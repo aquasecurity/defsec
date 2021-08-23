@@ -123,4 +123,5 @@ func (r *Result) WithBlock(block string) *Result {
 
 func(r *Result) WithRange(ra definition.Range) Set {
 	r.Location = ra
+	return r
 }
