@@ -121,7 +121,7 @@ func (r *Result) WithBlock(block string) *Result {
 	return r
 }
 
-func(r *Result) WithRange(ra definition.Range) Set {
+func(r *Result) WithRange(ra definition.Range) *Result {
 	r.Location = ra
 	return r
 }
