@@ -113,3 +113,8 @@ func (r *Result) WithStatus(status Status) *Result {
 	r.Status = status
 	return r
 }
+
+func (r *Result) WithAttribute(attr string) *Result {
+
+	return r
+}
