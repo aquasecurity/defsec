@@ -115,6 +115,9 @@ func (r *Result) WithStatus(status Status) *Result {
 }
 
 func (r *Result) WithAttribute(attr string) *Result {
+	return r
+}
 
+func (r *Result) WithBlock(block string) *Result {
 	return r
 }
