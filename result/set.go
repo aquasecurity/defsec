@@ -2,6 +2,7 @@ package result
 
 import (
 	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/severity"
 )
 
 type Set interface {
@@ -14,6 +15,7 @@ type Set interface {
 	WithImpact(impact string) Set
 	WithResolution(resolution string) Set
 	WithLinks(links []string) Set
+	WithSeverity(severity.Severity) Set
 	All() []*Result
 }
 
@@ -30,6 +32,7 @@ type resultSet struct {
 	impact       string
 	resolution   string
 	links        []string
+	severity     severity.Severity
 }
 
 func (s *resultSet) Add(r *Result) {
@@ -42,7 +45,16 @@ func (s *resultSet) Add(r *Result) {
 		WithRuleProvider(s.ruleProvider).
 		WithLinks(s.links)
 
+	if r.Severity == severity.None {
+		r.WithSeverity(s.severity)
+	}
+
 	s.results = append(s.results, r)
+}
+
+func (s *resultSet) WithSeverity(severity severity.Severity) Set {
+	s.severity = severity
+	return s
 }
 
 func (s *resultSet) AddResult() *Result {
