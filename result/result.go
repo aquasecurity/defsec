@@ -37,7 +37,6 @@ func New() *Result {
 	result := &Result{
 		Status: Failed,
 	}
-	result.Location = result.Range()
 	return result
 }
 
@@ -120,4 +119,8 @@ func (r *Result) WithAttribute(attr string) *Result {
 
 func (r *Result) WithBlock(block string) *Result {
 	return r
+}
+
+func(r *Result) WithRange(ra definition.Range) Set {
+	r.Location = ra
 }
