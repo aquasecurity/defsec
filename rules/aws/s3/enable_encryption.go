@@ -14,6 +14,7 @@ var CheckEncryptionIsEnabled = rules.RuleDef{
 
 	Provider:   provider.AWSProvider,
 	Service:    "s3",
+	ShortCode:  "enable-bucket-encryption",
 	Summary:    "Unencrypted S3 bucket.",
 	Impact:     "The bucket objects could be read if compromised",
 	Resolution: "Configure bucket encryption",
