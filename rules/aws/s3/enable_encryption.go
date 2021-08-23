@@ -6,11 +6,11 @@ import (
 	"github.com/aquasecurity/defsec/infra"
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/result"
-	"github.com/aquasecurity/defsec/rule"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 )
 
-var CheckEncryptionIsEnabled = rule.RuleDef{
+var CheckEncryptionIsEnabled = rules.RuleDef{
 
 	Provider:   provider.AWSProvider,
 	Service:    "s3",
