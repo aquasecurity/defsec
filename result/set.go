@@ -53,7 +53,7 @@ func (s *resultSet) Add(r *Result) {
 		r.WithSeverity(s.severity)
 	}
 
-	s.results = append(s.results, *r)
+	s.results = append(s.results, r)
 }
 
 func (s *resultSet) WithSeverity(severity severity.Severity) Set {
