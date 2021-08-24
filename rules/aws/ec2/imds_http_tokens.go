@@ -3,11 +3,11 @@ package ec2
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/infra"
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/result"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/state"
 )
 
 var CheckIMDSAccessRequiresToken = rules.RuleDef{
@@ -29,10 +29,10 @@ To fully protect IMDS you need to enable session tokens by using <code>metadata_
 	},
 
 	Severity: severity.High,
-	CheckFunc: func(context *infra.Context) []*result.Result {
+	CheckFunc: func(s *state.State) []*result.Result {
 
 		var results []*result.Result
-		for _, instance := range context.AWS.EC2.Instances {
+		for _, instance := range s.AWS.EC2.Instances {
 			if !instance.RequiresIMDSToken() && !instance.HasHTTPEndpointDisabled() {
 				results = append(results, &result.Result{
 					Description: fmt.Sprintf("Instance '%s' does not require IMDS access to require a token", instance.Reference),

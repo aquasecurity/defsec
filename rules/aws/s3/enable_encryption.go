@@ -3,11 +3,11 @@ package s3
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/infra"
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/result"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/state"
 )
 
 var CheckEncryptionIsEnabled = rules.RuleDef{
@@ -27,10 +27,10 @@ S3 Buckets should be encrypted with customer managed KMS keys and not default AW
 	},
 
 	Severity: severity.High,
-	CheckFunc: func(context *infra.Context) []*result.Result {
+	CheckFunc: func(s *state.State) []*result.Result {
 
 		var results []*result.Result
-		for _, bucket := range context.AWS.S3.Buckets {
+		for _, bucket := range s.AWS.S3.Buckets {
 			if bucket.Encryption.Enabled.IsFalse() {
 				results = append(results, &result.Result{
 					Description: fmt.Sprintf("Resource '%s' does not have encryption enabled", bucket.Reference),

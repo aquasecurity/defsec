@@ -3,11 +3,11 @@ package s3
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/infra"
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/result"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/state"
 )
 
 var CheckPublicPoliciesAreBlocked = rules.RuleDef{
@@ -26,9 +26,9 @@ S3 bucket policy should have block public policy to prevent users from putting a
 		"https://docs.aws.amazon.com/AmazonS3/latest/dev-retired/access-control-block-public-access.html",
 	},
 	Severity: severity.High,
-	CheckFunc: func(context *infra.Context) []*result.Result {
+	CheckFunc: func(s *state.State) []*result.Result {
 		var results []*result.Result
-		for _, block := range context.AWS.S3.PublicAccessBlocks {
+		for _, block := range s.AWS.S3.PublicAccessBlocks {
 			if block.BlockPublicPolicy.IsFalse() {
 				results = append(results, &result.Result{
 					Description: fmt.Sprintf("Public access block '%s' does not block public policies", block.Reference),

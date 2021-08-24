@@ -3,11 +3,11 @@ package s3
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/infra"
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/result"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/state"
 )
 
 var CheckVersioningIsEnabled = rules.RuleDef{
@@ -29,11 +29,11 @@ With versioning you can recover more easily from both unintended user actions an
 	},
 
 	Severity: severity.Medium,
-	CheckFunc: func(context *infra.Context) []*result.Result {
+	CheckFunc: func(s *state.State) []*result.Result {
 
 		var results []*result.Result
 
-		for _, bucket := range context.AWS.S3.Buckets {
+		for _, bucket := range s.AWS.S3.Buckets {
 			if !bucket.Versioning.Enabled.IsTrue() {
 				results = append(results, &result.Result{
 					Description: fmt.Sprintf("Resource '%s' does not have versioning enabled", bucket.Reference),

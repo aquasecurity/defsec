@@ -62,7 +62,7 @@ func (s *resultSet) WithSeverity(severity severity.Severity) Set {
 }
 
 func (s *resultSet) AddResult() *Result {
-	result := New().
+	result := newBlank().
 		WithRuleID(s.ruleID).
 		WithLegacyRuleID(s.legacyID).
 		WithRuleSummary(s.ruleSummary).

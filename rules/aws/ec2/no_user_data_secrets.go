@@ -3,11 +3,11 @@ package ec2
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/infra"
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/result"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/state"
 )
 
 var CheckNoSecretsInUserData = rules.RuleDef{
@@ -25,10 +25,10 @@ var CheckNoSecretsInUserData = rules.RuleDef{
 		"https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-add-user-data.html",
 	},
 	Severity: severity.Critical,
-	CheckFunc: func(context *infra.Context) []*result.Result {
+	CheckFunc: func(s *state.State) []*result.Result {
 
 		var results []*result.Result
-		for _, instance := range context.AWS.EC2.Instances {
+		for _, instance := range s.AWS.EC2.Instances {
 			if instance.HasSensitiveInformationInUserData() {
 				results = append(results, &result.Result{
 					Description: fmt.Sprintf("Instance '%s' has potentially sensitive information in its user data", instance.Reference),

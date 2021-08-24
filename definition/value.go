@@ -5,9 +5,10 @@ type Metadata struct {
 	Reference Reference
 }
 
-func NewMetadata(r Range) *Metadata {
+func NewMetadata(r Range, ref Reference) *Metadata {
 	return &Metadata{
-		Range: r,
+		Range:     r,
+		Reference: ref,
 	}
 }
 

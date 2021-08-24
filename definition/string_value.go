@@ -49,9 +49,9 @@ func (s *StringValue) executePredicate(value string, fn StringCheckFunc, equalit
 	return fn(subjectString, searchString)
 }
 
-func EmptyStringValue(r Range) StringValue {
+func EmptyStringValue(r Range, ref Reference) StringValue {
 	return StringValue{
-		Metadata: NewMetadata(r),
+		Metadata: NewMetadata(r, ref),
 	}
 
 }

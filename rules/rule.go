@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aquasecurity/defsec/infra"
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/result"
 	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/state"
 )
 
 type RuleDef struct {
@@ -21,7 +21,7 @@ type RuleDef struct {
 	Service     string
 	Links       []string
 	Severity    severity.Severity
-	CheckFunc   func(context *infra.Context) []*result.Result
+	CheckFunc   func(context *state.State) []*result.Result
 }
 
 func (r RuleDef) ID() string {

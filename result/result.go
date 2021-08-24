@@ -33,11 +33,19 @@ const (
 	Ignored Status = "ignored"
 )
 
-func New() *Result {
+func New(r definition.Range, description string, args ...interface{}) *Result {
 	result := &Result{
-		Status: Failed,
+		Description: fmt.Sprintf(description, args...),
+		Location:    r,
+		Status:      Failed,
 	}
 	return result
+}
+
+func newBlank() *Result {
+	return &Result{
+		Status: Failed,
+	}
 }
 
 func (r *Result) Passed() bool {
@@ -121,7 +129,7 @@ func (r *Result) WithBlock(block string) *Result {
 	return r
 }
 
-func(r *Result) WithRange(ra definition.Range) *Result {
+func (r *Result) WithRange(ra definition.Range) *Result {
 	r.Location = ra
 	return r
 }

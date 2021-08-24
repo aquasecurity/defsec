@@ -3,11 +3,11 @@ package s3
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/infra"
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/result"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/state"
 )
 
 var CheckPublicBucketsAreRestricted = rules.RuleDef{
@@ -24,9 +24,9 @@ S3 buckets should restrict public policies for the bucket. By enabling, the rest
 		"https://docs.aws.amazon.com/AmazonS3/latest/dev-retired/access-control-block-public-access.html",
 	},
 	Severity: severity.High,
-	CheckFunc: func(context *infra.Context) []*result.Result {
+	CheckFunc: func(s *state.State) []*result.Result {
 		var results []*result.Result
-		for _, block := range context.AWS.S3.PublicAccessBlocks {
+		for _, block := range s.AWS.S3.PublicAccessBlocks {
 			if block.RestrictPublicBuckets.IsFalse() {
 				results = append(results, &result.Result{
 					Description: fmt.Sprintf("Public access block '%s' does not restrict public buckets", block.Reference),

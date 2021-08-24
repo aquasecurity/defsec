@@ -3,11 +3,11 @@ package s3
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/infra"
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/result"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/state"
 )
 
 var CheckPublicACLsAreIgnored = rules.RuleDef{
@@ -24,9 +24,9 @@ S3 buckets should ignore public ACLs on buckets and any objects they contain. By
 		"https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html",
 	},
 	Severity: severity.High,
-	CheckFunc: func(context *infra.Context) []*result.Result {
+	CheckFunc: func(s *state.State) []*result.Result {
 		var results []*result.Result
-		for _, block := range context.AWS.S3.PublicAccessBlocks {
+		for _, block := range s.AWS.S3.PublicAccessBlocks {
 			if block.IgnorePublicACLs.IsFalse() {
 				results = append(results, &result.Result{
 					Description: fmt.Sprintf("Public access block '%s' does not ignore public ACLs", block.Reference),
