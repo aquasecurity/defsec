@@ -7,11 +7,23 @@ import (
 	"github.com/aquasecurity/defsec/types"
 )
 
+type Status uint8
+
+const (
+	StatusFailed Status = iota
+	StatusPassed
+)
+
 type Result struct {
 	rule        Rule
 	description string
 	annotation  string
+	status      Status
 	metadata    *types.Metadata
+}
+
+func (r Result) Status() Status {
+	return r.status
 }
 
 func (r Result) Rule() Rule {
