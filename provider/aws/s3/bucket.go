@@ -15,7 +15,7 @@ type Bucket struct {
 
 func (b *Bucket) HasPublicExposureACL() bool {
 	for _, publicACL := range []string{"public-read", "public-read-write", "website", "authenticated-read"} {
-		if b.ACL.Value == publicACL {
+		if b.ACL.EqualTo(publicACL) {
 			return true
 		}
 	}

@@ -5,13 +5,11 @@ import (
 	"strings"
 
 	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/result"
 	"github.com/aquasecurity/defsec/severity"
-	"github.com/aquasecurity/defsec/state"
 )
 
-type RuleDef struct {
-	Id          string
+type Rule struct {
+	ID          string
 	ShortCode   string
 	Summary     string
 	Explanation string
@@ -21,13 +19,8 @@ type RuleDef struct {
 	Service     string
 	Links       []string
 	Severity    severity.Severity
-	CheckFunc   func(context *state.State) []*result.Result
 }
 
-func (r RuleDef) ID() string {
+func (r Rule) LongID() string {
 	return strings.ToLower(fmt.Sprintf("%s-%s-%s", r.Provider, r.Service, r.ShortCode))
-}
-
-func (r RuleDef) MatchesID(id string) bool {
-	return r.ID() == id
 }

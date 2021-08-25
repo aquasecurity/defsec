@@ -27,5 +27,5 @@ func (i *Instance) HasHTTPEndpointDisabled() bool {
 
 func (i *Instance) HasSensitiveInformationInUserData() bool {
 	scanner := squealer.NewStringScanner()
-	return scanner.Scan(i.UserData.Value).TransgressionFound
+	return scanner.Scan(i.UserData.Value()).TransgressionFound
 }

@@ -13,5 +13,5 @@ type DiskEncryption struct {
 }
 
 func (e *DiskEncryption) UsesDefaultKey() bool {
-	return len(e.RawKey.Value) == 0 && e.KMSKeyLink.Value == ""
+	return len(e.RawKey.Value()) == 0 && e.KMSKeyLink.IsEmpty()
 }
