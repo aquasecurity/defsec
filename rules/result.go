@@ -55,7 +55,7 @@ func rawToString(raw interface{}) string {
 		return fmt.Sprintf("%d", t)
 	case bool:
 		return fmt.Sprintf("%t", t)
-	case float64, float32:
+	case float64:
 		return fmt.Sprintf("%f", t)
 	case string:
 		return fmt.Sprintf("%q", t)
@@ -66,12 +66,6 @@ func rawToString(raw interface{}) string {
 		}
 		return fmt.Sprintf("[%s]", strings.Join(items, ", "))
 	case []int:
-		var items []string
-		for _, item := range t {
-			items = append(items, rawToString(item))
-		}
-		return fmt.Sprintf("[%s]", strings.Join(items, ", "))
-	case []float32:
 		var items []string
 		for _, item := range t {
 			items = append(items, rawToString(item))
