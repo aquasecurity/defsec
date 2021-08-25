@@ -11,7 +11,7 @@ type Result struct {
 	rule        Rule
 	description string
 	annotation  string
-	metadata    types.Metadata
+	metadata    *types.Metadata
 }
 
 func (r Result) Rule() Rule {
@@ -26,8 +26,12 @@ func (r Result) Annotation() string {
 	return r.annotation
 }
 
-func (r Result) Metadata() types.Metadata {
+func (r Result) Metadata() *types.Metadata {
 	return r.metadata
+}
+
+func (r Result) Reference() types.Reference {
+	return r.metadata.Reference()
 }
 
 type Results []Result
@@ -40,7 +44,7 @@ func (r *Results) Add(description string, metadata *types.Metadata, annotation .
 	*r = append(*r,
 		Result{
 			description: description,
-			metadata:    *metadata,
+			metadata:    metadata,
 			annotation:  annotationStr,
 		},
 	)
