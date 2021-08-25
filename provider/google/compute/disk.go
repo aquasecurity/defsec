@@ -1,15 +1,15 @@
 package compute
 
-import "github.com/aquasecurity/defsec/definition"
+import "github.com/aquasecurity/defsec/types"
 
 type Disk struct {
-	Name       definition.StringValue
+	Name       types.StringValue
 	Encryption DiskEncryption
 }
 
 type DiskEncryption struct {
-	RawKey     definition.BytesValue
-	KMSKeyLink definition.StringValue
+	RawKey     types.BytesValue
+	KMSKeyLink types.StringValue
 }
 
 func (e *DiskEncryption) UsesDefaultKey() bool {

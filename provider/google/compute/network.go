@@ -1,9 +1,9 @@
 package compute
 
-import "github.com/aquasecurity/defsec/definition"
+import "github.com/aquasecurity/defsec/types"
 
 type Network struct {
-	*definition.Metadata
+	*types.Metadata
 	Firewall    *Firewall
 	Subnetworks []SubNetwork
 }

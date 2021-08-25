@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/definition"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/aquasecurity/defsec/provider/google/compute"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
@@ -11,9 +11,9 @@ import (
 
 func Test_No_Public_IP(t *testing.T) {
 	var s state.State
-	fakeMetadata := definition.NewMetadata(
-		definition.NewRange("main.tf", 123, 123),
-		&definition.FakeReference{},
+	fakeMetadata := types.NewMetadata(
+		types.NewRange("main.tf", 123, 123),
+		&types.FakeReference{},
 	)
 	s.Google.Compute.Instances = []compute.Instance{
 		{
@@ -21,7 +21,7 @@ func Test_No_Public_IP(t *testing.T) {
 			NetworkInterfaces: []compute.NetworkInterface{
 				{
 					Metadata:    fakeMetadata,
-					HasPublicIP: definition.Bool(true, definition.NewRange("main.tf", 124, 124), &definition.FakeReference{}),
+					HasPublicIP: types.Bool(true, types.NewRange("main.tf", 124, 124), &types.FakeReference{}),
 				},
 			},
 		},

@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aquasecurity/defsec/definition"
+	"github.com/aquasecurity/defsec/types"
 )
 
 type Result struct {
 	rule        Rule
 	description string
 	annotation  string
-	metadata    definition.Metadata
+	metadata    types.Metadata
 }
 
 func (r Result) Rule() Rule {
@@ -26,13 +26,13 @@ func (r Result) Annotation() string {
 	return r.annotation
 }
 
-func (r Result) Metadata() definition.Metadata {
+func (r Result) Metadata() types.Metadata {
 	return r.metadata
 }
 
 type Results []Result
 
-func (r *Results) Add(description string, metadata *definition.Metadata, annotation ...interface{}) {
+func (r *Results) Add(description string, metadata *types.Metadata, annotation ...interface{}) {
 	var annotationStr string
 	if len(annotation) == 1 && metadata.IsExplicit() {
 		annotationStr = rawToString(annotation[0])

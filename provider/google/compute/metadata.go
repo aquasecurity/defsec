@@ -1,8 +1,8 @@
 package compute
 
-import "github.com/aquasecurity/defsec/definition"
+import "github.com/aquasecurity/defsec/types"
 
 type ProjectMetadata struct {
-	*definition.Metadata
-	Values map[string]definition.StringValue
+	*types.Metadata
+	Values map[string]types.StringValue
 }

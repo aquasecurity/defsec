@@ -1,17 +1,17 @@
 package compute
 
-import "github.com/aquasecurity/defsec/definition"
+import "github.com/aquasecurity/defsec/types"
 
 type Instance struct {
-	*definition.Metadata
-	Name              definition.StringValue
+	*types.Metadata
+	Name              types.StringValue
 	NetworkInterfaces []NetworkInterface
 }
 
 type NetworkInterface struct {
-	*definition.Metadata
+	*types.Metadata
 	Network     *Network
 	SubNetwork  *SubNetwork
-	HasPublicIP definition.BoolValue
-	NATIP       definition.StringValue
+	HasPublicIP types.BoolValue
+	NATIP       types.StringValue
 }
