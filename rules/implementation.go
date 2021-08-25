@@ -23,3 +23,7 @@ func Register(rule Rule, f CheckFunc) RegisteredRule {
 		checkFunc: f,
 	}
 }
+
+func (r RegisteredRule) Rule() Rule {
+	return r.rule
+}
