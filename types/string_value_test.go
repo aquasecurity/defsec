@@ -1,4 +1,4 @@
-package definition
+package types
 
 import (
 	"testing"
@@ -10,15 +10,15 @@ func Test_StringValueEqualTo(t *testing.T) {
 	testCases := []struct {
 		desc       string
 		input      string
-		check     string
+		check      string
 		ignoreCase bool
 		expected   bool
 	}{
 		{
-			desc:       "return truw when string is equal",
-			input:      "something",
-			check:     "",
-			expected:   false,
+			desc:     "return truw when string is equal",
+			input:    "something",
+			check:    "",
+			expected: false,
 		},
 	}
 	for _, tC := range testCases {
@@ -65,9 +65,7 @@ func Test_StringValueStartsWith(t *testing.T) {
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 
-			val := StringValue{
-				Value: tC.input,
-			}
+			val := String(tC.input, NewRange("main.tf", 123, 123), &FakeReference{})
 
 			var options []StringEqualityOption
 

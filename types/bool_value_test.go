@@ -1,4 +1,4 @@
-package definition
+package types
 
 import (
 	"testing"
@@ -21,9 +21,7 @@ func Test_BoolValueIsTrue(t *testing.T) {
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 
-			val := BoolValue{
-				Value: tC.value,
-			}
+			val := Bool(tC.value, NewRange("main.tf", 123, 123), &FakeReference{})
 
 			assert.Equal(t, tC.expected, val.IsTrue())
 		})
