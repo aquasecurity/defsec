@@ -6,6 +6,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var fakeMetadata = NewMetadata(NewRange("main.tf", 123, 123), &FakeReference{})
+
 func Test_BoolValueIsTrue(t *testing.T) {
 	testCases := []struct {
 		desc     string
@@ -21,7 +23,7 @@ func Test_BoolValueIsTrue(t *testing.T) {
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
 
-			val := Bool(tC.value, NewRange("main.tf", 123, 123), &FakeReference{})
+			val := Bool(tC.value, fakeMetadata)
 
 			assert.Equal(t, tC.expected, val.IsTrue())
 		})
