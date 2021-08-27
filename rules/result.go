@@ -55,7 +55,7 @@ func (r *Results) Add(description string, metadata *types.Metadata, annotation .
 	}
 	*r = append(*r,
 		Result{
-			description: fmt.Sprintf("%s: %s", metadata.Reference(), description),
+			description: description,
 			metadata:    metadata,
 			annotation:  annotationStr,
 		},
