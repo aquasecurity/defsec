@@ -1,0 +1,35 @@
+package gke
+
+import (
+	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/rules"
+	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/state"
+)
+
+var CheckNoPublicControlPlane = rules.Register(
+	rules.Rule{
+		Provider:    provider.GoogleProvider,
+		Service:     "gke",
+		ShortCode:   "no-public-control-plane",
+		Summary:     "GKE Control Plane should not be publicly accessible",
+		Impact:      "GKE control plane exposed to public internet",
+		Resolution:  "Use private nodes and master authorised networks to prevent exposure",
+		Explanation: `The GKE control plane is exposed to the public internet by default.`,
+		Links: []string{ 
+		},
+		Severity: severity.High,
+	},
+	func(s *state.State) (results rules.Results) {
+		for _, x := range s.AWS.S3.Buckets {
+			if x.Encryption.Enabled.IsFalse() {
+				results.Add(
+					"",
+					x.Encryption.Enabled.Metadata(),
+					x.Encryption.Enabled.Value(),
+				)
+			}
+		}
+		return
+	},
+)
