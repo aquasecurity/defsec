@@ -12,22 +12,22 @@ var CheckNoPublicIp = rules.Register(
 		Provider:    provider.AWSProvider,
 		Service:     "autoscaling",
 		ShortCode:   "no-public-ip",
-		Summary:     "A resource has a public IP address.",
+		Summary:     "Launch configuration should not have a public IP address.",
 		Impact:      "The instance or configuration is publicly accessible",
 		Resolution:  "Set the instance to not be publicly accessible",
 		Explanation: `You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, launchConfig := range s.AWS.Autoscaling.LaunchConfigurations {
+			if launchConfig.AssociatePublicIP.IsTrue() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Launch configuration associates public IP address.",
+					launchConfig.AssociatePublicIP.Metadata(),
+					launchConfig.AssociatePublicIP.Value(),
 				)
 			}
 		}

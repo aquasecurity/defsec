@@ -15,20 +15,29 @@ var CheckEnableAtRestEncryption = rules.Register(
 		Summary:     "Launch configuration with unencrypted block device.",
 		Impact:      "The block device could be compromised and read from",
 		Resolution:  "Turn on encryption for all block devices",
-		Explanation: `Blocks devices should be encrypted to ensure sensitive data is held securely at rest.`,
-		Links: []string{ 
+		Explanation: `Block devices should be encrypted to ensure sensitive data is held securely at rest.`,
+		Links: []string{
 			"https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/RootDeviceStorage.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, launchConfig := range s.AWS.Autoscaling.LaunchConfigurations {
+			if launchConfig.RootBlockDevice.Encrypted.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Root block device is not encrypted.",
+					launchConfig.RootBlockDevice.Encrypted.Metadata(),
+					launchConfig.RootBlockDevice.Encrypted.Value(),
 				)
+			}
+			for _, device := range launchConfig.EBSBlockDevices {
+				if device.Encrypted.IsFalse() {
+					results.Add(
+						"EBS block device is not encrypted.",
+						device.Encrypted.Metadata(),
+						device.Encrypted.Value(),
+					)
+				}
 			}
 		}
 		return

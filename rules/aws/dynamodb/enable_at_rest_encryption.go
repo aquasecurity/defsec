@@ -16,19 +16,22 @@ var CheckEnableAtRestEncryption = rules.Register(
 		Impact:      "Data can be freely read if compromised",
 		Resolution:  "Enable encryption at rest for DAX Cluster",
 		Explanation: `Amazon DynamoDB Accelerator (DAX) encryption at rest provides an additional layer of data protection by helping secure your data from unauthorized access to the underlying storage.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAXEncryptionAtRest.html",
 			"https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dax-cluster.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.DynamoDB.DAXClusters {
+			if !cluster.IsManaged() {
+				continue
+			}
+			if cluster.ServerSideEncryption.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster encryption is not enabled.",
+					cluster.ServerSideEncryption.Enabled.Metadata(),
+					cluster.ServerSideEncryption.Enabled.Value(),
 				)
 			}
 		}

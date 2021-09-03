@@ -16,18 +16,30 @@ var CheckEncryptionCustomerKey = rules.Register(
 		Impact:      "Using AWS managed keys does not allow for fine grained control",
 		Resolution:  "Enable encryption using customer managed keys",
 		Explanation: `Encryption using AWS keys provides protection for your DocumentDB underlying storage. To increase control of the encryption and manage factors like rotation use customer managed keys.`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.DocumentDB.Clusters {
+			if cluster.IsManaged() && cluster.KMSKeyID.IsEmpty() && !cluster.KMSKeyID.Metadata().IsUnresolvable() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster encryption does not use a customer-managed KMS key.",
+					cluster.KMSKeyID.Metadata(),
+					cluster.KMSKeyID.Value(),
 				)
+			}
+			for _, instance := range cluster.Instances {
+				if !instance.IsManaged() {
+					continue
+				}
+				if instance.KMSKeyID.IsEmpty() && !instance.KMSKeyID.Metadata().IsUnresolvable() {
+					results.Add(
+						"Instance encryption does not use a customer-managed KMS key.",
+						instance.KMSKeyID.Metadata(),
+						instance.KMSKeyID.Value(),
+					)
+				}
+
 			}
 		}
 		return

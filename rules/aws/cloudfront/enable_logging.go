@@ -16,18 +16,18 @@ var CheckEnableLogging = rules.Register(
 		Impact:      "Logging provides vital information about access and usage",
 		Resolution:  "Enable logging for CloudFront distributions",
 		Explanation: `You should configure CloudFront Access Logging to create log files that contain detailed information about every user request that CloudFront receives`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, dist := range s.AWS.Cloudfront.Distributions {
+			if dist.Logging.Bucket.IsEmpty() && !dist.Logging.Bucket.Metadata().IsUnresolvable() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Distribution does not have logging enabled.",
+					dist.Logging.Bucket.Metadata(),
+					dist.Logging.Bucket.Value(),
 				)
 			}
 		}

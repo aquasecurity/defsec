@@ -16,17 +16,16 @@ var CheckEnableStorageEncryption = rules.Register(
 		Impact:      "Unencrypted sensitive data is vulnerable to compromise.",
 		Resolution:  "Enable storage encryption",
 		Explanation: `Encryption of the underlying storage used by DocumentDB ensures that if their is compromise of the disks, the data is still protected.`,
-		Links: []string{ 
-		},
-		Severity: severity.High,
+		Links:       []string{},
+		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.DocumentDB.Clusters {
+			if cluster.StorageEncrypted.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster storage does not have encryption enabled.",
+					cluster.StorageEncrypted.Metadata(),
+					cluster.StorageEncrypted.Value(),
 				)
 			}
 		}

@@ -5,11 +5,12 @@ type metadataProvider interface {
 }
 
 type Metadata struct {
-	rnge       Range
-	ref        Reference
-	isManaged  bool
-	isDefault  bool
-	isExplicit bool
+	rnge           Range
+	ref            Reference
+	isManaged      bool
+	isDefault      bool
+	isExplicit     bool
+	isUnresolvable bool
 }
 
 func NewMetadata(r Range, ref Reference) *Metadata {
@@ -38,6 +39,10 @@ func (m *Metadata) IsDefault() bool {
 
 func (m *Metadata) IsExplicit() bool {
 	return m.isExplicit
+}
+
+func (m *Metadata) IsUnresolvable() bool {
+	return m.isUnresolvable
 }
 
 func (m *Metadata) String() string {

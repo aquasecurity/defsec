@@ -16,19 +16,26 @@ var CheckEnableAccessLogging = rules.Register(
 		Impact:      "Logging provides vital information about access and usage",
 		Resolution:  "Enable logging for API Gateway stages",
 		Explanation: `API Gateway stages should have access log settings block configured to track all access to a particular stage. This should be applied to both v1 and v2 gateway stages.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-logging.html",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
+		for _, api := range s.AWS.APIGateway.APIs {
+			if !api.IsManaged() {
+				continue
+			}
+			for _, stage := range api.Stages {
+				if !stage.IsManaged() {
+					continue
+				}
+				if stage.AccessLogging.CloudwatchLogGroupARN.IsEmpty() {
+					results.Add(
+						"Access logging is not configured.",
+						stage.AccessLogging.CloudwatchLogGroupARN.Metadata(),
+					)
+				}
 			}
 		}
 		return

@@ -16,17 +16,19 @@ var CheckEncryptionCustomerKey = rules.Register(
 		Impact:      "Using AWS managed keys does not allow for fine grained control",
 		Resolution:  "Enable encryption using customer managed keys",
 		Explanation: `Encryption using AWS keys provides protection for your EBS volume. To increase control of the encryption and manage factors like rotation use customer managed keys.`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, volume := range s.AWS.EBS.Volumes {
+			if !volume.IsManaged() {
+				continue
+			}
+			if volume.Encryption.KMSKeyID.IsEmpty() && !volume.Encryption.KMSKeyID.Metadata().IsUnresolvable() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"EBS volume does not use a customer-managed KMS key.",
+					volume.Encryption.KMSKeyID.Metadata(),
+					volume.Encryption.KMSKeyID.Value(),
 				)
 			}
 		}

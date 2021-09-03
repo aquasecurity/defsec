@@ -19,6 +19,11 @@ func StringDefault(value string, m *Metadata) StringValue {
 	b.Metadata().isDefault = true
 	return b
 }
+func StringUnresolvable(m *Metadata) StringValue {
+	b := String("", m)
+	b.Metadata().isUnresolvable = true
+	return b
+}
 
 func StringExplicit(value string, m *Metadata) StringValue {
 	b := String(value, m)
