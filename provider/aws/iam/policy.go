@@ -17,7 +17,7 @@ func ParsePolicyDocument(policy []byte, metadata *types.Metadata) (*PolicyDocume
 }
 
 type PolicyDocument struct {
-	metadata   *Metadata
+	metadata   *types.Metadata
 	Statements []awsIAMPolicyDocumentStatement `json:"Statement"`
 }
 
