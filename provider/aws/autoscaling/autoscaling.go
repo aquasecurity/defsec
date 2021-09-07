@@ -9,7 +9,7 @@ type Autoscaling struct {
 type LaunchConfiguration struct {
 	Name              types.StringValue
 	AssociatePublicIP types.BoolValue
-	RootBlockDevice   BlockDevice
+	RootBlockDevice   *BlockDevice
 	EBSBlockDevices   []BlockDevice
 	UserData          types.StringValue
 }
