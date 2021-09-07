@@ -16,18 +16,18 @@ var CheckEnableContainerInsight = rules.Register(
 		Impact:      "Not all metrics and logs may be gathered for containers when Container Insights isn't enabled",
 		Resolution:  "Enable Container Insights",
 		Explanation: `Cloudwatch Container Insights provide more metrics and logs for container based applications and micro services.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/ContainerInsights.html",
 		},
 		Severity: severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.ECS.Clusters {
+			if cluster.Settings.ContainerInsightsEnabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not have container insights enabled.",
+					cluster.Settings.ContainerInsightsEnabled.Metadata(),
+					cluster.Settings.ContainerInsightsEnabled.Value(),
 				)
 			}
 		}

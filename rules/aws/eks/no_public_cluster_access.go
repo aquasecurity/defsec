@@ -16,18 +16,18 @@ var CheckNoPublicClusterAccess = rules.Register(
 		Impact:      "EKS can be access from the internet",
 		Resolution:  "Don't enable public access to EKS Clusters",
 		Explanation: `EKS clusters are available publicly by default, this should be explicitly disabled in the vpc_config of the EKS cluster resource.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/eks/latest/userguide/cluster-endpoint.html",
 		},
 		Severity: severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.EKS.Clusters {
+			if cluster.PublicAccessEnabled.IsTrue() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Public cluster access is enabled.",
+					cluster.PublicAccessEnabled.Metadata(),
+					cluster.PublicAccessEnabled.Value(),
 				)
 			}
 		}

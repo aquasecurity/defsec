@@ -1,7 +1,8 @@
-package elbv2
+package elb
 
 import (
 	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/provider/aws/elb"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -9,27 +10,38 @@ import (
 
 var CheckHttpNotUsed = rules.Register(
 	rules.Rule{
-		Provider:    provider.AWSProvider,
-		Service:     "elbv2",
-		ShortCode:   "http-not-used",
-		Summary:     "Use of plain HTTP.",
-		Impact:      "Your traffic is not protected",
-		Resolution:  "Switch to HTTPS to benefit from TLS security features",
+		Provider:   provider.AWSProvider,
+		Service:    "elb",
+		ShortCode:  "http-not-used",
+		Summary:    "Use of plain HTTP.",
+		Impact:     "Your traffic is not protected",
+		Resolution: "Switch to HTTPS to benefit from TLS security features",
 		Explanation: `Plain HTTP is unencrypted and human-readable. This means that if a malicious actor was to eavesdrop on your connection, they would be able to see all of your data flowing back and forth.
 
 You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning eavesdroppers cannot read your traffic.`,
-		Links: []string{ 
+		Links: []string{
 			"https://www.cloudflare.com/en-gb/learning/ssl/why-is-http-not-secure/",
 		},
 		Severity: severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, lb := range s.AWS.ELB.LoadBalancers {
+			if !lb.Type.EqualTo(elb.TypeApplication) {
+				continue
+			}
+			for _, listener := range lb.Listeners {
+				if !listener.Protocol.EqualTo("HTTP") {
+					continue
+				}
+
+				if listener.DefaultAction.Type.EqualTo("redirect") {
+					continue
+				}
+
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Listener for application load balancer does not use HTTPS.",
+					listener.Protocol.Metadata(),
+					listener.Protocol.Value(),
 				)
 			}
 		}

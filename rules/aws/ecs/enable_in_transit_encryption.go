@@ -16,20 +16,22 @@ var CheckEnableInTransitEncryption = rules.Register(
 		Impact:      "Intercepted traffic to and from EFS may lead to data loss",
 		Resolution:  "Enable in transit encryption when using efs",
 		Explanation: `ECS task definitions that have volumes using EFS configuration should explicitly enable in transit encryption to prevent the risk of data loss due to interception.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/AmazonECS/latest/userguide/efs-volumes.html",
 			"https://docs.aws.amazon.com/efs/latest/ug/encryption-in-transit.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
+		for _, definition := range s.AWS.ECS.TaskDefinitions {
+			for _, volume := range definition.Volumes {
+				if volume.EFSVolumeConfiguration.TransitEncryptionEnabled.IsFalse() {
+					results.Add(
+						"Task definition includes a volume which does not have in-transit-encryption enabled.",
+						volume.EFSVolumeConfiguration.TransitEncryptionEnabled.Metadata(),
+						volume.EFSVolumeConfiguration.TransitEncryptionEnabled.Value(),
+					)
+				}
 			}
 		}
 		return

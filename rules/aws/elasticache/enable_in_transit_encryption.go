@@ -16,18 +16,18 @@ var CheckEnableInTransitEncryption = rules.Register(
 		Impact:      "In transit data in the Replication Group could be read if intercepted",
 		Resolution:  "Enable in transit encryption for replication group",
 		Explanation: `Traffic flowing between Elasticache replication nodes should be encrypted to ensure sensitive data is kept private.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/in-transit-encryption.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, group := range s.AWS.ElastiCache.ReplicationGroups {
+			if group.TransitEncryptionEnabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Replication group does not have transit encryption enabled.",
+					group.TransitEncryptionEnabled.Metadata(),
+					group.TransitEncryptionEnabled.Value(),
 				)
 			}
 		}

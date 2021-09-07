@@ -16,18 +16,18 @@ var CheckEnableInTransitEncryption = rules.Register(
 		Impact:      "In transit data between nodes could be read if intercepted",
 		Resolution:  "Enable encrypted node to node communication",
 		Explanation: `Traffic flowing between Elasticsearch nodes should be encrypted to ensure sensitive data is kept private.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/ntn.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, domain := range s.AWS.Elasticsearch.Domains {
+			if domain.TransitEncryption.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Domain does not have in-transit encryption enabled.",
+					domain.TransitEncryption.Enabled.Metadata(),
+					domain.TransitEncryption.Enabled.Value(),
 				)
 			}
 		}

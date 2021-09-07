@@ -16,18 +16,24 @@ var CheckEncryptSecrets = rules.Register(
 		Impact:      "EKS secrets could be read if compromised",
 		Resolution:  "Enable encryption of EKS secrets",
 		Explanation: `EKS cluster resources should have the encryption_config block set with protection of the secrets resource.`,
-		Links: []string{ 
+		Links: []string{
 			"https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-eks-adds-envelope-encryption-for-secrets-with-aws-kms/",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.EKS.Clusters {
+			if cluster.Encryption.Secrets.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not have secret encryption enabled.",
+					cluster.Encryption.Secrets.Metadata(),
+					cluster.Encryption.Secrets.Value(),
+				)
+			} else if cluster.Encryption.KMSKeyID.IsEmpty() && !cluster.Encryption.KMSKeyID.Metadata().IsUnresolvable() {
+				results.Add(
+					"Cluster encryption requires a KMS key ID, which is missing",
+					cluster.Encryption.KMSKeyID.Metadata(),
+					cluster.Encryption.KMSKeyID.Value(),
 				)
 			}
 		}

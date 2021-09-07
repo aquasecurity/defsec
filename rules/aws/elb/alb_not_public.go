@@ -1,7 +1,8 @@
-package elbv2
+package elb
 
 import (
 	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/provider/aws/elb"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,23 +11,25 @@ import (
 var CheckAlbNotPublic = rules.Register(
 	rules.Rule{
 		Provider:    provider.AWSProvider,
-		Service:     "elbv2",
+		Service:     "elb",
 		ShortCode:   "alb-not-public",
 		Summary:     "Load balancer is exposed to the internet.",
 		Impact:      "The load balancer is exposed on the internet",
 		Resolution:  "Switch to an internal load balancer or add a tfsec ignore",
 		Explanation: `There are many scenarios in which you would want to expose a load balancer to the wider internet, but this check exists as a warning to prevent accidental exposure of internal assets. You should ensure that this resource should be exposed publicly.`,
-		Links: []string{ 
-		},
-		Severity: severity.High,
+		Links:       []string{},
+		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, lb := range s.AWS.ELB.LoadBalancers {
+			if lb.Type.EqualTo(elb.TypeGateway) || !lb.IsManaged() {
+				continue
+			}
+			if lb.Internal.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Load balancer is exposed publicly.",
+					lb.Internal.Metadata(),
+					lb.Internal.Value(),
 				)
 			}
 		}

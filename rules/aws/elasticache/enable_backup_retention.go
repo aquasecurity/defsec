@@ -16,18 +16,26 @@ var CheckEnableBackupRetention = rules.Register(
 		Impact:      "Without backups of the redis cluster recovery is made difficult",
 		Resolution:  "Configure snapshot retention for redis cluster",
 		Explanation: `Redis clusters should have a snapshot retention time to ensure that they are backed up and can be restored if required.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/backups-automatic.html",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.ElastiCache.Clusters {
+			if !cluster.Engine.EqualTo("redis") {
+				continue
+			}
+
+			if cluster.NodeType.EqualTo("cache.t1.micro") {
+				continue
+			}
+
+			if cluster.SnapshotRetentionLimit.EqualTo(0) && !cluster.SnapshotRetentionLimit.Metadata().IsUnresolvable() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster snapshot retention is not enabled.",
+					cluster.SnapshotRetentionLimit.Metadata(),
+					cluster.SnapshotRetentionLimit.Value(),
 				)
 			}
 		}

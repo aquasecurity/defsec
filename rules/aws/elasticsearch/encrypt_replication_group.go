@@ -16,18 +16,18 @@ var CheckEncryptReplicationGroup = rules.Register(
 		Impact:      "Data in the replication group could be readable if compromised",
 		Resolution:  "Enable encryption for replication group",
 		Explanation: `You should ensure your Elasticache data is encrypted at rest to help prevent sensitive information from being read by unauthorised users.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/at-rest-encryption.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, group := range s.AWS.Elasticsearch.ReplicationGroups {
+			if group.AtRestEncryption.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Replication group does not have at-rest encryption enabled.",
+					group.AtRestEncryption.Enabled.Metadata(),
+					group.AtRestEncryption.Enabled.Value(),
 				)
 			}
 		}

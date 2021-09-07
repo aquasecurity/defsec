@@ -1,4 +1,4 @@
-package elasticservice
+package elasticsearch
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -10,24 +10,24 @@ import (
 var CheckEnableDomainEncryption = rules.Register(
 	rules.Rule{
 		Provider:    provider.AWSProvider,
-		Service:     "elastic-service",
+		Service:     "elastic-search",
 		ShortCode:   "enable-domain-encryption",
 		Summary:     "Elasticsearch domain isn't encrypted at rest.",
 		Impact:      "Data will be readable if compromised",
 		Resolution:  "Enable ElasticSearch domain encryption",
 		Explanation: `You should ensure your Elasticsearch data is encrypted at rest to help prevent sensitive information from being read by unauthorised users.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/encryption-at-rest.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, domain := range s.AWS.Elasticsearch.Domains {
+			if domain.AtRestEncryption.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Domain does not have at-rest encryption enabled.",
+					domain.AtRestEncryption.Enabled.Metadata(),
+					domain.AtRestEncryption.Enabled.Value(),
 				)
 			}
 		}
