@@ -9,29 +9,33 @@ import (
 
 var CheckNoPasswordReuse = rules.Register(
 	rules.Rule{
-		Provider:    provider.AWSProvider,
-		Service:     "iam",
-		ShortCode:   "no-password-reuse",
-		Summary:     "IAM Password policy should prevent password reuse.",
-		Impact:      "Password reuse increase the risk of compromised passwords being abused",
-		Resolution:  "Prevent password reuse in the policy",
+		Provider:   provider.AWSProvider,
+		Service:    "iam",
+		ShortCode:  "no-password-reuse",
+		Summary:    "IAM Password policy should prevent password reuse.",
+		Impact:     "Password reuse increase the risk of compromised passwords being abused",
+		Resolution: "Prevent password reuse in the policy",
 		Explanation: `IAM account password policies should prevent the reuse of passwords. 
 
 The account password policy should be set to prevent using any of the last five used passwords.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html#password-policy-details",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
-			}
+
+		policy := s.AWS.IAM.PasswordPolicy
+		if !policy.IsManaged() {
+			return
+		}
+
+		if policy.ReusePreventionCount.LessThan(5) {
+			results.Add(
+				"Password policy allows reuse of recent passwords.",
+				policy.ReusePreventionCount.Metadata(),
+				policy.ReusePreventionCount.Value(),
+			)
 		}
 		return
 	},

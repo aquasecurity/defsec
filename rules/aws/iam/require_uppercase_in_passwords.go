@@ -9,28 +9,31 @@ import (
 
 var CheckRequireUppercaseInPasswords = rules.Register(
 	rules.Rule{
-		Provider:    provider.AWSProvider,
-		Service:     "iam",
-		ShortCode:   "require-uppercase-in-passwords",
-		Summary:     "IAM Password policy should have requirement for at least one uppercase character.",
-		Impact:      "Short, simple passwords are easier to compromise",
-		Resolution:  "Enforce longer, more complex passwords in the policy",
+		Provider:   provider.AWSProvider,
+		Service:    "iam",
+		ShortCode:  "require-uppercase-in-passwords",
+		Summary:    "IAM Password policy should have requirement for at least one uppercase character.",
+		Impact:     "Short, simple passwords are easier to compromise",
+		Resolution: "Enforce longer, more complex passwords in the policy",
 		Explanation: `,
 IAM account password policies should ensure that passwords content including at least one uppercase character.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html#password-policy-details",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
-			}
+		policy := s.AWS.IAM.PasswordPolicy
+		if !policy.IsManaged() {
+			return
+		}
+
+		if policy.RequireUppercase.IsFalse() {
+			results.Add(
+				"Password policy does not require uppercase characters.",
+				policy.RequireUppercase.Metadata(),
+				policy.RequireUppercase.Value(),
+			)
 		}
 		return
 	},

@@ -20,6 +20,7 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/elasticache"
 	"github.com/aquasecurity/defsec/provider/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/provider/aws/elb"
+	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/defsec/provider/aws/s3"
 )
 
@@ -43,5 +44,6 @@ type AWS struct {
 	ElastiCache   elasticache.ElastiCache
 	Elasticsearch elasticsearch.Elasticsearch
 	ELB           elb.ELB
+	IAM           iam.IAM
 	S3            s3.S3
 }

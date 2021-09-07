@@ -18,14 +18,14 @@ func ParsePolicyDocument(policy []byte, metadata *types.Metadata) (*PolicyDocume
 
 type PolicyDocument struct {
 	metadata   *types.Metadata
-	Statements []awsIAMPolicyDocumentStatement `json:"Statement"`
+	Statements []PolicyDocumentStatement `json:"Statement"`
 }
 
 func (p *PolicyDocument) Metadata() *types.Metadata {
 	return p.metadata
 }
 
-type awsIAMPolicyDocumentStatement struct {
+type PolicyDocumentStatement struct {
 	Effect    string                    `json:"Effect"`
 	Action    awsIAMPolicyDocumentValue `json:"Action"`
 	Resource  awsIAMPolicyDocumentValue `json:"Resource,omitempty"`

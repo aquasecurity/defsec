@@ -9,29 +9,32 @@ import (
 
 var CheckSetMaxPasswordAge = rules.Register(
 	rules.Rule{
-		Provider:    provider.AWSProvider,
-		Service:     "iam",
-		ShortCode:   "set-max-password-age",
-		Summary:     "IAM Password policy should have expiry less than or equal to 90 days.",
-		Impact:      "Long life password increase the likelihood of a password eventually being compromised",
-		Resolution:  "Limit the password duration with an expiry in the policy",
+		Provider:   provider.AWSProvider,
+		Service:    "iam",
+		ShortCode:  "set-max-password-age",
+		Summary:    "IAM Password policy should have expiry less than or equal to 90 days.",
+		Impact:     "Long life password increase the likelihood of a password eventually being compromised",
+		Resolution: "Limit the password duration with an expiry in the policy",
 		Explanation: `IAM account password policies should have a maximum age specified. 
 		
 The account password policy should be set to expire passwords after 90 days or less.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html#password-policy-details",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
-			}
+		policy := s.AWS.IAM.PasswordPolicy
+		if !policy.IsManaged() {
+			return
+		}
+
+		if policy.MaxAgeDays.GreaterThan(90) {
+			results.Add(
+				"Password policy allows a maximum password age of greater than 90 days.",
+				policy.MaxAgeDays.Metadata(),
+				policy.MaxAgeDays.Value(),
+			)
 		}
 		return
 	},
