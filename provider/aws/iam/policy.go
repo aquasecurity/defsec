@@ -7,7 +7,7 @@ import (
 	"github.com/aquasecurity/defsec/types"
 )
 
-func ParsePolicyDocument(policy []byte, metadata *types.Metadata) (*PolicyDocument, error) {
+func ParsePolicyDocument(policy []byte, metadata types.Metadata) (*PolicyDocument, error) {
 	var doc PolicyDocument
 	if err := json.Unmarshal(policy, &doc); err != nil {
 		return nil, err
@@ -17,12 +17,12 @@ func ParsePolicyDocument(policy []byte, metadata *types.Metadata) (*PolicyDocume
 }
 
 type PolicyDocument struct {
-	metadata   *types.Metadata
+	metadata   types.Metadata
 	Statements []PolicyDocumentStatement `json:"Statement"`
 }
 
 func (p *PolicyDocument) Metadata() *types.Metadata {
-	return p.metadata
+	return &p.metadata
 }
 
 type PolicyDocumentStatement struct {

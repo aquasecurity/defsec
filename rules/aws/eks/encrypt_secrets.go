@@ -29,7 +29,7 @@ var CheckEncryptSecrets = rules.Register(
 					cluster.Encryption.Secrets.Metadata(),
 					cluster.Encryption.Secrets.Value(),
 				)
-			} else if cluster.Encryption.KMSKeyID.IsEmpty() && !cluster.Encryption.KMSKeyID.Metadata().IsUnresolvable() {
+			} else if cluster.Encryption.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Cluster encryption requires a KMS key ID, which is missing",
 					cluster.Encryption.KMSKeyID.Metadata(),

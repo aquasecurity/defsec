@@ -7,7 +7,7 @@ type EKS struct {
 }
 
 type Cluster struct {
-	*types.Metadata
+	types.Metadata
 	Logging             Logging
 	Encryption          Encryption
 	PublicAccessEnabled types.BoolValue

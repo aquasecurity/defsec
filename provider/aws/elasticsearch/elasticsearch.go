@@ -8,7 +8,7 @@ type Elasticsearch struct {
 }
 
 type Domain struct {
-	*types.Metadata
+	types.Metadata
 	DomainName        types.StringValue
 	LogPublishing     LogPublishing
 	TransitEncryption TransitEncryption
@@ -30,7 +30,7 @@ type TransitEncryption struct {
 }
 
 type ReplicationGroup struct {
-	*types.Metadata
+	types.Metadata
 	AtRestEncryption AtRestEncryption
 }
 

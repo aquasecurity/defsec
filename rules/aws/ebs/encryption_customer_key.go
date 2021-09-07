@@ -24,7 +24,7 @@ var CheckEncryptionCustomerKey = rules.Register(
 			if !volume.IsManaged() {
 				continue
 			}
-			if volume.Encryption.KMSKeyID.IsEmpty() && !volume.Encryption.KMSKeyID.Metadata().IsUnresolvable() {
+			if volume.Encryption.KMSKeyID.IsEmpty() {
 				results.Add(
 					"EBS volume does not use a customer-managed KMS key.",
 					volume.Encryption.KMSKeyID.Metadata(),

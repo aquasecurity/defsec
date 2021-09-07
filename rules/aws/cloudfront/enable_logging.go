@@ -23,7 +23,7 @@ var CheckEnableLogging = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, dist := range s.AWS.Cloudfront.Distributions {
-			if dist.Logging.Bucket.IsEmpty() && !dist.Logging.Bucket.Metadata().IsUnresolvable() {
+			if dist.Logging.Bucket.IsEmpty() {
 				results.Add(
 					"Distribution does not have logging enabled.",
 					dist.Logging.Bucket.Metadata(),

@@ -2,6 +2,7 @@ package kms
 
 import (
 	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/provider/aws/kms"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -16,18 +17,21 @@ var CheckAutoRotateKeys = rules.Register(
 		Impact:      "Long life KMS keys increase the attack surface when compromised",
 		Resolution:  "Configure KMS key to auto rotate",
 		Explanation: `You should configure your KMS keys to auto rotate to maintain security and defend against compromise.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, key := range s.AWS.KMS.Keys {
+			if key.Usage.NotEqualTo(kms.KeyUsageSignAndVerify) {
+				continue
+			}
+			if key.RotationEnabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Key does not have rotation enabled.",
+					key.RotationEnabled.Metadata(),
+					key.RotationEnabled.Value(),
 				)
 			}
 		}

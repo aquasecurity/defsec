@@ -41,13 +41,22 @@ func (b *intValue) Value() int {
 }
 
 func (b *intValue) EqualTo(i int) bool {
+	if b.metadata.isUnresolvable {
+		return false
+	}
 	return b.value == i
 }
 
 func (b *intValue) LessThan(i int) bool {
+	if b.metadata.isUnresolvable {
+		return false
+	}
 	return b.value < i
 }
 
 func (b *intValue) GreaterThan(i int) bool {
+	if b.metadata.isUnresolvable {
+		return false
+	}
 	return b.value > i
 }

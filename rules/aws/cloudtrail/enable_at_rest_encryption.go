@@ -23,7 +23,7 @@ var CheckEnableAtRestEncryption = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, trail := range s.AWS.CloudTrail.Trails {
-			if trail.KMSKeyID.IsEmpty() && !trail.KMSKeyID.Metadata().IsUnresolvable() {
+			if trail.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Trail is not encrypted.",
 					trail.KMSKeyID.Metadata(),

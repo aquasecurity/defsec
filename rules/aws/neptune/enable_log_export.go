@@ -12,21 +12,20 @@ var CheckEnableLogExport = rules.Register(
 		Provider:    provider.AWSProvider,
 		Service:     "neptune",
 		ShortCode:   "enable-log-export",
-		Summary:     "Nepture logs export should be enabled",
+		Summary:     "Neptune logs export should be enabled",
 		Impact:      "Limited visibility of audit trail for changes to Neptune",
 		Resolution:  "Enable export logs",
 		Explanation: `Neptune does not have auditing by default. To ensure that you are able to accurately audit the usage of your Neptune instance you should enable export logs.`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.Neptune.Clusters {
+			if cluster.Logging.Audit.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not have audit logging enabled.",
+					cluster.Logging.Audit.Metadata(),
+					cluster.Logging.Audit.Value(),
 				)
 			}
 		}

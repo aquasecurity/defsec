@@ -8,31 +8,31 @@ type BoolValue interface {
 }
 
 type boolValue struct {
-	metadata *Metadata
+	metadata Metadata
 	value    bool
 }
 
-func Bool(value bool, metadata *Metadata) BoolValue {
+func Bool(value bool, metadata Metadata) BoolValue {
 	return &boolValue{
 		value:    value,
 		metadata: metadata,
 	}
 }
 
-func BoolDefault(value bool, metadata *Metadata) BoolValue {
+func BoolDefault(value bool, metadata Metadata) BoolValue {
 	b := Bool(value, metadata)
 	b.Metadata().isDefault = true
 	return b
 }
 
-func BoolExplicit(value bool, metadata *Metadata) BoolValue {
+func BoolExplicit(value bool, metadata Metadata) BoolValue {
 	b := Bool(value, metadata)
 	b.Metadata().isExplicit = true
 	return b
 }
 
 func (b *boolValue) Metadata() *Metadata {
-	return b.metadata
+	return &b.metadata
 }
 
 func (b *boolValue) Value() bool {
@@ -40,9 +40,15 @@ func (b *boolValue) Value() bool {
 }
 
 func (b *boolValue) IsTrue() bool {
+	if b.metadata.isUnresolvable {
+		return false
+	}
 	return b.Value()
 }
 
 func (b *boolValue) IsFalse() bool {
+	if b.metadata.isUnresolvable {
+		return false
+	}
 	return !b.Value()
 }

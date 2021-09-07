@@ -12,7 +12,7 @@ const (
 )
 
 type Cluster struct {
-	*types.Metadata
+	types.Metadata
 	Identifier        types.StringValue
 	EnabledLogExports types.StringValue
 	Instances         []Instance
@@ -21,6 +21,6 @@ type Cluster struct {
 }
 
 type Instance struct {
-	*types.Metadata
+	types.Metadata
 	KMSKeyID types.StringValue
 }

@@ -23,7 +23,7 @@ var CheckLogGroupCustomerKey = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, group := range s.AWS.CloudWatch.LogGroups {
-			if group.KMSKeyID.IsEmpty() && !group.KMSKeyID.Metadata().IsUnresolvable() {
+			if group.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Log group is not encrypted.",
 					group.KMSKeyID.Metadata(),

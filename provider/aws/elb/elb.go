@@ -13,7 +13,7 @@ const (
 )
 
 type LoadBalancer struct {
-	*types.Metadata
+	types.Metadata
 	Type                    types.StringValue
 	DropInvalidHeaderFields types.BoolValue
 	Internal                types.BoolValue
@@ -21,7 +21,7 @@ type LoadBalancer struct {
 }
 
 type Listener struct {
-	*types.Metadata
+	types.Metadata
 	Protocol      types.StringValue
 	DefaultAction Action
 }

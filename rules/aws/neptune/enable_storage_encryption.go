@@ -16,17 +16,16 @@ var CheckEnableStorageEncryption = rules.Register(
 		Impact:      "Unencrypted sensitive data is vulnerable to compromise.",
 		Resolution:  "Enable encryption of Neptune storage",
 		Explanation: `Encryption of Neptune storage ensures that if their is compromise of the disks, the data is still protected.`,
-		Links: []string{ 
-		},
-		Severity: severity.High,
+		Links:       []string{},
+		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.Neptune.Clusters {
+			if cluster.StorageEncrypted.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not have storage encryption enabled.",
+					cluster.StorageEncrypted.Metadata(),
+					cluster.StorageEncrypted.Value(),
 				)
 			}
 		}

@@ -30,7 +30,7 @@ var CheckRepositoryCustomerKey = rules.Register(
 					repo.Encryption.Type.Metadata(),
 					repo.Encryption.Type.Value(),
 				)
-			} else if repo.Encryption.KMSKeyID.IsEmpty() && !repo.Encryption.KMSKeyID.Metadata().IsUnresolvable() {
+			} else if repo.Encryption.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Repository encryption does not use a customer managed KMS key.",
 					repo.Encryption.KMSKeyID.Metadata(),

@@ -16,17 +16,16 @@ var CheckNoPublicAccess = rules.Register(
 		Impact:      "Publicly accessible MQ Broker may be vulnerable to compromise",
 		Resolution:  "Disable public access when not required",
 		Explanation: `Public access of the MQ broker should be disabled and only allow routes to applications that require access.`,
-		Links: []string{ 
-		},
-		Severity: severity.High,
+		Links:       []string{},
+		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, broker := range s.AWS.MQ.Brokers {
+			if broker.PublicAccess.IsTrue() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Broker has public access enabled.",
+					broker.PublicAccess.Metadata(),
+					broker.PublicAccess.Value(),
 				)
 			}
 		}

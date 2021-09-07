@@ -26,7 +26,7 @@ var CheckTableCustomerKey = rules.Register(
 			if !cluster.IsManaged() {
 				continue
 			}
-			if cluster.ServerSideEncryption.KMSKeyID.IsEmpty() && !cluster.ServerSideEncryption.KMSKeyID.Metadata().IsUnresolvable() {
+			if cluster.ServerSideEncryption.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Cluster encryption does not use a customer-managed KMS key.",
 					cluster.ServerSideEncryption.KMSKeyID.Metadata(),

@@ -8,13 +8,13 @@ type Athena struct {
 }
 
 type Database struct {
-	*types.Metadata
+	types.Metadata
 	Name       types.StringValue
 	Encryption EncryptionConfiguration
 }
 
 type Workgroup struct {
-	*types.Metadata
+	types.Metadata
 	Name                 types.StringValue
 	Encryption           EncryptionConfiguration
 	EnforceConfiguration types.BoolValue

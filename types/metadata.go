@@ -13,21 +13,21 @@ type Metadata struct {
 	isUnresolvable bool
 }
 
-func NewMetadata(r Range, ref Reference) *Metadata {
+func NewMetadata(r Range, ref Reference) Metadata {
 	if r == nil {
 		panic("range is nil")
 	}
 	if ref == nil {
 		panic("reference is nil")
 	}
-	return &Metadata{
+	return Metadata{
 		rnge:      r,
 		ref:       ref,
 		isManaged: true,
 	}
 }
 
-func NewUnmanagedMetadata(r Range, ref Reference) *Metadata {
+func NewUnmanagedMetadata(r Range, ref Reference) Metadata {
 	m := NewMetadata(r, ref)
 	m.isManaged = false
 	return m
@@ -39,10 +39,6 @@ func (m *Metadata) IsDefault() bool {
 
 func (m *Metadata) IsExplicit() bool {
 	return m.isExplicit
-}
-
-func (m *Metadata) IsUnresolvable() bool {
-	return m.isUnresolvable
 }
 
 func (m *Metadata) String() string {

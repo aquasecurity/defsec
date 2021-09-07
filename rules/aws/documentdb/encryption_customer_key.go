@@ -21,7 +21,7 @@ var CheckEncryptionCustomerKey = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, cluster := range s.AWS.DocumentDB.Clusters {
-			if cluster.IsManaged() && cluster.KMSKeyID.IsEmpty() && !cluster.KMSKeyID.Metadata().IsUnresolvable() {
+			if cluster.IsManaged() && cluster.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Cluster encryption does not use a customer-managed KMS key.",
 					cluster.KMSKeyID.Metadata(),
@@ -32,7 +32,7 @@ var CheckEncryptionCustomerKey = rules.Register(
 				if !instance.IsManaged() {
 					continue
 				}
-				if instance.KMSKeyID.IsEmpty() && !instance.KMSKeyID.Metadata().IsUnresolvable() {
+				if instance.KMSKeyID.IsEmpty() {
 					results.Add(
 						"Instance encryption does not use a customer-managed KMS key.",
 						instance.KMSKeyID.Metadata(),

@@ -3,25 +3,25 @@ package compute
 import "github.com/aquasecurity/defsec/types"
 
 type Firewall struct {
-	*types.Metadata
+	types.Metadata
 	IngressRules []IngressRule
 	EgressRules  []EgressRule
 }
 
 type FirewallRule struct {
-	*types.Metadata
+	types.Metadata
 	Enforced types.BoolValue
 	IsAllow  types.BoolValue
 }
 
 type IngressRule struct {
-	*types.Metadata
+	types.Metadata
 	FirewallRule
 	Source types.StringValue
 }
 
 type EgressRule struct {
-	*types.Metadata
+	types.Metadata
 	FirewallRule
 	Destination types.StringValue
 }

@@ -6,13 +6,13 @@ import (
 )
 
 type Instance struct {
-	*types.Metadata
+	types.Metadata
 	MetadataOptions MetadataOptions
 	UserData        types.StringValue
 }
 
 type MetadataOptions struct {
-	*types.Metadata
+	types.Metadata
 	HttpTokens   types.StringValue
 	HttpEndpoint types.StringValue
 }

@@ -10,7 +10,7 @@ type ECR struct {
 }
 
 type Repository struct {
-	*types.Metadata
+	types.Metadata
 	ImageScanning      ImageScanning
 	ImageTagsImmutable types.BoolValue
 	Policy             *iam.PolicyDocument

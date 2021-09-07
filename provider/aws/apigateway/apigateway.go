@@ -15,7 +15,7 @@ const (
 )
 
 type API struct {
-	*types.Metadata
+	types.Metadata
 	Name         types.StringValue
 	ProtocolType types.StringValue
 	Stages       []Stage
@@ -23,7 +23,7 @@ type API struct {
 }
 
 type Stage struct {
-	*types.Metadata
+	types.Metadata
 	Name               types.StringValue
 	AccessLogging      AccessLogging
 	RESTMethodSettings RESTMethodSettings
@@ -31,7 +31,7 @@ type Stage struct {
 }
 
 type AccessLogging struct {
-	*types.Metadata
+	types.Metadata
 	CloudwatchLogGroupARN types.StringValue
 }
 

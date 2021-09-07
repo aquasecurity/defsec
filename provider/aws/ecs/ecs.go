@@ -8,7 +8,7 @@ type ECS struct {
 }
 
 type Cluster struct {
-	*types.Metadata
+	types.Metadata
 	Settings ClusterSettings
 }
 
@@ -17,7 +17,7 @@ type ClusterSettings struct {
 }
 
 type TaskDefinition struct {
-	*types.Metadata
+	types.Metadata
 	Volumes              []Volume
 	ContainerDefinitions types.StringValue
 }

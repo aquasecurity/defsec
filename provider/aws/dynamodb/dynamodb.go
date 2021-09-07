@@ -7,7 +7,7 @@ type DynamoDB struct {
 }
 
 type DAXCluster struct {
-	*types.Metadata
+	types.Metadata
 	ServerSideEncryption ServerSideEncryption
 	PointInTimeRecovery  types.BoolValue
 }

@@ -23,7 +23,7 @@ Simplifies auditing, debugging, and managing security groups.`,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, sg := range s.AWS.ElastiCache.SecurityGroups {
-			if sg.Description.IsEmpty() && !sg.Description.Metadata().IsUnresolvable() {
+			if sg.Description.IsEmpty() {
 				results.Add(
 					"Security group does not have a description.",
 					sg.Description.Metadata(),

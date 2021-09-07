@@ -21,6 +21,12 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/provider/aws/elb"
 	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/aquasecurity/defsec/provider/aws/kinesis"
+	"github.com/aquasecurity/defsec/provider/aws/kms"
+	"github.com/aquasecurity/defsec/provider/aws/lambda"
+	"github.com/aquasecurity/defsec/provider/aws/mq"
+	"github.com/aquasecurity/defsec/provider/aws/msk"
+	"github.com/aquasecurity/defsec/provider/aws/neptune"
 	"github.com/aquasecurity/defsec/provider/aws/s3"
 )
 
@@ -45,5 +51,11 @@ type AWS struct {
 	Elasticsearch elasticsearch.Elasticsearch
 	ELB           elb.ELB
 	IAM           iam.IAM
+	Kinesis       kinesis.Kinesis
+	KMS           kms.KMS
+	Lambda        lambda.Lambda
+	MQ            mq.MQ
+	MSK           msk.MSK
+	Neptune       neptune.Neptune
 	S3            s3.S3
 }

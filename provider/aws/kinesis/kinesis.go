@@ -1,17 +1,21 @@
-package ebs
+package kinesis
 
 import "github.com/aquasecurity/defsec/types"
 
-type EBS struct {
-	Volumes []Volume
+type Kinesis struct {
+	Streams []Stream
 }
 
-type Volume struct {
+type Stream struct {
 	types.Metadata
 	Encryption Encryption
 }
 
+const (
+	EncryptionTypeKMS = "KMS"
+)
+
 type Encryption struct {
-	Enabled  types.BoolValue
+	Type     types.StringValue
 	KMSKeyID types.StringValue
 }

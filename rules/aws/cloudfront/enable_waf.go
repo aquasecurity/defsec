@@ -23,7 +23,7 @@ var CheckEnableWaf = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, dist := range s.AWS.Cloudfront.Distributions {
-			if dist.WAFID.IsEmpty() && !dist.WAFID.Metadata().IsUnresolvable() {
+			if dist.WAFID.IsEmpty() {
 				results.Add(
 					"Distribution does not utilise a WAF.",
 					dist.WAFID.Metadata(),

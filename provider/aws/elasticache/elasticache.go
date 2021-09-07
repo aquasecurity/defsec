@@ -19,6 +19,6 @@ type ReplicationGroup struct {
 }
 
 type SecurityGroup struct {
-	*types.Metadata
+	types.Metadata
 	Description types.StringValue
 }
