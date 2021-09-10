@@ -16,18 +16,24 @@ var CheckEnableTopicEncryption = rules.Register(
 		Impact:      "The SNS topic messages could be read if compromised",
 		Resolution:  "Turn on SNS Topic encryption",
 		Explanation: `Queues should be encrypted with customer managed KMS keys and not default AWS managed keys, in order to allow granular control over access to specific queues.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/sns/latest/dg/sns-server-side-encryption.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, topic := range s.AWS.SNS.Topics {
+			if topic.Encryption.KMSKeyID.IsEmpty() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Topic does not have encryption enabled.",
+					topic.Encryption.KMSKeyID.Metadata(),
+					topic.Encryption.KMSKeyID.Value(),
+				)
+			} else if topic.Encryption.KMSKeyID.EqualTo("alias/aws/sns") {
+				results.Add(
+					"Topic encryption does not use a customer managed key.",
+					topic.Encryption.KMSKeyID.Metadata(),
+					topic.Encryption.KMSKeyID.Value(),
 				)
 			}
 		}

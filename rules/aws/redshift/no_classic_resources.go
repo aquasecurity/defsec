@@ -1,4 +1,4 @@
-package rds
+package redshift
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -10,7 +10,7 @@ import (
 var CheckNoClassicResources = rules.Register(
 	rules.Rule{
 		Provider:   provider.AWSProvider,
-		Service:    "rds",
+		Service:    "redshift",
 		ShortCode:  "no-classic-resources",
 		Summary:    "AWS Classic resource usage.",
 		Impact:     "Classic resources are running in a shared environment with other customers",
@@ -23,7 +23,7 @@ resources in a VPC instead.`,
 		Severity: severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, group := range s.AWS.RDS.Classic.DBSecurityGroups {
+		for _, group := range s.AWS.Redshift.SecurityGroups {
 			results.Add(
 				"Classic resources should not be used.",
 				&group.Metadata,

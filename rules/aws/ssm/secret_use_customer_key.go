@@ -16,18 +16,18 @@ var CheckSecretUseCustomerKey = rules.Register(
 		Impact:      "Using AWS managed keys reduces the flexibility and control over the encryption key",
 		Resolution:  "Use customer managed keys",
 		Explanation: `Secrets Manager encrypts secrets by default using a default key created by AWS. To ensure control and granularity of secret encryption, CMK's should be used explicitly.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/kms/latest/developerguide/services-secrets-manager.html#asm-encrypt",
 		},
 		Severity: severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, secret := range s.AWS.SSM.Secrets {
+			if secret.KMSKeyID.IsEmpty() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Secret is not encrypted with a customer managed key.",
+					secret.KMSKeyID.Metadata(),
+					secret.KMSKeyID.Value(),
 				)
 			}
 		}

@@ -9,30 +9,52 @@ import (
 
 var CheckEnablePerformanceInsights = rules.Register(
 	rules.Rule{
-		Provider:    provider.AWSProvider,
-		Service:     "rds",
-		ShortCode:   "enable-performance-insights",
-		Summary:     "Encryption for RDS Performance Insights should be enabled.",
-		Impact:      "Data can be read from the RDS Performance Insights if it is compromised",
-		Resolution:  "Enable encryption for RDS clusters and instances",
+		Provider:   provider.AWSProvider,
+		Service:    "rds",
+		ShortCode:  "enable-performance-insights",
+		Summary:    "Encryption for RDS Performance Insights should be enabled.",
+		Impact:     "Data can be read from the RDS Performance Insights if it is compromised",
+		Resolution: "Enable encryption for RDS clusters and instances",
 		Explanation: `When enabling Performance Insights on an RDS cluster or RDS DB Instance, and encryption key should be provided.
 
 The encryption key specified in ` + "`" + `performance_insights_kms_key_id` + "`" + ` references a KMS ARN`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.htm",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.RDS.Clusters {
+			if !cluster.IsManaged() {
+				continue
+			}
+			if cluster.PerformanceInsights.Enabled.IsFalse() {
+				continue
+			}
+			if cluster.PerformanceInsights.KMSKeyID.IsEmpty() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster has performance insights enabled without encryption.",
+					cluster.PerformanceInsights.KMSKeyID.Metadata(),
+					cluster.PerformanceInsights.KMSKeyID.Value(),
 				)
 			}
 		}
+		for _, instance := range s.AWS.RDS.Instances {
+			if !instance.IsManaged() {
+				continue
+			}
+			if instance.PerformanceInsights.Enabled.IsFalse() {
+				continue
+			}
+			if instance.PerformanceInsights.KMSKeyID.IsEmpty() {
+				results.Add(
+					"Instance has performance insights enabled without encryption.",
+					instance.PerformanceInsights.KMSKeyID.Metadata(),
+					instance.PerformanceInsights.KMSKeyID.Value(),
+				)
+			}
+		}
+
 		return
 	},
 )

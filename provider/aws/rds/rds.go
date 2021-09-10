@@ -13,7 +13,7 @@ type Cluster struct {
 	BackupRetentionPeriodDays types.IntValue
 	ReplicationSourceARN      types.StringValue
 	PerformanceInsights       PerformanceInsights
-	Instance                  []ClusterInstance
+	Instances                 []ClusterInstance
 	Encryption                Encryption
 }
 
@@ -23,7 +23,9 @@ type Encryption struct {
 }
 
 type Instance struct {
+	types.Metadata
 	BackupRetentionPeriodDays types.IntValue
+	ReplicationSourceARN      types.StringValue
 	PerformanceInsights       PerformanceInsights
 	Encryption                Encryption
 	PublicAccess              types.BoolValue

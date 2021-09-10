@@ -27,7 +27,14 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/mq"
 	"github.com/aquasecurity/defsec/provider/aws/msk"
 	"github.com/aquasecurity/defsec/provider/aws/neptune"
+	"github.com/aquasecurity/defsec/provider/aws/rds"
+	"github.com/aquasecurity/defsec/provider/aws/redshift"
 	"github.com/aquasecurity/defsec/provider/aws/s3"
+	"github.com/aquasecurity/defsec/provider/aws/sns"
+	"github.com/aquasecurity/defsec/provider/aws/sqs"
+	"github.com/aquasecurity/defsec/provider/aws/ssm"
+	"github.com/aquasecurity/defsec/provider/aws/vpc"
+	"github.com/aquasecurity/defsec/provider/aws/workspaces"
 )
 
 type AWS struct {
@@ -57,5 +64,12 @@ type AWS struct {
 	MQ            mq.MQ
 	MSK           msk.MSK
 	Neptune       neptune.Neptune
+	RDS           rds.RDS
+	Redshift      redshift.Redshift
 	S3            s3.S3
+	SNS           sns.SNS
+	SQS           sqs.SQS
+	SSM           ssm.SSM
+	VPC           vpc.VPC
+	WorkSpaces    workspaces.WorkSpaces
 }

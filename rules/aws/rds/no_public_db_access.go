@@ -16,17 +16,27 @@ var CheckNoPublicDbAccess = rules.Register(
 		Impact:      "The database instance is publicly accessible",
 		Resolution:  "Set the database to not be publicly accessible",
 		Explanation: `Database resources should not publicly available. You should limit all access to the minimum that is required for your application to function.`,
-		Links: []string{ 
-		},
-		Severity: severity.Critical,
+		Links:       []string{},
+		Severity:    severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.RDS.Clusters {
+			for _, instance := range cluster.Instances {
+				if instance.PublicAccess.IsTrue() {
+					results.Add(
+						"Cluster instance is exposed publicly.",
+						instance.PublicAccess.Metadata(),
+						instance.PublicAccess.Value(),
+					)
+				}
+			}
+		}
+		for _, instance := range s.AWS.RDS.Instances {
+			if instance.PublicAccess.IsTrue() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Instance is exposed publicly.",
+					instance.PublicAccess.Metadata(),
+					instance.PublicAccess.Value(),
 				)
 			}
 		}

@@ -7,15 +7,15 @@ import (
 	"github.com/aquasecurity/defsec/state"
 )
 
-var CheckAddDescriptionToSecurityGroup = rules.Register(
+var CheckAddDescriptionToSecurityGroupRule = rules.Register(
 	rules.Rule{
 		Provider:   provider.AWSProvider,
 		Service:    "vpc",
-		ShortCode:  "add-description-to-security-group",
-		Summary:    "Missing description for security group.",
+		ShortCode:  "add-description-to-security-group-rule",
+		Summary:    "Missing description for security group rule.",
 		Impact:     "Descriptions provide context for the firewall rule reasons",
-		Resolution: "Add descriptions for all security groups",
-		Explanation: `Security groups should include a description for auditing purposes.
+		Resolution: "Add descriptions for all security groups rules",
+		Explanation: `Security group rules should include a description for auditing purposes.
 
 Simplifies auditing, debugging, and managing security groups.`,
 		Links: []string{
@@ -25,15 +25,14 @@ Simplifies auditing, debugging, and managing security groups.`,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, group := range s.AWS.VPC.SecurityGroups {
-			if !group.IsManaged() {
-				continue
-			}
-			if group.Description.IsEmpty() {
-				results.Add(
-					"Security group does not have a description.",
-					group.Description.Metadata(),
-					group.Description.Value(),
-				)
+			for _, rule := range group.Rules {
+				if rule.Description.IsEmpty() {
+					results.Add(
+						"Security group rule does not have a description.",
+						rule.Description.Metadata(),
+						rule.Description.Value(),
+					)
+				}
 			}
 		}
 		return

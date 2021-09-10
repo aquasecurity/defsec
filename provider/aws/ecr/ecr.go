@@ -13,7 +13,7 @@ type Repository struct {
 	types.Metadata
 	ImageScanning      ImageScanning
 	ImageTagsImmutable types.BoolValue
-	Policy             *iam.PolicyDocument
+	Policy             iam.PolicyDocument
 	Encryption         Encryption
 }
 
