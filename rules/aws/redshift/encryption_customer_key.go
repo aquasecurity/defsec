@@ -16,18 +16,24 @@ var CheckEncryptionCustomerKey = rules.Register(
 		Impact:      "Data may be leaked if infrastructure is compromised",
 		Resolution:  "Enable encryption using CMK",
 		Explanation: `Redshift clusters that contain sensitive data or are subject to regulation should be encrypted at rest to prevent data leakage should the infrastructure be compromised.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.Redshift.Clusters {
+			if cluster.Encryption.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not have encryption enabled.",
+					cluster.Encryption.Enabled.Metadata(),
+					cluster.Encryption.Enabled.Value(),
+				)
+			} else if cluster.Encryption.KMSKeyID.IsEmpty() {
+				results.Add(
+					"Cluster does not use a customer managed encryption key.",
+					cluster.Encryption.KMSKeyID.Metadata(),
+					cluster.Encryption.KMSKeyID.Value(),
 				)
 			}
 		}

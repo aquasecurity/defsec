@@ -16,17 +16,19 @@ var CheckEnableVolumeEncryption = rules.Register(
 		Impact:      "Unencrypted sensitive data is vulnerable to compromise.",
 		Resolution:  "Enable encryption of EBS volumes",
 		Explanation: `By enabling encryption on EBS volumes you protect the volume, the disk I/O and any derived snapshots from compromise if intercepted.`,
-		Links: []string{ 
-		},
-		Severity: severity.High,
+		Links:       []string{},
+		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, volume := range s.AWS.EBS.Volumes {
+			if !volume.IsManaged() {
+				continue
+			}
+			if volume.Encryption.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"EBS volume is not encrypted.",
+					volume.Encryption.Enabled.Metadata(),
+					volume.Encryption.Enabled.Value(),
 				)
 			}
 		}

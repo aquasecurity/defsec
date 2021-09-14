@@ -16,18 +16,21 @@ var CheckNoEncryptionOverride = rules.Register(
 		Impact:      "Clients can ignore encryption requirements",
 		Resolution:  "Enforce the configuration to prevent client overrides",
 		Explanation: `Athena workgroup configuration should be enforced to prevent client side changes to disable encryption settings.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/athena/latest/ug/manage-queries-control-costs-with-workgroups.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, workgroup := range s.AWS.Athena.Workgroups {
+			if !workgroup.IsManaged() {
+				continue
+			}
+			if workgroup.EnforceConfiguration.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"The workgroup configuration is not enforced.",
+					workgroup.EnforceConfiguration.Metadata(),
+					workgroup.EnforceConfiguration.Value(),
 				)
 			}
 		}

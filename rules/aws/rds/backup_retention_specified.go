@@ -16,21 +16,40 @@ var CheckBackupRetentionSpecified = rules.Register(
 		Impact:      "Potential loss of data and short opportunity for recovery",
 		Resolution:  "Explicitly set the retention period to greater than the default",
 		Explanation: `RDS backup retention for clusters defaults to 1 day, this may not be enough to identify and respond to an issue. Backup retention periods should be set to a period that is a balance on cost and limiting risk.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html#USER_WorkingWithAutomatedBackups.BackupRetention",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.RDS.Clusters {
+			if !cluster.ReplicationSourceARN.IsEmpty() {
+				continue
+			}
+			if !cluster.IsManaged() {
+				continue
+			}
+			if cluster.BackupRetentionPeriodDays.LessThan(2) {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster has very low backup retention period.",
+					cluster.BackupRetentionPeriodDays.Metadata(),
+					cluster.BackupRetentionPeriodDays.Value(),
 				)
 			}
 		}
+		for _, instance := range s.AWS.RDS.Instances {
+			if !instance.IsManaged() {
+				continue
+			}
+			if instance.BackupRetentionPeriodDays.LessThan(2) {
+				results.Add(
+					"Instance has very low backup retention period.",
+					instance.BackupRetentionPeriodDays.Metadata(),
+					instance.BackupRetentionPeriodDays.Value(),
+				)
+			}
+		}
+
 		return
 	},
 )

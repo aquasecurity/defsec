@@ -1,6 +1,8 @@
 package ecr
 
 import (
+	"strings"
+
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
@@ -16,18 +18,34 @@ var CheckNoPublicAccess = rules.Register(
 		Impact:      "Risk of potential data leakage of sensitive artifacts",
 		Resolution:  "Do not allow public access in the policy",
 		Explanation: `Allowing public access to the ECR repository risks leaking sensitive of abusable information`,
-		Links: []string{ 
-		},
-		Severity: severity.High,
+		Links:       []string{},
+		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
+		for _, repo := range s.AWS.ECR.Repositories {
+			if !repo.IsManaged() {
+				continue
+			}
+			for _, statement := range repo.Policy.Statements {
+				var hasECRAction bool
+				for _, action := range statement.Action {
+					if strings.HasPrefix(action, "ecr:") {
+						hasECRAction = true
+						break
+					}
+				}
+				if !hasECRAction {
+					continue
+				}
+				for _, account := range statement.Principal.AWS {
+					if account == "*" {
+						results.Add(
+							"Policy provides public access to the ECR repository.",
+							repo.Policy.Metadata(),
+						)
+					}
+					continue
+				}
 			}
 		}
 		return

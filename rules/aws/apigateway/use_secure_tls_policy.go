@@ -16,18 +16,18 @@ var CheckUseSecureTlsPolicy = rules.Register(
 		Impact:      "Outdated SSL policies increase exposure to known vulnerabilities",
 		Resolution:  "Use the most modern TLS/SSL policies available",
 		Explanation: `You should not use outdated/insecure TLS versions for encryption. You should be using TLS v1.2+.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-custom-domain-tls-version.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, domain := range s.AWS.APIGateway.DomainNames {
+			if domain.SecurityPolicy.NotEqualTo("TLS_1_2") {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Domain name is configured with an outdated TLS policy.",
+					domain.SecurityPolicy.Metadata(),
+					domain.SecurityPolicy.Value(),
 				)
 			}
 		}

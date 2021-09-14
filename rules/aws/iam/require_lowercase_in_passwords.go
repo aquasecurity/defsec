@@ -16,20 +16,23 @@ var CheckRequireLowercaseInPasswords = rules.Register(
 		Impact:      "Short, simple passwords are easier to compromise",
 		Resolution:  "Enforce longer, more complex passwords in the policy",
 		Explanation: `IAM account password policies should ensure that passwords content including at least one lowercase character.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html#password-policy-details",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
-			}
+		policy := s.AWS.IAM.PasswordPolicy
+		if !policy.IsManaged() {
+			return
+		}
+
+		if policy.RequireLowercase.IsFalse() {
+			results.Add(
+				"Password policy does not require lowercase characters.",
+				policy.RequireLowercase.Metadata(),
+				policy.RequireLowercase.Value(),
+			)
 		}
 		return
 	},

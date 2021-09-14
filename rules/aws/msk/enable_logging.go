@@ -16,19 +16,29 @@ var CheckEnableLogging = rules.Register(
 		Impact:      "Without logging it is difficult to trace issues",
 		Resolution:  "Enable logging",
 		Explanation: `Managed streaming for Kafka can log to Cloud Watch, Kinesis Firehose and S3, at least one of these locations should be logged to`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
+		for _, cluster := range s.AWS.MSK.Clusters {
+			brokerLogging := cluster.Logging.Broker
+
+			if brokerLogging.S3.Enabled.IsTrue() {
+				continue
 			}
+
+			if brokerLogging.Firehose.Enabled.IsTrue() {
+				continue
+			}
+
+			if brokerLogging.Cloudwatch.Enabled.IsTrue() {
+				continue
+			}
+
+			results.Add(
+				"Cluster does not ship logs to any service.",
+				brokerLogging.Cloudwatch.Enabled.Metadata(),
+			)
 		}
 		return
 	},

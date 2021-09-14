@@ -16,18 +16,18 @@ var CheckLogGroupCustomerKey = rules.Register(
 		Impact:      "Log data may be leaked if the logs are compromised. No auditing of who have viewed the logs.",
 		Resolution:  "Enable CMK encryption of CloudWatch Log Groups",
 		Explanation: `CloudWatch log groups are encrypted by default, however, to get the full benefit of controlling key rotation and other KMS aspects a KMS CMK should be used.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/encrypt-log-data-kms.html",
 		},
 		Severity: severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, group := range s.AWS.CloudWatch.LogGroups {
+			if group.KMSKeyID.IsEmpty() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Log group is not encrypted.",
+					group.KMSKeyID.Metadata(),
+					group.KMSKeyID.Value(),
 				)
 			}
 		}

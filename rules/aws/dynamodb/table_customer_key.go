@@ -16,18 +16,21 @@ var CheckTableCustomerKey = rules.Register(
 		Impact:      "Using AWS managed keys does not allow for fine grained control",
 		Resolution:  "Enable server side encryption with a customer managed key",
 		Explanation: `DynamoDB tables are encrypted by default using AWS managed encryption keys. To increase control of the encryption and control the management of factors like key rotation, use a Customer Managed Key.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html",
 		},
 		Severity: severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.AWS.DynamoDB.DAXClusters {
+			if !cluster.IsManaged() {
+				continue
+			}
+			if cluster.ServerSideEncryption.KMSKeyID.IsEmpty() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster encryption does not use a customer-managed KMS key.",
+					cluster.ServerSideEncryption.KMSKeyID.Metadata(),
+					cluster.ServerSideEncryption.KMSKeyID.Value(),
 				)
 			}
 		}

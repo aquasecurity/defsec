@@ -16,17 +16,16 @@ var CheckEnableGeneralLogging = rules.Register(
 		Impact:      "Without logging it is difficult to trace issues",
 		Resolution:  "Enable general logging",
 		Explanation: `Logging should be enabled to allow tracing of issues and activity to be investigated more fully. Logs provide additional information and context which is often invalauble during investigation`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, broker := range s.AWS.MQ.Brokers {
+			if broker.Logging.General.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Broker does not have general logging enabled.",
+					broker.Logging.General.Metadata(),
+					broker.Logging.General.Value(),
 				)
 			}
 		}

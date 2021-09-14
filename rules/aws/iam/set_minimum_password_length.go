@@ -9,29 +9,32 @@ import (
 
 var CheckSetMinimumPasswordLength = rules.Register(
 	rules.Rule{
-		Provider:    provider.AWSProvider,
-		Service:     "iam",
-		ShortCode:   "set-minimum-password-length",
-		Summary:     "IAM Password policy should have minimum password length of 14 or more characters.",
-		Impact:      "Short, simple passwords are easier to compromise",
-		Resolution:  "Enforce longer, more complex passwords in the policy",
+		Provider:   provider.AWSProvider,
+		Service:    "iam",
+		ShortCode:  "set-minimum-password-length",
+		Summary:    "IAM Password policy should have minimum password length of 14 or more characters.",
+		Impact:     "Short, simple passwords are easier to compromise",
+		Resolution: "Enforce longer, more complex passwords in the policy",
 		Explanation: `IAM account password policies should ensure that passwords have a minimum length. 
 
 The account password policy should be set to enforce minimum password length of at least 14 characters.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html#password-policy-details",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
-			}
+		policy := s.AWS.IAM.PasswordPolicy
+		if !policy.IsManaged() {
+			return
+		}
+
+		if policy.MinimumLength.LessThan(14) {
+			results.Add(
+				"Password policy has a minimum password length of less than 14 characters.",
+				policy.MinimumLength.Metadata(),
+				policy.MinimumLength.Value(),
+			)
 		}
 		return
 	},

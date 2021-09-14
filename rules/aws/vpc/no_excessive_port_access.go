@@ -16,18 +16,18 @@ var CheckNoExcessivePortAccess = rules.Register(
 		Impact:      "All ports exposed for egressing data",
 		Resolution:  "Set specific allowed ports",
 		Explanation: `Ensure access to specific required ports is allowed, and nothing else.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html",
 		},
 		Severity: severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, acl := range s.AWS.VPC.NetworkACLRules {
+			if acl.Protocol.EqualTo("all") || acl.Protocol.EqualTo("-1") {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Network ACL rule allows access using ALL ports.",
+					acl.Protocol.Metadata(),
+					acl.Protocol.Value(),
 				)
 			}
 		}

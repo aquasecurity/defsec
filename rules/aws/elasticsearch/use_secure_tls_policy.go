@@ -16,18 +16,18 @@ var CheckUseSecureTlsPolicy = rules.Register(
 		Impact:      "Outdated SSL policies increase exposure to known vulnerabilities",
 		Resolution:  "Use the most modern TLS/SSL policies available",
 		Explanation: `You should not use outdated/insecure TLS versions for encryption. You should be using TLS v1.2+.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-data-protection.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, domain := range s.AWS.Elasticsearch.Domains {
+			if domain.Endpoint.TLSPolicy.NotEqualTo("Policy-Min-TLS-1-2-2019-07") {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Domain does not have a secure TLS policy.",
+					domain.Endpoint.TLSPolicy.Metadata(),
+					domain.Endpoint.TLSPolicy.Value(),
 				)
 			}
 		}

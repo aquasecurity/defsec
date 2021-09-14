@@ -3,7 +3,7 @@ package s3
 import "github.com/aquasecurity/defsec/types"
 
 type Bucket struct {
-	*types.Metadata
+	types.Metadata
 	Name              types.StringValue
 	PublicAccessBlock *PublicAccessBlock
 	BucketPolicy      BucketPolicy

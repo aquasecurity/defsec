@@ -16,18 +16,18 @@ var CheckEnableLogValidation = rules.Register(
 		Impact:      "Illicit activity could be removed from the logs",
 		Resolution:  "Turn on log validation for Cloudtrail",
 		Explanation: `Log validation should be activated on Cloudtrail logs to prevent the tampering of the underlying data in the S3 bucket. It is feasible that a rogue actor compromising an AWS account might want to modify the log data to remove trace of their actions.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, trail := range s.AWS.CloudTrail.Trails {
+			if trail.EnableLogFileValidation.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Trail does not have log validation enabled.",
+					trail.EnableLogFileValidation.Metadata(),
+					trail.EnableLogFileValidation.Value(),
 				)
 			}
 		}

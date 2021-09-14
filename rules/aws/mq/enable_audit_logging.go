@@ -16,17 +16,16 @@ var CheckEnableAuditLogging = rules.Register(
 		Impact:      "Without audit logging it is difficult to trace activity in the MQ broker",
 		Resolution:  "Enable audit logging",
 		Explanation: `Logging should be enabled to allow tracing of issues and activity to be investigated more fully. Logs provide additional information and context which is often invalauble during investigation`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, broker := range s.AWS.MQ.Brokers {
+			if broker.Logging.Audit.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Broker does not have audit logging enabled.",
+					broker.Logging.Audit.Metadata(),
+					broker.Logging.Audit.Value(),
 				)
 			}
 		}

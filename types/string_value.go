@@ -8,19 +8,24 @@ const (
 	IgnoreCase StringEqualityOption = iota
 )
 
-func String(str string, m *Metadata) StringValue {
+func String(str string, m Metadata) StringValue {
 	return &stringValue{
 		value:    str,
 		metadata: m,
 	}
 }
-func StringDefault(value string, m *Metadata) StringValue {
+func StringDefault(value string, m Metadata) StringValue {
 	b := String(value, m)
 	b.Metadata().isDefault = true
 	return b
 }
+func StringUnresolvable(m Metadata) StringValue {
+	b := String("", m)
+	b.Metadata().isUnresolvable = true
+	return b
+}
 
-func StringExplicit(value string, m *Metadata) StringValue {
+func StringExplicit(value string, m Metadata) StringValue {
 	b := String(value, m)
 	b.Metadata().isExplicit = true
 	return b
@@ -38,14 +43,14 @@ type StringValue interface {
 }
 
 type stringValue struct {
-	metadata *Metadata
+	metadata Metadata
 	value    string
 }
 
 type stringCheckFunc func(string, string) bool
 
 func (s *stringValue) Metadata() *Metadata {
-	return s.metadata
+	return &s.metadata
 }
 
 func (s *stringValue) Value() string {
@@ -53,26 +58,47 @@ func (s *stringValue) Value() string {
 }
 
 func (s *stringValue) IsEmpty() bool {
+	if s.metadata.isUnresolvable {
+		return false
+	}
 	return s.value == ""
 }
 
 func (s *stringValue) EqualTo(value string, equalityOptions ...StringEqualityOption) bool {
+	if s.metadata.isUnresolvable {
+		return false
+	}
+
 	return s.executePredicate(value, func(a, b string) bool { return a == b }, equalityOptions...)
 }
 
 func (s *stringValue) NotEqualTo(value string, equalityOptions ...StringEqualityOption) bool {
+	if s.metadata.isUnresolvable {
+		return false
+	}
+
 	return !s.EqualTo(value, equalityOptions...)
 }
 
 func (s *stringValue) StartsWith(prefix string, equalityOptions ...StringEqualityOption) bool {
+	if s.metadata.isUnresolvable {
+		return false
+	}
+
 	return s.executePredicate(prefix, strings.HasPrefix, equalityOptions...)
 }
 
 func (s *stringValue) EndsWith(suffix string, equalityOptions ...StringEqualityOption) bool {
+	if s.metadata.isUnresolvable {
+		return false
+	}
 	return s.executePredicate(suffix, strings.HasSuffix, equalityOptions...)
 }
 
 func (s *stringValue) Contains(value string, equalityOptions ...StringEqualityOption) bool {
+	if s.metadata.isUnresolvable {
+		return false
+	}
 	return s.executePredicate(value, strings.Contains, equalityOptions...)
 }
 

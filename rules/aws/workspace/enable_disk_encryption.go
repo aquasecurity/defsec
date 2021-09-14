@@ -16,18 +16,25 @@ var CheckEnableDiskEncryption = rules.Register(
 		Impact:      "Data can be freely read if compromised",
 		Resolution:  "Root and user volume encryption should be enabled",
 		Explanation: `Workspace volumes for both user and root should be encrypted to protect the data stored on them.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.aws.amazon.com/workspaces/latest/adminguide/encrypt-workspaces.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, workspace := range s.AWS.WorkSpaces.WorkSpaces {
+			if workspace.RootVolume.Encryption.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Root volume does not have encryption enabled.",
+					workspace.RootVolume.Encryption.Enabled.Metadata(),
+					workspace.RootVolume.Encryption.Enabled.Value(),
+				)
+			}
+			if workspace.UserVolume.Encryption.Enabled.IsFalse() {
+				results.Add(
+					"User volume does not have encryption enabled.",
+					workspace.UserVolume.Encryption.Enabled.Metadata(),
+					workspace.UserVolume.Encryption.Enabled.Value(),
 				)
 			}
 		}
