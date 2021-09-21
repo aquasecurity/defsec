@@ -32,13 +32,12 @@ Buckets should have logging enabled so that access can be audited.
 				if bucket.ACL.EqualTo("authenticated-read") {
 					results.Add(
 						"Bucket is exposed to all AWS accounts via ACL.",
-						bucket.ACL.Metadata(),
+						bucket.ACL,
 					)
 				} else {
 					results.Add(
 						fmt.Sprintf("Bucket has a public ACL: '%s'.", bucket.ACL.Value()),
-						bucket.ACL.Metadata(),
-						bucket.ACL.Value(),
+						bucket.ACL,
 					)
 				}
 			}

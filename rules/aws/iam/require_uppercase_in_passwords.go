@@ -31,8 +31,7 @@ IAM account password policies should ensure that passwords content including at 
 		if policy.RequireUppercase.IsFalse() {
 			results.Add(
 				"Password policy does not require uppercase characters.",
-				policy.RequireUppercase.Metadata(),
-				policy.RequireUppercase.Value(),
+				policy.RequireUppercase,
 			)
 		}
 		return

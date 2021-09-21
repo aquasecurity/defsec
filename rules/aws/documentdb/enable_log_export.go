@@ -25,8 +25,7 @@ var CheckEnableLogExport = rules.Register(
 			if cluster.EnabledLogExports.NotEqualTo(documentdb.LogExportAudit) && cluster.EnabledLogExports.NotEqualTo(documentdb.LogExportProfiler) {
 				results.Add(
 					"CloudWatch log exports are not enabled.",
-					cluster.EnabledLogExports.Metadata(),
-					cluster.EnabledLogExports.Value(),
+					cluster.EnabledLogExports,
 				)
 			}
 		}

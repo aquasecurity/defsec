@@ -12,21 +12,19 @@ var CheckDiskEncryptionCustomerKey = rules.Register(
 		Provider:    provider.GoogleProvider,
 		Service:     "compute",
 		ShortCode:   "disk-encryption-customer-key",
-		Summary:     "Disks should be encrypted with Customer Supplied Encryption Keys",
-		Impact:      "Using unmanaged keys does not allow for proper management",
-		Resolution:  "Use managed keys ",
+		Summary:     "Disks should be encrypted with customer managed encryption keys",
+		Impact:      "Using unmanaged keys does not allow for proper key management.",
+		Resolution:  "Use managed keys to encrypt disks.",
 		Explanation: `Using unmanaged keys makes rotation and general management difficult.`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, disk := range s.Google.Compute.Disks {
+			if disk.Encryption.KMSKeyLink.IsEmpty() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Disk is not encrypted with a customer managed key.",
+					disk.Encryption.KMSKeyLink,
 				)
 			}
 		}

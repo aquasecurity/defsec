@@ -27,8 +27,8 @@ Microsoft will notify the security contact directly in the event of a security i
 			if x.Encryption.Enabled.IsFalse() {
 				results.Add(
 					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					x.Encryption.Enabled,
+					
 				)
 			}
 		}

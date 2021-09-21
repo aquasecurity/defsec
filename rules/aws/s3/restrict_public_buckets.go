@@ -26,7 +26,7 @@ var CheckPublicBucketsAreRestricted = rules.Register(
 			if block.RestrictPublicBuckets.IsFalse() {
 				results.Add(
 					"Public access block does not restrict public buckets",
-					block.RestrictPublicBuckets.Metadata(),
+					block.RestrictPublicBuckets,
 				)
 			}
 		}

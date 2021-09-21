@@ -26,8 +26,7 @@ var CheckEnableQueueEncryption = rules.Register(
 			if queue.Encryption.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Queue is not encrypted with a customer managed key.",
-					queue.Encryption.KMSKeyID.Metadata(),
-					queue.Encryption.KMSKeyID.Value(),
+					queue.Encryption.KMSKeyID,
 				)
 			}
 		}

@@ -26,8 +26,7 @@ var CheckNoPublicIp = rules.Register(
 			if launchConfig.AssociatePublicIP.IsTrue() {
 				results.Add(
 					"Launch configuration associates public IP address.",
-					launchConfig.AssociatePublicIP.Metadata(),
-					launchConfig.AssociatePublicIP.Value(),
+					launchConfig.AssociatePublicIP,
 				)
 			}
 		}

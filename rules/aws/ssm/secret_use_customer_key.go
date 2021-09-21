@@ -26,8 +26,7 @@ var CheckSecretUseCustomerKey = rules.Register(
 			if secret.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Secret is not encrypted with a customer managed key.",
-					secret.KMSKeyID.Metadata(),
-					secret.KMSKeyID.Value(),
+					secret.KMSKeyID,
 				)
 			}
 		}

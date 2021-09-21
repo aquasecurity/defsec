@@ -48,10 +48,16 @@ func (r Result) Reference() types.Reference {
 
 type Results []Result
 
-func (r *Results) Add(description string, metadata *types.Metadata, annotation ...interface{}) {
+type MetadataProvider interface {
+	GetMetadata() *types.Metadata
+	GetRawValue() interface{}
+}
+
+func (r *Results) Add(description string, source MetadataProvider) {
 	var annotationStr string
-	if len(annotation) == 1 && metadata.IsExplicit() {
-		annotationStr = rawToString(annotation[0])
+	metadata := source.GetMetadata()
+	if metadata != nil && metadata.IsExplicit() {
+		annotationStr = rawToString(source.GetRawValue())
 	}
 	*r = append(*r,
 		Result{

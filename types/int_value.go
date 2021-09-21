@@ -22,21 +22,25 @@ func Int(value int, m *Metadata) IntValue {
 
 func IntDefault(value int, m *Metadata) IntValue {
 	b := Int(value, m)
-	b.Metadata().isDefault = true
+	b.GetMetadata().isDefault = true
 	return b
 }
 
 func IntExplicit(value int, m *Metadata) IntValue {
 	b := Int(value, m)
-	b.Metadata().isExplicit = true
+	b.GetMetadata().isExplicit = true
 	return b
 }
 
-func (b *intValue) Metadata() *Metadata {
+func (b *intValue) GetMetadata() *Metadata {
 	return b.metadata
 }
 
 func (b *intValue) Value() int {
+	return b.value
+}
+
+func (b *intValue) GetRawValue() interface{} {
 	return b.value
 }
 

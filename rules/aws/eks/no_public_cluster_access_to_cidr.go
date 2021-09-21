@@ -30,8 +30,7 @@ var CheckNoPublicClusterAccessToCidr = rules.Register(
 				if cidr.IsPublic(accessCidr.Value()) {
 					results.Add(
 						fmt.Sprintf("Cluster allows access from a public CIDR: %s.", accessCidr.Value()),
-						accessCidr.Metadata(),
-						accessCidr.Value(),
+						accessCidr,
 					)
 				}
 			}

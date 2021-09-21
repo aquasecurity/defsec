@@ -7,16 +7,16 @@ import (
 	"github.com/aquasecurity/defsec/state"
 )
 
-var CheckNoOrgLevelDefaultServiceAccountAssignment = rules.Register(
+var CheckNoProjectLevelDefaultServiceAccountAssignment = rules.Register(
 	rules.Rule{
 		Provider:    provider.GoogleProvider,
-		Service:     "iam",
-		ShortCode:   "no-org-level-default-service-account-assignment",
+		Service:     "platform",
+		ShortCode:   "no-project-level-default-service-account-assignment",
 		Summary:     "Roles should not be assigned to default service accounts",
 		Impact:      "Violation of principal of least privilege",
 		Resolution:  "Use specialised service accounts for specific purposes.",
 		Explanation: `Default service accounts should not be used - consider creating specialised service accounts for individual purposes.`,
-		Links: []string{ 
+		Links: []string{
 			"",
 		},
 		Severity: severity.Medium,
@@ -26,8 +26,7 @@ var CheckNoOrgLevelDefaultServiceAccountAssignment = rules.Register(
 			if x.Encryption.Enabled.IsFalse() {
 				results.Add(
 					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					x.Encryption.Enabled,
 				)
 			}
 		}

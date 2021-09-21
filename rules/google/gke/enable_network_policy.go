@@ -16,17 +16,15 @@ var CheckEnableNetworkPolicy = rules.Register(
 		Impact:      "Unrestricted inter-cluster communication",
 		Resolution:  "Enable network policy",
 		Explanation: `Enabling a network policy allows the segregation of network traffic by namespace`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Google.GKE.Clusters {
+			if cluster.NetworkPolicy.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not have a network policy enabled.",
+					cluster.NetworkPolicy.Enabled,
 				)
 			}
 		}

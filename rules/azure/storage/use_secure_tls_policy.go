@@ -30,8 +30,8 @@ This check will warn if the minimum TLS is not set to TLS1_2.`,
 			if x.Encryption.Enabled.IsFalse() {
 				results.Add(
 					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					x.Encryption.Enabled,
+					
 				)
 			}
 		}

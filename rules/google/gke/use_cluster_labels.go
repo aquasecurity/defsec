@@ -16,17 +16,15 @@ var CheckUseClusterLabels = rules.Register(
 		Impact:      "Asset management can be limited/more difficult",
 		Resolution:  "Set cluster resource labels",
 		Explanation: `Labels make it easier to manage assets and differentiate between clusters and environments, allowing the mapping of computational resources to the wider organisational structure.`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Google.GKE.Clusters {
+			if cluster.ResourceLabels.Len() == 0 {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not use GCE resource labels.",
+					cluster.ResourceLabels,
 				)
 			}
 		}

@@ -28,8 +28,8 @@ RDP access should not be permitted from the internet (*, 0.0.0.0, /0, internet, 
 			if x.Encryption.Enabled.IsFalse() {
 				results.Add(
 					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					x.Encryption.Enabled,
+					
 				)
 			}
 		}

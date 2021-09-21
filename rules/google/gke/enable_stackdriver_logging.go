@@ -16,17 +16,15 @@ var CheckEnableStackdriverLogging = rules.Register(
 		Impact:      "Visibility will be reduced",
 		Resolution:  "Enable StackDriver logging",
 		Explanation: `StackDriver logging provides a useful interface to all of stdout/stderr for each container and should be enabled for moitoring, debugging, etc.`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Google.GKE.Clusters {
+			if cluster.LoggingService.NotEqualTo("logging.googleapis.com/kubernetes") {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not use the logging.googleapis.com/kubernetes StackDriver logging service.",
+					cluster.LoggingService,
 				)
 			}
 		}

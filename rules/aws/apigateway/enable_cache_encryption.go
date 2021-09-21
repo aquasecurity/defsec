@@ -32,8 +32,7 @@ var CheckEnableCacheEncryption = rules.Register(
 				if stage.RESTMethodSettings.CacheDataEncrypted.IsFalse() {
 					results.Add(
 						"Cache data is not encrypted.",
-						stage.RESTMethodSettings.CacheDataEncrypted.Metadata(),
-						stage.RESTMethodSettings.CacheDataEncrypted.Value(),
+						stage.RESTMethodSettings.CacheDataEncrypted,
 					)
 				}
 			}

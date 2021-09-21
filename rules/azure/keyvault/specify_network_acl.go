@@ -28,8 +28,8 @@ The default action of the Network ACL should be set to deny for when IPs are not
 			if x.Encryption.Enabled.IsFalse() {
 				results.Add(
 					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					x.Encryption.Enabled,
+					
 				)
 			}
 		}

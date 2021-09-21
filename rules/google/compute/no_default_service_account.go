@@ -16,17 +16,15 @@ var CheckNoDefaultServiceAccount = rules.Register(
 		Impact:      "Instance has full access to the project",
 		Resolution:  "Remove use of default service account",
 		Explanation: `The default service account has full project access. Instances should instead be assigned the minimal access they need.`,
-		Links: []string{ 
-		},
-		Severity: severity.Critical,
+		Links:       []string{},
+		Severity:    severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, instance := range s.Google.Compute.Instances {
+			if instance.ServiceAccount.Email.IsEmpty() || instance.ServiceAccount.Email.EndsWith("-compute@developer.gserviceaccount.com") {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Instance uses the default service account.",
+					instance.ServiceAccount.Email,
 				)
 			}
 		}

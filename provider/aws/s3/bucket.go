@@ -39,3 +39,11 @@ type Encryption struct {
 	Algorithm types.StringValue
 	KMSKeyId  types.StringValue
 }
+
+func (b *Bucket) GetMetadata() *types.Metadata {
+	return &b.Metadata
+}
+
+func (b *Bucket) GetRawValue() interface{} {
+	return nil
+}

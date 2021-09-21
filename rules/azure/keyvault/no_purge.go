@@ -28,8 +28,8 @@ Purge protection can only be enabled once soft-delete is enabled. It can be turn
 			if x.Encryption.Enabled.IsFalse() {
 				results.Add(
 					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					x.Encryption.Enabled,
+					
 				)
 			}
 		}

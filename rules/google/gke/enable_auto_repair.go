@@ -16,18 +16,18 @@ var CheckEnableAutoRepair = rules.Register(
 		Impact:      "Failing nodes will require manual repair.",
 		Resolution:  "Enable automatic repair",
 		Explanation: `Automatic repair will monitor nodes and attempt repair when a node fails multiple subsequent health checks`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
+		for _, cluster := range s.Google.GKE.Clusters {
+			for _, nodePool := range cluster.NodePools {
+				if nodePool.Management.EnableAutoRepair.IsFalse() {
+					results.Add(
+						"Node pool does not have auto-repair enabled.",
+						nodePool.Management.EnableAutoRepair,
+					)
+				}
 			}
 		}
 		return

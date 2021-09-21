@@ -26,8 +26,7 @@ var CheckEnableAllRegions = rules.Register(
 			if trail.IsMultiRegion.IsFalse() {
 				results.Add(
 					"Trail is not enabled across all regions.",
-					trail.IsMultiRegion.Metadata(),
-					trail.IsMultiRegion.Value(),
+					trail.IsMultiRegion,
 				)
 			}
 		}

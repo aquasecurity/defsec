@@ -26,8 +26,7 @@ var CheckEnableInTransitEncryption = rules.Register(
 			if domain.TransitEncryption.Enabled.IsFalse() {
 				results.Add(
 					"Domain does not have in-transit encryption enabled.",
-					domain.TransitEncryption.Enabled.Metadata(),
-					domain.TransitEncryption.Enabled.Value(),
+					domain.TransitEncryption.Enabled,
 				)
 			}
 		}

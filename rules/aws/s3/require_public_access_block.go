@@ -26,7 +26,7 @@ var CheckBucketsHavePublicAccessBlocks = rules.Register(
 			if bucket.PublicAccessBlock == nil {
 				results.Add(
 					"Bucket does not have a corresponding public access block.",
-					&bucket.Metadata,
+					&bucket,
 				)
 			}
 		}

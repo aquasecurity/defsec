@@ -34,8 +34,7 @@ var CheckEnableBackupRetention = rules.Register(
 			if cluster.SnapshotRetentionLimit.EqualTo(0) {
 				results.Add(
 					"Cluster snapshot retention is not enabled.",
-					cluster.SnapshotRetentionLimit.Metadata(),
-					cluster.SnapshotRetentionLimit.Value(),
+					cluster.SnapshotRetentionLimit,
 				)
 			}
 		}

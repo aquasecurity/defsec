@@ -16,17 +16,15 @@ var CheckUseSecureTlsPolicy = rules.Register(
 		Impact:      "Data in transit is not sufficiently secured",
 		Resolution:  "Enforce a minimum TLS version of 1.2",
 		Explanation: `TLS versions prior to 1.2 are outdated and insecure. You should use 1.2 as aminimum version.`,
-		Links: []string{ 
-		},
-		Severity: severity.Critical,
+		Links:       []string{},
+		Severity:    severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, policy := range s.Google.Compute.SSLPolicies {
+			if policy.MinimumTLSVersion.NotEqualTo("TLS_1_2") {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"TLS policy does not specify a minimum of TLS 1.2",
+					policy.MinimumTLSVersion,
 				)
 			}
 		}

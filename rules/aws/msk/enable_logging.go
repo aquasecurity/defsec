@@ -37,7 +37,7 @@ var CheckEnableLogging = rules.Register(
 
 			results.Add(
 				"Cluster does not ship logs to any service.",
-				brokerLogging.Cloudwatch.Enabled.Metadata(),
+				brokerLogging.Cloudwatch.Enabled,
 			)
 		}
 		return

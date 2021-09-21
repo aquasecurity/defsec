@@ -16,17 +16,15 @@ var CheckEnablePrivateCluster = rules.Register(
 		Impact:      "Nodes may be exposed to the public internet",
 		Resolution:  "Enable private cluster",
 		Explanation: `Enabling private nodes on a cluster ensures the nodes are only available internally as they will only be assigned internal addresses.`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Google.GKE.Clusters {
+			if cluster.PrivateCluster.EnablePrivateNodes.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not have private nodes.",
+					cluster.PrivateCluster.EnablePrivateNodes,
 				)
 			}
 		}

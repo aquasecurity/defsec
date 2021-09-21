@@ -27,8 +27,7 @@ var CheckInstancesDoNotHavePublicIPs = rules.Register(
 				if networkInterface.HasPublicIP.IsTrue() {
 					results.Add(
 						"Instance has a public IP allocated.",
-						networkInterface.HasPublicIP.Metadata(),
-						networkInterface.HasPublicIP.Value(),
+						networkInterface.HasPublicIP,
 					)
 				}
 			}

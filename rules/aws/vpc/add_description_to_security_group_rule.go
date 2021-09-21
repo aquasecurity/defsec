@@ -29,8 +29,7 @@ Simplifies auditing, debugging, and managing security groups.`,
 				if rule.Description.IsEmpty() {
 					results.Add(
 						"Security group rule does not have a description.",
-						rule.Description.Metadata(),
-						rule.Description.Value(),
+						rule.Description,
 					)
 				}
 			}

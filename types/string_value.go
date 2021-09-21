@@ -16,18 +16,18 @@ func String(str string, m Metadata) StringValue {
 }
 func StringDefault(value string, m Metadata) StringValue {
 	b := String(value, m)
-	b.Metadata().isDefault = true
+	b.GetMetadata().isDefault = true
 	return b
 }
 func StringUnresolvable(m Metadata) StringValue {
 	b := String("", m)
-	b.Metadata().isUnresolvable = true
+	b.GetMetadata().isUnresolvable = true
 	return b
 }
 
 func StringExplicit(value string, m Metadata) StringValue {
 	b := String(value, m)
-	b.Metadata().isExplicit = true
+	b.GetMetadata().isExplicit = true
 	return b
 }
 
@@ -35,6 +35,7 @@ type StringValue interface {
 	metadataProvider
 	Value() string
 	IsEmpty() bool
+	IsOneOf(values ...string) bool
 	EqualTo(value string, equalityOptions ...StringEqualityOption) bool
 	NotEqualTo(value string, equalityOptions ...StringEqualityOption) bool
 	StartsWith(prefix string, equalityOptions ...StringEqualityOption) bool
@@ -49,12 +50,28 @@ type stringValue struct {
 
 type stringCheckFunc func(string, string) bool
 
-func (s *stringValue) Metadata() *Metadata {
+func (s *stringValue) IsOneOf(values ...string) bool {
+	if s.metadata.isUnresolvable {
+		return false
+	}
+	for _, value := range values {
+		if value == s.value {
+			return true
+		}
+	}
+	return false
+}
+
+func (s *stringValue) GetMetadata() *Metadata {
 	return &s.metadata
 }
 
 func (s *stringValue) Value() string {
 	return s.value
+}
+
+func (b *stringValue) GetRawValue() interface{} {
+	return b.value
 }
 
 func (s *stringValue) IsEmpty() bool {

@@ -32,8 +32,7 @@ var CheckEnableTracing = rules.Register(
 				if stage.XRayTracingEnabled.IsFalse() {
 					results.Add(
 						"X-Ray tracing is not enabled,",
-						stage.XRayTracingEnabled.Metadata(),
-						stage.XRayTracingEnabled.Value(),
+						stage.XRayTracingEnabled,
 					)
 				}
 			}

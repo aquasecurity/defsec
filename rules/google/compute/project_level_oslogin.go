@@ -16,19 +16,15 @@ var CheckProjectLevelOslogin = rules.Register(
 		Impact:      "Access via SSH key cannot be revoked automatically when an IAM user is removed.",
 		Resolution:  "Enable OS Login at project level",
 		Explanation: `OS Login automatically revokes the relevant SSH keys when an IAM user has their access revoked.`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
-			}
+		if s.Google.Compute.ProjectMetadata.EnableOSLogin.IsFalse() {
+			results.Add(
+				"OS Login is disabled at project level.",
+				s.Google.Compute.ProjectMetadata.EnableOSLogin,
+			)
 		}
 		return
 	},

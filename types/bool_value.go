@@ -21,21 +21,25 @@ func Bool(value bool, metadata Metadata) BoolValue {
 
 func BoolDefault(value bool, metadata Metadata) BoolValue {
 	b := Bool(value, metadata)
-	b.Metadata().isDefault = true
+	b.GetMetadata().isDefault = true
 	return b
 }
 
 func BoolExplicit(value bool, metadata Metadata) BoolValue {
 	b := Bool(value, metadata)
-	b.Metadata().isExplicit = true
+	b.GetMetadata().isExplicit = true
 	return b
 }
 
-func (b *boolValue) Metadata() *Metadata {
+func (b *boolValue) GetMetadata() *Metadata {
 	return &b.metadata
 }
 
 func (b *boolValue) Value() bool {
+	return b.value
+}
+
+func (b *boolValue) GetRawValue() interface{} {
 	return b.value
 }
 

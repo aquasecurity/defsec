@@ -11,23 +11,22 @@ var CheckDiskEncryptionRequired = rules.Register(
 	rules.Rule{
 		Provider:    provider.GoogleProvider,
 		Service:     "compute",
-		ShortCode:   "disk-encryption-required",
+		ShortCode:   "disk-encryption-no-plaintext-key",
 		Summary:     "The encryption key used to encrypt a compute disk has been specified in plaintext.",
 		Impact:      "The encryption key should be considered compromised as it is not stored securely.",
 		Resolution:  "Reference a managed key rather than include the key in raw format.",
 		Explanation: `Sensitive values such as raw encryption keys should not be included in your Terraform code, and should be stored securely by a secrets manager.`,
-		Links: []string{ 
+		Links: []string{
 			"https://cloud.google.com/compute/docs/disks/customer-supplied-encryption",
 		},
 		Severity: severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, disk := range s.Google.Compute.Disks {
+			if disk.Encryption.RawKey.Len() > 0 {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Disk encryption key is supplied in plaintext.",
+					disk.Encryption.RawKey,
 				)
 			}
 		}

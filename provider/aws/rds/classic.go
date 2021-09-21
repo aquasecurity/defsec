@@ -9,3 +9,11 @@ type Classic struct {
 type DBSecurityGroup struct {
 	types.Metadata
 }
+
+func (g *DBSecurityGroup) GetMetadata() *types.Metadata {
+	return &g.Metadata
+}
+
+func (g *DBSecurityGroup) GetRawValue() interface{} {
+	return nil
+}

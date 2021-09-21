@@ -32,8 +32,7 @@ The account password policy should be set to enforce minimum password length of 
 		if policy.MinimumLength.LessThan(14) {
 			results.Add(
 				"Password policy has a minimum password length of less than 14 characters.",
-				policy.MinimumLength.Metadata(),
-				policy.MinimumLength.Value(),
+				policy.MinimumLength,
 			)
 		}
 		return

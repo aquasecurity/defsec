@@ -41,3 +41,11 @@ type NetworkACLRule struct {
 	Protocol types.StringValue
 	CIDRs    []types.StringValue
 }
+
+func (v *DefaultVPC) GetMetadata() *types.Metadata {
+	return &v.Metadata
+}
+
+func (v *DefaultVPC) GetRawValue() interface{} {
+	return nil
+}

@@ -33,7 +33,7 @@ var CheckEnableAccessLogging = rules.Register(
 				if stage.AccessLogging.CloudwatchLogGroupARN.IsEmpty() {
 					results.Add(
 						"Access logging is not configured.",
-						stage.AccessLogging.CloudwatchLogGroupARN.Metadata(),
+						stage.AccessLogging.CloudwatchLogGroupARN,
 					)
 				}
 			}

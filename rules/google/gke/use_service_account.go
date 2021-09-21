@@ -16,19 +16,29 @@ var CheckUseServiceAccount = rules.Register(
 		Impact:      "Service accounts with wide permissions can increase the risk of compromise",
 		Resolution:  "Use limited permissions for service accounts to be effective",
 		Explanation: `You should create and use a minimally privileged service account to run your GKE cluster instead of using the Compute Engine default service account.`,
-		Links: []string{ 
+		Links: []string{
 			"https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
+		for _, cluster := range s.Google.GKE.Clusters {
+			if cluster.RemoveDefaultNodePool.IsFalse() {
+				if cluster.NodeConfig.ServiceAccount.IsEmpty() {
+					results.Add(
+						"Cluster does not override the default service account.",
+						cluster.NodeConfig.ServiceAccount,
+					)
+				}
+			}
+			for _, pool := range cluster.NodePools {
+				if pool.NodeConfig.ServiceAccount.IsEmpty() {
+					results.Add(
+						"Node pool does not override the default service account.",
+						pool.NodeConfig.ServiceAccount,
+					)
+				}
+
 			}
 		}
 		return

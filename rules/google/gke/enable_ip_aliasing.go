@@ -16,17 +16,15 @@ var CheckEnableIpAliasing = rules.Register(
 		Impact:      "Nodes need a NAT gateway to access local services",
 		Resolution:  "Enable IP aliasing",
 		Explanation: `IP aliasing allows the reuse of public IPs internally, removing the need for a NAT gateway.`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Google.GKE.Clusters {
+			if cluster.IPAllocationPolicy.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster has IP aliasing disabled.",
+					cluster.IPAllocationPolicy.Enabled,
 				)
 			}
 		}

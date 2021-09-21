@@ -25,7 +25,7 @@ var CheckNoDefaultVpc = rules.Register(
 		for _, def := range s.AWS.VPC.DefaultVPCs {
 			results.Add(
 				"Default VPC is used.",
-				&def.Metadata,
+				&def,
 			)
 		}
 		return

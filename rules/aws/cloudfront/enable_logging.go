@@ -26,8 +26,7 @@ var CheckEnableLogging = rules.Register(
 			if dist.Logging.Bucket.IsEmpty() {
 				results.Add(
 					"Distribution does not have logging enabled.",
-					dist.Logging.Bucket.Metadata(),
-					dist.Logging.Bucket.Value(),
+					dist.Logging.Bucket,
 				)
 			}
 		}

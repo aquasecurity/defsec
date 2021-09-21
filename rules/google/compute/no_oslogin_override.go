@@ -16,17 +16,15 @@ var CheckNoOsloginOverride = rules.Register(
 		Impact:      "Access via SSH key cannot be revoked automatically when an IAM user is removed.",
 		Resolution:  "Enable OS Login at project level and remove instance-level overrides",
 		Explanation: `OS Login automatically revokes the relevant SSH keys when an IAM user has their access revoked.`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, instance := range s.Google.Compute.Instances {
+			if instance.OSLoginEnabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Instance has OS Login disabled.",
+					instance.OSLoginEnabled,
 				)
 			}
 		}

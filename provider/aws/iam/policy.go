@@ -21,8 +21,12 @@ type PolicyDocument struct {
 	Statements []PolicyDocumentStatement `json:"Statement"`
 }
 
-func (p *PolicyDocument) Metadata() *types.Metadata {
+func (p PolicyDocument) GetMetadata() *types.Metadata {
 	return &p.metadata
+}
+
+func (p PolicyDocument) GetRawValue() interface{} {
+	return nil
 }
 
 type PolicyDocumentStatement struct {

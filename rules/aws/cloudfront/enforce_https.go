@@ -29,16 +29,14 @@ You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning 
 			if dist.DefaultCacheBehaviour.ViewerProtocolPolicy.EqualTo(cloudfront.ViewerPolicyProtocolAllowAll) {
 				results.Add(
 					"Distribution allows unencrypted communications.",
-					dist.DefaultCacheBehaviour.ViewerProtocolPolicy.Metadata(),
-					dist.DefaultCacheBehaviour.ViewerProtocolPolicy.Value(),
+					dist.DefaultCacheBehaviour.ViewerProtocolPolicy,
 				)
 			}
 			for _, behaviour := range dist.OrdererCacheBehaviours {
 				if behaviour.ViewerProtocolPolicy.EqualTo(cloudfront.ViewerPolicyProtocolAllowAll) {
 					results.Add(
 						"Distribution allows unencrypted communications.",
-						behaviour.ViewerProtocolPolicy.Metadata(),
-						behaviour.ViewerProtocolPolicy.Value(),
+						behaviour.ViewerProtocolPolicy,
 					)
 				}
 			}

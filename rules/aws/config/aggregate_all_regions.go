@@ -27,8 +27,7 @@ This will help limit the risk of any unmonitored configuration in regions that a
 		if s.AWS.Config.ConfigurationAggregrator.SourceAllRegions.IsFalse() {
 			results.Add(
 				"Configuration aggregation is not set to source from all regions.",
-				s.AWS.Config.ConfigurationAggregrator.SourceAllRegions.Metadata(),
-				s.AWS.Config.ConfigurationAggregrator.SourceAllRegions.Value(),
+				s.AWS.Config.ConfigurationAggregrator.SourceAllRegions,
 			)
 		}
 		return

@@ -26,8 +26,7 @@ var CheckEnableWaf = rules.Register(
 			if dist.WAFID.IsEmpty() {
 				results.Add(
 					"Distribution does not utilise a WAF.",
-					dist.WAFID.Metadata(),
-					dist.WAFID.Value(),
+					dist.WAFID,
 				)
 			}
 		}

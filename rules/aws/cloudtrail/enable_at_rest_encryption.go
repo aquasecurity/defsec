@@ -26,8 +26,7 @@ var CheckEnableAtRestEncryption = rules.Register(
 			if trail.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Trail is not encrypted.",
-					trail.KMSKeyID.Metadata(),
-					trail.KMSKeyID.Value(),
+					trail.KMSKeyID,
 				)
 			}
 		}

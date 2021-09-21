@@ -9,27 +9,32 @@ import (
 
 var CheckNoLegacyAuthentication = rules.Register(
 	rules.Rule{
-		Provider:    provider.GoogleProvider,
-		Service:     "gke",
-		ShortCode:   "no-legacy-authentication",
-		Summary:     "Legacy client authentication methods utilized.",
-		Impact:      "Username and password authentication methods are less secure",
-		Resolution:  "Use service account or OAuth for authentication",
+		Provider:   provider.GoogleProvider,
+		Service:    "gke",
+		ShortCode:  "no-legacy-authentication",
+		Summary:    "Legacy client authentication methods utilized.",
+		Impact:     "Username/password or certificate authentication methods are less secure",
+		Resolution: "Use service account or OAuth for authentication",
 		Explanation: `It is recommended to use Service Accounts and OAuth as authentication methods for accessing the master in the container cluster. 
 
 Basic authentication should be disabled by explicitly unsetting the <code>username</code> and <code>password</code> on the <code>master_auth</code> block.`,
-		Links: []string{ 
+		Links: []string{
 			"https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#restrict_authn_methods",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Google.GKE.Clusters {
+			if cluster.MasterAuth.ClientCertificate.IssueCertificate.IsTrue() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster allows the use of certificates for master authentication.",
+					cluster.MasterAuth.ClientCertificate.IssueCertificate,
+				)
+			}
+			if cluster.MasterAuth.Username.NotEqualTo("") {
+				results.Add(
+					"Cluster allows the use of basic auth for master authentication.",
+					cluster.MasterAuth.Username,
 				)
 			}
 		}

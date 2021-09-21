@@ -16,17 +16,15 @@ var CheckNoProjectWideSshKeys = rules.Register(
 		Impact:      "Compromise of a single key pair compromises all instances",
 		Resolution:  "Disable project-wide SSH keys",
 		Explanation: `Use of project-wide SSH keys means that a compromise of any one of these key pairs can result in all instances being compromised. It is recommended to use instance-level keys.`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, instance := range s.Google.Compute.Instances {
+			if instance.EnableProjectSSHKeyBlocking.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Instance allows use of project-level SSH keys.",
+					instance.EnableProjectSSHKeyBlocking,
 				)
 			}
 		}
