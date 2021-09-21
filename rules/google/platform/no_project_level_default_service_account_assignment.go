@@ -1,4 +1,4 @@
-package iam
+package platform
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -22,12 +22,24 @@ var CheckNoProjectLevelDefaultServiceAccountAssignment = rules.Register(
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled,
-				)
+		for _, project := range s.Google.Platform.AllProjects() {
+			for _, binding := range project.Bindings {
+				for _, member := range binding.Members {
+					if isMemberDefaultServiceAccount(member.Value()) {
+						results.Add(
+							"Role is assigned to a default service account at project level.",
+							member,
+						)
+					}
+				}
+			}
+			for _, member := range project.Members {
+				if isMemberDefaultServiceAccount(member.Member.Value()) {
+					results.Add(
+						"Role is assigned to a default service account at project level.",
+						member.Member,
+					)
+				}
 			}
 		}
 		return

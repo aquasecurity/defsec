@@ -1,4 +1,4 @@
-package iam
+package platform
 
 import (
 	"strings"
@@ -24,11 +24,11 @@ var CheckNoFolderLevelDefaultServiceAccountAssignment = rules.Register(
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, folder := range s.Google.Platform.Folders {
+		for _, folder := range s.Google.Platform.AllFolders() {
 			for _, member := range folder.Members {
 				if isMemberDefaultServiceAccount(member.Member.Value()) {
 					results.Add(
-						"Folder access is granted to a default service account.",
+						"Role is assigned to a default service account at folder level.",
 						member.Member,
 					)
 				}
@@ -37,7 +37,7 @@ var CheckNoFolderLevelDefaultServiceAccountAssignment = rules.Register(
 				for _, member := range binding.Members {
 					if isMemberDefaultServiceAccount(member.Value()) {
 						results.Add(
-							"Folder access is granted to a default service account.",
+							"Role is assigned to a default service account at folder level.",
 							member,
 						)
 					}

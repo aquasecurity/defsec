@@ -1,6 +1,8 @@
-package iam
+package platform
 
 import (
+	"strings"
+
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
@@ -22,15 +24,94 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled,
-				)
+		for _, project := range s.Google.Platform.AllProjects() {
+			for _, member := range project.Members {
+				if member.Member.StartsWith("serviceAccount:") {
+					if isRolePrivileged(member.Role.Value()) {
+						results.Add(
+							"Service account is granted a privileged role.",
+							member.Role,
+						)
+					}
+				}
+			}
+			for _, binding := range project.Bindings {
+				if isRolePrivileged(binding.Role.Value()) {
+					for _, member := range binding.Members {
+						if member.StartsWith("serviceAccount:") {
+							results.Add(
+								"Service account is granted a privileged role.",
+								binding.Role,
+							)
+						}
+					}
+				}
+			}
+		}
+		for _, folder := range s.Google.Platform.AllFolders() {
+			for _, member := range folder.Members {
+				if member.Member.StartsWith("serviceAccount:") {
+					if isRolePrivileged(member.Role.Value()) {
+						results.Add(
+							"Service account is granted a privileged role.",
+							member.Role,
+						)
+					}
+				}
+			}
+			for _, binding := range folder.Bindings {
+				if isRolePrivileged(binding.Role.Value()) {
+					for _, member := range binding.Members {
+						if member.StartsWith("serviceAccount:") {
+							results.Add(
+								"Service account is granted a privileged role.",
+								binding.Role,
+							)
+						}
+					}
+				}
 			}
 
 		}
+
+		for _, org := range s.Google.Platform.Organizations {
+			for _, member := range org.Members {
+				if member.Member.StartsWith("serviceAccount:") {
+					if isRolePrivileged(member.Role.Value()) {
+						results.Add(
+							"Service account is granted a privileged role.",
+							member.Role,
+						)
+					}
+				}
+			}
+			for _, binding := range org.Bindings {
+				if isRolePrivileged(binding.Role.Value()) {
+					for _, member := range binding.Members {
+						if member.StartsWith("serviceAccount:") {
+							results.Add(
+								"Service account is granted a privileged role.",
+								binding.Role,
+							)
+						}
+					}
+				}
+			}
+
+		}
+
 		return
 	},
 )
+
+func isRolePrivileged(role string) bool {
+	switch {
+	case role == "roles/owner":
+		return true
+	case role == "roles/editor":
+		return true
+	case strings.HasSuffix(strings.ToLower(role), "admin"):
+		return true
+	}
+	return false
+}

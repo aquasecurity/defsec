@@ -1,4 +1,4 @@
-package iam
+package platform
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -22,12 +22,22 @@ var CheckNoProjectLevelServiceAccountImpersonation = rules.Register(
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled,
-				)
+		for _, project := range s.Google.Platform.AllProjects() {
+			for _, member := range project.Members {
+				if member.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {
+					results.Add(
+						"Service account access is granted to a user at project level.",
+						member.Role,
+					)
+				}
+			}
+			for _, binding := range project.Bindings {
+				if binding.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {
+					results.Add(
+						"Service account access is granted to a user at project level.",
+						binding.Role,
+					)
+				}
 			}
 		}
 		return

@@ -1,4 +1,4 @@
-package iam
+package platform
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -27,14 +27,69 @@ Permissions should be granted on roles, groups, services accounts instead.`,
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled,
-				)
+		for _, project := range s.Google.Platform.AllProjects() {
+			for _, member := range project.Members {
+				if member.Member.StartsWith("user:") {
+					results.Add(
+						"Permissions are granted directly to a user.",
+						member.Role,
+					)
+				}
+			}
+			for _, binding := range project.Bindings {
+				for _, member := range binding.Members {
+					if member.StartsWith("user:") {
+						results.Add(
+							"Permissions are granted directly to a user.",
+							binding.Role,
+						)
+					}
+				}
 			}
 		}
+
+		for _, folder := range s.Google.Platform.AllFolders() {
+			for _, member := range folder.Members {
+				if member.Member.StartsWith("user:") {
+					results.Add(
+						"Permissions are granted directly to a user.",
+						member.Role,
+					)
+				}
+			}
+			for _, binding := range folder.Bindings {
+				for _, member := range binding.Members {
+					if member.StartsWith("user:") {
+						results.Add(
+							"Permissions are granted directly to a user.",
+							binding.Role,
+						)
+					}
+				}
+			}
+		}
+
+		for _, org := range s.Google.Platform.Organizations {
+			for _, member := range org.Members {
+				if member.Member.StartsWith("user:") {
+					results.Add(
+						"Permissions are granted directly to a user.",
+						member.Role,
+					)
+				}
+			}
+			for _, binding := range org.Bindings {
+				for _, member := range binding.Members {
+					if member.StartsWith("user:") {
+						results.Add(
+							"Permissions are granted directly to a user.",
+							binding.Role,
+						)
+					}
+				}
+			}
+		}
+
 		return
 	},
 )

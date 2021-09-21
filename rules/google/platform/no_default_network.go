@@ -1,4 +1,4 @@
-package project
+package platform
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -20,24 +20,13 @@ var CheckNoDefaultNetwork = rules.Register(
 		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, project := range s.Google.Platform.Projects {
+		for _, project := range s.Google.Platform.AllProjects() {
 			if project.AutoCreateNetwork.IsTrue() {
 				results.Add(
 					"Project has automatic network creation enabled.",
 					project.AutoCreateNetwork,
 				)
 			}
-		}
-		for _, folder := range s.Google.Platform.Folders {
-			for _, project := range folder.Projects {
-			if project.AutoCreateNetwork.IsTrue() {
-				results.Add(
-					"Project has automatic network creation enabled.",
-					project.AutoCreateNetwork,
-				)
-			}
-		}
-
 		}
 		return
 	},

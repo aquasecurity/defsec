@@ -1,4 +1,4 @@
-package iam
+package platform
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -22,12 +22,22 @@ var CheckNoOrgLevelServiceAccountImpersonation = rules.Register(
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled,
-				)
+		for _, org := range s.Google.Platform.Organizations {
+			for _, member := range org.Members {
+				if member.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {
+					results.Add(
+						"Service account access is granted to a user at organization level.",
+						member.Role,
+					)
+				}
+			}
+			for _, binding := range org.Bindings {
+				if binding.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {
+					results.Add(
+						"Service account access is granted to a user at organization level.",
+						binding.Role,
+					)
+				}
 			}
 		}
 		return

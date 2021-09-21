@@ -1,4 +1,4 @@
-package iam
+package platform
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -22,7 +22,7 @@ var CheckNoFolderLevelServiceAccountImpersonation = rules.Register(
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, folder := range s.Google.Platform.Folders {
+		for _, folder := range s.Google.Platform.AllFolders() {
 			for _, member := range folder.Members {
 				if member.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {
 					results.Add(

@@ -1,4 +1,4 @@
-package iam
+package platform
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -22,12 +22,24 @@ var CheckNoOrgLevelDefaultServiceAccountAssignment = rules.Register(
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled,
-				)
+		for _, org := range s.Google.Platform.Organizations {
+			for _, binding := range org.Bindings {
+				for _, member := range binding.Members {
+					if isMemberDefaultServiceAccount(member.Value()) {
+						results.Add(
+							"Role is assigned to a default service account at organisation level.",
+							member,
+						)
+					}
+				}
+			}
+			for _, member := range org.Members {
+				if isMemberDefaultServiceAccount(member.Member.Value()) {
+					results.Add(
+						"Role is assigned to a default service account at organisation level.",
+						member.Member,
+					)
+				}
 			}
 		}
 		return
