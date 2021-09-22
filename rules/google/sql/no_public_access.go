@@ -1,6 +1,7 @@
 package sql
 
 import (
+	"github.com/aquasecurity/defsec/cidr"
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
@@ -16,19 +17,26 @@ var CheckNoPublicAccess = rules.Register(
 		Impact:      "Public exposure of sensitive data",
 		Resolution:  "Remove public access from database instances",
 		Explanation: `Database instances should be configured so that they are not available over the public internet, but to internal compute resources which access them.`,
-		Links: []string{ 
+		Links: []string{
 			"https://www.cloudconformity.com/knowledge-base/gcp/CloudSQL/publicly-accessible-cloud-sql-instances.html",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, instance := range s.Google.SQL.Instances {
+			if instance.Settings.IPConfiguration.EnableIPv4.IsTrue() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Database instance is granted a public internet address.",
+					instance.Settings.IPConfiguration.EnableIPv4,
 				)
+			}
+			for _, network := range instance.Settings.IPConfiguration.AuthorizedNetworks {
+				if cidr.IsPublic(network.CIDR.Value()) {
+					results.Add(
+						"Database instance allows access from the public internet.",
+						network.CIDR,
+					)
+				}
 			}
 		}
 		return

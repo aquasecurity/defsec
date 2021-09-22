@@ -16,21 +16,37 @@ var CheckNoPublicAccess = rules.Register(
 		Impact:      "Public exposure of sensitive data.",
 		Resolution:  "Restrict public access to the bucket.",
 		Explanation: `Using 'allUsers' or 'allAuthenticatedUsers' as members in an IAM member/binding causes data to be exposed outside of the organisation.`,
-		Links: []string{ 
+		Links: []string{
 			"https://jbrojbrojbro.medium.com/you-make-the-rules-with-authentication-controls-for-cloud-storage-53c32543747b",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
-				)
+		for _, bucket := range s.Google.Storage.Buckets {
+			for _, binding := range bucket.Bindings {
+				for _, member := range binding.Members {
+					if googleIAMMemberIsExternal(member.Value()) {
+						results.Add(
+							"Bucket allows public access.",
+							member,
+						)
+					}
+				}
 			}
+			for _, member := range bucket.Members {
+				if googleIAMMemberIsExternal(member.Member.Value()) {
+					results.Add(
+						"Bucket allows public access.",
+						member.Member,
+					)
+				}
+			}
+
 		}
 		return
 	},
 )
+
+func googleIAMMemberIsExternal(member string) bool {
+	return member == "allUsers" || member == "allAuthenticatedUsers"
+}

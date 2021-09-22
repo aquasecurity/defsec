@@ -4,6 +4,7 @@ type IntValue interface {
 	metadataProvider
 	Value() int
 	EqualTo(i int) bool
+	NotEqualTo(i int) bool
 	LessThan(i int) bool
 	GreaterThan(i int) bool
 }
@@ -42,6 +43,13 @@ func (b *intValue) Value() int {
 
 func (b *intValue) GetRawValue() interface{} {
 	return b.value
+}
+
+func (b *intValue) NotEqualTo(i int) bool {
+	if b.metadata.isUnresolvable {
+		return false
+	}
+	return b.value != i
 }
 
 func (b *intValue) EqualTo(i int) bool {

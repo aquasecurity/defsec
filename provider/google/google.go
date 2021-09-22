@@ -7,6 +7,8 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/gke"
 	"github.com/aquasecurity/defsec/provider/google/kms"
 	"github.com/aquasecurity/defsec/provider/google/platform"
+	"github.com/aquasecurity/defsec/provider/google/sql"
+	"github.com/aquasecurity/defsec/provider/google/storage"
 )
 
 type Google struct {
@@ -16,4 +18,6 @@ type Google struct {
 	GKE      gke.GKE
 	KMS      kms.KMS
 	Platform platform.Platform
+	SQL      sql.SQL
+	Storage  storage.Storage
 }

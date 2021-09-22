@@ -2,6 +2,7 @@ package sql
 
 import (
 	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/provider/google/sql"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -16,18 +17,20 @@ var CheckPgLogCheckpoints = rules.Register(
 		Impact:      "Insufficient diagnostic data.",
 		Resolution:  "Enable checkpoints logging.",
 		Explanation: `Logging checkpoints provides useful diagnostic data, which can identify performance issues in an application and potential DoS vectors.`,
-		Links: []string{ 
+		Links: []string{
 			"https://www.postgresql.org/docs/13/runtime-config-logging.html#GUC-LOG-CHECKPOINTS",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, instance := range s.Google.SQL.Instances {
+			if instance.DatabaseFamily() != sql.DatabaseFamilyPostgres {
+				continue
+			}
+			if instance.Settings.Flags.LogCheckpoints.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Database instance is not configured to log checkpoints.",
+					instance.Settings.Flags.LogCheckpoints,
 				)
 			}
 		}

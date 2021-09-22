@@ -16,18 +16,17 @@ var CheckEncryptInTransitData = rules.Register(
 		Impact:      "Intercepted data can be read in transit",
 		Resolution:  "Enforce SSL for all connections",
 		Explanation: `In-transit data should be encrypted so that if traffic is intercepted data will not be exposed in plaintext to attackers.`,
-		Links: []string{ 
+		Links: []string{
 			"https://cloud.google.com/sql/docs/mysql/configure-ssl-instance",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, instance := range s.Google.SQL.Instances {
+			if instance.Settings.IPConfiguration.RequireTLS.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Database instance does not require TLS for all connections.",
+					instance.Settings.IPConfiguration.RequireTLS,
 				)
 			}
 		}

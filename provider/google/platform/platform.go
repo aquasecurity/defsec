@@ -1,6 +1,9 @@
 package platform
 
-import "github.com/aquasecurity/defsec/types"
+import (
+	"github.com/aquasecurity/defsec/provider/google/iam"
+	"github.com/aquasecurity/defsec/types"
+)
 
 type Platform struct {
 	Organizations []Organization
@@ -43,29 +46,19 @@ func (f *Folder) AllFolders() []Folder {
 type Organization struct {
 	Folders  []Folder
 	Projects []Project
-	Members  []Member
-	Bindings []Binding
+	Members  []iam.Member
+	Bindings []iam.Binding
 }
 
 type Folder struct {
 	Folders  []Folder
 	Projects []Project
-	Members  []Member
-	Bindings []Binding
-}
-
-type Member struct {
-	Member types.StringValue
-	Role   types.StringValue
-}
-
-type Binding struct {
-	Members []types.StringValue
-	Role    types.StringValue
+	Members  []iam.Member
+	Bindings []iam.Binding
 }
 
 type Project struct {
 	AutoCreateNetwork types.BoolValue
-	Members           []Member
-	Bindings          []Binding
+	Members           []iam.Member
+	Bindings          []iam.Binding
 }
