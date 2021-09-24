@@ -9,4 +9,5 @@ type CloudWatch struct {
 type LogGroup struct {
 	Name     types.StringValue
 	KMSKeyID types.StringValue
+	RetentionInDays types.IntValue
 }
