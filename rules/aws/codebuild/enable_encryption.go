@@ -30,11 +30,14 @@ var CheckEnableEncryption = rules.Register(
 					project.ArtifactSettings.EncryptionEnabled,
 				)
 			}
-			if project.SecondaryArtifactSettings.EncryptionEnabled.IsFalse() {
+			for _, setting := range project.SecondaryArtifactSettings {
+
+			if setting.EncryptionEnabled.IsFalse() {
 				results.Add(
 					"Encryption is not enabled for secondary project artifacts.",
-					project.SecondaryArtifactSettings.EncryptionEnabled,
+					setting.EncryptionEnabled,
 				)
+			}
 			}
 
 		}
