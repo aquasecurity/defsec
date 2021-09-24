@@ -16,17 +16,15 @@ var CheckEnableHttp2 = rules.Register(
 		Impact:      "Outdated versions of HTTP has security vulnerabilities",
 		Resolution:  "Use the latest version of HTTP",
 		Explanation: `Use the latest version of HTTP to ensure you are benefiting from security fixes`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, service := range s.Azure.AppService.Services {
+			if service.Site.EnableHTTP2.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"App service does not have HTTP 2 enabled.",
+					service.Site.EnableHTTP2,
 				)
 			}
 		}

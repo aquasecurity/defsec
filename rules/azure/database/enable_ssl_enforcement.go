@@ -16,17 +16,31 @@ var CheckEnableSslEnforcement = rules.Register(
 		Impact:      "Insecure connections could lead to data loss and other vulnerabilities",
 		Resolution:  "Enable SSL enforcement",
 		Explanation: `SSL connections should be enforced were available to ensure secure transfer and reduce the risk of compromising data in flight.`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, server := range s.Azure.Database.MariaDBServers {
+			if server.EnableSSLEnforcement.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Database server does not have enforce SSL.",
+					server.EnableSSLEnforcement,
+				)
+			}
+		}
+		for _, server := range s.Azure.Database.MySQLServers {
+			if server.EnableSSLEnforcement.IsFalse() {
+				results.Add(
+					"Database server does not have enforce SSL.",
+					server.EnableSSLEnforcement,
+				)
+			}
+		}
+		for _, server := range s.Azure.Database.PostgreSQLServers {
+			if server.EnableSSLEnforcement.IsFalse() {
+				results.Add(
+					"Database server does not have enforce SSL.",
+					server.EnableSSLEnforcement,
 				)
 			}
 		}

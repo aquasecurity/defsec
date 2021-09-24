@@ -16,18 +16,17 @@ var CheckPostgresConfigurationLogConnections = rules.Register(
 		Impact:      "No visibility of successful connections",
 		Resolution:  "Enable connection logging",
 		Explanation: `Postgresql can generate logs for successful connections to improve visibility for audit and configuration issue resolution.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/postgresql/concepts-server-logs#configure-logging",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, server := range s.Azure.Database.PostgreSQLServers {
+			if server.Config.LogConnections.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Database server is not configured to log connections.",
+					server.Config.LogConnections,
 				)
 			}
 		}

@@ -16,17 +16,15 @@ var CheckDisablePasswordAuthentication = rules.Register(
 		Impact:      "Using password authentication is less secure that ssh keys may result in compromised servers",
 		Resolution:  "Use ssh authentication for virtual machines",
 		Explanation: `Access to virtual machines should be authenticated using SSH keys. Removing the option of password authentication enforces more secure methods while removing the risks inherent with passwords.`,
-		Links: []string{ 
-		},
-		Severity: severity.High,
+		Links:       []string{},
+		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, vm := range s.Azure.Compute.LinuxVirtualMachines {
+			if vm.OSProfileLinuxConfig.DisablePasswordAuthentication.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Linux virtual machine allows password authentication.",
+					vm.OSProfileLinuxConfig.DisablePasswordAuthentication,
 				)
 			}
 		}

@@ -16,17 +16,15 @@ var CheckSecureTlsPolicy = rules.Register(
 		Impact:      "Outdated TLS policies increase exposure to known issues",
 		Resolution:  "Use the most modern TLS policies available",
 		Explanation: `You should not use outdated/insecure TLS versions for encryption. You should be using TLS v1.2+.`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, server := range s.Azure.Database.MariaDBServers {
+			if server.MinimumTLSVersion.NotEqualTo("1.2") {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Database server does not require a secure TLS version.",
+					server.MinimumTLSVersion,
 				)
 			}
 		}

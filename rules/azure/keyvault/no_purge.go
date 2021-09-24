@@ -9,27 +9,26 @@ import (
 
 var CheckNoPurge = rules.Register(
 	rules.Rule{
-		Provider:    provider.AzureProvider,
-		Service:     "keyvault",
-		ShortCode:   "no-purge",
-		Summary:     "Key vault should have purge protection enabled",
-		Impact:      "Keys could be purged from the vault without protection",
-		Resolution:  "Enable purge protection for key vaults",
+		Provider:   provider.AzureProvider,
+		Service:    "keyvault",
+		ShortCode:  "no-purge",
+		Summary:    "Key vault should have purge protection enabled",
+		Impact:     "Keys could be purged from the vault without protection",
+		Resolution: "Enable purge protection for key vaults",
 		Explanation: `Purge protection is an optional Key Vault behavior and is not enabled by default.
 
 Purge protection can only be enabled once soft-delete is enabled. It can be turned on via CLI or PowerShell.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/key-vault/general/soft-delete-overview#purge-protection",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, vault := range s.Azure.KeyVault.Vaults {
+			if vault.EnablePurgeProtection.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Vault does not have purge protection enabled.",
+					vault.EnablePurgeProtection,
 				)
 			}
 		}

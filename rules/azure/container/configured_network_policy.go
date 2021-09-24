@@ -16,18 +16,17 @@ var CheckConfiguredNetworkPolicy = rules.Register(
 		Impact:      "No network policy is protecting the AKS cluster",
 		Resolution:  "Configure a network policy",
 		Explanation: `The Kubernetes object type NetworkPolicy should be defined to have opportunity allow or block traffic to pods, as in a Kubernetes cluster configured with default settings, all pods can discover and communicate with each other without any restrictions.`,
-		Links: []string{ 
+		Links: []string{
 			"https://kubernetes.io/docs/concepts/services-networking/network-policies",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Azure.Container.KubernetesClusters {
+			if cluster.NetworkProfile.NetworkPolicy.IsEmpty() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Kubernetes cluster does not have a network policy set.",
+					cluster.NetworkProfile.NetworkPolicy,
 				)
 			}
 		}

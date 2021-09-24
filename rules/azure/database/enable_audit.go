@@ -16,18 +16,17 @@ var CheckEnableAudit = rules.Register(
 		Impact:      "Auditing provides valuable information about access and usage",
 		Resolution:  "Enable auditing on Azure SQL databases",
 		Explanation: `Auditing helps you maintain regulatory compliance, understand database activity, and gain insight into discrepancies and anomalies that could indicate business concerns or suspected security violations.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/azure-sql/database/auditing-overview",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, server := range s.Azure.Database.MSSQLServers {
+			if len(server.ExtendedAuditingPolicies) == 0 {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Server does not have an extended audit policty configured.",
+					server,
 				)
 			}
 		}

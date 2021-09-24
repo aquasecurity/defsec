@@ -5,7 +5,10 @@ import (
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/owenrumney/squealer/pkg/squealer"
 )
+
+var scanner = squealer.NewStringScanner()
 
 var CheckNoSecretsInCustomData = rules.Register(
 	rules.Rule{
@@ -16,17 +19,23 @@ var CheckNoSecretsInCustomData = rules.Register(
 		Impact:      "Sensitive credentials in custom_data can be leaked",
 		Resolution:  "Don't use sensitive credentials in the VM custom_data",
 		Explanation: `When creating Azure Virtual Machines, custom_data is used to pass start up information into the EC2 instance. This custom_dat must not contain access key credentials.`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, vm := range s.Azure.Compute.LinuxVirtualMachines {
+			if result := scanner.Scan(vm.CustomData.Value()); result.TransgressionFound {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Virtual machine includes secret(s) in custom data.",
+					vm.CustomData,
+				)
+			}
+		}
+		for _, vm := range s.Azure.Compute.WindowsVirtualMachines {
+			if result := scanner.Scan(vm.CustomData.Value()); result.TransgressionFound {
+				results.Add(
+					"Virtual machine includes secret(s) in custom data.",
+					vm.CustomData,
 				)
 			}
 		}

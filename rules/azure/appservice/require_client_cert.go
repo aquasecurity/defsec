@@ -16,17 +16,15 @@ var CheckRequireClientCert = rules.Register(
 		Impact:      "Mutual TLS is not being used",
 		Resolution:  "Enable incoming certificates for clients",
 		Explanation: `The TLS mutual authentication technique in enterprise environments ensures the authenticity of clients to the server. If incoming client certificates are enabled only an authenticated client with valid certificates can access the app.`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, service := range s.Azure.AppService.Services {
+			if service.EnableClientCert.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"App service does not have client certificates enabled.",
+					service.EnableClientCert,
 				)
 			}
 		}

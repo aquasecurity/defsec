@@ -9,29 +9,28 @@ import (
 
 var CheckQueueServicesLoggingEnabled = rules.Register(
 	rules.Rule{
-		Provider:    provider.AzureProvider,
-		Service:     "storage",
-		ShortCode:   "queue-services-logging-enabled",
-		Summary:     "When using Queue Services for a storage account, logging should be enabled.",
-		Impact:      "Logging provides valuable information about access and usage",
-		Resolution:  "Enable logging for Queue Services",
+		Provider:   provider.AzureProvider,
+		Service:    "storage",
+		ShortCode:  "queue-services-logging-enabled",
+		Summary:    "When using Queue Services for a storage account, logging should be enabled.",
+		Impact:     "Logging provides valuable information about access and usage",
+		Resolution: "Enable logging for Queue Services",
 		Explanation: `Storage Analytics logs detailed information about successful and failed requests to a storage service. 
 
 This information can be used to monitor individual requests and to diagnose issues with a storage service. 
 
 Requests are logged on a best-effort basis.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/storage/common/storage-analytics-logging?tabs=dotnet",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, account := range s.Azure.Storage.Accounts {
+			if account.QueueProperties.EnableLogging.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Queue services storage account does not have logging enabled.",
+					account.QueueProperties.EnableLogging,
 				)
 			}
 		}

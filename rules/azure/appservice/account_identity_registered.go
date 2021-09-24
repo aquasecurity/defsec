@@ -16,17 +16,15 @@ var CheckAccountIdentityRegistered = rules.Register(
 		Impact:      "Interaction between services can't easily be achieved without username/password",
 		Resolution:  "Register the app identity with AD",
 		Explanation: `Registering the identity used by an App with AD allows it to interact with other services without using username and password`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, service := range s.Azure.AppService.Services {
+			if service.Identity.Type.IsEmpty() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"App service does not have an identity type.",
+					service.Identity.Type,
 				)
 			}
 		}
