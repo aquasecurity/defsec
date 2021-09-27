@@ -1,6 +1,7 @@
 package network
 
 import (
+	"github.com/aquasecurity/defsec/cidr"
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
@@ -16,18 +17,18 @@ var CheckNoPublicEgress = rules.Register(
 		Impact:      "Exfiltration of data to the public internet",
 		Resolution:  "Remove public access except where explicitly required",
 		Explanation: `You should not expose infrastructure to the public internet except where explicitly required`,
-		Links: []string{ 
-		},
-		Severity: severity.High,
+		Links:       []string{},
+		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
-				)
+		for _, policy := range s.Kubernetes.NetworkPolicies {
+			for _, destination := range policy.Spec.Egress.DestinationCIDRs {
+				if cidr.IsPublic(destination.Value()) {
+					results.Add(
+						"Network policy allows egress to the public internet.",
+						destination,
+					)
+				}
 			}
 		}
 		return

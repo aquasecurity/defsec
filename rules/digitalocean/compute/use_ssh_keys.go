@@ -1,4 +1,4 @@
-package droplet
+package compute
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -16,18 +16,17 @@ var CheckUseSshKeys = rules.Register(
 		Impact:      "Logging in with username and password is easier to compromise",
 		Resolution:  "Use ssh keys for login",
 		Explanation: `When working with a server, you’ll likely spend most of your time in a terminal session connected to your server through SSH. A more secure alternative to password-based logins, SSH keys use encryption to provide a secure way of logging into your server and are recommended for all users.`,
-		Links: []string{ 
+		Links: []string{
 			"https://www.digitalocean.com/community/tutorials/understanding-the-ssh-encryption-and-connection-process",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, droplet := range s.DigitalOcean.Compute.Droplets {
+			if len(droplet.SSHKeys) == 0 {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Droplet does not have an SSH key specified.",
+					droplet,
 				)
 			}
 		}

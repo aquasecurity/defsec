@@ -5,7 +5,10 @@ import (
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/owenrumney/squealer/pkg/squealer"
 )
+
+var scanner = squealer.NewStringScanner()
 
 var CheckNoSensitiveInfo = rules.Register(
 	rules.Rule{
@@ -20,12 +23,11 @@ var CheckNoSensitiveInfo = rules.Register(
 		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, instance := range s.CloudStack.Compute.Instances {
+			if scanner.Scan(instance.UserData.Value()).TransgressionFound {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Instance user data contains secret(s).",
+					instance.UserData,
 				)
 			}
 		}

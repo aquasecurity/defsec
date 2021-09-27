@@ -16,19 +16,28 @@ var CheckAclNoPublicRead = rules.Register(
 		Impact:      "The contents of the space can be accessed publicly",
 		Resolution:  "Apply a more restrictive ACL",
 		Explanation: `Space bucket and bucket object permissions should be set to deny public access unless explicitly required.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.digitalocean.com/reference/api/spaces-api/#access-control-lists-acls",
 		},
 		Severity: severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
-				)
+		for _, bucket := range s.DigitalOcean.Spaces.Buckets {
+			if bucket.ACL.GetMetadata().IsManaged() {
+				if bucket.ACL.EqualTo("public-read") {
+					results.Add(
+						"Bucket is publicly exposed.",
+						bucket.ACL,
+					)
+				}
+			}
+			for _, object := range bucket.Objects {
+				if object.ACL.EqualTo("public-read") {
+					results.Add(
+						"Object is publicly exposed.",
+						object.ACL,
+					)
+				}
 			}
 		}
 		return

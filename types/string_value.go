@@ -35,6 +35,7 @@ type StringValue interface {
 	metadataProvider
 	Value() string
 	IsEmpty() bool
+	IsNotEmpty() bool
 	IsOneOf(values ...string) bool
 	EqualTo(value string, equalityOptions ...StringEqualityOption) bool
 	NotEqualTo(value string, equalityOptions ...StringEqualityOption) bool
@@ -79,6 +80,13 @@ func (s *stringValue) IsEmpty() bool {
 		return false
 	}
 	return s.value == ""
+}
+
+func (s *stringValue) IsNotEmpty() bool {
+	if s.metadata.isUnresolvable {
+		return false
+	}
+	return s.value != ""
 }
 
 func (s *stringValue) EqualTo(value string, equalityOptions ...StringEqualityOption) bool {

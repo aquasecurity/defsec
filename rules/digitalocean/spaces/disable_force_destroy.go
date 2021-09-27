@@ -16,17 +16,15 @@ var CheckDisableForceDestroy = rules.Register(
 		Impact:      "Accidental deletion of bucket objects",
 		Resolution:  "Don't use force destroy on bucket configuration",
 		Explanation: `Enabling force destroy on a Spaces bucket means that the bucket can be deleted without the additional check that it is empty. This risks important data being accidentally deleted by a bucket removal process.`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, bucket := range s.DigitalOcean.Spaces.Buckets {
+			if bucket.ForceDestroy.IsTrue() {
 				results.Add(
-					"",
-					x.Encryption.Enabled,
-					
+					"Bucket has force-destroy enabled.",
+					bucket.ForceDestroy,
 				)
 			}
 		}
