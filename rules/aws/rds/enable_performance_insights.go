@@ -34,8 +34,7 @@ The encryption key specified in ` + "`" + `performance_insights_kms_key_id` + "`
 			if cluster.PerformanceInsights.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Cluster has performance insights enabled without encryption.",
-					cluster.PerformanceInsights.KMSKeyID.Metadata(),
-					cluster.PerformanceInsights.KMSKeyID.Value(),
+					cluster.PerformanceInsights.KMSKeyID,
 				)
 			}
 		}
@@ -49,8 +48,7 @@ The encryption key specified in ` + "`" + `performance_insights_kms_key_id` + "`
 			if instance.PerformanceInsights.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Instance has performance insights enabled without encryption.",
-					instance.PerformanceInsights.KMSKeyID.Metadata(),
-					instance.PerformanceInsights.KMSKeyID.Value(),
+					instance.PerformanceInsights.KMSKeyID,
 				)
 			}
 		}

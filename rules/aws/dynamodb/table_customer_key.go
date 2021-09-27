@@ -29,8 +29,7 @@ var CheckTableCustomerKey = rules.Register(
 			if cluster.ServerSideEncryption.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Cluster encryption does not use a customer-managed KMS key.",
-					cluster.ServerSideEncryption.KMSKeyID.Metadata(),
-					cluster.ServerSideEncryption.KMSKeyID.Value(),
+					cluster.ServerSideEncryption.KMSKeyID,
 				)
 			}
 		}

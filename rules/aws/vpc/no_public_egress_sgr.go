@@ -31,8 +31,7 @@ var CheckNoPublicEgressSgr = rules.Register(
 					if cidr.IsPublic(block.Value()) {
 						results.Add(
 							"Security group rule allows egress to public internet.",
-							block.Metadata(),
-							block.Value(),
+							block,
 						)
 					}
 				}

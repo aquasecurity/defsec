@@ -16,17 +16,15 @@ var CheckNoSerialPort = rules.Register(
 		Impact:      "Unrestricted network access to the serial console of the instance",
 		Resolution:  "Disable serial port access",
 		Explanation: `When serial port access is enabled, the access is not governed by network security rules meaning the port can be exposed publicly.`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, instance := range s.Google.Compute.Instances {
+			if instance.EnableSerialPort.IsTrue() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Instance has serial port enabled.",
+					instance.EnableSerialPort,
 				)
 			}
 		}

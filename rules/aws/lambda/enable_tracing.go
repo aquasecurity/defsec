@@ -25,8 +25,7 @@ var CheckEnableTracing = rules.Register(
 			if function.Tracing.Mode.NotEqualTo(lambda.TracingModeActive) && function.Tracing.Mode.NotEqualTo(lambda.TracingModePassThrough) {
 				results.Add(
 					"Function does not have tracing enabled.",
-					function.Tracing.Mode.Metadata(),
-					function.Tracing.Mode.Value(),
+					function.Tracing.Mode,
 				)
 			}
 		}

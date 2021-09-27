@@ -9,28 +9,29 @@ import (
 
 var CheckDefaultActionDeny = rules.Register(
 	rules.Rule{
-		Provider:    provider.AzureProvider,
-		Service:     "storage",
-		ShortCode:   "default-action-deny",
-		Summary:     "The default action on Storage account network rules should be set to deny",
-		Impact:      "Network rules that allow could cause data to be exposed publicly",
-		Resolution:  "Set network rules to deny",
+		Provider:   provider.AzureProvider,
+		Service:    "storage",
+		ShortCode:  "default-action-deny",
+		Summary:    "The default action on Storage account network rules should be set to deny",
+		Impact:     "Network rules that allow could cause data to be exposed publicly",
+		Resolution: "Set network rules to deny",
 		Explanation: `The default_action for network rules should come into effect when no other rules are matched.
 
 The default action should be set to Deny.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/firewall/rule-processing",
 		},
 		Severity: severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
+		for _, account := range s.Azure.Storage.Accounts {
+			for _, rule := range account.NetworkRules {
+				if rule.AllowByDefault.IsTrue() {
+					results.Add(
+						"Network rules allow access by default.",
+						rule.AllowByDefault,
+					)
+				}
 			}
 		}
 		return

@@ -41,7 +41,7 @@ var CheckNoPublicAccess = rules.Register(
 					if account == "*" {
 						results.Add(
 							"Policy provides public access to the ECR repository.",
-							repo.Policy.Metadata(),
+							repo.Policy,
 						)
 					}
 					continue

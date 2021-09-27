@@ -15,18 +15,16 @@ var CheckNoIpForwarding = rules.Register(
 		Summary:     "Instances should not have IP forwarding enabled",
 		Impact:      "Instance can send/receive packets without the explicit instance address",
 		Resolution:  "Disable IP forwarding",
-		Explanation: `Disabling IP forwarding ensuresthe instance can only receive packets addressed to the instance and can only send packets with a source address of the instance.`,
-		Links: []string{ 
-		},
-		Severity: severity.High,
+		Explanation: `Disabling IP forwarding ensures the instance can only receive packets addressed to the instance and can only send packets with a source address of the instance.`,
+		Links:       []string{},
+		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, instance := range s.Google.Compute.Instances {
+			if instance.CanIPForward.IsTrue() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Instance has IP forwarding allowed.",
+					instance.CanIPForward,
 				)
 			}
 		}

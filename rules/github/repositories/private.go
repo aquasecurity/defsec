@@ -25,12 +25,11 @@ You can do this by either setting <code>private</code> attribute to 'true' or <c
 		Severity: severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, repo := range s.GitHub.Repositories {
+			if repo.Public.IsTrue() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Repository is public,",
+					repo.Public,
 				)
 			}
 		}

@@ -31,8 +31,7 @@ By enabling point-in-time-recovery you can restore to a known point in the event
 			if cluster.PointInTimeRecovery.IsFalse() {
 				results.Add(
 					"Point-in-time recovery is not enabled.",
-					cluster.PointInTimeRecovery.Metadata(),
-					cluster.PointInTimeRecovery.Value(),
+					cluster.PointInTimeRecovery,
 				)
 			}
 		}

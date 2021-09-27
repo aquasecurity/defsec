@@ -27,8 +27,7 @@ var CheckEncryptionCustomerKey = rules.Register(
 			if volume.Encryption.KMSKeyID.IsEmpty() {
 				results.Add(
 					"EBS volume does not use a customer-managed KMS key.",
-					volume.Encryption.KMSKeyID.Metadata(),
-					volume.Encryption.KMSKeyID.Value(),
+					volume.Encryption.KMSKeyID,
 				)
 			}
 		}

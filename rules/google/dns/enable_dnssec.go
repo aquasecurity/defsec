@@ -16,17 +16,15 @@ var CheckEnableDnssec = rules.Register(
 		Impact:      "Unverified DNS responses could lead to man-in-the-middle attacks",
 		Resolution:  "Enable DNSSEC",
 		Explanation: `DNSSEC authenticates DNS responses, preventing MITM attacks and impersonation.`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, zone := range s.Google.DNS.ManagedZones {
+			if zone.DNSSec.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Managed zone does not have DNSSEC enabled.",
+					zone.DNSSec.Enabled,
 				)
 			}
 		}

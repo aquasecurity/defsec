@@ -26,8 +26,7 @@ var CheckNoPublicClusterAccess = rules.Register(
 			if cluster.PublicAccessEnabled.IsTrue() {
 				results.Add(
 					"Public cluster access is enabled.",
-					cluster.PublicAccessEnabled.Metadata(),
-					cluster.PublicAccessEnabled.Value(),
+					cluster.PublicAccessEnabled,
 				)
 			}
 		}

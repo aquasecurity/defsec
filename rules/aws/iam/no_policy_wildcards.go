@@ -1,4 +1,4 @@
-package iam
+package platform
 
 import (
 	"strings"
@@ -57,7 +57,7 @@ func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentSta
 		if strings.Contains(action, "*") {
 			results.Add(
 				"IAM policy document uses wildcarded action.",
-				document.Metadata(),
+				document,
 			)
 		}
 	}
@@ -65,7 +65,7 @@ func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentSta
 		if strings.Contains(resource, "*") && !iam.IsWildcardAllowed(statement.Action...) {
 			results.Add(
 				"IAM policy document uses wildcarded resource for sensitive action(s).",
-				document.Metadata(),
+				document,
 			)
 		}
 	}
@@ -73,7 +73,7 @@ func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentSta
 		if strings.Contains(principal, "*") {
 			results.Add(
 				"IAM policy document uses wildcarded principal.",
-				document.Metadata(),
+				document,
 			)
 		}
 	}

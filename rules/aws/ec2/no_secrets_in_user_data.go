@@ -34,8 +34,7 @@ var CheckNoSecretsInUserData = rules.Register(
 			if result := scanner.Scan(instance.UserData.Value()); result.TransgressionFound {
 				results.Add(
 					fmt.Sprintf("Sensitive data found in instance user data: %s", result.Description),
-					instance.UserData.Metadata(),
-					instance.UserData.Value(),
+					instance.UserData,
 				)
 			}
 		}

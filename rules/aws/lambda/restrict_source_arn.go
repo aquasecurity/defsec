@@ -34,8 +34,7 @@ For S3, this should be the ARN of the S3 Bucket. For CloudWatch Events, this sho
 				if permission.SourceARN.IsEmpty() {
 					results.Add(
 						"Lambda permission lacks source ARN for *.amazonaws.com principal.",
-						permission.SourceARN.Metadata(),
-						permission.SourceARN.Value(),
+						permission.SourceARN,
 					)
 				}
 			}

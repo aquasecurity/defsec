@@ -1,4 +1,4 @@
-package iam
+package platform
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -30,8 +30,7 @@ var CheckRequireLowercaseInPasswords = rules.Register(
 		if policy.RequireLowercase.IsFalse() {
 			results.Add(
 				"Password policy does not require lowercase characters.",
-				policy.RequireLowercase.Metadata(),
-				policy.RequireLowercase.Value(),
+				policy.RequireLowercase,
 			)
 		}
 		return

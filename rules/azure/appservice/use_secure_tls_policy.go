@@ -16,17 +16,15 @@ var CheckUseSecureTlsPolicy = rules.Register(
 		Impact:      "The minimum TLS version for apps should be TLS1_2",
 		Resolution:  "The TLS version being outdated and has known vulnerabilities",
 		Explanation: `Use a more recent TLS/SSL policy for the App Service`,
-		Links: []string{ 
-		},
-		Severity: severity.High,
+		Links:       []string{},
+		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, service := range s.Azure.AppService.Services {
+			if service.Site.MinimumTLSVersion.NotEqualTo("1.2") {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"App service does not require a secure TLS version.",
+					service.Site.MinimumTLSVersion,
 				)
 			}
 		}

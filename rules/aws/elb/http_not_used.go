@@ -40,8 +40,7 @@ You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning 
 
 				results.Add(
 					"Listener for application load balancer does not use HTTPS.",
-					listener.Protocol.Metadata(),
-					listener.Protocol.Value(),
+					listener.Protocol,
 				)
 			}
 		}

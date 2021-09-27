@@ -1,4 +1,4 @@
-package iam
+package platform
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -33,8 +33,7 @@ The account password policy should be set to prevent using any of the last five 
 		if policy.ReusePreventionCount.LessThan(5) {
 			results.Add(
 				"Password policy allows reuse of recent passwords.",
-				policy.ReusePreventionCount.Metadata(),
-				policy.ReusePreventionCount.Value(),
+				policy.ReusePreventionCount,
 			)
 		}
 		return

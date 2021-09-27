@@ -16,18 +16,24 @@ var CheckNodePoolUsesCos = rules.Register(
 		Impact:      "COS is the recommended OS image to use on cluster nodes",
 		Resolution:  "Use the COS image type",
 		Explanation: `GKE supports several OS image types but COS is the recommended OS image to use on cluster nodes for enhanced security`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Google.GKE.Clusters {
+			if cluster.NodeConfig.ImageType.NotEqualTo("") && cluster.NodeConfig.ImageType.NotEqualTo("COS_CONTAINERD") {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster is not configuring node pools to use the COS containerd image type by default.",
+					cluster.NodeConfig.ImageType,
 				)
+			}
+			for _, pool := range cluster.NodePools {
+				if pool.NodeConfig.ImageType.NotEqualTo("COS_CONTAINERD") {
+					results.Add(
+						"Node pool is not using the COS containerd image type.",
+						pool.NodeConfig.ImageType,
+					)
+				}
 			}
 		}
 		return

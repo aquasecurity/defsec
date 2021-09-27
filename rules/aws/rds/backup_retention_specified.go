@@ -32,8 +32,7 @@ var CheckBackupRetentionSpecified = rules.Register(
 			if cluster.BackupRetentionPeriodDays.LessThan(2) {
 				results.Add(
 					"Cluster has very low backup retention period.",
-					cluster.BackupRetentionPeriodDays.Metadata(),
-					cluster.BackupRetentionPeriodDays.Value(),
+					cluster.BackupRetentionPeriodDays,
 				)
 			}
 		}
@@ -44,8 +43,7 @@ var CheckBackupRetentionSpecified = rules.Register(
 			if instance.BackupRetentionPeriodDays.LessThan(2) {
 				results.Add(
 					"Instance has very low backup retention period.",
-					instance.BackupRetentionPeriodDays.Metadata(),
-					instance.BackupRetentionPeriodDays.Value(),
+					instance.BackupRetentionPeriodDays,
 				)
 			}
 		}

@@ -28,7 +28,7 @@ S3 buckets should ignore public ACLs on buckets and any objects they contain. By
 			if block.IgnorePublicACLs.IsFalse() {
 				results.Add(
 					"Public access block does not ignore public ACLs",
-					block.IgnorePublicACLs.Metadata(),
+					block.IgnorePublicACLs,
 				)
 			}
 		}

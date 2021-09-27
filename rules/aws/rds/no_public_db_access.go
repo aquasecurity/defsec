@@ -25,8 +25,7 @@ var CheckNoPublicDbAccess = rules.Register(
 				if instance.PublicAccess.IsTrue() {
 					results.Add(
 						"Cluster instance is exposed publicly.",
-						instance.PublicAccess.Metadata(),
-						instance.PublicAccess.Value(),
+						instance.PublicAccess,
 					)
 				}
 			}
@@ -35,8 +34,7 @@ var CheckNoPublicDbAccess = rules.Register(
 			if instance.PublicAccess.IsTrue() {
 				results.Add(
 					"Instance is exposed publicly.",
-					instance.PublicAccess.Metadata(),
-					instance.PublicAccess.Value(),
+					instance.PublicAccess,
 				)
 			}
 		}

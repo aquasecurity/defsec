@@ -27,14 +27,12 @@ var CheckEnableInTransitEncryption = rules.Register(
 			if cluster.EncryptionInTransit.ClientBroker.EqualTo(msk.ClientBrokerEncryptionPlaintext) {
 				results.Add(
 					"Cluster allows plaintext communication.",
-					cluster.EncryptionInTransit.ClientBroker.Metadata(),
-					cluster.EncryptionInTransit.ClientBroker.Value(),
+					cluster.EncryptionInTransit.ClientBroker,
 				)
 			} else if cluster.EncryptionInTransit.ClientBroker.EqualTo(msk.ClientBrokerEncryptionTLSOrPlaintext) {
 				results.Add(
 					"Cluster allows plaintext communication.",
-					cluster.EncryptionInTransit.ClientBroker.Metadata(),
-					cluster.EncryptionInTransit.ClientBroker.Value(),
+					cluster.EncryptionInTransit.ClientBroker,
 				)
 			}
 

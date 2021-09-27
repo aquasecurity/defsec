@@ -24,8 +24,7 @@ var CheckEnableLogExport = rules.Register(
 			if cluster.Logging.Audit.IsFalse() {
 				results.Add(
 					"Cluster does not have audit logging enabled.",
-					cluster.Logging.Audit.Metadata(),
-					cluster.Logging.Audit.Value(),
+					cluster.Logging.Audit,
 				)
 			}
 		}

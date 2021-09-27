@@ -1,4 +1,4 @@
-package iam
+package platform
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -30,8 +30,7 @@ var CheckRequireSymbolsInPasswords = rules.Register(
 		if policy.RequireSymbols.IsFalse() {
 			results.Add(
 				"Password policy does not require symbols.",
-				policy.RequireSymbols.Metadata(),
-				policy.RequireSymbols.Value(),
+				policy.RequireSymbols,
 			)
 		}
 		return

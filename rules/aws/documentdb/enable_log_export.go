@@ -22,11 +22,27 @@ var CheckEnableLogExport = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, cluster := range s.AWS.DocumentDB.Clusters {
-			if cluster.EnabledLogExports.NotEqualTo(documentdb.LogExportAudit) && cluster.EnabledLogExports.NotEqualTo(documentdb.LogExportProfiler) {
+			var hasAudit bool
+			var hasProfiler bool
+
+			for _, log := range cluster.EnabledLogExports {
+				if log.EqualTo(documentdb.LogExportAudit) {
+					hasAudit = true
+				}
+				if log.EqualTo(documentdb.LogExportProfiler) {
+					hasProfiler = true
+				}
+			}
+			if !hasAudit {
 				results.Add(
-					"CloudWatch log exports are not enabled.",
-					cluster.EnabledLogExports.Metadata(),
-					cluster.EnabledLogExports.Value(),
+					"CloudWatch audit log exports are not enabled.",
+					cluster,
+				)
+			}
+			if !hasProfiler {
+				results.Add(
+					"CloudWatch profiler log exports are not enabled.",
+					cluster,
 				)
 			}
 		}

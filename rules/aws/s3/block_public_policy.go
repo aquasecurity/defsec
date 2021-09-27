@@ -29,7 +29,7 @@ S3 bucket policy should have block public policy to prevent users from putting a
 			if block.BlockPublicPolicy.IsFalse() {
 				results.Add(
 					"Public access block does not block public policies",
-					block.BlockPublicPolicy.Metadata(),
+					block.BlockPublicPolicy,
 				)
 			}
 		}

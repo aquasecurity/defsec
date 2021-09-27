@@ -16,18 +16,20 @@ var CheckLimitAuthorizedIps = rules.Register(
 		Impact:      "Any IP can interact with the API server",
 		Resolution:  "Limit the access to the API server to a limited IP range",
 		Explanation: `The API server is the central way to interact with and manage a cluster. To improve cluster security and minimize attacks, the API server should only be accessible from a limited set of IP address ranges.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/aks/api-server-authorized-ip-ranges",
 		},
 		Severity: severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Azure.Container.KubernetesClusters {
+			if cluster.EnablePrivateCluster.IsTrue() {
+				continue
+			}
+			if len(cluster.APIServerAuthorizedIPRanges) == 0 {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not limit API access to specific IP addresses.",
+					cluster.EnablePrivateCluster,
 				)
 			}
 		}

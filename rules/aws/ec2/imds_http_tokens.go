@@ -32,7 +32,7 @@ To fully protect IMDS you need to enable session tokens by using <code>metadata_
 			if !instance.RequiresIMDSToken() && !instance.HasHTTPEndpointDisabled() {
 				results.Add(
 					"Instance does not require IMDS access to require a token",
-					instance.MetadataOptions.HttpTokens.Metadata(),
+					instance.MetadataOptions.HttpTokens,
 				)
 			}
 		}

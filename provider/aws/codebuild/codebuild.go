@@ -8,7 +8,7 @@ type CodeBuild struct {
 
 type Project struct {
 	ArtifactSettings          ArtifactSettings
-	SecondaryArtifactSettings ArtifactSettings
+	SecondaryArtifactSettings []ArtifactSettings
 }
 
 type ArtifactSettings struct {

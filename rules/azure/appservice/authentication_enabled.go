@@ -16,17 +16,15 @@ var CheckAuthenticationEnabled = rules.Register(
 		Impact:      "Anonymous HTTP requests will be accepted",
 		Resolution:  "Enable authentication to prevent anonymous request being accepted",
 		Explanation: `Enabling authentication ensures that all communications in the application are authenticated. The auth_settings block needs to be filled out with the appropriate auth backend settings`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, service := range s.Azure.AppService.Services {
+			if service.Authentication.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"App service does not have authentication enabled.",
+					service.Authentication.Enabled,
 				)
 			}
 		}

@@ -30,8 +30,7 @@ var CheckAutoRotateKeys = rules.Register(
 			if key.RotationEnabled.IsFalse() {
 				results.Add(
 					"Key does not have rotation enabled.",
-					key.RotationEnabled.Metadata(),
-					key.RotationEnabled.Value(),
+					key.RotationEnabled,
 				)
 			}
 		}

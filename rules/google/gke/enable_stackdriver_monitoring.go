@@ -16,17 +16,15 @@ var CheckEnableStackdriverMonitoring = rules.Register(
 		Impact:      "Visibility will be reduced",
 		Resolution:  "Enable StackDriver monitoring",
 		Explanation: `StackDriver monitoring aggregates logs, events, and metrics from your Kubernetes environment on GKE to help you understand your application's behavior in production.`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Google.GKE.Clusters {
+			if cluster.MonitoringService.NotEqualTo("monitoring.googleapis.com/kubernetes") {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not use the monitoring.googleapis.com/kubernetes StackDriver monitoring service.",
+					cluster.MonitoringService,
 				)
 			}
 		}

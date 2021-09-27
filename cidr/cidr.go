@@ -40,9 +40,24 @@ func isPrivate(ip net.IP) bool {
 // true if either of the min/max addresses of a provided CIDR are outside of these ranges.
 func IsPublic(cidr string) bool {
 
-	// some providers use wildcards :/
-	if cidr == "*" {
+	// some providers use wildcards etc. instead of "0.0.0.0/0" :/
+	if cidr == "*" || cidr == "internet" || cidr == "any" {
 		return true
+	}
+
+	// providers also allow "ranges" instead of cidrs :/
+	if strings.Contains(cidr, "-") {
+		parts := strings.Split(cidr, "-")
+		if len(parts) != 2 {
+			return false
+		}
+		if !isPrivate(net.IP(strings.TrimSpace(parts[0]))) {
+			return true
+		}
+		if !isPrivate(net.IP(strings.TrimSpace(parts[1]))) {
+			return true
+		}
+		return false
 	}
 
 	if !strings.Contains(cidr, "/") {

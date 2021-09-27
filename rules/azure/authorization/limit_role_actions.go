@@ -16,18 +16,25 @@ var CheckLimitRoleActions = rules.Register(
 		Impact:      "Open permissions for subscriptions could result in an easily compromisable account",
 		Resolution:  "Use targeted permissions for roles",
 		Explanation: `The permissions granted to a role should be kept to the minimum required to be able to do the task. Wildcard permissions must not be used.`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
+		for _, roleDef := range s.Azure.Authorization.RoleDefinitions {
+			for _, perm := range roleDef.Permissions {
+				for _, action := range perm.Actions {
+					if action.Contains("*") {
+						for _, scope := range roleDef.AssignableScopes {
+							if scope.EqualTo("/") {
+								results.Add(
+									"Role definition uses wildcard action with all scopes.",
+									action,
+								)
+							}
+						}
+
+					}
+				}
 			}
 		}
 		return

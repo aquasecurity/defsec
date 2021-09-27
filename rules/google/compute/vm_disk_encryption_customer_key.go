@@ -16,18 +16,18 @@ var CheckVmDiskEncryptionCustomerKey = rules.Register(
 		Impact:      "Using unmanaged keys does not allow for proper management",
 		Resolution:  "Use managed keys ",
 		Explanation: `Using unmanaged keys makes rotation and general management difficult.`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
+		for _, instance := range s.Google.Compute.Instances {
+			for _, disk := range append(instance.BootDisks, instance.AttachedDisks...) {
+				if disk.Encryption.KMSKeyLink.IsEmpty() {
+					results.Add(
+						"Instance disk encryption does not use a customer managed key.",
+						disk.Encryption.KMSKeyLink,
+					)
+				}
 			}
 		}
 		return

@@ -26,8 +26,7 @@ var CheckEnableImageScans = rules.Register(
 			if repo.ImageScanning.ScanOnPush.IsFalse() {
 				results.Add(
 					"Image scanning is not enabled.",
-					repo.ImageScanning.ScanOnPush.Metadata(),
-					repo.ImageScanning.ScanOnPush.Value(),
+					repo.ImageScanning.ScanOnPush,
 				)
 			}
 		}

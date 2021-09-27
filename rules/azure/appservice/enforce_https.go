@@ -16,19 +16,18 @@ var CheckEnforceHttps = rules.Register(
 		Impact:      "Anyone can access the Function App using HTTP.",
 		Resolution:  "You can redirect all HTTP requests to the HTTPS port.",
 		Explanation: `By default, clients can connect to function endpoints by using both HTTP or HTTPS. You should redirect HTTP to HTTPs because HTTPS uses the SSL/TLS protocol to provide a secure connection, which is both encrypted and authenticated.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/app-service/configure-ssl-bindings#enforce-https",
 			"https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts",
 		},
 		Severity: severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, functionApp := range s.Azure.AppService.FunctionApps {
+			if functionApp.HTTPSOnly.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Function app does not have HTTPS enforced.",
+					functionApp.HTTPSOnly,
 				)
 			}
 		}

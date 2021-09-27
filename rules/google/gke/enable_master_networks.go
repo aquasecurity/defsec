@@ -16,17 +16,15 @@ var CheckEnableMasterNetworks = rules.Register(
 		Impact:      "Unrestricted network access to the master",
 		Resolution:  "Enable master authorized networks",
 		Explanation: `Enabling authorized networks means you can restrict master access to a fixed set of CIDR ranges`,
-		Links: []string{ 
-		},
-		Severity: severity.High,
+		Links:       []string{},
+		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Google.GKE.Clusters {
+			if cluster.MasterAuthorizedNetworks.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not have master authorized networks enabled.",
+					cluster.MasterAuthorizedNetworks.Enabled,
 				)
 			}
 		}

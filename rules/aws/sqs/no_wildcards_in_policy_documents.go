@@ -33,7 +33,7 @@ This ensures that the queue itself cannot be modified or deleted, and prevents p
 					if action == "*" || action == "sqs:*" {
 						results.Add(
 							"Queue policy does not restrict actions to a known set.",
-							queue.Policy.Metadata(),
+							queue.Policy,
 						)
 						break
 					}

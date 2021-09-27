@@ -26,8 +26,7 @@ var CheckEncryptReplicationGroup = rules.Register(
 			if group.AtRestEncryption.Enabled.IsFalse() {
 				results.Add(
 					"Replication group does not have at-rest encryption enabled.",
-					group.AtRestEncryption.Enabled.Metadata(),
-					group.AtRestEncryption.Enabled.Value(),
+					group.AtRestEncryption.Enabled,
 				)
 			}
 		}

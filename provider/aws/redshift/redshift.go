@@ -21,3 +21,11 @@ type Encryption struct {
 	Enabled  types.BoolValue
 	KMSKeyID types.StringValue
 }
+
+func (g *SecurityGroup) GetMetadata() *types.Metadata {
+	return &g.Metadata
+}
+
+func (g *SecurityGroup) GetRawValue() interface{} {
+	return nil
+}

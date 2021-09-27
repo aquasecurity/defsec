@@ -16,18 +16,18 @@ var CheckEnableAutoUpgrade = rules.Register(
 		Impact:      "Nodes will need the cluster master version manually updating",
 		Resolution:  "Enable automatic upgrades",
 		Explanation: `Automatic updates keep nodes updated with the latest cluster master version.`,
-		Links: []string{ 
-		},
-		Severity: severity.Low,
+		Links:       []string{},
+		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
-				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
-				)
+		for _, cluster := range s.Google.GKE.Clusters {
+			for _, nodePool := range cluster.NodePools {
+				if nodePool.Management.EnableAutoUpgrade.IsFalse() {
+					results.Add(
+						"Node pool does not have auto-upgraade enabled.",
+						nodePool.Management.EnableAutoUpgrade,
+					)
+				}
 			}
 		}
 		return

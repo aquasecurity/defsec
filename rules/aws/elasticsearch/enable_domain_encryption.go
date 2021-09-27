@@ -26,8 +26,7 @@ var CheckEnableDomainEncryption = rules.Register(
 			if domain.AtRestEncryption.Enabled.IsFalse() {
 				results.Add(
 					"Domain does not have at-rest encryption enabled.",
-					domain.AtRestEncryption.Enabled.Metadata(),
-					domain.AtRestEncryption.Enabled.Value(),
+					domain.AtRestEncryption.Enabled,
 				)
 			}
 		}

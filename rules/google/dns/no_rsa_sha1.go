@@ -16,17 +16,21 @@ var CheckNoRsaSha1 = rules.Register(
 		Impact:      "Less secure encryption algorithm than others available",
 		Resolution:  "Use RSA SHA512",
 		Explanation: `RSA SHA1 is a weaker algorithm than SHA2-based algorithms such as RSA SHA256/512`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, zone := range s.Google.DNS.ManagedZones {
+			if zone.DNSSec.DefaultKeySpecs.KeySigningKey.Algorithm.EqualTo("rsasha1") {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Zone KSK uses RSA SHA1 for signing.",
+					zone.DNSSec.DefaultKeySpecs.KeySigningKey.Algorithm,
+				)
+			}
+			if zone.DNSSec.DefaultKeySpecs.ZoneSigningKey.Algorithm.EqualTo("rsasha1") {
+				results.Add(
+					"Zone ZSK uses RSA SHA1 for signing.",
+					zone.DNSSec.DefaultKeySpecs.ZoneSigningKey.Algorithm,
 				)
 			}
 		}

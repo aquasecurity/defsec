@@ -28,8 +28,7 @@ You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning 
 			if domain.Endpoint.EnforceHTTPS.IsFalse() {
 				results.Add(
 					"Domain does not enfroce HTTPS.",
-					domain.Endpoint.EnforceHTTPS.Metadata(),
-					domain.Endpoint.EnforceHTTPS.Value(),
+					domain.Endpoint.EnforceHTTPS,
 				)
 			}
 		}

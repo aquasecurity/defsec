@@ -16,18 +16,17 @@ var CheckLogging = rules.Register(
 		Impact:      "Logging provides valuable information about access and usage",
 		Resolution:  "Enable logging for AKS",
 		Explanation: `Ensure AKS logging to Azure Monitoring is configured for containers to monitor the performance of workloads.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-onboard",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Azure.Container.KubernetesClusters {
+			if cluster.AddonProfile.OMSAgent.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster does not have logging enabled via OMS Agent.",
+					cluster.AddonProfile.OMSAgent.Enabled,
 				)
 			}
 		}

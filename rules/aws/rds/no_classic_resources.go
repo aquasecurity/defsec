@@ -26,7 +26,7 @@ resources in a VPC instead.`,
 		for _, group := range s.AWS.RDS.Classic.DBSecurityGroups {
 			results.Add(
 				"Classic resources should not be used.",
-				&group.Metadata,
+				&group,
 			)
 		}
 		return

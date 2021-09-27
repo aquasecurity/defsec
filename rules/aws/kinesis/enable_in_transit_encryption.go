@@ -27,14 +27,12 @@ var CheckEnableInTransitEncryption = rules.Register(
 			if stream.Encryption.Type.NotEqualTo(kinesis.EncryptionTypeKMS) {
 				results.Add(
 					"Stream does not use KMS encryption.",
-					stream.Encryption.Type.Metadata(),
-					stream.Encryption.Type.Value(),
+					stream.Encryption.Type,
 				)
 			} else if stream.Encryption.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Stream does not use a custom-managed KMS key.",
-					stream.Encryption.KMSKeyID.Metadata(),
-					stream.Encryption.KMSKeyID.Value(),
+					stream.Encryption.KMSKeyID,
 				)
 			}
 		}

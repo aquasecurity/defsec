@@ -16,18 +16,17 @@ var CheckPostgresConfigurationLogCheckpoints = rules.Register(
 		Impact:      "No error and query logs generated on checkpoint",
 		Resolution:  "Enable checkpoint logging",
 		Explanation: `Postgresql can generate logs for checkpoints to improve visibility for audit and configuration issue resolution.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/postgresql/concepts-server-logs#configure-logging",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, server := range s.Azure.Database.PostgreSQLServers {
+			if server.Config.LogCheckpoints.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Database server is not configured to log checkpoints.",
+					server.Config.LogCheckpoints,
 				)
 			}
 		}

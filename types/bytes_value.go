@@ -15,11 +15,15 @@ func (b *bytesValue) Value() []byte {
 	return b.value
 }
 
+func (b *bytesValue) GetRawValue() interface{} {
+	return b.value
+}
+
 func (b *bytesValue) Len() int {
 	return len(b.value)
 }
 
-func (b *bytesValue) Metadata() *Metadata {
+func (b *bytesValue) GetMetadata() *Metadata {
 	return b.metadata
 }
 
@@ -32,12 +36,12 @@ func Bytes(value []byte, m *Metadata) BytesValue {
 
 func BytesDefault(value []byte, m *Metadata) BytesValue {
 	b := Bytes(value, m)
-	b.Metadata().isDefault = true
+	b.GetMetadata().isDefault = true
 	return b
 }
 
 func BytesExplicit(value []byte, m *Metadata) BytesValue {
 	b := Bytes(value, m)
-	b.Metadata().isExplicit = true
+	b.GetMetadata().isExplicit = true
 	return b
 }

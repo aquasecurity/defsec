@@ -9,29 +9,28 @@ import (
 
 var CheckVirtualNetworkEnabled = rules.Register(
 	rules.Rule{
-		Provider:    provider.AzureProvider,
-		Service:     "synapse",
-		ShortCode:   "virtual-network-enabled",
-		Summary:     "Synapse Workspace should have managed virtual network enabled, the default is disabled.",
-		Impact:      "Your Synapse workspace is not using the private endpoints",
-		Resolution:  "Set manage virtual network to enabled",
+		Provider:   provider.AzureProvider,
+		Service:    "synapse",
+		ShortCode:  "virtual-network-enabled",
+		Summary:    "Synapse Workspace should have managed virtual network enabled, the default is disabled.",
+		Impact:     "Your Synapse workspace is not using the private endpoints",
+		Resolution: "Set manage virtual network to enabled",
 		Explanation: `Synapse Workspace does not have managed virtual network enabled by default.
 
 When you create your Azure Synapse workspace, you can choose to associate it to a Microsoft Azure Virtual Network. The Virtual Network associated with your workspace is managed by Azure Synapse. This Virtual Network is called a Managed workspace Virtual Network.
 Managed private endpoints are private endpoints created in a Managed Virtual Network associated with your Azure Synapse workspace. Managed private endpoints establish a private link to Azure resources. You can only use private links in a workspace that has a Managed workspace Virtual Network.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/synapse-analytics/security/synapse-workspace-managed-private-endpoints",
 			"https://docs.microsoft.com/en-us/azure/synapse-analytics/security/synapse-workspace-managed-vnet",
 		},
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, workspace := range s.Azure.Synapse.Workspaces {
+			if workspace.EnableManagedVirtualNetwork.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Workspace does not have a managed virtual network enabled.",
+					workspace.EnableManagedVirtualNetwork,
 				)
 			}
 		}

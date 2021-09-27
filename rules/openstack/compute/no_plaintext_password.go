@@ -16,17 +16,15 @@ var CheckNoPlaintextPassword = rules.Register(
 		Impact:      "Including a plaintext password could lead to compromised instance",
 		Resolution:  "Do not use plaintext passwords in terraform files",
 		Explanation: `Assigning a password to the compute instance using plaintext could lead to compromise; it would be preferable to use key-pairs as a login mechanism`,
-		Links: []string{ 
-		},
-		Severity: severity.Medium,
+		Links:       []string{},
+		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, instance := range s.OpenStack.Compute.Instances {
+			if instance.AdminPassword.IsNotEmpty() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Instance has admin password set.",
+					instance.AdminPassword,
 				)
 			}
 		}

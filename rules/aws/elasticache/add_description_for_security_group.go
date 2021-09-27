@@ -26,8 +26,7 @@ Simplifies auditing, debugging, and managing security groups.`,
 			if sg.Description.IsEmpty() {
 				results.Add(
 					"Security group does not have a description.",
-					sg.Description.Metadata(),
-					sg.Description.Value(),
+					sg.Description,
 				)
 			}
 		}

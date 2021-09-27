@@ -27,8 +27,7 @@ var CheckEnableVolumeEncryption = rules.Register(
 			if volume.Encryption.Enabled.IsFalse() {
 				results.Add(
 					"EBS volume is not encrypted.",
-					volume.Encryption.Enabled.Metadata(),
-					volume.Encryption.Enabled.Value(),
+					volume.Encryption.Enabled,
 				)
 			}
 		}

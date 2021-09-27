@@ -16,18 +16,17 @@ var CheckUseRbacPermissions = rules.Register(
 		Impact:      "No role based access control is in place for the AKS cluster",
 		Resolution:  "Enable RBAC",
 		Explanation: `Using Kubernetes role-based access control (RBAC), you can grant users, groups, and service accounts access to only the resources they need.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/aks/concepts-identity",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, cluster := range s.Azure.Container.KubernetesClusters {
+			if cluster.RoleBasedAccessControl.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Cluster has RBAC disabled",
+					cluster.RoleBasedAccessControl.Enabled,
 				)
 			}
 		}

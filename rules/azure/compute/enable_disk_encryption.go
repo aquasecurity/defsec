@@ -16,18 +16,17 @@ var CheckEnableDiskEncryption = rules.Register(
 		Impact:      "Data could be read if compromised",
 		Resolution:  "Enable encryption on managed disks",
 		Explanation: `Manage disks should be encrypted at rest. When specifying the <code>encryption_settings</code> block, the enabled attribute should be set to <code>true</code>.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/virtual-machines/linux/disk-encryption",
 		},
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, x := range s.AWS.S3.Buckets {
-			if x.Encryption.Enabled.IsFalse() {
+		for _, disk := range s.Azure.Compute.ManagedDisks {
+			if disk.Encryption.Enabled.IsFalse() {
 				results.Add(
-					"",
-					x.Encryption.Enabled.Metadata(),
-					x.Encryption.Enabled.Value(),
+					"Managed disk is not encrypted.",
+					disk.Encryption.Enabled,
 				)
 			}
 		}

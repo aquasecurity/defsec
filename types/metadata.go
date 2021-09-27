@@ -1,7 +1,8 @@
 package types
 
 type metadataProvider interface {
-	Metadata() *Metadata
+	GetMetadata() *Metadata
+	GetRawValue() interface{}
 }
 
 type Metadata struct {

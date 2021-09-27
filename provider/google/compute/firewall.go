@@ -17,11 +17,11 @@ type FirewallRule struct {
 type IngressRule struct {
 	types.Metadata
 	FirewallRule
-	Source types.StringValue
+	SourceRanges []types.StringValue
 }
 
 type EgressRule struct {
 	types.Metadata
 	FirewallRule
-	Destination types.StringValue
+	DestinationRanges []types.StringValue
 }
