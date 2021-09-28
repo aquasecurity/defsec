@@ -63,11 +63,16 @@ func (value *awsIAMPolicyPrincipal) UnmarshalJSON(b []byte) error {
 				} else {
 					value.AWS = append(value.AWS, raw)
 				}
-			case []string:
+			case []interface{}, []string:
 				if key == "Service" {
-					value.Service = append(value.Service, raw...)
+					for _, r := range raw.([]interface{}) {
+						value.Service = append(value.Service, r.(string))
+					}
+
 				} else {
-					value.AWS = append(value.AWS, raw...)
+					for _, r := range raw.([]interface{}) {
+						value.AWS = append(value.AWS, r.(string))
+					}
 				}
 			}
 		}
@@ -76,6 +81,10 @@ func (value *awsIAMPolicyPrincipal) UnmarshalJSON(b []byte) error {
 	case []interface{}:
 		for _, item := range v {
 			value.AWS = append(value.AWS, fmt.Sprintf("%v", item))
+		}
+	case []string:
+		for _, item := range v {
+			value.AWS = append(value.AWS, item)
 		}
 	default:
 		return fmt.Errorf("invalid %s value element: allowed is only string or []string", value)
