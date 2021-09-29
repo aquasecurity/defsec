@@ -10,14 +10,14 @@ type VPC struct {
 
 type SecurityGroup struct {
 	types.Metadata
-	Description types.StringValue
-	Rules       []SecurityGroupRule
+	Description  types.StringValue
+	IngressRules []SecurityGroupRule
+	EgressRules  []SecurityGroupRule
 }
 
 type SecurityGroupRule struct {
 	Description types.StringValue
 	CIDRs       []types.StringValue
-	Type        types.StringValue
 }
 
 type DefaultVPC struct {
