@@ -24,19 +24,21 @@ var CheckNoPublicIngress = rules.Register(
 		Severity: severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, rule := range s.AWS.VPC.NetworkACLRules {
-			if !rule.Type.EqualTo(vpc.TypeIngress) {
-				continue
-			}
-			if !rule.Action.EqualTo(vpc.ActionAllow) {
-				continue
-			}
-			for _, block := range rule.CIDRs {
-				if cidr.IsPublic(block.Value()) {
-					results.Add(
-						"Network ACL rule allows ingress from public internet.",
-						block,
-					)
+		for _, acl := range s.AWS.VPC.NetworkACLs {
+			for _, rule := range acl.Rules {
+				if !rule.Type.EqualTo(vpc.TypeIngress) {
+					continue
+				}
+				if !rule.Action.EqualTo(vpc.ActionAllow) {
+					continue
+				}
+				for _, block := range rule.CIDRs {
+					if cidr.IsPublic(block.Value()) {
+						results.Add(
+							"Network ACL rule allows ingress from public internet.",
+							block,
+						)
+					}
 				}
 			}
 		}

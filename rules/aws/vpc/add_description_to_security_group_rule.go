@@ -25,7 +25,7 @@ Simplifies auditing, debugging, and managing security groups.`,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, group := range s.AWS.VPC.SecurityGroups {
-			for _, rule := range group.Rules {
+			for _, rule := range append(group.EgressRules, group.IngressRules...) {
 				if rule.Description.IsEmpty() {
 					results.Add(
 						"Security group rule does not have a description.",

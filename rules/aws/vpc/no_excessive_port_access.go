@@ -22,12 +22,14 @@ var CheckNoExcessivePortAccess = rules.Register(
 		Severity: severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, acl := range s.AWS.VPC.NetworkACLRules {
-			if acl.Protocol.EqualTo("all") || acl.Protocol.EqualTo("-1") {
-				results.Add(
-					"Network ACL rule allows access using ALL ports.",
-					acl.Protocol,
-				)
+		for _, acl := range s.AWS.VPC.NetworkACLs {
+			for _, rule := range acl.Rules {
+				if rule.Protocol.EqualTo("all") || rule.Protocol.EqualTo("-1") {
+					results.Add(
+						"Network ACL rule allows access using ALL ports.",
+						rule.Protocol,
+					)
+				}
 			}
 		}
 		return

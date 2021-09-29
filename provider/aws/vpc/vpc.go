@@ -5,7 +5,7 @@ import "github.com/aquasecurity/defsec/types"
 type VPC struct {
 	DefaultVPCs    []DefaultVPC
 	SecurityGroups []SecurityGroup
-	NetworkACL     []NetworkACL
+	NetworkACLs    []NetworkACL
 }
 
 type NetworkACL struct {

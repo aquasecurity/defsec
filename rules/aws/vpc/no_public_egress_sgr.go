@@ -3,7 +3,6 @@ package vpc
 import (
 	"github.com/aquasecurity/defsec/cidr"
 	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/vpc"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -23,10 +22,7 @@ var CheckNoPublicEgressSgr = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, group := range s.AWS.VPC.SecurityGroups {
-			for _, rule := range group.Rules {
-				if rule.Type.NotEqualTo(vpc.TypeEgress) {
-					continue
-				}
+			for _, rule := range group.EgressRules {
 				for _, block := range rule.CIDRs {
 					if cidr.IsPublic(block.Value()) {
 						results.Add(
