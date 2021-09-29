@@ -10,31 +10,31 @@ type IntValue interface {
 }
 
 type intValue struct {
-	metadata *Metadata
+	metadata Metadata
 	value    int
 }
 
-func Int(value int, m *Metadata) IntValue {
+func Int(value int, m Metadata) IntValue {
 	return &intValue{
 		value:    value,
 		metadata: m,
 	}
 }
 
-func IntDefault(value int, m *Metadata) IntValue {
+func IntDefault(value int, m Metadata) IntValue {
 	b := Int(value, m)
 	b.GetMetadata().isDefault = true
 	return b
 }
 
-func IntExplicit(value int, m *Metadata) IntValue {
+func IntExplicit(value int, m Metadata) IntValue {
 	b := Int(value, m)
 	b.GetMetadata().isExplicit = true
 	return b
 }
 
 func (b *intValue) GetMetadata() *Metadata {
-	return b.metadata
+	return &b.metadata
 }
 
 func (b *intValue) Value() int {
