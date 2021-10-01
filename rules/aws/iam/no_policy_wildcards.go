@@ -42,16 +42,16 @@ var CheckNoPolicyWildcards = rules.Register(
 
 		for _, document := range documents {
 			for _, statement := range document.Statements {
-				checkStatement(document, statement, results)
+				results = checkStatement(document, statement, results)
 			}
 		}
 		return
 	},
 )
 
-func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentStatement, results rules.Results) {
-	if statement.Effect == "deny" {
-		return
+func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentStatement, results rules.Results) rules.Results {
+	if strings.ToLower(statement.Effect) == "deny" {
+		return results
 	}
 	for _, action := range statement.Action {
 		if strings.Contains(action, "*") {
@@ -77,4 +77,5 @@ func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentSta
 			)
 		}
 	}
+	return results
 }
