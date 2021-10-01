@@ -1,4 +1,4 @@
-package platform
+package iam
 
 import (
 	"github.com/aquasecurity/defsec/provider"
