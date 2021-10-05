@@ -1,6 +1,8 @@
 package sqs
 
 import (
+	"strings"
+
 	"github.com/aquasecurity/defsec/provider"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
@@ -26,10 +28,11 @@ This ensures that the queue itself cannot be modified or deleted, and prevents p
 	func(s *state.State) (results rules.Results) {
 		for _, queue := range s.AWS.SQS.Queues {
 			for _, statement := range queue.Policy.Statements {
-				if statement.Effect != "allow" {
+				if strings.ToLower(statement.Effect) != "allow" {
 					continue
 				}
 				for _, action := range statement.Action {
+					action = strings.ToLower(action)
 					if action == "*" || action == "sqs:*" {
 						results.Add(
 							"Queue policy does not restrict actions to a known set.",
