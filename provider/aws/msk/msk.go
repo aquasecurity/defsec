@@ -12,6 +12,7 @@ type Cluster struct {
 }
 
 const (
+	ClientBrokerEncryptionTLS            = "TLS"
 	ClientBrokerEncryptionPlaintext      = "PLAINTEXT"
 	ClientBrokerEncryptionTLSOrPlaintext = "TLS_PLAINTEXT"
 )
