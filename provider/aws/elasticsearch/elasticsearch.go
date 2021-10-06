@@ -4,7 +4,6 @@ import "github.com/aquasecurity/defsec/types"
 
 type Elasticsearch struct {
 	Domains           []Domain
-	ReplicationGroups []ReplicationGroup
 }
 
 type Domain struct {
@@ -27,11 +26,6 @@ type LogPublishing struct {
 
 type TransitEncryption struct {
 	Enabled types.BoolValue
-}
-
-type ReplicationGroup struct {
-	types.Metadata
-	AtRestEncryption AtRestEncryption
 }
 
 type AtRestEncryption struct {
