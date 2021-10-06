@@ -9,6 +9,7 @@ type Neptune struct {
 type Cluster struct {
 	Logging          Logging
 	StorageEncrypted types.BoolValue
+	KMSKeyID         types.StringValue
 }
 
 type Logging struct {
