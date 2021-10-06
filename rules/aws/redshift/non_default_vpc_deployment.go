@@ -7,11 +7,11 @@ import (
 	"github.com/aquasecurity/defsec/state"
 )
 
-var CheckNonDefaultVpcDeployment = rules.Register(
+var CheckUsesVPC = rules.Register(
 	rules.Rule{
 		Provider:   provider.AWSProvider,
 		Service:    "redshift",
-		ShortCode:  "non-default-vpc-deployment",
+		ShortCode:  "use-vpc",
 		Summary:    "Redshift cluster should be deployed into a specific VPC",
 		Impact:     "Redshift cluster does not benefit from VPC security if it is deployed in EC2 classic mode",
 		Resolution: "Deploy Redshift cluster into a non default VPC",
