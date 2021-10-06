@@ -11,7 +11,7 @@ var CheckBackupRetentionSpecified = rules.Register(
 	rules.Rule{
 		Provider:    provider.AWSProvider,
 		Service:     "rds",
-		ShortCode:   "backup-retention-specified",
+		ShortCode:   "specify-backup-retention",
 		Summary:     "RDS Cluster and RDS instance should have backup retention longer than default 1 day",
 		Impact:      "Potential loss of data and short opportunity for recovery",
 		Resolution:  "Explicitly set the retention period to greater than the default",
