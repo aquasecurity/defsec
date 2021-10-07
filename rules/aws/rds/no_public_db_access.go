@@ -16,7 +16,9 @@ var CheckNoPublicDbAccess = rules.Register(
 		Impact:      "The database instance is publicly accessible",
 		Resolution:  "Set the database to not be publicly accessible",
 		Explanation: `Database resources should not publicly available. You should limit all access to the minimum that is required for your application to function.`,
-		Links:       []string{},
+		Links:       []string{
+			"https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.WorkingWithRDSInstanceinaVPC.html#USER_VPC.Hiding",
+		},
 		Severity:    severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {

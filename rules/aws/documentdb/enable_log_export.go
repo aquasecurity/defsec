@@ -17,7 +17,9 @@ var CheckEnableLogExport = rules.Register(
 		Impact:      "Limited visibility of audit trail for changes to the DocumentDB",
 		Resolution:  "Enable export logs",
 		Explanation: `Document DB does not have auditing by default. To ensure that you are able to accurately audit the usage of your DocumentDB cluster you should enable export logs.`,
-		Links:       []string{},
+		Links:       []string{
+			"https://docs.aws.amazon.com/documentdb/latest/developerguide/event-auditing.html",
+		},
 		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {

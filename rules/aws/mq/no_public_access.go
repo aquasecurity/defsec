@@ -16,7 +16,9 @@ var CheckNoPublicAccess = rules.Register(
 		Impact:      "Publicly accessible MQ Broker may be vulnerable to compromise",
 		Resolution:  "Disable public access when not required",
 		Explanation: `Public access of the MQ broker should be disabled and only allow routes to applications that require access.`,
-		Links:       []string{},
+		Links:       []string{
+			"https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/using-amazon-mq-securely.html#prefer-brokers-without-public-accessibility",
+		},
 		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {

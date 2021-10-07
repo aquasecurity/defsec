@@ -16,7 +16,9 @@ var CheckEnableLogging = rules.Register(
 		Impact:      "Without logging it is difficult to trace issues",
 		Resolution:  "Enable logging",
 		Explanation: `Managed streaming for Kafka can log to Cloud Watch, Kinesis Firehose and S3, at least one of these locations should be logged to`,
-		Links:       []string{},
+		Links:       []string{
+			"https://docs.aws.amazon.com/msk/latest/developerguide/msk-logging.html",
+		},
 		Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {

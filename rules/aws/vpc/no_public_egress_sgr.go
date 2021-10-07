@@ -17,7 +17,9 @@ var CheckNoPublicEgressSgr = rules.Register(
 		Impact:      "Your port is egressing data to the internet",
 		Resolution:  "Set a more restrictive cidr range",
 		Explanation: `Opening up ports to connect out to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that are explicitly required where possible.`,
-		Links:       []string{},
+		Links:       []string{
+			"https://docs.aws.amazon.com/whitepapers/latest/building-scalable-secure-multi-vpc-network-infrastructure/centralized-egress-to-internet.html",
+		},
 		Severity:    severity.Critical,
 	},
 	func(s *state.State) (results rules.Results) {

@@ -18,7 +18,9 @@ var CheckAddDescriptionForSecurityGroup = rules.Register(
 		Explanation: `Security groups and security group rules should include a description for auditing purposes.
 
 Simplifies auditing, debugging, and managing security groups.`,
-		Links:    []string{},
+		Links:    []string{
+			"https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/SecurityGroups.Creating.html",
+		},
 		Severity: severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {

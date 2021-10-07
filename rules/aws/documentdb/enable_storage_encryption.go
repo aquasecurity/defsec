@@ -16,7 +16,7 @@ var CheckEnableStorageEncryption = rules.Register(
 		Impact:      "Unencrypted sensitive data is vulnerable to compromise.",
 		Resolution:  "Enable storage encryption",
 		Explanation: `Encryption of the underlying storage used by DocumentDB ensures that if their is compromise of the disks, the data is still protected.`,
-		Links:       []string{},
+		Links:       []string{"https://docs.aws.amazon.com/documentdb/latest/developerguide/encryption-at-rest.html"},
 		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {

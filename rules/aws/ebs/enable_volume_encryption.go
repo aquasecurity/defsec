@@ -16,7 +16,7 @@ var CheckEnableVolumeEncryption = rules.Register(
 		Impact:      "Unencrypted sensitive data is vulnerable to compromise.",
 		Resolution:  "Enable encryption of EBS volumes",
 		Explanation: `By enabling encryption on EBS volumes you protect the volume, the disk I/O and any derived snapshots from compromise if intercepted.`,
-		Links:       []string{},
+		Links:       []string{"https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html"},
 		Severity:    severity.High,
 	},
 	func(s *state.State) (results rules.Results) {

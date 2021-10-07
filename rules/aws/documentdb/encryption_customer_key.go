@@ -16,7 +16,7 @@ var CheckEncryptionCustomerKey = rules.Register(
 		Impact:      "Using AWS managed keys does not allow for fine grained control",
 		Resolution:  "Enable encryption using customer managed keys",
 		Explanation: `Encryption using AWS keys provides protection for your DocumentDB underlying storage. To increase control of the encryption and manage factors like rotation use customer managed keys.`,
-		Links:       []string{},
+		Links:       []string{"https://docs.aws.amazon.com/documentdb/latest/developerguide/security.encryption.ssl.public-key.html"},
 		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
