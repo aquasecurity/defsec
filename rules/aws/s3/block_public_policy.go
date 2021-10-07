@@ -25,11 +25,15 @@ S3 bucket policy should have block public policy to prevent users from putting a
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, block := range s.AWS.S3.PublicAccessBlocks {
-			if block.BlockPublicPolicy.IsFalse() {
+		for _, bucket := range s.AWS.S3.Buckets {
+			if bucket.PublicAccessBlock == nil {
+				results.Add("No public access block so not blocking public policies", &bucket)
+				return results
+			}
+			if bucket.PublicAccessBlock.BlockPublicPolicy.IsFalse() {
 				results.Add(
 					"Public access block does not block public policies",
-					block.BlockPublicPolicy,
+					bucket.PublicAccessBlock.BlockPublicPolicy,
 				)
 			}
 		}
