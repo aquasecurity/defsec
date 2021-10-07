@@ -24,11 +24,14 @@ S3 buckets should ignore public ACLs on buckets and any objects they contain. By
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, block := range s.AWS.S3.PublicAccessBlocks {
-			if block.IgnorePublicACLs.IsFalse() {
+		for _, bucket := range s.AWS.S3.Buckets {
+			if bucket.PublicAccessBlock == nil {
+				results.Add("No public access block so not ignoring public acls", &bucket)
+			}
+			if bucket.PublicAccessBlock.IgnorePublicACLs.IsFalse() {
 				results.Add(
 					"Public access block does not ignore public ACLs",
-					block.IgnorePublicACLs,
+					bucket.PublicAccessBlock.IgnorePublicACLs,
 				)
 			}
 		}
