@@ -8,4 +8,5 @@ type Config struct {
 
 type ConfigurationAggregrator struct {
 	SourceAllRegions types.BoolValue
+	IsDefined bool
 }

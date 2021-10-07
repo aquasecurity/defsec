@@ -24,7 +24,7 @@ This will help limit the risk of any unmonitored configuration in regions that a
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		if !s.AWS.Config.ConfigurationAggregrator.SourceAllRegions.GetMetadata().IsManaged() {
+		if !s.AWS.Config.ConfigurationAggregrator.IsDefined {
 			return
 		}
 		if s.AWS.Config.ConfigurationAggregrator.SourceAllRegions.IsFalse() {
