@@ -32,5 +32,5 @@ func (r RegisteredRule) Rule() Rule {
 }
 
 func (r *RegisteredRule) AddLink(link string) {
-	r.rule.Links = append(r.rule.Links, link)
+	r.rule.Links = append([]string{link}, r.rule.Links...)
 }
