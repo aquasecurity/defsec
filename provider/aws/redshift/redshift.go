@@ -13,6 +13,7 @@ type SecurityGroup struct {
 }
 
 type Cluster struct {
+	types.Metadata
 	Encryption      Encryption
 	SubnetGroupName types.StringValue
 }
@@ -27,5 +28,13 @@ func (g *SecurityGroup) GetMetadata() *types.Metadata {
 }
 
 func (g *SecurityGroup) GetRawValue() interface{} {
+	return nil
+}
+
+func (c *Cluster) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Cluster) GetRawValue() interface{} {
 	return nil
 }

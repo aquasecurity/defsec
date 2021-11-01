@@ -34,6 +34,8 @@ var CheckEnableInTransitEncryption = rules.Register(
 					"Stream does not use a custom-managed KMS key.",
 					stream.Encryption.KMSKeyID,
 				)
+			} else {
+				results.AddPassed(&stream)
 			}
 		}
 		return

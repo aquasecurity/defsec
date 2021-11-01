@@ -32,6 +32,8 @@ With versioning you can recover more easily from both unintended user actions an
 					"Bucket does not have versioning enabled",
 					bucket.Versioning.Enabled,
 				)
+			} else {
+				results.AddPassed(&bucket)
 			}
 		}
 		return results

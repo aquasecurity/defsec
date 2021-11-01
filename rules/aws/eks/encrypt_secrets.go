@@ -33,6 +33,8 @@ var CheckEncryptSecrets = rules.Register(
 					"Cluster encryption requires a KMS key ID, which is missing",
 					cluster.Encryption.KMSKeyID,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 		}
 		return

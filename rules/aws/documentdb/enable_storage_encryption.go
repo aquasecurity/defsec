@@ -26,6 +26,8 @@ var CheckEnableStorageEncryption = rules.Register(
 					"Cluster storage does not have encryption enabled.",
 					cluster.StorageEncrypted,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 		}
 		return

@@ -12,3 +12,11 @@ type PasswordPolicy struct {
 	MaxAgeDays           types.IntValue
 	MinimumLength        types.IntValue
 }
+
+func (p *PasswordPolicy) GetMetadata() *types.Metadata {
+	return &p.Metadata
+}
+
+func (p *PasswordPolicy) GetRawValue() interface{} {
+	return nil
+}

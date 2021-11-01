@@ -40,12 +40,16 @@ var CheckEnableLogExport = rules.Register(
 					"CloudWatch audit log exports are not enabled.",
 					cluster,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 			if !hasProfiler {
 				results.Add(
 					"CloudWatch profiler log exports are not enabled.",
 					cluster,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 		}
 		return

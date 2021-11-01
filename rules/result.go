@@ -68,6 +68,18 @@ func (r *Results) Add(description string, source MetadataProvider) {
 	)
 }
 
+func (r *Results) AddPassed(source MetadataProvider, descriptions ...string) {
+	metadata := source.GetMetadata()
+
+	*r = append(*r,
+		Result{
+			description: strings.Join(descriptions, " "),
+			status:      StatusPassed,
+			metadata:    metadata,
+		},
+	)
+}
+
 func (r *Results) SetRule(rule Rule) {
 	for i := range *r {
 		(*r)[i].rule = rule

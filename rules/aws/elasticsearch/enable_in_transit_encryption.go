@@ -28,6 +28,8 @@ var CheckEnableInTransitEncryption = rules.Register(
 					"Domain does not have in-transit encryption enabled.",
 					domain.TransitEncryption.Enabled,
 				)
+			} else {
+				results.AddPassed(&domain)
 			}
 		}
 		return

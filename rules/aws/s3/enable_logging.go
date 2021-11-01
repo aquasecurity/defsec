@@ -28,6 +28,8 @@ var CheckLoggingIsEnabled = rules.Register(
 					"Bucket does not have logging enabled",
 					bucket.Logging.Enabled,
 				)
+			} else {
+				results.AddPassed(&bucket)
 			}
 		}
 		return results

@@ -33,6 +33,8 @@ var CheckEncryptionCustomerKey = rules.Register(
 					"Cluster does not use a customer managed encryption key.",
 					cluster.Encryption.KMSKeyID,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 		}
 		return

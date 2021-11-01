@@ -28,6 +28,8 @@ var CheckEnableLogExport = rules.Register(
 					"Cluster does not have audit logging enabled.",
 					cluster.Logging.Audit,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 		}
 		return

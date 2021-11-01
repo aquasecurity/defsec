@@ -28,6 +28,8 @@ var CheckUseSecureTlsPolicy = rules.Register(
 					"Domain name is configured with an outdated TLS policy.",
 					domain.SecurityPolicy,
 				)
+			}else {
+				results.AddPassed(&domain)
 			}
 		}
 		return

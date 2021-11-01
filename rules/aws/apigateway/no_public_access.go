@@ -37,6 +37,8 @@ var CheckNoPublicAccess = rules.Register(
 						"Authorization is not enabled for this method.",
 						method.AuthorizationType,
 					)
+				}else {
+					results.AddPassed(&method)
 				}
 			}
 		}

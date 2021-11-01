@@ -31,3 +31,11 @@ type TransitEncryption struct {
 type AtRestEncryption struct {
 	Enabled types.BoolValue
 }
+
+func (c *Domain) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Domain) GetRawValue() interface{} {
+	return nil
+}

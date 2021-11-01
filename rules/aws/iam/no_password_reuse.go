@@ -35,6 +35,8 @@ The account password policy should be set to prevent using any of the last five 
 				"Password policy allows reuse of recent passwords.",
 				policy.ReusePreventionCount,
 			)
+		} else {
+			results.AddPassed(&policy)
 		}
 		return
 	},

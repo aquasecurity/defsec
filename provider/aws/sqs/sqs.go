@@ -18,3 +18,11 @@ type Queue struct {
 type Encryption struct {
 	KMSKeyID types.StringValue
 }
+
+func (v *Queue) GetMetadata() *types.Metadata {
+	return &v.Metadata
+}
+
+func (v *Queue) GetRawValue() interface{} {
+	return nil
+}

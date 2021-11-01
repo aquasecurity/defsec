@@ -28,6 +28,8 @@ var CheckEnableAllRegions = rules.Register(
 					"Trail is not enabled across all regions.",
 					trail.IsMultiRegion,
 				)
+			} else {
+				results.AddPassed(&trail)
 			}
 		}
 		return

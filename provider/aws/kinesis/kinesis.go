@@ -19,3 +19,11 @@ type Encryption struct {
 	Type     types.StringValue
 	KMSKeyID types.StringValue
 }
+
+func (s *Stream) GetMetadata() *types.Metadata {
+	return &s.Metadata
+}
+
+func (s *Stream) GetRawValue() interface{} {
+	return nil
+}

@@ -34,6 +34,8 @@ By setting drop_invalid_header_fields to true, anything that doe not conform to 
 					"Application load balancer is not set to drop invalid headers.",
 					lb.DropInvalidHeaderFields,
 				)
+			}else {
+				results.AddPassed(&lb)
 			}
 		}
 		return

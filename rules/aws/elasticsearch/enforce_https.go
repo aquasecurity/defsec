@@ -30,6 +30,8 @@ You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning 
 					"Domain does not enfroce HTTPS.",
 					domain.Endpoint.EnforceHTTPS,
 				)
+			} else {
+				results.AddPassed(&domain)
 			}
 		}
 		return

@@ -9,16 +9,16 @@ import (
 )
 
 type Rule struct {
-	ID          string
-	ShortCode   string
-	Summary     string
-	Explanation string
-	Impact      string
-	Resolution  string
-	Provider    provider.Provider
-	Service     string
-	Links       []string
-	Severity    severity.Severity
+	AVDID       string            `json:"avd_id"`
+	ShortCode   string            `json:"short_code"`
+	Summary     string            `json:"summary"`
+	Explanation string            `json:"explanation"`
+	Impact      string            `json:"impact"`
+	Resolution  string            `json:"resolution"`
+	Provider    provider.Provider `json:"provider"`
+	Service     string            `json:"service"`
+	Links       []string          `json:"links"`
+	Severity    severity.Severity `json:"severity"`
 }
 
 func (r Rule) LongID() string {

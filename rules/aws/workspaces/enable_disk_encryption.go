@@ -23,17 +23,23 @@ var CheckEnableDiskEncryption = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, workspace := range s.AWS.WorkSpaces.WorkSpaces {
+			var fail bool
 			if workspace.RootVolume.Encryption.Enabled.IsFalse() {
 				results.Add(
 					"Root volume does not have encryption enabled.",
 					workspace.RootVolume.Encryption.Enabled,
 				)
+				fail = true
 			}
 			if workspace.UserVolume.Encryption.Enabled.IsFalse() {
 				results.Add(
 					"User volume does not have encryption enabled.",
 					workspace.UserVolume.Encryption.Enabled,
 				)
+				fail = true
+			}
+			if !fail {
+				results.AddPassed(&workspace)
 			}
 		}
 		return

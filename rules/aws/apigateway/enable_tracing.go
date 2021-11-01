@@ -34,6 +34,8 @@ var CheckEnableTracing = rules.Register(
 						"X-Ray tracing is not enabled,",
 						stage.XRayTracingEnabled,
 					)
+				}else {
+					results.AddPassed(&stage)
 				}
 			}
 		}

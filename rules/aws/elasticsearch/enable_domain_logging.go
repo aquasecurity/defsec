@@ -34,6 +34,8 @@ All the logs are disabled by default.`,
 					"Domain audit logging is not enabled.",
 					domain.LogPublishing.AuditEnabled,
 				)
+			} else {
+				results.AddPassed(&domain)
 			}
 		}
 		return

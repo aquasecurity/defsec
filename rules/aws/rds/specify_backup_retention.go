@@ -34,6 +34,8 @@ var CheckBackupRetentionSpecified = rules.Register(
 					"Cluster has very low backup retention period.",
 					cluster.BackupRetentionPeriodDays,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 		}
 		for _, instance := range s.AWS.RDS.Instances {
@@ -45,6 +47,8 @@ var CheckBackupRetentionSpecified = rules.Register(
 					"Instance has very low backup retention period.",
 					instance.BackupRetentionPeriodDays,
 				)
+			} else {
+				results.AddPassed(&instance)
 			}
 		}
 

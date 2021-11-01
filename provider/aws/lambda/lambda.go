@@ -25,3 +25,11 @@ type Permission struct {
 	Principal types.StringValue
 	SourceARN types.StringValue
 }
+
+func (c *Function) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Function) GetRawValue() interface{} {
+	return nil
+}

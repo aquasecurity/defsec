@@ -33,6 +33,8 @@ By enabling point-in-time-recovery you can restore to a known point in the event
 					"Point-in-time recovery is not enabled.",
 					cluster.PointInTimeRecovery,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 		}
 		return

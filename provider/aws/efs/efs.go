@@ -10,3 +10,12 @@ type FileSystem struct {
 	types.Metadata
 	Encrypted types.BoolValue
 }
+
+
+func (f *FileSystem) GetMetadata() *types.Metadata {
+	return &f.Metadata
+}
+
+func (f *FileSystem) GetRawValue() interface{} {
+	return nil
+}

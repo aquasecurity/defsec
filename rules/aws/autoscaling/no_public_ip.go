@@ -28,6 +28,8 @@ var CheckNoPublicIp = rules.Register(
 					"Launch configuration associates public IP address.",
 					launchConfig.AssociatePublicIP,
 				)
+			} else {
+				results.AddPassed(&launchConfig)
 			}
 		}
 		return

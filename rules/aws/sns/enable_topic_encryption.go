@@ -33,6 +33,8 @@ var CheckEnableTopicEncryption = rules.Register(
 					"Topic encryption does not use a customer managed key.",
 					topic.Encryption.KMSKeyID,
 				)
+			} else {
+				results.AddPassed(&topic)
 			}
 		}
 		return

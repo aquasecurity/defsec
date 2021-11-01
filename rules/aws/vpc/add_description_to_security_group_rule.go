@@ -31,8 +31,11 @@ Simplifies auditing, debugging, and managing security groups.`,
 						"Security group rule does not have a description.",
 						rule.Description,
 					)
+				} else {
+					results.AddPassed(&rule)
 				}
 			}
+
 		}
 		return
 	},

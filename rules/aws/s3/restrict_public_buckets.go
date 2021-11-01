@@ -25,13 +25,13 @@ var CheckPublicBucketsAreRestricted = rules.Register(
 		for _, bucket := range s.AWS.S3.Buckets {
 			if bucket.PublicAccessBlock == nil {
 				results.Add("No public access block so not restricting public buckets", &bucket)
-				return results
-			}
-			if bucket.PublicAccessBlock.RestrictPublicBuckets.IsFalse() {
+			} else if bucket.PublicAccessBlock.RestrictPublicBuckets.IsFalse() {
 				results.Add(
 					"Public access block does not restrict public buckets",
 					bucket.PublicAccessBlock.RestrictPublicBuckets,
 				)
+			} else {
+				results.AddPassed(&bucket)
 			}
 		}
 		return results

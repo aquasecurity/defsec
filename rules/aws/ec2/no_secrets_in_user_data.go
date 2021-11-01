@@ -36,6 +36,8 @@ var CheckNoSecretsInUserData = rules.Register(
 					fmt.Sprintf("Sensitive data found in instance user data: %s", result.Description),
 					instance.UserData,
 				)
+			} else {
+				results.AddPassed(&instance)
 			}
 		}
 		return

@@ -28,6 +28,8 @@ var CheckEnableQueueEncryption = rules.Register(
 					"Queue is not encrypted with a customer managed key.",
 					queue.Encryption.KMSKeyID,
 				)
+			} else {
+				results.AddPassed(&queue)
 			}
 		}
 		return

@@ -28,6 +28,8 @@ var CheckEnableAtRestEncryption = rules.Register(
 					"Root block device is not encrypted.",
 					launchConfig.RootBlockDevice.Encrypted,
 				)
+			} else {
+				results.AddPassed(&launchConfig)
 			}
 			for _, device := range launchConfig.EBSBlockDevices {
 				if device.Encrypted.IsFalse() {
@@ -35,6 +37,8 @@ var CheckEnableAtRestEncryption = rules.Register(
 						"EBS block device is not encrypted.",
 						device.Encrypted,
 					)
+				} else {
+					results.AddPassed(&device)
 				}
 			}
 		}

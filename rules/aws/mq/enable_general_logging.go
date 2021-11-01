@@ -28,6 +28,8 @@ var CheckEnableGeneralLogging = rules.Register(
 					"Broker does not have general logging enabled.",
 					broker.Logging.General,
 				)
+			}else {
+				results.AddPassed(&broker)
 			}
 		}
 		return

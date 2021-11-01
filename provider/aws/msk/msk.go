@@ -7,6 +7,7 @@ type MSK struct {
 }
 
 type Cluster struct {
+	types.Metadata
 	EncryptionInTransit EncryptionInTransit
 	Logging             Logging
 }
@@ -41,4 +42,12 @@ type CloudwatchLogging struct {
 
 type FirehoseLogging struct {
 	Enabled types.BoolValue
+}
+
+func (c *Cluster) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Cluster) GetRawValue() interface{} {
+	return nil
 }

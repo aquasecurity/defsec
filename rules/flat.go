@@ -35,10 +35,10 @@ func (r Results) Flatten() []FlatResult {
 
 func (r *Result) Flatten() FlatResult {
 	return FlatResult{
-		RuleID:          r.rule.ID,
+		RuleID:          r.rule.AVDID,
 		RuleSummary:     r.rule.Summary,
 		RuleProvider:    r.rule.Provider,
-		Impact:          r.rule.ID,
+		Impact:          r.rule.AVDID,
 		Resolution:      r.rule.Resolution,
 		Links:           r.rule.Links,
 		Description:     r.Description(),

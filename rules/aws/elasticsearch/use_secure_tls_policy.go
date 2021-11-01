@@ -28,6 +28,8 @@ var CheckUseSecureTlsPolicy = rules.Register(
 					"Domain does not have a secure TLS policy.",
 					domain.Endpoint.TLSPolicy,
 				)
+			} else {
+				results.AddPassed(&domain)
 			}
 		}
 		return

@@ -59,6 +59,8 @@ func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentSta
 				"IAM policy document uses wildcarded action.",
 				document,
 			)
+		} else {
+			results.AddPassed(&document)
 		}
 	}
 	for _, resource := range statement.Resource {
@@ -67,6 +69,8 @@ func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentSta
 				"IAM policy document uses wildcarded resource for sensitive action(s).",
 				document,
 			)
+		} else {
+			results.AddPassed(&document)
 		}
 	}
 	for _, principal := range statement.Principal.AWS {
@@ -75,6 +79,8 @@ func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentSta
 				"IAM policy document uses wildcarded principal.",
 				document,
 			)
+		} else {
+			results.AddPassed(&document)
 		}
 	}
 	return results

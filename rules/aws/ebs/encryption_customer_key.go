@@ -29,6 +29,8 @@ var CheckEncryptionCustomerKey = rules.Register(
 					"EBS volume does not use a customer-managed KMS key.",
 					volume.Encryption.KMSKeyID,
 				)
+			} else {
+				results.AddPassed(&volume)
 			}
 		}
 		return

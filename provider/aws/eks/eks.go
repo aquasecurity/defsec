@@ -26,3 +26,11 @@ type Encryption struct {
 	Secrets  types.BoolValue
 	KMSKeyID types.StringValue
 }
+
+func (c *Cluster) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Cluster) GetRawValue() interface{} {
+	return nil
+}

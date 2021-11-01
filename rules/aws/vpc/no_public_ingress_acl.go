@@ -32,13 +32,18 @@ var CheckNoPublicIngress = rules.Register(
 				if !rule.Action.EqualTo(vpc.ActionAllow) {
 					continue
 				}
+				var fail bool
 				for _, block := range rule.CIDRs {
 					if cidr.IsPublic(block.Value()) {
+						fail = true
 						results.Add(
 							"Network ACL rule allows ingress from public internet.",
 							block,
 						)
 					}
+				}
+				if !fail {
+					results.AddPassed(&rule)
 				}
 			}
 		}

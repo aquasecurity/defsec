@@ -28,6 +28,8 @@ var CheckSecretUseCustomerKey = rules.Register(
 					"Secret is not encrypted with a customer managed key.",
 					secret.KMSKeyID,
 				)
+			} else {
+				results.AddPassed(&secret)
 			}
 		}
 		return
