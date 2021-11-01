@@ -40,6 +40,8 @@ Buckets should have logging enabled so that access can be audited.
 						bucket.ACL,
 					)
 				}
+			} else {
+				results.AddPassed(&bucket)
 			}
 		}
 		return results

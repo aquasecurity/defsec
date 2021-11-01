@@ -21,6 +21,7 @@ type SecurityGroup struct {
 }
 
 type SecurityGroupRule struct {
+	types.Metadata
 	Description types.StringValue
 	CIDRs       []types.StringValue
 }
@@ -52,5 +53,28 @@ func (v *DefaultVPC) GetMetadata() *types.Metadata {
 }
 
 func (v *DefaultVPC) GetRawValue() interface{} {
+	return nil
+}
+
+func (v *SecurityGroup) GetMetadata() *types.Metadata {
+	return &v.Metadata
+}
+
+func (v *SecurityGroup) GetRawValue() interface{} {
+	return nil
+}
+
+func (v *SecurityGroupRule) GetMetadata() *types.Metadata {
+	return &v.Metadata
+}
+
+func (v *SecurityGroupRule) GetRawValue() interface{} {
+	return nil
+}
+func (v *NetworkACLRule) GetMetadata() *types.Metadata {
+	return &v.Metadata
+}
+
+func (v *NetworkACLRule) GetRawValue() interface{} {
 	return nil
 }

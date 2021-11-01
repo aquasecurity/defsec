@@ -14,3 +14,11 @@ type Topic struct {
 type Encryption struct {
 	KMSKeyID types.StringValue
 }
+
+func (v *Topic) GetMetadata() *types.Metadata {
+	return &v.Metadata
+}
+
+func (v *Topic) GetRawValue() interface{} {
+	return nil
+}

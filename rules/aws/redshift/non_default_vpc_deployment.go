@@ -30,6 +30,8 @@ In order to benefit from the additional security features achieved with using an
 					"Cluster is deployed outside of a VPC.",
 					cluster.SubnetGroupName,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 		}
 		return

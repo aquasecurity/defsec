@@ -28,6 +28,8 @@ var CheckBucketsHavePublicAccessBlocks = rules.Register(
 					"Bucket does not have a corresponding public access block.",
 					&bucket,
 				)
+			} else {
+				results.AddPassed(&bucket)
 			}
 		}
 		return results

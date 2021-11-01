@@ -33,6 +33,8 @@ Simplifies auditing, debugging, and managing security groups.`,
 					"Security group does not have a description.",
 					group.Description,
 				)
+			} else {
+				results.AddPassed(&group)
 			}
 		}
 		return

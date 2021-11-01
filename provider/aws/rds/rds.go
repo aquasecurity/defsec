@@ -37,3 +37,27 @@ type PerformanceInsights struct {
 	Enabled  types.BoolValue
 	KMSKeyID types.StringValue
 }
+
+func (c *Cluster) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Cluster) GetRawValue() interface{} {
+	return nil
+}
+
+func (i *Instance) GetMetadata() *types.Metadata {
+	return &i.Metadata
+}
+
+func (i *Instance) GetRawValue() interface{} {
+	return nil
+}
+
+func (i *ClusterInstance) GetMetadata() *types.Metadata {
+	return &i.Metadata
+}
+
+func (i *ClusterInstance) GetRawValue() interface{} {
+	return nil
+}
