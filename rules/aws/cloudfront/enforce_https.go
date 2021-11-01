@@ -31,6 +31,8 @@ You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning 
 					"Distribution allows unencrypted communications.",
 					dist.DefaultCacheBehaviour.ViewerProtocolPolicy,
 				)
+			}else {
+				results.AddPassed(&dist)
 			}
 			for _, behaviour := range dist.OrdererCacheBehaviours {
 				if behaviour.ViewerProtocolPolicy.EqualTo(cloudfront.ViewerPolicyProtocolAllowAll) {
@@ -38,6 +40,8 @@ You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning 
 						"Distribution allows unencrypted communications.",
 						behaviour.ViewerProtocolPolicy,
 					)
+				}else {
+					results.AddPassed(&behaviour)
 				}
 			}
 

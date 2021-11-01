@@ -32,6 +32,8 @@ var CheckEnableAtRestEncryption = rules.Register(
 					"Workgroup does not have encryption configured.",
 					workgroup.Encryption.Type,
 				)
+			} else {
+				results.AddPassed(&workgroup)
 			}
 		}
 		for _, database := range s.AWS.Athena.Databases {
@@ -43,6 +45,8 @@ var CheckEnableAtRestEncryption = rules.Register(
 					"Database does not have encryption configured.",
 					database.Encryption.Type,
 				)
+			} else {
+				results.AddPassed(&database)
 			}
 		}
 		return

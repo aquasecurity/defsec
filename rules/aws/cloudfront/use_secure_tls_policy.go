@@ -29,6 +29,8 @@ var CheckUseSecureTlsPolicy = rules.Register(
 					"Distribution allows unencrypted communications.",
 					dist.ViewerCertificate.MinimumProtocolVersion,
 				)
+			} else {
+				results.AddPassed(&dist)
 			}
 		}
 		return

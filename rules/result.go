@@ -15,11 +15,11 @@ const (
 )
 
 type Result struct {
-	rule        Rule
-	description string
-	annotation  string
-	status      Status
-	metadata    *types.Metadata
+	rule        Rule            `json:"rule"`
+	description string          `json:"decription"`
+	annotation  string          `json:"annotation"`
+	status      Status          `json:"status"`
+	metadata    *types.Metadata `json:"location"`
 }
 
 func (r Result) Status() Status {
@@ -64,6 +64,19 @@ func (r *Results) Add(description string, source MetadataProvider) {
 			description: description,
 			metadata:    metadata,
 			annotation:  annotationStr,
+		},
+	)
+}
+
+func (r *Results) AddPassed(source MetadataProvider, descriptions ...string) {
+	metadata := source.GetMetadata()
+
+
+	*r = append(*r,
+		Result{
+			description: strings.Join(descriptions, " "),
+			status:      StatusPassed,
+			metadata:    metadata,
 		},
 	)
 }

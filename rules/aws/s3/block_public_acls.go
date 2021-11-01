@@ -27,13 +27,13 @@ S3 buckets should block public ACLs on buckets and any objects they contain. By 
 		for _, bucket := range s.AWS.S3.Buckets {
 			if bucket.PublicAccessBlock == nil {
 				results.Add("No public access block so not blocking public acls", &bucket)
-				return results
-			}
-			if bucket.PublicAccessBlock.BlockPublicACLs.IsFalse() {
+			} else 	if bucket.PublicAccessBlock.BlockPublicACLs.IsFalse() {
 				results.Add(
 					"Public access block does not block public ACLs",
 					bucket.PublicAccessBlock.BlockPublicACLs,
 				)
+			}else {
+				results.AddPassed( &bucket)
 			}
 		}
 		return results

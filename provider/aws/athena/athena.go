@@ -30,3 +30,19 @@ const (
 type EncryptionConfiguration struct {
 	Type types.StringValue
 }
+
+func (w *Workgroup) GetMetadata() *types.Metadata {
+	return &w.Metadata
+}
+
+func (w *Workgroup) GetRawValue() interface{} {
+	return nil
+}
+
+func (d *Database) GetMetadata() *types.Metadata {
+	return &d.Metadata
+}
+
+func (d *Database) GetRawValue() interface{} {
+	return nil
+}

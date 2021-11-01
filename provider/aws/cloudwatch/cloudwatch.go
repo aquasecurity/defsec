@@ -7,7 +7,16 @@ type CloudWatch struct {
 }
 
 type LogGroup struct {
-	Name     types.StringValue
-	KMSKeyID types.StringValue
+	types.Metadata
+	Name            types.StringValue
+	KMSKeyID        types.StringValue
 	RetentionInDays types.IntValue
+}
+
+func (c *LogGroup) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *LogGroup) GetRawValue() interface{} {
+	return nil
 }

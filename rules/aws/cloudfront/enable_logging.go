@@ -28,6 +28,8 @@ var CheckEnableLogging = rules.Register(
 					"Distribution does not have logging enabled.",
 					dist.Logging.Bucket,
 				)
+			} else {
+				results.AddPassed(&dist)
 			}
 		}
 		return

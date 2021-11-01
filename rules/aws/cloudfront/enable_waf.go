@@ -28,6 +28,8 @@ var CheckEnableWaf = rules.Register(
 					"Distribution does not utilise a WAF.",
 					dist.WAFID,
 				)
+			}else {
+				results.AddPassed(&dist)
 			}
 		}
 		return

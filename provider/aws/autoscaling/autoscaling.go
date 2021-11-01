@@ -7,6 +7,7 @@ type Autoscaling struct {
 }
 
 type LaunchConfiguration struct {
+	types.Metadata
 	Name              types.StringValue
 	AssociatePublicIP types.BoolValue
 	RootBlockDevice   *BlockDevice
@@ -15,5 +16,22 @@ type LaunchConfiguration struct {
 }
 
 type BlockDevice struct {
+	types.Metadata
 	Encrypted types.BoolValue
+}
+
+func (d *BlockDevice) GetMetadata() *types.Metadata {
+	return &d.Metadata
+}
+
+func (d *BlockDevice) GetRawValue() interface{} {
+	return nil
+}
+
+func (d *LaunchConfiguration) GetMetadata() *types.Metadata {
+	return &d.Metadata
+}
+
+func (d *LaunchConfiguration) GetRawValue() interface{} {
+	return nil
 }

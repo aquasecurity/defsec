@@ -28,6 +28,8 @@ var CheckEnableAtRestEncryption = rules.Register(
 					"Trail is not encrypted.",
 					trail.KMSKeyID,
 				)
+			}else {
+				results.AddPassed(&trail)
 			}
 		}
 		return

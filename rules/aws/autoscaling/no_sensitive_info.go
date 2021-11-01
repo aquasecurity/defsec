@@ -30,6 +30,8 @@ var CheckNoSensitiveInfo = rules.Register(
 					fmt.Sprintf("Sensitive data found in user data: %s", result.Description),
 					launchConfig.UserData,
 				)
+			}else {
+				results.AddPassed(&launchConfig)
 			}
 		}
 		return

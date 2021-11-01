@@ -7,8 +7,17 @@ type CloudTrail struct {
 }
 
 type Trail struct {
+	types.Metadata
 	Name                    types.StringValue
 	EnableLogFileValidation types.BoolValue
 	IsMultiRegion           types.BoolValue
 	KMSKeyID                types.StringValue
+}
+
+func (c *Trail) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Trail) GetRawValue() interface{} {
+	return nil
 }
