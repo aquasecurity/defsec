@@ -11,6 +11,15 @@ const (
 )
 
 type Key struct {
+	types.Metadata
 	Usage           types.StringValue
 	RotationEnabled types.BoolValue
+}
+
+func (c *Key) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Key) GetRawValue() interface{} {
+	return nil
 }

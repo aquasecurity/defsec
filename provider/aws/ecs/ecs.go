@@ -23,9 +23,34 @@ type TaskDefinition struct {
 }
 
 type Volume struct {
+	types.Metadata
 	EFSVolumeConfiguration EFSVolumeConfiguration
 }
 
 type EFSVolumeConfiguration struct {
 	TransitEncryptionEnabled types.BoolValue
+}
+
+func (c *Cluster) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Cluster) GetRawValue() interface{} {
+	return nil
+}
+
+func (v *Volume) GetMetadata() *types.Metadata {
+	return &v.Metadata
+}
+
+func (v *Volume) GetRawValue() interface{} {
+	return nil
+}
+
+func (td *TaskDefinition) GetMetadata() *types.Metadata {
+	return &td.Metadata
+}
+
+func (td *TaskDefinition) GetRawValue() interface{} {
+	return nil
 }

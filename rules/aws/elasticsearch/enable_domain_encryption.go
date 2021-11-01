@@ -28,6 +28,8 @@ var CheckEnableDomainEncryption = rules.Register(
 					"Domain does not have at-rest encryption enabled.",
 					domain.AtRestEncryption.Enabled,
 				)
+			} else {
+				results.AddPassed(&domain)
 			}
 		}
 		return

@@ -28,6 +28,8 @@ var CheckEnableInTransitEncryption = rules.Register(
 					"Replication group does not have transit encryption enabled.",
 					group.TransitEncryptionEnabled,
 				)
+			} else {
+				results.AddPassed(&group)
 			}
 		}
 		return

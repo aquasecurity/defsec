@@ -32,6 +32,8 @@ var CheckRequireLowercaseInPasswords = rules.Register(
 				"Password policy does not require lowercase characters.",
 				policy.RequireLowercase,
 			)
+		}else {
+			results.AddPassed(&policy)
 		}
 		return
 	},

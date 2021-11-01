@@ -30,6 +30,8 @@ var CheckAlbNotPublic = rules.Register(
 					"Load balancer is exposed publicly.",
 					lb.Internal,
 				)
+			} else {
+				results.AddPassed(&lb)
 			}
 		}
 		return

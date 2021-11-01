@@ -28,6 +28,8 @@ var CheckNoPublicClusterAccess = rules.Register(
 					"Public cluster access is enabled.",
 					cluster.PublicAccessEnabled,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 		}
 		return

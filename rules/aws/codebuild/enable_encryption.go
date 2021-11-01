@@ -29,15 +29,19 @@ var CheckEnableEncryption = rules.Register(
 					"Encryption is not enabled for project artifacts.",
 					project.ArtifactSettings.EncryptionEnabled,
 				)
+			} else {
+				results.AddPassed(&project)
 			}
-			for _, setting := range project.SecondaryArtifactSettings {
 
-			if setting.EncryptionEnabled.IsFalse() {
-				results.Add(
-					"Encryption is not enabled for secondary project artifacts.",
-					setting.EncryptionEnabled,
-				)
-			}
+			for _, setting := range project.SecondaryArtifactSettings {
+				if setting.EncryptionEnabled.IsFalse() {
+					results.Add(
+						"Encryption is not enabled for secondary project artifacts.",
+						setting.EncryptionEnabled,
+					)
+				} else {
+					results.AddPassed(&setting)
+				}
 			}
 
 		}

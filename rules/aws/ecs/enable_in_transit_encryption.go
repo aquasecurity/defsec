@@ -30,6 +30,8 @@ var CheckEnableInTransitEncryption = rules.Register(
 						"Task definition includes a volume which does not have in-transit-encryption enabled.",
 						volume.EFSVolumeConfiguration.TransitEncryptionEnabled,
 					)
+				}else {
+					results.AddPassed(&volume)
 				}
 			}
 		}

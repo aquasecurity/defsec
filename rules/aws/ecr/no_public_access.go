@@ -18,10 +18,10 @@ var CheckNoPublicAccess = rules.Register(
 		Impact:      "Risk of potential data leakage of sensitive artifacts",
 		Resolution:  "Do not allow public access in the policy",
 		Explanation: `Allowing public access to the ECR repository risks leaking sensitive of abusable information`,
-		Links:       []string{
+		Links: []string{
 			"https://docs.aws.amazon.com/AmazonECR/latest/public/public-repository-policies.html",
 		},
-		Severity:    severity.High,
+		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, repo := range s.AWS.ECR.Repositories {
@@ -39,14 +39,19 @@ var CheckNoPublicAccess = rules.Register(
 				if !hasECRAction {
 					continue
 				}
+				var foundIssue bool
 				for _, account := range statement.Principal.AWS {
 					if account == "*" {
+						foundIssue = true
 						results.Add(
 							"Policy provides public access to the ECR repository.",
 							repo.Policy,
 						)
 					}
 					continue
+				}
+				if foundIssue {
+					results.AddPassed(&repo)
 				}
 			}
 		}

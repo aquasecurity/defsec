@@ -30,3 +30,12 @@ type Encryption struct {
 	Type     types.StringValue
 	KMSKeyID types.StringValue
 }
+
+
+func (c *Repository) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Repository) GetRawValue() interface{} {
+	return nil
+}

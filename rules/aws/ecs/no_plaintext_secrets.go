@@ -41,6 +41,8 @@ var CheckNoPlaintextSecrets = rules.Register(
 						fmt.Sprintf("Container definition contains a potentially sensitive environment variable '%s': %s", key, result.Description),
 						definition.ContainerDefinitions,
 					)
+				}else {
+					results.AddPassed(&definition)
 				}
 			}
 		}

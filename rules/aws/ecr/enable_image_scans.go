@@ -28,6 +28,8 @@ var CheckEnableImageScans = rules.Register(
 					"Image scanning is not enabled.",
 					repo.ImageScanning.ScanOnPush,
 				)
+			} else {
+				results.AddPassed(&repo)
 			}
 		}
 		return

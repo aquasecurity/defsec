@@ -28,6 +28,8 @@ var CheckEnableAtRestEncryption = rules.Register(
 					"File system is not encrypted.",
 					fs.Encrypted,
 				)
+			} else {
+				results.AddPassed(&fs)
 			}
 		}
 		return

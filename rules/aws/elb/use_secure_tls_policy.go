@@ -35,6 +35,8 @@ var CheckUseSecureTlsPolicy = rules.Register(
 							"Listener uses an outdated TLS policy.",
 							listener.TLSPolicy,
 						)
+					} else {
+						results.AddPassed(&listener)
 					}
 				}
 			}

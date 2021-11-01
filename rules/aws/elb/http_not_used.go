@@ -31,10 +31,12 @@ You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning 
 			}
 			for _, listener := range lb.Listeners {
 				if !listener.Protocol.EqualTo("HTTP") {
+					results.AddPassed(&listener)
 					continue
 				}
 
 				if listener.DefaultAction.Type.EqualTo("redirect") {
+					results.AddPassed(&listener)
 					continue
 				}
 

@@ -32,6 +32,8 @@ var CheckEnableAtRestEncryption = rules.Register(
 					"Cluster encryption is not enabled.",
 					cluster.ServerSideEncryption.Enabled,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 		}
 		return

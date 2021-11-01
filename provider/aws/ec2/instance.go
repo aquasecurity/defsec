@@ -31,3 +31,11 @@ func (i *Instance) HasSensitiveInformationInUserData() bool {
 	scanner := squealer.NewStringScanner()
 	return scanner.Scan(i.UserData.Value()).TransgressionFound
 }
+
+func (c *Instance) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Instance) GetRawValue() interface{} {
+	return nil
+}

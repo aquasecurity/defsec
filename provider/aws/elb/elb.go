@@ -30,3 +30,19 @@ type Listener struct {
 type Action struct {
 	Type types.StringValue
 }
+
+func (c *LoadBalancer) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *LoadBalancer) GetRawValue() interface{} {
+	return nil
+}
+
+func (c *Listener) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Listener) GetRawValue() interface{} {
+	return nil
+}
