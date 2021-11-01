@@ -9,15 +9,15 @@ import (
 )
 
 type Rule struct {
-	ID          string `json:"id"`
-	ShortCode   string `json:"short_code"`
-	Summary     string `json:"summary"`
-	Explanation string `json:"explanation"`
-	Impact      string `json:"impact"`
-	Resolution  string `json:"resolution"`
+	AVDID       string            `json:"avd_id"`
+	ShortCode   string            `json:"short_code"`
+	Summary     string            `json:"summary"`
+	Explanation string            `json:"explanation"`
+	Impact      string            `json:"impact"`
+	Resolution  string            `json:"resolution"`
 	Provider    provider.Provider `json:"provider"`
-	Service     string `json:"service"`
-	Links       []string `json:"links"`
+	Service     string            `json:"service"`
+	Links       []string          `json:"links"`
 	Severity    severity.Severity `json:"severity"`
 }
 

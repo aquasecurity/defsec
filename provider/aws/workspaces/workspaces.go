@@ -7,6 +7,7 @@ type WorkSpaces struct {
 }
 
 type WorkSpace struct {
+	types.Metadata
 	RootVolume Volume
 	UserVolume Volume
 }
@@ -17,4 +18,12 @@ type Volume struct {
 
 type Encryption struct {
 	Enabled types.BoolValue
+}
+
+func (b *WorkSpace) GetMetadata() *types.Metadata {
+	return &b.Metadata
+}
+
+func (b *WorkSpace) GetRawValue() interface{} {
+	return nil
 }
