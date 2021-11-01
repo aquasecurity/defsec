@@ -9,6 +9,7 @@ import (
 
 var CheckAggregateAllRegions = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0019",
 		Provider:   provider.AWSProvider,
 		Service:    "config",
 		ShortCode:  "aggregate-all-regions",

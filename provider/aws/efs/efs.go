@@ -11,7 +11,6 @@ type FileSystem struct {
 	Encrypted types.BoolValue
 }
 
-
 func (f *FileSystem) GetMetadata() *types.Metadata {
 	return &f.Metadata
 }

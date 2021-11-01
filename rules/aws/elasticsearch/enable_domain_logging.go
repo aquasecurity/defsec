@@ -9,6 +9,7 @@ import (
 
 var CheckEnableDomainLogging = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0042",
 		Provider:   provider.AWSProvider,
 		Service:    "elastic-search",
 		ShortCode:  "enable-domain-logging",

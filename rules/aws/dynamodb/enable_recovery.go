@@ -9,6 +9,7 @@ import (
 
 var CheckEnableRecovery = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0024",
 		Provider:   provider.AWSProvider,
 		Service:    "dynamodb",
 		ShortCode:  "enable-recovery",

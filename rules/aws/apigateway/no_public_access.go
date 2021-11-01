@@ -10,6 +10,7 @@ import (
 
 var CheckNoPublicAccess = rules.Register(
 	rules.Rule{
+		AVDID:       "",
 		Provider:    provider.AWSProvider,
 		Service:     "api-gateway",
 		ShortCode:   "no-public-access",
@@ -37,7 +38,7 @@ var CheckNoPublicAccess = rules.Register(
 						"Authorization is not enabled for this method.",
 						method.AuthorizationType,
 					)
-				}else {
+				} else {
 					results.AddPassed(&method)
 				}
 			}

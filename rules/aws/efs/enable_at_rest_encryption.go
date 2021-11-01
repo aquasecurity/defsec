@@ -9,6 +9,7 @@ import (
 
 var CheckEnableAtRestEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0037",
 		Provider:    provider.AWSProvider,
 		Service:     "efs",
 		ShortCode:   "enable-at-rest-encryption",

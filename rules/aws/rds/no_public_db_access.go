@@ -9,6 +9,7 @@ import (
 
 var CheckNoPublicDbAccess = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0082",
 		Provider:    provider.AWSProvider,
 		Service:     "rds",
 		ShortCode:   "no-public-db-access",

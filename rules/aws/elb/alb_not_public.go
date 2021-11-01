@@ -10,6 +10,7 @@ import (
 
 var CheckAlbNotPublic = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0053",
 		Provider:    provider.AWSProvider,
 		Service:     "elb",
 		ShortCode:   "alb-not-public",

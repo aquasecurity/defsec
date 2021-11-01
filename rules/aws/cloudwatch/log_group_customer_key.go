@@ -9,6 +9,7 @@ import (
 
 var CheckLogGroupCustomerKey = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0017",
 		Provider:    provider.AWSProvider,
 		Service:     "cloudwatch",
 		ShortCode:   "log-group-customer-key",

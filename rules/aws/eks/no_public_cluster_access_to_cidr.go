@@ -12,6 +12,7 @@ import (
 
 var CheckNoPublicClusterAccessToCidr = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0041",
 		Provider:    provider.AWSProvider,
 		Service:     "eks",
 		ShortCode:   "no-public-cluster-access-to-cidr",

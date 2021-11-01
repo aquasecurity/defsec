@@ -9,6 +9,7 @@ import (
 
 var CheckRestrictSourceArn = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0067",
 		Provider:   provider.AWSProvider,
 		Service:    "lambda",
 		ShortCode:  "restrict-source-arn",

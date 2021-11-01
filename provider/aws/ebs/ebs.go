@@ -16,7 +16,6 @@ type Encryption struct {
 	KMSKeyID types.StringValue
 }
 
-
 func (c *Volume) GetMetadata() *types.Metadata {
 	return &c.Metadata
 }

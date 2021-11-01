@@ -10,6 +10,7 @@ import (
 
 var CheckEnforceHttps = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0012",
 		Provider:   provider.AWSProvider,
 		Service:    "cloudfront",
 		ShortCode:  "enforce-https",
@@ -31,7 +32,7 @@ You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning 
 					"Distribution allows unencrypted communications.",
 					dist.DefaultCacheBehaviour.ViewerProtocolPolicy,
 				)
-			}else {
+			} else {
 				results.AddPassed(&dist)
 			}
 			for _, behaviour := range dist.OrdererCacheBehaviours {
@@ -40,7 +41,7 @@ You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning 
 						"Distribution allows unencrypted communications.",
 						behaviour.ViewerProtocolPolicy,
 					)
-				}else {
+				} else {
 					results.AddPassed(&behaviour)
 				}
 			}

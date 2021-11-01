@@ -9,6 +9,7 @@ import (
 
 var CheckRequireUppercaseInPasswords = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0061",
 		Provider:   provider.AWSProvider,
 		Service:    "iam",
 		ShortCode:  "require-uppercase-in-passwords",
@@ -33,7 +34,7 @@ IAM account password policies should ensure that passwords content including at 
 				"Password policy does not require uppercase characters.",
 				policy.RequireUppercase,
 			)
-		}else {
+		} else {
 			results.AddPassed(&policy)
 		}
 		return

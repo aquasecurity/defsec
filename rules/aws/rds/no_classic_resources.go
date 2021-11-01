@@ -9,6 +9,7 @@ import (
 
 var CheckNoClassicResources = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0081",
 		Provider:   provider.AWSProvider,
 		Service:    "rds",
 		ShortCode:  "no-classic-resources",

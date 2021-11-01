@@ -9,6 +9,7 @@ import (
 
 var CheckEnableStorageEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0021",
 		Provider:    provider.AWSProvider,
 		Service:     "documentdb",
 		ShortCode:   "enable-storage-encryption",

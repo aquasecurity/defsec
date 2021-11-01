@@ -12,6 +12,7 @@ import (
 
 var CheckNoPolicyWildcards = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0057",
 		Provider:    provider.AWSProvider,
 		Service:     "iam",
 		ShortCode:   "no-policy-wildcards",

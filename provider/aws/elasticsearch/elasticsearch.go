@@ -3,7 +3,7 @@ package elasticsearch
 import "github.com/aquasecurity/defsec/types"
 
 type Elasticsearch struct {
-	Domains           []Domain
+	Domains []Domain
 }
 
 type Domain struct {

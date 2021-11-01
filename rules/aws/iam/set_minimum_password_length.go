@@ -9,6 +9,7 @@ import (
 
 var CheckSetMinimumPasswordLength = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0063",
 		Provider:   provider.AWSProvider,
 		Service:    "iam",
 		ShortCode:  "set-minimum-password-length",
@@ -34,7 +35,7 @@ The account password policy should be set to enforce minimum password length of 
 				"Password policy has a minimum password length of less than 14 characters.",
 				policy.MinimumLength,
 			)
-		}else {
+		} else {
 			results.AddPassed(&policy)
 		}
 		return

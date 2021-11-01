@@ -9,6 +9,7 @@ import (
 
 var CheckPublicACLsAreIgnored = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0091",
 		Provider:   provider.AWSProvider,
 		Service:    "s3",
 		ShortCode:  "ignore-public-acls",

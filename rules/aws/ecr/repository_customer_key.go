@@ -10,6 +10,7 @@ import (
 
 var CheckRepositoryCustomerKey = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0033",
 		Provider:    provider.AWSProvider,
 		Service:     "ecr",
 		ShortCode:   "repository-customer-key",
@@ -34,7 +35,7 @@ var CheckRepositoryCustomerKey = rules.Register(
 					"Repository encryption does not use a customer managed KMS key.",
 					repo.Encryption.KMSKeyID,
 				)
-			}else {
+			} else {
 				results.AddPassed(&repo)
 			}
 		}

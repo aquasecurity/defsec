@@ -9,6 +9,7 @@ import (
 
 var CheckNoEncryptionOverride = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0007",
 		Provider:    provider.AWSProvider,
 		Service:     "athena",
 		ShortCode:   "no-encryption-override",

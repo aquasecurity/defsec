@@ -16,7 +16,7 @@ var CheckNoPublicIngress = rules.Register(
 		Impact:      "Your port is exposed to the internet",
 		Resolution:  "Set a more restrictive CIRDR range",
 		Explanation: `Opening up ports to connect out to the public internet is generally to be avoided. You should restrict access to IP addresses or ranges that are explicitly required where possible.`,
-		Links: []string{ 
+		Links: []string{
 			"https://docs.digitalocean.com/products/networking/firewalls/how-to/configure-rules/",
 		},
 		Severity: severity.Critical,
@@ -27,7 +27,6 @@ var CheckNoPublicIngress = rules.Register(
 				results.Add(
 					"",
 					x.Encryption.Enabled,
-					
 				)
 			}
 		}

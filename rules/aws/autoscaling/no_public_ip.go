@@ -9,6 +9,7 @@ import (
 
 var CheckNoPublicIp = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0009",
 		Provider:    provider.AWSProvider,
 		Service:     "autoscaling",
 		ShortCode:   "no-public-ip",

@@ -9,6 +9,7 @@ import (
 
 var CheckIMDSAccessRequiresToken = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0028",
 		Provider:   provider.AWSProvider,
 		Service:    "ec2",
 		ShortCode:  "enforce-http-token-imds",

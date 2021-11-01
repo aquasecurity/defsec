@@ -10,6 +10,7 @@ import (
 
 var CheckAutoRotateKeys = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0065",
 		Provider:    provider.AWSProvider,
 		Service:     "kms",
 		ShortCode:   "auto-rotate-keys",

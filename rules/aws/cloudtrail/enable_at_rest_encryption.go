@@ -9,6 +9,7 @@ import (
 
 var CheckEnableAtRestEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0015",
 		Provider:    provider.AWSProvider,
 		Service:     "cloudtrail",
 		ShortCode:   "enable-at-rest-encryption",
@@ -28,7 +29,7 @@ var CheckEnableAtRestEncryption = rules.Register(
 					"Trail is not encrypted.",
 					trail.KMSKeyID,
 				)
-			}else {
+			} else {
 				results.AddPassed(&trail)
 			}
 		}

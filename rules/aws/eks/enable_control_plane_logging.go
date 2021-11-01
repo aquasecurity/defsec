@@ -9,6 +9,7 @@ import (
 
 var CheckEnableControlPlaneLogging = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0038",
 		Provider:    provider.AWSProvider,
 		Service:     "eks",
 		ShortCode:   "enable-control-plane-logging",

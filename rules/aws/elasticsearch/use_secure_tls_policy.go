@@ -9,6 +9,7 @@ import (
 
 var CheckUseSecureTlsPolicy = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0047",
 		Provider:    provider.AWSProvider,
 		Service:     "elastic-search",
 		ShortCode:   "use-secure-tls-policy",

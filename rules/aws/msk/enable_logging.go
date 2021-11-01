@@ -9,6 +9,7 @@ import (
 
 var CheckEnableLogging = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0074",
 		Provider:    provider.AWSProvider,
 		Service:     "msk",
 		ShortCode:   "enable-logging",
@@ -16,10 +17,10 @@ var CheckEnableLogging = rules.Register(
 		Impact:      "Without logging it is difficult to trace issues",
 		Resolution:  "Enable logging",
 		Explanation: `Managed streaming for Kafka can log to Cloud Watch, Kinesis Firehose and S3, at least one of these locations should be logged to`,
-		Links:       []string{
+		Links: []string{
 			"https://docs.aws.amazon.com/msk/latest/developerguide/msk-logging.html",
 		},
-		Severity:    severity.Medium,
+		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, cluster := range s.AWS.MSK.Clusters {

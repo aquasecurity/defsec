@@ -9,6 +9,7 @@ import (
 
 var CheckEncryptInstanceStorageData = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0080",
 		Provider:   provider.AWSProvider,
 		Service:    "rds",
 		ShortCode:  "encrypt-instance-storage-data",

@@ -9,6 +9,7 @@ import (
 
 var CheckNoDefaultVpc = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0101",
 		Provider:    provider.AWSProvider,
 		Service:     "vpc",
 		ShortCode:   "no-default-vpc",

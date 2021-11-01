@@ -10,6 +10,7 @@ import (
 
 var CheckUseSecureTlsPolicy = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0013",
 		Provider:    provider.AWSProvider,
 		Service:     "cloudfront",
 		ShortCode:   "use-secure-tls-policy",

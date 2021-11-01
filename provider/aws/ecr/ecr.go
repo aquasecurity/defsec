@@ -31,7 +31,6 @@ type Encryption struct {
 	KMSKeyID types.StringValue
 }
 
-
 func (c *Repository) GetMetadata() *types.Metadata {
 	return &c.Metadata
 }

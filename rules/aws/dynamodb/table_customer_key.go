@@ -9,6 +9,7 @@ import (
 
 var CheckTableCustomerKey = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0025",
 		Provider:    provider.AWSProvider,
 		Service:     "dynamodb",
 		ShortCode:   "table-customer-key",
