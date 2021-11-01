@@ -28,6 +28,7 @@ type Volume struct {
 }
 
 type EFSVolumeConfiguration struct {
+	types.Metadata
 	TransitEncryptionEnabled types.BoolValue
 }
 
@@ -52,5 +53,13 @@ func (td *TaskDefinition) GetMetadata() *types.Metadata {
 }
 
 func (td *TaskDefinition) GetRawValue() interface{} {
+	return nil
+}
+
+func (td *EFSVolumeConfiguration) GetMetadata() *types.Metadata {
+	return &td.Metadata
+}
+
+func (td *EFSVolumeConfiguration) GetRawValue() interface{} {
 	return nil
 }

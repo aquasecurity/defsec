@@ -28,6 +28,8 @@ var CheckEnableAuditLogging = rules.Register(
 					"Broker does not have audit logging enabled.",
 					broker.Logging.Audit,
 				)
+			} else {
+				results.AddPassed(&broker)
 			}
 		}
 		return

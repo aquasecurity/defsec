@@ -34,6 +34,8 @@ var CheckEnableInTransitEncryption = rules.Register(
 					"Cluster allows plaintext communication.",
 					cluster.EncryptionInTransit.ClientBroker,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 
 		}

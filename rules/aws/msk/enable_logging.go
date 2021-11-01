@@ -26,14 +26,17 @@ var CheckEnableLogging = rules.Register(
 			brokerLogging := cluster.Logging.Broker
 
 			if brokerLogging.S3.Enabled.IsTrue() {
+				results.AddPassed(&cluster, "S3 Logging is enabled")
 				continue
 			}
 
 			if brokerLogging.Firehose.Enabled.IsTrue() {
+				results.AddPassed(&cluster, "Firehose Logging is enabled")
 				continue
 			}
 
 			if brokerLogging.Cloudwatch.Enabled.IsTrue() {
+				results.AddPassed(&cluster, "Cloudwatch Logging is enabled")
 				continue
 			}
 

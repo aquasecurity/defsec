@@ -29,6 +29,8 @@ var CheckEnableTracing = rules.Register(
 					"Function does not have tracing enabled.",
 					function.Tracing.Mode,
 				)
+			} else {
+				results.AddPassed(&function)
 			}
 		}
 		return

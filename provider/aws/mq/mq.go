@@ -16,3 +16,11 @@ type Logging struct {
 	General types.BoolValue
 	Audit   types.BoolValue
 }
+
+func (c *Broker) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Broker) GetRawValue() interface{} {
+	return nil
+}
