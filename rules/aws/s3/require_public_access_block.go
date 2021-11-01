@@ -9,6 +9,7 @@ import (
 
 var CheckBucketsHavePublicAccessBlocks = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0094",
 		Provider:    provider.AWSProvider,
 		Service:     "s3",
 		ShortCode:   "specify-public-access-block",

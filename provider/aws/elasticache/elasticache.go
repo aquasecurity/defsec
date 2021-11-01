@@ -41,7 +41,6 @@ func (c *Cluster) GetRawValue() interface{} {
 	return nil
 }
 
-
 func (r *ReplicationGroup) GetMetadata() *types.Metadata {
 	return &r.Metadata
 }

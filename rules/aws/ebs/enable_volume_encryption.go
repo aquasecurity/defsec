@@ -9,6 +9,7 @@ import (
 
 var CheckEnableVolumeEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0026",
 		Provider:    provider.AWSProvider,
 		Service:     "ebs",
 		ShortCode:   "enable-volume-encryption",

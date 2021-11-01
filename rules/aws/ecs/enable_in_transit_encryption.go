@@ -9,6 +9,7 @@ import (
 
 var CheckEnableInTransitEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0035",
 		Provider:    provider.AWSProvider,
 		Service:     "ecs",
 		ShortCode:   "enable-in-transit-encryption",
@@ -30,7 +31,7 @@ var CheckEnableInTransitEncryption = rules.Register(
 						"Task definition includes a volume which does not have in-transit-encryption enabled.",
 						volume.EFSVolumeConfiguration.TransitEncryptionEnabled,
 					)
-				}else {
+				} else {
 					results.AddPassed(&volume)
 				}
 			}

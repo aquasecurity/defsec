@@ -10,6 +10,7 @@ import (
 
 var CheckHttpNotUsed = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0054",
 		Provider:   provider.AWSProvider,
 		Service:    "elb",
 		ShortCode:  "http-not-used",

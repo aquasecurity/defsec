@@ -9,6 +9,7 @@ import (
 
 var CheckNoPublicAccess = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0072",
 		Provider:    provider.AWSProvider,
 		Service:     "mq",
 		ShortCode:   "no-public-access",

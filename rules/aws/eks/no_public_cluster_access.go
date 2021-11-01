@@ -9,6 +9,7 @@ import (
 
 var CheckNoPublicClusterAccess = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0040",
 		Provider:    provider.AWSProvider,
 		Service:     "eks",
 		ShortCode:   "no-public-cluster-access",

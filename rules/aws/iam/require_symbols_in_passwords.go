@@ -9,6 +9,7 @@ import (
 
 var CheckRequireSymbolsInPasswords = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0060",
 		Provider:    provider.AWSProvider,
 		Service:     "iam",
 		ShortCode:   "require-symbols-in-passwords",
@@ -32,7 +33,7 @@ var CheckRequireSymbolsInPasswords = rules.Register(
 				"Password policy does not require symbols.",
 				policy.RequireSymbols,
 			)
-		}else {
+		} else {
 			results.AddPassed(&policy)
 		}
 		return

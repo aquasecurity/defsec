@@ -9,6 +9,7 @@ import (
 
 var CheckEncryptionCustomerKey = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0027",
 		Provider:    provider.AWSProvider,
 		Service:     "ebs",
 		ShortCode:   "encryption-customer-key",

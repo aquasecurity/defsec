@@ -9,6 +9,7 @@ import (
 
 var CheckEnablePerformanceInsights = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0078",
 		Provider:   provider.AWSProvider,
 		Service:    "rds",
 		ShortCode:  "enable-performance-insights",

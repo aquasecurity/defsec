@@ -11,6 +11,7 @@ import (
 
 var CheckNoPublicIngress = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0105",
 		Provider:    provider.AWSProvider,
 		Service:     "vpc",
 		ShortCode:   "no-public-ingress-acl",

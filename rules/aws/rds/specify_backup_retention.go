@@ -9,6 +9,7 @@ import (
 
 var CheckBackupRetentionSpecified = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0077",
 		Provider:    provider.AWSProvider,
 		Service:     "rds",
 		ShortCode:   "specify-backup-retention",

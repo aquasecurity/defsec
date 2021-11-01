@@ -10,6 +10,7 @@ import (
 
 var CheckEnableCacheEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0002",
 		Provider:    provider.AWSProvider,
 		Service:     "api-gateway",
 		ShortCode:   "enable-cache-encryption",

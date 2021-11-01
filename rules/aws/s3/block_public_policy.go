@@ -9,6 +9,7 @@ import (
 
 var CheckPublicPoliciesAreBlocked = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0087",
 		Provider:   provider.AWSProvider,
 		Service:    "s3",
 		ShortCode:  "block-public-policy",

@@ -9,6 +9,7 @@ import (
 
 var CheckEnableTopicEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0095",
 		Provider:    provider.AWSProvider,
 		Service:     "sns",
 		ShortCode:   "enable-topic-encryption",

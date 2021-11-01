@@ -9,6 +9,7 @@ import (
 
 var CheckRequireLowercaseInPasswords = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0058",
 		Provider:    provider.AWSProvider,
 		Service:     "iam",
 		ShortCode:   "require-lowercase-in-passwords",
@@ -32,7 +33,7 @@ var CheckRequireLowercaseInPasswords = rules.Register(
 				"Password policy does not require lowercase characters.",
 				policy.RequireLowercase,
 			)
-		}else {
+		} else {
 			results.AddPassed(&policy)
 		}
 		return

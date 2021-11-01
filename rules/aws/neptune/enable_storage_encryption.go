@@ -9,6 +9,7 @@ import (
 
 var CheckEnableStorageEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0076",
 		Provider:    provider.AWSProvider,
 		Service:     "neptune",
 		ShortCode:   "enable-storage-encryption",

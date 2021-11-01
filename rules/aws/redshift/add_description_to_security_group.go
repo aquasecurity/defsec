@@ -9,6 +9,7 @@ import (
 
 var CheckAddDescriptionToSecurityGroup = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0083",
 		Provider:   provider.AWSProvider,
 		Service:    "redshift",
 		ShortCode:  "add-description-to-security-group",

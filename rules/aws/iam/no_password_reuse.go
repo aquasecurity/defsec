@@ -9,6 +9,7 @@ import (
 
 var CheckNoPasswordReuse = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0056",
 		Provider:   provider.AWSProvider,
 		Service:    "iam",
 		ShortCode:  "no-password-reuse",

@@ -9,6 +9,7 @@ import (
 
 var CheckEnableEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0018",
 		Provider:    provider.AWSProvider,
 		Service:     "codebuild",
 		ShortCode:   "enable-encryption",

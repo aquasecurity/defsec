@@ -9,6 +9,7 @@ import (
 
 var CheckPublicBucketsAreRestricted = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0093",
 		Provider:    provider.AWSProvider,
 		Service:     "s3",
 		ShortCode:   "no-public-buckets",

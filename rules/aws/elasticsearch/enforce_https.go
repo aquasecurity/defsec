@@ -9,6 +9,7 @@ import (
 
 var CheckEnforceHttps = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0046",
 		Provider:   provider.AWSProvider,
 		Service:    "elastic-search",
 		ShortCode:  "enforce-https",

@@ -9,6 +9,7 @@ import (
 
 var CheckEnforceImmutableRepository = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0031",
 		Provider:   provider.AWSProvider,
 		Service:    "ecr",
 		ShortCode:  "enforce-immutable-repository",
@@ -30,7 +31,7 @@ This can be done by setting <code>image_tab_mutability</code> to <code>IMMUTABLE
 					"Repository tags are mutable.",
 					repo.ImageTagsImmutable,
 				)
-			}else {
+			} else {
 				results.AddPassed(&repo)
 			}
 		}

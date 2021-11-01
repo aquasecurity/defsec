@@ -9,6 +9,7 @@ import (
 
 var CheckEnableLogging = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0010",
 		Provider:    provider.AWSProvider,
 		Service:     "cloudfront",
 		ShortCode:   "enable-logging",

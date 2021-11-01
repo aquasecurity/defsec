@@ -9,6 +9,7 @@ import (
 
 var CheckEnableDiskEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0109",
 		Provider:    provider.AWSProvider,
 		Service:     "workspaces",
 		ShortCode:   "enable-disk-encryption",

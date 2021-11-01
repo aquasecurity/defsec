@@ -10,6 +10,7 @@ import (
 
 var CheckEnableInTransitEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0073",
 		Provider:    provider.AWSProvider,
 		Service:     "msk",
 		ShortCode:   "enable-in-transit-encryption",

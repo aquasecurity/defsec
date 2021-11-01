@@ -9,6 +9,7 @@ import (
 
 var CheckSetMaxPasswordAge = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0062",
 		Provider:   provider.AWSProvider,
 		Service:    "iam",
 		ShortCode:  "set-max-password-age",
@@ -34,7 +35,7 @@ The account password policy should be set to expire passwords after 90 days or l
 				"Password policy allows a maximum password age of greater than 90 days.",
 				policy.MaxAgeDays,
 			)
-		}else {
+		} else {
 			results.AddPassed(&policy)
 		}
 		return

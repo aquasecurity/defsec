@@ -10,6 +10,7 @@ import (
 
 var CheckEnableAtRestEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0006",
 		Provider:    provider.AWSProvider,
 		Service:     "athena",
 		ShortCode:   "enable-at-rest-encryption",

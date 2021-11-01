@@ -9,6 +9,7 @@ import (
 
 var CheckEnableInTransitEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0051",
 		Provider:    provider.AWSProvider,
 		Service:     "elasticache",
 		ShortCode:   "enable-in-transit-encryption",

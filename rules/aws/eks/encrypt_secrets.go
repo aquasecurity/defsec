@@ -9,6 +9,7 @@ import (
 
 var CheckEncryptSecrets = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0039",
 		Provider:    provider.AWSProvider,
 		Service:     "eks",
 		ShortCode:   "encrypt-secrets",

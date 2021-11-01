@@ -9,6 +9,7 @@ import (
 
 var CheckEnableAccessLogging = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0001",
 		Provider:    provider.AWSProvider,
 		Service:     "api-gateway",
 		ShortCode:   "enable-access-logging",

@@ -9,6 +9,7 @@ import (
 
 var CheckVersioningIsEnabled = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0090",
 		Provider:   provider.AWSProvider,
 		Service:    "s3",
 		ShortCode:  "enable-versioning",

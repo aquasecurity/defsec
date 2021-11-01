@@ -9,6 +9,7 @@ import (
 
 var CheckEnableContainerInsight = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0034",
 		Provider:    provider.AWSProvider,
 		Service:     "ecs",
 		ShortCode:   "enable-container-insight",

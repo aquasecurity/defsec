@@ -9,6 +9,7 @@ import (
 
 var CheckEnableDomainEncryption = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0048",
 		Provider:    provider.AWSProvider,
 		Service:     "elastic-search",
 		ShortCode:   "enable-domain-encryption",

@@ -9,6 +9,7 @@ import (
 
 var CheckNoClassicResources = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0085",
 		Provider:   provider.AWSProvider,
 		Service:    "redshift",
 		ShortCode:  "no-classic-resources",

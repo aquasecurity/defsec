@@ -9,6 +9,7 @@ import (
 
 var CheckEnableLogExport = rules.Register(
 	rules.Rule{
+		AVDID:       "AVD-AWS-0075",
 		Provider:    provider.AWSProvider,
 		Service:     "neptune",
 		ShortCode:   "enable-log-export",
@@ -16,10 +17,10 @@ var CheckEnableLogExport = rules.Register(
 		Impact:      "Limited visibility of audit trail for changes to Neptune",
 		Resolution:  "Enable export logs",
 		Explanation: `Neptune does not have auditing by default. To ensure that you are able to accurately audit the usage of your Neptune instance you should enable export logs.`,
-		Links:       []string{
+		Links: []string{
 			"https://docs.aws.amazon.com/neptune/latest/userguide/auditing.html",
 		},
-		Severity:    severity.Medium,
+		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, cluster := range s.AWS.Neptune.Clusters {

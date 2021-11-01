@@ -9,6 +9,7 @@ import (
 
 var CheckEncryptionIsEnabled = rules.Register(
 	rules.Rule{
+		AVDID:      "AVD-AWS-0088",
 		Provider:   provider.AWSProvider,
 		Service:    "s3",
 		ShortCode:  "enable-bucket-encryption",
