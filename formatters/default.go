@@ -91,10 +91,11 @@ func printResult(res rules.Result, i int, includePassedChecks bool) {
   <blue>[</blue>%s<blue>]</blue> %s
   <blue>%s</blue>
 
-`, severityFormatted, res.Description, rng)
+`, severityFormatted, res.Description(), rng)
 
 	if code, err := highlightCode(res); err == nil {
-		_ = tml.Printf("%s\n\n", code)
+		_ = tml.Printf(code)
+		tml.Println("\n")
 	} else if err != nil {
 		terminal.PrintErrorf("Source code not available\n\n")
 	}
