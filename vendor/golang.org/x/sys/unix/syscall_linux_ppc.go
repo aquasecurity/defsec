@@ -3,8 +3,7 @@
 // license that can be found in the LICENSE file.
 
 //go:build linux && ppc
-// +build linux
-// +build ppc
+// +build linux,ppc
 
 package unix
 
@@ -213,6 +212,10 @@ func (msghdr *Msghdr) SetIovlen(length int) {
 
 func (cmsg *Cmsghdr) SetLen(length int) {
 	cmsg.Len = uint32(length)
+}
+
+func (rsa *RawSockaddrNFCLLCP) SetServiceNameLen(length int) {
+	rsa.Service_name_len = uint32(length)
 }
 
 //sysnb	pipe(p *[2]_C_int) (err error)
