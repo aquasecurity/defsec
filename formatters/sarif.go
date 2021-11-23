@@ -4,14 +4,13 @@ import (
 	"io"
 	"path/filepath"
 
-	"github.com/aquasecurity/tfsec/pkg/severity"
-
-	"github.com/aquasecurity/tfsec/pkg/result"
+	"github.com/aquasecurity/defsec/rules"
+	"github.com/aquasecurity/defsec/severity"
 
 	"github.com/owenrumney/go-sarif/sarif"
 )
 
-func FormatSarif(w io.Writer, results []result.Result, baseDir string, _ ...FormatterOption) error {
+func FormatSarif(w io.Writer, results []rules.Result, baseDir string, _ ...FormatterOption) error {
 	report, err := sarif.New(sarif.Version210)
 	if err != nil {
 		return err
@@ -22,27 +21,29 @@ func FormatSarif(w io.Writer, results []result.Result, baseDir string, _ ...Form
 
 	for _, res := range results {
 
-		if res.Passed() {
+		if res.Status() == rules.StatusPassed {
 			continue
 		}
 
 		var link string
-		if len(res.Links) > 0 {
-			link = res.Links[0]
+		if len(res.Rule().Links) > 0 {
+			link = res.Rule().Links[0]
 		}
-		rule := run.AddRule(res.RuleID).
-			WithDescription(res.RuleSummary).
+		rule := run.AddRule(res.Rule().LongID()).
+			WithDescription(res.Rule().Summary).
 			WithHelp(link)
 
-		relativePath, err := filepath.Rel(baseDir, res.Range().Filename)
+		rng := res.NarrowestRange()
+
+		relativePath, err := filepath.Rel(baseDir, rng.GetFilename())
 		if err != nil {
 			return err
 		}
 
-		message := sarif.NewTextMessage(res.Description)
-		region := sarif.NewSimpleRegion(res.Range().StartLine, res.Range().EndLine)
+		message := sarif.NewTextMessage(res.Description())
+		region := sarif.NewSimpleRegion(rng.GetStartLine(), rng.GetEndLine())
 		var level string
-		switch res.Severity {
+		switch res.Severity() {
 		case severity.None:
 			level = "none"
 		case severity.Low:
