@@ -37,6 +37,18 @@ func (r *Result) OverrideSeverity(s severity.Severity) {
 	r.severityOverride = &s
 }
 
+func (r *Result) OverrideDescription(description string) {
+	r.description = description
+}
+
+func (r *Result) OverrideIssueBlockMetadata(metadata *types.Metadata) {
+	r.issueBlock = metadata
+}
+
+func (r *Result) OverrideAnnotation(annotation string) {
+	r.annotation = annotation
+}
+
 func (r Result) Status() Status {
 	return r.status
 }

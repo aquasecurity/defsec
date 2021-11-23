@@ -14,4 +14,3 @@ func Printf(input string, a ...interface{}) error {
 	_, err = fmt.Printf(format, a...)
 	return err
 }
-
