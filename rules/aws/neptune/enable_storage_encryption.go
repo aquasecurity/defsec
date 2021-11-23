@@ -27,11 +27,13 @@ var CheckEnableStorageEncryption = rules.Register(
 			if cluster.StorageEncrypted.IsFalse() {
 				results.Add(
 					"Cluster does not have storage encryption enabled.",
+					&cluster,
 					cluster.StorageEncrypted,
 				)
 			} else if cluster.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Cluster does not encrypt data with a customer managed key.",
+					&cluster,
 					cluster.KMSKeyID,
 				)
 			} else {

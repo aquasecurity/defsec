@@ -28,6 +28,7 @@ var CheckUseSecureTlsPolicy = rules.Register(
 			if dist.ViewerCertificate.MinimumProtocolVersion.NotEqualTo(cloudfront.ProtocolVersionTLS1_2) {
 				results.Add(
 					"Distribution allows unencrypted communications.",
+					&dist,
 					dist.ViewerCertificate.MinimumProtocolVersion,
 				)
 			} else {

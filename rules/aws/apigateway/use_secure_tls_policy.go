@@ -27,6 +27,7 @@ var CheckUseSecureTlsPolicy = rules.Register(
 			if domain.SecurityPolicy.NotEqualTo("TLS_1_2") {
 				results.Add(
 					"Domain name is configured with an outdated TLS policy.",
+					&domain,
 					domain.SecurityPolicy,
 				)
 			} else {

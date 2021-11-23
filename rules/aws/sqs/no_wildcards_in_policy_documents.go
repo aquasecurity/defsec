@@ -39,6 +39,7 @@ This ensures that the queue itself cannot be modified or deleted, and prevents p
 						fail = true
 						results.Add(
 							"Queue policy does not restrict actions to a known set.",
+							&queue,
 							queue.Policy,
 						)
 						break

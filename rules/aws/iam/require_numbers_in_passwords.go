@@ -31,6 +31,7 @@ var CheckRequireNumbersInPasswords = rules.Register(
 		if policy.RequireNumbers.IsFalse() {
 			results.Add(
 				"Password policy does not require numbers.",
+				&policy,
 				policy.RequireNumbers,
 			)
 		} else {

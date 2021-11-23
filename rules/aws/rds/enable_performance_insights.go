@@ -32,11 +32,13 @@ The encryption key specified in ` + "`" + `performance_insights_kms_key_id` + "`
 			if cluster.PerformanceInsights.Enabled.IsFalse() {
 				results.Add(
 					"Cluster does not have performance insights enabled.",
+					&cluster,
 					cluster.PerformanceInsights.Enabled,
 				)
 			} else if cluster.PerformanceInsights.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Cluster has performance insights enabled without encryption.",
+					&cluster,
 					cluster.PerformanceInsights.KMSKeyID,
 				)
 			} else {
@@ -50,11 +52,13 @@ The encryption key specified in ` + "`" + `performance_insights_kms_key_id` + "`
 			if instance.PerformanceInsights.Enabled.IsFalse() {
 				results.Add(
 					"Instance does not have performance insights enabled.",
+					&instance,
 					instance.PerformanceInsights.Enabled,
 				)
 			} else if instance.PerformanceInsights.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Instance has performance insights enabled without encryption.",
+					&instance,
 					instance.PerformanceInsights.KMSKeyID,
 				)
 			} else {

@@ -31,6 +31,7 @@ var CheckEnableAtRestEncryption = rules.Register(
 			if workgroup.Encryption.Type.EqualTo(athena.EncryptionTypeNone) {
 				results.Add(
 					"Workgroup does not have encryption configured.",
+					&workgroup,
 					workgroup.Encryption.Type,
 				)
 			} else {
@@ -44,6 +45,7 @@ var CheckEnableAtRestEncryption = rules.Register(
 			if database.Encryption.Type.EqualTo(athena.EncryptionTypeNone) {
 				results.Add(
 					"Database does not have encryption configured.",
+					&database,
 					database.Encryption.Type,
 				)
 			} else {

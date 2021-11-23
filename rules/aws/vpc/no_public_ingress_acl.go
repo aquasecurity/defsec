@@ -39,6 +39,7 @@ var CheckNoPublicIngress = rules.Register(
 						fail = true
 						results.Add(
 							"Network ACL rule allows ingress from public internet.",
+							&rule,
 							block,
 						)
 					}

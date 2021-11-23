@@ -39,6 +39,9 @@ func FormatSarif(w io.Writer, results []rules.Result, baseDir string, _ ...Forma
 		if err != nil {
 			return err
 		}
+		if baseDir == rng.GetFilename() {
+			relativePath = filepath.Base(baseDir)
+		}
 
 		message := sarif.NewTextMessage(res.Description())
 		region := sarif.NewSimpleRegion(rng.GetStartLine(), rng.GetEndLine())
