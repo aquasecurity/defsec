@@ -42,7 +42,7 @@ func (r *Result) Flatten() FlatResult {
 		RuleID:          r.rule.AVDID,
 		RuleSummary:     r.rule.Summary,
 		RuleProvider:    r.rule.Provider,
-		Impact:          r.rule.AVDID,
+		Impact:          r.rule.Impact,
 		Resolution:      r.rule.Resolution,
 		Links:           r.rule.Links,
 		Description:     r.Description(),

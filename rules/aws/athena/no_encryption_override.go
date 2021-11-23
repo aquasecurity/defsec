@@ -30,6 +30,7 @@ var CheckNoEncryptionOverride = rules.Register(
 			if workgroup.EnforceConfiguration.IsFalse() {
 				results.Add(
 					"The workgroup configuration is not enforced.",
+					&workgroup,
 					workgroup.EnforceConfiguration,
 				)
 			}

@@ -16,7 +16,7 @@ var CheckLoggingIsEnabled = rules.Register(
 		Summary:     "S3 Bucket does not have logging enabled.",
 		Explanation: "Buckets should have logging enabled so that access can be audited.",
 		Impact:      "There is no way to determine the access to this bucket",
-		Resolution:  "Add a logging block to the resource to enable access logging",
+		Resolution:  "AddOld a logging block to the resource to enable access logging",
 		Links: []string{
 			"https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html",
 		},
@@ -27,6 +27,7 @@ var CheckLoggingIsEnabled = rules.Register(
 			if !bucket.Logging.Enabled.IsTrue() && bucket.ACL.NotEqualTo("log-delivery-write") {
 				results.Add(
 					"Bucket does not have logging enabled",
+					&bucket,
 					bucket.Logging.Enabled,
 				)
 			} else {

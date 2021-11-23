@@ -29,6 +29,7 @@ This can be done by setting <code>image_tab_mutability</code> to <code>IMMUTABLE
 			if repo.ImageTagsImmutable.IsFalse() {
 				results.Add(
 					"Repository tags are mutable.",
+					&repo,
 					repo.ImageTagsImmutable,
 				)
 			} else {

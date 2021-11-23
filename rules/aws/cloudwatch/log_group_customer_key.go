@@ -27,6 +27,7 @@ var CheckLogGroupCustomerKey = rules.Register(
 			if group.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Log group is not encrypted.",
+					&group,
 					group.KMSKeyID,
 				)
 			} else {

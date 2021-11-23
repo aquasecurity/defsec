@@ -27,6 +27,7 @@ var CheckNoPublicAccess = rules.Register(
 			if broker.PublicAccess.IsTrue() {
 				results.Add(
 					"Broker has public access enabled.",
+					&broker,
 					broker.PublicAccess,
 				)
 			} else {

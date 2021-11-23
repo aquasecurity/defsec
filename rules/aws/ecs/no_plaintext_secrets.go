@@ -40,6 +40,7 @@ var CheckNoPlaintextSecrets = rules.Register(
 				if result := scanner.Scan(val); result.TransgressionFound {
 					results.Add(
 						fmt.Sprintf("Container definition contains a potentially sensitive environment variable '%s': %s", key, result.Description),
+						&definition,
 						definition.ContainerDefinitions,
 					)
 				} else {

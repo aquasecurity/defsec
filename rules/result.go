@@ -87,19 +87,25 @@ type MetadataProvider interface {
 	GetRawValue() interface{}
 }
 
-func (r *Results) Add(description string, source MetadataProvider) {
+func (r *Results) Add(description string, source MetadataProvider, issueBlock ...MetadataProvider) {
 	var annotationStr string
-	metadata := source.GetMetadata()
-	if metadata != nil && metadata.IsExplicit() {
-		annotationStr = rawToString(source.GetRawValue())
+
+	result := Result{
+		description: description,
+		codeBlock:   source.GetMetadata(),
 	}
-	*r = append(*r,
-		Result{
-			description: description,
-			codeBlock:   metadata,
-			annotation:  annotationStr,
-		},
-	)
+
+	if len(issueBlock) > 0 {
+		metadata := issueBlock[0].GetMetadata()
+		if metadata != nil && metadata.IsExplicit() {
+			annotationStr = rawToString(issueBlock[0].GetRawValue())
+
+		}
+		result.annotation = annotationStr
+		result.issueBlock = issueBlock[0].GetMetadata()
+	}
+
+	*r = append(*r, result)
 }
 
 func (r *Results) AddPassed(source MetadataProvider, descriptions ...string) {

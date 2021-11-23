@@ -29,6 +29,7 @@ In order to benefit from the additional security features achieved with using an
 			if cluster.SubnetGroupName.IsEmpty() {
 				results.Add(
 					"Cluster is deployed outside of a VPC.",
+					&cluster,
 					cluster.SubnetGroupName,
 				)
 			} else {

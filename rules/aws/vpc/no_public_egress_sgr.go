@@ -32,6 +32,7 @@ var CheckNoPublicEgressSgr = rules.Register(
 						fail = true
 						results.Add(
 							"Security group rule allows egress to public internet.",
+							&group,
 							block,
 						)
 					}

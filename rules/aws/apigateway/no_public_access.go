@@ -36,6 +36,7 @@ var CheckNoPublicAccess = rules.Register(
 				if method.AuthorizationType.EqualTo(apigateway.AuthorizationNone) {
 					results.Add(
 						"Authorization is not enabled for this method.",
+						&method,
 						method.AuthorizationType,
 					)
 				} else {

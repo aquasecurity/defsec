@@ -32,6 +32,7 @@ var CheckEnableTopicEncryption = rules.Register(
 			} else if topic.Encryption.KMSKeyID.EqualTo("alias/aws/sns") {
 				results.Add(
 					"Topic encryption does not use a customer managed key.",
+					&topic,
 					topic.Encryption.KMSKeyID,
 				)
 			} else {

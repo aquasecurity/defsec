@@ -31,6 +31,7 @@ var CheckRequireSymbolsInPasswords = rules.Register(
 		if policy.RequireSymbols.IsFalse() {
 			results.Add(
 				"Password policy does not require symbols.",
+				&policy,
 				policy.RequireSymbols,
 			)
 		} else {

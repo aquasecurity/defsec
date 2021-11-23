@@ -30,6 +30,7 @@ You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning 
 			if dist.DefaultCacheBehaviour.ViewerProtocolPolicy.EqualTo(cloudfront.ViewerPolicyProtocolAllowAll) {
 				results.Add(
 					"Distribution allows unencrypted communications.",
+					&dist,
 					dist.DefaultCacheBehaviour.ViewerProtocolPolicy,
 				)
 			} else {
@@ -39,6 +40,7 @@ You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning 
 				if behaviour.ViewerProtocolPolicy.EqualTo(cloudfront.ViewerPolicyProtocolAllowAll) {
 					results.Add(
 						"Distribution allows unencrypted communications.",
+						&behaviour,
 						behaviour.ViewerProtocolPolicy,
 					)
 				} else {

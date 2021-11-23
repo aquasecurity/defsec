@@ -46,6 +46,7 @@ var CheckNoPublicAccess = rules.Register(
 						foundIssue = true
 						results.Add(
 							"Policy provides public access to the ECR repository.",
+							&repo,
 							repo.Policy,
 						)
 					}

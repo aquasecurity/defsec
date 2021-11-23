@@ -32,3 +32,11 @@ type Instance struct {
 	types.Metadata
 	KMSKeyID types.StringValue
 }
+
+func (i *Instance) GetMetadata() *types.Metadata {
+	return &i.Metadata
+}
+
+func (i *Instance) GetRawValue() interface{} {
+	return nil
+}
