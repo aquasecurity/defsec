@@ -9,6 +9,7 @@ type FlatResult struct {
 	RuleID          string            `json:"rule_id"`
 	RuleSummary     string            `json:"rule_description"`
 	RuleProvider    provider.Provider `json:"rule_provider"`
+	RuleService     string            `json:"rule_service"`
 	Impact          string            `json:"impact"`
 	Resolution      string            `json:"resolution"`
 	Links           []string          `json:"links"`
@@ -16,7 +17,7 @@ type FlatResult struct {
 	RangeAnnotation string            `json:"-"`
 	Severity        severity.Severity `json:"severity"`
 	Status          Status            `json:"status"`
-	Resource        string            `json:resource`
+	Resource        string            `json:"resource"`
 	Location        FlatRange         `json:"location"`
 }
 
@@ -43,6 +44,7 @@ func (r *Result) Flatten() FlatResult {
 		RuleID:          r.rule.AVDID,
 		RuleSummary:     r.rule.Summary,
 		RuleProvider:    r.rule.Provider,
+		RuleService:     r.rule.Service,
 		Impact:          r.rule.Impact,
 		Resolution:      r.rule.Resolution,
 		Links:           r.rule.Links,
