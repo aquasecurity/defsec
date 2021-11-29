@@ -2,6 +2,7 @@ package types
 
 type Reference interface {
 	String() string
+	LogicalID() string
 	RefersTo(r Reference) bool
 }
 
@@ -14,4 +15,8 @@ func (f *FakeReference) String() string {
 
 func (f *FakeReference) RefersTo(r Reference) bool {
 	return false
+}
+
+func (f *FakeReference) LogicalID() string {
+	return "something"
 }
