@@ -191,7 +191,7 @@ func (val Value) Equals(other Value) Value {
 
 	switch {
 	case ty == Number:
-		result = rawNumberEqual(val.v.(*big.Float), other.v.(*big.Float))
+		result = val.v.(*big.Float).Cmp(other.v.(*big.Float)) == 0
 	case ty == Bool:
 		result = val.v.(bool) == other.v.(bool)
 	case ty == String:

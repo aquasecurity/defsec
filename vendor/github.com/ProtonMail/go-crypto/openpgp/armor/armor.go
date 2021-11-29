@@ -10,9 +10,8 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/base64"
-	"io"
-
 	"github.com/ProtonMail/go-crypto/openpgp/errors"
+	"io"
 )
 
 // A Block represents an OpenPGP armored structure.

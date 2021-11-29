@@ -1,7 +1,5 @@
 package uniseg
 
-import "unicode/utf8"
-
 // The states of the grapheme cluster parser.
 const (
 	grAny = iota
@@ -120,20 +118,12 @@ type Graphemes struct {
 
 // NewGraphemes returns a new grapheme cluster iterator.
 func NewGraphemes(s string) *Graphemes {
-	l := utf8.RuneCountInString(s)
-	codePoints := make([]rune, l)
-	indices := make([]int, l+1)
-	i := 0
-	for pos, r := range s {
-		codePoints[i] = r
-		indices[i] = pos
-		i++
+	g := &Graphemes{}
+	for index, codePoint := range s {
+		g.codePoints = append(g.codePoints, codePoint)
+		g.indices = append(g.indices, index)
 	}
-	indices[l] = len(s)
-	g := &Graphemes{
-		codePoints: codePoints,
-		indices:    indices,
-	}
+	g.indices = append(g.indices, len(s))
 	g.Next() // Parse ahead.
 	return g
 }

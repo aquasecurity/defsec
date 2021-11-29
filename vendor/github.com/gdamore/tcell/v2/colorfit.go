@@ -15,9 +15,8 @@
 package tcell
 
 import (
-	"math"
-
 	"github.com/lucasb-eyer/go-colorful"
+	"math"
 )
 
 // FindColor attempts to find a given color, or the best match possible for it,
