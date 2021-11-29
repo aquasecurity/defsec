@@ -132,8 +132,10 @@ func highlightCode(result rules.Result) (string, error) {
 
 	rng := result.CodeBlockMetadata().Range()
 
+	if rng == nil {
+		return "", nil
+	}
 	var resolvedValue string
-
 	content, err := ioutil.ReadFile(rng.GetFilename())
 	if err != nil {
 		return "", err
