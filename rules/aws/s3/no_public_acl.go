@@ -20,7 +20,7 @@ var CheckForPublicACL = rules.Register(
 Buckets should have logging enabled so that access can be audited. 
 `,
 		Impact:     "There is no way to determine the access to this bucket",
-		Resolution: "AddOld a logging block to the resource to enable access logging",
+		Resolution: "Add a logging block to the resource to enable access logging",
 
 		Links: []string{
 			"https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html",

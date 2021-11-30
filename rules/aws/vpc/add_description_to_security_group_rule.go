@@ -15,7 +15,7 @@ var CheckAddDescriptionToSecurityGroupRule = rules.Register(
 		ShortCode:  "add-description-to-security-group-rule",
 		Summary:    "Missing description for security group rule.",
 		Impact:     "Descriptions provide context for the firewall rule reasons",
-		Resolution: "AddOld descriptions for all security groups rules",
+		Resolution: "Add descriptions for all security groups rules",
 		Explanation: `Security group rules should include a description for auditing purposes.
 
 Simplifies auditing, debugging, and managing security groups.`,
