@@ -7,12 +7,12 @@ import (
 	"github.com/aquasecurity/defsec/state"
 )
 
-var CheckEnableAccessLogging = rules.Register(
+var CheckEnableApiAccessLogging = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0113",
 		Provider:    provider.AWSProvider,
 		Service:     "sam",
-		ShortCode:   "enable-access-logging",
+		ShortCode:   "enable-api-access-logging",
 		Summary:     "SAM API stages for V1 and V2 should have access logging enabled",
 		Impact:      "Logging provides vital information about access and usage",
 		Resolution:  "Enable logging for API Gateway stages",

@@ -7,12 +7,12 @@ import (
 	"github.com/aquasecurity/defsec/state"
 )
 
-var CheckUseSecureTlsPolicy = rules.Register(
+var CheckApiUseSecureTlsPolicy = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0112",
 		Provider:    provider.AWSProvider,
 		Service:     "sam",
-		ShortCode:   "use-secure-tls-policy",
+		ShortCode:   "api-use-secure-tls-policy",
 		Summary:     "SAM API domain name uses outdated SSL/TLS protocols.",
 		Impact:      "Outdated SSL policies increase exposure to known vulnerabilities",
 		Resolution:  "Use the most modern TLS/SSL policies available",

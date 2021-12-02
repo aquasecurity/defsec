@@ -7,12 +7,12 @@ import (
 	"github.com/aquasecurity/defsec/state"
 )
 
-var CheckEnableCacheEncryption = rules.Register(
+var CheckEnableApiCacheEncryption = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0110",
 		Provider:    provider.AWSProvider,
 		Service:     "sam",
-		ShortCode:   "enable-cache-encryption",
+		ShortCode:   "enable-api-cache-encryption",
 		Summary:     "SAM API must have data cache enabled",
 		Impact:      "Data stored in the cache that is unencrypted may be vulnerable to compromise",
 		Resolution:  "Enable cache encryption",
