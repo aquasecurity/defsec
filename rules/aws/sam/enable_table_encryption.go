@@ -7,7 +7,7 @@ import (
 	"github.com/aquasecurity/defsec/state"
 )
 
-var CheckTableEncryptionEnabled = rules.Register(
+var CheckEnableTableEncryption = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0121",
 		Provider:    provider.AWSProvider,
@@ -23,15 +23,15 @@ var CheckTableEncryptionEnabled = rules.Register(
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, api := range s.AWS.SAM.APIs {
-			if api.DomainConfiguration.SecurityPolicy.NotEqualTo("TLS_1_2") {
+		for _, table := range s.AWS.SAM.SimpleTables {
+			if table.SSESpecification.Enabled.IsFalse() {
 				results.Add(
 					"Domain name is configured with an outdated TLS policy.",
-					&api,
-					api.DomainConfiguration.SecurityPolicy,
+					&table,
+					table.SSESpecification.Enabled,
 				)
 			} else {
-				results.AddPassed(&api)
+				results.AddPassed(&table)
 			}
 		}
 		return
