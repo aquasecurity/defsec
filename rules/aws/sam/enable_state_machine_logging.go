@@ -17,7 +17,9 @@ var CheckEnableStateMachineLogging = rules.Register(
 		Impact:      "Without logging enabled it is difficult to identify suspicious activity",
 		Resolution:  "Enable logging",
 		Explanation: `Logging enables end-to-end debugging and analysis of all state machine activities.`,
-		Links:       []string{},
+		Links:       []string{
+			"https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-statemachine.html#sam-statemachine-logging",
+		},
 		Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {

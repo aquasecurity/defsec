@@ -7,18 +7,18 @@ import (
 	"github.com/aquasecurity/defsec/state"
 )
 
-var CheckApiUseSecureTlsPolicy = rules.Register(
+var CheckTableEncryptionEnabled = rules.Register(
 	rules.Rule{
-		AVDID:       "AVD-AWS-0112",
+		AVDID:       "AVD-AWS-0121",
 		Provider:    provider.AWSProvider,
 		Service:     "sam",
-		ShortCode:   "api-use-secure-tls-policy",
-		Summary:     "SAM API domain name uses outdated SSL/TLS protocols.",
-		Impact:      "Outdated SSL policies increase exposure to known vulnerabilities",
-		Resolution:  "Use the most modern TLS/SSL policies available",
-		Explanation: `You should not use outdated/insecure TLS versions for encryption. You should be using TLS v1.2+.`,
+		ShortCode:   "enable-table-encryption",
+		Summary:     "SAM Simple table must have server side encryption enabled.",
+		Impact:      "Data stored in the table that is unencrypted may be vulnerable to compromise",
+		Resolution:  "Enable server side encryption",
+		Explanation: `Encryption should be enabled at all available levels to ensure that data is protected if compromised.`,
 		Links: []string{
-			"https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-property-api-domainconfiguration.html#sam-api-domainconfiguration-securitypolicy",
+			"https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-simpletable.html#sam-simpletable-ssespecification",
 		},
 		Severity: severity.High,
 	},

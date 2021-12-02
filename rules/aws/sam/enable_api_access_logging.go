@@ -18,7 +18,7 @@ var CheckEnableApiAccessLogging = rules.Register(
 		Resolution:  "Enable logging for API Gateway stages",
 		Explanation: `API Gateway stages should have access log settings block configured to track all access to a particular stage. This should be applied to both v1 and v2 gateway stages.`,
 		Links: []string{
-			"https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-logging.html",
+			"https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-api.html#sam-api-accesslogsetting",
 		},
 		Severity: severity.Medium,
 	},

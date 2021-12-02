@@ -21,7 +21,7 @@ var CheckNoFunctionPolicyWildcards = rules.Register(
 		Resolution:  "Specify the exact permissions required, and to which resources they should apply instead of using wildcards.",
 		Explanation: `You should use the principle of least privilege when defining your IAM policies. This means you should specify each exact permission required without using wildcards, as this could cause the granting of access to certain undesired actions, resources and principals.`,
 		Links: []string{
-			"https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
+			"https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-policies",
 		},
 		Severity: severity.High,
 	},
