@@ -74,7 +74,10 @@ func printResult(res rules.Result, i int, includePassedChecks bool) {
 	resultHeader := fmt.Sprintf("  <underline>Result %d</underline>\n", i+1)
 
 	var severityFormatted string
-	if includePassedChecks && res.Status() == rules.StatusPassed {
+	if res.Status() == rules.StatusPassed {
+		if !includePassedChecks {
+			return
+		}
 		terminal.PrintSuccessf(resultHeader)
 		severityFormatted = tml.Sprintf("<green>PASSED</green>")
 	} else {
