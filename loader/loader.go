@@ -22,6 +22,33 @@ type Check struct {
 	Description string `json:"description"`
 }
 
+func GetProvidersHierarchy() (providers map[string]map[string][]string) {
+
+	registeredRules := rules.GetRegistered()
+
+	provs := make(map[string]map[string][]string)
+
+	for _, rule := range registeredRules {
+
+		pName := strings.ToLower(rule.Rule().Provider.DisplayName())
+		sName := strings.ToLower(rule.Rule().Service)
+		cName := rule.Rule().AVDID
+
+		if _, ok := provs[pName]; !ok {
+			provs[pName] = make(map[string][]string)
+		}
+
+		if _, ok := provs[pName][sName]; !ok {
+			provs[pName][sName] = make([]string, 0)
+		}
+
+		provs[pName][sName] = append(provs[pName][sName], cName)
+	}
+
+	return provs
+}
+
+
 func GetProviders() (providers []Provider) {
 
 	registeredRules := rules.GetRegistered()

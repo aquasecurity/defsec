@@ -34,3 +34,15 @@ func Test_get_providers_as_Json(t *testing.T) {
 
 	assert.NotEmpty(t, jsonData)
 }
+
+func Test_get_provider_hierarchy(t *testing.T) {
+	hierarchy := loader.GetProvidersHierarchy()
+
+	var providers []string
+
+	for provider := range hierarchy {
+		providers = append(providers, provider)
+	}
+
+	assert.Len(t, providers, 9)
+}
