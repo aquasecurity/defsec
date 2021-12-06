@@ -9,6 +9,7 @@ import (
 
 var CheckEnableStackdriverLogging = rules.Register(
 	rules.Rule{
+                AVDID: "AVD-GCP-0060",
 		Provider:    provider.GoogleProvider,
 		Service:     "gke",
 		ShortCode:   "enable-stackdriver-logging",

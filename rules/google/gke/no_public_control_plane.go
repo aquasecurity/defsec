@@ -10,6 +10,7 @@ import (
 
 var CheckNoPublicControlPlane = rules.Register(
 	rules.Rule{
+                AVDID: "AVD-GCP-0053",
 		Provider:    provider.GoogleProvider,
 		Service:     "gke",
 		ShortCode:   "no-public-control-plane",

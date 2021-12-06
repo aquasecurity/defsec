@@ -10,6 +10,7 @@ import (
 
 var CheckPgNoMinStatementLogging = rules.Register(
 	rules.Rule{
+                AVDID: "AVD-GCP-0021",
 		Provider:    provider.GoogleProvider,
 		Service:     "sql",
 		ShortCode:   "pg-no-min-statement-logging",

@@ -9,6 +9,7 @@ import (
 
 var CheckMetadataEndpointsDisabled = rules.Register(
 	rules.Rule{
+                AVDID: "AVD-GCP-0048",
 		Provider:   provider.GoogleProvider,
 		Service:    "gke",
 		ShortCode:  "metadata-endpoints-disabled",

@@ -9,6 +9,7 @@ import (
 
 var CheckEnableIpAliasing = rules.Register(
 	rules.Rule{
+                AVDID: "AVD-GCP-0049",
 		Provider:    provider.GoogleProvider,
 		Service:     "gke",
 		ShortCode:   "enable-ip-aliasing",

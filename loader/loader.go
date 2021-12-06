@@ -1,12 +1,80 @@
 package loader
 
 import (
+	"encoding/json"
 	"strings"
 
 	"github.com/aquasecurity/defsec/rules"
 )
 
-func GetProviders() []string {
+type Provider struct {
+	Name     string    `json:"name"`
+	Services []Service `json:"services"`
+}
+
+type Service struct {
+	Name   string  `json:"name"`
+	Checks []Check `json:"checks"`
+}
+
+type Check struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+func GetProviders() (providers []Provider) {
+
+	registeredRules := rules.GetRegistered()
+
+	provs := make(map[string]map[string][]Check)
+
+	for _, rule := range registeredRules {
+
+		pName := strings.ToLower(rule.Rule().Provider.DisplayName())
+		sName := strings.ToLower(rule.Rule().Service)
+		cName := rule.Rule().AVDID
+		desc := rule.Rule().Summary
+
+		if _, ok := provs[pName]; !ok {
+			provs[pName] = make(map[string][]Check)
+		}
+
+		if _, ok := provs[pName][sName]; !ok {
+			provs[pName][sName] = []Check{}
+		}
+
+		provs[pName][sName] = append(provs[pName][sName], Check{
+			Name:        cName,
+			Description: desc,
+		})
+	}
+
+	for providerName, providerServices := range provs {
+		var services []Service
+		for serviceName, checks := range providerServices {
+			services = append(services, Service{
+				Name:   serviceName,
+				Checks: checks,
+			})
+		}
+
+		providers = append(providers, Provider{
+			Name:     providerName,
+			Services: services,
+		})
+	}
+
+	return providers
+}
+
+func GetProvidersAsJson() ([]byte, error) {
+
+	providers := GetProviders()
+
+	return json.MarshalIndent(providers, "", "  ")
+}
+
+func GetProviderNames() []string {
 
 	registeredRules := rules.GetRegistered()
 
@@ -29,7 +97,7 @@ func GetProviders() []string {
 
 }
 
-func GetProviderServices(providerName string) []string {
+func GetProviderServiceNames(providerName string) []string {
 
 	registeredRules := rules.GetRegistered()
 
@@ -54,7 +122,7 @@ func GetProviderServices(providerName string) []string {
 	return uniqueServices
 }
 
-func GetProviderServiceChecks(providerName string, serviceName string) []string {
+func GetProviderServiceCheckNames(providerName string, serviceName string) []string {
 
 	registeredRules := rules.GetRegistered()
 
