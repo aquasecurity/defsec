@@ -135,6 +135,7 @@ github.com/sirupsen/logrus
 # github.com/stretchr/testify v1.7.0
 ## explicit
 github.com/stretchr/testify/assert
+github.com/stretchr/testify/require
 # github.com/zclconf/go-cty v1.9.1
 github.com/zclconf/go-cty/cty
 github.com/zclconf/go-cty/cty/set

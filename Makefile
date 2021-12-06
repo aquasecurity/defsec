@@ -27,5 +27,8 @@ fix-typos:
 .PHONY: quality
 quality: cyclo vet
 
-
+.PHONY: update-loader
+update-loader:
+	python3 scripts/update_loader_rules.py
+	@goimports -w loader/rules.go
 
