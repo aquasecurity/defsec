@@ -7,7 +7,7 @@ import (
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 
-	"github.com/owenrum/go-sarif/sarif"
+	"github.com/owenrumney/go-sarif/sarif"
 )
 
 func FormatSarif(w io.Writer, results []rules.Result, baseDir string, _ ...FormatterOption) error {

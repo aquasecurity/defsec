@@ -114,16 +114,16 @@ github.com/lucasb-eyer/go-colorful
 github.com/mattn/go-runewidth
 # github.com/mitchellh/go-homedir v1.1.0
 github.com/mitchellh/go-homedir
-# github.com/owenrum/go-sarif v1.0.13
+# github.com/owenrumney/go-sarif v1.0.14
 ## explicit
-github.com/owenrum/go-sarif/sarif
-# github.com/owenrum/squealer v0.2.29
+github.com/owenrumney/go-sarif/sarif
+# github.com/owenrumney/squealer v0.3.1
 ## explicit
-github.com/owenrum/squealer/internal/app/squealer/match
-github.com/owenrum/squealer/internal/app/squealer/mertics
-github.com/owenrum/squealer/pkg/config
-github.com/owenrum/squealer/pkg/result
-github.com/owenrum/squealer/pkg/squealer
+github.com/owenrumney/squealer/internal/app/squealer/match
+github.com/owenrumney/squealer/internal/app/squealer/mertics
+github.com/owenrumney/squealer/pkg/config
+github.com/owenrumney/squealer/pkg/result
+github.com/owenrumney/squealer/pkg/squealer
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
 # github.com/rivo/uniseg v0.1.0
