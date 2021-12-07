@@ -114,16 +114,16 @@ github.com/lucasb-eyer/go-colorful
 github.com/mattn/go-runewidth
 # github.com/mitchellh/go-homedir v1.1.0
 github.com/mitchellh/go-homedir
-# github.com/owenrumney/go-sarif v1.0.12
+# github.com/owenrum/go-sarif v1.0.13
 ## explicit
-github.com/owenrumney/go-sarif/sarif
-# github.com/owenrumney/squealer v0.2.28
+github.com/owenrum/go-sarif/sarif
+# github.com/owenrum/squealer v0.2.29
 ## explicit
-github.com/owenrumney/squealer/internal/app/squealer/match
-github.com/owenrumney/squealer/internal/app/squealer/mertics
-github.com/owenrumney/squealer/pkg/config
-github.com/owenrumney/squealer/pkg/result
-github.com/owenrumney/squealer/pkg/squealer
+github.com/owenrum/squealer/internal/app/squealer/match
+github.com/owenrum/squealer/internal/app/squealer/mertics
+github.com/owenrum/squealer/pkg/config
+github.com/owenrum/squealer/pkg/result
+github.com/owenrum/squealer/pkg/squealer
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
 # github.com/rivo/uniseg v0.1.0
@@ -136,7 +136,7 @@ github.com/sirupsen/logrus
 ## explicit
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
-# github.com/zclconf/go-cty v1.9.1
+# github.com/zclconf/go-cty v1.10.0
 github.com/zclconf/go-cty/cty
 github.com/zclconf/go-cty/cty/set
 # golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b
@@ -145,9 +145,9 @@ golang.org/x/crypto/curve25519
 golang.org/x/crypto/ed25519
 golang.org/x/crypto/ed25519/internal/edwards25519
 golang.org/x/crypto/ssh/terminal
-# golang.org/x/net v0.0.0-20210326060303-6b1517762897
+# golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4
 golang.org/x/net/context
-# golang.org/x/sys v0.0.0-20210502180810-71e4cd670f79
+# golang.org/x/sys v0.0.0-20210510120138-977fb7262007
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/plan9
 golang.org/x/sys/unix
@@ -163,5 +163,5 @@ golang.org/x/text/unicode/norm
 gopkg.in/warnings.v0
 # gopkg.in/yaml.v2 v2.4.0
 gopkg.in/yaml.v2
-# gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
+# gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 gopkg.in/yaml.v3

@@ -3,7 +3,7 @@ package ec2
 import (
 	"github.com/aquasecurity/defsec/provider/aws/vpc"
 	"github.com/aquasecurity/defsec/types"
-	"github.com/owenrumney/squealer/pkg/squealer"
+	"github.com/owenrum/squealer/pkg/squealer"
 )
 
 type Instance struct {

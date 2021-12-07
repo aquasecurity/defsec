@@ -5,14 +5,14 @@ import (
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
-	"github.com/owenrumney/squealer/pkg/squealer"
+	"github.com/owenrum/squealer/pkg/squealer"
 )
 
 var scanner = squealer.NewStringScanner()
 
 var CheckNoSensitiveInfo = rules.Register(
 	rules.Rule{
-                AVDID: "AVD-CLDSTK-0001",
+		AVDID:       "AVD-CLDSTK-0001",
 		Provider:    provider.CloudStackProvider,
 		Service:     "compute",
 		ShortCode:   "no-sensitive-info",
