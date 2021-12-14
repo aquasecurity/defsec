@@ -155,18 +155,18 @@ func highlightCode(result rules.Result) (string, error) {
 			// TODO: Fix this for json
 			if !strings.HasSuffix(rng.GetFilename(), ".json") {
 				if hasAnnotation && result.IssueBlockMetadata().Range().GetStartLine() == i+1 {
-					resolvedValue = fmt.Sprintf("<blue>[%s]</blue>", result.Annotation())
+					resolvedValue = tml.Sprintf("<blue>[%s]</blue>", result.Annotation())
 				}
 			}
 
 			if hasAnnotation {
 				if resolvedValue == "" {
-					coloured = append(coloured, fmt.Sprintf("<blue>% 5d</blue> <dim>┃</dim> <yellow>%s</yellow>", i, bodyString))
+					coloured = append(coloured, tml.Sprintf("<blue>% 5d</blue> <dim>┃</dim> <yellow>%s</yellow>", i, bodyString))
 				} else {
-					coloured = append(coloured, fmt.Sprintf("<blue>% 5d</blue> <dim>┃</dim> <red>%s    %s</red>", i, bodyString, resolvedValue))
+					coloured = append(coloured, tml.Sprintf("<blue>% 5d</blue> <dim>┃</dim> <red>%s    %s</red>", i, bodyString, resolvedValue))
 				}
 			} else {
-				coloured = append(coloured, fmt.Sprintf("<blue>% 5d</blue> <dim>┃</dim> <red>%s</red>", i, bodyString))
+				coloured = append(coloured, tml.Sprintf("<blue>% 5d</blue> <dim>┃</dim> <red>%s</red>", i, bodyString))
 
 			}
 		}
