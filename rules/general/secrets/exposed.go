@@ -14,7 +14,7 @@ var CheckNotExposed = rules.Register(
 		AVDID:       "AVD-GEN-0004",
 		Provider:    provider.GeneralProvider,
 		Service:     "secrets",
-		ShortCode:   "plaintext-exposure",
+		ShortCode:   "no-plaintext-exposure",
 		Summary:     "Secret/sensitive data should not be exposed in plaintext.",
 		Impact:      "Sensitive data can be leaked to unauthorised people or systems.",
 		Resolution:  "Remove plaintext secrets and encrypt them within a secrets manager instead.",
