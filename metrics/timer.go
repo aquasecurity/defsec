@@ -19,11 +19,18 @@ type timerMetric struct {
 }
 
 // Timer returns a new timer (or returns an existing one if one exists with this category and name)
-// The timer will be started on creation
-func Timer(category string, name string, debug bool) TimerMetric {
+func Timer(category, name string) TimerMetric {
+	return newTimer(category, name, false)
+}
+
+// DebugTimer returns a new debug timer (or returns an existing one if one exists with this category and name)
+func DebugTimer(category, name string) TimerMetric {
+	return newTimer(category, name, true)
+}
+
+func newTimer(category string, name string, debug bool) TimerMetric {
 	if metric := useCategory(category, debug).findMetric(name); metric != nil {
 		if c, ok := metric.(TimerMetric); ok {
-			c.Start()
 			return c
 		}
 	}

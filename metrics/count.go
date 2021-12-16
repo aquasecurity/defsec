@@ -17,7 +17,16 @@ type counter struct {
 }
 
 // Counter creates a new counter metric (or returns an existing one if one already exists with this name and category)
-func Counter(category string, name string, debug bool) CounterMetric {
+func Counter(category, name string) CounterMetric {
+	return newCounter(category, name, false)
+}
+
+// DebugCounter creates a new debug counter metric (or returns an existing one if one already exists with this name and category)
+func DebugCounter(category, name string) CounterMetric {
+	return newCounter(category, name, true)
+}
+
+func newCounter(category string, name string, debug bool) CounterMetric {
 	if metric := useCategory(category, debug).findMetric(name); metric != nil {
 		if c, ok := metric.(CounterMetric); ok {
 			return c
