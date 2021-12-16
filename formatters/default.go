@@ -94,7 +94,7 @@ func printMetrics(debug bool) {
 	}
 
 	for _, category := range categories {
-		_ = tml.Printf("  <blue>%s</blue>\n  %s\n", category.Name(), strings.Repeat("-", 50-len(category.Name())))
+		_ = tml.Printf("  <blue>%s</blue>\n  %s\n", category.Name(), strings.Repeat("-", 42))
 		for _, metric := range category.Metrics() {
 			_ = tml.Printf("  <blue>%-20s</blue> %s\n", metric.Name(), metric.Value())
 		}
