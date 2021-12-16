@@ -45,10 +45,10 @@ func ClearSession() {
 func General() []Category {
 	categoriesMu.Lock()
 	defer categoriesMu.Unlock()
-	results := make([]Category, len(registeredCategories))
-	for i, cat := range registeredCategories {
+	var results []Category
+	for _, cat := range registeredCategories {
 		if !cat.debug {
-			results[i] = cat
+			results = append(results, cat)
 		}
 	}
 	return results
@@ -58,10 +58,10 @@ func General() []Category {
 func Debug() []Category {
 	categoriesMu.Lock()
 	defer categoriesMu.Unlock()
-	results := make([]Category, len(registeredCategories))
-	for i, cat := range registeredCategories {
+	var results []Category
+	for _, cat := range registeredCategories {
 		if cat.debug {
-			results[i] = cat
+			results = append(results, cat)
 		}
 	}
 	return results
