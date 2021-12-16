@@ -18,14 +18,11 @@ var severityFormat map[severity.Severity]string
 func FormatDefault(_ io.Writer, results []rules.Result, _ string, options ...FormatterOption) error {
 
 	showSuccessOutput := true
-	includePassedChecks := false
 
 	var showGif bool
 
 	for _, option := range options {
 		switch option {
-		case IncludePassed:
-			includePassedChecks = true
 		case ConciseOutput:
 			showSuccessOutput = false
 		case PassingGif:
@@ -60,7 +57,7 @@ func FormatDefault(_ io.Writer, results []rules.Result, _ string, options ...For
 
 	fmt.Println("")
 	for i, res := range results {
-		printResult(res, i, includePassedChecks)
+		printResult(res, i)
 	}
 
 	terminal.PrintErrorf("\n  %d potential problems detected.\n\n", len(results)-countPassedResults(results))
@@ -69,15 +66,12 @@ func FormatDefault(_ io.Writer, results []rules.Result, _ string, options ...For
 
 }
 
-func printResult(res rules.Result, i int, includePassedChecks bool) {
+func printResult(res rules.Result, i int) {
 
 	resultHeader := fmt.Sprintf("  <underline>Result %d</underline>\n", i+1)
 
 	var severityFormatted string
 	if res.Status() == rules.StatusPassed {
-		if !includePassedChecks {
-			return
-		}
 		terminal.PrintSuccessf(resultHeader)
 		severityFormatted = tml.Sprintf("<green>PASSED</green>")
 	} else {
