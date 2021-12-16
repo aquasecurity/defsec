@@ -1,6 +1,9 @@
 package metrics
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 type CounterMetric interface {
 	Metric
@@ -8,6 +11,7 @@ type CounterMetric interface {
 }
 
 type counter struct {
+	sync.Mutex
 	name  string
 	count uint64
 }
@@ -35,5 +39,7 @@ func (c *counter) Value() string {
 }
 
 func (c *counter) Increment(delta int) {
+	c.Lock()
+	defer c.Unlock()
 	c.count += uint64(delta)
 }

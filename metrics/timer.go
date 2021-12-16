@@ -1,6 +1,9 @@
 package metrics
 
-import "time"
+import (
+	"sync"
+	"time"
+)
 
 type TimerMetric interface {
 	Metric
@@ -9,6 +12,7 @@ type TimerMetric interface {
 }
 
 type timerMetric struct {
+	sync.Mutex
 	name    string
 	started time.Time
 	total   time.Duration
@@ -32,11 +36,18 @@ func Timer(category string, name string, debug bool) TimerMetric {
 }
 
 func (t *timerMetric) Start() {
-	t.started = time.Now()
+	now := time.Now()
+	t.Lock()
+	defer t.Unlock()
+	t.started = now
+
 }
 
 func (t *timerMetric) Stop() {
-	t.total += time.Since(t.started)
+	now := time.Now()
+	t.Lock()
+	defer t.Unlock()
+	t.total += now.Sub(t.started)
 }
 
 func (t *timerMetric) Name() string {
