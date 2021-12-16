@@ -46,9 +46,9 @@ func General() []Category {
 	categoriesMu.Lock()
 	defer categoriesMu.Unlock()
 	results := make([]Category, len(registeredCategories))
-	for _, cat := range registeredCategories {
+	for i, cat := range registeredCategories {
 		if !cat.debug {
-			results = append(results, cat)
+			results[i] = cat
 		}
 	}
 	return results
@@ -59,9 +59,9 @@ func Debug() []Category {
 	categoriesMu.Lock()
 	defer categoriesMu.Unlock()
 	results := make([]Category, len(registeredCategories))
-	for _, cat := range registeredCategories {
+	for i, cat := range registeredCategories {
 		if cat.debug {
-			results = append(results, cat)
+			results[i] = cat
 		}
 	}
 	return results
