@@ -177,7 +177,7 @@ func highlightCode(result rules.Result) error {
 	for i, bodyString := range strings.Split(string(content), "\n") {
 
 		// this line is outside the range, skip it
-		if i+1 < outerRange.GetStartLine() || i > outerRange.GetEndLine() {
+		if i+1 < outerRange.GetStartLine() || i+1 > outerRange.GetEndLine() {
 			continue
 		}
 
