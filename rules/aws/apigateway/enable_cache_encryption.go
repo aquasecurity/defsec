@@ -27,7 +27,7 @@ var CheckEnableCacheEncryption = rules.Register(
 				continue
 			}
 			for _, stage := range api.Stages {
-				if !stage.IsManaged() {
+				if !stage.IsManaged() || stage.Version.NotEqualTo(1) {
 					continue
 				}
 				if stage.RESTMethodSettings.CacheDataEncrypted.IsFalse() {
