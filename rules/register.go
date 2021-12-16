@@ -1,6 +1,9 @@
 package rules
 
-import "github.com/aquasecurity/defsec/state"
+import (
+	"github.com/aquasecurity/defsec/metrics"
+	"github.com/aquasecurity/defsec/state"
+)
 
 type CheckFunc func(s *state.State) (results Results)
 
@@ -15,7 +18,9 @@ func (r RegisteredRule) Evaluate(s *state.State) Results {
 	if r.checkFunc == nil {
 		return nil
 	}
+	ruleTimer := metrics.Timer("defsec-rule-timers", r.Rule().LongID(), true)
 	results := r.checkFunc(s)
+	ruleTimer.Stop()
 	for i := range results {
 		results[i].rule = r.rule
 	}
