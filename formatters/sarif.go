@@ -7,7 +7,7 @@ import (
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 
-	"github.com/owenrumney/go-sarif/sarif"
+	"github.com/owenrumney/go-sarif/v2/sarif"
 )
 
 func FormatSarif(w io.Writer, results []rules.Result, baseDir string, _ ...FormatterOption) error {
@@ -16,7 +16,7 @@ func FormatSarif(w io.Writer, results []rules.Result, baseDir string, _ ...Forma
 		return err
 	}
 
-	run := sarif.NewRun("tfsec", "https://tfsec.dev")
+	run := sarif.NewRunWithInformationURI("tfsec", "https://tfsec.dev")
 	report.AddRun(run)
 
 	for _, res := range results {
@@ -31,7 +31,7 @@ func FormatSarif(w io.Writer, results []rules.Result, baseDir string, _ ...Forma
 		}
 		rule := run.AddRule(res.Rule().LongID()).
 			WithDescription(res.Rule().Summary).
-			WithHelp(link)
+			WithHelpURI(link)
 
 		rng := res.NarrowestRange()
 
@@ -61,11 +61,11 @@ func FormatSarif(w io.Writer, results []rules.Result, baseDir string, _ ...Forma
 			WithArtifactLocation(sarif.NewSimpleArtifactLocation(relativePath)).
 			WithRegion(region)
 
-		ruleResult := run.AddResult(rule.ID)
+		ruleResult := run.CreateResultForRule(rule.ID)
 
 		ruleResult.WithMessage(message).
 			WithLevel(level).
-			WithLocation(sarif.NewLocation().WithPhysicalLocation(location))
+			AddLocation(sarif.NewLocation().WithPhysicalLocation(location))
 	}
 
 	return report.PrettyWrite(w)
