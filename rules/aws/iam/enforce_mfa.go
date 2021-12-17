@@ -7,7 +7,7 @@ import (
 	"github.com/aquasecurity/defsec/state"
 )
 
-var EnforceMFA = rules.Register(
+var CheckEnforceMFA = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AWS-0123",
 		Provider:   provider.AWSProvider,
