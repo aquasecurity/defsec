@@ -76,10 +76,10 @@ func FormatDefault(_ io.Writer, results []rules.Result, _ string, options ...For
 
 	var passInfo string
 	if passCount > 0 {
-		passInfo = fmt.Sprintf(" (%d passed)", passCount)
+		passInfo = fmt.Sprintf("%d passed, ", passCount)
 	}
 
-	terminal.PrintErrorf("\n  %d potential problems detected%s.\n\n", len(results)-countPassedResults(results), passInfo)
+	terminal.PrintErrorf("\n  %s%d potential problems detected.\n\n", passInfo, len(results)-countPassedResults(results))
 
 	return nil
 
