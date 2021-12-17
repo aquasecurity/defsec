@@ -45,6 +45,10 @@ func (r *Result) OverrideIssueBlockMetadata(metadata *types.Metadata) {
 	r.issueBlock = metadata
 }
 
+func (r *Result) OverrideCodeBlockMetadata(metadata *types.Metadata) {
+	r.codeBlock = metadata
+}
+
 func (r *Result) OverrideAnnotation(annotation string) {
 	r.annotation = annotation
 }
