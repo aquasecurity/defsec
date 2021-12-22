@@ -10,7 +10,7 @@ import (
 
 var CheckEnableFunctionTracing = rules.Register(
 	rules.Rule{
-		AVDID:       "AVD-AWS-0113",
+		AVDID:       "AVD-AWS-0125",
 		Provider:    provider.AWSProvider,
 		Service:     "sam",
 		ShortCode:   "enable-function-tracing",
@@ -18,10 +18,10 @@ var CheckEnableFunctionTracing = rules.Register(
 		Impact:      "Without full tracing enabled it is difficult to trace the flow of logs",
 		Resolution:  "Enable tracing",
 		Explanation: `X-Ray tracing enables end-to-end debugging and analysis of the function.`,
-		Links:       []string{
+		Links: []string{
 			"https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-tracing",
 		},
-		Severity:    severity.Low,
+		Severity: severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, function := range s.AWS.SAM.Functions {

@@ -30,6 +30,7 @@ func GetProvidersHierarchy() (providers map[string]map[string][]string) {
 
 	for _, rule := range registeredRules {
 
+		cNames := make(map[string]bool)
 		pName := strings.ToLower(rule.Rule().Provider.DisplayName())
 		sName := strings.ToLower(rule.Rule().Service)
 		cName := rule.Rule().AVDID
@@ -42,12 +43,14 @@ func GetProvidersHierarchy() (providers map[string]map[string][]string) {
 			provs[pName][sName] = make([]string, 0)
 		}
 
-		provs[pName][sName] = append(provs[pName][sName], cName)
+		if _, ok := cNames[cName]; !ok {
+			cNames[cName] = true
+			provs[pName][sName] = append(provs[pName][sName], cName)
+		}
 	}
 
 	return provs
 }
-
 
 func GetProviders() (providers []Provider) {
 
