@@ -24,15 +24,13 @@ var CheckNoPlainTextActionEnvironmentSecrets = rules.Register(
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, action := range s.GitHub.Actions {
-			for _, environmentSecret := range action.EnvironmentSecrets {
-				if environmentSecret.PlainTextValue.IsNotEmpty() {
-					results.Add("Secret has plain text value",
-						&action,
-						environmentSecret.PlainTextValue)
-				}
+		for _, environmentSecret := range s.GitHub.EnvironmentSecrets {
+			if environmentSecret.PlainTextValue.IsNotEmpty() {
+				results.Add("Secret has plain text value",
+					&environmentSecret,
+					environmentSecret.PlainTextValue)
 			}
 		}
-		return
+		return results
 	},
 )

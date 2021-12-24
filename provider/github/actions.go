@@ -8,6 +8,7 @@ type Action struct {
 }
 
 type EnvironmentSecret struct {
+	types.Metadata
 	Repository     types.StringValue
 	Environment    types.StringValue
 	SecretName     types.StringValue
@@ -15,10 +16,10 @@ type EnvironmentSecret struct {
 	EncryptedValue types.StringValue
 }
 
-func (a *Action) GetMetadata() *types.Metadata {
+func (a *EnvironmentSecret) GetMetadata() *types.Metadata {
 	return &a.Metadata
 }
 
-func (a *Action) GetRawValue() interface{} {
+func (a *EnvironmentSecret) GetRawValue() interface{} {
 	return nil
 }
