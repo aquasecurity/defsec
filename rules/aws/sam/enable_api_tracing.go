@@ -20,7 +20,13 @@ var CheckEnableApiTracing = rules.Register(
 		Links:       []string{
 			"https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-api.html#sam-api-tracingenabled",
 		},
-		Severity:    severity.Low,
+		CloudFormation:   &rules.EngineMetadata{
+            GoodExamples:        cloudFormationEnableApiTracingGoodExamples,
+            BadExamples:         cloudFormationEnableApiTracingBadExamples,
+            Links:               cloudFormationEnableApiTracingLinks,
+            RemediationMarkdown: cloudFormationEnableApiTracingRemediationMarkdown,
+        },
+        Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, api := range s.AWS.SAM.APIs {

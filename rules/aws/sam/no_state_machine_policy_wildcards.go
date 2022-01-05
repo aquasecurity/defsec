@@ -20,7 +20,13 @@ var CheckNoStateMachinePolicyWildcards = rules.Register(
 		Links: []string{
 			"https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-statemachine.html#sam-statemachine-policies",
 		},
-		Severity: severity.High,
+		CloudFormation:   &rules.EngineMetadata{
+            GoodExamples:        cloudFormationNoStateMachinePolicyWildcardsGoodExamples,
+            BadExamples:         cloudFormationNoStateMachinePolicyWildcardsBadExamples,
+            Links:               cloudFormationNoStateMachinePolicyWildcardsLinks,
+            RemediationMarkdown: cloudFormationNoStateMachinePolicyWildcardsRemediationMarkdown,
+        },
+        Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
 
