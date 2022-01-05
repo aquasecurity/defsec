@@ -9,7 +9,7 @@ import (
 
 var CheckRetentionPeriodSet = rules.Register(
 	rules.Rule{
-                AVDID: "AVD-AZU-0025",
+		AVDID:      "AVD-AZU-0025",
 		Provider:   provider.AzureProvider,
 		Service:    "database",
 		ShortCode:  "retention-period-set",
@@ -33,7 +33,7 @@ If the retention period is to be explicitly set, it should be set for no less th
 	func(s *state.State) (results rules.Results) {
 		for _, server := range s.Azure.Database.MSSQLServers {
 			for _, policy := range server.ExtendedAuditingPolicies {
-				if policy.RetentionInDays.LessThan(90) {
+				if policy.RetentionInDays.LessThan(90) && policy.RetentionInDays.NotEqualTo(0) {
 					results.Add(
 						"Server has a retention period of less than 90 days.",
 						policy.RetentionInDays,
