@@ -23,7 +23,13 @@ var CheckNoFunctionPolicyWildcards = rules.Register(
 		Links: []string{
 			"https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-policies",
 		},
-		Severity: severity.High,
+		CloudFormation:   &rules.EngineMetadata{
+            GoodExamples:        cloudFormationNoFunctionPolicyWildcardsGoodExamples,
+            BadExamples:         cloudFormationNoFunctionPolicyWildcardsBadExamples,
+            Links:               cloudFormationNoFunctionPolicyWildcardsLinks,
+            RemediationMarkdown: cloudFormationNoFunctionPolicyWildcardsRemediationMarkdown,
+        },
+        Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
 

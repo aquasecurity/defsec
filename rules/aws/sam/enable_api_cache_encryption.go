@@ -20,7 +20,13 @@ var CheckEnableApiCacheEncryption = rules.Register(
 		Links:       []string{
 			"https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-stage-methodsetting.html#cfn-apigateway-stage-methodsetting-cachedataencrypted",
 		},
-		Severity:    severity.Medium,
+		CloudFormation:   &rules.EngineMetadata{
+            GoodExamples:        cloudFormationEnableApiCacheEncryptionGoodExamples,
+            BadExamples:         cloudFormationEnableApiCacheEncryptionBadExamples,
+            Links:               cloudFormationEnableApiCacheEncryptionLinks,
+            RemediationMarkdown: cloudFormationEnableApiCacheEncryptionRemediationMarkdown,
+        },
+        Severity:    severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, api := range s.AWS.SAM.APIs {

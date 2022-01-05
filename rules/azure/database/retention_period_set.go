@@ -22,7 +22,13 @@ If the retention period is to be explicitly set, it should be set for no less th
 		Links: []string{
 			"https://docs.microsoft.com/en-us/azure/azure-sql/database/auditing-overview",
 		},
-		Severity: severity.Medium,
+		Terraform:   &rules.EngineMetadata{
+            GoodExamples:        terraformRetentionPeriodSetGoodExamples,
+            BadExamples:         terraformRetentionPeriodSetBadExamples,
+            Links:               terraformRetentionPeriodSetLinks,
+            RemediationMarkdown: terraformRetentionPeriodSetRemediationMarkdown,
+        },
+        Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, server := range s.Azure.Database.MSSQLServers {

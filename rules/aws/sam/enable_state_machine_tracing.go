@@ -20,7 +20,13 @@ var CheckEnableStateMachineTracing = rules.Register(
 		Links:       []string{
 			"https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-statemachine.html#sam-statemachine-tracing",
 		},
-		Severity:    severity.Low,
+		CloudFormation:   &rules.EngineMetadata{
+            GoodExamples:        cloudFormationEnableStateMachineTracingGoodExamples,
+            BadExamples:         cloudFormationEnableStateMachineTracingBadExamples,
+            Links:               cloudFormationEnableStateMachineTracingLinks,
+            RemediationMarkdown: cloudFormationEnableStateMachineTracingRemediationMarkdown,
+        },
+        Severity:    severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, stateMachine := range s.AWS.SAM.StateMachines {
