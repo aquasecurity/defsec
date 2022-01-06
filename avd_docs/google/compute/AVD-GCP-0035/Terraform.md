@@ -1,0 +1,12 @@
+---
+additional_links: 
+  - "https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall"
+---
+
+Set a more restrictive cidr range
+
+```hcl
+resource "google_compute_firewall" "good_example" {
+ 	destination_ranges = ["1.2.3.4/32"]
+ }
+```
