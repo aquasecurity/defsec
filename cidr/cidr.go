@@ -42,7 +42,11 @@ func CountAddresses(inputCIDR string) int {
 		return 0
 	}
 	prefixLen, bits := network.Mask.Size()
-	return 1 << (uint64(bits) - uint64(prefixLen))
+	mask := (uint64(bits) - uint64(prefixLen))
+	if mask == 128 {
+		return 0xffffffff
+	}
+	return 1 << mask
 }
 
 // IsPublic returns true if a provided IP is outside of the designated public ranges, or
