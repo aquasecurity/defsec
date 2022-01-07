@@ -7,6 +7,7 @@ type Spaces struct {
 }
 
 type Bucket struct {
+	Name         types.StringValue
 	Objects      []Object
 	ACL          types.StringValue
 	ForceDestroy types.BoolValue
