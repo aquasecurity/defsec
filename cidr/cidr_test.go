@@ -1,6 +1,8 @@
 package cidr
 
 import (
+	"fmt"
+	"math"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -104,4 +106,37 @@ func TestPublicDetection(t *testing.T) {
 		})
 	}
 
+}
+
+func TestCountCIDRAddresses(t *testing.T) {
+	tests := []struct {
+		cidr     string
+		expected uint64
+	}{
+		{
+			cidr:     "127.0.0.1",
+			expected: 1,
+		},
+		{
+			cidr:     "192.168.0.1/16",
+			expected: 0x10000,
+		},
+		{
+			cidr:     "1.2.3.4/0",
+			expected: 0x100000000,
+		},
+		{
+			cidr:     "::0/0",
+			expected: math.MaxUint64,
+		},
+	}
+	for _, test := range tests {
+		t.Run(
+			fmt.Sprintf("%s => %d", test.cidr, test.expected),
+			func(t *testing.T) {
+				actual := CountAddresses(test.cidr)
+				assert.Equal(t, test.expected, actual)
+			},
+		)
+	}
 }
