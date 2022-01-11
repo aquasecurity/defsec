@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	_ "github.com/aquasecurity/defsec/loader"
 	"github.com/aquasecurity/defsec/rules"
 	"gopkg.in/yaml.v2"
 )
