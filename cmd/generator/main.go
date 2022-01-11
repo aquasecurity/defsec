@@ -113,7 +113,8 @@ func reformatFile(path string) error {
 	output := string(rawContent)
 
 	if len(matter.Links) > 0 {
-		output += fmt.Sprintf(`### Additional Links
+		output += fmt.Sprintf(`
+### Additional Links
 - %s
         `, strings.Join(matter.Links, "\n - "))
 	}
