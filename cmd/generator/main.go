@@ -17,7 +17,7 @@ func main() {
 		if err != nil {
 			return err
 		}
-		if !info.IsDir() || !strings.HasPrefix(path, "AVD") {
+		if !info.IsDir() || !strings.HasPrefix(filepath.Base(path), "AVD") {
 			return nil
 		}
 		return processDir(path)
