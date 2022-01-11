@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Only use immutable images in ECR
 

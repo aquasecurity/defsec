@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Enforce the use of HTTPS for ElasticSearch
 

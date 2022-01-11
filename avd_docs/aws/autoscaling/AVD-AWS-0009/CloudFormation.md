@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Set the instance to not be publicly accessible
 

@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Specify the exact permissions required, and to which resources they should apply instead of using wildcards.
 

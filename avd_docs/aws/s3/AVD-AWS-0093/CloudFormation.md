@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Limit the access to public buckets to only the owner or AWS Services (eg; CloudFront)
 

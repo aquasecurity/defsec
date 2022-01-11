@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Do not allow public access in the policy
 

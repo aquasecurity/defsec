@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Add a logging block to the resource to enable access logging
 

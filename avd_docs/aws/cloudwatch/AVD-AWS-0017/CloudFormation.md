@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Enable CMK encryption of CloudWatch Log Groups
 

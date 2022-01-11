@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Explicitly set the retention period to greater than the default
 

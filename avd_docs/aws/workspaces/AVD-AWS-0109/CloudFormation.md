@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Root and user volume encryption should be enabled
 

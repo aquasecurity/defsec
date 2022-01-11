@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Keep policy scope to the minimum that is required to be effective
 

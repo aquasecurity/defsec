@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Enable blocking any PUT calls with a public ACL specified
 

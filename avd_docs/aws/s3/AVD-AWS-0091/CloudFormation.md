@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Enable ignoring the application of public ACLs in PUT calls
 

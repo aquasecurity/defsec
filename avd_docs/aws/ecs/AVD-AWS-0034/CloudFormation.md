@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Enable Container Insights
 

@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Turn on log validation for Cloudtrail
 

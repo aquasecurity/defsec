@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Disable public access when not required
 

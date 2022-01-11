@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Enable WAF for the CloudFront distribution
 

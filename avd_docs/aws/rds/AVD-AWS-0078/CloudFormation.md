@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Enable encryption for RDS clusters and instances
 

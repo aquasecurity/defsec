@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Always provide a source arn for Lambda permissions
 
