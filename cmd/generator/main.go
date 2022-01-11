@@ -101,7 +101,7 @@ func reformatFile(path string) error {
 	}
 
 	frontMatter := areas[1]
-	rawContent := areas[2]
+	rawContent := strings.Join(areas[2:], "---\n")
 
 	matter := struct {
 		Links []string `yaml:"additional_links"`
