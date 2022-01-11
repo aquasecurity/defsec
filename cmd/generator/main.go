@@ -138,9 +138,11 @@ func cleanCode(code string) string {
 				if strings.HasSuffix(line, "{") {
 					indent++
 				} else if strings.HasSuffix(line, "}") {
-					indent--
-					line = strings.TrimSpace(line)
-					line = strings.Repeat("  ", indent) + line
+					if !strings.Contains(line, "{") {
+						indent--
+						line = strings.TrimSpace(line)
+						line = strings.Repeat("  ", indent) + line
+					}
 				}
 			}
 		} else if strings.TrimSpace(line) == "```hcl" {
