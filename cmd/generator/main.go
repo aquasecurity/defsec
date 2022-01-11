@@ -66,7 +66,7 @@ func processRule(dir string, rule rules.Rule) error {
         `, strings.Join(rule.Links, "\n - "))
 	}
 
-	if err := ioutil.WriteFile(dir, []byte(docsMd), 0600); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(dir, "docs.md"), []byte(docsMd), 0600); err != nil {
 		return err
 	}
 
