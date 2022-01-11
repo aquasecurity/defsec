@@ -115,7 +115,7 @@ func reformatFile(path string) error {
 	if len(matter.Links) > 0 {
 		output += fmt.Sprintf(`
 #### Remediation Links
-- %s
+ - %s
         `, strings.Join(matter.Links, "\n - "))
 	}
 
@@ -139,6 +139,8 @@ func cleanCode(code string) string {
 					indent++
 				} else if strings.HasSuffix(line, "}") {
 					indent--
+					line = strings.TrimSpace(line)
+					line = strings.Repeat("  ", indent) + line
 				}
 			}
 		} else if strings.TrimSpace(line) == "```hcl" {
