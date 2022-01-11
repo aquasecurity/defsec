@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Enable encryption at rest for Athena databases and workgroup configurations
 

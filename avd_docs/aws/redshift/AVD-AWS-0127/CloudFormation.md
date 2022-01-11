@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Deploy Redshift cluster into a non default VPC
 

@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Enable in transit encryption when using efs
 

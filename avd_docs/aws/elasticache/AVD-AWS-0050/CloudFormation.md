@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Configure snapshot retention for redis cluster
 

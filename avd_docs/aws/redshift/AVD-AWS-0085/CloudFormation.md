@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Switch to VPC resources
 

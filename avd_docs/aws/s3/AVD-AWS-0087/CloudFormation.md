@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Prevent policies that allow public access being PUT
 

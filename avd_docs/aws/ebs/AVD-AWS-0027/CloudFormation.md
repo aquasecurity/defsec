@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Enable encryption using customer managed keys
 

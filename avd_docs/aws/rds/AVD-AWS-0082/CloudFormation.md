@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Set the database to not be publicly accessible
 

@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Only allow HTTPS for CloudFront distribution communication
 

@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Use secrets for the task definition
 

@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Use the most modern TLS/SSL policies available
 

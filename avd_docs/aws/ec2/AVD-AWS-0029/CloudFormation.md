@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Remove sensitive data from the EC2 instance user-data
 

@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Set the aggregator to cover all regions
 

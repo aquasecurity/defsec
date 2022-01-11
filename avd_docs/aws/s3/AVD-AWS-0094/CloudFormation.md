@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Define a aws_s3_bucket_public_access_block for the given bucket to control public access policies
 

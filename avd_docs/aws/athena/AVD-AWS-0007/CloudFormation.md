@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Enforce the configuration to prevent client overrides
 

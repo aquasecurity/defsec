@@ -1,6 +1,3 @@
----
-additional_links: []
----
 
 Add descriptions for all security groups rules
 
