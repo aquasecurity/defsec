@@ -110,14 +110,42 @@ func reformatFile(path string) error {
 		return err
 	}
 
-	output := string(rawContent)
+	output := cleanCode(string(rawContent))
 
 	if len(matter.Links) > 0 {
 		output += fmt.Sprintf(`
-### Additional Links
+#### Remediation Links
 - %s
         `, strings.Join(matter.Links, "\n - "))
 	}
 
 	return ioutil.WriteFile(path, []byte(output), 0600)
+}
+
+func cleanCode(code string) string {
+	var output []string
+	var inTF bool
+	var indent int
+	for _, line := range strings.Split(code, "\n") {
+		if inTF {
+			if strings.TrimSpace(line) == "```" {
+				inTF = false
+				indent = 0
+			} else {
+				// process hcl here
+				line = strings.TrimSpace(line)
+				line = strings.Repeat("  ", indent) + line
+				if strings.HasSuffix(line, "{") {
+					indent++
+				} else if strings.HasSuffix(line, "}") {
+					indent--
+				}
+			}
+		} else if strings.TrimSpace(line) == "```hcl" {
+			inTF = true
+		}
+		output = append(output, line)
+	}
+
+	return strings.Join(output, "\n")
 }
