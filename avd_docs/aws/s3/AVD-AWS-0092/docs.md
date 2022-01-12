@@ -5,9 +5,6 @@
 Buckets should have logging enabled so that access can be audited. 
 
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 There is no way to determine the access to this bucket
 

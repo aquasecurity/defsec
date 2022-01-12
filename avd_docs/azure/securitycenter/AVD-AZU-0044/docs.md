@@ -4,9 +4,6 @@
 It is recommended that at least one valid contact is configured for the security center. 
 Microsoft will notify the security contact directly in the event of a security incident using email and require alerting to be turned on.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 The ability to react to high severity notifications could be delayed
 

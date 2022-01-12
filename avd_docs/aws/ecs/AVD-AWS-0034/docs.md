@@ -3,9 +3,6 @@
 
 Cloudwatch Container Insights provide more metrics and logs for container based applications and micro services.
 
-### Default Severity
-{{ severity "LOW" }}
-
 ### Impact
 Not all metrics and logs may be gathered for containers when Container Insights isn't enabled
 

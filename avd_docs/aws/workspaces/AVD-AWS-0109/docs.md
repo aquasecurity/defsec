@@ -3,9 +3,6 @@
 
 Workspace volumes for both user and root should be encrypted to protect the data stored on them.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Data can be freely read if compromised
 

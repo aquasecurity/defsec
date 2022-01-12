@@ -3,9 +3,6 @@
 
 Arbitrary files can be read from the system using LOAD_DATA unless this setting is disabled.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Arbitrary files read by attackers when combined with a SQL injection vulnerability.
 

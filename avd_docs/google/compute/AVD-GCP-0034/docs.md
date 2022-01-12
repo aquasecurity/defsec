@@ -3,9 +3,6 @@
 
 Using unmanaged keys makes rotation and general management difficult.
 
-### Default Severity
-{{ severity "LOW" }}
-
 ### Impact
 Using unmanaged keys does not allow for proper key management.
 

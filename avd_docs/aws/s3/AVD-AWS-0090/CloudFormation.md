@@ -3,6 +3,8 @@ Enable versioning to protect against accidental/malicious removal or modificatio
 
 ```yaml
 ---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
 Resources:
   GoodExample:
     Properties:

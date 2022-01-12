@@ -3,9 +3,6 @@
 
 Using 'allAuthenticatedUsers' provides any GCP user - even those outside of your organisation - access to your BigQuery dataset.
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 Exposure of sensitive data to the public iniernet
 

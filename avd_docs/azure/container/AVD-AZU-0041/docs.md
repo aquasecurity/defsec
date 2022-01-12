@@ -3,9 +3,6 @@
 
 The API server is the central way to interact with and manage a cluster. To improve cluster security and minimize attacks, the API server should only be accessible from a limited set of IP address ranges.
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 Any IP can interact with the API server
 

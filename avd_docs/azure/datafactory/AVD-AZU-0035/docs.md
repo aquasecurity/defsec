@@ -5,9 +5,6 @@ Data Factory has public access set to true by default.
 
 Disabling public network access is applicable only to the self-hosted integration runtime, not to Azure Integration Runtime and SQL Server Integration Services (SSIS) Integration Runtime.
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 Data factory is publicly accessible
 

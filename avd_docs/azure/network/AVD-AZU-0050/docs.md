@@ -5,9 +5,6 @@ SSH access can be configured on either the network security group or in the netw
 
 SSH access should not be permitted from the internet (*, 0.0.0.0, /0, internet, any)
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 Its dangerous to allow SSH access from the internet
 

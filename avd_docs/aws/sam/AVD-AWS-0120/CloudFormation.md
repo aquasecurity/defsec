@@ -3,6 +3,8 @@ Specify the exact permissions required, and to which resources they should apply
 
 ```yaml
 ---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
 AWSTemplateFormatVersion: 2010-09-09
 Description: Good Example of SAM Function
 Resources:

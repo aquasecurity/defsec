@@ -3,9 +3,6 @@
 
 By default, clients can connect to function endpoints by using both HTTP or HTTPS. You should redirect HTTP to HTTPs because HTTPS uses the SSL/TLS protocol to provide a secure connection, which is both encrypted and authenticated.
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 Anyone can access the Function App using HTTP.
 

@@ -3,9 +3,6 @@
 
 Enabling a network policy allows the segregation of network traffic by namespace
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Unrestricted inter-cluster communication
 

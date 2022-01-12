@@ -3,6 +3,8 @@ Enable in transit encryption for replication group
 
 ```yaml
 ---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
 Resources:
   GoodExample:
     Type: 'AWS::ElastiCache::ReplicationGroup'

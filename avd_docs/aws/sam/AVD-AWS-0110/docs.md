@@ -3,9 +3,6 @@
 
 Method cache encryption ensures that any sensitive data in the cache is not vulnerable to compromise in the event of interception
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Data stored in the cache that is unencrypted may be vulnerable to compromise
 

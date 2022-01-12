@@ -5,9 +5,6 @@ SQS Policy actions should always be restricted to a specific set.
 
 This ensures that the queue itself cannot be modified or deleted, and prevents possible future additions to queue actions to be implicitly allowed.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 SQS policies with wildcard actions allow more that is required
 

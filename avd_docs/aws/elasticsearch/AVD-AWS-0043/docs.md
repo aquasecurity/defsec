@@ -3,9 +3,6 @@
 
 Traffic flowing between Elasticsearch nodes should be encrypted to ensure sensitive data is kept private.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 In transit data between nodes could be read if intercepted
 

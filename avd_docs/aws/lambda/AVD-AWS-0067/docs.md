@@ -7,9 +7,6 @@ Without this, any resource from principal will be granted permission – even if
 
 For S3, this should be the ARN of the S3 Bucket. For CloudWatch Events, this should be the ARN of the CloudWatch Events Rule. For API Gateway, this should be the ARN of the API
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 Not providing the source ARN allows any resource from principal, even from other accounts
 

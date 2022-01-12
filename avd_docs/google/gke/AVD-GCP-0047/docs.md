@@ -9,9 +9,6 @@ Pod Security Policy allows you to set smart defaults for your Pods, and enforce 
 
 The policies you define should be specific to the needs of your application
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Pods could be operating with more permissions than required to be effective
 

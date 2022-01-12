@@ -3,9 +3,6 @@
 
 Encryption should be enabled at all available levels to ensure that data is protected if compromised.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Data stored in the table that is unencrypted may be vulnerable to compromise
 

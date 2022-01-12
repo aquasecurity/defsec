@@ -3,9 +3,6 @@
 
 Encryption of Neptune storage ensures that if their is compromise of the disks, the data is still protected.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Unencrypted sensitive data is vulnerable to compromise.
 

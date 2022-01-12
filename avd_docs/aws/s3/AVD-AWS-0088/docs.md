@@ -5,9 +5,6 @@
 S3 Buckets should be encrypted with customer managed KMS keys and not default AWS managed keys, in order to allow granular control over access to specific buckets.
 
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 The bucket objects could be read if compromised
 

@@ -3,9 +3,6 @@
 
 Setting the minimum log severity too high will cause errors not to be logged
 
-### Default Severity
-{{ severity "LOW" }}
-
 ### Impact
 Loss of error logging
 

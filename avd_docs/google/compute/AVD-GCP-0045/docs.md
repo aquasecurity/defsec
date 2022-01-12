@@ -3,9 +3,6 @@
 
 Integrity monitoring helps you understand and make decisions about the state of your VM instances.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 No visibility of VM instance boot state.
 

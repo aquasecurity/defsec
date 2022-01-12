@@ -5,9 +5,6 @@ Some Microsoft services that interact with storage accounts operate from network
 
 To help this type of service work as intended, allow the set of trusted Microsoft services to bypass the network rules
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Trusted Microsoft Services won't be able to access storage account unless rules set to allow
 

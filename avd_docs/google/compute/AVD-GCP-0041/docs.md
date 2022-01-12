@@ -3,9 +3,6 @@
 
 The virtual TPM provides numerous security measures to your VM.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Unable to prevent unwanted system state modification
 

@@ -3,6 +3,8 @@ Enable ignoring the application of public ACLs in PUT calls
 
 ```yaml
 ---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
 Resources:
   GoodExample:
     Properties:

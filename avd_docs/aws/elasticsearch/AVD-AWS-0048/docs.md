@@ -3,9 +3,6 @@
 
 You should ensure your Elasticsearch data is encrypted at rest to help prevent sensitive information from being read by unauthorised users.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Data will be readable if compromised
 

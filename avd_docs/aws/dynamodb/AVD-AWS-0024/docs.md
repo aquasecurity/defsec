@@ -5,9 +5,6 @@ DynamoDB tables should be protected against accidentally or malicious write/dele
 
 By enabling point-in-time-recovery you can restore to a known point in the event of loss of data.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Accidental or malicious writes and deletes can't be rolled back
 

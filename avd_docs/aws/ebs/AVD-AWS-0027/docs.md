@@ -3,9 +3,6 @@
 
 Encryption using AWS keys provides protection for your EBS volume. To increase control of the encryption and manage factors like rotation use customer managed keys.
 
-### Default Severity
-{{ severity "LOW" }}
-
 ### Impact
 Using AWS managed keys does not allow for fine grained control
 

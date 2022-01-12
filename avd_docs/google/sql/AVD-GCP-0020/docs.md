@@ -3,9 +3,6 @@
 
 Lock waits are often an indication of poor performance and often an indicator of a potential denial of service vulnerability, therefore occurrences should be logged for analysis.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Issues leading to denial of service may not be identified.
 

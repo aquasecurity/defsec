@@ -3,9 +3,6 @@
 
 Opening up ACLs to the public internet is potentially dangerous. You should restrict access to IP addresses or ranges that explicitly require it where possible.
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 The ports are exposed for ingressing data to the internet
 

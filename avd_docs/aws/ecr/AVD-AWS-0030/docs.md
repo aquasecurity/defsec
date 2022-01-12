@@ -3,9 +3,6 @@
 
 Repository image scans should be enabled to ensure vulnerable software can be discovered and remediated as soon as possible.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 The ability to scan images is not being used and vulnerabilities will not be highlighted
 

@@ -5,9 +5,6 @@ Storage container public access should be off. It can be configured for blobs on
 
 Explicitly overriding publicAccess to anything other than off should be avoided.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Data in the storage container could be exposed publicly
 

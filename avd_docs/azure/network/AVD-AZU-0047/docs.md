@@ -5,9 +5,6 @@ Network security rules should not use very broad subnets.
 
 Where possible, segments should be broken into smaller subnets.
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 The port is exposed for ingress from the internet
 

@@ -7,9 +7,6 @@ Granting permissions to users quickly become unwieldy and complex to make large 
 
 Permissions should be granted on roles, groups, services accounts instead.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Users shouldn't have permissions granted to them directly
 

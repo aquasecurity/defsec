@@ -9,9 +9,6 @@ Audit logs track user activity for compliance purposes.
 
 All the logs are disabled by default.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Logging provides vital information about access and usage
 

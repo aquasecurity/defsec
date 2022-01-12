@@ -3,9 +3,6 @@
 
 You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 The instance or configuration is publicly accessible
 

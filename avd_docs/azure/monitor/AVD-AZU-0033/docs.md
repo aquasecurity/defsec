@@ -3,9 +3,6 @@
 
 Log profiles should capture all categories to ensure that all events are logged
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Log profile must capture all activity to be able to ensure that all relevant information possible is available for an investigation
 
