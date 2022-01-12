@@ -2,6 +2,7 @@ package rules
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/aquasecurity/defsec/provider"
@@ -32,4 +33,50 @@ type Rule struct {
 
 func (r Rule) LongID() string {
 	return strings.ToLower(fmt.Sprintf("%s-%s-%s", r.Provider, r.Service, r.ShortCode))
+}
+
+func (r Rule) ServiceDisplayName() string {
+	return nicify(r.Service)
+}
+
+func (r Rule) ShortCodeDisplayName() string {
+	return nicify(r.ShortCode)
+}
+
+var acronyms = []string{
+	"aws",
+	"ec2",
+	"ecr",
+	"eks",
+	"efs",
+	"kms",
+	"https",
+	"ssh",
+	"http",
+	"mq",
+	"sns",
+	"sqs",
+	"iam",
+	"alb",
+	"lb",
+	"elb",
+	"tls",
+}
+
+var specials = map[string]string{
+	"dynamodb":   "DynamoDB",
+	"documentdb": "DocumentDB",
+	"mysql":      "MySQL",
+	"postgresql": "PostgreSQL",
+}
+
+func nicify(input string) string {
+	input = strings.ToLower(input)
+	for _, acronym := range acronyms {
+		input = regexp.MustCompile(fmt.Sprintf("\\b%s\\b", acronym)).ReplaceAllString(input, strings.ToUpper(acronym))
+	}
+	for replace, with := range specials {
+		input = regexp.MustCompile(fmt.Sprintf("\\b%s\\b", replace)).ReplaceAllString(input, with)
+	}
+	return strings.Title(input)
 }
