@@ -5,9 +5,6 @@ Expiration Date is an optional Key Vault Key behavior and is not set by default.
 
 Set when the resource will be become inactive.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Long life keys increase the attack surface when compromised
 

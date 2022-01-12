@@ -3,9 +3,6 @@
 
 Automated backups are not enabled by default. Backups are an easy way to restore data in a corruption or data-loss scenario.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 No recovery of lost or corrupted data
 

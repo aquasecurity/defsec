@@ -3,9 +3,6 @@
 
 Postgresql can generate logs for checkpoints to improve visibility for audit and configuration issue resolution.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 No error and query logs generated on checkpoint
 

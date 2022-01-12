@@ -7,9 +7,6 @@ This information can be used to monitor individual requests and to diagnose issu
 
 Requests are logged on a best-effort basis.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Logging provides valuable information about access and usage
 

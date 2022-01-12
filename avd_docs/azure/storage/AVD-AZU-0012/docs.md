@@ -5,9 +5,6 @@ The default_action for network rules should come into effect when no other rules
 
 The default action should be set to Deny.
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 Network rules that allow could cause data to be exposed publicly
 

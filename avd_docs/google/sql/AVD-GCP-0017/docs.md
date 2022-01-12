@@ -3,9 +3,6 @@
 
 Database instances should be configured so that they are not available over the public internet, but to internal compute resources which access them.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Public exposure of sensitive data
 

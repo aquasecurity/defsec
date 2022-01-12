@@ -3,9 +3,6 @@
 
 All artifacts produced by your CodeBuild project pipeline should always be encrypted
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 CodeBuild project artifacts are unencrypted
 

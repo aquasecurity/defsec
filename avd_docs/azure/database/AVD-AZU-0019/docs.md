@@ -3,9 +3,6 @@
 
 Postgresql can generate logs for successful connections to improve visibility for audit and configuration issue resolution.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 No visibility of successful connections
 

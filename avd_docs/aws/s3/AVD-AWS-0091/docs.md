@@ -5,9 +5,6 @@
 S3 buckets should ignore public ACLs on buckets and any objects they contain. By ignoring rather than blocking, PUT calls with public ACLs will still be applied but the ACL will be ignored.
 
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 PUT calls with public ACLs specified can make objects public
 

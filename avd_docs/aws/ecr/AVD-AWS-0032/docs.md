@@ -3,9 +3,6 @@
 
 Allowing public access to the ECR repository risks leaking sensitive of abusable information
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Risk of potential data leakage of sensitive artifacts
 

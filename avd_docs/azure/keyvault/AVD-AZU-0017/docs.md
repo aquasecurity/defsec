@@ -5,9 +5,6 @@ Expiration Date is an optional Key Vault Secret behavior and is not set by defau
 
 Set when the resource will be become inactive.
 
-### Default Severity
-{{ severity "LOW" }}
-
 ### Impact
 Long life secrets increase the opportunity for compromise
 

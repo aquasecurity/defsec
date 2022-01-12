@@ -3,9 +3,6 @@
 
 Data stored within an Elasticache replication node should be encrypted to ensure sensitive data is kept private.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 At-rest data in the Replication Group could be compromised if accessed.
 

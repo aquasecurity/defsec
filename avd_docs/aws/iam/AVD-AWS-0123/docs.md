@@ -5,9 +5,6 @@
 IAM user accounts should be protected with multi factor authentication to add safe guards to password compromise.
 			
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 User accounts are more vulnerable to compromise without multi factor authentication activated
 

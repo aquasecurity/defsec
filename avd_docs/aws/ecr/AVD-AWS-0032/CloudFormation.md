@@ -3,6 +3,8 @@ Do not allow public access in the policy
 
 ```yaml
 ---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
 Resources:
   GoodExample:
     Type: AWS::ECR::Repository

@@ -3,9 +3,6 @@
 
 Amazon DynamoDB Accelerator (DAX) encryption at rest provides an additional layer of data protection by helping secure your data from unauthorized access to the underlying storage.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Data can be freely read if compromised
 

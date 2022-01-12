@@ -3,9 +3,6 @@
 
 Postgresql can generate logs for connection throttling to improve visibility for audit and configuration issue resolution.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 No log information to help diagnosing connection contention issues
 

@@ -3,6 +3,8 @@ Use the most modern TLS/SSL policies available
 
 ```yaml
 ---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
 Resources:
   GoodExample:
     Properties:

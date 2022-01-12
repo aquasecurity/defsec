@@ -3,9 +3,6 @@
 
 Log profiles should capture all regions to ensure that all events are logged
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Activity may be occurring in locations that aren't being monitored
 

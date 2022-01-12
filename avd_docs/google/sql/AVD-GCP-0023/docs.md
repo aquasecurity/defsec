@@ -3,9 +3,6 @@
 
 Users with ALTER permissions on users can grant access to a contained database without the knowledge of an administrator
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Access can be granted without knowledge of the database administrator
 

@@ -3,9 +3,6 @@
 
 Logging checkpoints provides useful diagnostic data, which can identify performance issues in an application and potential DoS vectors.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Insufficient diagnostic data.
 

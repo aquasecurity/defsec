@@ -3,9 +3,6 @@
 
 Default service accounts should not be used - consider creating specialised service accounts for individual purposes.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Violation of principal of least privilege
 

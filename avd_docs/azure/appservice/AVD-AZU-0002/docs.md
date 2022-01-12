@@ -3,9 +3,6 @@
 
 Registering the identity used by an App with AD allows it to interact with other services without using username and password
 
-### Default Severity
-{{ severity "LOW" }}
-
 ### Impact
 Interaction between services can't easily be achieved without username/password
 

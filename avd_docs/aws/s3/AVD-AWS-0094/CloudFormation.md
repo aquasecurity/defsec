@@ -3,6 +3,8 @@ Define a aws_s3_bucket_public_access_block for the given bucket to control publi
 
 ```yaml
 ---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
 Resources:
   GoodExample:
     Properties:

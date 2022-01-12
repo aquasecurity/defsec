@@ -3,9 +3,6 @@
 
 Instances should not be publicly exposed to the internet
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Direct exposure of an instance to the public internet
 

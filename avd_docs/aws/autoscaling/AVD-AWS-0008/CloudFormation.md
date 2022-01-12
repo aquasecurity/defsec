@@ -3,6 +3,8 @@ Turn on encryption for all block devices
 
 ```yaml
 ---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
 Resources:
   GoodExample:
     Properties:

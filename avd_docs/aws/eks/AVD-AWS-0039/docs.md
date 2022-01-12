@@ -3,9 +3,6 @@
 
 EKS cluster resources should have the encryption_config block set with protection of the secrets resource.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 EKS secrets could be read if compromised
 

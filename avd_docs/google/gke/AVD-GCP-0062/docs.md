@@ -5,9 +5,6 @@ You should disable Attribute-Based Access Control (ABAC), and instead use Role-B
 
 RBAC has significant security advantages and is now stable in Kubernetes, so it’s time to disable ABAC.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 ABAC permissions are less secure than RBAC permissions
 

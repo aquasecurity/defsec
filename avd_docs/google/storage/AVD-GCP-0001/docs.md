@@ -3,9 +3,6 @@
 
 Using 'allUsers' or 'allAuthenticatedUsers' as members in an IAM member/binding causes data to be exposed outside of the organisation.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Public exposure of sensitive data.
 

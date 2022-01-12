@@ -3,9 +3,6 @@
 
 Datalake storage encryption defaults to Enabled, it shouldn't be overridden to Disabled.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Data could be read if compromised
 

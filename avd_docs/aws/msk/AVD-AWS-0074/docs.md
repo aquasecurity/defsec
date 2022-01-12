@@ -3,9 +3,6 @@
 
 Managed streaming for Kafka can log to Cloud Watch, Kinesis Firehose and S3, at least one of these locations should be logged to
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Without logging it is difficult to trace issues
 

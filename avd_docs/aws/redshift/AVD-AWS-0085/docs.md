@@ -4,9 +4,6 @@
 AWS Classic resources run in a shared environment with infrastructure owned by other AWS customers. You should run
 resources in a VPC instead.
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 Classic resources are running in a shared environment with other customers
 

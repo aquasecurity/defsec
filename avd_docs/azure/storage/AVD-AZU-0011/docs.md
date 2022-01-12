@@ -7,9 +7,6 @@ Azure Storage uses TLS 1.2 on public HTTPS endpoints, but TLS 1.0 and TLS 1.1 ar
 
 This check will warn if the minimum TLS is not set to TLS1_2.
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 The TLS version being outdated and has known vulnerabilities
 

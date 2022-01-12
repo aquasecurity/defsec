@@ -3,9 +3,6 @@
 
 You should not expose infrastructure to the public internet except where explicitly required
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Exposure of infrastructure to the public internet
 

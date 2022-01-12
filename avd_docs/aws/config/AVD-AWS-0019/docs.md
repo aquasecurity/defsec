@@ -5,9 +5,6 @@ The configuration aggregator should be configured with all_regions for the sourc
 
 This will help limit the risk of any unmonitored configuration in regions that are thought to be unused.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Sources that aren't covered by the aggregator are not include in the configuration
 

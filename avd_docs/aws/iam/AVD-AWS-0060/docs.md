@@ -3,9 +3,6 @@
 
 IAM account password policies should ensure that passwords content including a symbol.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Short, simple passwords are easier to compromise
 

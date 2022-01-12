@@ -3,9 +3,6 @@
 
 Subscription owners should be notified when there are security alerts. By ensuring the administrators of the account have been notified they can quickly assist in any required remediation
 
-### Default Severity
-{{ severity "LOW" }}
-
 ### Impact
 Administrators and subscription owners may have a delayed response
 

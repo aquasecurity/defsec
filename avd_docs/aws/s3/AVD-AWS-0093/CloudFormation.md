@@ -3,6 +3,8 @@ Limit the access to public buckets to only the owner or AWS Services (eg; CloudF
 
 ```yaml
 ---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
 Resources:
   GoodExample:
     Properties:

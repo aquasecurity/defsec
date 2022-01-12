@@ -5,9 +5,6 @@ If the <code>workload_metadata_config</code> block within <code>node_config</cod
 
 The attribute should be set to <code>SECURE</code> to use metadata concealment, or <code>GKE_METADATA_SERVER</code> if workload identity is enabled. This ensures that the VM metadata is not unnecessarily exposed to pods.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Metadata that isn't concealed potentially risks leakage of sensitive data
 

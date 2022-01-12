@@ -7,9 +7,6 @@ You can use the S3 Versioning feature to preserve, retrieve, and restore every v
 With versioning you can recover more easily from both unintended user actions and application failures.
 
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Deleted or modified data would not be recoverable
 

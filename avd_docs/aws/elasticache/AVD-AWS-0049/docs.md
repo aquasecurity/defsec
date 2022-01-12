@@ -5,9 +5,6 @@ Security groups and security group rules should include a description for auditi
 
 Simplifies auditing, debugging, and managing security groups.
 
-### Default Severity
-{{ severity "LOW" }}
-
 ### Impact
 Descriptions provide context for the firewall rule reasons
 

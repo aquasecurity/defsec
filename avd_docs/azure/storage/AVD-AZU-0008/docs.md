@@ -7,9 +7,6 @@ When you require secure transfer, any requests originating from an insecure conn
 
 Microsoft recommends that you always require secure transfer for all of your storage accounts.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Insecure transfer of data into secure accounts could be read if intercepted
 

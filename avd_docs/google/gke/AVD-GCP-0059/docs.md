@@ -3,9 +3,6 @@
 
 Enabling private nodes on a cluster ensures the nodes are only available internally as they will only be assigned internal addresses.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Nodes may be exposed to the public internet
 

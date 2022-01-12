@@ -3,9 +3,6 @@
 
 Logging disconnections provides useful diagnostic data such as session length, which can identify performance issues in an application and potential DoS vectors.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Insufficient diagnostic data.
 

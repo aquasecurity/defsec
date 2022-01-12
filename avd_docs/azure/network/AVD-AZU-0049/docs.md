@@ -6,9 +6,6 @@ To enable analysis in security event that was detected late, you need to have th
 			
 Setting an retention policy will help ensure as much information is available for review.
 
-### Default Severity
-{{ severity "LOW" }}
-
 ### Impact
 Not enabling retention or having short expiry on flow logs could lead to compromise being undetected limiting time for analysis
 

@@ -3,9 +3,6 @@
 
 Space bucket and bucket object permissions should be set to deny public access unless explicitly required.
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 The contents of the space can be accessed publicly
 

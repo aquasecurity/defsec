@@ -3,9 +3,6 @@
 
 IAM account password policies should ensure that passwords content including at least one number.
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Short, simple passwords are easier to compromise
 

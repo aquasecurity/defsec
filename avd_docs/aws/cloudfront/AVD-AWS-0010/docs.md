@@ -3,9 +3,6 @@
 
 You should configure CloudFront Access Logging to create log files that contain detailed information about every user request that CloudFront receives
 
-### Default Severity
-{{ severity "MEDIUM" }}
-
 ### Impact
 Logging provides vital information about access and usage
 

@@ -3,6 +3,8 @@ Add descriptions for all security groups
 
 ```yaml
 ---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
 AWSTemplateFormatVersion: 2010-09-09
 Description: Good example of group description
 Resources:

@@ -3,9 +3,6 @@
 
 ECS task definitions that have volumes using EFS configuration should explicitly enable in transit encryption to prevent the risk of data loss due to interception.
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Intercepted traffic to and from EFS may lead to data loss
 

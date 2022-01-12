@@ -7,9 +7,6 @@ By default <code>aws_instance</code> resource sets IMDS session auth tokens to b
 To fully protect IMDS you need to enable session tokens by using <code>metadata_options</code> block and its <code>http_tokens</code> variable set to <code>required</code>.
 
 
-### Default Severity
-{{ severity "HIGH" }}
-
 ### Impact
 Instance metadata service can be interacted with freely
 

@@ -3,9 +3,6 @@
 
 Ensure access to specific required ports is allowed, and nothing else.
 
-### Default Severity
-{{ severity "CRITICAL" }}
-
 ### Impact
 All ports exposed for egressing data
 
