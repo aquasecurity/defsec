@@ -78,5 +78,5 @@ func nicify(input string) string {
 	for replace, with := range specials {
 		input = regexp.MustCompile(fmt.Sprintf("\\b%s\\b", replace)).ReplaceAllString(input, with)
 	}
-	return strings.Title(input)
+	return strings.Title(strings.ReplaceAll(input, "-", " "))
 }
