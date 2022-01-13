@@ -44,23 +44,55 @@ func (r Rule) ShortCodeDisplayName() string {
 }
 
 var acronyms = []string{
+	"acl",
+	"alb",
+	"api",
+	"arn",
 	"aws",
+	"cidr",
+	"db",
+	"dns",
+	"ebs",
 	"ec2",
 	"ecr",
-	"eks",
+	"ecs",
 	"efs",
-	"kms",
-	"https",
-	"ssh",
-	"http",
-	"mq",
-	"sns",
-	"sqs",
-	"iam",
-	"alb",
-	"lb",
+	"eks",
 	"elb",
+	"gke",
+	"http",
+	"http2",
+	"https",
+	"iam",
+	"im",
+	"imds",
+	"ip",
+	"ips",
+	"kms",
+	"lb",
+	"md5",
+	"mfa",
+	"mq",
+	"msk",
+	"rbac",
+	"rdp",
+	"rds",
+	"rsa",
+	"sam",
+	"sgr",
+	"sha1",
+	"sha256",
+	"sns",
+	"sql",
+	"sqs",
+	"ssh",
+	"ssm",
 	"tls",
+	"ubla",
+	"vm",
+	"vpc",
+	"vtpm",
+	"waf",
 }
 
 var specials = map[string]string{
@@ -68,15 +100,18 @@ var specials = map[string]string{
 	"documentdb": "DocumentDB",
 	"mysql":      "MySQL",
 	"postgresql": "PostgreSQL",
+	"acls":       "ACLs",
+	"ips":        "IPs",
+	"bigquery":   "BigQuery",
 }
 
 func nicify(input string) string {
 	input = strings.ToLower(input)
-	for _, acronym := range acronyms {
-		input = regexp.MustCompile(fmt.Sprintf("\\b%s\\b", acronym)).ReplaceAllString(input, strings.ToUpper(acronym))
-	}
 	for replace, with := range specials {
 		input = regexp.MustCompile(fmt.Sprintf("\\b%s\\b", replace)).ReplaceAllString(input, with)
+	}
+	for _, acronym := range acronyms {
+		input = regexp.MustCompile(fmt.Sprintf("\\b%s\\b", acronym)).ReplaceAllString(input, strings.ToUpper(acronym))
 	}
 	return strings.Title(strings.ReplaceAll(input, "-", " "))
 }
