@@ -17,16 +17,16 @@ var CheckEnableApiCacheEncryption = rules.Register(
 		Impact:      "Data stored in the cache that is unencrypted may be vulnerable to compromise",
 		Resolution:  "Enable cache encryption",
 		Explanation: `Method cache encryption ensures that any sensitive data in the cache is not vulnerable to compromise in the event of interception`,
-		Links:       []string{
+		Links: []string{
 			"https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-stage-methodsetting.html#cfn-apigateway-stage-methodsetting-cachedataencrypted",
 		},
-		CloudFormation:   &rules.EngineMetadata{
-            GoodExamples:        cloudFormationEnableApiCacheEncryptionGoodExamples,
-            BadExamples:         cloudFormationEnableApiCacheEncryptionBadExamples,
-            Links:               cloudFormationEnableApiCacheEncryptionLinks,
-            RemediationMarkdown: cloudFormationEnableApiCacheEncryptionRemediationMarkdown,
-        },
-        Severity:    severity.Medium,
+		CloudFormation: &rules.EngineMetadata{
+			GoodExamples:        cloudFormationEnableApiCacheEncryptionGoodExamples,
+			BadExamples:         cloudFormationEnableApiCacheEncryptionBadExamples,
+			Links:               cloudFormationEnableApiCacheEncryptionLinks,
+			RemediationMarkdown: cloudFormationEnableApiCacheEncryptionRemediationMarkdown,
+		},
+		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, api := range s.AWS.SAM.APIs {

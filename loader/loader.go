@@ -135,7 +135,7 @@ func GetProviderServiceNames(providerName string) []string {
 
 	for _, rule := range registeredRules {
 
-		if strings.ToLower(providerName) != strings.ToLower(rule.Rule().Provider.DisplayName()) {
+		if !strings.EqualFold(providerName, rule.Rule().Provider.DisplayName()) {
 			continue
 		}
 
@@ -160,8 +160,8 @@ func GetProviderServiceCheckNames(providerName string, serviceName string) []str
 
 	for _, rule := range registeredRules {
 
-		if strings.ToLower(providerName) != strings.ToLower(rule.Rule().Provider.DisplayName()) ||
-			strings.ToLower(serviceName) != strings.ToLower(rule.Rule().Service) {
+		if !strings.EqualFold(providerName, rule.Rule().Provider.DisplayName()) ||
+			!strings.EqualFold(serviceName, rule.Rule().Service) {
 			continue
 		}
 
