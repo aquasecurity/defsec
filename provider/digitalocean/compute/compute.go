@@ -16,8 +16,8 @@ type Firewall struct {
 
 type KubernetesCluster struct {
 	types.Metadata
-	SurgeUpgrades types.BoolValue
-	AutoUpgrades  types.BoolValue
+	SurgeUpgrade types.BoolValue
+	AutoUpgrade  types.BoolValue
 }
 
 type LoadBalancer struct {

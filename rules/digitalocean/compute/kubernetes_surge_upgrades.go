@@ -30,10 +30,10 @@ var CheckKubernetesSurgeUpgrades = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, kc := range s.DigitalOcean.Compute.KubernetesClusters {
-			if kc.SurgeUpgrades.IsFalse() {
+			if kc.SurgeUpgrade.IsFalse() {
 				results.Add(
 					"Surge upgrades are disabled in your Kubernetes cluster. Please enable this feature.",
-					kc.SurgeUpgrades,
+					kc.SurgeUpgrade,
 				)
 			}
 		}
