@@ -18,13 +18,13 @@ var CheckKubernetesSurgeUpgrades = rules.Register(
 		Resolution:  "Enable surge upgrades in your Kubernetes cluster",
 		Explanation: `While upgrading your cluster, workloads will temporarily be moved to new nodes. A small cost will follow, but as a bonus, you won't experience downtime.`,
 		Links: []string{
-			"https://docs.digitalocean.com/products/networking/firewalls/how-to/configure-rules/",
+			"https://docs.digitalocean.com/products/kubernetes/how-to/upgrade-cluster/#surge-upgrades",
 		},
 		Terraform: &rules.EngineMetadata{
-			GoodExamples:        terraformNoPublicIngressGoodExamples,
-			BadExamples:         terraformNoPublicIngressBadExamples,
-			Links:               terraformNoPublicIngressLinks,
-			RemediationMarkdown: terraformNoPublicIngressRemediationMarkdown,
+			GoodExamples:        terraformKubernetesClusterSurgeUpgradesGoodExamples,
+			BadExamples:         terraformKubernetesClusterSurgeUpgradesBadExamples,
+			Links:               terraformKubernetesClusterSurgeUpgradeLinks,
+			RemediationMarkdown: terraformKubernetesClusterSurgeUpgradesMarkdown,
 		},
 		Severity: severity.Medium,
 	},
