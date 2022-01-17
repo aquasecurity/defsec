@@ -7,6 +7,7 @@ import (
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/liamg/iamgo"
 )
 
 var CheckNoWildcardsInPolicyDocuments = rules.Register(
@@ -24,25 +25,29 @@ This ensures that the queue itself cannot be modified or deleted, and prevents p
 		Links: []string{
 			"https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-security-best-practices.html",
 		},
-		Terraform:   &rules.EngineMetadata{
-            GoodExamples:        terraformNoWildcardsInPolicyDocumentsGoodExamples,
-            BadExamples:         terraformNoWildcardsInPolicyDocumentsBadExamples,
-            Links:               terraformNoWildcardsInPolicyDocumentsLinks,
-            RemediationMarkdown: terraformNoWildcardsInPolicyDocumentsRemediationMarkdown,
-        },
-        CloudFormation:   &rules.EngineMetadata{
-            GoodExamples:        cloudFormationNoWildcardsInPolicyDocumentsGoodExamples,
-            BadExamples:         cloudFormationNoWildcardsInPolicyDocumentsBadExamples,
-            Links:               cloudFormationNoWildcardsInPolicyDocumentsLinks,
-            RemediationMarkdown: cloudFormationNoWildcardsInPolicyDocumentsRemediationMarkdown,
-        },
-        Severity: severity.High,
+		Terraform: &rules.EngineMetadata{
+			GoodExamples:        terraformNoWildcardsInPolicyDocumentsGoodExamples,
+			BadExamples:         terraformNoWildcardsInPolicyDocumentsBadExamples,
+			Links:               terraformNoWildcardsInPolicyDocumentsLinks,
+			RemediationMarkdown: terraformNoWildcardsInPolicyDocumentsRemediationMarkdown,
+		},
+		CloudFormation: &rules.EngineMetadata{
+			GoodExamples:        cloudFormationNoWildcardsInPolicyDocumentsGoodExamples,
+			BadExamples:         cloudFormationNoWildcardsInPolicyDocumentsBadExamples,
+			Links:               cloudFormationNoWildcardsInPolicyDocumentsLinks,
+			RemediationMarkdown: cloudFormationNoWildcardsInPolicyDocumentsRemediationMarkdown,
+		},
+		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, queue := range s.AWS.SQS.Queues {
 			var fail bool
-			for _, statement := range queue.Policy.Statements {
-				if strings.ToLower(statement.Effect) != "allow" {
+			policy, err := iamgo.ParseString(queue.Policy.Value())
+			if err != nil {
+				return
+			}
+			for _, statement := range policy.Statement {
+				if statement.Effect != iamgo.EffectAllow {
 					continue
 				}
 				for _, action := range statement.Action {
