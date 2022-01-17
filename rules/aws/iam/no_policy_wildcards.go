@@ -43,14 +43,20 @@ var CheckNoPolicyWildcards = rules.Register(
 		for _, policy := range s.AWS.IAM.Policies {
 			results = checkPolicy(policy.Document, results)
 		}
-		for _, policy := range s.AWS.IAM.GroupPolicies {
-			results = checkPolicy(policy.Document, results)
+		for _, group := range s.AWS.IAM.Groups {
+			for _, policy := range group.Policies {
+				results = checkPolicy(policy.Document, results)
+			}
 		}
-		for _, policy := range s.AWS.IAM.UserPolicies {
-			results = checkPolicy(policy.Document, results)
+		for _, user := range s.AWS.IAM.Users {
+			for _, policy := range user.Policies {
+				results = checkPolicy(policy.Document, results)
+			}
 		}
-		for _, policy := range s.AWS.IAM.RolePolicies {
-			results = checkPolicy(policy.Document, results)
+		for _, role := range s.AWS.IAM.Roles {
+			for _, policy := range role.Policies {
+				results = checkPolicy(policy.Document, results)
+			}
 		}
 		return results
 	},
