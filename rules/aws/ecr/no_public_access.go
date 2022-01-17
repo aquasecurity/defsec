@@ -42,44 +42,46 @@ var CheckNoPublicAccess = rules.Register(
 			if !repo.IsManaged() {
 				continue
 			}
-			policy, err := iamgo.ParseString(repo.Policy.Value())
-			if err != nil {
-				continue
-			}
-			for _, statement := range policy.Statement {
-				var hasECRAction bool
-				for _, action := range statement.Action {
-					if strings.HasPrefix(action, "ecr:") {
-						hasECRAction = true
-						break
-					}
-				}
-				if !hasECRAction {
+			for _, policyDocument := range repo.Policies {
+				policy, err := iamgo.ParseString(policyDocument.Value())
+				if err != nil {
 					continue
 				}
-				var foundIssue bool
-				if statement.Principal.All {
-					foundIssue = true
-					results.Add(
-						"Policy provides public access to the ECR repository.",
-						&repo,
-						repo.Policy,
-					)
-				} else {
-					for _, account := range statement.Principal.AWS {
-						if account == "*" {
-							foundIssue = true
-							results.Add(
-								"Policy provides public access to the ECR repository.",
-								&repo,
-								repo.Policy,
-							)
+				for _, statement := range policy.Statement {
+					var hasECRAction bool
+					for _, action := range statement.Action {
+						if strings.HasPrefix(action, "ecr:") {
+							hasECRAction = true
+							break
 						}
+					}
+					if !hasECRAction {
 						continue
 					}
-				}
-				if foundIssue {
-					results.AddPassed(&repo)
+					var foundIssue bool
+					if statement.Principal.All {
+						foundIssue = true
+						results.Add(
+							"Policy provides public access to the ECR repository.",
+							&repo,
+							policyDocument,
+						)
+					} else {
+						for _, account := range statement.Principal.AWS {
+							if account == "*" {
+								foundIssue = true
+								results.Add(
+									"Policy provides public access to the ECR repository.",
+									&repo,
+									policyDocument,
+								)
+							}
+							continue
+						}
+					}
+					if foundIssue {
+						results.AddPassed(&repo)
+					}
 				}
 			}
 		}
