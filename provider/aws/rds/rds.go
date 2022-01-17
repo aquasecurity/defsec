@@ -31,7 +31,10 @@ type Instance struct {
 	PublicAccess              types.BoolValue
 }
 
-type ClusterInstance Instance
+type ClusterInstance struct {
+	Instance
+	ClusterIdentifier string
+}
 
 type PerformanceInsights struct {
 	Enabled  types.BoolValue
