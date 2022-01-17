@@ -1,5 +1,7 @@
 package iam
 
+import "github.com/aquasecurity/defsec/types"
+
 type IAM struct {
 	PasswordPolicy PasswordPolicy
 	Policies       []Policy
@@ -9,17 +11,17 @@ type IAM struct {
 }
 
 type Policy struct {
-	Document PolicyDocument
+	Document types.StringValue
 }
 
 type GroupPolicy struct {
-	Document PolicyDocument
+	Document types.StringValue
 }
 
 type UserPolicy struct {
-	Document PolicyDocument
+	Document types.StringValue
 }
 
 type RolePolicy struct {
-	Document PolicyDocument
+	Document types.StringValue
 }

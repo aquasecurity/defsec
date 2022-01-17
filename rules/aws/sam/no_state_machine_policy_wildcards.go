@@ -5,6 +5,7 @@ import (
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/liamg/iamgo"
 )
 
 var CheckNoStateMachinePolicyWildcards = rules.Register(
@@ -20,13 +21,13 @@ var CheckNoStateMachinePolicyWildcards = rules.Register(
 		Links: []string{
 			"https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-statemachine.html#sam-statemachine-policies",
 		},
-		CloudFormation:   &rules.EngineMetadata{
-            GoodExamples:        cloudFormationNoStateMachinePolicyWildcardsGoodExamples,
-            BadExamples:         cloudFormationNoStateMachinePolicyWildcardsBadExamples,
-            Links:               cloudFormationNoStateMachinePolicyWildcardsLinks,
-            RemediationMarkdown: cloudFormationNoStateMachinePolicyWildcardsRemediationMarkdown,
-        },
-        Severity: severity.High,
+		CloudFormation: &rules.EngineMetadata{
+			GoodExamples:        cloudFormationNoStateMachinePolicyWildcardsGoodExamples,
+			BadExamples:         cloudFormationNoStateMachinePolicyWildcardsBadExamples,
+			Links:               cloudFormationNoStateMachinePolicyWildcardsLinks,
+			RemediationMarkdown: cloudFormationNoStateMachinePolicyWildcardsRemediationMarkdown,
+		},
+		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
 
@@ -36,7 +37,11 @@ var CheckNoStateMachinePolicyWildcards = rules.Register(
 			}
 
 			for _, document := range stateMachine.Policies {
-				for _, statement := range document.Statements {
+				policy, err := iamgo.ParseString(document.Value())
+				if err != nil {
+					continue
+				}
+				for _, statement := range policy.Statement {
 					results = checkStatement(document, statement, results)
 				}
 			}

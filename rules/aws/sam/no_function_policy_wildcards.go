@@ -8,6 +8,8 @@ import (
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
+	"github.com/liamg/iamgo"
 )
 
 var CheckNoFunctionPolicyWildcards = rules.Register(
@@ -23,13 +25,13 @@ var CheckNoFunctionPolicyWildcards = rules.Register(
 		Links: []string{
 			"https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html#sam-function-policies",
 		},
-		CloudFormation:   &rules.EngineMetadata{
-            GoodExamples:        cloudFormationNoFunctionPolicyWildcardsGoodExamples,
-            BadExamples:         cloudFormationNoFunctionPolicyWildcardsBadExamples,
-            Links:               cloudFormationNoFunctionPolicyWildcardsLinks,
-            RemediationMarkdown: cloudFormationNoFunctionPolicyWildcardsRemediationMarkdown,
-        },
-        Severity: severity.High,
+		CloudFormation: &rules.EngineMetadata{
+			GoodExamples:        cloudFormationNoFunctionPolicyWildcardsGoodExamples,
+			BadExamples:         cloudFormationNoFunctionPolicyWildcardsBadExamples,
+			Links:               cloudFormationNoFunctionPolicyWildcardsLinks,
+			RemediationMarkdown: cloudFormationNoFunctionPolicyWildcardsRemediationMarkdown,
+		},
+		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
 
@@ -39,7 +41,11 @@ var CheckNoFunctionPolicyWildcards = rules.Register(
 			}
 
 			for _, document := range function.Policies {
-				for _, statement := range document.Statements {
+				policy, err := iamgo.ParseString(document.Value())
+				if err != nil {
+					continue
+				}
+				for _, statement := range policy.Statement {
 					results = checkStatement(document, statement, results)
 				}
 			}
@@ -48,8 +54,8 @@ var CheckNoFunctionPolicyWildcards = rules.Register(
 	},
 )
 
-func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentStatement, results rules.Results) rules.Results {
-	if strings.ToLower(statement.Effect) == "deny" {
+func checkStatement(document types.StringValue, statement iamgo.Statement, results rules.Results) rules.Results {
+	if statement.Effect != iamgo.EffectAllow {
 		return results
 	}
 	for _, action := range statement.Action {
@@ -59,7 +65,7 @@ func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentSta
 				document,
 			)
 		} else {
-			results.AddPassed(&document)
+			results.AddPassed(document)
 		}
 	}
 	for _, resource := range statement.Resource {
@@ -72,8 +78,14 @@ func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentSta
 				document,
 			)
 		} else {
-			results.AddPassed(&document)
+			results.AddPassed(document)
 		}
+	}
+	if statement.Principal.All {
+		results.Add(
+			"Policy document uses a wildcard principal.",
+			document,
+		)
 	}
 	for _, principal := range statement.Principal.AWS {
 		if strings.Contains(principal, "*") {
@@ -82,7 +94,7 @@ func checkStatement(document iam.PolicyDocument, statement iam.PolicyDocumentSta
 				document,
 			)
 		} else {
-			results.AddPassed(&document)
+			results.AddPassed(document)
 		}
 	}
 	return results
