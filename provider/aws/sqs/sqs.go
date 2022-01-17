@@ -11,7 +11,7 @@ type SQS struct {
 type Queue struct {
 	types.Metadata
 	Encryption Encryption
-	Policy     types.StringValue
+	Policies   []types.StringValue
 }
 
 type Encryption struct {

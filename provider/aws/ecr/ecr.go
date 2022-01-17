@@ -12,7 +12,7 @@ type Repository struct {
 	types.Metadata
 	ImageScanning      ImageScanning
 	ImageTagsImmutable types.BoolValue
-	Policy             types.StringValue
+	Policies           []types.StringValue
 	Encryption         Encryption
 }
 
