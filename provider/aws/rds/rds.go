@@ -33,7 +33,7 @@ type Instance struct {
 
 type ClusterInstance struct {
 	Instance
-	ClusterIdentifier string
+	ClusterIdentifier types.StringValue
 }
 
 type PerformanceInsights struct {
