@@ -10,3 +10,12 @@ type Compute struct {
 	ProjectMetadata ProjectMetadata
 	Instances       []Instance
 }
+
+
+func (c *Compute) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Compute) GetRawValue() interface{} {
+	return nil
+}    

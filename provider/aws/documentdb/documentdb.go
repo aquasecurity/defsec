@@ -21,14 +21,6 @@ type Cluster struct {
 	KMSKeyID          types.StringValue
 }
 
-func (c Cluster) GetMetadata() *types.Metadata {
-	return &c.Metadata
-}
-
-func (c Cluster) GetRawValue() interface{} {
-	return nil
-}
-
 type Instance struct {
 	types.Metadata
 	KMSKeyID types.StringValue
@@ -39,5 +31,21 @@ func (i *Instance) GetMetadata() *types.Metadata {
 }
 
 func (i *Instance) GetRawValue() interface{} {
+	return nil
+}
+
+func (d *DocumentDB) GetMetadata() *types.Metadata {
+	return &d.Metadata
+}
+
+func (d *DocumentDB) GetRawValue() interface{} {
+	return nil
+}
+
+func (c *Cluster) GetMetadata() *types.Metadata {
+	return &c.Metadata
+}
+
+func (c *Cluster) GetRawValue() interface{} {
 	return nil
 }

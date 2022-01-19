@@ -66,3 +66,39 @@ type Project struct {
 	Members           []iam.Member
 	Bindings          []iam.Binding
 }
+
+
+func (p *Platform) GetMetadata() *types.Metadata {
+	return &p.Metadata
+}
+
+func (p *Platform) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (o *Organization) GetMetadata() *types.Metadata {
+	return &o.Metadata
+}
+
+func (o *Organization) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (f *Folder) GetMetadata() *types.Metadata {
+	return &f.Metadata
+}
+
+func (f *Folder) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (p *Project) GetMetadata() *types.Metadata {
+	return &p.Metadata
+}
+
+func (p *Project) GetRawValue() interface{} {
+	return nil
+}    

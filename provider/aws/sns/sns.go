@@ -24,3 +24,21 @@ func (v *Topic) GetMetadata() *types.Metadata {
 func (v *Topic) GetRawValue() interface{} {
 	return nil
 }
+
+
+func (s *SNS) GetMetadata() *types.Metadata {
+	return &s.Metadata
+}
+
+func (s *SNS) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (e *Encryption) GetMetadata() *types.Metadata {
+	return &e.Metadata
+}
+
+func (e *Encryption) GetRawValue() interface{} {
+	return nil
+}    

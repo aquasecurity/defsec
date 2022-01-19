@@ -36,3 +36,39 @@ type ShieldedVMConfig struct {
 	IntegrityMonitoringEnabled types.BoolValue
 	VTPMEnabled                types.BoolValue
 }
+
+
+func (i *Instance) GetMetadata() *types.Metadata {
+	return &i.Metadata
+}
+
+func (i *Instance) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (s *ServiceAccount) GetMetadata() *types.Metadata {
+	return &s.Metadata
+}
+
+func (s *ServiceAccount) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (n *NetworkInterface) GetMetadata() *types.Metadata {
+	return &n.Metadata
+}
+
+func (n *NetworkInterface) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (s *ShieldedVMConfig) GetMetadata() *types.Metadata {
+	return &s.Metadata
+}
+
+func (s *ShieldedVMConfig) GetRawValue() interface{} {
+	return nil
+}    

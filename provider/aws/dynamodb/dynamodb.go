@@ -28,3 +28,21 @@ func (c *DAXCluster) GetMetadata() *types.Metadata {
 func (c *DAXCluster) GetRawValue() interface{} {
 	return nil
 }
+
+
+func (d *DynamoDB) GetMetadata() *types.Metadata {
+	return &d.Metadata
+}
+
+func (d *DynamoDB) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (s *ServerSideEncryption) GetMetadata() *types.Metadata {
+	return &s.Metadata
+}
+
+func (s *ServerSideEncryption) GetRawValue() interface{} {
+	return nil
+}    
