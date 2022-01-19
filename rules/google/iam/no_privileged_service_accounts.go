@@ -13,7 +13,7 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0007",
 		Provider:    provider.GoogleProvider,
-		Service:     "platform",
+		Service:     "iam",
 		ShortCode:   "no-privileged-service-accounts",
 		Summary:     "Service accounts should not have roles assigned with excessive privileges",
 		Impact:      "Cloud account takeover if a resource using a service account is compromised",
@@ -22,16 +22,16 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 		Links: []string{
 			"https://cloud.google.com/iam/docs/understanding-roles",
 		},
-		Terraform:   &rules.EngineMetadata{
-            GoodExamples:        terraformNoPrivilegedServiceAccountsGoodExamples,
-            BadExamples:         terraformNoPrivilegedServiceAccountsBadExamples,
-            Links:               terraformNoPrivilegedServiceAccountsLinks,
-            RemediationMarkdown: terraformNoPrivilegedServiceAccountsRemediationMarkdown,
-        },
-        Severity: severity.High,
+		Terraform: &rules.EngineMetadata{
+			GoodExamples:        terraformNoPrivilegedServiceAccountsGoodExamples,
+			BadExamples:         terraformNoPrivilegedServiceAccountsBadExamples,
+			Links:               terraformNoPrivilegedServiceAccountsLinks,
+			RemediationMarkdown: terraformNoPrivilegedServiceAccountsRemediationMarkdown,
+		},
+		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, project := range s.Google.Platform.AllProjects() {
+		for _, project := range s.Google.IAM.AllProjects() {
 			for _, member := range project.Members {
 				if member.Member.StartsWith("serviceAccount:") {
 					if isRolePrivileged(member.Role.Value()) {
@@ -55,7 +55,7 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 				}
 			}
 		}
-		for _, folder := range s.Google.Platform.AllFolders() {
+		for _, folder := range s.Google.IAM.AllFolders() {
 			for _, member := range folder.Members {
 				if member.Member.StartsWith("serviceAccount:") {
 					if isRolePrivileged(member.Role.Value()) {
@@ -81,7 +81,7 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 
 		}
 
-		for _, org := range s.Google.Platform.Organizations {
+		for _, org := range s.Google.IAM.Organizations {
 			for _, member := range org.Members {
 				if member.Member.StartsWith("serviceAccount:") {
 					if isRolePrivileged(member.Role.Value()) {

@@ -11,7 +11,7 @@ var CheckNoFolderLevelServiceAccountImpersonation = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0005",
 		Provider:    provider.GoogleProvider,
-		Service:     "platform",
+		Service:     "IAM",
 		ShortCode:   "no-folder-level-service-account-impersonation",
 		Summary:     "Users should not be granted service account access at the folder level",
 		Impact:      "Privilege escalation, impersonation of any/all services",
@@ -20,16 +20,16 @@ var CheckNoFolderLevelServiceAccountImpersonation = rules.Register(
 		Links: []string{
 			"https://cloud.google.com/iam/docs/impersonating-service-accounts",
 		},
-		Terraform:   &rules.EngineMetadata{
-            GoodExamples:        terraformNoFolderLevelServiceAccountImpersonationGoodExamples,
-            BadExamples:         terraformNoFolderLevelServiceAccountImpersonationBadExamples,
-            Links:               terraformNoFolderLevelServiceAccountImpersonationLinks,
-            RemediationMarkdown: terraformNoFolderLevelServiceAccountImpersonationRemediationMarkdown,
-        },
-        Severity: severity.Medium,
+		Terraform: &rules.EngineMetadata{
+			GoodExamples:        terraformNoFolderLevelServiceAccountImpersonationGoodExamples,
+			BadExamples:         terraformNoFolderLevelServiceAccountImpersonationBadExamples,
+			Links:               terraformNoFolderLevelServiceAccountImpersonationLinks,
+			RemediationMarkdown: terraformNoFolderLevelServiceAccountImpersonationRemediationMarkdown,
+		},
+		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, folder := range s.Google.Platform.AllFolders() {
+		for _, folder := range s.Google.IAM.AllFolders() {
 			for _, member := range folder.Members {
 				if member.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {
 					results.Add(

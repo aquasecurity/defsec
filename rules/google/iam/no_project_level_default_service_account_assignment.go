@@ -7,12 +7,12 @@ import (
 	"github.com/aquasecurity/defsec/state"
 )
 
-var CheckNoOrgLevelDefaultServiceAccountAssignment = rules.Register(
+var CheckNoProjectLevelDefaultServiceAccountAssignment = rules.Register(
 	rules.Rule{
-		AVDID:       "AVD-GCP-0008",
+		AVDID:       "AVD-GCP-0006",
 		Provider:    provider.GoogleProvider,
-		Service:     "platform",
-		ShortCode:   "no-org-level-default-service-account-assignment",
+		Service:     "iam",
+		ShortCode:   "no-project-level-default-service-account-assignment",
 		Summary:     "Roles should not be assigned to default service accounts",
 		Impact:      "Violation of principal of least privilege",
 		Resolution:  "Use specialised service accounts for specific purposes.",
@@ -20,30 +20,30 @@ var CheckNoOrgLevelDefaultServiceAccountAssignment = rules.Register(
 		Links: []string{
 			"",
 		},
-		Terraform:   &rules.EngineMetadata{
-            GoodExamples:        terraformNoOrgLevelDefaultServiceAccountAssignmentGoodExamples,
-            BadExamples:         terraformNoOrgLevelDefaultServiceAccountAssignmentBadExamples,
-            Links:               terraformNoOrgLevelDefaultServiceAccountAssignmentLinks,
-            RemediationMarkdown: terraformNoOrgLevelDefaultServiceAccountAssignmentRemediationMarkdown,
-        },
-        Severity: severity.Medium,
+		Terraform: &rules.EngineMetadata{
+			GoodExamples:        terraformNoProjectLevelDefaultServiceAccountAssignmentGoodExamples,
+			BadExamples:         terraformNoProjectLevelDefaultServiceAccountAssignmentBadExamples,
+			Links:               terraformNoProjectLevelDefaultServiceAccountAssignmentLinks,
+			RemediationMarkdown: terraformNoProjectLevelDefaultServiceAccountAssignmentRemediationMarkdown,
+		},
+		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, org := range s.Google.Platform.Organizations {
-			for _, binding := range org.Bindings {
+		for _, project := range s.Google.IAM.AllProjects() {
+			for _, binding := range project.Bindings {
 				for _, member := range binding.Members {
 					if isMemberDefaultServiceAccount(member.Value()) {
 						results.Add(
-							"Role is assigned to a default service account at organisation level.",
+							"Role is assigned to a default service account at project level.",
 							member,
 						)
 					}
 				}
 			}
-			for _, member := range org.Members {
+			for _, member := range project.Members {
 				if isMemberDefaultServiceAccount(member.Member.Value()) {
 					results.Add(
-						"Role is assigned to a default service account at organisation level.",
+						"Role is assigned to a default service account at project level.",
 						member.Member,
 					)
 				}
