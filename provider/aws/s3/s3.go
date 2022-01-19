@@ -7,3 +7,12 @@ type S3 struct {
 	Buckets            []Bucket
 	PublicAccessBlocks []PublicAccessBlock
 }
+
+
+func (s *S3) GetMetadata() *types.Metadata {
+	return &s.Metadata
+}
+
+func (s *S3) GetRawValue() interface{} {
+	return nil
+}    

@@ -25,3 +25,21 @@ func (c *Volume) GetMetadata() *types.Metadata {
 func (c *Volume) GetRawValue() interface{} {
 	return nil
 }
+
+
+func (e *EBS) GetMetadata() *types.Metadata {
+	return &e.Metadata
+}
+
+func (e *EBS) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (e *Encryption) GetMetadata() *types.Metadata {
+	return &e.Metadata
+}
+
+func (e *Encryption) GetRawValue() interface{} {
+	return nil
+}    

@@ -18,3 +18,21 @@ type Bucket struct {
 	Members                        []iam.Member
 	Bindings                       []iam.Binding
 }
+
+
+func (s *Storage) GetMetadata() *types.Metadata {
+	return &s.Metadata
+}
+
+func (s *Storage) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (b *Bucket) GetMetadata() *types.Metadata {
+	return &b.Metadata
+}
+
+func (b *Bucket) GetRawValue() interface{} {
+	return nil
+}    

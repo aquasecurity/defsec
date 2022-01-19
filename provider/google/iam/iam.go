@@ -17,3 +17,23 @@ type Binding struct {
 	Members []types.StringValue
 	Role    types.StringValue
 }
+
+func (i *IAM) GetRawValue() interface{} {
+	return nil
+}
+
+func (m *Member) GetMetadata() *types.Metadata {
+	return &m.Metadata
+}
+
+func (m *Member) GetRawValue() interface{} {
+	return nil
+}
+
+func (b *Binding) GetMetadata() *types.Metadata {
+	return &b.Metadata
+}
+
+func (b *Binding) GetRawValue() interface{} {
+	return nil
+}

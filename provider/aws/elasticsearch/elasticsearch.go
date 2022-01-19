@@ -44,3 +44,48 @@ func (c *Domain) GetMetadata() *types.Metadata {
 func (c *Domain) GetRawValue() interface{} {
 	return nil
 }
+
+
+func (e *Elasticsearch) GetMetadata() *types.Metadata {
+	return &e.Metadata
+}
+
+func (e *Elasticsearch) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (e *Endpoint) GetMetadata() *types.Metadata {
+	return &e.Metadata
+}
+
+func (e *Endpoint) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (l *LogPublishing) GetMetadata() *types.Metadata {
+	return &l.Metadata
+}
+
+func (l *LogPublishing) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (t *TransitEncryption) GetMetadata() *types.Metadata {
+	return &t.Metadata
+}
+
+func (t *TransitEncryption) GetRawValue() interface{} {
+	return nil
+}    
+
+
+func (a *AtRestEncryption) GetMetadata() *types.Metadata {
+	return &a.Metadata
+}
+
+func (a *AtRestEncryption) GetRawValue() interface{} {
+	return nil
+}    

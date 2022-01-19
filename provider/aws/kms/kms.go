@@ -24,3 +24,12 @@ func (c *Key) GetMetadata() *types.Metadata {
 func (c *Key) GetRawValue() interface{} {
 	return nil
 }
+
+
+func (k *KMS) GetMetadata() *types.Metadata {
+	return &k.Metadata
+}
+
+func (k *KMS) GetRawValue() interface{} {
+	return nil
+}    
