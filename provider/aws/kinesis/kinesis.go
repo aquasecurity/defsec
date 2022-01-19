@@ -3,6 +3,7 @@ package kinesis
 import "github.com/aquasecurity/defsec/types"
 
 type Kinesis struct {
+	types.Metadata
 	Streams []Stream
 }
 
@@ -16,6 +17,7 @@ const (
 )
 
 type Encryption struct {
+	types.Metadata
 	Type     types.StringValue
 	KMSKeyID types.StringValue
 }

@@ -3,10 +3,12 @@ package container
 import "github.com/aquasecurity/defsec/types"
 
 type Container struct {
+	types.Metadata
 	KubernetesClusters []KubernetesCluster
 }
 
 type KubernetesCluster struct {
+	types.Metadata
 	NetworkProfile              NetworkProfile
 	EnablePrivateCluster        types.BoolValue
 	APIServerAuthorizedIPRanges []types.StringValue
@@ -15,17 +17,21 @@ type KubernetesCluster struct {
 }
 
 type RoleBasedAccessControl struct {
+	types.Metadata
 	Enabled types.BoolValue
 }
 
 type AddonProfile struct {
+	types.Metadata
 	OMSAgent OMSAgent
 }
 
 type OMSAgent struct {
+	types.Metadata
 	Enabled types.BoolValue
 }
 
 type NetworkProfile struct {
+	types.Metadata
 	NetworkPolicy types.StringValue // "", "calico", "azure"
 }

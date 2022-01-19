@@ -3,6 +3,7 @@ package apigateway
 import "github.com/aquasecurity/defsec/types"
 
 type APIGateway struct {
+	types.Metadata
 	APIs        []API
 	DomainNames []DomainName
 }
@@ -38,6 +39,7 @@ type AccessLogging struct {
 }
 
 type RESTMethodSettings struct {
+	types.Metadata
 	CacheDataEncrypted types.BoolValue
 }
 

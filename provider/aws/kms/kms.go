@@ -3,6 +3,7 @@ package kms
 import "github.com/aquasecurity/defsec/types"
 
 type KMS struct {
+	types.Metadata
 	Keys []Key
 }
 

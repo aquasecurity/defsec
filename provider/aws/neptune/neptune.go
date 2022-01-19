@@ -3,6 +3,7 @@ package neptune
 import "github.com/aquasecurity/defsec/types"
 
 type Neptune struct {
+	types.Metadata
 	Clusters []Cluster
 }
 
@@ -14,6 +15,7 @@ type Cluster struct {
 }
 
 type Logging struct {
+	types.Metadata
 	Audit types.BoolValue
 }
 

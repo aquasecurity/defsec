@@ -6,6 +6,7 @@ import (
 )
 
 type Platform struct {
+	types.Metadata
 	Organizations []Organization
 }
 
@@ -44,6 +45,7 @@ func (f *Folder) AllFolders() []Folder {
 }
 
 type Organization struct {
+	types.Metadata
 	Folders  []Folder
 	Projects []Project
 	Members  []iam.Member
@@ -51,6 +53,7 @@ type Organization struct {
 }
 
 type Folder struct {
+	types.Metadata
 	Folders  []Folder
 	Projects []Project
 	Members  []iam.Member
@@ -58,6 +61,7 @@ type Folder struct {
 }
 
 type Project struct {
+	types.Metadata
 	AutoCreateNetwork types.BoolValue
 	Members           []iam.Member
 	Bindings          []iam.Binding

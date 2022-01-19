@@ -6,10 +6,12 @@ import (
 )
 
 type Storage struct {
+	types.Metadata
 	Buckets []Bucket
 }
 
 type Bucket struct {
+	types.Metadata
 	Name                           types.StringValue
 	Location                       types.StringValue
 	EnableUniformBucketLevelAccess types.BoolValue

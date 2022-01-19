@@ -3,6 +3,7 @@ package ecs
 import "github.com/aquasecurity/defsec/types"
 
 type ECS struct {
+	types.Metadata
 	Clusters        []Cluster
 	TaskDefinitions []TaskDefinition
 }
@@ -13,6 +14,7 @@ type Cluster struct {
 }
 
 type ClusterSettings struct {
+	types.Metadata
 	ContainerInsightsEnabled types.BoolValue
 }
 

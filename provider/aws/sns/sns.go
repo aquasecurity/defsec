@@ -3,6 +3,7 @@ package sns
 import "github.com/aquasecurity/defsec/types"
 
 type SNS struct {
+	types.Metadata
 	Topics []Topic
 }
 
@@ -12,6 +13,7 @@ type Topic struct {
 }
 
 type Encryption struct {
+	types.Metadata
 	KMSKeyID types.StringValue
 }
 

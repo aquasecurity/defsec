@@ -3,6 +3,7 @@ package codebuild
 import "github.com/aquasecurity/defsec/types"
 
 type CodeBuild struct {
+	types.Metadata
 	Projects []Project
 }
 

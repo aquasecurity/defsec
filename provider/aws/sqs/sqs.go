@@ -5,6 +5,7 @@ import (
 )
 
 type SQS struct {
+	types.Metadata
 	Queues []Queue
 }
 
@@ -15,6 +16,7 @@ type Queue struct {
 }
 
 type Encryption struct {
+	types.Metadata
 	KMSKeyID types.StringValue
 }
 

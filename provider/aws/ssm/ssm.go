@@ -3,6 +3,7 @@ package ssm
 import "github.com/aquasecurity/defsec/types"
 
 type SSM struct {
+	types.Metadata
 	Secrets []Secret
 }
 

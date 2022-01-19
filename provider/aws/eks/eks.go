@@ -3,6 +3,7 @@ package eks
 import "github.com/aquasecurity/defsec/types"
 
 type EKS struct {
+	types.Metadata
 	Clusters []Cluster
 }
 
@@ -15,6 +16,7 @@ type Cluster struct {
 }
 
 type Logging struct {
+	types.Metadata
 	API               types.BoolValue
 	Audit             types.BoolValue
 	Authenticator     types.BoolValue
@@ -23,6 +25,7 @@ type Logging struct {
 }
 
 type Encryption struct {
+	types.Metadata
 	Secrets  types.BoolValue
 	KMSKeyID types.StringValue
 }

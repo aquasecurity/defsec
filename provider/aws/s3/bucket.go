@@ -26,15 +26,18 @@ type BucketPolicy struct {
 }
 
 type Logging struct {
+	types.Metadata
 	Enabled      types.BoolValue
 	TargetBucket types.StringValue
 }
 
 type Versioning struct {
+	types.Metadata
 	Enabled types.BoolValue
 }
 
 type Encryption struct {
+	types.Metadata
 	Enabled   types.BoolValue
 	Algorithm types.StringValue
 	KMSKeyId  types.StringValue

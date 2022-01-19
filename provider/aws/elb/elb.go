@@ -3,6 +3,7 @@ package elb
 import "github.com/aquasecurity/defsec/types"
 
 type ELB struct {
+	types.Metadata
 	LoadBalancers []LoadBalancer
 }
 
@@ -28,6 +29,7 @@ type Listener struct {
 }
 
 type Action struct {
+	types.Metadata
 	Type types.StringValue
 }
 

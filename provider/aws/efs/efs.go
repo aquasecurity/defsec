@@ -3,6 +3,7 @@ package efs
 import "github.com/aquasecurity/defsec/types"
 
 type EFS struct {
+	types.Metadata
 	FileSystems []FileSystem
 }
 

@@ -3,6 +3,7 @@ package cloudtrail
 import "github.com/aquasecurity/defsec/types"
 
 type CloudTrail struct {
+	types.Metadata
 	Trails []Trail
 }
 

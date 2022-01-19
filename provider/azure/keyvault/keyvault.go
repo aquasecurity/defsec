@@ -5,10 +5,12 @@ import (
 )
 
 type KeyVault struct {
+	types.Metadata
 	Vaults []Vault
 }
 
 type Vault struct {
+	types.Metadata
 	Secrets                 []Secret
 	Keys                    []Key
 	EnablePurgeProtection   types.BoolValue
@@ -17,14 +19,17 @@ type Vault struct {
 }
 
 type NetworkACLs struct {
+	types.Metadata
 	DefaultAction types.StringValue
 }
 
 type Key struct {
+	types.Metadata
 	ExpiryDate types.TimeValue
 }
 
 type Secret struct {
+	types.Metadata
 	ContentType types.StringValue
 	ExpiryDate  types.TimeValue
 }

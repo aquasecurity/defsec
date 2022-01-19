@@ -3,6 +3,7 @@ package cloudfront
 import "github.com/aquasecurity/defsec/types"
 
 type Cloudfront struct {
+	types.Metadata
 	Distributions []Distribution
 }
 
@@ -16,6 +17,7 @@ type Distribution struct {
 }
 
 type Logging struct {
+	types.Metadata
 	Bucket types.StringValue
 }
 
@@ -35,6 +37,7 @@ const (
 )
 
 type ViewerCertificate struct {
+	types.Metadata
 	MinimumProtocolVersion types.StringValue
 }
 

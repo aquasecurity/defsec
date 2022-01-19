@@ -3,6 +3,7 @@ package athena
 import "github.com/aquasecurity/defsec/types"
 
 type Athena struct {
+	types.Metadata
 	Databases  []Database
 	Workgroups []Workgroup
 }
@@ -28,6 +29,7 @@ const (
 )
 
 type EncryptionConfiguration struct {
+	types.Metadata
 	Type types.StringValue
 }
 

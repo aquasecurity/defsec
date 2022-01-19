@@ -3,6 +3,7 @@ package cloudwatch
 import "github.com/aquasecurity/defsec/types"
 
 type CloudWatch struct {
+	types.Metadata
 	LogGroups []LogGroup
 }
 

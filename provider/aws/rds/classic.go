@@ -3,6 +3,7 @@ package rds
 import "github.com/aquasecurity/defsec/types"
 
 type Classic struct {
+	types.Metadata
 	DBSecurityGroups []DBSecurityGroup
 }
 

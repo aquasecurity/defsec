@@ -3,6 +3,7 @@ package msk
 import "github.com/aquasecurity/defsec/types"
 
 type MSK struct {
+	types.Metadata
 	Clusters []Cluster
 }
 
@@ -19,28 +20,34 @@ const (
 )
 
 type EncryptionInTransit struct {
+	types.Metadata
 	ClientBroker types.StringValue
 }
 
 type Logging struct {
+	types.Metadata
 	Broker BrokerLogging
 }
 
 type BrokerLogging struct {
+	types.Metadata
 	S3         S3Logging
 	Cloudwatch CloudwatchLogging
 	Firehose   FirehoseLogging
 }
 
 type S3Logging struct {
+	types.Metadata
 	Enabled types.BoolValue
 }
 
 type CloudwatchLogging struct {
+	types.Metadata
 	Enabled types.BoolValue
 }
 
 type FirehoseLogging struct {
+	types.Metadata
 	Enabled types.BoolValue
 }
 
