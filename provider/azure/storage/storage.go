@@ -3,10 +3,12 @@ package storage
 import "github.com/aquasecurity/defsec/types"
 
 type Storage struct {
+	types.Metadata
 	Accounts []Account
 }
 
 type Account struct {
+	types.Metadata
 	NetworkRules      []NetworkRule
 	EnforceHTTPS      types.BoolValue
 	Containers        []Container
@@ -15,6 +17,7 @@ type Account struct {
 }
 
 type QueueProperties struct {
+	types.Metadata
 	EnableLogging types.BoolValue
 }
 
@@ -39,5 +42,6 @@ const (
 )
 
 type Container struct {
+	types.Metadata
 	PublicAccess types.StringValue
 }

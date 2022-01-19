@@ -3,6 +3,7 @@ package autoscaling
 import "github.com/aquasecurity/defsec/types"
 
 type Autoscaling struct {
+	types.Metadata
 	LaunchConfigurations []LaunchConfiguration
 }
 

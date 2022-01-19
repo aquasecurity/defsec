@@ -3,6 +3,7 @@ package compute
 import "github.com/aquasecurity/defsec/types"
 
 type Compute struct {
+	types.Metadata
 	Firewalls          []Firewall
 	LoadBalancers      []LoadBalancer
 	Droplets           []Droplet
@@ -10,6 +11,7 @@ type Compute struct {
 }
 
 type Firewall struct {
+	types.Metadata
 	OutboundRules []OutboundFirewallRule
 	InboundRules  []InboundFirewallRule
 }
@@ -21,18 +23,22 @@ type KubernetesCluster struct {
 }
 
 type LoadBalancer struct {
+	types.Metadata
 	ForwardingRules []ForwardingRule
 }
 
 type ForwardingRule struct {
+	types.Metadata
 	EntryProtocol types.StringValue
 }
 
 type OutboundFirewallRule struct {
+	types.Metadata
 	DestinationAddresses []types.StringValue
 }
 
 type InboundFirewallRule struct {
+	types.Metadata
 	SourceAddresses []types.StringValue
 }
 

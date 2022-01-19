@@ -3,6 +3,7 @@ package rds
 import "github.com/aquasecurity/defsec/types"
 
 type RDS struct {
+	types.Metadata
 	Instances []Instance
 	Clusters  []Cluster
 	Classic   Classic
@@ -18,6 +19,7 @@ type Cluster struct {
 }
 
 type Encryption struct {
+	types.Metadata
 	EncryptStorage types.BoolValue
 	KMSKeyID       types.StringValue
 }
@@ -32,11 +34,13 @@ type Instance struct {
 }
 
 type ClusterInstance struct {
+	types.Metadata
 	Instance
 	ClusterIdentifier types.StringValue
 }
 
 type PerformanceInsights struct {
+	types.Metadata
 	Enabled  types.BoolValue
 	KMSKeyID types.StringValue
 }

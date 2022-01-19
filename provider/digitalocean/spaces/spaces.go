@@ -3,6 +3,7 @@ package spaces
 import "github.com/aquasecurity/defsec/types"
 
 type Spaces struct {
+	types.Metadata
 	Buckets []Bucket
 }
 
@@ -16,10 +17,12 @@ type Bucket struct {
 }
 
 type Versioning struct {
+	types.Metadata
 	Enabled types.BoolValue
 }
 
 type Object struct {
+	types.Metadata
 	ACL types.StringValue
 }
 

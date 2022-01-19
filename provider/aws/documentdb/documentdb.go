@@ -3,6 +3,7 @@ package documentdb
 import "github.com/aquasecurity/defsec/types"
 
 type DocumentDB struct {
+	types.Metadata
 	Clusters []Cluster
 }
 

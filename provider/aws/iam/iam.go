@@ -3,6 +3,7 @@ package iam
 import "github.com/aquasecurity/defsec/types"
 
 type IAM struct {
+	types.Metadata
 	PasswordPolicy PasswordPolicy
 	Policies       []Policy
 	Groups         []Group

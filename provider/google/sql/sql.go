@@ -7,6 +7,7 @@ import (
 )
 
 type SQL struct {
+	types.Metadata
 	Instances []DatabaseInstance
 }
 
@@ -32,16 +33,19 @@ const (
 )
 
 type DatabaseInstance struct {
+	types.Metadata
 	DatabaseVersion types.StringValue
 	Settings        Settings
 }
 
 type Settings struct {
+	types.Metadata
 	Flags           Flags
 	Backups         Backups
 	IPConfiguration IPConfiguration
 }
 type Flags struct {
+	types.Metadata
 	LogTempFileSize                 types.IntValue
 	LocalInFile                     types.BoolValue
 	ContainedDatabaseAuthentication types.BoolValue
@@ -55,10 +59,12 @@ type Flags struct {
 }
 
 type Backups struct {
+	types.Metadata
 	Enabled types.BoolValue
 }
 
 type IPConfiguration struct {
+	types.Metadata
 	RequireTLS         types.BoolValue
 	EnableIPv4         types.BoolValue
 	AuthorizedNetworks []struct {

@@ -3,6 +3,7 @@ package workspaces
 import "github.com/aquasecurity/defsec/types"
 
 type WorkSpaces struct {
+	types.Metadata
 	WorkSpaces []WorkSpace
 }
 
@@ -13,10 +14,12 @@ type WorkSpace struct {
 }
 
 type Volume struct {
+	types.Metadata
 	Encryption Encryption
 }
 
 type Encryption struct {
+	types.Metadata
 	Enabled types.BoolValue
 }
 

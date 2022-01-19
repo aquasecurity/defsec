@@ -3,11 +3,13 @@ package appservice
 import "github.com/aquasecurity/defsec/types"
 
 type AppService struct {
+	types.Metadata
 	Services     []Service
 	FunctionApps []FunctionApp
 }
 
 type Service struct {
+	types.Metadata
 	EnableClientCert types.BoolValue
 	Identity         struct {
 		Type types.StringValue
@@ -22,5 +24,6 @@ type Service struct {
 }
 
 type FunctionApp struct {
+	types.Metadata
 	HTTPSOnly types.BoolValue
 }

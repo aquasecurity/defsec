@@ -3,6 +3,7 @@ package monitor
 import "github.com/aquasecurity/defsec/types"
 
 type Monitor struct {
+	types.Metadata
 	LogProfiles []LogProfile
 }
 
@@ -22,6 +23,7 @@ func (p LogProfile) GetRawValue() interface{} {
 }
 
 type RetentionPolicy struct {
+	types.Metadata
 	Enabled types.BoolValue
 	Days    types.IntValue
 }

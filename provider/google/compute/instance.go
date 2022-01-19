@@ -17,6 +17,7 @@ type Instance struct {
 }
 
 type ServiceAccount struct {
+	types.Metadata
 	Email  types.StringValue
 	Scopes []types.StringValue
 }
@@ -30,6 +31,7 @@ type NetworkInterface struct {
 }
 
 type ShieldedVMConfig struct {
+	types.Metadata
 	SecureBootEnabled          types.BoolValue
 	IntegrityMonitoringEnabled types.BoolValue
 	VTPMEnabled                types.BoolValue

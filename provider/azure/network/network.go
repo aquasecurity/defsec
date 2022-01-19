@@ -3,11 +3,13 @@ package network
 import "github.com/aquasecurity/defsec/types"
 
 type Network struct {
+	types.Metadata
 	SecurityGroups         []SecurityGroup
 	NetworkWatcherFlowLogs []NetworkWatcherFlowLog
 }
 
 type SecurityGroup struct {
+	types.Metadata
 	InboundAllowRules  []SecurityGroupRule
 	InboundDenyRules   []SecurityGroupRule
 	OutboundAllowRules []SecurityGroupRule
@@ -15,6 +17,7 @@ type SecurityGroup struct {
 }
 
 type SecurityGroupRule struct {
+	types.Metadata
 	SourceAddresses       []types.StringValue
 	SourcePortRanges      []types.StringValue
 	DestinationAddresses  []types.StringValue
@@ -22,10 +25,12 @@ type SecurityGroupRule struct {
 }
 
 type NetworkWatcherFlowLog struct {
+	types.Metadata
 	RetentionPolicy RetentionPolicy
 }
 
 type RetentionPolicy struct {
+	types.Metadata
 	Enabled types.BoolValue
 	Days    types.IntValue
 }

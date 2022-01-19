@@ -5,6 +5,7 @@ import (
 )
 
 type ECR struct {
+	types.Metadata
 	Repositories []Repository
 }
 
@@ -17,6 +18,7 @@ type Repository struct {
 }
 
 type ImageScanning struct {
+	types.Metadata
 	ScanOnPush types.BoolValue
 }
 
@@ -26,6 +28,7 @@ const (
 )
 
 type Encryption struct {
+	types.Metadata
 	Type     types.StringValue
 	KMSKeyID types.StringValue
 }

@@ -3,6 +3,7 @@ package redshift
 import "github.com/aquasecurity/defsec/types"
 
 type Redshift struct {
+	types.Metadata
 	Clusters       []Cluster
 	SecurityGroups []SecurityGroup
 }
@@ -19,6 +20,7 @@ type Cluster struct {
 }
 
 type Encryption struct {
+	types.Metadata
 	Enabled  types.BoolValue
 	KMSKeyID types.StringValue
 }

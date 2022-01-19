@@ -3,6 +3,7 @@ package elasticache
 import "github.com/aquasecurity/defsec/types"
 
 type ElastiCache struct {
+	types.Metadata
 	Clusters          []Cluster
 	ReplicationGroups []ReplicationGroup
 	SecurityGroups    []SecurityGroup
