@@ -1,7 +1,7 @@
-package platform
+package iam
 
 var terraformNoUserGrantedPermissionsGoodExamples = []string{
-        `
+	`
  resource "google_project_iam_binding" "good_example" {
  	members = [
  		"group:test@example.com",
@@ -14,7 +14,7 @@ var terraformNoUserGrantedPermissionsGoodExamples = []string{
 }
 
 var terraformNoUserGrantedPermissionsBadExamples = []string{
-        `
+	`
  resource "google_project_iam_binding" "bad_example" {
  	members = [
  		"user:test@example.com",
@@ -28,7 +28,7 @@ var terraformNoUserGrantedPermissionsBadExamples = []string{
 }
 
 var terraformNoUserGrantedPermissionsLinks = []string{
-        `https://www.terraform.io/docs/providers/google/d/iam_policy.html#members`,
+	`https://www.terraform.io/docs/providers/google/d/iam_policy.html#members`,
 }
 
 var terraformNoUserGrantedPermissionsRemediationMarkdown = ``
