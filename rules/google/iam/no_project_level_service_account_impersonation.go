@@ -1,4 +1,4 @@
-package platform
+package iam
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -11,7 +11,7 @@ var CheckNoProjectLevelServiceAccountImpersonation = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0011",
 		Provider:    provider.GoogleProvider,
-		Service:     "platform",
+		Service:     "iam",
 		ShortCode:   "no-project-level-service-account-impersonation",
 		Summary:     "Users should not be granted service account access at the project level",
 		Impact:      "Privilege escalation, impersonation of any/all services",
@@ -20,16 +20,16 @@ var CheckNoProjectLevelServiceAccountImpersonation = rules.Register(
 		Links: []string{
 			"https://cloud.google.com/iam/docs/impersonating-service-accounts",
 		},
-		Terraform:   &rules.EngineMetadata{
-            GoodExamples:        terraformNoProjectLevelServiceAccountImpersonationGoodExamples,
-            BadExamples:         terraformNoProjectLevelServiceAccountImpersonationBadExamples,
-            Links:               terraformNoProjectLevelServiceAccountImpersonationLinks,
-            RemediationMarkdown: terraformNoProjectLevelServiceAccountImpersonationRemediationMarkdown,
-        },
-        Severity: severity.Medium,
+		Terraform: &rules.EngineMetadata{
+			GoodExamples:        terraformNoProjectLevelServiceAccountImpersonationGoodExamples,
+			BadExamples:         terraformNoProjectLevelServiceAccountImpersonationBadExamples,
+			Links:               terraformNoProjectLevelServiceAccountImpersonationLinks,
+			RemediationMarkdown: terraformNoProjectLevelServiceAccountImpersonationRemediationMarkdown,
+		},
+		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, project := range s.Google.Platform.AllProjects() {
+		for _, project := range s.Google.IAM.AllProjects() {
 			for _, member := range project.Members {
 				if member.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {
 					results.Add(

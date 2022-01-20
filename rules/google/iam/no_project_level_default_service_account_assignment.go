@@ -1,4 +1,4 @@
-package platform
+package iam
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -11,7 +11,7 @@ var CheckNoProjectLevelDefaultServiceAccountAssignment = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0006",
 		Provider:    provider.GoogleProvider,
-		Service:     "platform",
+		Service:     "iam",
 		ShortCode:   "no-project-level-default-service-account-assignment",
 		Summary:     "Roles should not be assigned to default service accounts",
 		Impact:      "Violation of principal of least privilege",
@@ -20,16 +20,16 @@ var CheckNoProjectLevelDefaultServiceAccountAssignment = rules.Register(
 		Links: []string{
 			"",
 		},
-		Terraform:   &rules.EngineMetadata{
-            GoodExamples:        terraformNoProjectLevelDefaultServiceAccountAssignmentGoodExamples,
-            BadExamples:         terraformNoProjectLevelDefaultServiceAccountAssignmentBadExamples,
-            Links:               terraformNoProjectLevelDefaultServiceAccountAssignmentLinks,
-            RemediationMarkdown: terraformNoProjectLevelDefaultServiceAccountAssignmentRemediationMarkdown,
-        },
-        Severity: severity.Medium,
+		Terraform: &rules.EngineMetadata{
+			GoodExamples:        terraformNoProjectLevelDefaultServiceAccountAssignmentGoodExamples,
+			BadExamples:         terraformNoProjectLevelDefaultServiceAccountAssignmentBadExamples,
+			Links:               terraformNoProjectLevelDefaultServiceAccountAssignmentLinks,
+			RemediationMarkdown: terraformNoProjectLevelDefaultServiceAccountAssignmentRemediationMarkdown,
+		},
+		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, project := range s.Google.Platform.AllProjects() {
+		for _, project := range s.Google.IAM.AllProjects() {
 			for _, binding := range project.Bindings {
 				for _, member := range binding.Members {
 					if isMemberDefaultServiceAccount(member.Value()) {

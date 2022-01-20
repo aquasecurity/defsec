@@ -1,4 +1,4 @@
-package platform
+package iam
 
 import (
 	"strings"
@@ -13,7 +13,7 @@ var CheckNoFolderLevelDefaultServiceAccountAssignment = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0004",
 		Provider:    provider.GoogleProvider,
-		Service:     "platform",
+		Service:     "iam",
 		ShortCode:   "no-folder-level-default-service-account-assignment",
 		Summary:     "Roles should not be assigned to default service accounts",
 		Impact:      "Violation of principal of least privilege",
@@ -22,18 +22,23 @@ var CheckNoFolderLevelDefaultServiceAccountAssignment = rules.Register(
 		Links: []string{
 			"",
 		},
-		Terraform:   &rules.EngineMetadata{
-            GoodExamples:        terraformNoFolderLevelDefaultServiceAccountAssignmentGoodExamples,
-            BadExamples:         terraformNoFolderLevelDefaultServiceAccountAssignmentBadExamples,
-            Links:               terraformNoFolderLevelDefaultServiceAccountAssignmentLinks,
-            RemediationMarkdown: terraformNoFolderLevelDefaultServiceAccountAssignmentRemediationMarkdown,
-        },
-        Severity: severity.Medium,
+		Terraform: &rules.EngineMetadata{
+			GoodExamples:        terraformNoFolderLevelDefaultServiceAccountAssignmentGoodExamples,
+			BadExamples:         terraformNoFolderLevelDefaultServiceAccountAssignmentBadExamples,
+			Links:               terraformNoFolderLevelDefaultServiceAccountAssignmentLinks,
+			RemediationMarkdown: terraformNoFolderLevelDefaultServiceAccountAssignmentRemediationMarkdown,
+		},
+		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, folder := range s.Google.Platform.AllFolders() {
+		for _, folder := range s.Google.IAM.AllFolders() {
 			for _, member := range folder.Members {
-				if isMemberDefaultServiceAccount(member.Member.Value()) {
+				if member.DefaultServiceAccount.IsTrue() {
+					results.Add(
+						"Role is assigned to a default service account at folder level.",
+						member.DefaultServiceAccount,
+					)
+				} else if isMemberDefaultServiceAccount(member.Member.Value()) {
 					results.Add(
 						"Role is assigned to a default service account at folder level.",
 						member.Member,
@@ -41,6 +46,13 @@ var CheckNoFolderLevelDefaultServiceAccountAssignment = rules.Register(
 				}
 			}
 			for _, binding := range folder.Bindings {
+				if binding.IncludesDefaultServiceAccount.IsTrue() {
+					results.Add(
+						"Role is assigned to a default service account at folder level.",
+						binding.IncludesDefaultServiceAccount,
+					)
+					continue
+				}
 				for _, member := range binding.Members {
 					if isMemberDefaultServiceAccount(member.Value()) {
 						results.Add(

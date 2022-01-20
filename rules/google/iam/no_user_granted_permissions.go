@@ -1,4 +1,4 @@
-package platform
+package iam
 
 import (
 	"github.com/aquasecurity/defsec/provider"
@@ -11,7 +11,7 @@ var CheckNoUserGrantedPermissions = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-GCP-0003",
 		Provider:   provider.GoogleProvider,
-		Service:    "platform",
+		Service:    "iam",
 		ShortCode:  "no-user-granted-permissions",
 		Summary:    "IAM granted directly to user.",
 		Impact:     "Users shouldn't have permissions granted to them directly",
@@ -25,16 +25,16 @@ Permissions should be granted on roles, groups, services accounts instead.`,
 			"https://cloud.google.com/iam/docs/overview#permissions",
 			"https://cloud.google.com/resource-manager/reference/rest/v1/projects/setIamPolicy",
 		},
-		Terraform:   &rules.EngineMetadata{
-            GoodExamples:        terraformNoUserGrantedPermissionsGoodExamples,
-            BadExamples:         terraformNoUserGrantedPermissionsBadExamples,
-            Links:               terraformNoUserGrantedPermissionsLinks,
-            RemediationMarkdown: terraformNoUserGrantedPermissionsRemediationMarkdown,
-        },
-        Severity: severity.Medium,
+		Terraform: &rules.EngineMetadata{
+			GoodExamples:        terraformNoUserGrantedPermissionsGoodExamples,
+			BadExamples:         terraformNoUserGrantedPermissionsBadExamples,
+			Links:               terraformNoUserGrantedPermissionsLinks,
+			RemediationMarkdown: terraformNoUserGrantedPermissionsRemediationMarkdown,
+		},
+		Severity: severity.Medium,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, project := range s.Google.Platform.AllProjects() {
+		for _, project := range s.Google.IAM.AllProjects() {
 			for _, member := range project.Members {
 				if member.Member.StartsWith("user:") {
 					results.Add(
@@ -55,7 +55,7 @@ Permissions should be granted on roles, groups, services accounts instead.`,
 			}
 		}
 
-		for _, folder := range s.Google.Platform.AllFolders() {
+		for _, folder := range s.Google.IAM.AllFolders() {
 			for _, member := range folder.Members {
 				if member.Member.StartsWith("user:") {
 					results.Add(
@@ -76,7 +76,7 @@ Permissions should be granted on roles, groups, services accounts instead.`,
 			}
 		}
 
-		for _, org := range s.Google.Platform.Organizations {
+		for _, org := range s.Google.IAM.Organizations {
 			for _, member := range org.Members {
 				if member.Member.StartsWith("user:") {
 					results.Add(

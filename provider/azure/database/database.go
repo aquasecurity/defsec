@@ -11,17 +11,14 @@ type Database struct {
 }
 
 type MariaDBServer struct {
-	types.Metadata
 	Server
 }
 
 type MySQLServer struct {
-	types.Metadata
 	Server
 }
 
 type PostgreSQLServer struct {
-	types.Metadata
 	Server
 	Config PostgresSQLConfig
 }
