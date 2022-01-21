@@ -37,7 +37,7 @@ var CheckBackupRetentionSpecified = rules.Register(
 	func(s *state.State) (results rules.Results) {
 		for _, cluster := range s.AWS.RDS.Clusters {
 
-			if !cluster.IsManaged() {
+			if cluster.IsUnmanaged() {
 				continue
 			}
 			if !cluster.ReplicationSourceARN.IsEmpty() {
@@ -57,7 +57,7 @@ var CheckBackupRetentionSpecified = rules.Register(
 			if !instance.ReplicationSourceARN.IsEmpty() {
 				continue
 			}
-			if !instance.IsManaged() {
+			if instance.IsUnmanaged() {
 				continue
 			}
 			if instance.BackupRetentionPeriodDays.LessThan(2) {

@@ -30,7 +30,7 @@ var CheckPostgresConfigurationLogConnectionThrottling = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, server := range s.Azure.Database.PostgreSQLServers {
-			if !server.IsManaged() {
+			if server.IsUnmanaged() {
 				continue
 			}
 			if server.Config.ConnectionThrottling.IsFalse() {

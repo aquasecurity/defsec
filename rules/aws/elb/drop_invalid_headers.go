@@ -33,7 +33,7 @@ By setting drop_invalid_header_fields to true, anything that doe not conform to 
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, lb := range s.AWS.ELB.LoadBalancers {
-			if !lb.Type.EqualTo(elb.TypeApplication) || !lb.IsManaged() {
+			if !lb.Type.EqualTo(elb.TypeApplication) || lb.IsUnmanaged() {
 				continue
 			}
 			if lb.DropInvalidHeaderFields.IsFalse() {

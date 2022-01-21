@@ -32,7 +32,7 @@ Basic authentication should be disabled by explicitly unsetting the <code>userna
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, cluster := range s.Google.GKE.Clusters {
-			if !cluster.IsManaged() {
+			if cluster.IsUnmanaged() {
 				continue
 			}
 			if cluster.MasterAuth.ClientCertificate.IssueCertificate.IsTrue() {

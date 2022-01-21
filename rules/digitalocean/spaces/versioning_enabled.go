@@ -30,7 +30,7 @@ var CheckVersioningEnabled = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, bucket := range s.DigitalOcean.Spaces.Buckets {
-			if !bucket.IsManaged() {
+			if bucket.IsUnmanaged() {
 				continue
 			}
 			if bucket.Versioning.Enabled.IsFalse() {

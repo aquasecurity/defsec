@@ -28,7 +28,7 @@ var CheckEnableSslEnforcement = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, server := range s.Azure.Database.MariaDBServers {
-			if !server.IsManaged() {
+			if server.IsUnmanaged() {
 				continue
 			}
 			if server.EnableSSLEnforcement.IsFalse() {
@@ -39,7 +39,7 @@ var CheckEnableSslEnforcement = rules.Register(
 			}
 		}
 		for _, server := range s.Azure.Database.MySQLServers {
-			if !server.IsManaged() {
+			if server.IsUnmanaged() {
 				continue
 			}
 			if server.EnableSSLEnforcement.IsFalse() {
@@ -50,7 +50,7 @@ var CheckEnableSslEnforcement = rules.Register(
 			}
 		}
 		for _, server := range s.Azure.Database.PostgreSQLServers {
-			if !server.IsManaged() {
+			if server.IsUnmanaged() {
 				continue
 			}
 			if server.EnableSSLEnforcement.IsFalse() {

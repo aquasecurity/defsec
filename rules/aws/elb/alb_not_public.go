@@ -29,7 +29,7 @@ var CheckAlbNotPublic = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, lb := range s.AWS.ELB.LoadBalancers {
-			if lb.Type.EqualTo(elb.TypeGateway) || !lb.IsManaged() {
+			if lb.Type.EqualTo(elb.TypeGateway) || lb.IsUnmanaged() {
 				continue
 			}
 			if lb.Internal.IsFalse() {

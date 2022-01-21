@@ -28,7 +28,7 @@ var CheckAccountIdentityRegistered = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, service := range s.Azure.AppService.Services {
-			if !service.IsManaged() {
+			if service.IsUnmanaged() {
 				continue
 			}
 			if service.Identity.Type.IsEmpty() {

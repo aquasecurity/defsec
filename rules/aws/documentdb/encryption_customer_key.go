@@ -34,7 +34,7 @@ var CheckEncryptionCustomerKey = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, cluster := range s.AWS.DocumentDB.Clusters {
-			if cluster.IsManaged() && cluster.KMSKeyID.IsEmpty() {
+			if cluster.IsUnmanaged() && cluster.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Cluster encryption does not use a customer-managed KMS key.",
 					&cluster,
@@ -44,7 +44,7 @@ var CheckEncryptionCustomerKey = rules.Register(
 				results.AddPassed(&cluster)
 			}
 			for _, instance := range cluster.Instances {
-				if !instance.IsManaged() {
+				if instance.IsUnmanaged() {
 					continue
 				}
 				if instance.KMSKeyID.IsEmpty() {
