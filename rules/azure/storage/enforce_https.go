@@ -42,6 +42,8 @@ Microsoft recommends that you always require secure transfer for all of your sto
 					"Account does not enforce HTTPS.",
 					account.EnforceHTTPS,
 				)
+			} else {
+				results.AddPassed(&account)
 			}
 		}
 		return

@@ -38,6 +38,8 @@ var CheckVersioningEnabled = rules.Register(
 					"Bucket does not have versioning enabled.",
 					bucket.Versioning.Enabled,
 				)
+			} else {
+				results.AddPassed(&bucket)
 			}
 		}
 		return

@@ -42,6 +42,8 @@ Requests are logged on a best-effort basis.`,
 					"Queue services storage account does not have logging enabled.",
 					account.QueueProperties.EnableLogging,
 				)
+			} else {
+				results.AddPassed(&account)
 			}
 		}
 		return

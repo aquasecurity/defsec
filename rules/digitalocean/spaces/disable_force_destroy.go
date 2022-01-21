@@ -36,6 +36,8 @@ var CheckDisableForceDestroy = rules.Register(
 					"Bucket has force-destroy enabled.",
 					bucket.ForceDestroy,
 				)
+			} else {
+				results.AddPassed(&bucket)
 			}
 		}
 		return
