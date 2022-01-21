@@ -36,6 +36,8 @@ var CheckEnableSslEnforcement = rules.Register(
 					"Database server does not have enforce SSL.",
 					server.EnableSSLEnforcement,
 				)
+			} else {
+				results.AddPassed(&server)
 			}
 		}
 		for _, server := range s.Azure.Database.MySQLServers {
@@ -47,6 +49,8 @@ var CheckEnableSslEnforcement = rules.Register(
 					"Database server does not have enforce SSL.",
 					server.EnableSSLEnforcement,
 				)
+			} else {
+				results.AddPassed(&server)
 			}
 		}
 		for _, server := range s.Azure.Database.PostgreSQLServers {
@@ -58,6 +62,8 @@ var CheckEnableSslEnforcement = rules.Register(
 					"Database server does not have enforce SSL.",
 					server.EnableSSLEnforcement,
 				)
+			} else {
+				results.AddPassed(&server)
 			}
 		}
 		return

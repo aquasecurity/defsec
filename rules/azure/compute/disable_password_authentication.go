@@ -28,6 +28,9 @@ var CheckDisablePasswordAuthentication = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, vm := range s.Azure.Compute.LinuxVirtualMachines {
+			if vm.IsUnmanaged() {
+				continue
+			}
 			if vm.OSProfileLinuxConfig.DisablePasswordAuthentication.IsFalse() {
 				results.Add(
 					"Linux virtual machine allows password authentication.",

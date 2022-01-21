@@ -36,6 +36,8 @@ var CheckNoPublicAccess = rules.Register(
 					"Database server has public network access enabled.",
 					server.EnablePublicNetworkAccess,
 				)
+			} else {
+				results.AddPassed(&server)
 			}
 		}
 		for _, server := range s.Azure.Database.MSSQLServers {
@@ -47,6 +49,8 @@ var CheckNoPublicAccess = rules.Register(
 					"Database server has public network access enabled.",
 					server.EnablePublicNetworkAccess,
 				)
+			} else {
+				results.AddPassed(&server)
 			}
 		}
 		for _, server := range s.Azure.Database.MySQLServers {
@@ -58,6 +62,8 @@ var CheckNoPublicAccess = rules.Register(
 					"Database server has public network access enabled.",
 					server.EnablePublicNetworkAccess,
 				)
+			} else {
+				results.AddPassed(&server)
 			}
 		}
 		for _, server := range s.Azure.Database.PostgreSQLServers {
@@ -69,6 +75,8 @@ var CheckNoPublicAccess = rules.Register(
 					"Database server has public network access enabled.",
 					server.EnablePublicNetworkAccess,
 				)
+			} else {
+				results.AddPassed(&server)
 			}
 		}
 		return

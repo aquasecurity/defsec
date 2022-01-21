@@ -28,6 +28,9 @@ var CheckRequireClientCert = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, service := range s.Azure.AppService.Services {
+			if service.IsUnmanaged() {
+				continue
+			}
 			if service.EnableClientCert.IsFalse() {
 				results.Add(
 					"App service does not have client certificates enabled.",

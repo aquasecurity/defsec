@@ -38,6 +38,8 @@ var CheckPostgresConfigurationLogCheckpoints = rules.Register(
 					"Database server is not configured to log checkpoints.",
 					server.Config.LogCheckpoints,
 				)
+			} else {
+				results.AddPassed(&server.Config)
 			}
 		}
 		return

@@ -38,6 +38,8 @@ var CheckPostgresConfigurationLogConnectionThrottling = rules.Register(
 					"Database server is not configured to throttle connections.",
 					server.Config.ConnectionThrottling,
 				)
+			} else {
+				results.AddPassed(&server.Config)
 			}
 		}
 		return

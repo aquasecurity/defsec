@@ -28,6 +28,9 @@ var CheckUseSecureTlsPolicy = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, service := range s.Azure.AppService.Services {
+			if service.IsUnmanaged() {
+				continue
+			}
 			if service.Site.MinimumTLSVersion.NotEqualTo("1.2") {
 				results.Add(
 					"App service does not require a secure TLS version.",

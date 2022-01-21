@@ -38,6 +38,8 @@ var CheckPostgresConfigurationLogConnections = rules.Register(
 					"Database server is not configured to log connections.",
 					server.Config.LogConnections,
 				)
+			} else {
+				results.AddPassed(&server.Config)
 			}
 		}
 		return

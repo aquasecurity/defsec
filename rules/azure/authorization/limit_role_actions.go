@@ -38,7 +38,7 @@ var CheckLimitRoleActions = rules.Register(
 									action,
 								)
 							} else {
-								results.AddPassed(&roleDef)
+								results.AddPassed(&perm)
 							}
 						}
 

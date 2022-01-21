@@ -40,6 +40,8 @@ The default action of the Network ACL should be set to deny for when IPs are not
 					"Vault network ACL does not block access by default.",
 					vault.NetworkACLs.DefaultAction,
 				)
+			} else {
+				results.AddPassed(&vault)
 			}
 		}
 		return
