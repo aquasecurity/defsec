@@ -30,7 +30,7 @@ var CheckEnableHttp2 = rules.Register(
 		for _, service := range s.Azure.AppService.Services {
 			if service.Site.EnableHTTP2.IsFalse() {
 				results.Add(
-					"App service does not have HTTP 2 enabled.",
+					"App service does not have HTTP/2 enabled.",
 					service.Site.EnableHTTP2,
 				)
 			} else {
