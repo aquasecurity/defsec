@@ -4,11 +4,7 @@ var terraformNoPublicAccessGoodExamples = []string{
 	`
  resource "azurerm_storage_container" "good_example" {
  	name                  = "terraform-container-storage"
- 	container_access_type = "blob"
- 	
- 	properties = {
- 		"publicAccess" = "off"
- 	}
+ 	container_access_type = "private"
  }
  `,
 }
