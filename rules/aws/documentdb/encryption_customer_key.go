@@ -18,23 +18,23 @@ var CheckEncryptionCustomerKey = rules.Register(
 		Resolution:  "Enable encryption using customer managed keys",
 		Explanation: `Encryption using AWS keys provides protection for your DocumentDB underlying storage. To increase control of the encryption and manage factors like rotation use customer managed keys.`,
 		Links:       []string{"https://docs.aws.amazon.com/documentdb/latest/developerguide/security.encryption.ssl.public-key.html"},
-		Terraform:   &rules.EngineMetadata{
-            GoodExamples:        terraformEncryptionCustomerKeyGoodExamples,
-            BadExamples:         terraformEncryptionCustomerKeyBadExamples,
-            Links:               terraformEncryptionCustomerKeyLinks,
-            RemediationMarkdown: terraformEncryptionCustomerKeyRemediationMarkdown,
-        },
-        CloudFormation:   &rules.EngineMetadata{
-            GoodExamples:        cloudFormationEncryptionCustomerKeyGoodExamples,
-            BadExamples:         cloudFormationEncryptionCustomerKeyBadExamples,
-            Links:               cloudFormationEncryptionCustomerKeyLinks,
-            RemediationMarkdown: cloudFormationEncryptionCustomerKeyRemediationMarkdown,
-        },
-        Severity:    severity.Low,
+		Terraform: &rules.EngineMetadata{
+			GoodExamples:        terraformEncryptionCustomerKeyGoodExamples,
+			BadExamples:         terraformEncryptionCustomerKeyBadExamples,
+			Links:               terraformEncryptionCustomerKeyLinks,
+			RemediationMarkdown: terraformEncryptionCustomerKeyRemediationMarkdown,
+		},
+		CloudFormation: &rules.EngineMetadata{
+			GoodExamples:        cloudFormationEncryptionCustomerKeyGoodExamples,
+			BadExamples:         cloudFormationEncryptionCustomerKeyBadExamples,
+			Links:               cloudFormationEncryptionCustomerKeyLinks,
+			RemediationMarkdown: cloudFormationEncryptionCustomerKeyRemediationMarkdown,
+		},
+		Severity: severity.Low,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, cluster := range s.AWS.DocumentDB.Clusters {
-			if cluster.IsUnmanaged() && cluster.KMSKeyID.IsEmpty() {
+			if cluster.IsManaged() && cluster.KMSKeyID.IsEmpty() {
 				results.Add(
 					"Cluster encryption does not use a customer-managed KMS key.",
 					&cluster,

@@ -54,10 +54,10 @@ var CheckBackupRetentionSpecified = rules.Register(
 			}
 		}
 		for _, instance := range s.AWS.RDS.Instances {
-			if !instance.ReplicationSourceARN.IsEmpty() {
+			if instance.IsUnmanaged() {
 				continue
 			}
-			if instance.IsUnmanaged() {
+			if !instance.ReplicationSourceARN.IsEmpty() {
 				continue
 			}
 			if instance.BackupRetentionPeriodDays.LessThan(2) {
