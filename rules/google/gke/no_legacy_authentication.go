@@ -40,13 +40,15 @@ Basic authentication should be disabled by explicitly unsetting the <code>userna
 					"Cluster allows the use of certificates for master authentication.",
 					cluster.MasterAuth.ClientCertificate.IssueCertificate,
 				)
-			}
-			if cluster.MasterAuth.Username.NotEqualTo("") {
+			} else if cluster.MasterAuth.Username.NotEqualTo("") {
 				results.Add(
 					"Cluster allows the use of basic auth for master authentication.",
 					cluster.MasterAuth.Username,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
+
 		}
 		return
 	},

@@ -40,6 +40,8 @@ RBAC has significant security advantages and is now stable in Kubernetes, so itâ
 					"Cluster has legacy ABAC enabled.",
 					cluster.EnableLegacyABAC,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 		}
 		return

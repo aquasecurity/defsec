@@ -36,7 +36,10 @@ var CheckEnableIpAliasing = rules.Register(
 					"Cluster has IP aliasing disabled.",
 					cluster.IPAllocationPolicy.Enabled,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
+
 		}
 		return
 	},

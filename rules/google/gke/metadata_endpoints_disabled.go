@@ -44,7 +44,10 @@ When setting the <code>metadata</code> block, the default value for <code>disabl
 					"Cluster has legacy metadata endpoints enabled.",
 					cluster.ClusterMetadata.EnableLegacyEndpoints,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
+
 		}
 		return
 	},

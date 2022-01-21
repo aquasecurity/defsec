@@ -36,7 +36,10 @@ var CheckEnableStackdriverMonitoring = rules.Register(
 					"Cluster does not use the monitoring.googleapis.com/kubernetes StackDriver monitoring service.",
 					cluster.MonitoringService,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
+
 		}
 		return
 	},

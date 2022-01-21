@@ -30,7 +30,7 @@ var CheckUseServiceAccount = rules.Register(
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, cluster := range s.Google.GKE.Clusters {
-			if cluster.IsUnmanaged() {
+			if cluster.IsManaged() {
 				if cluster.RemoveDefaultNodePool.IsFalse() {
 					if cluster.NodeConfig.ServiceAccount.IsEmpty() {
 						results.Add(
@@ -38,6 +38,8 @@ var CheckUseServiceAccount = rules.Register(
 							cluster.NodeConfig.ServiceAccount,
 						)
 					}
+				} else {
+					results.AddPassed(&cluster)
 				}
 			}
 			for _, pool := range cluster.NodePools {
@@ -46,8 +48,9 @@ var CheckUseServiceAccount = rules.Register(
 						"Node pool does not override the default service account.",
 						pool.NodeConfig.ServiceAccount,
 					)
+				} else {
+					results.AddPassed(&pool)
 				}
-
 			}
 		}
 		return

@@ -36,7 +36,10 @@ var CheckEnableNetworkPolicy = rules.Register(
 					"Cluster does not have a network policy enabled.",
 					cluster.NetworkPolicy.Enabled,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
+
 		}
 		return
 	},

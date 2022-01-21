@@ -36,7 +36,10 @@ var CheckEnablePrivateCluster = rules.Register(
 					"Cluster does not have private nodes.",
 					cluster.PrivateCluster.EnablePrivateNodes,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
+
 		}
 		return
 	},

@@ -36,7 +36,10 @@ var CheckEnableMasterNetworks = rules.Register(
 					"Cluster does not have master authorized networks enabled.",
 					cluster.MasterAuthorizedNetworks.Enabled,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
+
 		}
 		return
 	},

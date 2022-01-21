@@ -44,7 +44,10 @@ The policies you define should be specific to the needs of your application`,
 					"Cluster pod security policy is not enforced.",
 					cluster.PodSecurityPolicy.Enabled,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
+
 		}
 		return
 	},

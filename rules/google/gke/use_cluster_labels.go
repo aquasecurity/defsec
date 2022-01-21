@@ -36,6 +36,8 @@ var CheckUseClusterLabels = rules.Register(
 					"Cluster does not use GCE resource labels.",
 					cluster.ResourceLabels,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
 		}
 		return

@@ -38,7 +38,10 @@ var CheckNoPublicControlPlane = rules.Register(
 						"Cluster exposes control plane to the public internet.",
 						block,
 					)
+				} else {
+					results.AddPassed(&cluster)
 				}
+
 			}
 		}
 		return

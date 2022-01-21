@@ -32,14 +32,17 @@ The attribute should be set to <code>SECURE</code> to use metadata concealment, 
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, cluster := range s.Google.GKE.Clusters {
-			if cluster.IsUnmanaged() {
+			if cluster.IsManaged() {
 				metadata := cluster.NodeConfig.WorkloadMetadataConfig.NodeMetadata
 				if metadata.EqualTo("UNSPECIFIED") || metadata.EqualTo("EXPOSE") {
 					results.Add(
 						"Cluster exposes node metadata of pools by default.",
 						metadata,
 					)
+				} else {
+					results.AddPassed(&cluster)
 				}
+
 			}
 			for _, pool := range cluster.NodePools {
 				metadata := pool.NodeConfig.WorkloadMetadataConfig.NodeMetadata
@@ -48,7 +51,10 @@ The attribute should be set to <code>SECURE</code> to use metadata concealment, 
 						"Node pool exposes node metadata.",
 						metadata,
 					)
+				} else {
+					results.AddPassed(&pool)
 				}
+
 			}
 		}
 		return

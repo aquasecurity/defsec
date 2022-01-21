@@ -40,7 +40,10 @@ Shielded GKE Nodes provide strong, verifiable node identity and integrity to inc
 					"Cluster has shielded nodes disabled.",
 					cluster.EnableShieldedNodes,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
+
 		}
 		return
 	},

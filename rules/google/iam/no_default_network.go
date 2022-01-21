@@ -37,6 +37,8 @@ var CheckNoDefaultNetwork = rules.Register(
 					"Project has automatic network creation enabled.",
 					project.AutoCreateNetwork,
 				)
+			} else {
+				results.AddPassed(project)
 			}
 		}
 		return

@@ -36,7 +36,10 @@ var CheckEnableStackdriverLogging = rules.Register(
 					"Cluster does not use the logging.googleapis.com/kubernetes StackDriver logging service.",
 					cluster.LoggingService,
 				)
+			} else {
+				results.AddPassed(&cluster)
 			}
+
 		}
 		return
 	},
