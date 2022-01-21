@@ -34,7 +34,7 @@ var CheckUseSecureTlsPolicy = rules.Register(
 					service.Site.MinimumTLSVersion,
 				)
 			} else {
-
+				results.AddPassed(&service)
 			}
 		}
 		return

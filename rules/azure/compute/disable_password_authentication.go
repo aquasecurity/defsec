@@ -18,13 +18,13 @@ var CheckDisablePasswordAuthentication = rules.Register(
 		Resolution:  "Use ssh authentication for virtual machines",
 		Explanation: `Access to virtual machines should be authenticated using SSH keys. Removing the option of password authentication enforces more secure methods while removing the risks inherent with passwords.`,
 		Links:       []string{},
-		Terraform:   &rules.EngineMetadata{
-            GoodExamples:        terraformDisablePasswordAuthenticationGoodExamples,
-            BadExamples:         terraformDisablePasswordAuthenticationBadExamples,
-            Links:               terraformDisablePasswordAuthenticationLinks,
-            RemediationMarkdown: terraformDisablePasswordAuthenticationRemediationMarkdown,
-        },
-        Severity:    severity.High,
+		Terraform: &rules.EngineMetadata{
+			GoodExamples:        terraformDisablePasswordAuthenticationGoodExamples,
+			BadExamples:         terraformDisablePasswordAuthenticationBadExamples,
+			Links:               terraformDisablePasswordAuthenticationLinks,
+			RemediationMarkdown: terraformDisablePasswordAuthenticationRemediationMarkdown,
+		},
+		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
 		for _, vm := range s.Azure.Compute.LinuxVirtualMachines {
@@ -33,6 +33,8 @@ var CheckDisablePasswordAuthentication = rules.Register(
 					"Linux virtual machine allows password authentication.",
 					vm.OSProfileLinuxConfig.DisablePasswordAuthentication,
 				)
+			} else {
+				results.AddPassed(&vm)
 			}
 		}
 		return
