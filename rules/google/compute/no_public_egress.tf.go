@@ -3,6 +3,7 @@ package compute
 var terraformNoPublicEgressGoodExamples = []string{
 	`
  resource "google_compute_firewall" "good_example" {
+  direction = "EGRESS"
   allow {
     protocol = "icmp"
   }
@@ -13,6 +14,7 @@ var terraformNoPublicEgressGoodExamples = []string{
 var terraformNoPublicEgressBadExamples = []string{
 	`
 resource "google_compute_firewall" "bad_example" {
+  direction = "EGRESS"
   allow {
     protocol = "icmp"
   }
