@@ -66,7 +66,7 @@ func (m *Metadata) IsManaged() bool {
 
 func (m *Metadata) IsUnmanaged() bool {
 	if m == nil {
-		return false
+		return true
 	}
 	return !m.isManaged
 }
