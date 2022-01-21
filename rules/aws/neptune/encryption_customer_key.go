@@ -12,7 +12,7 @@ var CheckEncryptionCustomerKey = rules.Register(
 		AVDID:       "AVD-AWS-0128",
 		Provider:    provider.AWSProvider,
 		Service:     "neptune",
-		ShortCode:   "enable-storage-encryption",
+		ShortCode:   "encryption-customer-key",
 		Summary:     "Neptune encryption should use Customer Managed Keys",
 		Impact:      "Using AWS managed keys does not allow for fine grained control",
 		Resolution:  "Enable encryption using customer managed keys",
