@@ -5,24 +5,52 @@ import (
 
 	"github.com/aquasecurity/defsec/provider/google/bigquery"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    bigquery.BigQuery
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    bigquery.BigQuery{},
+			name: "positive result",
+			input: bigquery.BigQuery{
+				Datasets: []bigquery.Dataset{
+					{
+						Metadata: types.NewTestMetadata(),
+						AccessGrants: []bigquery.AccessGrant{
+							{
+								SpecialGroup: types.String(
+									bigquery.SpecialGroupAllAuthenticatedUsers,
+									types.NewTestMetadata(),
+								),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    bigquery.BigQuery{},
+			name: "negative result",
+			input: bigquery.BigQuery{
+				Datasets: []bigquery.Dataset{
+					{
+						Metadata: types.NewTestMetadata(),
+						AccessGrants: []bigquery.AccessGrant{
+							{
+								SpecialGroup: types.String(
+									"anotherGroup",
+									types.NewTestMetadata(),
+								),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
