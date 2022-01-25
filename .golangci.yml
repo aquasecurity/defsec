@@ -21,6 +21,7 @@ linters:
     - exportloopref
     - goimports
     - gocritic
+    - gosec
 
 linters-settings: 
   cyclop:
@@ -31,10 +32,7 @@ linters-settings:
 
 issues:
   exclude-rules:
-    - path: internal/app/tfsec/funcs/
+    - path: rules/
       linters:
-        - cyclop
-        - errorlint
-        - gocritic
         - gosec
 

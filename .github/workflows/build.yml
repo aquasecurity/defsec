@@ -20,6 +20,4 @@ jobs:
       run: make test
       shell: bash
 
-    - name: Code Quality
-      run: make quality
 
