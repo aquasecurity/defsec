@@ -4,7 +4,8 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/aws/msk"
-	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/rules"
+        "github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -33,7 +34,7 @@ func TestCheckEnableLogging(t *testing.T) {
 			results := CheckEnableLogging.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckEnableLogging.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableLogging.Rule().LongID() {
 					found = true
 				}
 			}

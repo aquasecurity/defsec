@@ -4,7 +4,8 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/google/compute"
-	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/rules"
+        "github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -33,7 +34,7 @@ func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
 			results := CheckInstancesDoNotHavePublicIPs.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckInstancesDoNotHavePublicIPs.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckInstancesDoNotHavePublicIPs.Rule().LongID() {
 					found = true
 				}
 			}
