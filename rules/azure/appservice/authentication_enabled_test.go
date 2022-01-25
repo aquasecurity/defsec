@@ -1,39 +1,39 @@
-package compute
+package appservice
 
 import (
     "testing"
 
-    "github.com/aquasecurity/defsec/provider/google/compute"
+    "github.com/aquasecurity/defsec/provider/azure/appservice"
     "github.com/aquasecurity/defsec/state"
     "github.com/stretchr/testify/assert"
 )
 
-func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
+func TestCheckAuthenticationEnabled(t *testing.T) {
     t.SkipNow()
     tests := []struct{
         name string
-        input compute.Compute
+        input appservice.AppService
         expected bool
     }{
         {
             name: "positive result",
-            input: compute.Compute{},
+            input: appservice.AppService{},
             expected: true,
         },
         {
             name: "negative result",
-            input: compute.Compute{},
+            input: appservice.AppService{},
             expected: false,
         },
     }
     for _, test := range tests {
         t.Run(test.name, func(t *testing.T){
             var testState state.State
-            testState.Google.Compute = test.input
-            results := CheckInstancesDoNotHavePublicIPs.Evaluate(&testState)
+            testState.Azure.AppService = test.input
+            results := CheckAuthenticationEnabled.Evaluate(&testState)
             var found bool
             for _, result := range results {
-                if result.Rule().LongID() == CheckInstancesDoNotHavePublicIPs.Rule().LongID() {
+                if result.Rule().LongID() == CheckAuthenticationEnabled.Rule().LongID() {
                     found = true
                 }
             }

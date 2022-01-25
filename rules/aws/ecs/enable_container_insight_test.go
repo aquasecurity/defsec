@@ -1,39 +1,39 @@
-package compute
+package ecs
 
 import (
     "testing"
 
-    "github.com/aquasecurity/defsec/provider/google/compute"
+    "github.com/aquasecurity/defsec/provider/aws/ecs"
     "github.com/aquasecurity/defsec/state"
     "github.com/stretchr/testify/assert"
 )
 
-func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
+func TestCheckEnableContainerInsight(t *testing.T) {
     t.SkipNow()
     tests := []struct{
         name string
-        input compute.Compute
+        input ecs.ECS
         expected bool
     }{
         {
             name: "positive result",
-            input: compute.Compute{},
+            input: ecs.ECS{},
             expected: true,
         },
         {
             name: "negative result",
-            input: compute.Compute{},
+            input: ecs.ECS{},
             expected: false,
         },
     }
     for _, test := range tests {
         t.Run(test.name, func(t *testing.T){
             var testState state.State
-            testState.Google.Compute = test.input
-            results := CheckInstancesDoNotHavePublicIPs.Evaluate(&testState)
+            testState.AWS.ECS = test.input
+            results := CheckEnableContainerInsight.Evaluate(&testState)
             var found bool
             for _, result := range results {
-                if result.Rule().LongID() == CheckInstancesDoNotHavePublicIPs.Rule().LongID() {
+                if result.Rule().LongID() == CheckEnableContainerInsight.Rule().LongID() {
                     found = true
                 }
             }
