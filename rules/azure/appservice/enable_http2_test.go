@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/azure/appservice"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckEnableHttp2(t *testing.T) {
 			results := CheckEnableHttp2.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckEnableHttp2.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableHttp2.Rule().LongID() {
 					found = true
 				}
 			}

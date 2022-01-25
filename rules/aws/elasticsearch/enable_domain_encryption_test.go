@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/aws/elasticsearch"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckEnableDomainEncryption(t *testing.T) {
 			results := CheckEnableDomainEncryption.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckEnableDomainEncryption.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableDomainEncryption.Rule().LongID() {
 					found = true
 				}
 			}

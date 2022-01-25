@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/azure/appservice"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckRequireClientCert(t *testing.T) {
 			results := CheckRequireClientCert.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckRequireClientCert.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckRequireClientCert.Rule().LongID() {
 					found = true
 				}
 			}

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckRequireUppercaseInPasswords(t *testing.T) {
 			results := CheckRequireUppercaseInPasswords.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckRequireUppercaseInPasswords.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckRequireUppercaseInPasswords.Rule().LongID() {
 					found = true
 				}
 			}

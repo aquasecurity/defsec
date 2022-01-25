@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/azure/database"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckSecureTlsPolicy(t *testing.T) {
 			results := CheckSecureTlsPolicy.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckSecureTlsPolicy.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckSecureTlsPolicy.Rule().LongID() {
 					found = true
 				}
 			}

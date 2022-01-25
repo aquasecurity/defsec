@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/aws/s3"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckPublicPoliciesAreBlocked(t *testing.T) {
 			results := CheckPublicPoliciesAreBlocked.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckPublicPoliciesAreBlocked.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckPublicPoliciesAreBlocked.Rule().LongID() {
 					found = true
 				}
 			}

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/azure/container"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckUseRbacPermissions(t *testing.T) {
 			results := CheckUseRbacPermissions.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckUseRbacPermissions.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckUseRbacPermissions.Rule().LongID() {
 					found = true
 				}
 			}

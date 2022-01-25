@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/azure/container"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckConfiguredNetworkPolicy(t *testing.T) {
 			results := CheckConfiguredNetworkPolicy.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckConfiguredNetworkPolicy.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckConfiguredNetworkPolicy.Rule().LongID() {
 					found = true
 				}
 			}

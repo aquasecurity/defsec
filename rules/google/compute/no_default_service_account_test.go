@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/google/compute"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckNoDefaultServiceAccount(t *testing.T) {
 			results := CheckNoDefaultServiceAccount.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckNoDefaultServiceAccount.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckNoDefaultServiceAccount.Rule().LongID() {
 					found = true
 				}
 			}

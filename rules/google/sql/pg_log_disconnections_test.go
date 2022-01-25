@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/google/sql"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckPgLogDisconnections(t *testing.T) {
 			results := CheckPgLogDisconnections.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckPgLogDisconnections.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckPgLogDisconnections.Rule().LongID() {
 					found = true
 				}
 			}

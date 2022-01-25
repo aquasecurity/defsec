@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/google/gke"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckMetadataEndpointsDisabled(t *testing.T) {
 			results := CheckMetadataEndpointsDisabled.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckMetadataEndpointsDisabled.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckMetadataEndpointsDisabled.Rule().LongID() {
 					found = true
 				}
 			}

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/aws/cloudwatch"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckLogGroupCustomerKey(t *testing.T) {
 			results := CheckLogGroupCustomerKey.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckLogGroupCustomerKey.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckLogGroupCustomerKey.Rule().LongID() {
 					found = true
 				}
 			}

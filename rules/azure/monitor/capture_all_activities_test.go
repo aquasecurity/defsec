@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/azure/monitor"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
@@ -33,7 +34,7 @@ func TestCheckCaptureAllActivities(t *testing.T) {
 			results := CheckCaptureAllActivities.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckCaptureAllActivities.Rule().LongID() {
+				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckCaptureAllActivities.Rule().LongID() {
 					found = true
 				}
 			}
