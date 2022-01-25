@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/provider/aws/documentdb"
 	"github.com/aquasecurity/defsec/rules"
-        "github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
 
