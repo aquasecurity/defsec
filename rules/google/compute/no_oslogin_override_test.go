@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
+func TestCheckNoOsloginOverride(t *testing.T) {
 	t.SkipNow()
 	tests := []struct {
 		name     string
@@ -30,10 +30,10 @@ func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
 			testState.Google.Compute = test.input
-			results := CheckInstancesDoNotHavePublicIPs.Evaluate(&testState)
+			results := CheckNoOsloginOverride.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckInstancesDoNotHavePublicIPs.Rule().LongID() {
+				if result.Rule().LongID() == CheckNoOsloginOverride.Rule().LongID() {
 					found = true
 				}
 			}

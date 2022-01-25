@@ -1,39 +1,39 @@
-package compute
+package cloudwatch
 
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/provider/google/compute"
+	"github.com/aquasecurity/defsec/provider/aws/cloudwatch"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
+func TestCheckLogGroupCustomerKey(t *testing.T) {
 	t.SkipNow()
 	tests := []struct {
 		name     string
-		input    compute.Compute
+		input    cloudwatch.CloudWatch
 		expected bool
 	}{
 		{
 			name:     "positive result",
-			input:    compute.Compute{},
+			input:    cloudwatch.CloudWatch{},
 			expected: true,
 		},
 		{
 			name:     "negative result",
-			input:    compute.Compute{},
+			input:    cloudwatch.CloudWatch{},
 			expected: false,
 		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
-			testState.Google.Compute = test.input
-			results := CheckInstancesDoNotHavePublicIPs.Evaluate(&testState)
+			testState.AWS.CloudWatch = test.input
+			results := CheckLogGroupCustomerKey.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckInstancesDoNotHavePublicIPs.Rule().LongID() {
+				if result.Rule().LongID() == CheckLogGroupCustomerKey.Rule().LongID() {
 					found = true
 				}
 			}

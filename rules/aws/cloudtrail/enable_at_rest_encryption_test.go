@@ -1,39 +1,39 @@
-package compute
+package cloudtrail
 
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/provider/google/compute"
+	"github.com/aquasecurity/defsec/provider/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
+func TestCheckEnableAtRestEncryption(t *testing.T) {
 	t.SkipNow()
 	tests := []struct {
 		name     string
-		input    compute.Compute
+		input    cloudtrail.CloudTrail
 		expected bool
 	}{
 		{
 			name:     "positive result",
-			input:    compute.Compute{},
+			input:    cloudtrail.CloudTrail{},
 			expected: true,
 		},
 		{
 			name:     "negative result",
-			input:    compute.Compute{},
+			input:    cloudtrail.CloudTrail{},
 			expected: false,
 		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
-			testState.Google.Compute = test.input
-			results := CheckInstancesDoNotHavePublicIPs.Evaluate(&testState)
+			testState.AWS.CloudTrail = test.input
+			results := CheckEnableAtRestEncryption.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckInstancesDoNotHavePublicIPs.Rule().LongID() {
+				if result.Rule().LongID() == CheckEnableAtRestEncryption.Rule().LongID() {
 					found = true
 				}
 			}

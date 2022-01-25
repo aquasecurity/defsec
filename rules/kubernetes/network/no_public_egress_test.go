@@ -1,39 +1,39 @@
-package compute
+package network
 
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/provider/google/compute"
+	"github.com/aquasecurity/defsec/provider/kubernetes"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
+func TestCheckNoPublicEgress(t *testing.T) {
 	t.SkipNow()
 	tests := []struct {
 		name     string
-		input    compute.Compute
+		input    []kubernetes.NetworkPolicy
 		expected bool
 	}{
 		{
 			name:     "positive result",
-			input:    compute.Compute{},
+			input:    []kubernetes.NetworkPolicy{},
 			expected: true,
 		},
 		{
 			name:     "negative result",
-			input:    compute.Compute{},
+			input:    []kubernetes.NetworkPolicy{},
 			expected: false,
 		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
-			testState.Google.Compute = test.input
-			results := CheckInstancesDoNotHavePublicIPs.Evaluate(&testState)
+			testState.Kubernetes.NetworkPolicies = test.input
+			results := CheckNoPublicEgress.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Rule().LongID() == CheckInstancesDoNotHavePublicIPs.Rule().LongID() {
+				if result.Rule().LongID() == CheckNoPublicEgress.Rule().LongID() {
 					found = true
 				}
 			}
