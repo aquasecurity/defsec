@@ -58,7 +58,7 @@ func outputDefault(b configurableFormatter, results []rules.Result) error {
 
 const lineNoWidth = 7
 
-func printResult(b configurableFormatter, group *GroupedResult) {
+func printResult(b configurableFormatter, group GroupedResult) {
 
 	first := group.Results()[0]
 

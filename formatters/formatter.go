@@ -22,7 +22,7 @@ type configurableFormatter interface {
 	PrintMetrics()
 	BaseDir() string
 	DebugEnabled() bool
-	GroupResults([]rules.Result) ([]*GroupedResult, error)
+	GroupResults([]rules.Result) ([]GroupedResult, error)
 }
 
 type base struct {
@@ -107,23 +107,23 @@ func key(result rules.Result) string {
 	return fmt.Sprintf("%s:%s:%d", result.Range(), result.Rule().AVDID, result.Status())
 }
 
-func (b *base) GroupResults(results []rules.Result) ([]*GroupedResult, error) {
+func (b *base) GroupResults(results []rules.Result) ([]GroupedResult, error) {
 
 	// sort by key first
 	sort.Slice(results, func(i, j int) bool {
 		return key(results[i]) < key(results[j])
 	})
 
-	var output []*GroupedResult
+	var output []GroupedResult
 	var lastKey string
-	var group *GroupedResult
+	var group GroupedResult
 	for i, result := range results {
 		currentKey := key(result)
-		if !b.enableGrouping || lastKey != currentKey || group == nil {
-			if group != nil && group.Len() > 0 {
+		if !b.enableGrouping || lastKey != currentKey {
+			if group.Len() > 0 {
 				output = append(output, group)
 			}
-			group = &GroupedResult{}
+			group = GroupedResult{}
 		}
 		if err := group.Add(i+1, result); err != nil {
 			return nil, err
