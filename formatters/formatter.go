@@ -118,6 +118,7 @@ func (b *base) GroupResults(results []rules.Result) ([]GroupedResult, error) {
 	var lastKey string
 	var group GroupedResult
 	for i, result := range results {
+		fmt.Printf("Meta: %s\n", result.Metadata())
 		currentKey := key(result)
 		if !b.enableGrouping || lastKey != currentKey {
 			if group.Len() > 0 {
@@ -161,7 +162,7 @@ func (g *GroupedResult) String() string {
 	if g.start == g.end {
 		return fmt.Sprintf("#%d", g.start)
 	}
-	return fmt.Sprintf("#%d -> %d", g.start, g.end)
+	return fmt.Sprintf("#%d-%d", g.start, g.end)
 }
 
 func (g *GroupedResult) Len() int {

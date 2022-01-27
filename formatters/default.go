@@ -76,14 +76,17 @@ func printResult(b configurableFormatter, group GroupedResult) {
 
 	w := b.Writer()
 
+	numPrefix := "Result"
 	var groupingInfo string
-	if group.Len() > 0 {
-		groupingInfo = fmt.Sprintf("(%d similar results grouped together)", group.Len())
+	if group.Len() > 1 {
+		numPrefix = "Results"
+		groupingInfo = fmt.Sprintf("(%d similar results)", group.Len())
 	}
 
 	tml.Fprintf(
 		w,
-		" <italic>%s</italic> %s <bold>%s</bold> <dim>%s</dim>\n",
+		"%s <italic>%s</italic> %s <bold>%s</bold> <dim>%s</dim>\n",
+		numPrefix,
 		group.String(),
 		severityFormatted,
 		first.Description(),
@@ -106,31 +109,34 @@ func printResult(b configurableFormatter, group GroupedResult) {
 		"<dim>%s\n",
 		strings.Repeat("─", width),
 	)
-	tml.Fprintf(
-		w,
-		" <italic>%s <dim>%s\n",
-		filename,
-		lineInfo,
-	)
 
-	tml.Fprintf(
-		w,
-		"<dim>%s%s%s</dim>\n",
-		strings.Repeat("─", lineNoWidth),
-		"┬",
-		strings.Repeat("─", width-lineNoWidth-1),
-	)
+	if first.Status() != rules.StatusPassed {
+		tml.Fprintf(
+			w,
+			" <italic>%s <dim>%s\n",
+			filename,
+			lineInfo,
+		)
 
-	if err := highlightCode(b, first); err != nil {
-		printCodeLine(w, -1, tml.Sprintf("<red><bold>Failed to render code:</bold> %s", err))
+		tml.Fprintf(
+			w,
+			"<dim>%s%s%s</dim>\n",
+			strings.Repeat("─", lineNoWidth),
+			"┬",
+			strings.Repeat("─", width-lineNoWidth-1),
+		)
+
+		if err := highlightCode(b, first); err != nil {
+			printCodeLine(w, -1, tml.Sprintf("<red><bold>Failed to render code:</bold> %s", err))
+		}
+
+		tml.Fprintf(
+			w,
+			"<dim>%s┴%s</dim>\n",
+			strings.Repeat("─", lineNoWidth),
+			strings.Repeat("─", width-lineNoWidth-1),
+		)
 	}
-
-	tml.Fprintf(
-		w,
-		"<dim>%s┴%s</dim>\n",
-		strings.Repeat("─", lineNoWidth),
-		strings.Repeat("─", width-lineNoWidth-1),
-	)
 
 	if group.Len() > 1 {
 		tml.Printf("  <dim>Individual Causes\n")
