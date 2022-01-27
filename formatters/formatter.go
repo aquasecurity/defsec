@@ -104,7 +104,7 @@ func (b *base) PrintMetrics() {
 }
 
 func key(result rules.Result) string {
-	return fmt.Sprintf("%s:%s:%s", result.Range(), result.Rule().AVDID, result.Status())
+	return fmt.Sprintf("%s:%s:%d", result.Range(), result.Rule().AVDID, result.Status())
 }
 
 func (b *base) GroupResults(results []rules.Result) ([]*GroupedResult, error) {
@@ -119,8 +119,8 @@ func (b *base) GroupResults(results []rules.Result) ([]*GroupedResult, error) {
 	var group *GroupedResult
 	for i, result := range results {
 		currentKey := key(result)
-		if !b.enableGrouping || lastKey != currentKey {
-			if group.Len() > 0 {
+		if !b.enableGrouping || lastKey != currentKey || group == nil {
+			if group != nil && group.Len() > 0 {
 				output = append(output, group)
 			}
 			group = &GroupedResult{}
