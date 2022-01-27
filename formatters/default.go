@@ -85,7 +85,7 @@ func printResult(b configurableFormatter, group GroupedResult) {
 
 	tml.Fprintf(
 		w,
-		"%s <italic>%s</italic> %s <bold>%s</bold> <dim>%s</dim>\n",
+		"<italic>%s %s</italic> %s <bold>%s</bold> <dim>%s</dim>\n",
 		numPrefix,
 		group.String(),
 		severityFormatted,
@@ -146,7 +146,7 @@ func printResult(b configurableFormatter, group GroupedResult) {
 			for metadata.Parent() != nil {
 				metadata = metadata.Parent()
 			}
-			tml.Printf("  <dim>- %s\n", metadata.String())
+			tml.Printf("  <dim>- %s (%s)\n", metadata.Range(), metadata.Reference())
 		}
 		tml.Fprintf(
 			w,
