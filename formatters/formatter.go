@@ -118,7 +118,6 @@ func (b *base) GroupResults(results []rules.Result) ([]GroupedResult, error) {
 	var lastKey string
 	var group GroupedResult
 	for i, result := range results {
-		fmt.Printf("Meta: %s\n", result.Metadata())
 		currentKey := key(result)
 		if !b.enableGrouping || lastKey != currentKey {
 			if group.Len() > 0 {

@@ -93,7 +93,7 @@ func printResult(b configurableFormatter, group GroupedResult) {
 		groupingInfo,
 	)
 
-	innerRange := first.Metadata().Range()
+	innerRange := first.Range()
 	lineInfo := fmt.Sprintf("Lines %d-%d", innerRange.GetStartLine(), innerRange.GetEndLine())
 	if !innerRange.IsMultiLine() {
 		lineInfo = fmt.Sprintf("Line %d", innerRange.GetStartLine())
@@ -141,7 +141,8 @@ func printResult(b configurableFormatter, group GroupedResult) {
 	if group.Len() > 1 {
 		tml.Printf("  <dim>Individual Causes\n")
 		for _, result := range group.Results() {
-			metadata := result.Metadata()
+			m := result.Metadata()
+			metadata := &m
 			for metadata.Parent() != nil {
 				metadata = metadata.Parent()
 			}
@@ -203,7 +204,8 @@ func highlightCode(b configurableFormatter, result rules.Result) error {
 	innerRange := result.Range()
 	outerRange := innerRange
 	if !innerRange.IsMultiLine() {
-		if parent := result.Metadata().Parent(); parent != nil {
+		metadata := result.Metadata()
+		if parent := metadata.Parent(); parent != nil {
 			outerRange = parent.Range()
 		}
 	}
