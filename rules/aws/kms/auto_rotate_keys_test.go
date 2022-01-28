@@ -6,24 +6,53 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/kms"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAutoRotateKeys(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    kms.KMS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    kms.KMS{},
+			name: "ENCRYPT_DECRYPT KMS Key with auto-rotation disabled",
+			input: kms.KMS{
+				Metadata: types.NewTestMetadata(),
+				Keys: []kms.Key{
+					{
+						Usage:           types.String("ENCRYPT_DECRYPT", types.NewTestMetadata()),
+						RotationEnabled: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    kms.KMS{},
+			name: "ENCRYPT_DECRYPT KMS Key with auto-rotation enabled",
+			input: kms.KMS{
+				Metadata: types.NewTestMetadata(),
+				Keys: []kms.Key{
+					{
+						Usage:           types.String("ENCRYPT_DECRYPT", types.NewTestMetadata()),
+						RotationEnabled: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "SIGN_VERIFY KMS Key with auto-rotation disabled",
+			input: kms.KMS{
+				Metadata: types.NewTestMetadata(),
+				Keys: []kms.Key{
+					{
+						Usage:           types.String(kms.KeyUsageSignAndVerify, types.NewTestMetadata()),
+						RotationEnabled: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
