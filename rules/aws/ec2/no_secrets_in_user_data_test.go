@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ec2"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoSecretsInUserData(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ec2.EC2
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ec2.EC2{},
+			name: "positive result",
+			input: ec2.EC2{
+				Metadata: types.NewTestMetadata(),
+				Instances: []ec2.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						UserData: types.String(`<<EOF
+						export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+						export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+						export AWS_DEFAULT_REGION=us-west-2
+						EOF`, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    ec2.EC2{},
+			name: "negative result",
+			input: ec2.EC2{
+				Metadata: types.NewTestMetadata(),
+				Instances: []ec2.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						UserData: types.String(`<<EOF
+						export GREETING=hello
+						EOF`, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
