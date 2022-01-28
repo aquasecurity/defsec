@@ -1,10 +1,14 @@
 package autoscaling
 
-import "github.com/aquasecurity/defsec/types"
+import (
+	"github.com/aquasecurity/defsec/provider/aws/ec2"
+	"github.com/aquasecurity/defsec/types"
+)
 
 type Autoscaling struct {
 	types.Metadata
 	LaunchConfigurations []LaunchConfiguration
+	LaunchTemplates      []LaunchTemplate
 }
 
 type LaunchConfiguration struct {
@@ -14,6 +18,11 @@ type LaunchConfiguration struct {
 	RootBlockDevice   *BlockDevice
 	EBSBlockDevices   []BlockDevice
 	UserData          types.StringValue
+}
+
+type LaunchTemplate struct {
+	types.Metadata
+	ec2.Instance
 }
 
 type BlockDevice struct {
@@ -34,6 +43,14 @@ func (d *LaunchConfiguration) GetMetadata() *types.Metadata {
 }
 
 func (d *LaunchConfiguration) GetRawValue() interface{} {
+	return nil
+}
+
+func (d *LaunchTemplate) GetMetadata() *types.Metadata {
+	return &d.Metadata
+}
+
+func (d *LaunchTemplate) GetRawValue() interface{} {
 	return nil
 }
 
