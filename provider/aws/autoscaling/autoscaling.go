@@ -17,6 +17,7 @@ type LaunchConfiguration struct {
 	AssociatePublicIP types.BoolValue
 	RootBlockDevice   *BlockDevice
 	EBSBlockDevices   []BlockDevice
+	MetadataOptions   ec2.MetadataOptions
 	UserData          types.StringValue
 }
 
@@ -36,6 +37,14 @@ func (d *BlockDevice) GetMetadata() *types.Metadata {
 
 func (d *BlockDevice) GetRawValue() interface{} {
 	return nil
+}
+
+func (i *LaunchConfiguration) RequiresIMDSToken() bool {
+	return i.MetadataOptions.HttpTokens.EqualTo("required")
+}
+
+func (i *LaunchConfiguration) HasHTTPEndpointDisabled() bool {
+	return i.MetadataOptions.HttpEndpoint.EqualTo("disabled")
 }
 
 func (d *LaunchConfiguration) GetMetadata() *types.Metadata {

@@ -41,10 +41,20 @@ To fully protect IMDS you need to enable session tokens by using <code>metadata_
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
+		for _, configuration := range s.AWS.Autoscaling.LaunchConfigurations {
+			if !configuration.RequiresIMDSToken() && !configuration.HasHTTPEndpointDisabled() {
+				results.Add(
+					"Launch configuration does not require IMDS access to require a token",
+					configuration.MetadataOptions.HttpTokens,
+				)
+			} else {
+				results.AddPassed(&configuration)
+			}
+		}
 		for _, instance := range s.AWS.Autoscaling.LaunchTemplates {
 			if !instance.RequiresIMDSToken() && !instance.HasHTTPEndpointDisabled() {
 				results.Add(
-					"Instance does not require IMDS access to require a token",
+					"Launch template does not require IMDS access to require a token",
 					instance.MetadataOptions.HttpTokens,
 				)
 			} else {
