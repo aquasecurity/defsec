@@ -6,11 +6,13 @@ resource "aws_iam_instance_profile" "good_example" {
   // ...
 }
 
-resource "aws_instance" "good_example" {
-  ami           = "ami-12345667"
+resource "aws_launch_template" "good_example" {
+  image_id           = "ami-12345667"
   instance_type = "t2.small"
   
-  iam_instance_profile = aws_iam_instance_profile.good_profile.arn
+  iam_instance_profile {
+    aws_iam_instance_profile.good_profile.arn
+  }
   
   user_data = <<EOF
   export GREETING=hello

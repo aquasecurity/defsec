@@ -6,12 +6,13 @@ var terraformNoSecretsInUserDataGoodExamples = []string{
 		 // ...
  }
  
- resource "aws_instance" "good_example" {
-	 ami           = "ami-12345667"
+ resource "aws_launch_template" "good_example" {
+	 image_id      = "ami-12345667"
 	 instance_type = "t2.small"
  
-	 iam_instance_profile = aws_iam_instance_profile.good_profile.arn
- 
+	 iam_instance_profile {
+		 aws_iam_instance_profile.good_profile.arn
+	 }
 	 user_data = <<EOF
 	 export GREETING=hello
  EOF
@@ -21,9 +22,9 @@ var terraformNoSecretsInUserDataGoodExamples = []string{
 
 var terraformNoSecretsInUserDataBadExamples = []string{
 	`
- resource "aws_instance" "bad_example" {
+ resource "aws_launch_template" "bad_example" {
  
-	 ami           = "ami-12345667"
+	 image_id      = "ami-12345667"
 	 instance_type = "t2.small"
  
 	 user_data = <<EOF

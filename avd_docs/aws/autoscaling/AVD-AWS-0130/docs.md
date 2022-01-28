@@ -1,5 +1,5 @@
 
-### aws_instance should activate session tokens for Instance Metadata Service.
+### AW instances should activate session tokens for Instance Metadata Service.
 
 
 IMDS v2 (Instance Metadata Service) introduced session authentication tokens which improve security when talking to IMDS.

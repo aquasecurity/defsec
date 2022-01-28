@@ -36,7 +36,7 @@ To fully protect IMDS you need to enable session tokens by using <code>metadata_
 			GoodExamples:        cloudformationEnforceHttpTokenImdsGoodExamples,
 			BadExamples:         cloudformationEnforceHttpTokenImdsBadExamples,
 			Links:               cloudformationEnforceHttpTokenImdsLinks,
-			RemediationMarkdown: terraformEnforceHttpTokenImdsRemediationMarkdown,
+			RemediationMarkdown: cloudformationEnforceHttpTokenImdsRemediationMarkdown,
 		},
 		Severity: severity.High,
 	},
