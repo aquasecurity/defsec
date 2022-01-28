@@ -6,24 +6,65 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/eks"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEncryptSecrets(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    eks.EKS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    eks.EKS{},
+			name: "EKS Cluster with no secrets in the resources attribute",
+			input: eks.EKS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []eks.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: eks.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Secrets:  types.Bool(false, types.NewTestMetadata()),
+							KMSKeyID: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    eks.EKS{},
+			name: "EKS Cluster with secrets in the resources attribute but no KMS key",
+			input: eks.EKS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []eks.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: eks.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Secrets:  types.Bool(true, types.NewTestMetadata()),
+							KMSKeyID: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "EKS Cluster with secrets in the resources attribute and a KMS key",
+			input: eks.EKS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []eks.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: eks.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Secrets:  types.Bool(true, types.NewTestMetadata()),
+							KMSKeyID: types.String("some-arn", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

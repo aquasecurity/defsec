@@ -6,24 +6,71 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/eks"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableControlPlaneLogging(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    eks.EKS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    eks.EKS{},
+			name: "EKS cluster with all cluster logging disabled",
+			input: eks.EKS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []eks.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Logging: eks.Logging{
+							API:               types.Bool(false, types.NewTestMetadata()),
+							Audit:             types.Bool(false, types.NewTestMetadata()),
+							Authenticator:     types.Bool(false, types.NewTestMetadata()),
+							ControllerManager: types.Bool(false, types.NewTestMetadata()),
+							Scheduler:         types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    eks.EKS{},
+			name: "EKS cluster with only some cluster logging enabled",
+			input: eks.EKS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []eks.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Logging: eks.Logging{
+							API:               types.Bool(false, types.NewTestMetadata()),
+							Audit:             types.Bool(true, types.NewTestMetadata()),
+							Authenticator:     types.Bool(false, types.NewTestMetadata()),
+							ControllerManager: types.Bool(true, types.NewTestMetadata()),
+							Scheduler:         types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "EKS cluster with all cluster logging enabled",
+			input: eks.EKS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []eks.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Logging: eks.Logging{
+							API:               types.Bool(true, types.NewTestMetadata()),
+							Audit:             types.Bool(true, types.NewTestMetadata()),
+							Authenticator:     types.Bool(true, types.NewTestMetadata()),
+							ControllerManager: types.Bool(true, types.NewTestMetadata()),
+							Scheduler:         types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

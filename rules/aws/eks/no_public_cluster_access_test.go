@@ -6,24 +6,38 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/eks"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicClusterAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    eks.EKS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    eks.EKS{},
+			name: "EKS Cluster with public access enabled",
+			input: eks.EKS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []eks.Cluster{
+					{
+						PublicAccessEnabled: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    eks.EKS{},
+			name: "EKS Cluster with public access disabled",
+			input: eks.EKS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []eks.Cluster{
+					{
+						PublicAccessEnabled: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
