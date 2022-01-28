@@ -12,5 +12,3 @@ Defining DefSec rules in this central repository means they can be used from var
 There's a detailed walkthrough for creating a new check in the [tfsec contributing guide](https://github.com/aquasecurity/tfsec/tree/master/CONTRIBUTING.md).
 
 Please feel free to raise issues/discussions for anything else, or [join us on Slack](https://slack.aquasec.com/)!.
-
-
