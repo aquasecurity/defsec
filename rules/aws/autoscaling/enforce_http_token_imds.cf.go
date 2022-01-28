@@ -3,14 +3,14 @@ package autoscaling
 var cloudformationEnforceHttpTokenImdsGoodExamples = []string{
 	`---
 Resources:
-  GoodExample:
+  InstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       InstanceProfileName: MyIamInstanceProfile
       Path: "/"
       Roles:
       - MyAdminRole
-  MyLaunchTemplate:
+  GoodExample:
     Type: AWS::EC2::LaunchTemplate
     Properties:
       LaunchTemplateName: MyLaunchTemplate
@@ -34,14 +34,14 @@ Resources:
 var cloudformationEnforceHttpTokenImdsBadExamples = []string{
 	`---
 Resources:
+  InstanceProfile:
+	Type: AWS::IAM::InstanceProfile
+	Properties:
+		InstanceProfileName: MyIamInstanceProfile
+		Path: "/"
+		Roles:
+		- MyAdminRole
   BadExample:
-  Type: AWS::IAM::InstanceProfile
-  Properties:
-    InstanceProfileName: MyIamInstanceProfile
-    Path: "/"
-    Roles:
-    - MyAdminRole
-  MyLaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
     Properties:
       LaunchTemplateName: MyLaunchTemplate
