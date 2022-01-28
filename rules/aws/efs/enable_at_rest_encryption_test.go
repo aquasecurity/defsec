@@ -6,24 +6,38 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/efs"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableAtRestEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    efs.EFS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    efs.EFS{},
+			name: "positive result",
+			input: efs.EFS{
+				Metadata: types.NewTestMetadata(),
+				FileSystems: []efs.FileSystem{
+					{
+						Metadata:  types.NewTestMetadata(),
+						Encrypted: types.Bool(false, types.NewTestMetadata()),
+					}},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    efs.EFS{},
+			name: "negative result",
+			input: efs.EFS{
+				Metadata: types.NewTestMetadata(),
+				FileSystems: []efs.FileSystem{
+					{
+						Metadata:  types.NewTestMetadata(),
+						Encrypted: types.Bool(true, types.NewTestMetadata()),
+					}},
+			},
 			expected: false,
 		},
 	}
