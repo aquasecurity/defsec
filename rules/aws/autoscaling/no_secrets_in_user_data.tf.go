@@ -11,12 +11,12 @@ var terraformNoSecretsInUserDataGoodExamples = []string{
 	 instance_type = "t2.small"
  
 	 iam_instance_profile {
-		 aws_iam_instance_profile.good_profile.arn
+		 name = aws_iam_instance_profile.good_profile.arn
 	 }
 	 user_data = <<EOF
 	 export GREETING=hello
- EOF
- }
+EOF
+}
  `,
 }
 
@@ -31,8 +31,8 @@ var terraformNoSecretsInUserDataBadExamples = []string{
  export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
  export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
  export AWS_DEFAULT_REGION=us-west-2 
- EOF
- }
+EOF
+}
  `,
 }
 

@@ -11,12 +11,12 @@ resource "aws_launch_template" "good_example" {
   instance_type = "t2.small"
   
   iam_instance_profile {
-    aws_iam_instance_profile.good_profile.arn
+    name = aws_iam_instance_profile.good_profile.arn
   }
   
   user_data = <<EOF
   export GREETING=hello
-  EOF
+EOF
 }
 ```
 
