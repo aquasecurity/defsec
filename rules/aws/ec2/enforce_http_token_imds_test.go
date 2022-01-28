@@ -6,24 +6,48 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ec2"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckIMDSAccessRequiresToken(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ec2.EC2
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ec2.EC2{},
+			name: "positive result",
+			input: ec2.EC2{
+				Metadata: types.NewTestMetadata(),
+				Instances: []ec2.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						MetadataOptions: ec2.MetadataOptions{
+							Metadata:     types.NewTestMetadata(),
+							HttpTokens:   types.String("optional", types.NewTestMetadata()),
+							HttpEndpoint: types.String("enabled", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    ec2.EC2{},
+			name: "negative result",
+			input: ec2.EC2{
+				Metadata: types.NewTestMetadata(),
+				Instances: []ec2.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						MetadataOptions: ec2.MetadataOptions{
+							Metadata:     types.NewTestMetadata(),
+							HttpTokens:   types.String("required", types.NewTestMetadata()),
+							HttpEndpoint: types.String("disabled", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
