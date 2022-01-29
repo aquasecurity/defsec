@@ -6,24 +6,63 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/sqs"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoWildcardsInPolicyDocuments(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    sqs.SQS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    sqs.SQS{},
+			name: "AWS SQS policy document with wildcard action statement",
+			input: sqs.SQS{
+				Metadata: types.NewTestMetadata(),
+				Queues: []sqs.Queue{
+					{
+						Metadata: types.NewTestMetadata(),
+						Policies: []types.StringValue{
+							types.String(`
+							{
+							  "Statement": [
+								{
+								  "Effect": "Allow",
+								  "Action": "sqs:*"
+								}
+							  ]
+							}
+							`, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    sqs.SQS{},
+			name: "AWS SQS policy document with action statement list",
+			input: sqs.SQS{
+				Metadata: types.NewTestMetadata(),
+				Queues: []sqs.Queue{
+					{
+						Metadata: types.NewTestMetadata(),
+						Policies: []types.StringValue{
+							types.String(`
+							{
+							  "Statement": [
+								{
+								  "Effect": "Allow",
+								  "Principal": "*",
+								  "Action": ["sqs:SendMessage", "sqs:ReceiveMessage"]
+								}
+							  ]
+							}
+							`, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

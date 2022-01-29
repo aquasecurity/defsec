@@ -6,24 +6,62 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/sqs"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableQueueEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    sqs.SQS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    sqs.SQS{},
+			name: "SQS Queue unencrypted",
+			input: sqs.SQS{
+				Metadata: types.NewTestMetadata(),
+				Queues: []sqs.Queue{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: sqs.Encryption{
+							Metadata: types.NewTestMetadata(),
+							KMSKeyID: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    sqs.SQS{},
+			name: "SQS Queue encrypted with default key",
+			input: sqs.SQS{
+				Metadata: types.NewTestMetadata(),
+				Queues: []sqs.Queue{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: sqs.Encryption{
+							Metadata: types.NewTestMetadata(),
+							KMSKeyID: types.String("alias/aws/sqs", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "SQS Queue encrypted with proper key",
+			input: sqs.SQS{
+				Metadata: types.NewTestMetadata(),
+				Queues: []sqs.Queue{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: sqs.Encryption{
+							Metadata: types.NewTestMetadata(),
+							KMSKeyID: types.String("some-ok-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
