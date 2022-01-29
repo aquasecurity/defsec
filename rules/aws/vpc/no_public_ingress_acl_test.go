@@ -6,24 +6,58 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/vpc"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicIngress(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    vpc.VPC
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    vpc.VPC{},
+			name: "AWS VPC network ACL rule with wildcard address",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				NetworkACLs: []vpc.NetworkACL{
+					{
+						Metadata: types.NewTestMetadata(),
+						Rules: []vpc.NetworkACLRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Type:     types.String(vpc.TypeIngress, types.NewTestMetadata()),
+								Action:   types.String(vpc.ActionAllow, types.NewTestMetadata()),
+								CIDRs: []types.StringValue{
+									types.String("0.0.0.0/0", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    vpc.VPC{},
+			name: "AWS VPC network ACL rule with private address",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				NetworkACLs: []vpc.NetworkACL{
+					{
+						Metadata: types.NewTestMetadata(),
+						Rules: []vpc.NetworkACLRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Type:     types.String(vpc.TypeIngress, types.NewTestMetadata()),
+								Action:   types.String(vpc.ActionAllow, types.NewTestMetadata()),
+								CIDRs: []types.StringValue{
+									types.String("10.0.0.0/16", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

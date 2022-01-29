@@ -6,24 +6,68 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/vpc"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoExcessivePortAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    vpc.VPC
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    vpc.VPC{},
+			name: "AWS VPC network ACL rule with protocol set to all",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				NetworkACLs: []vpc.NetworkACL{
+					{
+						Metadata: types.NewTestMetadata(),
+						Rules: []vpc.NetworkACLRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Protocol: types.String("-1", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    vpc.VPC{},
+			name: "AWS VPC network ACL rule with protocol set to all",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				NetworkACLs: []vpc.NetworkACL{
+					{
+						Metadata: types.NewTestMetadata(),
+						Rules: []vpc.NetworkACLRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Protocol: types.String("all", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "AWS VPC network ACL rule with tcp protocol",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				NetworkACLs: []vpc.NetworkACL{
+					{
+						Metadata: types.NewTestMetadata(),
+						Rules: []vpc.NetworkACLRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Protocol: types.String("tcp", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

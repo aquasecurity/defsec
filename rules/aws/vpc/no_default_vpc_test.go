@@ -6,24 +6,33 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/vpc"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoDefaultVpc(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    vpc.VPC
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    vpc.VPC{},
+			name: "default AWS VPC",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				DefaultVPCs: []vpc.DefaultVPC{
+					{
+						Metadata: types.NewTestMetadata(),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    vpc.VPC{},
+			name: "no default AWS VPC",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+			},
 			expected: false,
 		},
 	}
