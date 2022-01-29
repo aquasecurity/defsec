@@ -6,24 +6,71 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/athena"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableAtRestEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    athena.Athena
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    athena.Athena{},
+			name: "AWS Athena database unencrypted",
+			input: athena.Athena{
+				Metadata: types.NewTestMetadata(),
+				Databases: []athena.Database{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: athena.EncryptionConfiguration{
+							Metadata: types.NewTestMetadata(),
+							Type:     types.String(athena.EncryptionTypeNone, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    athena.Athena{},
+			name: "AWS Athena workgroup unencrypted",
+			input: athena.Athena{
+				Metadata: types.NewTestMetadata(),
+				Workgroups: []athena.Workgroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: athena.EncryptionConfiguration{
+							Metadata: types.NewTestMetadata(),
+							Type:     types.String(athena.EncryptionTypeNone, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "AWS Athena database and workgroup encrypted",
+			input: athena.Athena{
+				Metadata: types.NewTestMetadata(),
+				Databases: []athena.Database{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: athena.EncryptionConfiguration{
+							Metadata: types.NewTestMetadata(),
+							Type:     types.String(athena.EncryptionTypeSSEKMS, types.NewTestMetadata()),
+						},
+					},
+				},
+				Workgroups: []athena.Workgroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: athena.EncryptionConfiguration{
+							Metadata: types.NewTestMetadata(),
+							Type:     types.String(athena.EncryptionTypeSSEKMS, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
