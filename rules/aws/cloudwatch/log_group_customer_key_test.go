@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/cloudwatch"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckLogGroupCustomerKey(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    cloudwatch.CloudWatch
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    cloudwatch.CloudWatch{},
+			name: "AWS CloudWatch with unencrypted log group",
+			input: cloudwatch.CloudWatch{
+				Metadata: types.NewTestMetadata(),
+				LogGroups: []cloudwatch.LogGroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						KMSKeyID: types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    cloudwatch.CloudWatch{},
+			name: "AWS CloudWatch with encrypted log group",
+			input: cloudwatch.CloudWatch{
+				Metadata: types.NewTestMetadata(),
+				LogGroups: []cloudwatch.LogGroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						KMSKeyID: types.String("some-kms-key", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
