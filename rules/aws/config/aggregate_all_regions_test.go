@@ -6,24 +6,38 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/config"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAggregateAllRegions(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    config.Config
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    config.Config{},
+			name: "AWS Config aggregator source with all regions set to false",
+			input: config.Config{
+				Metadata: types.NewTestMetadata(),
+				ConfigurationAggregrator: config.ConfigurationAggregrator{
+					Metadata:         types.NewTestMetadata(),
+					SourceAllRegions: types.Bool(false, types.NewTestMetadata()),
+					IsDefined:        true,
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    config.Config{},
+			name: "AWS Config aggregator source with all regions set to true",
+			input: config.Config{
+				Metadata: types.NewTestMetadata(),
+				ConfigurationAggregrator: config.ConfigurationAggregrator{
+					Metadata:         types.NewTestMetadata(),
+					SourceAllRegions: types.Bool(true, types.NewTestMetadata()),
+					IsDefined:        true,
+				},
+			},
 			expected: false,
 		},
 	}
