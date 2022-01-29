@@ -6,24 +6,53 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ssm"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckSecretUseCustomerKey(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ssm.SSM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ssm.SSM{},
+			name: "AWS SSM missing KMS key",
+			input: ssm.SSM{
+				Metadata: types.NewTestMetadata(),
+				Secrets: []ssm.Secret{
+					{
+						Metadata: types.NewTestMetadata(),
+						KMSKeyID: types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    ssm.SSM{},
+			name: "AWS SSM with default KMS key",
+			input: ssm.SSM{
+				Metadata: types.NewTestMetadata(),
+				Secrets: []ssm.Secret{
+					{
+						Metadata: types.NewTestMetadata(),
+						KMSKeyID: types.String(ssm.DefaultKMSKeyID, types.NewTestMetadata()),
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "AWS SSM with proper KMS key",
+			input: ssm.SSM{
+				Metadata: types.NewTestMetadata(),
+				Secrets: []ssm.Secret{
+					{
+						Metadata: types.NewTestMetadata(),
+						KMSKeyID: types.String("some-ok-key", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
