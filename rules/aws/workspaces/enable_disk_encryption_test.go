@@ -6,24 +6,93 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/workspaces"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableDiskEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    workspaces.WorkSpaces
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    workspaces.WorkSpaces{},
+			name: "AWS Workspace with unencrypted root volume",
+			input: workspaces.WorkSpaces{
+				Metadata: types.NewTestMetadata(),
+				WorkSpaces: []workspaces.WorkSpace{
+					{
+						Metadata: types.NewTestMetadata(),
+						RootVolume: workspaces.Volume{
+							Metadata: types.NewTestMetadata(),
+							Encryption: workspaces.Encryption{
+								Metadata: types.NewTestMetadata(),
+								Enabled:  types.Bool(false, types.NewTestMetadata()),
+							},
+						},
+						UserVolume: workspaces.Volume{
+							Metadata: types.NewTestMetadata(),
+							Encryption: workspaces.Encryption{
+								Metadata: types.NewTestMetadata(),
+								Enabled:  types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    workspaces.WorkSpaces{},
+			name: "AWS Workspace with unencrypted user volume",
+			input: workspaces.WorkSpaces{
+				Metadata: types.NewTestMetadata(),
+				WorkSpaces: []workspaces.WorkSpace{
+					{
+						Metadata: types.NewTestMetadata(),
+						RootVolume: workspaces.Volume{
+							Metadata: types.NewTestMetadata(),
+							Encryption: workspaces.Encryption{
+								Metadata: types.NewTestMetadata(),
+								Enabled:  types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+						UserVolume: workspaces.Volume{
+							Metadata: types.NewTestMetadata(),
+							Encryption: workspaces.Encryption{
+								Metadata: types.NewTestMetadata(),
+								Enabled:  types.Bool(false, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+
+		{
+			name: "AWS Workspace with encrypted user and root volumes",
+			input: workspaces.WorkSpaces{
+				Metadata: types.NewTestMetadata(),
+				WorkSpaces: []workspaces.WorkSpace{
+					{
+						Metadata: types.NewTestMetadata(),
+						RootVolume: workspaces.Volume{
+							Metadata: types.NewTestMetadata(),
+							Encryption: workspaces.Encryption{
+								Metadata: types.NewTestMetadata(),
+								Enabled:  types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+						UserVolume: workspaces.Volume{
+							Metadata: types.NewTestMetadata(),
+							Encryption: workspaces.Encryption{
+								Metadata: types.NewTestMetadata(),
+								Enabled:  types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
