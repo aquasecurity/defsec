@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableAllRegions(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    cloudtrail.CloudTrail
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    cloudtrail.CloudTrail{},
+			name: "AWS CloudTrail not enabled accross all regions",
+			input: cloudtrail.CloudTrail{
+				Metadata: types.NewTestMetadata(),
+				Trails: []cloudtrail.Trail{
+					{
+						Metadata:      types.NewTestMetadata(),
+						IsMultiRegion: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    cloudtrail.CloudTrail{},
+			name: "AWS CloudTrail enabled accross all regions",
+			input: cloudtrail.CloudTrail{
+				Metadata: types.NewTestMetadata(),
+				Trails: []cloudtrail.Trail{
+					{
+						Metadata:      types.NewTestMetadata(),
+						IsMultiRegion: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
