@@ -6,24 +6,62 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/sns"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableTopicEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    sns.SNS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    sns.SNS{},
+			name: "AWS SNS Topic without encryption",
+			input: sns.SNS{
+				Metadata: types.NewTestMetadata(),
+				Topics: []sns.Topic{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: sns.Encryption{
+							Metadata: types.NewTestMetadata(),
+							KMSKeyID: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    sns.SNS{},
+			name: "AWS SNS Topic encrypted with default key",
+			input: sns.SNS{
+				Metadata: types.NewTestMetadata(),
+				Topics: []sns.Topic{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: sns.Encryption{
+							Metadata: types.NewTestMetadata(),
+							KMSKeyID: types.String("alias/aws/sns", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "AWS SNS Topic properly encrypted",
+			input: sns.SNS{
+				Metadata: types.NewTestMetadata(),
+				Topics: []sns.Topic{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: sns.Encryption{
+							Metadata: types.NewTestMetadata(),
+							KMSKeyID: types.String("some-ok-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
