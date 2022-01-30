@@ -6,24 +6,36 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/rds"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoClassicResources(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    rds.RDS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    rds.RDS{},
+			name: "Classic resources present",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+				Classic: rds.Classic{
+					Metadata: types.NewTestMetadata(),
+					DBSecurityGroups: []rds.DBSecurityGroup{
+						{
+							Metadata: types.NewTestMetadata(),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    rds.RDS{},
+			name: "no Classic resources present",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+			},
 			expected: false,
 		},
 	}

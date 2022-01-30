@@ -6,24 +6,48 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/rds"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEncryptInstanceStorageData(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    rds.RDS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    rds.RDS{},
+			name: "RDS Instance with unencrypted storage",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+				Instances: []rds.Instance{
+					{
+						Metadata:             types.NewTestMetadata(),
+						ReplicationSourceARN: types.String("", types.NewTestMetadata()),
+						Encryption: rds.Encryption{
+							Metadata:       types.NewTestMetadata(),
+							EncryptStorage: types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    rds.RDS{},
+			name: "RDS Instance with encrypted storage",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+				Instances: []rds.Instance{
+					{
+						Metadata:             types.NewTestMetadata(),
+						ReplicationSourceARN: types.String("", types.NewTestMetadata()),
+						Encryption: rds.Encryption{
+							Metadata:       types.NewTestMetadata(),
+							EncryptStorage: types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

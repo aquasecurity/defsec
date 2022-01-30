@@ -6,24 +6,65 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/rds"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEncryptClusterStorageData(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    rds.RDS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    rds.RDS{},
+			name: "RDS Cluster with storage encryption disabled",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []rds.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: rds.Encryption{
+							Metadata:       types.NewTestMetadata(),
+							EncryptStorage: types.Bool(false, types.NewTestMetadata()),
+							KMSKeyID:       types.String("kms-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    rds.RDS{},
+			name: "RDS Cluster with storage encryption enabled but missing KMS key",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []rds.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: rds.Encryption{
+							Metadata:       types.NewTestMetadata(),
+							EncryptStorage: types.Bool(true, types.NewTestMetadata()),
+							KMSKeyID:       types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "RDS Cluster with storage encryption enabled and KMS key provided",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []rds.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: rds.Encryption{
+							Metadata:       types.NewTestMetadata(),
+							EncryptStorage: types.Bool(true, types.NewTestMetadata()),
+							KMSKeyID:       types.String("kms-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
