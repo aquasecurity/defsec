@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableDomainLogging(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    elasticsearch.Elasticsearch
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    elasticsearch.Elasticsearch{},
+			name: "Elasticsearch domain with audit logging disabled",
+			input: elasticsearch.Elasticsearch{
+				Metadata: types.NewTestMetadata(),
+				Domains: []elasticsearch.Domain{
+					{
+						Metadata: types.NewTestMetadata(),
+						LogPublishing: elasticsearch.LogPublishing{
+							Metadata:     types.NewTestMetadata(),
+							AuditEnabled: types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    elasticsearch.Elasticsearch{},
+			name: "Elasticsearch domain with audit logging enabled",
+			input: elasticsearch.Elasticsearch{
+				Metadata: types.NewTestMetadata(),
+				Domains: []elasticsearch.Domain{
+					{
+						Metadata: types.NewTestMetadata(),
+						LogPublishing: elasticsearch.LogPublishing{
+							Metadata:     types.NewTestMetadata(),
+							AuditEnabled: types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

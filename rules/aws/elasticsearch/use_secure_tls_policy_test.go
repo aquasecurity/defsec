@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckUseSecureTlsPolicy(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    elasticsearch.Elasticsearch
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    elasticsearch.Elasticsearch{},
+			name: "Elasticsearch domain with TLS v1.0",
+			input: elasticsearch.Elasticsearch{
+				Metadata: types.NewTestMetadata(),
+				Domains: []elasticsearch.Domain{
+					{
+						Metadata: types.NewTestMetadata(),
+						Endpoint: elasticsearch.Endpoint{
+							Metadata:  types.NewTestMetadata(),
+							TLSPolicy: types.String("Policy-Min-TLS-1-0-2019-07", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    elasticsearch.Elasticsearch{},
+			name: "Elasticsearch domain with TLS v1.2",
+			input: elasticsearch.Elasticsearch{
+				Metadata: types.NewTestMetadata(),
+				Domains: []elasticsearch.Domain{
+					{
+						Metadata: types.NewTestMetadata(),
+						Endpoint: elasticsearch.Endpoint{
+							Metadata:  types.NewTestMetadata(),
+							TLSPolicy: types.String("Policy-Min-TLS-1-2-2019-07", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
