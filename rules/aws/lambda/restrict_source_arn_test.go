@@ -6,24 +6,52 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/lambda"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckRestrictSourceArn(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    lambda.Lambda
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    lambda.Lambda{},
+			name: "Lambda function permission missing source ARN",
+			input: lambda.Lambda{
+				Metadata: types.NewTestMetadata(),
+				Functions: []lambda.Function{
+					{
+						Metadata: types.NewTestMetadata(),
+						Permissions: []lambda.Permission{
+							{
+								Metadata:  types.NewTestMetadata(),
+								Principal: types.String("sns.amazonaws.com", types.NewTestMetadata()),
+								SourceARN: types.String("", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    lambda.Lambda{},
+			name: "Lambda function permission with source ARN",
+			input: lambda.Lambda{
+				Metadata: types.NewTestMetadata(),
+				Functions: []lambda.Function{
+					{
+						Metadata: types.NewTestMetadata(),
+						Permissions: []lambda.Permission{
+							{
+								Metadata:  types.NewTestMetadata(),
+								Principal: types.String("sns.amazonaws.com", types.NewTestMetadata()),
+								SourceARN: types.String("source-arn", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
