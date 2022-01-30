@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ebs"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEncryptionCustomerKey(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ebs.EBS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ebs.EBS{},
+			name: "EBS volume missing KMS key",
+			input: ebs.EBS{
+				Metadata: types.NewTestMetadata(),
+				Volumes: []ebs.Volume{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: ebs.Encryption{
+							Metadata: types.NewTestMetadata(),
+							KMSKeyID: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    ebs.EBS{},
+			name: "EBS volume encrypted with KMS key",
+			input: ebs.EBS{
+				Metadata: types.NewTestMetadata(),
+				Volumes: []ebs.Volume{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: ebs.Encryption{
+							Metadata: types.NewTestMetadata(),
+							KMSKeyID: types.String("some-kms-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

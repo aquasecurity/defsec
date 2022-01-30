@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ebs"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableVolumeEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ebs.EBS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ebs.EBS{},
+			name: "unencrypted EBS volume",
+			input: ebs.EBS{
+				Metadata: types.NewTestMetadata(),
+				Volumes: []ebs.Volume{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: ebs.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    ebs.EBS{},
+			name: "encrypted EBS volume",
+			input: ebs.EBS{
+				Metadata: types.NewTestMetadata(),
+				Volumes: []ebs.Volume{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: ebs.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
