@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/cloudfront"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckUseSecureTlsPolicy(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    cloudfront.Cloudfront
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    cloudfront.Cloudfront{},
+			name: "CloudFront distribution using TLS v1.0",
+			input: cloudfront.Cloudfront{
+				Metadata: types.NewTestMetadata(),
+				Distributions: []cloudfront.Distribution{
+					{
+						Metadata: types.NewTestMetadata(),
+						ViewerCertificate: cloudfront.ViewerCertificate{
+							Metadata:               types.NewTestMetadata(),
+							MinimumProtocolVersion: types.String("TLSv1.0", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    cloudfront.Cloudfront{},
+			name: "CloudFront distribution using TLS v1.2",
+			input: cloudfront.Cloudfront{
+				Metadata: types.NewTestMetadata(),
+				Distributions: []cloudfront.Distribution{
+					{
+						Metadata: types.NewTestMetadata(),
+						ViewerCertificate: cloudfront.ViewerCertificate{
+							Metadata:               types.NewTestMetadata(),
+							MinimumProtocolVersion: types.String(cloudfront.ProtocolVersionTLS1_2, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

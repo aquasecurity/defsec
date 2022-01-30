@@ -6,24 +6,74 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/cloudfront"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnforceHttps(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    cloudfront.Cloudfront
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    cloudfront.Cloudfront{},
+			name: "CloudFront distribution default cache behaviour with allow all policy",
+			input: cloudfront.Cloudfront{
+				Metadata: types.NewTestMetadata(),
+				Distributions: []cloudfront.Distribution{
+					{
+						Metadata: types.NewTestMetadata(),
+						DefaultCacheBehaviour: cloudfront.CacheBehaviour{
+							Metadata:             types.NewTestMetadata(),
+							ViewerProtocolPolicy: types.String(cloudfront.ViewerPolicyProtocolAllowAll, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    cloudfront.Cloudfront{},
+			name: "CloudFront distribution ordered cache behaviour with allow all policy",
+			input: cloudfront.Cloudfront{
+				Metadata: types.NewTestMetadata(),
+				Distributions: []cloudfront.Distribution{
+					{
+						Metadata: types.NewTestMetadata(),
+						DefaultCacheBehaviour: cloudfront.CacheBehaviour{
+							Metadata:             types.NewTestMetadata(),
+							ViewerProtocolPolicy: types.String(cloudfront.ViewerPolicyProtocolHTTPSOnly, types.NewTestMetadata()),
+						},
+						OrdererCacheBehaviours: []cloudfront.CacheBehaviour{
+							{
+								Metadata:             types.NewTestMetadata(),
+								ViewerProtocolPolicy: types.String(cloudfront.ViewerPolicyProtocolAllowAll, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "CloudFront distribution cache behaviours allowing HTTPS only",
+			input: cloudfront.Cloudfront{
+				Metadata: types.NewTestMetadata(),
+				Distributions: []cloudfront.Distribution{
+					{
+						Metadata: types.NewTestMetadata(),
+						DefaultCacheBehaviour: cloudfront.CacheBehaviour{
+							Metadata:             types.NewTestMetadata(),
+							ViewerProtocolPolicy: types.String(cloudfront.ViewerPolicyProtocolHTTPSOnly, types.NewTestMetadata()),
+						},
+						OrdererCacheBehaviours: []cloudfront.CacheBehaviour{
+							{
+								Metadata:             types.NewTestMetadata(),
+								ViewerProtocolPolicy: types.String(cloudfront.ViewerPolicyProtocolHTTPSOnly, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/cloudfront"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableWaf(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    cloudfront.Cloudfront
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    cloudfront.Cloudfront{},
+			name: "CloudFront distribution missing WAF",
+			input: cloudfront.Cloudfront{
+				Metadata: types.NewTestMetadata(),
+				Distributions: []cloudfront.Distribution{
+					{
+						Metadata: types.NewTestMetadata(),
+						WAFID:    types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    cloudfront.Cloudfront{},
+			name: "CloudFront distribution with WAF provided",
+			input: cloudfront.Cloudfront{
+				Metadata: types.NewTestMetadata(),
+				Distributions: []cloudfront.Distribution{
+					{
+						Metadata: types.NewTestMetadata(),
+						WAFID:    types.String("waf_id", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/cloudfront"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableLogging(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    cloudfront.Cloudfront
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    cloudfront.Cloudfront{},
+			name: "CloudFront distribution missing logging configuration",
+			input: cloudfront.Cloudfront{
+				Metadata: types.NewTestMetadata(),
+				Distributions: []cloudfront.Distribution{
+					{
+						Metadata: types.NewTestMetadata(),
+						Logging: cloudfront.Logging{
+							Metadata: types.NewTestMetadata(),
+							Bucket:   types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    cloudfront.Cloudfront{},
+			name: "CloudFront distribution with logging configured",
+			input: cloudfront.Cloudfront{
+				Metadata: types.NewTestMetadata(),
+				Distributions: []cloudfront.Distribution{
+					{
+						Metadata: types.NewTestMetadata(),
+						Logging: cloudfront.Logging{
+							Metadata: types.NewTestMetadata(),
+							Bucket:   types.String("mylogs.s3.amazonaws.com", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
