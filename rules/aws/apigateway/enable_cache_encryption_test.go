@@ -6,24 +6,60 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/apigateway"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableCacheEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    apigateway.APIGateway
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    apigateway.APIGateway{},
+			name: "API Gateway stage with unencrypted cache",
+			input: apigateway.APIGateway{
+				Metadata: types.NewTestMetadata(),
+				APIs: []apigateway.API{
+					{
+						Metadata:     types.NewTestMetadata(),
+						ProtocolType: types.String(apigateway.ProtocolTypeREST, types.NewTestMetadata()),
+						Stages: []apigateway.Stage{
+							{
+								Metadata: types.NewTestMetadata(),
+								Version:  types.Int(1, types.NewTestMetadata()),
+								RESTMethodSettings: apigateway.RESTMethodSettings{
+									Metadata:           types.NewTestMetadata(),
+									CacheDataEncrypted: types.Bool(false, types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    apigateway.APIGateway{},
+			name: "API Gateway stage with encrypted cache",
+			input: apigateway.APIGateway{
+				Metadata: types.NewTestMetadata(),
+				APIs: []apigateway.API{
+					{
+						Metadata:     types.NewTestMetadata(),
+						ProtocolType: types.String(apigateway.ProtocolTypeREST, types.NewTestMetadata()),
+						Stages: []apigateway.Stage{
+							{
+								Metadata: types.NewTestMetadata(),
+								Version:  types.Int(1, types.NewTestMetadata()),
+								RESTMethodSettings: apigateway.RESTMethodSettings{
+									Metadata:           types.NewTestMetadata(),
+									CacheDataEncrypted: types.Bool(true, types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

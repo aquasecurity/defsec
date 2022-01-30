@@ -6,24 +6,77 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/apigateway"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    apigateway.APIGateway
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    apigateway.APIGateway{},
+			name: "API GET method without authorization",
+			input: apigateway.APIGateway{
+				Metadata: types.NewTestMetadata(),
+				APIs: []apigateway.API{
+					{
+						Metadata:     types.NewTestMetadata(),
+						ProtocolType: types.String(apigateway.ProtocolTypeREST, types.NewTestMetadata()),
+						RESTMethods: []apigateway.RESTMethod{
+							{
+								Metadata:          types.NewTestMetadata(),
+								HTTPMethod:        types.String("GET", types.NewTestMetadata()),
+								APIKeyRequired:    types.Bool(false, types.NewTestMetadata()),
+								AuthorizationType: types.String(apigateway.AuthorizationNone, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    apigateway.APIGateway{},
+			name: "API OPTION method without authorization",
+			input: apigateway.APIGateway{
+				Metadata: types.NewTestMetadata(),
+				APIs: []apigateway.API{
+					{
+						Metadata:     types.NewTestMetadata(),
+						ProtocolType: types.String(apigateway.ProtocolTypeREST, types.NewTestMetadata()),
+						RESTMethods: []apigateway.RESTMethod{
+							{
+								Metadata:          types.NewTestMetadata(),
+								HTTPMethod:        types.String("OPTION", types.NewTestMetadata()),
+								APIKeyRequired:    types.Bool(true, types.NewTestMetadata()),
+								AuthorizationType: types.String(apigateway.AuthorizationNone, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "API GET method with IAM authorization",
+			input: apigateway.APIGateway{
+				Metadata: types.NewTestMetadata(),
+				APIs: []apigateway.API{
+					{
+						Metadata:     types.NewTestMetadata(),
+						ProtocolType: types.String(apigateway.ProtocolTypeREST, types.NewTestMetadata()),
+						RESTMethods: []apigateway.RESTMethod{
+							{
+								Metadata:          types.NewTestMetadata(),
+								HTTPMethod:        types.String("GET", types.NewTestMetadata()),
+								APIKeyRequired:    types.Bool(false, types.NewTestMetadata()),
+								AuthorizationType: types.String(apigateway.AuthorizationIAM, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
