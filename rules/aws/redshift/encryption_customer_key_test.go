@@ -6,24 +6,65 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/redshift"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEncryptionCustomerKey(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    redshift.Redshift
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    redshift.Redshift{},
+			name: "Redshift Cluster with encryption disabled",
+			input: redshift.Redshift{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []redshift.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: redshift.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							KMSKeyID: types.String("some-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    redshift.Redshift{},
+			name: "Redshift Cluster missing KMS key",
+			input: redshift.Redshift{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []redshift.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: redshift.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							KMSKeyID: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Redshift Cluster encrypted with KMS key",
+			input: redshift.Redshift{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []redshift.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: redshift.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							KMSKeyID: types.String("some-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

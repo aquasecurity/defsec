@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/redshift"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckUsesVPC(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    redshift.Redshift
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    redshift.Redshift{},
+			name: "Redshift Cluster missing subnet name",
+			input: redshift.Redshift{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []redshift.Cluster{
+					{
+						Metadata:        types.NewTestMetadata(),
+						SubnetGroupName: types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    redshift.Redshift{},
+			name: "Redshift Cluster with subnet name",
+			input: redshift.Redshift{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []redshift.Cluster{
+					{
+						Metadata:        types.NewTestMetadata(),
+						SubnetGroupName: types.String("redshift-subnet", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/redshift"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAddDescriptionToSecurityGroup(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    redshift.Redshift
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    redshift.Redshift{},
+			name: "Redshift security group without description",
+			input: redshift.Redshift{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []redshift.SecurityGroup{
+					{
+						Metadata:    types.NewTestMetadata(),
+						Description: types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    redshift.Redshift{},
+			name: "Redshift security group with description",
+			input: redshift.Redshift{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []redshift.SecurityGroup{
+					{
+						Metadata:    types.NewTestMetadata(),
+						Description: types.String("security group description", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
