@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/autoscaling"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoSensitiveInfo(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    autoscaling.Autoscaling
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    autoscaling.Autoscaling{},
+			name: "Launch configuration with sensitive info in user data",
+			input: autoscaling.Autoscaling{
+				Metadata: types.NewTestMetadata(),
+				LaunchConfigurations: []autoscaling.LaunchConfiguration{
+					{
+						Metadata: types.NewTestMetadata(),
+						UserData: types.String(`
+						export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+						export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+						export AWS_DEFAULT_REGION=us-west-2
+						`, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    autoscaling.Autoscaling{},
+			name: "Launch configuration with no sensitive info in user data",
+			input: autoscaling.Autoscaling{
+				Metadata: types.NewTestMetadata(),
+				LaunchConfigurations: []autoscaling.LaunchConfiguration{
+					{
+						Metadata: types.NewTestMetadata(),
+						UserData: types.String(`
+						export GREETING=hello
+						`, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

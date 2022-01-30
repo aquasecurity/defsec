@@ -4,26 +4,71 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/aws/autoscaling"
+	"github.com/aquasecurity/defsec/provider/aws/ec2"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckIMDSAccessRequiresToken(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    autoscaling.Autoscaling
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    autoscaling.Autoscaling{},
+			name: "Launch configuration with optional tokens",
+			input: autoscaling.Autoscaling{
+				Metadata: types.NewTestMetadata(),
+				LaunchConfigurations: []autoscaling.LaunchConfiguration{
+					{
+						Metadata: types.NewTestMetadata(),
+						MetadataOptions: ec2.MetadataOptions{
+							Metadata:     types.NewTestMetadata(),
+							HttpTokens:   types.String("optional", types.NewTestMetadata()),
+							HttpEndpoint: types.String("enabled", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    autoscaling.Autoscaling{},
+			name: "Launch template with optional tokens",
+			input: autoscaling.Autoscaling{
+				Metadata: types.NewTestMetadata(),
+				LaunchTemplates: []autoscaling.LaunchTemplate{
+					{
+						Metadata: types.NewTestMetadata(),
+						Instance: ec2.Instance{
+							Metadata: types.NewTestMetadata(),
+							MetadataOptions: ec2.MetadataOptions{
+								Metadata:     types.NewTestMetadata(),
+								HttpTokens:   types.String("optional", types.NewTestMetadata()),
+								HttpEndpoint: types.String("enabled", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Launch configuration with required tokens",
+			input: autoscaling.Autoscaling{
+				Metadata: types.NewTestMetadata(),
+				LaunchConfigurations: []autoscaling.LaunchConfiguration{
+					{
+						Metadata: types.NewTestMetadata(),
+						MetadataOptions: ec2.MetadataOptions{
+							Metadata:     types.NewTestMetadata(),
+							HttpTokens:   types.String("required", types.NewTestMetadata()),
+							HttpEndpoint: types.String("enabled", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

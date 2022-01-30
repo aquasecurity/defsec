@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/autoscaling"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicIp(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    autoscaling.Autoscaling
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    autoscaling.Autoscaling{},
+			name: "Launch configuration with public access",
+			input: autoscaling.Autoscaling{
+				Metadata: types.NewTestMetadata(),
+				LaunchConfigurations: []autoscaling.LaunchConfiguration{
+					{
+						Metadata:          types.NewTestMetadata(),
+						AssociatePublicIP: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    autoscaling.Autoscaling{},
+			name: "Launch configuration without public access",
+			input: autoscaling.Autoscaling{
+				Metadata: types.NewTestMetadata(),
+				LaunchConfigurations: []autoscaling.LaunchConfiguration{
+					{
+						Metadata:          types.NewTestMetadata(),
+						AssociatePublicIP: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

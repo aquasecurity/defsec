@@ -6,24 +6,70 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/autoscaling"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableAtRestEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    autoscaling.Autoscaling
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    autoscaling.Autoscaling{},
+			name: "Autoscaling unencrypted root block device",
+			input: autoscaling.Autoscaling{
+				Metadata: types.NewTestMetadata(),
+				LaunchConfigurations: []autoscaling.LaunchConfiguration{
+					{
+						Metadata: types.NewTestMetadata(),
+						RootBlockDevice: &autoscaling.BlockDevice{
+							Metadata:  types.NewTestMetadata(),
+							Encrypted: types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    autoscaling.Autoscaling{},
+			name: "Autoscaling unencrypted EBS block device",
+			input: autoscaling.Autoscaling{
+				Metadata: types.NewTestMetadata(),
+				LaunchConfigurations: []autoscaling.LaunchConfiguration{
+					{
+						Metadata: types.NewTestMetadata(),
+						EBSBlockDevices: []autoscaling.BlockDevice{
+							{
+								Metadata:  types.NewTestMetadata(),
+								Encrypted: types.Bool(false, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Autoscaling encrypted root and EBS block devices",
+			input: autoscaling.Autoscaling{
+				Metadata: types.NewTestMetadata(),
+				LaunchConfigurations: []autoscaling.LaunchConfiguration{
+					{
+						Metadata: types.NewTestMetadata(),
+						RootBlockDevice: &autoscaling.BlockDevice{
+							Metadata:  types.NewTestMetadata(),
+							Encrypted: types.Bool(true, types.NewTestMetadata()),
+						},
+						EBSBlockDevices: []autoscaling.BlockDevice{
+							{
+								Metadata:  types.NewTestMetadata(),
+								Encrypted: types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
