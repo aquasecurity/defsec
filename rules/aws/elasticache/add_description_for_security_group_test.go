@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/elasticache"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAddDescriptionForSecurityGroup(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    elasticache.ElastiCache
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    elasticache.ElastiCache{},
+			name: "ElastiCache security group with no description provided",
+			input: elasticache.ElastiCache{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []elasticache.SecurityGroup{
+					{
+						Metadata:    types.NewTestMetadata(),
+						Description: types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    elasticache.ElastiCache{},
+			name: "ElastiCache security group with description",
+			input: elasticache.ElastiCache{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []elasticache.SecurityGroup{
+					{
+						Metadata:    types.NewTestMetadata(),
+						Description: types.String("some decent description", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
