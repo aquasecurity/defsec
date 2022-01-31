@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/athena"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoEncryptionOverride(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    athena.Athena
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    athena.Athena{},
+			name: "AWS Athena workgroup doesn't enforce configuration",
+			input: athena.Athena{
+				Metadata: types.NewTestMetadata(),
+				Workgroups: []athena.Workgroup{
+					{
+						Metadata:             types.NewTestMetadata(),
+						EnforceConfiguration: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    athena.Athena{},
+			name: "AWS Athena workgroup enforces configuration",
+			input: athena.Athena{
+				Metadata: types.NewTestMetadata(),
+				Workgroups: []athena.Workgroup{
+					{
+						Metadata:             types.NewTestMetadata(),
+						EnforceConfiguration: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
