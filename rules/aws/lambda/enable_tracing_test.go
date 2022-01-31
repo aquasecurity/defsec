@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/lambda"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableTracing(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    lambda.Lambda
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    lambda.Lambda{},
+			name: "Lambda function with no tracing mode specified",
+			input: lambda.Lambda{
+				Metadata: types.NewTestMetadata(),
+				Functions: []lambda.Function{
+					{
+						Metadata: types.NewTestMetadata(),
+						Tracing: lambda.Tracing{
+							Metadata: types.NewTestMetadata(),
+							Mode:     types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    lambda.Lambda{},
+			name: "Lambda function with active tracing mode",
+			input: lambda.Lambda{
+				Metadata: types.NewTestMetadata(),
+				Functions: []lambda.Function{
+					{
+						Metadata: types.NewTestMetadata(),
+						Tracing: lambda.Tracing{
+							Metadata: types.NewTestMetadata(),
+							Mode:     types.String(lambda.TracingModeActive, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
