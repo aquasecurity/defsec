@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableAtRestEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    cloudtrail.CloudTrail
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    cloudtrail.CloudTrail{},
+			name: "AWS CloudTrail unencrypted",
+			input: cloudtrail.CloudTrail{
+				Metadata: types.NewTestMetadata(),
+				Trails: []cloudtrail.Trail{
+					{
+						Metadata: types.NewTestMetadata(),
+						KMSKeyID: types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    cloudtrail.CloudTrail{},
+			name: "AWS CloudTrail encrypted with KMS key",
+			input: cloudtrail.CloudTrail{
+				Metadata: types.NewTestMetadata(),
+				Trails: []cloudtrail.Trail{
+					{
+						Metadata: types.NewTestMetadata(),
+						KMSKeyID: types.String("some-kms-key", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
