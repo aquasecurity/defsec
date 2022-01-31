@@ -35,16 +35,16 @@ var CheckEnableAtRestEncryption = rules.Register(
 		Severity: severity.High,
 	},
 	func(s *state.State) (results rules.Results) {
-		for _, launchConfig := range s.AWS.EC2.Instances {
-			if launchConfig.RootBlockDevice != nil && launchConfig.RootBlockDevice.Encrypted.IsFalse() {
+		for _, instance := range s.AWS.EC2.Instances {
+			if instance.RootBlockDevice != nil && instance.RootBlockDevice.Encrypted.IsFalse() {
 				results.Add(
 					"Root block device is not encrypted.",
-					launchConfig.RootBlockDevice.Encrypted,
+					instance.RootBlockDevice.Encrypted,
 				)
 			} else {
-				results.AddPassed(&launchConfig)
+				results.AddPassed(&instance)
 			}
-			for _, device := range launchConfig.EBSBlockDevices {
+			for _, device := range instance.EBSBlockDevices {
 				if device.Encrypted.IsFalse() {
 					results.Add(
 						"EBS block device is not encrypted.",
