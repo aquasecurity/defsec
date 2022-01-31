@@ -6,24 +6,62 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/dynamodb"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckTableCustomerKey(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    dynamodb.DynamoDB
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    dynamodb.DynamoDB{},
+			name: "Cluster encryption missing KMS key",
+			input: dynamodb.DynamoDB{
+				Metadata: types.NewTestMetadata(),
+				DAXClusters: []dynamodb.DAXCluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						ServerSideEncryption: dynamodb.ServerSideEncryption{
+							Metadata: types.NewTestMetadata(),
+							KMSKeyID: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    dynamodb.DynamoDB{},
+			name: "Cluster encryption using default KMS key",
+			input: dynamodb.DynamoDB{
+				Metadata: types.NewTestMetadata(),
+				DAXClusters: []dynamodb.DAXCluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						ServerSideEncryption: dynamodb.ServerSideEncryption{
+							Metadata: types.NewTestMetadata(),
+							KMSKeyID: types.String(dynamodb.DefaultKMSKeyID, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Cluster encryption using proper KMS key",
+			input: dynamodb.DynamoDB{
+				Metadata: types.NewTestMetadata(),
+				DAXClusters: []dynamodb.DAXCluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						ServerSideEncryption: dynamodb.ServerSideEncryption{
+							Metadata: types.NewTestMetadata(),
+							KMSKeyID: types.String("some-ok-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

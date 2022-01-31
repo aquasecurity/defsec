@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/dynamodb"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableRecovery(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    dynamodb.DynamoDB
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    dynamodb.DynamoDB{},
+			name: "Cluster with point in time recovery disabled",
+			input: dynamodb.DynamoDB{
+				Metadata: types.NewTestMetadata(),
+				DAXClusters: []dynamodb.DAXCluster{
+					{
+						Metadata:            types.NewTestMetadata(),
+						PointInTimeRecovery: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    dynamodb.DynamoDB{},
+			name: "Cluster with point in time recovery enabled",
+			input: dynamodb.DynamoDB{
+				Metadata: types.NewTestMetadata(),
+				DAXClusters: []dynamodb.DAXCluster{
+					{
+						Metadata:            types.NewTestMetadata(),
+						PointInTimeRecovery: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
