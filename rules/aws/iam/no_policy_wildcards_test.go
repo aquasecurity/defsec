@@ -6,24 +6,117 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPolicyWildcards(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    iam.IAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    iam.IAM{},
+			name: "IAM policy with wildcard resource",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+
+				Roles: []iam.Role{
+					{
+						Metadata: types.NewTestMetadata(),
+						Policies: []iam.Policy{
+							{
+								Metadata: types.NewTestMetadata(),
+								Document: types.String(` {
+									"Version": "2012-10-17",
+									"Statement": [
+										{
+											"Sid": "ListYourObjects",
+											"Effect": "Allow",
+											"Action": "s3:ListBucket",
+											"Resource": ["arn:aws:s3:::*"],
+											"Principal": {
+												"AWS": "arn:aws:iam::1234567890:root"
+											}
+										}
+									]
+								}`, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    iam.IAM{},
+			name: "IAM policy with wildcard action",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+				Policies: []iam.Policy{
+					{
+						Metadata: types.NewTestMetadata(),
+						Document: types.String(` {
+							"Version": "2012-10-17",
+							"Statement": [
+								{
+									"Sid": "ListYourObjects",
+									"Effect": "Allow",
+									"Action": "s3:*",
+									"Resource": ["arn:aws:s3:::bucket-name"],
+									"Principal": {
+										"AWS": "arn:aws:iam::1234567890:root"
+									}
+								}
+							]
+						}`, types.NewTestMetadata()),
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "IAM policies without wildcards",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+				Policies: []iam.Policy{
+					{
+						Metadata: types.NewTestMetadata(),
+						Document: types.String(`{
+						statement {
+							principals {
+							  type        = "AWS"
+							  identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+							}
+							actions   = ["s3:GetObject"]
+							resources = [aws_s3_bucket.example.arn]
+						  }
+						}`, types.NewTestMetadata()),
+					},
+				},
+				Roles: []iam.Role{
+					{
+						Metadata: types.NewTestMetadata(),
+						Policies: []iam.Policy{
+							{
+								Metadata: types.NewTestMetadata(),
+								Document: types.String(`{
+									Version = "2012-10-17"
+									Statement = [
+									{
+										Action = "sts:AssumeRole"
+										Effect = "Allow"
+										Sid    = ""
+										Principal = {
+										Service = "s3.amazonaws.com"
+										}
+									},
+									]
+								}`, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
