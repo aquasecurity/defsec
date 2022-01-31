@@ -6,24 +6,56 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/apigateway"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableAccessLogging(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    apigateway.APIGateway
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    apigateway.APIGateway{},
+			name: "API Gateway stage with no log group ARN",
+			input: apigateway.APIGateway{
+				Metadata: types.NewTestMetadata(),
+				APIs: []apigateway.API{
+					{
+						Metadata: types.NewTestMetadata(),
+						Stages: []apigateway.Stage{
+							{
+								Metadata: types.NewTestMetadata(),
+								AccessLogging: apigateway.AccessLogging{
+									Metadata:              types.NewTestMetadata(),
+									CloudwatchLogGroupARN: types.String("", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    apigateway.APIGateway{},
+			name: "API Gateway stage with log group ARN",
+			input: apigateway.APIGateway{
+				Metadata: types.NewTestMetadata(),
+				APIs: []apigateway.API{
+					{
+						Metadata: types.NewTestMetadata(),
+						Stages: []apigateway.Stage{
+							{
+								Metadata: types.NewTestMetadata(),
+								AccessLogging: apigateway.AccessLogging{
+									Metadata:              types.NewTestMetadata(),
+									CloudwatchLogGroupARN: types.String("log-group-arn", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/apigateway"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckUseSecureTlsPolicy(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    apigateway.APIGateway
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    apigateway.APIGateway{},
+			name: "API Gateway domain name with TLS version 1.0",
+			input: apigateway.APIGateway{
+				Metadata: types.NewTestMetadata(),
+				DomainNames: []apigateway.DomainName{
+					{
+						Metadata:       types.NewTestMetadata(),
+						SecurityPolicy: types.String("TLS_1_0", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    apigateway.APIGateway{},
+			name: "API Gateway domain name with TLS version 1.2",
+			input: apigateway.APIGateway{
+				Metadata: types.NewTestMetadata(),
+				DomainNames: []apigateway.DomainName{
+					{
+						Metadata:       types.NewTestMetadata(),
+						SecurityPolicy: types.String("TLS_1_2", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
