@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/documentdb"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableStorageEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    documentdb.DocumentDB
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    documentdb.DocumentDB{},
+			name: "DocDB unencrypted storage",
+			input: documentdb.DocumentDB{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []documentdb.Cluster{
+					{
+						Metadata:         types.NewTestMetadata(),
+						StorageEncrypted: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    documentdb.DocumentDB{},
+			name: "DocDB encrypted storage",
+			input: documentdb.DocumentDB{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []documentdb.Cluster{
+					{
+						Metadata:         types.NewTestMetadata(),
+						StorageEncrypted: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

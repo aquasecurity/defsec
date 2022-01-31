@@ -6,24 +6,59 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/documentdb"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableLogExport(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    documentdb.DocumentDB
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    documentdb.DocumentDB{},
+			name: "DocDB Cluster not exporting logs",
+			input: documentdb.DocumentDB{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []documentdb.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						EnabledLogExports: []types.StringValue{
+							types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    documentdb.DocumentDB{},
+			name: "DocDB Cluster exporting audit logs",
+			input: documentdb.DocumentDB{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []documentdb.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						EnabledLogExports: []types.StringValue{
+							types.String(documentdb.LogExportAudit, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "DocDB Cluster exporting profiler logs",
+			input: documentdb.DocumentDB{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []documentdb.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						EnabledLogExports: []types.StringValue{
+							types.String(documentdb.LogExportProfiler, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
