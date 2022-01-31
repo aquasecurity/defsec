@@ -6,24 +6,42 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/s3"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckPublicBucketsAreRestricted(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    s3.S3
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    s3.S3{},
+			name: "Public access block missing",
+			input: s3.S3{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []s3.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    s3.S3{},
+			name: "Public access block limiting access to buckets",
+			input: s3.S3{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []s3.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						PublicAccessBlock: &s3.PublicAccessBlock{
+							Metadata:              types.NewTestMetadata(),
+							RestrictPublicBuckets: types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

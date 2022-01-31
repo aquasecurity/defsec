@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/s3"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEncryptionIsEnabled(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    s3.S3
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    s3.S3{},
+			name: "Bucket encryption disabled",
+			input: s3.S3{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []s3.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: s3.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    s3.S3{},
+			name: "Bucket encryption enabled",
+			input: s3.S3{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []s3.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: s3.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
