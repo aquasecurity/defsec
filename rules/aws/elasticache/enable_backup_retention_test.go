@@ -6,24 +6,44 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/elasticache"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableBackupRetention(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    elasticache.ElastiCache
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    elasticache.ElastiCache{},
+			name: "Cluster snapshot retention days set to 0",
+			input: elasticache.ElastiCache{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []elasticache.Cluster{
+					{
+						Metadata:               types.NewTestMetadata(),
+						Engine:                 types.String("redis", types.NewTestMetadata()),
+						NodeType:               types.String("cache.m4.large", types.NewTestMetadata()),
+						SnapshotRetentionLimit: types.Int(0, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    elasticache.ElastiCache{},
+			name: "Cluster snapshot retention days set to 5",
+			input: elasticache.ElastiCache{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []elasticache.Cluster{
+					{
+						Metadata:               types.NewTestMetadata(),
+						Engine:                 types.String("redis", types.NewTestMetadata()),
+						NodeType:               types.String("cache.m4.large", types.NewTestMetadata()),
+						SnapshotRetentionLimit: types.Int(5, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
