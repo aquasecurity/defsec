@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ecr"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnforceImmutableRepository(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ecr.ECR
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ecr.ECR{},
+			name: "ECR mutable image tags",
+			input: ecr.ECR{
+				Metadata: types.NewTestMetadata(),
+				Repositories: []ecr.Repository{
+					{
+						Metadata:           types.NewTestMetadata(),
+						ImageTagsImmutable: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    ecr.ECR{},
+			name: "ECR immutable image tags",
+			input: ecr.ECR{
+				Metadata: types.NewTestMetadata(),
+				Repositories: []ecr.Repository{
+					{
+						Metadata:           types.NewTestMetadata(),
+						ImageTagsImmutable: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

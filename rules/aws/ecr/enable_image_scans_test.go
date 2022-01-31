@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ecr"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableImageScans(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ecr.ECR
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ecr.ECR{},
+			name: "ECR repository with image scans disabled",
+			input: ecr.ECR{
+				Metadata: types.NewTestMetadata(),
+				Repositories: []ecr.Repository{
+					{
+						Metadata: types.NewTestMetadata(),
+						ImageScanning: ecr.ImageScanning{
+							Metadata:   types.NewTestMetadata(),
+							ScanOnPush: types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    ecr.ECR{},
+			name: "ECR repository with image scans enabled",
+			input: ecr.ECR{
+				Metadata: types.NewTestMetadata(),
+				Repositories: []ecr.Repository{
+					{
+						Metadata: types.NewTestMetadata(),
+						ImageScanning: ecr.ImageScanning{
+							Metadata:   types.NewTestMetadata(),
+							ScanOnPush: types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
