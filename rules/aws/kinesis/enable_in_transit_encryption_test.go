@@ -6,24 +6,65 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/kinesis"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableInTransitEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    kinesis.Kinesis
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    kinesis.Kinesis{},
+			name: "AWS Kinesis Stream with no encryption",
+			input: kinesis.Kinesis{
+				Metadata: types.NewTestMetadata(),
+				Streams: []kinesis.Stream{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: kinesis.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Type:     types.String("NONE", types.NewTestMetadata()),
+							KMSKeyID: types.String("some-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    kinesis.Kinesis{},
+			name: "AWS Kinesis Stream with KMS encryption but no key",
+			input: kinesis.Kinesis{
+				Metadata: types.NewTestMetadata(),
+				Streams: []kinesis.Stream{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: kinesis.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Type:     types.String(kinesis.EncryptionTypeKMS, types.NewTestMetadata()),
+							KMSKeyID: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "AWS Kinesis Stream with KMS encryption and key",
+			input: kinesis.Kinesis{
+				Metadata: types.NewTestMetadata(),
+				Streams: []kinesis.Stream{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: kinesis.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Type:     types.String(kinesis.EncryptionTypeKMS, types.NewTestMetadata()),
+							KMSKeyID: types.String("some-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
