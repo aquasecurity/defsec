@@ -6,24 +6,74 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/codebuild"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    codebuild.CodeBuild
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    codebuild.CodeBuild{},
+			name: "AWS Codebuild project with unencrypted artifact",
+			input: codebuild.CodeBuild{
+				Metadata: types.NewTestMetadata(),
+				Projects: []codebuild.Project{
+					{
+						Metadata: types.NewTestMetadata(),
+						ArtifactSettings: codebuild.ArtifactSettings{
+							Metadata:          types.NewTestMetadata(),
+							EncryptionEnabled: types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    codebuild.CodeBuild{},
+			name: "AWS Codebuild project with unencrypted secondary artifact",
+			input: codebuild.CodeBuild{
+				Metadata: types.NewTestMetadata(),
+				Projects: []codebuild.Project{
+					{
+						Metadata: types.NewTestMetadata(),
+						ArtifactSettings: codebuild.ArtifactSettings{
+							Metadata:          types.NewTestMetadata(),
+							EncryptionEnabled: types.Bool(true, types.NewTestMetadata()),
+						},
+						SecondaryArtifactSettings: []codebuild.ArtifactSettings{
+							{
+								Metadata:          types.NewTestMetadata(),
+								EncryptionEnabled: types.Bool(false, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "AWS Codebuild with encrypted artifacts",
+			input: codebuild.CodeBuild{
+				Metadata: types.NewTestMetadata(),
+				Projects: []codebuild.Project{
+					{
+						Metadata: types.NewTestMetadata(),
+						ArtifactSettings: codebuild.ArtifactSettings{
+							Metadata:          types.NewTestMetadata(),
+							EncryptionEnabled: types.Bool(true, types.NewTestMetadata()),
+						},
+						SecondaryArtifactSettings: []codebuild.ArtifactSettings{
+							{
+								Metadata:          types.NewTestMetadata(),
+								EncryptionEnabled: types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
