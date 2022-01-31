@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/provider/aws/autoscaling"
+	"github.com/aquasecurity/defsec/provider/aws/ec2"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/aquasecurity/defsec/types"
@@ -23,7 +24,7 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata: types.NewTestMetadata(),
-						RootBlockDevice: &autoscaling.BlockDevice{
+						RootBlockDevice: &ec2.BlockDevice{
 							Metadata:  types.NewTestMetadata(),
 							Encrypted: types.Bool(false, types.NewTestMetadata()),
 						},
@@ -39,7 +40,7 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata: types.NewTestMetadata(),
-						EBSBlockDevices: []autoscaling.BlockDevice{
+						EBSBlockDevices: []ec2.BlockDevice{
 							{
 								Metadata:  types.NewTestMetadata(),
 								Encrypted: types.Bool(false, types.NewTestMetadata()),
@@ -57,11 +58,11 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata: types.NewTestMetadata(),
-						RootBlockDevice: &autoscaling.BlockDevice{
+						RootBlockDevice: &ec2.BlockDevice{
 							Metadata:  types.NewTestMetadata(),
 							Encrypted: types.Bool(true, types.NewTestMetadata()),
 						},
-						EBSBlockDevices: []autoscaling.BlockDevice{
+						EBSBlockDevices: []ec2.BlockDevice{
 							{
 								Metadata:  types.NewTestMetadata(),
 								Encrypted: types.Bool(true, types.NewTestMetadata()),
