@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/mq"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableAuditLogging(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    mq.MQ
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    mq.MQ{},
+			name: "AWS MQ Broker without audit logging",
+			input: mq.MQ{
+				Metadata: types.NewTestMetadata(),
+				Brokers: []mq.Broker{
+					{
+						Metadata: types.NewTestMetadata(),
+						Logging: mq.Logging{
+							Metadata: types.NewTestMetadata(),
+							Audit:    types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    mq.MQ{},
+			name: "AWS MQ Broker with audit logging",
+			input: mq.MQ{
+				Metadata: types.NewTestMetadata(),
+				Brokers: []mq.Broker{
+					{
+						Metadata: types.NewTestMetadata(),
+						Logging: mq.Logging{
+							Metadata: types.NewTestMetadata(),
+							Audit:    types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

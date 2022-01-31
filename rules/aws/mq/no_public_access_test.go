@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/mq"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    mq.MQ
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    mq.MQ{},
+			name: "AWS MQ Broker with public access enabled",
+			input: mq.MQ{
+				Metadata: types.NewTestMetadata(),
+				Brokers: []mq.Broker{
+					{
+						Metadata:     types.NewTestMetadata(),
+						PublicAccess: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    mq.MQ{},
+			name: "AWS MQ Broker with public access disabled",
+			input: mq.MQ{
+				Metadata: types.NewTestMetadata(),
+				Brokers: []mq.Broker{
+					{
+						Metadata:     types.NewTestMetadata(),
+						PublicAccess: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
