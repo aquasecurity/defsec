@@ -13,7 +13,7 @@ func IsWildcardAllowed(actions ...string) (bool, string) {
 			return false, action
 		}
 	}
-	return true
+	return true, ""
 }
 
 // see https://docs.aws.amazon.com/service-authorization/latest/reference/list_identityandaccessmanagement.html
