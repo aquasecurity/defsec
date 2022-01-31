@@ -6,24 +6,53 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/vpc"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAddDescriptionToSecurityGroup(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    vpc.VPC
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    vpc.VPC{},
+			name: "AWS VPC security group with no description provided",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []vpc.SecurityGroup{
+					{
+						Metadata:    types.NewTestMetadata(),
+						Description: types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    vpc.VPC{},
+			name: "AWS VPC security group with default description",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []vpc.SecurityGroup{
+					{
+						Metadata:    types.NewTestMetadata(),
+						Description: types.String("Managed by Terraform", types.NewTestMetadata()),
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "AWS VPC security group with proper description",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []vpc.SecurityGroup{
+					{
+						Metadata:    types.NewTestMetadata(),
+						Description: types.String("some proper description", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

@@ -6,24 +6,50 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/vpc"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAddDescriptionToSecurityGroupRule(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    vpc.VPC
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    vpc.VPC{},
+			name: "AWS VPC security group rule has no description",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []vpc.SecurityGroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						IngressRules: []vpc.SecurityGroupRule{
+							{
+								Metadata:    types.NewTestMetadata(),
+								Description: types.String("", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    vpc.VPC{},
+			name: "AWS VPC security group rule has description",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []vpc.SecurityGroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						IngressRules: []vpc.SecurityGroupRule{
+							{
+								Metadata:    types.NewTestMetadata(),
+								Description: types.String("some description", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

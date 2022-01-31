@@ -6,24 +6,54 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/vpc"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicIngressSgr(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    vpc.VPC
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    vpc.VPC{},
+			name: "AWS VPC ingress security group rule with wildcard address",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []vpc.SecurityGroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						IngressRules: []vpc.SecurityGroupRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								CIDRs: []types.StringValue{
+									types.String("0.0.0.0/0", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    vpc.VPC{},
+			name: "AWS VPC ingress security group rule with private address",
+			input: vpc.VPC{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []vpc.SecurityGroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						IngressRules: []vpc.SecurityGroupRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								CIDRs: []types.StringValue{
+									types.String("10.0.0.0/16", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
