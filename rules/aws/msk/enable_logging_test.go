@@ -6,24 +6,74 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/msk"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableLogging(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    msk.MSK
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    msk.MSK{},
+			name: "Cluster with logging disabled",
+			input: msk.MSK{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []msk.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Logging: msk.Logging{
+							Metadata: types.NewTestMetadata(),
+							Broker: msk.BrokerLogging{
+								Metadata: types.NewTestMetadata(),
+								S3: msk.S3Logging{
+									Metadata: types.NewTestMetadata(),
+									Enabled:  types.Bool(false, types.NewTestMetadata()),
+								},
+								Cloudwatch: msk.CloudwatchLogging{
+									Metadata: types.NewTestMetadata(),
+									Enabled:  types.Bool(false, types.NewTestMetadata()),
+								},
+								Firehose: msk.FirehoseLogging{
+									Metadata: types.NewTestMetadata(),
+									Enabled:  types.Bool(false, types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    msk.MSK{},
+			name: "Cluster logging to S3",
+			input: msk.MSK{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []msk.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Logging: msk.Logging{
+							Metadata: types.NewTestMetadata(),
+							Broker: msk.BrokerLogging{
+								Metadata: types.NewTestMetadata(),
+								S3: msk.S3Logging{
+									Metadata: types.NewTestMetadata(),
+									Enabled:  types.Bool(true, types.NewTestMetadata()),
+								},
+								Cloudwatch: msk.CloudwatchLogging{
+									Metadata: types.NewTestMetadata(),
+									Enabled:  types.Bool(false, types.NewTestMetadata()),
+								},
+								Firehose: msk.FirehoseLogging{
+									Metadata: types.NewTestMetadata(),
+									Enabled:  types.Bool(false, types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

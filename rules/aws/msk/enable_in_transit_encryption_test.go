@@ -6,24 +6,62 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/msk"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableInTransitEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    msk.MSK
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    msk.MSK{},
+			name: "Cluster client broker with plaintext encryption",
+			input: msk.MSK{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []msk.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						EncryptionInTransit: msk.EncryptionInTransit{
+							Metadata:     types.NewTestMetadata(),
+							ClientBroker: types.String(msk.ClientBrokerEncryptionPlaintext, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    msk.MSK{},
+			name: "Cluster client broker with plaintext or TLS encryption",
+			input: msk.MSK{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []msk.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						EncryptionInTransit: msk.EncryptionInTransit{
+							Metadata:     types.NewTestMetadata(),
+							ClientBroker: types.String(msk.ClientBrokerEncryptionTLSOrPlaintext, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Cluster client broker with TLS encryption",
+			input: msk.MSK{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []msk.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						EncryptionInTransit: msk.EncryptionInTransit{
+							Metadata:     types.NewTestMetadata(),
+							ClientBroker: types.String(msk.ClientBrokerEncryptionTLS, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
