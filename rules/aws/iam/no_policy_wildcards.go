@@ -74,6 +74,7 @@ func checkPolicy(src types.StringValue, results rules.Results) rules.Results {
 	return results
 }
 
+//nolint
 func checkStatement(src types.StringValue, statement iamgo.Statement, results rules.Results) rules.Results {
 	if statement.Effect != iamgo.EffectAllow {
 		return results
