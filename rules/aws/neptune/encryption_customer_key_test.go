@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/neptune"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEncryptionCustomerKey(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    neptune.Neptune
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    neptune.Neptune{},
+			name: "Neptune Cluster missing KMS key",
+			input: neptune.Neptune{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []neptune.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						KMSKeyID: types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    neptune.Neptune{},
+			name: "Neptune Cluster encrypted with KMS key",
+			input: neptune.Neptune{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []neptune.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						KMSKeyID: types.String("some-kms-key", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

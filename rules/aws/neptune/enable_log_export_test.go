@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/neptune"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableLogExport(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    neptune.Neptune
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    neptune.Neptune{},
+			name: "Neptune Cluster with audit logging disabled",
+			input: neptune.Neptune{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []neptune.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Logging: neptune.Logging{
+							Metadata: types.NewTestMetadata(),
+							Audit:    types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    neptune.Neptune{},
+			name: "Neptune Cluster with audit logging enabled",
+			input: neptune.Neptune{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []neptune.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Logging: neptune.Logging{
+							Metadata: types.NewTestMetadata(),
+							Audit:    types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
