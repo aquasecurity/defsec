@@ -6,24 +6,70 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/rds"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckBackupRetentionSpecified(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    rds.RDS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    rds.RDS{},
+			name: "RDS Cluster with 1 retention day (default)",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []rds.Cluster{
+					{
+						Metadata:                  types.NewTestMetadata(),
+						ReplicationSourceARN:      types.String("", types.NewTestMetadata()),
+						BackupRetentionPeriodDays: types.Int(1, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    rds.RDS{},
+			name: "RDS Instance with 1 retention day (default)",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+				Instances: []rds.Instance{
+					{
+						Metadata:                  types.NewTestMetadata(),
+						ReplicationSourceARN:      types.String("", types.NewTestMetadata()),
+						BackupRetentionPeriodDays: types.Int(1, types.NewTestMetadata()),
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "RDS Cluster with 5 retention days",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []rds.Cluster{
+					{
+						Metadata:                  types.NewTestMetadata(),
+						ReplicationSourceARN:      types.String("", types.NewTestMetadata()),
+						BackupRetentionPeriodDays: types.Int(5, types.NewTestMetadata()),
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "RDS Instance with 5 retention days",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+				Instances: []rds.Instance{
+					{
+						Metadata:                  types.NewTestMetadata(),
+						ReplicationSourceARN:      types.String("", types.NewTestMetadata()),
+						BackupRetentionPeriodDays: types.Int(5, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

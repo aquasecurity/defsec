@@ -6,24 +6,48 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/rds"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicDbAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    rds.RDS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    rds.RDS{},
+			name: "RDS Instance with public access enabled",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+				Instances: []rds.Instance{
+					{
+						Metadata:     types.NewTestMetadata(),
+						PublicAccess: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    rds.RDS{},
+			name: "RDS Instance with public access disabled",
+			input: rds.RDS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []rds.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Instances: []rds.ClusterInstance{
+							{
+								Metadata: types.NewTestMetadata(),
+								Instance: rds.Instance{
+									Metadata:     types.NewTestMetadata(),
+									PublicAccess: types.Bool(false, types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
