@@ -6,24 +6,94 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ecr"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ecr.ECR
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ecr.ECR{},
+			name: "ECR repository policy with wildcard principal",
+			input: ecr.ECR{
+				Metadata: types.NewTestMetadata(),
+				Repositories: []ecr.Repository{
+					{
+						Metadata: types.NewTestMetadata(),
+						Policies: []types.StringValue{
+							types.String(`{
+								"Version": "2008-10-17",
+								"Statement": [
+									{
+										"Sid": "new policy",
+										"Effect": "Allow",
+										"Principal": "*",
+										"Action": [
+											"ecr:GetDownloadUrlForLayer",
+											"ecr:BatchGetImage",
+											"ecr:BatchCheckLayerAvailability",
+											"ecr:PutImage",
+											"ecr:InitiateLayerUpload",
+											"ecr:UploadLayerPart",
+											"ecr:CompleteLayerUpload",
+											"ecr:DescribeRepositories",
+											"ecr:GetRepositoryPolicy",
+											"ecr:ListImages",
+											"ecr:DeleteRepository",
+											"ecr:BatchDeleteImage",
+											"ecr:SetRepositoryPolicy",
+											"ecr:DeleteRepositoryPolicy"
+										]
+									}
+								]
+							}`, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    ecr.ECR{},
+			name: "ECR repository policy with specific principal",
+			input: ecr.ECR{
+				Metadata: types.NewTestMetadata(),
+				Repositories: []ecr.Repository{
+					{
+						Metadata: types.NewTestMetadata(),
+						Policies: []types.StringValue{
+							types.String(`{
+								"Version": "2008-10-17",
+								"Statement": [
+									{
+										"Sid": "new policy",
+										"Effect": "Allow",
+										"Principal": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+										"Action": [
+											"ecr:GetDownloadUrlForLayer",
+											"ecr:BatchGetImage",
+											"ecr:BatchCheckLayerAvailability",
+											"ecr:PutImage",
+											"ecr:InitiateLayerUpload",
+											"ecr:UploadLayerPart",
+											"ecr:CompleteLayerUpload",
+											"ecr:DescribeRepositories",
+											"ecr:GetRepositoryPolicy",
+											"ecr:ListImages",
+											"ecr:DeleteRepository",
+											"ecr:BatchDeleteImage",
+											"ecr:SetRepositoryPolicy",
+											"ecr:DeleteRepositoryPolicy"
+										]
+									}
+								]
+							}`, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

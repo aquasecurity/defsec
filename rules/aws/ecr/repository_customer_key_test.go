@@ -6,24 +6,64 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ecr"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckRepositoryCustomerKey(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ecr.ECR
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ecr.ECR{},
+			name: "ECR repository not using KMS encryption",
+			input: ecr.ECR{
+				Metadata: types.NewTestMetadata(),
+				Repositories: []ecr.Repository{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: ecr.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Type:     types.String(ecr.EncryptionTypeAES256, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    ecr.ECR{},
+			name: "ECR repository using KMS encryption but missing key",
+			input: ecr.ECR{
+				Metadata: types.NewTestMetadata(),
+				Repositories: []ecr.Repository{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: ecr.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Type:     types.String(ecr.EncryptionTypeKMS, types.NewTestMetadata()),
+							KMSKeyID: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "ECR repository encrypted with KMS key",
+			input: ecr.ECR{
+				Metadata: types.NewTestMetadata(),
+				Repositories: []ecr.Repository{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: ecr.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Type:     types.String(ecr.EncryptionTypeKMS, types.NewTestMetadata()),
+							KMSKeyID: types.String("some-kms-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
