@@ -6,24 +6,56 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ecs"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableInTransitEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ecs.ECS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ecs.ECS{},
+			name: "ECS task definition unencrypted volume",
+			input: ecs.ECS{
+				Metadata: types.NewTestMetadata(),
+				TaskDefinitions: []ecs.TaskDefinition{
+					{
+						Metadata: types.NewTestMetadata(),
+						Volumes: []ecs.Volume{
+							{
+								Metadata: types.NewTestMetadata(),
+								EFSVolumeConfiguration: ecs.EFSVolumeConfiguration{
+									Metadata:                 types.NewTestMetadata(),
+									TransitEncryptionEnabled: types.Bool(false, types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    ecs.ECS{},
+			name: "ECS task definition encrypted volume",
+			input: ecs.ECS{
+				Metadata: types.NewTestMetadata(),
+				TaskDefinitions: []ecs.TaskDefinition{
+					{
+						Metadata: types.NewTestMetadata(),
+						Volumes: []ecs.Volume{
+							{
+								Metadata: types.NewTestMetadata(),
+								EFSVolumeConfiguration: ecs.EFSVolumeConfiguration{
+									Metadata:                 types.NewTestMetadata(),
+									TransitEncryptionEnabled: types.Bool(true, types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

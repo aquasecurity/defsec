@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ecs"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableContainerInsight(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ecs.ECS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ecs.ECS{},
+			name: "Cluster with disabled container insights",
+			input: ecs.ECS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []ecs.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Settings: ecs.ClusterSettings{
+							Metadata:                 types.NewTestMetadata(),
+							ContainerInsightsEnabled: types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    ecs.ECS{},
+			name: "Cluster with enabled container insights",
+			input: ecs.ECS{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []ecs.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						Settings: ecs.ClusterSettings{
+							Metadata:                 types.NewTestMetadata(),
+							ContainerInsightsEnabled: types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
