@@ -6,24 +6,59 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ecs"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPlaintextSecrets(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ecs.ECS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ecs.ECS{},
+			name: "Task definition with plaintext sensitive information",
+			input: ecs.ECS{
+				Metadata: types.NewTestMetadata(),
+				TaskDefinitions: []ecs.TaskDefinition{
+					{
+						Metadata: types.NewTestMetadata(),
+						ContainerDefinitions: types.String(`[
+							{
+							  "name": "my_service",
+							  "essential": true,
+							  "memory": 256,
+							  "environment": [
+								{ "name": "ENVIRONMENT", "value": "development" },
+								{ "name": "DATABASE_PASSWORD", "value": "oh no D:"}
+							  ]
+							}
+						  ]`, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    ecs.ECS{},
+			name: "Task definition without sensitive information",
+			input: ecs.ECS{
+				Metadata: types.NewTestMetadata(),
+				TaskDefinitions: []ecs.TaskDefinition{
+					{
+						Metadata: types.NewTestMetadata(),
+						ContainerDefinitions: types.String(` [
+							{
+							  "name": "my_service",
+							  "essential": true,
+							  "memory": 256,
+							  "environment": [
+								{ "name": "ENVIRONMENT", "value": "development" }
+							  ]
+							}
+						  ]`, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
