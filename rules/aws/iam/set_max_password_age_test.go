@@ -6,24 +6,36 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckSetMaxPasswordAge(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    iam.IAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    iam.IAM{},
+			name: "Password expires in 99 days",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+				PasswordPolicy: iam.PasswordPolicy{
+					Metadata:   types.NewTestMetadata(),
+					MaxAgeDays: types.Int(99, types.NewTestMetadata()),
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    iam.IAM{},
+			name: "Password expires in 60 days",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+				PasswordPolicy: iam.PasswordPolicy{
+					Metadata:   types.NewTestMetadata(),
+					MaxAgeDays: types.Int(60, types.NewTestMetadata()),
+				},
+			},
 			expected: false,
 		},
 	}
