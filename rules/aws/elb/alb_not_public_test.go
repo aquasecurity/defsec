@@ -6,24 +6,42 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/elb"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAlbNotPublic(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    elb.ELB
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    elb.ELB{},
+			name: "Load balancer publicly accessible",
+			input: elb.ELB{
+				Metadata: types.NewTestMetadata(),
+				LoadBalancers: []elb.LoadBalancer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Type:     types.String(elb.TypeApplication, types.NewTestMetadata()),
+						Internal: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    elb.ELB{},
+			name: "Load balancer internally accessible",
+			input: elb.ELB{
+				Metadata: types.NewTestMetadata(),
+				LoadBalancers: []elb.LoadBalancer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Type:     types.String(elb.TypeApplication, types.NewTestMetadata()),
+						Internal: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
