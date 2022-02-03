@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableDiskEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Managed disk encryption disabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				ManagedDisks: []compute.ManagedDisk{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: compute.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Managed disk encryption enabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				ManagedDisks: []compute.ManagedDisk{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: compute.Encryption{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

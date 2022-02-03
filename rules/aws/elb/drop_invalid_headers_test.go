@@ -6,24 +6,42 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/elb"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckDropInvalidHeaders(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    elb.ELB
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    elb.ELB{},
+			name: "Load balancer drop invalid headers disabled",
+			input: elb.ELB{
+				Metadata: types.NewTestMetadata(),
+				LoadBalancers: []elb.LoadBalancer{
+					{
+						Metadata:                types.NewTestMetadata(),
+						Type:                    types.String(elb.TypeApplication, types.NewTestMetadata()),
+						DropInvalidHeaderFields: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    elb.ELB{},
+			name: "Load balancer drop invalid headers enabled",
+			input: elb.ELB{
+				Metadata: types.NewTestMetadata(),
+				LoadBalancers: []elb.LoadBalancer{
+					{
+						Metadata:                types.NewTestMetadata(),
+						Type:                    types.String(elb.TypeApplication, types.NewTestMetadata()),
+						DropInvalidHeaderFields: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

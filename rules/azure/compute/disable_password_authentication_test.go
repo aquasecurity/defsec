@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckDisablePasswordAuthentication(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Linux VM password authentication enabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				LinuxVirtualMachines: []compute.LinuxVirtualMachine{
+					{
+						Metadata: types.NewTestMetadata(),
+						OSProfileLinuxConfig: compute.OSProfileLinuxConfig{
+							Metadata:                      types.NewTestMetadata(),
+							DisablePasswordAuthentication: types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Linux VM password authentication disabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				LinuxVirtualMachines: []compute.LinuxVirtualMachine{
+					{
+						Metadata: types.NewTestMetadata(),
+						OSProfileLinuxConfig: compute.OSProfileLinuxConfig{
+							Metadata:                      types.NewTestMetadata(),
+							DisablePasswordAuthentication: types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
