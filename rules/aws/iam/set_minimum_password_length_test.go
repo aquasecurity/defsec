@@ -6,24 +6,36 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckSetMinimumPasswordLength(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    iam.IAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    iam.IAM{},
+			name: "Minimum password length set to 8",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+				PasswordPolicy: iam.PasswordPolicy{
+					Metadata:      types.NewTestMetadata(),
+					MinimumLength: types.Int(8, types.NewTestMetadata()),
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    iam.IAM{},
+			name: "Minimum password length set to 15",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+				PasswordPolicy: iam.PasswordPolicy{
+					Metadata:      types.NewTestMetadata(),
+					MinimumLength: types.Int(15, types.NewTestMetadata()),
+				},
+			},
 			expected: false,
 		},
 	}

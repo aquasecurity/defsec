@@ -6,24 +6,75 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnforceMFA(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    iam.IAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    iam.IAM{},
+			name: "IAM policy with no MFA required",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+				Groups: []iam.Group{
+					{
+						Metadata: types.NewTestMetadata(),
+						Policies: []iam.Policy{
+							{
+								Metadata: types.NewTestMetadata(),
+								Document: types.String(`{
+								"Version": "2012-10-17",
+								"Statement": [
+								  {
+									"Sid": "",
+									"Effect": "Allow",
+									"Action": "ec2:*",
+									"Resource": "*"
+								  }
+								]
+							  }`, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    iam.IAM{},
+			name: "IAM policy with MFA required",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+				Groups: []iam.Group{
+					{
+						Metadata: types.NewTestMetadata(),
+						Policies: []iam.Policy{
+							{
+								Metadata: types.NewTestMetadata(),
+								Document: types.String(`{
+								"Version": "2012-10-17",
+								"Statement": [
+								  {
+									"Sid": "",
+									"Effect": "Allow",
+									"Action": "ec2:*",
+									"Resource": "*",
+									"Condition": {
+										"Bool": {
+											"aws:MultiFactorAuthPresent": ["true"]
+										}
+									}
+								  }
+								]
+							  }`, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

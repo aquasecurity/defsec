@@ -6,24 +6,50 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/elb"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckUseSecureTlsPolicy(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    elb.ELB
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    elb.ELB{},
+			name: "Load balancer listener using TLS v1.0",
+			input: elb.ELB{
+				Metadata: types.NewTestMetadata(),
+				LoadBalancers: []elb.LoadBalancer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Listeners: []elb.Listener{
+							{
+								Metadata:  types.NewTestMetadata(),
+								TLSPolicy: types.String("ELBSecurityPolicy-TLS-1-0-2015-04", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    elb.ELB{},
+			name: "Load balancer listener using TLS v1.2",
+			input: elb.ELB{
+				Metadata: types.NewTestMetadata(),
+				LoadBalancers: []elb.LoadBalancer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Listeners: []elb.Listener{
+							{
+								Metadata:  types.NewTestMetadata(),
+								TLSPolicy: types.String("ELBSecurityPolicy-TLS-1-2-2017-01", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

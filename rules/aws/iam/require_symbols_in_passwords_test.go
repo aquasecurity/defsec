@@ -6,24 +6,36 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckRequireSymbolsInPasswords(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    iam.IAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    iam.IAM{},
+			name: "IAM password policy symbols not required",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+				PasswordPolicy: iam.PasswordPolicy{
+					Metadata:       types.NewTestMetadata(),
+					RequireSymbols: types.Bool(false, types.NewTestMetadata()),
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    iam.IAM{},
+			name: "IAM password policy symbols required",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+				PasswordPolicy: iam.PasswordPolicy{
+					Metadata:       types.NewTestMetadata(),
+					RequireSymbols: types.Bool(true, types.NewTestMetadata()),
+				},
+			},
 			expected: false,
 		},
 	}

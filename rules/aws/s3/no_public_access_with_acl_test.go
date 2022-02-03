@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/s3"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckForPublicACL(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    s3.S3
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    s3.S3{},
+			name: "positive result",
+			input: s3.S3{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []s3.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						ACL:      types.String("public-read", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    s3.S3{},
+			name: "negative result",
+			input: s3.S3{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []s3.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						ACL:      types.String("private", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

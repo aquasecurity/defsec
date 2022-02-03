@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/datalake"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableAtRestEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    datalake.DataLake
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    datalake.DataLake{},
+			name: "unencrypted Data Lake store",
+			input: datalake.DataLake{
+				Metadata: types.NewTestMetadata(),
+				Stores: []datalake.Store{
+					{
+						Metadata:         types.NewTestMetadata(),
+						EnableEncryption: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    datalake.DataLake{},
+			name: "encrypted Data Lake store",
+			input: datalake.DataLake{
+				Metadata: types.NewTestMetadata(),
+				Stores: []datalake.Store{
+					{
+						Metadata:         types.NewTestMetadata(),
+						EnableEncryption: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
