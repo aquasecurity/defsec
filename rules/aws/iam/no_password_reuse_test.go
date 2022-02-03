@@ -6,24 +6,36 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPasswordReuse(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    iam.IAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    iam.IAM{},
+			name: "IAM with 1 password that can't be reused (min)",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+				PasswordPolicy: iam.PasswordPolicy{
+					Metadata:             types.NewTestMetadata(),
+					ReusePreventionCount: types.Int(1, types.NewTestMetadata()),
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    iam.IAM{},
+			name: "IAM with 5 passwords that can't be reused",
+			input: iam.IAM{
+				Metadata: types.NewTestMetadata(),
+				PasswordPolicy: iam.PasswordPolicy{
+					Metadata:             types.NewTestMetadata(),
+					ReusePreventionCount: types.Int(5, types.NewTestMetadata()),
+				},
+			},
 			expected: false,
 		},
 	}
