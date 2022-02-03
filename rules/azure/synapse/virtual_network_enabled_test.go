@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/synapse"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckVirtualNetworkEnabled(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    synapse.Synapse
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    synapse.Synapse{},
+			name: "Synapse workspace managed VN disabled",
+			input: synapse.Synapse{
+				Metadata: types.NewTestMetadata(),
+				Workspaces: []synapse.Workspace{
+					{
+						Metadata:                    types.NewTestMetadata(),
+						EnableManagedVirtualNetwork: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    synapse.Synapse{},
+			name: "Synapse workspace managed VN enabled",
+			input: synapse.Synapse{
+				Metadata: types.NewTestMetadata(),
+				Workspaces: []synapse.Workspace{
+					{
+						Metadata:                    types.NewTestMetadata(),
+						EnableManagedVirtualNetwork: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
