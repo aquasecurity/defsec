@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoSecretsInCustomData(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Secrets in custom data",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				LinuxVirtualMachines: []compute.LinuxVirtualMachine{
+					{
+						Metadata: types.NewTestMetadata(),
+						VirtualMachine: compute.VirtualMachine{
+							Metadata:   types.NewTestMetadata(),
+							CustomData: types.String(`export DATABASE_PASSWORD=\"SomeSortOfPassword\"`, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "No secrets in custom data",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				LinuxVirtualMachines: []compute.LinuxVirtualMachine{
+					{
+						Metadata: types.NewTestMetadata(),
+						VirtualMachine: compute.VirtualMachine{
+							Metadata:   types.NewTestMetadata(),
+							CustomData: types.String(`export GREETING="Hello there"`, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

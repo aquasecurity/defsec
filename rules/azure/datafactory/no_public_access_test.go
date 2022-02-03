@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/datafactory"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    datafactory.DataFactory
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    datafactory.DataFactory{},
+			name: "Data Factory public access enabled",
+			input: datafactory.DataFactory{
+				Metadata: types.NewTestMetadata(),
+				DataFactories: []datafactory.Factory{
+					{
+						Metadata:            types.NewTestMetadata(),
+						EnablePublicNetwork: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    datafactory.DataFactory{},
+			name: "Data Factory public access disabled",
+			input: datafactory.DataFactory{
+				Metadata: types.NewTestMetadata(),
+				DataFactories: []datafactory.Factory{
+					{
+						Metadata:            types.NewTestMetadata(),
+						EnablePublicNetwork: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
