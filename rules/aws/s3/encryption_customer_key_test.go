@@ -3,7 +3,7 @@ package s3
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/provider/aws/neptune"
+	"github.com/aquasecurity/defsec/provider/aws/s3"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/aquasecurity/defsec/types"
@@ -13,40 +13,49 @@ import (
 func TestCheckEncryptionCustomerKey(t *testing.T) {
 	tests := []struct {
 		name     string
-		input    neptune.Neptune
+		input    s3.S3
 		expected bool
 	}{
 		{
-			name: "Neptune Cluster missing KMS key",
-			input: neptune.Neptune{
+			name: "S3 Bucket missing KMS key",
+			input: s3.S3{
 				Metadata: types.NewTestMetadata(),
-				Clusters: []neptune.Cluster{
+				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("", types.NewTestMetadata()),
+						Encryption: s3.Encryption{
+							Metadata: types.Metadata{},
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							KMSKeyId: types.String("", *types.NewTestMetadata().GetMetadata()),
+						},
 					},
 				},
 			},
 			expected: true,
 		},
 		{
-			name: "Neptune Cluster encrypted with KMS key",
-			input: neptune.Neptune{
+			name: "S3 Bucket with KMS key",
+			input: s3.S3{
 				Metadata: types.NewTestMetadata(),
-				Clusters: []neptune.Cluster{
+				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("some-kms-key", types.NewTestMetadata()),
+						Encryption: s3.Encryption{
+							Metadata: types.Metadata{},
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							KMSKeyId: types.String("some-sort-of-key", *types.NewTestMetadata().GetMetadata()),
+						},
 					},
 				},
 			},
 			expected: false,
 		},
 	}
+
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
-			testState.AWS.Neptune = test.input
+			testState.AWS.S3 = test.input
 			results := CheckEncryptionCustomerKey.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
