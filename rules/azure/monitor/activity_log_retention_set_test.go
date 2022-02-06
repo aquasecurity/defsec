@@ -6,24 +6,65 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/monitor"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckActivityLogRetentionSet(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    monitor.Monitor
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    monitor.Monitor{},
+			name: "Log retention policy disabled",
+			input: monitor.Monitor{
+				Metadata: types.NewTestMetadata(),
+				LogProfiles: []monitor.LogProfile{
+					{
+						Metadata: types.NewTestMetadata(),
+						RetentionPolicy: monitor.RetentionPolicy{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Days:     types.Int(365, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    monitor.Monitor{},
+			name: "Log retention policy enabled for 90 days",
+			input: monitor.Monitor{
+				Metadata: types.NewTestMetadata(),
+				LogProfiles: []monitor.LogProfile{
+					{
+						Metadata: types.NewTestMetadata(),
+						RetentionPolicy: monitor.RetentionPolicy{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Days:     types.Int(90, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Log retention policy enabled for 365 days",
+			input: monitor.Monitor{
+				Metadata: types.NewTestMetadata(),
+				LogProfiles: []monitor.LogProfile{
+					{
+						Metadata: types.NewTestMetadata(),
+						RetentionPolicy: monitor.RetentionPolicy{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Days:     types.Int(365, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
