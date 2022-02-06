@@ -6,24 +6,52 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/database"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAllThreatAlertsEnabled(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    database.Database
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    database.Database{},
+			name: "MS SQL server alerts for SQL injection disabled",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						SecurityAlertPolicies: []database.SecurityAlertPolicy{
+							{
+								Metadata: types.NewTestMetadata(),
+								DisabledAlerts: []types.StringValue{
+									types.String("Sql_Injection", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    database.Database{},
+			name: "MS SQL server all alerts enabled",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						SecurityAlertPolicies: []database.SecurityAlertPolicy{
+							{
+								Metadata:       types.NewTestMetadata(),
+								DisabledAlerts: []types.StringValue{},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
