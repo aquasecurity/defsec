@@ -6,24 +6,50 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/kms"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckRotateKmsKeys(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    kms.KMS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    kms.KMS{},
+			name: "KMS key rotation period of 91 days",
+			input: kms.KMS{
+				Metadata: types.NewTestMetadata(),
+				KeyRings: []kms.KeyRing{
+					{
+						Metadata: types.NewTestMetadata(),
+						Keys: []kms.Key{
+							{
+								Metadata:              types.NewTestMetadata(),
+								RotationPeriodSeconds: types.Int(7862400, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    kms.KMS{},
+			name: "KMS key rotation period of 30 days",
+			input: kms.KMS{
+				Metadata: types.NewTestMetadata(),
+				KeyRings: []kms.KeyRing{
+					{
+						Metadata: types.NewTestMetadata(),
+						Keys: []kms.Key{
+							{
+								Metadata:              types.NewTestMetadata(),
+								RotationPeriodSeconds: types.Int(2592000, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
