@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/securitycenter"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAlertOnSevereNotifications(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    securitycenter.SecurityCenter
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    securitycenter.SecurityCenter{},
+			name: "Security center alert nofifications disabled",
+			input: securitycenter.SecurityCenter{
+				Metadata: types.NewTestMetadata(),
+				Contacts: []securitycenter.Contact{
+					{
+						Metadata:                 types.NewTestMetadata(),
+						EnableAlertNotifications: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    securitycenter.SecurityCenter{},
+			name: "Security center alert nofifications enabled",
+			input: securitycenter.SecurityCenter{
+				Metadata: types.NewTestMetadata(),
+				Contacts: []securitycenter.Contact{
+					{
+						Metadata:                 types.NewTestMetadata(),
+						EnableAlertNotifications: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

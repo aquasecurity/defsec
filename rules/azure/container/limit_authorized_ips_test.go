@@ -6,24 +6,44 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/container"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckLimitAuthorizedIps(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    container.Container
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    container.Container{},
+			name: "API server authorized IP ranges undefined",
+			input: container.Container{
+				Metadata: types.NewTestMetadata(),
+				KubernetesClusters: []container.KubernetesCluster{
+					{
+						Metadata:                    types.NewTestMetadata(),
+						EnablePrivateCluster:        types.Bool(false, types.NewTestMetadata()),
+						APIServerAuthorizedIPRanges: []types.StringValue{},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    container.Container{},
+			name: "API server authorized IP ranges defined",
+			input: container.Container{
+				Metadata: types.NewTestMetadata(),
+				KubernetesClusters: []container.KubernetesCluster{
+					{
+						Metadata:             types.NewTestMetadata(),
+						EnablePrivateCluster: types.Bool(false, types.NewTestMetadata()),
+						APIServerAuthorizedIPRanges: []types.StringValue{
+							types.String("1.2.3.4/32", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
