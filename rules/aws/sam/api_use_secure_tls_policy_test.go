@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/sam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckApiUseSecureTlsPolicy(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    sam.SAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    sam.SAM{},
+			name: "SAM API TLS v1.0",
+			input: sam.SAM{
+				Metadata: types.NewTestMetadata(),
+				APIs: []sam.API{
+					{
+						Metadata: types.NewTestMetadata(),
+						DomainConfiguration: sam.DomainConfiguration{
+							Metadata:       types.NewTestMetadata(),
+							SecurityPolicy: types.String("TLS_1_0", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    sam.SAM{},
+			name: "SAM API TLS v1.2",
+			input: sam.SAM{
+				Metadata: types.NewTestMetadata(),
+				APIs: []sam.API{
+					{
+						Metadata: types.NewTestMetadata(),
+						DomainConfiguration: sam.DomainConfiguration{
+							Metadata:       types.NewTestMetadata(),
+							SecurityPolicy: types.String("TLS_1_2", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

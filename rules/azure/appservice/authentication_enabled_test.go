@@ -6,24 +6,44 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/appservice"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAuthenticationEnabled(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    appservice.AppService
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    appservice.AppService{},
+			name: "App service authentication disabled",
+			input: appservice.AppService{
+				Metadata: types.NewTestMetadata(),
+				Services: []appservice.Service{
+					{
+						Metadata: types.NewTestMetadata(),
+						Authentication: struct{ Enabled types.BoolValue }{
+							Enabled: types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    appservice.AppService{},
+			name: "App service authentication enabled",
+			input: appservice.AppService{
+				Metadata: types.NewTestMetadata(),
+				Services: []appservice.Service{
+					{
+						Metadata: types.NewTestMetadata(),
+						Authentication: struct{ Enabled types.BoolValue }{
+							Enabled: types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

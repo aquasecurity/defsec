@@ -6,24 +6,190 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/database"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicFirewallAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    database.Database
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    database.Database{},
+			name: "MySQL server firewall allows public internet access",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MySQLServers: []database.MySQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata: types.NewTestMetadata(),
+							FirewallRules: []database.FirewallRule{
+								{
+									Metadata: types.NewTestMetadata(),
+									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
+									EndIP:    types.String("255.255.255.255", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    database.Database{},
+			name: "MS SQL server firewall allows public internet access",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata: types.NewTestMetadata(),
+							FirewallRules: []database.FirewallRule{
+								{
+									Metadata: types.NewTestMetadata(),
+									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
+									EndIP:    types.String("255.255.255.255", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "PostgreSQL server firewall allows public internet access",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				PostgreSQLServers: []database.PostgreSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata: types.NewTestMetadata(),
+							FirewallRules: []database.FirewallRule{
+								{
+									Metadata: types.NewTestMetadata(),
+									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
+									EndIP:    types.String("255.255.255.255", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "MariaDB server firewall allows public internet access",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MariaDBServers: []database.MariaDBServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata: types.NewTestMetadata(),
+							FirewallRules: []database.FirewallRule{
+								{
+									Metadata: types.NewTestMetadata(),
+									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
+									EndIP:    types.String("255.255.255.255", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "MySQL server firewall allows access to Azure services",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MySQLServers: []database.MySQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata: types.NewTestMetadata(),
+							FirewallRules: []database.FirewallRule{
+								{
+									Metadata: types.NewTestMetadata(),
+									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
+									EndIP:    types.String("0.0.0.0", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "MS SQL server firewall allows access to Azure services",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata: types.NewTestMetadata(),
+							FirewallRules: []database.FirewallRule{
+								{
+									Metadata: types.NewTestMetadata(),
+									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
+									EndIP:    types.String("0.0.0.0", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "PostgreSQL server firewall allows access to Azure services",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				PostgreSQLServers: []database.PostgreSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata: types.NewTestMetadata(),
+							FirewallRules: []database.FirewallRule{
+								{
+									Metadata: types.NewTestMetadata(),
+									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
+									EndIP:    types.String("0.0.0.0", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "MariaDB server firewall allows access to Azure services",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MariaDBServers: []database.MariaDBServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata: types.NewTestMetadata(),
+							FirewallRules: []database.FirewallRule{
+								{
+									Metadata: types.NewTestMetadata(),
+									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
+									EndIP:    types.String("0.0.0.0", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
