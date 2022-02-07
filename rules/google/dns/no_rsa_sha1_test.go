@@ -6,24 +6,66 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/dns"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoRsaSha1(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    dns.DNS
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    dns.DNS{},
+			name: "Zone signing using RSA SHA1 key",
+			input: dns.DNS{
+				Metadata: types.NewTestMetadata(),
+				ManagedZones: []dns.ManagedZone{
+					{
+						Metadata: types.NewTestMetadata(),
+						DNSSec: dns.DNSSec{
+							Metadata: types.NewTestMetadata(),
+							DefaultKeySpecs: dns.KeySpecs{
+								Metadata: types.NewTestMetadata(),
+								KeySigningKey: dns.Key{
+									Metadata:  types.NewTestMetadata(),
+									Algorithm: types.String("rsasha1", types.NewTestMetadata()),
+								},
+								ZoneSigningKey: dns.Key{
+									Metadata:  types.NewTestMetadata(),
+									Algorithm: types.String("rsasha1", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    dns.DNS{},
+			name: "Zone signing using RSA SHA512 key",
+			input: dns.DNS{
+				Metadata: types.NewTestMetadata(),
+				ManagedZones: []dns.ManagedZone{
+					{
+						Metadata: types.NewTestMetadata(),
+						DNSSec: dns.DNSSec{
+							Metadata: types.NewTestMetadata(),
+							DefaultKeySpecs: dns.KeySpecs{
+								Metadata: types.NewTestMetadata(),
+								KeySigningKey: dns.Key{
+									Metadata:  types.NewTestMetadata(),
+									Algorithm: types.String("rsasha512", types.NewTestMetadata()),
+								},
+								ZoneSigningKey: dns.Key{
+									Metadata:  types.NewTestMetadata(),
+									Algorithm: types.String("rsasha512", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
