@@ -6,24 +6,60 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/authorization"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckLimitRoleActions(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    authorization.Authorization
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    authorization.Authorization{},
+			name: "Wildcard action with all scopes",
+			input: authorization.Authorization{
+				Metadata: types.NewTestMetadata(),
+				RoleDefinitions: []authorization.RoleDefinition{
+					{
+						Metadata: types.NewTestMetadata(),
+						Permissions: []authorization.Permission{
+							{
+								Metadata: types.NewTestMetadata(),
+								Actions: []types.StringValue{
+									types.String("*", types.NewTestMetadata()),
+								},
+							},
+						},
+						AssignableScopes: []types.StringValue{
+							types.String("/", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    authorization.Authorization{},
+			name: "Wildcard action with specific scope",
+			input: authorization.Authorization{
+				Metadata: types.NewTestMetadata(),
+				RoleDefinitions: []authorization.RoleDefinition{
+					{
+						Metadata: types.NewTestMetadata(),
+						Permissions: []authorization.Permission{
+							{
+								Metadata: types.NewTestMetadata(),
+								Actions: []types.StringValue{
+									types.String("*", types.NewTestMetadata()),
+								},
+							},
+						},
+						AssignableScopes: []types.StringValue{
+							types.String("proper-scope", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

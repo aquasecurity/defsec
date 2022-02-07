@@ -6,24 +6,104 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/database"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckSecureTlsPolicy(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    database.Database
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    database.Database{},
+			name: "MS SQL server minimum TLS version 1.0",
+			input: database.Database{
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata:          types.NewTestMetadata(),
+							MinimumTLSVersion: types.String("1.0", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    database.Database{},
+			name: "MySQL server minimum TLS version 1.0",
+			input: database.Database{
+				MySQLServers: []database.MySQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata:          types.NewTestMetadata(),
+							MinimumTLSVersion: types.String("TLS1_0", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "PostgreSQL server minimum TLS version 1.0",
+			input: database.Database{
+				PostgreSQLServers: []database.PostgreSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata:          types.NewTestMetadata(),
+							MinimumTLSVersion: types.String("TLS1_0", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "MS SQL server minimum TLS version 1.2",
+			input: database.Database{
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata:          types.NewTestMetadata(),
+							MinimumTLSVersion: types.String("1.2", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "MySQL server minimum TLS version 1.2",
+			input: database.Database{
+				MySQLServers: []database.MySQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata:          types.NewTestMetadata(),
+							MinimumTLSVersion: types.String("TLS1_2", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "PostgreSQL server minimum TLS version 1.2",
+			input: database.Database{
+				PostgreSQLServers: []database.PostgreSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata:          types.NewTestMetadata(),
+							MinimumTLSVersion: types.String("TLS1_2", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

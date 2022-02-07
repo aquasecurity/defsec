@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/securitycenter"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckSetRequiredContactDetails(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    securitycenter.SecurityCenter
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    securitycenter.SecurityCenter{},
+			name: "Contact's phone number missing",
+			input: securitycenter.SecurityCenter{
+				Metadata: types.NewTestMetadata(),
+				Contacts: []securitycenter.Contact{
+					{
+						Metadata: types.NewTestMetadata(),
+						Phone:    types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    securitycenter.SecurityCenter{},
+			name: "Contact's phone number provided",
+			input: securitycenter.SecurityCenter{
+				Metadata: types.NewTestMetadata(),
+				Contacts: []securitycenter.Contact{
+					{
+						Metadata: types.NewTestMetadata(),
+						Phone:    types.String("+1-555-555-5555", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
