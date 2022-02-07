@@ -6,24 +6,65 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/network"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckRetentionPolicySet(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    network.Network
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    network.Network{},
+			name: "Network watcher flow log retention policy disabled",
+			input: network.Network{
+				Metadata: types.NewTestMetadata(),
+				NetworkWatcherFlowLogs: []network.NetworkWatcherFlowLog{
+					{
+						Metadata: types.NewTestMetadata(),
+						RetentionPolicy: network.RetentionPolicy{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Days:     types.Int(100, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    network.Network{},
+			name: "Network watcher flow log retention policy enabled for 30 days",
+			input: network.Network{
+				Metadata: types.NewTestMetadata(),
+				NetworkWatcherFlowLogs: []network.NetworkWatcherFlowLog{
+					{
+						Metadata: types.NewTestMetadata(),
+						RetentionPolicy: network.RetentionPolicy{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Days:     types.Int(30, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Network watcher flow log retention policy enabled for 100 days",
+			input: network.Network{
+				Metadata: types.NewTestMetadata(),
+				NetworkWatcherFlowLogs: []network.NetworkWatcherFlowLog{
+					{
+						Metadata: types.NewTestMetadata(),
+						RetentionPolicy: network.RetentionPolicy{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Days:     types.Int(100, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

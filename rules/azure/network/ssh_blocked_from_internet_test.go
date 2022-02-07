@@ -6,24 +6,72 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/network"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckSshBlockedFromInternet(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    network.Network
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    network.Network{},
+			name: "Security group rule allowing SSH access from the public internet",
+			input: network.Network{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []network.SecurityGroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						Rules: []network.SecurityGroupRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Allow:    types.Bool(true, types.NewTestMetadata()),
+								Outbound: types.Bool(false, types.NewTestMetadata()),
+								DestinationPorts: []network.PortRange{
+									{
+										Metadata: types.NewTestMetadata(),
+										Start:    22,
+										End:      22,
+									},
+								},
+								SourceAddresses: []types.StringValue{
+									types.String("*", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    network.Network{},
+			name: "Security group rule allowing SSH access from a specific address",
+			input: network.Network{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []network.SecurityGroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						Rules: []network.SecurityGroupRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Allow:    types.Bool(true, types.NewTestMetadata()),
+								Outbound: types.Bool(false, types.NewTestMetadata()),
+								DestinationPorts: []network.PortRange{
+									{
+										Metadata: types.NewTestMetadata(),
+										Start:    22,
+										End:      22,
+									},
+								},
+								SourceAddresses: []types.StringValue{
+									types.String("82.102.23.23", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

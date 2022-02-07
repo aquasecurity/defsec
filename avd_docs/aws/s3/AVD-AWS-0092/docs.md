@@ -1,16 +1,16 @@
 
-### S3 Bucket does not have logging enabled.
+### S3 Buckets not publically accessible through ACL
 
 
 Buckets should have logging enabled so that access can be audited. 
 
 
 ### Impact
-There is no way to determine the access to this bucket
+Public access to the bucket can lead to data leakage
 
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
 ### Links
-- https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html
+- https://docs.aws.amazon.com/AmazonS3/latest/userguide/acl-overview.html
         
