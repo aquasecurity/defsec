@@ -6,24 +6,52 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/storage"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAllowMicrosoftServiceBypass(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    storage.Storage
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    storage.Storage{},
+			name: "Azure storage rule doesn't allow bypass access",
+			input: storage.Storage{
+				Metadata: types.NewTestMetadata(),
+				Accounts: []storage.Account{
+					{
+						Metadata: types.NewTestMetadata(),
+						NetworkRules: []storage.NetworkRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Bypass:   []types.StringValue{},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    storage.Storage{},
+			name: "Azure storage rule allows bypass access to Microsoft services",
+			input: storage.Storage{
+				Metadata: types.NewTestMetadata(),
+				Accounts: []storage.Account{
+					{
+						Metadata: types.NewTestMetadata(),
+						NetworkRules: []storage.NetworkRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Bypass: []types.StringValue{
+									types.String("AzureServices", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
