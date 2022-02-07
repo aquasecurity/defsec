@@ -6,24 +6,44 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/appservice"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAccountIdentityRegistered(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    appservice.AppService
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    appservice.AppService{},
+			name: "App service identity not registered",
+			input: appservice.AppService{
+				Metadata: types.NewTestMetadata(),
+				Services: []appservice.Service{
+					{
+						Metadata: types.NewTestMetadata(),
+						Identity: struct{ Type types.StringValue }{
+							Type: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    appservice.AppService{},
+			name: "App service identity registered",
+			input: appservice.AppService{
+				Metadata: types.NewTestMetadata(),
+				Services: []appservice.Service{
+					{
+						Metadata: types.NewTestMetadata(),
+						Identity: struct{ Type types.StringValue }{
+							Type: types.String("UserAssigned", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

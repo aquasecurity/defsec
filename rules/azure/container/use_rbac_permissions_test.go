@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/container"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckUseRbacPermissions(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    container.Container
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    container.Container{},
+			name: "Role based access control disabled",
+			input: container.Container{
+				Metadata: types.NewTestMetadata(),
+				KubernetesClusters: []container.KubernetesCluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						RoleBasedAccessControl: container.RoleBasedAccessControl{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    container.Container{},
+			name: "Role based access control enabled",
+			input: container.Container{
+				Metadata: types.NewTestMetadata(),
+				KubernetesClusters: []container.KubernetesCluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						RoleBasedAccessControl: container.RoleBasedAccessControl{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

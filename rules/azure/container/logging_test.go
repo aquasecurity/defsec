@@ -6,24 +6,52 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/container"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckLogging(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    container.Container
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    container.Container{},
+			name: "Logging via OMS agent disabled",
+			input: container.Container{
+				Metadata: types.NewTestMetadata(),
+				KubernetesClusters: []container.KubernetesCluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						AddonProfile: container.AddonProfile{
+							Metadata: types.NewTestMetadata(),
+							OMSAgent: container.OMSAgent{
+								Metadata: types.NewTestMetadata(),
+								Enabled:  types.Bool(false, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    container.Container{},
+			name: "Logging via OMS agent enabled",
+			input: container.Container{
+				Metadata: types.NewTestMetadata(),
+				KubernetesClusters: []container.KubernetesCluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						AddonProfile: container.AddonProfile{
+							Metadata: types.NewTestMetadata(),
+							OMSAgent: container.OMSAgent{
+								Metadata: types.NewTestMetadata(),
+								Enabled:  types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

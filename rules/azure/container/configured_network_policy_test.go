@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/container"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckConfiguredNetworkPolicy(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    container.Container
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    container.Container{},
+			name: "Cluster missing network policy configuration",
+			input: container.Container{
+				Metadata: types.NewTestMetadata(),
+				KubernetesClusters: []container.KubernetesCluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						NetworkProfile: container.NetworkProfile{
+							Metadata:      types.NewTestMetadata(),
+							NetworkPolicy: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    container.Container{},
+			name: "Cluster with network policy configured",
+			input: container.Container{
+				Metadata: types.NewTestMetadata(),
+				KubernetesClusters: []container.KubernetesCluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						NetworkProfile: container.NetworkProfile{
+							Metadata:      types.NewTestMetadata(),
+							NetworkPolicy: types.String("calico", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
