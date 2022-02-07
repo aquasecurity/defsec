@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/monitor"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckCaptureAllActivities(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    monitor.Monitor
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    monitor.Monitor{},
+			name: "Log profile captures only write activities",
+			input: monitor.Monitor{
+				Metadata: types.NewTestMetadata(),
+				LogProfiles: []monitor.LogProfile{
+					{
+						Metadata: types.NewTestMetadata(),
+						Categories: []types.StringValue{
+							types.String("Write", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    monitor.Monitor{},
+			name: "Log profile captures action, write, delete activities",
+			input: monitor.Monitor{
+				Metadata: types.NewTestMetadata(),
+				LogProfiles: []monitor.LogProfile{
+					{
+						Metadata: types.NewTestMetadata(),
+						Categories: []types.StringValue{
+							types.String("Action", types.NewTestMetadata()),
+							types.String("Write", types.NewTestMetadata()),
+							types.String("Delete", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
