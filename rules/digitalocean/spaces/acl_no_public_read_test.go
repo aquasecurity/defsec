@@ -6,24 +6,65 @@ import (
 	"github.com/aquasecurity/defsec/provider/digitalocean/spaces"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAclNoPublicRead(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    spaces.Spaces
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    spaces.Spaces{},
+			name: "Space bucket with public read ACL",
+			input: spaces.Spaces{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []spaces.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						ACL:      types.String("public-read", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    spaces.Spaces{},
+			name: "Space bucket object with public read ACL",
+			input: spaces.Spaces{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []spaces.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						ACL:      types.String("private", types.NewTestMetadata()),
+						Objects: []spaces.Object{
+							{
+								Metadata: types.NewTestMetadata(),
+								ACL:      types.String("public-read", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Space bucket and bucket object with private ACL",
+			input: spaces.Spaces{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []spaces.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						ACL:      types.String("private", types.NewTestMetadata()),
+						Objects: []spaces.Object{
+							{
+								Metadata: types.NewTestMetadata(),
+								ACL:      types.String("private", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
