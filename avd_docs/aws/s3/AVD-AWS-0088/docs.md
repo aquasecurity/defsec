@@ -2,7 +2,7 @@
 ### Unencrypted S3 bucket.
 
 
-S3 Buckets should be encrypted with customer managed KMS keys and not default AWS managed keys, in order to allow granular control over access to specific buckets.
+S3 Buckets should be encrypted to protect the data that is stored within them if access is compromised.
 
 
 ### Impact

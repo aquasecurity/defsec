@@ -6,24 +6,45 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/database"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableAudit(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    database.Database
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    database.Database{},
+			name: "MS SQL server extended audit policy not configured",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata:                 types.NewTestMetadata(),
+						ExtendedAuditingPolicies: []database.ExtendedAuditingPolicy{},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    database.Database{},
+			name: "MS SQL server extended audit policy configured",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						ExtendedAuditingPolicies: []database.ExtendedAuditingPolicy{
+							{
+								Metadata:        types.NewTestMetadata(),
+								RetentionInDays: types.Int(6, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
