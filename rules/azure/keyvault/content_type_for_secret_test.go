@@ -6,24 +6,50 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/keyvault"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckContentTypeForSecret(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    keyvault.KeyVault
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    keyvault.KeyVault{},
+			name: "Key vault secret content-type not specified",
+			input: keyvault.KeyVault{
+				Metadata: types.NewTestMetadata(),
+				Vaults: []keyvault.Vault{
+					{
+						Metadata: types.NewTestMetadata(),
+						Secrets: []keyvault.Secret{
+							{
+								Metadata:    types.NewTestMetadata(),
+								ContentType: types.String("", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    keyvault.KeyVault{},
+			name: "Key vault secret content-type specified",
+			input: keyvault.KeyVault{
+				Metadata: types.NewTestMetadata(),
+				Vaults: []keyvault.Vault{
+					{
+						Metadata: types.NewTestMetadata(),
+						Secrets: []keyvault.Secret{
+							{
+								Metadata:    types.NewTestMetadata(),
+								ContentType: types.String("password", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

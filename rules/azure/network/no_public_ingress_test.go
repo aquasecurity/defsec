@@ -6,24 +6,58 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/network"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicIngress(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    network.Network
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    network.Network{},
+			name: "Security group inbound rule with wildcard source address",
+			input: network.Network{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []network.SecurityGroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						Rules: []network.SecurityGroupRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Allow:    types.Bool(true, types.NewTestMetadata()),
+								Outbound: types.Bool(false, types.NewTestMetadata()),
+								SourceAddresses: []types.StringValue{
+									types.String("*", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    network.Network{},
+			name: "Security group inbound rule with private source address",
+			input: network.Network{
+				Metadata: types.NewTestMetadata(),
+				SecurityGroups: []network.SecurityGroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						Rules: []network.SecurityGroupRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Allow:    types.Bool(true, types.NewTestMetadata()),
+								Outbound: types.Bool(false, types.NewTestMetadata()),
+								SourceAddresses: []types.StringValue{
+									types.String("10.0.0.0/16", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
