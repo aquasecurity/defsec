@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/securitycenter"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableStandardSubscription(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    securitycenter.SecurityCenter
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    securitycenter.SecurityCenter{},
+			name: "Security center set with free subscription",
+			input: securitycenter.SecurityCenter{
+				Metadata: types.NewTestMetadata(),
+				Subscriptions: []securitycenter.SubscriptionPricing{
+					{
+						Metadata: types.NewTestMetadata(),
+						Tier:     types.String(securitycenter.TierFree, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    securitycenter.SecurityCenter{},
+			name: "Security center set with standard subscription",
+			input: securitycenter.SecurityCenter{
+				Metadata: types.NewTestMetadata(),
+				Subscriptions: []securitycenter.SubscriptionPricing{
+					{
+						Metadata: types.NewTestMetadata(),
+						Tier:     types.String(securitycenter.TierStandard, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
