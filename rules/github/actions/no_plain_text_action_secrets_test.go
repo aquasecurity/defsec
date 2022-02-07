@@ -6,24 +6,34 @@ import (
 	"github.com/aquasecurity/defsec/provider/github"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPlainTextActionEnvironmentSecrets(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    []github.EnvironmentSecret
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    []github.EnvironmentSecret{},
+			name: "Github actions environment secret has plain text value",
+			input: []github.EnvironmentSecret{
+				{
+					Metadata:       types.NewTestMetadata(),
+					PlainTextValue: types.String("sensitive secret string", types.NewTestMetadata()),
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    []github.EnvironmentSecret{},
+			name: "Github actions environment secret has no plain text value",
+			input: []github.EnvironmentSecret{
+				{
+					Metadata:       types.NewTestMetadata(),
+					PlainTextValue: types.String("", types.NewTestMetadata()),
+				},
+			},
 			expected: false,
 		},
 	}
