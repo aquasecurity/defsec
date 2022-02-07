@@ -6,24 +6,110 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/database"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableSslEnforcement(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    database.Database
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    database.Database{},
+			name: "MariaDB server SSL not enforced",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MariaDBServers: []database.MariaDBServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata:             types.NewTestMetadata(),
+							EnableSSLEnforcement: types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    database.Database{},
+			name: "MySQL server SSL not enforced",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MySQLServers: []database.MySQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata:             types.NewTestMetadata(),
+							EnableSSLEnforcement: types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "PostgreSQL server SSL not enforced",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				PostgreSQLServers: []database.PostgreSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata:             types.NewTestMetadata(),
+							EnableSSLEnforcement: types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "MariaDB server SSL enforced",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MariaDBServers: []database.MariaDBServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata:             types.NewTestMetadata(),
+							EnableSSLEnforcement: types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "MySQL server SSL enforced",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MySQLServers: []database.MySQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata:             types.NewTestMetadata(),
+							EnableSSLEnforcement: types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "PostgreSQL server SSL enforced",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				PostgreSQLServers: []database.PostgreSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Server: database.Server{
+							Metadata:             types.NewTestMetadata(),
+							EnableSSLEnforcement: types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

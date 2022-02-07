@@ -6,24 +6,50 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/database"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckRetentionPeriodSet(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    database.Database
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    database.Database{},
+			name: "MS SQL server auditing policy with retention period of 30 days",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						ExtendedAuditingPolicies: []database.ExtendedAuditingPolicy{
+							{
+								Metadata:        types.NewTestMetadata(),
+								RetentionInDays: types.Int(30, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    database.Database{},
+			name: "MS SQL server auditing policy with retention period of 90 days",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						ExtendedAuditingPolicies: []database.ExtendedAuditingPolicy{
+							{
+								Metadata:        types.NewTestMetadata(),
+								RetentionInDays: types.Int(90, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
