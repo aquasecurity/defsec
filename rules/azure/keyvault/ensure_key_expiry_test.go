@@ -2,28 +2,55 @@ package keyvault
 
 import (
 	"testing"
+	"time"
 
 	"github.com/aquasecurity/defsec/provider/azure/keyvault"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnsureKeyExpiry(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    keyvault.KeyVault
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    keyvault.KeyVault{},
+			name: "Key vault key expiration date not set",
+			input: keyvault.KeyVault{
+				Metadata: types.NewTestMetadata(),
+				Vaults: []keyvault.Vault{
+					{
+						Metadata: types.NewTestMetadata(),
+						Keys: []keyvault.Key{
+							{
+								Metadata:   types.NewTestMetadata(),
+								ExpiryDate: types.Time(time.Time{}, types.NewTestMetadata().GetMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    keyvault.KeyVault{},
+			name: "Key vault key expiration date specified",
+			input: keyvault.KeyVault{
+				Metadata: types.NewTestMetadata(),
+				Vaults: []keyvault.Vault{
+					{
+						Metadata: types.NewTestMetadata(),
+						Keys: []keyvault.Key{
+							{
+								Metadata:   types.NewTestMetadata(),
+								ExpiryDate: types.Time(time.Now(), types.NewTestMetadata().GetMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

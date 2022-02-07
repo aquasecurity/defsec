@@ -6,24 +6,68 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/sam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoFunctionPolicyWildcards(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    sam.SAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    sam.SAM{},
+			name: "Wildcard action in function policy",
+			input: sam.SAM{
+				Metadata: types.NewTestMetadata(),
+				Functions: []sam.Function{
+					{
+						Metadata: types.NewTestMetadata(),
+						Policies: []types.StringValue{
+							types.String(`{
+								"Version": "2012-10-17",
+								"Statement": [
+								  {
+									"Effect": "Allow",
+									"Action": ["s3:*"],
+									"Resource": ["arn:aws:s3:::my-bucket/*"],
+									"Principal": {
+										"AWS": "*"
+									}
+								  }
+								]
+							  }`, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    sam.SAM{},
+			name: "Specific action in function policy",
+			input: sam.SAM{
+				Metadata: types.NewTestMetadata(),
+				Functions: []sam.Function{
+					{
+						Metadata: types.NewTestMetadata(),
+						Policies: []types.StringValue{
+							types.String(`{
+								"Version": "2012-10-17",
+								"Statement": [
+								  {
+									"Effect": "Allow",
+									"Action": ["s3:GetObject"],
+									"Resource": ["arn:aws:s3:::my-bucket/*"],
+									"Principal": {
+										"AWS": "proper-value"
+									}
+								  }
+								]
+							  }`, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

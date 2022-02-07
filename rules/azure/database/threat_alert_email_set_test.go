@@ -6,24 +6,52 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/database"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckThreatAlertEmailSet(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    database.Database
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    database.Database{},
+			name: "No email address provided for threat alerts",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						SecurityAlertPolicies: []database.SecurityAlertPolicy{
+							{
+								Metadata:       types.NewTestMetadata(),
+								EmailAddresses: []types.StringValue{},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    database.Database{},
+			name: "Email address provided for threat alerts",
+			input: database.Database{
+				Metadata: types.NewTestMetadata(),
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata: types.NewTestMetadata(),
+						SecurityAlertPolicies: []database.SecurityAlertPolicy{
+							{
+								Metadata: types.NewTestMetadata(),
+								EmailAddresses: []types.StringValue{
+									types.String("sample@email.com", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

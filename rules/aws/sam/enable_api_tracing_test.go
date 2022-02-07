@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/sam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableApiTracing(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    sam.SAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    sam.SAM{},
+			name: "API X-Ray tracing disabled",
+			input: sam.SAM{
+				Metadata: types.NewTestMetadata(),
+				APIs: []sam.API{
+					{
+						Metadata:       types.NewTestMetadata(),
+						TracingEnabled: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    sam.SAM{},
+			name: "API X-Ray tracing enabled",
+			input: sam.SAM{
+				Metadata: types.NewTestMetadata(),
+				APIs: []sam.API{
+					{
+						Metadata:       types.NewTestMetadata(),
+						TracingEnabled: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
