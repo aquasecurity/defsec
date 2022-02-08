@@ -6,24 +6,68 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/storage"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    storage.Storage
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    storage.Storage{},
+			name: "Storage account container public access set to blob",
+			input: storage.Storage{
+				Metadata: types.NewTestMetadata(),
+				Accounts: []storage.Account{
+					{
+						Metadata: types.NewTestMetadata(),
+						Containers: []storage.Container{
+							{
+								Metadata:     types.NewTestMetadata(),
+								PublicAccess: types.String(storage.PublicAccessBlob, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    storage.Storage{},
+			name: "Storage account container public access set to container",
+			input: storage.Storage{
+				Metadata: types.NewTestMetadata(),
+				Accounts: []storage.Account{
+					{
+						Metadata: types.NewTestMetadata(),
+						Containers: []storage.Container{
+							{
+								Metadata:     types.NewTestMetadata(),
+								PublicAccess: types.String(storage.PublicAccessContainer, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Storage account container public access set to off",
+			input: storage.Storage{
+				Metadata: types.NewTestMetadata(),
+				Accounts: []storage.Account{
+					{
+						Metadata: types.NewTestMetadata(),
+						Containers: []storage.Container{
+							{
+								Metadata:     types.NewTestMetadata(),
+								PublicAccess: types.String(storage.PublicAccessOff, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

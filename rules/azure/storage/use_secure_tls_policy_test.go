@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/storage"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckUseSecureTlsPolicy(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    storage.Storage
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    storage.Storage{},
+			name: "Storage account minimum TLS version 1.0",
+			input: storage.Storage{
+				Metadata: types.NewTestMetadata(),
+				Accounts: []storage.Account{
+					{
+						Metadata:          types.NewTestMetadata(),
+						MinimumTLSVersion: types.String("TLS1_0", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    storage.Storage{},
+			name: "Storage account minimum TLS version 1.2",
+			input: storage.Storage{
+				Metadata: types.NewTestMetadata(),
+				Accounts: []storage.Account{
+					{
+						Metadata:          types.NewTestMetadata(),
+						MinimumTLSVersion: types.String("TLS1_2", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

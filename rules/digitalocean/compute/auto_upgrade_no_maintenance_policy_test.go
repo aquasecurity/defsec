@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/digitalocean/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckAutoUpgrade(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Kubernetes cluster auto-upgrade disabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				KubernetesClusters: []compute.KubernetesCluster{
+					{
+						Metadata:    types.NewTestMetadata(),
+						AutoUpgrade: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Kubernetes cluster auto-upgrade enabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				KubernetesClusters: []compute.KubernetesCluster{
+					{
+						Metadata:    types.NewTestMetadata(),
+						AutoUpgrade: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

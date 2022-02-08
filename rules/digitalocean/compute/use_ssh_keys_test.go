@@ -6,24 +6,42 @@ import (
 	"github.com/aquasecurity/defsec/provider/digitalocean/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckUseSshKeys(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Droplet missing SSH keys",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Droplets: []compute.Droplet{
+					{
+						Metadata: types.NewTestMetadata(),
+						SSHKeys:  []types.StringValue{},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Droplet with an SSH key provided",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Droplets: []compute.Droplet{
+					{
+						Metadata: types.NewTestMetadata(),
+						SSHKeys: []types.StringValue{
+							types.String("my-ssh-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

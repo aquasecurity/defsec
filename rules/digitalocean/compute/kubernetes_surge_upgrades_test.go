@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/digitalocean/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckKubernetesSurgeUpgrades(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Kubernetes cluster surge upgrade disabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				KubernetesClusters: []compute.KubernetesCluster{
+					{
+						Metadata:     types.NewTestMetadata(),
+						SurgeUpgrade: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Kubernetes cluster surge upgrade enabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				KubernetesClusters: []compute.KubernetesCluster{
+					{
+						Metadata:     types.NewTestMetadata(),
+						SurgeUpgrade: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/keyvault"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckSpecifyNetworkAcl(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    keyvault.KeyVault
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    keyvault.KeyVault{},
+			name: "Network ACL default action set to allow",
+			input: keyvault.KeyVault{
+				Metadata: types.NewTestMetadata(),
+				Vaults: []keyvault.Vault{
+					{
+						Metadata: types.NewTestMetadata(),
+						NetworkACLs: keyvault.NetworkACLs{
+							Metadata:      types.NewTestMetadata(),
+							DefaultAction: types.String("Allow", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    keyvault.KeyVault{},
+			name: "Network ACL default action set to deny",
+			input: keyvault.KeyVault{
+				Metadata: types.NewTestMetadata(),
+				Vaults: []keyvault.Vault{
+					{
+						Metadata: types.NewTestMetadata(),
+						NetworkACLs: keyvault.NetworkACLs{
+							Metadata:      types.NewTestMetadata(),
+							DefaultAction: types.String("Deny", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

@@ -6,24 +6,50 @@ import (
 	"github.com/aquasecurity/defsec/provider/digitalocean/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnforceHttps(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Load balancer forwarding rule using HTTP",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				LoadBalancers: []compute.LoadBalancer{
+					{
+						Metadata: types.NewTestMetadata(),
+						ForwardingRules: []compute.ForwardingRule{
+							{
+								Metadata:      types.NewTestMetadata(),
+								EntryProtocol: types.String("http", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Load balancer forwarding rule using HTTPS",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				LoadBalancers: []compute.LoadBalancer{
+					{
+						Metadata: types.NewTestMetadata(),
+						ForwardingRules: []compute.ForwardingRule{
+							{
+								Metadata:      types.NewTestMetadata(),
+								EntryProtocol: types.String("https", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

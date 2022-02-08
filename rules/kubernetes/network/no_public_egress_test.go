@@ -6,24 +6,50 @@ import (
 	"github.com/aquasecurity/defsec/provider/kubernetes"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicEgress(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    []kubernetes.NetworkPolicy
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    []kubernetes.NetworkPolicy{},
+			name: "Public destination CIDR",
+			input: []kubernetes.NetworkPolicy{
+				{
+					Metadata: types.NewTestMetadata(),
+					Spec: kubernetes.Spec{
+						Metadata: types.NewTestMetadata(),
+						Egress: kubernetes.Egress{
+							Metadata: types.NewTestMetadata(),
+							DestinationCIDRs: []types.StringValue{
+								types.String("0.0.0.0/0", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    []kubernetes.NetworkPolicy{},
+			name: "Private destination CIDR",
+			input: []kubernetes.NetworkPolicy{
+				{
+					Metadata: types.NewTestMetadata(),
+					Spec: kubernetes.Spec{
+						Metadata: types.NewTestMetadata(),
+						Egress: kubernetes.Egress{
+							Metadata: types.NewTestMetadata(),
+							DestinationCIDRs: []types.StringValue{
+								types.String("10.0.0.0/16", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

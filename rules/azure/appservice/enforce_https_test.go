@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/appservice"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnforceHttps(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    appservice.AppService
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    appservice.AppService{},
+			name: "Function app doesn't enforce HTTPS",
+			input: appservice.AppService{
+				Metadata: types.NewTestMetadata(),
+				FunctionApps: []appservice.FunctionApp{
+					{
+						Metadata:  types.NewTestMetadata(),
+						HTTPSOnly: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    appservice.AppService{},
+			name: "Function app enforces HTTPS",
+			input: appservice.AppService{
+				Metadata: types.NewTestMetadata(),
+				FunctionApps: []appservice.FunctionApp{
+					{
+						Metadata:  types.NewTestMetadata(),
+						HTTPSOnly: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
