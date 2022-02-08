@@ -10,6 +10,9 @@ func GetAllNonTestRegoFiles() ([]*RegoMetadata, error) {
 	var regoFiles []*RegoMetadata
 
 	if err := filepath.Walk("./", func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
 		if info.IsDir() ||
 			strings.HasSuffix(info.Name(), "_test.rego") ||
 			!strings.Contains(path, "/policies/") ||

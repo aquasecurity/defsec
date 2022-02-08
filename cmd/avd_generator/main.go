@@ -5,7 +5,7 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/aquasecurity/defsec/cmd/tools/rego"
+	"github.com/aquasecurity/defsec/cmd/rego"
 )
 
 func main() {
