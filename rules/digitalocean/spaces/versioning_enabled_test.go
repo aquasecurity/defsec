@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/digitalocean/spaces"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckVersioningEnabled(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    spaces.Spaces
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    spaces.Spaces{},
+			name: "Space bucket versioning disabled",
+			input: spaces.Spaces{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []spaces.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						Versioning: spaces.Versioning{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    spaces.Spaces{},
+			name: "Space bucket versioning enabled",
+			input: spaces.Spaces{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []spaces.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						Versioning: spaces.Versioning{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
