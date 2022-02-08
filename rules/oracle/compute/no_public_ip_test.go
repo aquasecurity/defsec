@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/oracle"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicIp(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    oracle.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    oracle.Compute{},
+			name: "Compute instance public reservation pool",
+			input: oracle.Compute{
+				Metadata: types.NewTestMetadata(),
+				AddressReservations: []oracle.AddressReservation{
+					{
+						Metadata: types.NewTestMetadata(),
+						Pool:     types.String("public-ippool", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    oracle.Compute{},
+			name: "Compute instance cloud reservation pool",
+			input: oracle.Compute{
+				Metadata: types.NewTestMetadata(),
+				AddressReservations: []oracle.AddressReservation{
+					{
+						Metadata: types.NewTestMetadata(),
+						Pool:     types.String("cloud-ippool", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
