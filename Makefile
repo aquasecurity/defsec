@@ -25,3 +25,10 @@ update-loader:
 	python3 scripts/update_loader_rules.py
 	@goimports -w loader/rules.go
 
+.PHONY: metadata_lint
+metadata_lint:
+	go run ./cmd/lint
+
+.PHONY: generate_missing_docs
+generate_missing_docs:
+	go run ./cmd/avd_generator

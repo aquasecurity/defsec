@@ -1,0 +1,41 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*"
+env:
+  GH_USER: aqua-bot
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get the semantic version
+        run: echo "RELEASE_VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+      - name: Get the minor version
+        run: echo "MINOR_VERSION=$(echo ${RELEASE_VERSION} | cut -d. -f1,2)" >> $GITHUB_ENV
+      - name: Get the major version
+        run: echo "MAJOR_VERSION=$(echo ${RELEASE_VERSION} | cut -d. -f1)" >> $GITHUB_ENV
+      - name: Copy Rego files
+        run: rsync -avr --exclude=README.md --exclude="*_test.rego" --exclude="*.go" --exclude=test --exclude=advanced rules/docker rules/kubernetes bundle/
+      - name: Copy manifest
+        run: |
+          cp .manifest bundle/
+          sed -i -e "s/\[GITHUB_SHA\]/${RELEASE_VERSION}/" bundle/.manifest
+      - name: Compress
+        run: tar -C bundle -czvf bundle.tar.gz .
+      - name: Login to GitHub Packages Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ env.GH_USER }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy to GitHub Packages Container registry
+        run: |
+          tags=(latest ${{ env.RELEASE_VERSION}} ${{env.MINOR_VERSION }} ${{ env.MAJOR_VERSION }})
+          for tag in ${tags[@]}; do
+              oras push ghcr.io/${{ github.repository }}:${tag} \
+              --manifest-config /dev/null:application/vnd.cncf.openpolicyagent.config.v1+json \
+              bundle.tar.gz:application/vnd.cncf.openpolicyagent.layer.v1.tar+gzip
+          done
