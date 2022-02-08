@@ -1,3 +1,10 @@
+# github.com/BurntSushi/toml v1.0.0
+## explicit; go 1.16
+github.com/BurntSushi/toml
+github.com/BurntSushi/toml/internal
+# github.com/OneOfOne/xxhash v1.2.8
+## explicit; go 1.11
+github.com/OneOfOne/xxhash
 # github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7
 ## explicit; go 1.13
 github.com/ProtonMail/go-crypto/bitcurves
@@ -19,9 +26,277 @@ github.com/ProtonMail/go-crypto/openpgp/s2k
 # github.com/acomagu/bufpipe v1.0.3
 ## explicit; go 1.12
 github.com/acomagu/bufpipe
+# github.com/agext/levenshtein v1.2.3
+## explicit
+github.com/agext/levenshtein
+# github.com/apparentlymart/go-cidr v1.1.0
+## explicit
+github.com/apparentlymart/go-cidr/cidr
+# github.com/apparentlymart/go-textseg/v13 v13.0.0
+## explicit; go 1.16
+github.com/apparentlymart/go-textseg/v13/textseg
+# github.com/aquasecurity/cfsec v0.2.2
+## explicit; go 1.16
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/apigateway
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/athena
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/autoscaling
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/cloudfront
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/cloudtrail
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/cloudwatch
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/codebuild
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/config
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/documentdb
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/dynamodb
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/ebs
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/ec2
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/ecr
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/ecs
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/efs
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/eks
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/elasticache
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/elasticsearch
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/elb
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/iam
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/kinesis
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/lambda
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/mq
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/msk
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/neptune
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/rds
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/redshift
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/s3
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/sns
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/sqs
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/ssm
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/vpc
+github.com/aquasecurity/cfsec/internal/app/cfsec/adapter/aws/workspaces
+github.com/aquasecurity/cfsec/internal/app/cfsec/cftypes
+github.com/aquasecurity/cfsec/internal/app/cfsec/debug
+github.com/aquasecurity/cfsec/internal/app/cfsec/loader
+github.com/aquasecurity/cfsec/internal/app/cfsec/parser
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/apigateway
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/athena
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/autoscaling
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/cloudfront
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/cloudtrail
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/cloudwatch
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/codebuild
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/config
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/documentdb
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/dynamodb
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/ebs
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/ec2
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/ecr
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/ecs
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/efs
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/eks
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/elasticache
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/elasticsearch
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/iam
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/kinesis
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/lambda
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/mq
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/msk
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/neptune
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/rds
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/redshift
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/s3
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/sns
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/sqs
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/ssm
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/vpc
+github.com/aquasecurity/cfsec/internal/app/cfsec/rules/aws/workspaces
+github.com/aquasecurity/cfsec/internal/app/cfsec/scanner
+github.com/aquasecurity/cfsec/internal/app/cfsec/util
+github.com/aquasecurity/cfsec/pkg/externalscan
+# github.com/aquasecurity/fanal v0.0.0-20220208104902-9680a15403e0
+## explicit; go 1.17
+github.com/aquasecurity/fanal/analyzer
+github.com/aquasecurity/fanal/analyzer/config
+github.com/aquasecurity/fanal/analyzer/config/cloudformation
+github.com/aquasecurity/fanal/analyzer/config/docker
+github.com/aquasecurity/fanal/analyzer/config/hcl
+github.com/aquasecurity/fanal/analyzer/config/json
+github.com/aquasecurity/fanal/analyzer/config/terraform
+github.com/aquasecurity/fanal/analyzer/config/toml
+github.com/aquasecurity/fanal/analyzer/config/yaml
+github.com/aquasecurity/fanal/analyzer/os
+github.com/aquasecurity/fanal/applier
+github.com/aquasecurity/fanal/artifact
+github.com/aquasecurity/fanal/artifact/local
+github.com/aquasecurity/fanal/cache
+github.com/aquasecurity/fanal/config/parser/dockerfile
+github.com/aquasecurity/fanal/config/parser/hcl2
+github.com/aquasecurity/fanal/config/parser/yaml
+github.com/aquasecurity/fanal/config/scanner
+github.com/aquasecurity/fanal/external
+github.com/aquasecurity/fanal/hook
+github.com/aquasecurity/fanal/log
+github.com/aquasecurity/fanal/policy
+github.com/aquasecurity/fanal/types
+github.com/aquasecurity/fanal/utils
+github.com/aquasecurity/fanal/walker
+# github.com/aquasecurity/go-dep-parser v0.0.0-20211224170007-df43bca6b6ff
+## explicit; go 1.12
+github.com/aquasecurity/go-dep-parser/pkg/io
+# github.com/aquasecurity/tfsec v0.63.1
+## explicit; go 1.17
+github.com/aquasecurity/tfsec/internal/app/tfsec/block
+github.com/aquasecurity/tfsec/internal/app/tfsec/cidr
+github.com/aquasecurity/tfsec/internal/app/tfsec/custom
+github.com/aquasecurity/tfsec/internal/app/tfsec/debug
+github.com/aquasecurity/tfsec/internal/app/tfsec/funcs
+github.com/aquasecurity/tfsec/internal/app/tfsec/metrics
+github.com/aquasecurity/tfsec/internal/app/tfsec/parser
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/apigateway
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/athena
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/autoscaling
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/cloudfront
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/cloudtrail
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/cloudwatch
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/codebuild
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/config
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/documentdb
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/dynamodb
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/ebs
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/ec2
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/ecr
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/ecs
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/efs
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/eks
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/elasticache
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/elasticsearch
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/elasticservice
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/elb
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/elbv2
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/iam
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/kinesis
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/kms
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/lambda
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/launch
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/misc
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/mq
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/msk
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/neptune
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/rds
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/redshift
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/s3
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/sns
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/sqs
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/ssm
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/vpc
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/aws/workspace
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/appservice
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/authorization
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/compute
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/container
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/database
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/datafactory
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/datalake
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/functionapp
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/keyvault
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/monitor
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/mssql
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/network
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/securitycenter
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/storage
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/azure/synapse
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/cloudstack/compute
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/digitalocean/compute
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/digitalocean/droplet
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/digitalocean/loadbalancing
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/digitalocean/spaces
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/general/secrets
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/github/repositories
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/google/bigquery
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/google/compute
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/google/dns
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/google/gke
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/google/iam
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/google/kms
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/google/project
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/google/sql
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/google/storage
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/kubernetes/network
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/openstack/compute
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/openstack/fw
+github.com/aquasecurity/tfsec/internal/app/tfsec/rules/oracle/compute
+github.com/aquasecurity/tfsec/internal/app/tfsec/scanner
+github.com/aquasecurity/tfsec/internal/app/tfsec/schema
+github.com/aquasecurity/tfsec/internal/app/tfsec/security
+github.com/aquasecurity/tfsec/pkg/externalscan
+github.com/aquasecurity/tfsec/pkg/provider
+github.com/aquasecurity/tfsec/pkg/result
+github.com/aquasecurity/tfsec/pkg/rule
+github.com/aquasecurity/tfsec/pkg/severity
+# github.com/aws/aws-sdk-go v1.42.30
+## explicit; go 1.11
+github.com/aws/aws-sdk-go/aws
+github.com/aws/aws-sdk-go/aws/arn
+github.com/aws/aws-sdk-go/aws/awserr
+github.com/aws/aws-sdk-go/aws/awsutil
+github.com/aws/aws-sdk-go/aws/client
+github.com/aws/aws-sdk-go/aws/client/metadata
+github.com/aws/aws-sdk-go/aws/corehandlers
+github.com/aws/aws-sdk-go/aws/credentials
+github.com/aws/aws-sdk-go/aws/endpoints
+github.com/aws/aws-sdk-go/aws/request
+github.com/aws/aws-sdk-go/aws/signer/v4
+github.com/aws/aws-sdk-go/internal/context
+github.com/aws/aws-sdk-go/internal/ini
+github.com/aws/aws-sdk-go/internal/s3shared
+github.com/aws/aws-sdk-go/internal/s3shared/arn
+github.com/aws/aws-sdk-go/internal/s3shared/s3err
+github.com/aws/aws-sdk-go/internal/sdkio
+github.com/aws/aws-sdk-go/internal/sdkmath
+github.com/aws/aws-sdk-go/internal/sdkrand
+github.com/aws/aws-sdk-go/internal/shareddefaults
+github.com/aws/aws-sdk-go/internal/strings
+github.com/aws/aws-sdk-go/internal/sync/singleflight
+github.com/aws/aws-sdk-go/private/checksum
+github.com/aws/aws-sdk-go/private/protocol
+github.com/aws/aws-sdk-go/private/protocol/eventstream
+github.com/aws/aws-sdk-go/private/protocol/eventstream/eventstreamapi
+github.com/aws/aws-sdk-go/private/protocol/query
+github.com/aws/aws-sdk-go/private/protocol/query/queryutil
+github.com/aws/aws-sdk-go/private/protocol/rest
+github.com/aws/aws-sdk-go/private/protocol/restxml
+github.com/aws/aws-sdk-go/private/protocol/xml/xmlutil
+github.com/aws/aws-sdk-go/service/s3
+github.com/aws/aws-sdk-go/service/s3/s3iface
+github.com/aws/aws-sdk-go/service/s3/s3manager
+github.com/aws/aws-sdk-go/service/s3/s3manager/s3manageriface
+# github.com/bmatcuk/doublestar v1.3.4
+## explicit; go 1.12
+github.com/bmatcuk/doublestar
+# github.com/cespare/xxhash/v2 v2.1.2
+## explicit; go 1.11
+github.com/cespare/xxhash/v2
+# github.com/containerd/typeurl v1.0.2
+## explicit; go 1.13
+github.com/containerd/typeurl
 # github.com/davecgh/go-spew v1.1.1
 ## explicit
 github.com/davecgh/go-spew/spew
+# github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f
+## explicit
+github.com/dgryski/go-rendezvous
+# github.com/docker/docker v20.10.12+incompatible
+## explicit
+github.com/docker/docker/api/types/blkiodev
+github.com/docker/docker/api/types/container
+github.com/docker/docker/api/types/mount
+github.com/docker/docker/api/types/strslice
+# github.com/docker/go-connections v0.4.0
+## explicit
+github.com/docker/go-connections/nat
+# github.com/docker/go-units v0.4.0
+## explicit
+github.com/docker/go-units
 # github.com/emirpasic/gods v1.12.0
 ## explicit
 github.com/emirpasic/gods/containers
@@ -73,6 +348,9 @@ github.com/gdamore/tcell/v2/terminfo/x/xfce
 github.com/gdamore/tcell/v2/terminfo/x/xterm
 github.com/gdamore/tcell/v2/terminfo/x/xterm_kitty
 github.com/gdamore/tcell/v2/terminfo/x/xterm_termite
+# github.com/ghodss/yaml v1.0.0
+## explicit
+github.com/ghodss/yaml
 # github.com/go-git/gcfg v1.5.0
 ## explicit
 github.com/go-git/gcfg
@@ -106,9 +384,78 @@ github.com/go-git/go-git/v5/utils/ioutil
 github.com/go-git/go-git/v5/utils/merkletrie
 github.com/go-git/go-git/v5/utils/merkletrie/internal/frame
 github.com/go-git/go-git/v5/utils/merkletrie/noder
+# github.com/go-redis/redis/v8 v8.11.4
+## explicit; go 1.13
+github.com/go-redis/redis/v8
+github.com/go-redis/redis/v8/internal
+github.com/go-redis/redis/v8/internal/hashtag
+github.com/go-redis/redis/v8/internal/hscan
+github.com/go-redis/redis/v8/internal/pool
+github.com/go-redis/redis/v8/internal/proto
+github.com/go-redis/redis/v8/internal/rand
+github.com/go-redis/redis/v8/internal/util
+# github.com/gobwas/glob v0.2.3
+## explicit
+github.com/gobwas/glob
+github.com/gobwas/glob/compiler
+github.com/gobwas/glob/match
+github.com/gobwas/glob/syntax
+github.com/gobwas/glob/syntax/ast
+github.com/gobwas/glob/syntax/lexer
+github.com/gobwas/glob/util/runes
+github.com/gobwas/glob/util/strings
+# github.com/gogo/protobuf v1.3.2
+## explicit; go 1.15
+github.com/gogo/protobuf/proto
+github.com/gogo/protobuf/sortkeys
+github.com/gogo/protobuf/types
+# github.com/golang/protobuf v1.5.2
+## explicit; go 1.9
+github.com/golang/protobuf/proto
+# github.com/google/go-containerregistry v0.7.1-0.20211214010025-a65b7844a475
+## explicit; go 1.14
+github.com/google/go-containerregistry/pkg/v1
+github.com/google/go-containerregistry/pkg/v1/types
+# github.com/google/uuid v1.3.0
+## explicit
+github.com/google/uuid
+# github.com/hashicorp/errwrap v1.1.0
+## explicit
+github.com/hashicorp/errwrap
+# github.com/hashicorp/go-multierror v1.1.1
+## explicit; go 1.13
+github.com/hashicorp/go-multierror
+# github.com/hashicorp/go-uuid v1.0.2
+## explicit
+github.com/hashicorp/go-uuid
+# github.com/hashicorp/hcl v1.0.0
+## explicit
+github.com/hashicorp/hcl
+github.com/hashicorp/hcl/hcl/ast
+github.com/hashicorp/hcl/hcl/parser
+github.com/hashicorp/hcl/hcl/scanner
+github.com/hashicorp/hcl/hcl/strconv
+github.com/hashicorp/hcl/hcl/token
+github.com/hashicorp/hcl/json/parser
+github.com/hashicorp/hcl/json/scanner
+github.com/hashicorp/hcl/json/token
+# github.com/hashicorp/hcl/v2 v2.11.1
+## explicit; go 1.12
+github.com/hashicorp/hcl/v2
+github.com/hashicorp/hcl/v2/ext/customdecode
+github.com/hashicorp/hcl/v2/ext/tryfunc
+github.com/hashicorp/hcl/v2/hclparse
+github.com/hashicorp/hcl/v2/hclsyntax
+github.com/hashicorp/hcl/v2/json
 # github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99
 ## explicit
 github.com/jbenet/go-context/io
+# github.com/jmespath/go-jmespath v0.4.0
+## explicit; go 1.14
+github.com/jmespath/go-jmespath
+# github.com/knqyf263/nested v0.0.1
+## explicit
+github.com/knqyf263/nested
 # github.com/liamg/clinch v1.5.6
 ## explicit; go 1.13
 github.com/liamg/clinch/terminal
@@ -118,18 +465,102 @@ github.com/liamg/gifwrap/pkg/ascii
 # github.com/liamg/iamgo v0.0.2
 ## explicit; go 1.17
 github.com/liamg/iamgo
+# github.com/liamg/jfather v0.0.2
+## explicit; go 1.16
+github.com/liamg/jfather
 # github.com/liamg/tml v0.6.0
 ## explicit; go 1.12
 github.com/liamg/tml
 # github.com/lucasb-eyer/go-colorful v1.0.3
 ## explicit; go 1.12
 github.com/lucasb-eyer/go-colorful
-# github.com/mattn/go-runewidth v0.0.10
+# github.com/mattn/go-runewidth v0.0.12
 ## explicit; go 1.9
 github.com/mattn/go-runewidth
 # github.com/mitchellh/go-homedir v1.1.0
 ## explicit
 github.com/mitchellh/go-homedir
+# github.com/mitchellh/go-wordwrap v1.0.1
+## explicit; go 1.14
+github.com/mitchellh/go-wordwrap
+# github.com/mitchellh/mapstructure v1.4.3
+## explicit; go 1.14
+github.com/mitchellh/mapstructure
+# github.com/moby/buildkit v0.9.3
+## explicit; go 1.13
+github.com/moby/buildkit/frontend/dockerfile/command
+github.com/moby/buildkit/frontend/dockerfile/instructions
+github.com/moby/buildkit/frontend/dockerfile/parser
+github.com/moby/buildkit/frontend/dockerfile/shell
+github.com/moby/buildkit/util/stack
+github.com/moby/buildkit/util/suggest
+# github.com/olekukonko/tablewriter v0.0.5
+## explicit; go 1.12
+github.com/olekukonko/tablewriter
+# github.com/open-policy-agent/opa v0.36.1
+## explicit; go 1.16
+github.com/open-policy-agent/opa/ast
+github.com/open-policy-agent/opa/ast/internal/scanner
+github.com/open-policy-agent/opa/ast/internal/tokens
+github.com/open-policy-agent/opa/ast/location
+github.com/open-policy-agent/opa/bundle
+github.com/open-policy-agent/opa/format
+github.com/open-policy-agent/opa/internal/bundle
+github.com/open-policy-agent/opa/internal/cidr/merge
+github.com/open-policy-agent/opa/internal/compiler/wasm
+github.com/open-policy-agent/opa/internal/compiler/wasm/opa
+github.com/open-policy-agent/opa/internal/debug
+github.com/open-policy-agent/opa/internal/deepcopy
+github.com/open-policy-agent/opa/internal/file/archive
+github.com/open-policy-agent/opa/internal/file/url
+github.com/open-policy-agent/opa/internal/future
+github.com/open-policy-agent/opa/internal/gojsonschema
+github.com/open-policy-agent/opa/internal/ir
+github.com/open-policy-agent/opa/internal/jwx/buffer
+github.com/open-policy-agent/opa/internal/jwx/jwa
+github.com/open-policy-agent/opa/internal/jwx/jwk
+github.com/open-policy-agent/opa/internal/jwx/jws
+github.com/open-policy-agent/opa/internal/jwx/jws/sign
+github.com/open-policy-agent/opa/internal/jwx/jws/verify
+github.com/open-policy-agent/opa/internal/lcss
+github.com/open-policy-agent/opa/internal/leb128
+github.com/open-policy-agent/opa/internal/merge
+github.com/open-policy-agent/opa/internal/planner
+github.com/open-policy-agent/opa/internal/rego/opa
+github.com/open-policy-agent/opa/internal/semver
+github.com/open-policy-agent/opa/internal/strings
+github.com/open-policy-agent/opa/internal/uuid
+github.com/open-policy-agent/opa/internal/version
+github.com/open-policy-agent/opa/internal/wasm/constant
+github.com/open-policy-agent/opa/internal/wasm/encoding
+github.com/open-policy-agent/opa/internal/wasm/instruction
+github.com/open-policy-agent/opa/internal/wasm/module
+github.com/open-policy-agent/opa/internal/wasm/opcode
+github.com/open-policy-agent/opa/internal/wasm/sdk/opa/capabilities
+github.com/open-policy-agent/opa/internal/wasm/types
+github.com/open-policy-agent/opa/internal/wasm/util
+github.com/open-policy-agent/opa/keys
+github.com/open-policy-agent/opa/loader
+github.com/open-policy-agent/opa/metrics
+github.com/open-policy-agent/opa/rego
+github.com/open-policy-agent/opa/resolver
+github.com/open-policy-agent/opa/resolver/wasm
+github.com/open-policy-agent/opa/storage
+github.com/open-policy-agent/opa/storage/inmem
+github.com/open-policy-agent/opa/storage/internal/errors
+github.com/open-policy-agent/opa/storage/internal/ptr
+github.com/open-policy-agent/opa/topdown
+github.com/open-policy-agent/opa/topdown/builtins
+github.com/open-policy-agent/opa/topdown/cache
+github.com/open-policy-agent/opa/topdown/copypropagation
+github.com/open-policy-agent/opa/topdown/print
+github.com/open-policy-agent/opa/tracing
+github.com/open-policy-agent/opa/types
+github.com/open-policy-agent/opa/util
+github.com/open-policy-agent/opa/version
+# github.com/opencontainers/go-digest v1.0.0
+## explicit; go 1.13
+github.com/opencontainers/go-digest
 # github.com/owenrumney/go-sarif/v2 v2.0.13
 ## explicit; go 1.16
 github.com/owenrumney/go-sarif/v2/sarif
@@ -140,34 +571,104 @@ github.com/owenrumney/squealer/internal/app/squealer/mertics
 github.com/owenrumney/squealer/pkg/config
 github.com/owenrumney/squealer/pkg/result
 github.com/owenrumney/squealer/pkg/squealer
+# github.com/pkg/errors v0.9.1
+## explicit
+github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 ## explicit
 github.com/pmezard/go-difflib/difflib
-# github.com/rivo/uniseg v0.1.0
+# github.com/rcrowley/go-metrics v0.0.0-20200313005456-10cdbea86bc0
+## explicit
+github.com/rcrowley/go-metrics
+# github.com/rivo/uniseg v0.2.0
 ## explicit; go 1.12
 github.com/rivo/uniseg
+# github.com/saracen/walker v0.0.0-20191201085201-324a081bae7e
+## explicit; go 1.12
+github.com/saracen/walker
 # github.com/sergi/go-diff v1.1.0
 ## explicit; go 1.12
 github.com/sergi/go-diff/diffmatchpatch
 # github.com/sirupsen/logrus v1.8.1
 ## explicit; go 1.13
 github.com/sirupsen/logrus
+# github.com/stretchr/objx v0.2.0
+## explicit; go 1.12
+github.com/stretchr/objx
 # github.com/stretchr/testify v1.7.0
 ## explicit; go 1.13
 github.com/stretchr/testify/assert
+github.com/stretchr/testify/mock
 github.com/stretchr/testify/require
-# golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b
-## explicit; go 1.11
+# github.com/tmccombs/hcl2json v0.3.3
+## explicit; go 1.14
+github.com/tmccombs/hcl2json/convert
+# github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb
+## explicit
+github.com/xeipuuv/gojsonpointer
+# github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415
+## explicit
+github.com/xeipuuv/gojsonreference
+# github.com/yashtewari/glob-intersection v0.0.0-20180916065949-5c77d914dd0b
+## explicit
+github.com/yashtewari/glob-intersection
+# github.com/zclconf/go-cty v1.10.0
+## explicit; go 1.12
+github.com/zclconf/go-cty/cty
+github.com/zclconf/go-cty/cty/convert
+github.com/zclconf/go-cty/cty/function
+github.com/zclconf/go-cty/cty/function/stdlib
+github.com/zclconf/go-cty/cty/gocty
+github.com/zclconf/go-cty/cty/json
+github.com/zclconf/go-cty/cty/set
+# github.com/zclconf/go-cty-yaml v1.0.2
+## explicit
+github.com/zclconf/go-cty-yaml
+# go.etcd.io/bbolt v1.3.6
+## explicit; go 1.12
+go.etcd.io/bbolt
+# go.uber.org/atomic v1.7.0
+## explicit; go 1.13
+go.uber.org/atomic
+# go.uber.org/multierr v1.6.0
+## explicit; go 1.12
+go.uber.org/multierr
+# go.uber.org/zap v1.20.0
+## explicit; go 1.13
+go.uber.org/zap
+go.uber.org/zap/buffer
+go.uber.org/zap/internal/bufferpool
+go.uber.org/zap/internal/color
+go.uber.org/zap/internal/exit
+go.uber.org/zap/zapcore
+# golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce
+## explicit; go 1.17
+golang.org/x/crypto/bcrypt
+golang.org/x/crypto/blowfish
 golang.org/x/crypto/cast5
+golang.org/x/crypto/chacha20
 golang.org/x/crypto/curve25519
+golang.org/x/crypto/curve25519/internal/field
 golang.org/x/crypto/ed25519
 golang.org/x/crypto/ed25519/internal/edwards25519
+golang.org/x/crypto/internal/poly1305
+golang.org/x/crypto/internal/subtle
+golang.org/x/crypto/ssh
+golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
 golang.org/x/crypto/ssh/terminal
-# golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4
-## explicit; go 1.11
-golang.org/x/net/context
-# golang.org/x/sys v0.0.0-20210510120138-977fb7262007
+# golang.org/x/mod v0.5.1
 ## explicit; go 1.17
+golang.org/x/mod/sumdb/dirhash
+# golang.org/x/net v0.0.0-20220114011407-0dd24b26b47d
+## explicit; go 1.17
+golang.org/x/net/context
+# golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
+## explicit
+golang.org/x/sync/errgroup
+golang.org/x/sync/semaphore
+# golang.org/x/sys v0.0.0-20220114195835-da31bd327af9
+## explicit; go 1.17
+golang.org/x/sys/cpu
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/plan9
 golang.org/x/sys/unix
@@ -175,11 +676,55 @@ golang.org/x/sys/windows
 # golang.org/x/term v0.0.0-20201210144234-2321bbc49cbf
 ## explicit; go 1.11
 golang.org/x/term
-# golang.org/x/text v0.3.5
-## explicit; go 1.11
+# golang.org/x/text v0.3.7
+## explicit; go 1.17
 golang.org/x/text/encoding
+golang.org/x/text/encoding/charmap
+golang.org/x/text/encoding/ianaindex
+golang.org/x/text/encoding/internal
 golang.org/x/text/encoding/internal/identifier
+golang.org/x/text/encoding/japanese
+golang.org/x/text/encoding/korean
+golang.org/x/text/encoding/simplifiedchinese
+golang.org/x/text/encoding/traditionalchinese
+golang.org/x/text/encoding/unicode
+golang.org/x/text/internal/utf8internal
+golang.org/x/text/runes
 golang.org/x/text/transform
+golang.org/x/text/unicode/norm
+# golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
+## explicit; go 1.11
+golang.org/x/xerrors
+golang.org/x/xerrors/internal
+# google.golang.org/protobuf v1.27.1
+## explicit; go 1.9
+google.golang.org/protobuf/encoding/prototext
+google.golang.org/protobuf/encoding/protowire
+google.golang.org/protobuf/internal/descfmt
+google.golang.org/protobuf/internal/descopts
+google.golang.org/protobuf/internal/detrand
+google.golang.org/protobuf/internal/encoding/defval
+google.golang.org/protobuf/internal/encoding/messageset
+google.golang.org/protobuf/internal/encoding/tag
+google.golang.org/protobuf/internal/encoding/text
+google.golang.org/protobuf/internal/errors
+google.golang.org/protobuf/internal/filedesc
+google.golang.org/protobuf/internal/filetype
+google.golang.org/protobuf/internal/flags
+google.golang.org/protobuf/internal/genid
+google.golang.org/protobuf/internal/impl
+google.golang.org/protobuf/internal/order
+google.golang.org/protobuf/internal/pragma
+google.golang.org/protobuf/internal/set
+google.golang.org/protobuf/internal/strs
+google.golang.org/protobuf/internal/version
+google.golang.org/protobuf/proto
+google.golang.org/protobuf/reflect/protodesc
+google.golang.org/protobuf/reflect/protoreflect
+google.golang.org/protobuf/reflect/protoregistry
+google.golang.org/protobuf/runtime/protoiface
+google.golang.org/protobuf/runtime/protoimpl
+google.golang.org/protobuf/types/descriptorpb
 # gopkg.in/warnings.v0 v0.1.2
 ## explicit
 gopkg.in/warnings.v0
@@ -189,3 +734,6 @@ gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 ## explicit
 gopkg.in/yaml.v3
+# sigs.k8s.io/yaml v1.3.0
+## explicit; go 1.12
+sigs.k8s.io/yaml
