@@ -6,24 +6,55 @@ import (
 	"github.com/aquasecurity/defsec/provider/digitalocean/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicIngress(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Firewall inbound rule with multiple public source addresses",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Firewalls: []compute.Firewall{
+					{
+						Metadata: types.NewTestMetadata(),
+						InboundRules: []compute.InboundFirewallRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								SourceAddresses: []types.StringValue{
+									types.String("0.0.0.0/0", types.NewTestMetadata()),
+									types.String("::/0", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Firewall inbound rule with a private source address",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Firewalls: []compute.Firewall{
+					{
+						Metadata: types.NewTestMetadata(),
+						InboundRules: []compute.InboundFirewallRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								SourceAddresses: []types.StringValue{
+									types.String("192.168.1.0/24", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
