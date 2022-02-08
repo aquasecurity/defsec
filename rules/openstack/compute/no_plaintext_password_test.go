@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/openstack"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPlaintextPassword(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    openstack.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    openstack.Compute{},
+			name: "Instance admin with plaintext password set",
+			input: openstack.Compute{
+				Metadata: types.NewTestMetadata(),
+				Instances: []openstack.Instance{
+					{
+						Metadata:      types.NewTestMetadata(),
+						AdminPassword: types.String("very-secret", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    openstack.Compute{},
+			name: "Instance admin with no plaintext password",
+			input: openstack.Compute{
+				Metadata: types.NewTestMetadata(),
+				Instances: []openstack.Instance{
+					{
+						Metadata:      types.NewTestMetadata(),
+						AdminPassword: types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

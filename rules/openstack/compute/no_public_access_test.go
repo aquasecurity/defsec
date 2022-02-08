@@ -6,24 +6,86 @@ import (
 	"github.com/aquasecurity/defsec/provider/openstack"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    openstack.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    openstack.Compute{},
+			name: "Firewall rule missing destination address",
+			input: openstack.Compute{
+				Metadata: types.NewTestMetadata(),
+				Firewall: openstack.Firewall{
+					Metadata: types.NewTestMetadata(),
+					AllowRules: []openstack.Rule{
+						{
+							Metadata:    types.NewTestMetadata(),
+							Enabled:     types.Bool(true, types.NewTestMetadata()),
+							Destination: types.String("", types.NewTestMetadata()),
+							Source:      types.String("10.10.10.1", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    openstack.Compute{},
+			name: "Firewall rule missing source address",
+			input: openstack.Compute{
+				Metadata: types.NewTestMetadata(),
+				Firewall: openstack.Firewall{
+					Metadata: types.NewTestMetadata(),
+					AllowRules: []openstack.Rule{
+						{
+							Metadata:    types.NewTestMetadata(),
+							Enabled:     types.Bool(true, types.NewTestMetadata()),
+							Destination: types.String("10.10.10.2", types.NewTestMetadata()),
+							Source:      types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Firewall rule with public destination and source addresses",
+			input: openstack.Compute{
+				Metadata: types.NewTestMetadata(),
+				Firewall: openstack.Firewall{
+					Metadata: types.NewTestMetadata(),
+					AllowRules: []openstack.Rule{
+						{
+							Metadata:    types.NewTestMetadata(),
+							Enabled:     types.Bool(true, types.NewTestMetadata()),
+							Destination: types.String("0.0.0.0", types.NewTestMetadata()),
+							Source:      types.String("0.0.0.0", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Firewall rule with private destination and source addresses",
+			input: openstack.Compute{
+				Metadata: types.NewTestMetadata(),
+				Firewall: openstack.Firewall{
+					Metadata: types.NewTestMetadata(),
+					AllowRules: []openstack.Rule{
+						{
+							Metadata:    types.NewTestMetadata(),
+							Enabled:     types.Bool(true, types.NewTestMetadata()),
+							Destination: types.String("10.10.10.1", types.NewTestMetadata()),
+							Source:      types.String("10.10.10.2", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
