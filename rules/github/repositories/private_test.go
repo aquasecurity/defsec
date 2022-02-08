@@ -6,24 +6,34 @@ import (
 	"github.com/aquasecurity/defsec/provider/github"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckPrivate(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    []github.Repository
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    []github.Repository{},
+			name: "Public repository",
+			input: []github.Repository{
+				{
+					Metadata: types.NewTestMetadata(),
+					Public:   types.Bool(true, types.NewTestMetadata()),
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    []github.Repository{},
+			name: "Private repository",
+			input: []github.Repository{
+				{
+					Metadata: types.NewTestMetadata(),
+					Public:   types.Bool(false, types.NewTestMetadata()),
+				},
+			},
 			expected: false,
 		},
 	}
