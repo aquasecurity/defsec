@@ -3,27 +3,83 @@ package storage
 import (
 	"testing"
 
+	"github.com/aquasecurity/defsec/provider/google/iam"
 	"github.com/aquasecurity/defsec/provider/google/storage"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    storage.Storage
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    storage.Storage{},
+			name: "Members set to all authenticated users",
+			input: storage.Storage{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []storage.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						Bindings: []iam.Binding{
+							{
+								Metadata: types.NewTestMetadata(),
+								Members: []types.StringValue{
+									types.String("allAuthenticatedUsers", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    storage.Storage{},
+			name: "Members set to all users",
+			input: storage.Storage{
+				Metadata: types.NewTestMetadata(),
+				Buckets: []storage.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						Members: []iam.Member{
+							{
+								Metadata: types.NewTestMetadata(),
+								Member:   types.String("allUsers", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Members set to specific users",
+			input: storage.Storage{
+				Metadata: types.NewTestMetadata(),
+
+				Buckets: []storage.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						Bindings: []iam.Binding{
+							{
+								Metadata: types.NewTestMetadata(),
+								Members: []types.StringValue{
+									types.String("user:jane@example.com", types.NewTestMetadata()),
+								},
+							},
+						},
+						Members: []iam.Member{
+							{
+								Metadata: types.NewTestMetadata(),
+								Member:   types.String("user:john@example.com", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
