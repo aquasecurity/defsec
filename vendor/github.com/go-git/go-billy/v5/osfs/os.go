@@ -1,3 +1,4 @@
+//go:build !js
 // +build !js
 
 // Package osfs provides a billy filesystem for the OS.

@@ -7,7 +7,7 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ec2"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
-	"github.com/aquasecurity/defsec/types"
+	"github.com/aquasecurity/trivy-config-parsers/types"
 	"github.com/stretchr/testify/assert"
 )
 

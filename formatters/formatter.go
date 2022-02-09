@@ -7,9 +7,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/aquasecurity/defsec/metrics"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/trivy-config-parsers/metrics"
 	"github.com/liamg/tml"
 )
 
