@@ -1,0 +1,3 @@
+FROM alpine:3.13
+USER mike
+RUN apt-get install -y curl && apt-get clean
