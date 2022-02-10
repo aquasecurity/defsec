@@ -17,7 +17,7 @@ func (b *Bucket) HasPublicExposureACL() bool {
 	for _, publicACL := range []string{"public-read", "public-read-write", "website", "authenticated-read"} {
 		if b.ACL.EqualTo(publicACL) {
 			// if there is a public access block, check the public ACL blocks
-			if b.PublicAccessBlock.IsManaged() {
+			if b.PublicAccessBlock != nil && b.PublicAccessBlock.IsManaged() {
 				return b.PublicAccessBlock.IgnorePublicACLs.IsFalse() && b.PublicAccessBlock.BlockPublicACLs.IsFalse()
 			}
 			return true
