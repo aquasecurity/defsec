@@ -1,8 +1,8 @@
 package tml
 
 import (
-	"strings"
 	"bytes"
+	"strings"
 )
 
 // Parse converts the input string (containing TML tags) into a string containing ANSI escape code sequences for output to the terminal.

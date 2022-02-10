@@ -1,3 +1,4 @@
+//go:build !plan9 && !windows && !js
 // +build !plan9,!windows,!js
 
 package osfs

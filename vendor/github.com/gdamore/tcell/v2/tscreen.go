@@ -1580,7 +1580,6 @@ func (t *tScreen) HasKey(k Key) bool {
 
 func (t *tScreen) Resize(int, int, int, int) {}
 
-
 func (t *tScreen) Suspend() error {
 	t.disengage()
 	return nil
