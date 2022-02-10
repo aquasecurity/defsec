@@ -3,7 +3,7 @@ module github.com/aquasecurity/defsec
 go 1.17
 
 require (
-	github.com/aquasecurity/trivy-config-parsers v0.0.0-20220209155545-cb13ab3d846e
+	github.com/aquasecurity/trivy-config-parsers v0.0.0-20220210135951-7406459eea5d
 	github.com/google/uuid v1.3.0
 	github.com/liamg/clinch v1.5.6
 	github.com/liamg/gifwrap v0.0.6

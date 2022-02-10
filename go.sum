@@ -66,6 +66,8 @@ github.com/aquasecurity/trivy-config-parsers v0.0.0-20220209154331-0376cf39edfb 
 github.com/aquasecurity/trivy-config-parsers v0.0.0-20220209154331-0376cf39edfb/go.mod h1:FfWydzoyM/OBpylJ+70I2v7UNSaY2YvFoaBkhLKbAHY=
 github.com/aquasecurity/trivy-config-parsers v0.0.0-20220209155545-cb13ab3d846e h1:ZXmHHLVF8fxBVrM138xlwdS6fB2hLdXtZpoR1OwkT0w=
 github.com/aquasecurity/trivy-config-parsers v0.0.0-20220209155545-cb13ab3d846e/go.mod h1:78xN8c40ibIDlD8OkaC9++Wr2Eu6rnwuExqyuRyKokk=
+github.com/aquasecurity/trivy-config-parsers v0.0.0-20220210135951-7406459eea5d h1:Bf5jtf8vbE0kXkC/RYkiRKmJH+OsXriUScHijJtmClE=
+github.com/aquasecurity/trivy-config-parsers v0.0.0-20220210135951-7406459eea5d/go.mod h1:78xN8c40ibIDlD8OkaC9++Wr2Eu6rnwuExqyuRyKokk=
 github.com/armon/circbuf v0.0.0-20150827004946-bbbad097214e/go.mod h1:3U/XgcO3hCbHZ8TKRvWD2dDTCfh9M9ya+I9JpbB7O8o=
 github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da/go.mod h1:Q73ZrmVTwzkszR9V5SSuryQ31EELlFMUz1kKyl939pY=
 github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
@@ -399,6 +401,8 @@ github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9de
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
+github.com/zclconf/go-cty v1.0.0/go.mod h1:xnAOWiHeOqg2nWS62VtQ7pbOu17FtxJNW8RLEih+O3s=
+github.com/zclconf/go-cty v1.2.0/go.mod h1:hOPWgoHbaTUnI5k4D2ld+GRpFJSCe6bCM7m1q/N4PQ8=
 github.com/zclconf/go-cty v1.8.0/go.mod h1:vVKLxnk3puL4qRAv72AO+W99LUD4da90g3uUAzyuvAk=
 github.com/zclconf/go-cty v1.10.0 h1:mp9ZXQeIcN8kAwuqorjH+Q+njbJKjLrvB2yIh4q7U+0=
 github.com/zclconf/go-cty v1.10.0/go.mod h1:vVKLxnk3puL4qRAv72AO+W99LUD4da90g3uUAzyuvAk=
