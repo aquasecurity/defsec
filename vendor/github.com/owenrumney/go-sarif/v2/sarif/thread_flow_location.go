@@ -18,6 +18,7 @@ type ThreadFlowLocation struct {
 	WebRequest       *WebRequest                          `json:"webRequest,omitempty"`
 	WebResponse      *WebResponse                         `json:"webResponse,omitempty"`
 	PropertyBag
+
 }
 
 // NewThreadFlowLocation creates a new ThreadFlowLocation and returns a pointer to it

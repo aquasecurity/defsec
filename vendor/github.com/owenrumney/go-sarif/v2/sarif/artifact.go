@@ -2,6 +2,7 @@ package sarif
 
 // Artifact ...
 type Artifact struct {
+
 	Location            *ArtifactLocation `json:"location,omitempty"`
 	ParentIndex         *uint             `json:"parentIndex,omitempty"`
 	Offset              *uint             `json:"offset,omitempty"`

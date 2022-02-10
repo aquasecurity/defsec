@@ -126,7 +126,7 @@ func NewEntity(name, comment, email string, config *packet.Config) (*Entity, err
 		PrimaryKey: &primary.PublicKey,
 		PrivateKey: primary,
 		Identities: map[string]*Identity{
-			uid.Id: {
+			uid.Id: &Identity{
 				Name:          uid.Id,
 				UserId:        uid,
 				SelfSignature: selfSignature,

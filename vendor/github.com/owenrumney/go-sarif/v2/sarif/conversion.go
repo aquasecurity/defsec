@@ -6,6 +6,7 @@ type Conversion struct {
 	Invocation           *Invocation         `json:"invocation,omitempty"`
 	Tool                 *Tool               `json:"tool"`
 	PropertyBag
+
 }
 
 // NewConversion creates a new Conversion and returns a pointer to it

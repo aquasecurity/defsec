@@ -7,6 +7,7 @@ type EdgeTraversal struct {
 	Message           *Message                             `json:"message,omitempty"`
 	StepOverEdgeCount *int                                 `json:"stepOverEdgeCount,omitempty"`
 	PropertyBag
+
 }
 
 // NewEdgeTraversal creates a new EdgeTraversal and returns a pointer to it

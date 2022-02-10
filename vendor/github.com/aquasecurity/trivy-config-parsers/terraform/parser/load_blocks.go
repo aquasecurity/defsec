@@ -2,11 +2,10 @@ package parser
 
 import (
 	"fmt"
+	"github.com/aquasecurity/trivy-config-parsers/terraform"
 	"regexp"
 	"strings"
 	"time"
-
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
 
 	"github.com/aquasecurity/trivy-config-parsers/types"
 	"github.com/hashicorp/hcl/v2"

@@ -9,6 +9,7 @@ type GraphTraversal struct {
 	ResultGraphIndex *int                                 `json:"resultGraphIndex,omitempty"`
 	RunGraphIndex    *int                                 `json:"runGraphIndex,omitempty"`
 	PropertyBag
+
 }
 
 // NewGraphTraversal creates a new GraphTraversal and returns a pointer to it

@@ -7,6 +7,7 @@ type ReportingConfiguration struct {
 	Parameters *PropertyBag `json:"parameters,omitempty"`
 	Rank       *float64     `json:"rank,omitempty"`
 	PropertyBag
+
 }
 
 // NewReportingConfiguration creates a new ReportingConfiguration and returns a pointer to it
