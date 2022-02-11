@@ -4,13 +4,24 @@ import "github.com/aquasecurity/defsec/types"
 
 type OpenStack struct {
 	types.Metadata
-	Compute Compute
+	Compute    Compute
+	Networking Networking
 }
 
 type Compute struct {
 	types.Metadata
 	Instances []Instance
 	Firewall  Firewall
+}
+
+type Networking struct {
+	types.Metadata
+	Direction      types.StringValue
+	Ethertype      types.StringValue
+	Protocol       types.StringValue
+	PortRangeMin   types.IntValue
+	PortRangeMax   types.IntValue
+	RemoteIPPrefix types.StringValue
 }
 
 type Firewall struct {
@@ -31,4 +42,8 @@ type Rule struct {
 type Instance struct {
 	types.Metadata
 	AdminPassword types.StringValue
+}
+
+func (n Networking) IsIngress() bool {
+	return n.Direction.Value() == "ingress"
 }

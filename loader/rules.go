@@ -65,5 +65,6 @@ import (
 	_ "github.com/aquasecurity/defsec/rules/google/storage"
 	_ "github.com/aquasecurity/defsec/rules/kubernetes/network"
 	_ "github.com/aquasecurity/defsec/rules/openstack/compute"
+	_ "github.com/aquasecurity/defsec/rules/openstack/networking"
 	_ "github.com/aquasecurity/defsec/rules/oracle/compute"
 )
