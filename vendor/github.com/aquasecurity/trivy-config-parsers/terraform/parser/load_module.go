@@ -78,17 +78,11 @@ func (e *evaluator) loadModules() []*ModuleDefinition {
 				}
 				continue
 			}
-			_, _ = fmt.Fprintf(os.Stderr, "WARNING: Failed to load module: %s\n", err)
+			e.debug("Failed to load module '%s'. Maybe try 'terraform init'?", err)
 			continue
 		}
+		e.debug("Loaded module '%s' from '%s'.", moduleDefinition.Name, moduleDefinition.Path)
 		moduleDefinitions = append(moduleDefinitions, moduleDefinition)
-	}
-
-	if len(loadErrors) > 0 {
-		_, _ = fmt.Fprintf(os.Stderr, "WARNING: Did you forget to 'terraform init'? The following modules failed to load:\n")
-		for _, err := range loadErrors {
-			_, _ = fmt.Fprintf(os.Stderr, " - %s\n", err.source)
-		}
 	}
 
 	return moduleDefinitions

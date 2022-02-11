@@ -51,10 +51,14 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 	)
 
 	var parts []string
-	if hclBlock.Type != "resource" {
+	// if there are no labels then use the block type
+	// this is for the case where "special" keywords like "resource" are used
+	// as normal block names in top level blocks - see issue tfsec#1528 for an example
+	if hclBlock.Type != "resource" || len(hclBlock.Labels) == 0 {
 		parts = append(parts, hclBlock.Type)
 	}
 	parts = append(parts, hclBlock.Labels...)
+
 	var parent string
 	if moduleBlock != nil {
 		parent = moduleBlock.FullName()

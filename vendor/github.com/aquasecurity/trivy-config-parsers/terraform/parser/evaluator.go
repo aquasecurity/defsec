@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"io"
 	"reflect"
 	"time"
 
@@ -13,13 +14,9 @@ import (
 	"github.com/zclconf/go-cty/cty/gocty"
 )
 
-const maxContextIterations = 32
-
-type visitedModule struct {
-	name                string
-	path                string
-	definitionReference string
-}
+const (
+	maxContextIterations = 32
+)
 
 type evaluator struct {
 	ctx             *context.Context
@@ -29,12 +26,9 @@ type evaluator struct {
 	projectRootPath string // root of the current scan
 	modulePath      string
 	moduleName      string
-	workingDir      string
-	workspace       string
 	ignores         terraform.Ignores
-	stopOnHCLError  bool
 	parentParser    Parser
-	submodules      []terraform.Module
+	debugWriter     io.Writer
 }
 
 func newEvaluator(
@@ -48,6 +42,7 @@ func newEvaluator(
 	moduleMetadata *modulesMetadata,
 	workspace string,
 	ignores []terraform.Ignore,
+	debugWriter io.Writer,
 ) *evaluator {
 
 	// create a context to store variables and make functions available
@@ -71,14 +66,21 @@ func newEvaluator(
 		modulePath:      modulePath,
 		moduleName:      moduleName,
 		projectRootPath: projectRootPath,
-		workingDir:      workingDir,
 		ctx:             ctx,
 		blocks:          blocks,
 		inputVars:       inputVars,
 		moduleMetadata:  moduleMetadata,
-		workspace:       workspace,
 		ignores:         ignores,
+		debugWriter:     debugWriter,
 	}
+}
+
+func (e *evaluator) debug(format string, args ...interface{}) {
+	if e.debugWriter == nil {
+		return
+	}
+	prefix := fmt.Sprintf("[debug:eval][%s] ", e.moduleName)
+	_, _ = e.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
 func (e *evaluator) evaluateStep() {
@@ -105,6 +107,7 @@ func (e *evaluator) exportOutputs() cty.Value {
 			continue
 		}
 		data[block.Label()] = attr.Value()
+		e.debug("Added module output %s=%s.", block.Label(), attr.Value().GoString())
 	}
 	return cty.ObjectVal(data)
 }
@@ -142,13 +145,14 @@ func (e *evaluator) EvaluateAll() (terraform.Modules, time.Duration) {
 	for _, definition := range e.loadModules() {
 		submodules, outputs, err := definition.Parser.EvaluateAll()
 		if err != nil {
-			// TODO: report this error?
+			e.debug("Failed to evaluate submodule '%s': %s.", definition.Name, err)
 			continue
 		}
 		// export module outputs
 		e.ctx.Set(outputs, "module", definition.Name)
 		modules = append(modules, submodules...)
 	}
+	e.debug("Finished processing %d submodule(s).", len(modules))
 
 	for i := 0; i < maxContextIterations; i++ {
 
@@ -232,7 +236,6 @@ func (e *evaluator) expandBlockForEaches(blocks terraform.Blocks) terraform.Bloc
 				ctx.Set(key, block.TypeLabel(), "key")
 				ctx.Set(val, block.TypeLabel(), "value")
 
-				//debug.Log("Added %s from for_each", clone.GetMetadata().Reference())
 				forEachFiltered = append(forEachFiltered, clone)
 
 				clones = append(clones, clone.Values())
@@ -245,6 +248,7 @@ func (e *evaluator) expandBlockForEaches(blocks terraform.Blocks) terraform.Bloc
 			} else {
 				e.ctx.SetByDot(cty.TupleVal(clones), metadata.Reference().String())
 			}
+			e.debug("Expanded block '%s' into %d clones via 'for_each' attribute.", block.LocalName(), len(clones))
 		}
 	}
 
@@ -273,7 +277,6 @@ func (e *evaluator) expandBlockCounts(blocks terraform.Blocks) terraform.Blocks 
 			clone := block.Clone(c)
 			clones = append(clones, clone.Values())
 			block.TypeLabel()
-			//debug.Log("Added %s from count var", clone.GetMetadata().Reference())
 			countFiltered = append(countFiltered, clone)
 			metadata := clone.GetMetadata()
 			e.ctx.SetByDot(clone.Values(), metadata.Reference().String())
@@ -284,7 +287,7 @@ func (e *evaluator) expandBlockCounts(blocks terraform.Blocks) terraform.Blocks 
 		} else {
 			e.ctx.SetByDot(cty.TupleVal(clones), metadata.Reference().String())
 		}
-
+		e.debug("Expanded block '%s' into %d clones via 'count' attribute.", block.LocalName(), len(clones))
 	}
 
 	return countFiltered

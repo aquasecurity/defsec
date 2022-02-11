@@ -16,7 +16,9 @@ import (
 	"path/filepath"
 	"unicode"
 	"unicode/utf8"
+)
 
+import (
 	"github.com/go-git/gcfg/token"
 )
 

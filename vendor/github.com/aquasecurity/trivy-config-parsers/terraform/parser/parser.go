@@ -2,7 +2,7 @@ package parser
 
 import (
 	"fmt"
-	"io/fs"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -49,26 +49,24 @@ type parser struct {
 	modulePath     string
 	moduleBlock    *terraform.Block
 	files          []sourceFile
-	excludePaths   []string
 	tfvarsPaths    []string
 	stopOnHCLError bool
-	stopOnFirstTf  bool
 	workspaceName  string
-	skipDownloaded bool
 	underlying     *hclparse.Parser
 	children       []Parser
 	metrics        Metrics
 	options        []Option
+	debugWriter    io.Writer
 }
 
 // New creates a new Parser
 func New(options ...Option) Parser {
 	p := &parser{
-		stopOnFirstTf: true,
 		workspaceName: "default",
 		underlying:    hclparse.NewParser(),
 		options:       options,
 		moduleName:    "root",
+		debugWriter:   ioutil.Discard,
 	}
 
 	for _, option := range options {
@@ -76,6 +74,14 @@ func New(options ...Option) Parser {
 	}
 
 	return p
+}
+
+func (p *parser) debug(format string, args ...interface{}) {
+	if p.debugWriter == nil {
+		return
+	}
+	prefix := fmt.Sprintf("[debug:parse][%s] ", p.moduleName)
+	_, _ = p.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
 func (p *parser) NewModuleParser(modulePath string, moduleName string, moduleBlock *terraform.Block) Parser {
@@ -137,6 +143,7 @@ func (p *parser) ParseFile(fullPath string) error {
 	})
 	p.metrics.Counts.Files++
 	p.metrics.Timings.ParseDuration += time.Since(start)
+	p.debug("Added file %s.", fullPath)
 	return nil
 }
 
@@ -148,40 +155,30 @@ func (p *parser) ParseDirectory(fullPath string) error {
 		p.modulePath = fullPath
 	}
 
-	////debug.Log("Finding Terraform subdirectories...")
-	//diskTimer := metrics.Timer("timings", "disk i/o")
-	//diskTimer.Start()
-	subdirectories, err := p.getSubdirectories(fullPath)
+	fileInfos, err := ioutil.ReadDir(fullPath)
 	if err != nil {
 		return err
 	}
-	//diskTimer.Stop()
 
-	for _, dir := range subdirectories {
-		fileInfos, err := ioutil.ReadDir(dir)
-		if err != nil {
-			return err
+	for _, info := range fileInfos {
+		if info.IsDir() {
+			continue
 		}
-
-		for _, info := range fileInfos {
-			if info.IsDir() {
-				continue
+		if err := p.ParseFile(filepath.Join(fullPath, info.Name())); err != nil {
+			if p.stopOnHCLError {
+				return err
 			}
-			if err := p.ParseFile(filepath.Join(dir, info.Name())); err != nil {
-				if p.stopOnHCLError {
-					return err
-				}
-				continue
-			}
+			continue
 		}
 	}
-
+	p.debug("Added directory %s.", fullPath)
 	return nil
 }
 
 func (p *parser) EvaluateAll() (terraform.Modules, cty.Value, error) {
 
 	if len(p.files) == 0 {
+		p.debug("No files found, nothing to do.")
 		return nil, cty.NilVal, nil
 	}
 
@@ -189,26 +186,27 @@ func (p *parser) EvaluateAll() (terraform.Modules, cty.Value, error) {
 	if err != nil {
 		return nil, cty.NilVal, err
 	}
+	p.debug("Read %d block(s) and %d ignore(s) for module '%s' (%d file[s])...", len(blocks), len(ignores), p.moduleName, len(p.files))
 
 	p.metrics.Counts.Blocks = len(blocks)
 
 	var inputVars map[string]cty.Value
 	if p.moduleBlock != nil {
 		inputVars = p.moduleBlock.Values().AsValueMap()
+		p.debug("Added %d input variables from module definition.", len(inputVars))
 	} else {
 		inputVars, err = loadTFVars(p.tfvarsPaths)
 		if err != nil {
 			return nil, cty.NilVal, err
 		}
+		p.debug("Added %d variables from tfvars.", len(inputVars))
 	}
 
-	var modulesMetadata *modulesMetadata
-	if p.skipDownloaded {
-		//debug.Log("Skipping module metadata loading, --exclude-downloaded-modules passed")
+	modulesMetadata, err := loadModuleMetadata(p.projectRoot)
+	if err != nil {
+		p.debug("Error loading module metadata: %s.", err)
 	} else {
-		//debug.Log("Loading module metadata...")
-		modulesMetadata, _ = loadModuleMetadata(p.projectRoot)
-		// TODO: report error and continue?
+		p.debug("Loaded module metadata for %d module(s).", len(modulesMetadata.Modules))
 	}
 
 	workingDir, err := os.Getwd()
@@ -226,10 +224,12 @@ func (p *parser) EvaluateAll() (terraform.Modules, cty.Value, error) {
 		modulesMetadata,
 		p.workspaceName,
 		ignores,
+		p.debugWriter,
 	)
 	modules, parseDuration := evaluator.EvaluateAll()
 	p.metrics.Counts.Modules = len(modules)
 	p.metrics.Timings.ParseDuration = parseDuration
+	p.debug("Finished parsing module '%s'.", p.moduleName)
 	return modules, evaluator.exportOutputs(), nil
 }
 
@@ -243,7 +243,7 @@ func (p *parser) readBlocks(files []sourceFile) (terraform.Blocks, terraform.Ign
 			if p.stopOnHCLError {
 				return nil, nil, err
 			}
-			_, _ = fmt.Fprintf(os.Stderr, "WARNING: HCL error: %s\n", err)
+			p.debug("Encountered HCL parse error: %s", err)
 			continue
 		}
 		for _, fileBlock := range fileBlocks {
@@ -254,61 +254,4 @@ func (p *parser) readBlocks(files []sourceFile) (terraform.Blocks, terraform.Ign
 
 	sortBlocksByHierarchy(blocks)
 	return blocks, ignores, nil
-}
-
-func (p *parser) getSubdirectories(path string) ([]string, error) {
-
-	if p.skipDownloaded && filepath.Base(path) == ".terraform" {
-		return nil, nil
-	}
-
-	entries, err := ioutil.ReadDir(path)
-	if err != nil {
-		return nil, err
-	}
-	entries = p.removeExcluded(path, entries)
-	var results []string
-	for _, entry := range entries {
-
-		if !entry.IsDir() && (filepath.Ext(entry.Name()) == ".tf" || strings.HasSuffix(entry.Name(), ".tf.json")) {
-			//debug.Log("Found qualifying subdirectory containing .tf files: %s", path)
-			results = append(results, path)
-			if p.stopOnFirstTf {
-				return results, nil
-			}
-			break
-		}
-	}
-	for _, entry := range entries {
-		if entry.IsDir() {
-			dirs, err := p.getSubdirectories(filepath.Join(path, entry.Name()))
-			if err != nil {
-				return nil, err
-			}
-			if p.stopOnFirstTf && len(dirs) > 0 {
-				return dirs[:1], nil
-			}
-			results = append(results, dirs...)
-		}
-	}
-	return results, nil
-}
-
-func (p *parser) removeExcluded(path string, entries []fs.FileInfo) (valid []fs.FileInfo) {
-	if len(p.excludePaths) == 0 {
-		return entries
-	}
-	for _, entry := range entries {
-		var remove bool
-		fullPath := filepath.Join(path, entry.Name())
-		for _, excludePath := range p.excludePaths {
-			if fullPath == excludePath {
-				remove = true
-			}
-		}
-		if !remove {
-			valid = append(valid, entry)
-		}
-	}
-	return valid
 }
