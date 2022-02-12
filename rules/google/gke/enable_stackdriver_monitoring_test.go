@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/gke"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableStackdriverMonitoring(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    gke.GKE
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    gke.GKE{},
+			name: "Cluster missing monitoring service provider",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata:          types.NewTestMetadata(),
+						MonitoringService: types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    gke.GKE{},
+			name: "Cluster with StackDriver monitoring configured",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata:          types.NewTestMetadata(),
+						MonitoringService: types.String("monitoring.googleapis.com/kubernetes", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
