@@ -6,24 +6,71 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicEgress(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Firewall egress rule with multiple public destination addresses",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Networks: []compute.Network{
+					{
+						Metadata: types.NewTestMetadata(),
+						Firewall: &compute.Firewall{
+							Metadata: types.NewTestMetadata(),
+							EgressRules: []compute.EgressRule{
+								{
+									Metadata: types.NewTestMetadata(),
+									FirewallRule: compute.FirewallRule{
+										Metadata: types.NewTestMetadata(),
+										IsAllow:  types.Bool(true, types.NewTestMetadata()),
+										Enforced: types.Bool(true, types.NewTestMetadata()),
+									},
+									DestinationRanges: []types.StringValue{
+										types.String("0.0.0.0/0", types.NewTestMetadata()),
+										types.String("1.2.3.4/32", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Firewall egress rule with public destination address",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Networks: []compute.Network{
+					{
+						Metadata: types.NewTestMetadata(),
+						Firewall: &compute.Firewall{
+							Metadata: types.NewTestMetadata(),
+							EgressRules: []compute.EgressRule{
+								{
+									Metadata: types.NewTestMetadata(),
+									FirewallRule: compute.FirewallRule{
+										Metadata: types.NewTestMetadata(),
+										IsAllow:  types.Bool(true, types.NewTestMetadata()),
+										Enforced: types.Bool(true, types.NewTestMetadata()),
+									},
+									DestinationRanges: []types.StringValue{
+										types.String("1.2.3.4/32", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
