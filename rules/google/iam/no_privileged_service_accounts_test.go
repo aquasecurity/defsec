@@ -6,24 +6,99 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPrivilegedServiceAccounts(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    iam.IAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    iam.IAM{},
+			name: "Service account granted owner role",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Members: []iam.Member{
+							{
+								Metadata: types.NewTestMetadata(),
+								Role:     types.String("roles/owner", types.NewTestMetadata()),
+								Member:   types.String("serviceAccount:${google_service_account.test.email}", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    iam.IAM{},
+			name: "Service account granted editor role",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Folders: []iam.Folder{
+							{
+								Metadata: types.NewTestMetadata(),
+								Projects: []iam.Project{
+									{
+										Metadata: types.NewTestMetadata(),
+										Bindings: []iam.Binding{
+											{
+												Metadata: types.NewTestMetadata(),
+												Role:     types.String("roles/editor", types.NewTestMetadata()),
+												Members: []types.StringValue{
+													types.String("serviceAccount:${google_service_account.test.email}", types.NewTestMetadata()),
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "No service account with excessive privileges",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Folders: []iam.Folder{
+							{
+								Metadata: types.NewTestMetadata(),
+								Projects: []iam.Project{
+									{
+										Metadata: types.NewTestMetadata(),
+										Members: []iam.Member{
+											{
+												Metadata: types.NewTestMetadata(),
+												Role:     types.String("roles/owner", types.NewTestMetadata()),
+												Member:   types.String("proper@email.com", types.NewTestMetadata()),
+											},
+										},
+										Bindings: []iam.Binding{
+											{
+												Metadata: types.NewTestMetadata(),
+												Role:     types.String("roles/logging.logWriter", types.NewTestMetadata()),
+												Members: []types.StringValue{
+													types.String("serviceAccount:${google_service_account.test.email}", types.NewTestMetadata()),
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
