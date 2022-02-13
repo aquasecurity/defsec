@@ -6,24 +6,52 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/sql"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEncryptInTransitData(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    sql.SQL
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    sql.SQL{},
+			name: "DB instance TLS not required",
+			input: sql.SQL{
+				Metadata: types.NewTestMetadata(),
+				Instances: []sql.DatabaseInstance{
+					{
+						Metadata: types.NewTestMetadata(),
+						Settings: sql.Settings{
+							Metadata: types.NewTestMetadata(),
+							IPConfiguration: sql.IPConfiguration{
+								Metadata:   types.NewTestMetadata(),
+								RequireTLS: types.Bool(false, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    sql.SQL{},
+			name: "DB instance TLS required",
+			input: sql.SQL{
+				Metadata: types.NewTestMetadata(),
+				Instances: []sql.DatabaseInstance{
+					{
+						Metadata: types.NewTestMetadata(),
+						Settings: sql.Settings{
+							Metadata: types.NewTestMetadata(),
+							IPConfiguration: sql.IPConfiguration{
+								Metadata:   types.NewTestMetadata(),
+								RequireTLS: types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

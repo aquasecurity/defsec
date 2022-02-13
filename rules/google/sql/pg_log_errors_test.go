@@ -6,24 +6,54 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/sql"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckPgLogErrors(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    sql.SQL
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    sql.SQL{},
+			name: "Instance minimum log severity set to PANIC",
+			input: sql.SQL{
+				Metadata: types.NewTestMetadata(),
+				Instances: []sql.DatabaseInstance{
+					{
+						Metadata:        types.NewTestMetadata(),
+						DatabaseVersion: types.String("POSTGRES_12", types.NewTestMetadata()),
+						Settings: sql.Settings{
+							Metadata: types.NewTestMetadata(),
+							Flags: sql.Flags{
+								Metadata:       types.NewTestMetadata(),
+								LogMinMessages: types.String("PANIC", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    sql.SQL{},
+			name: "Instance minimum log severity set to ERROR",
+			input: sql.SQL{
+				Metadata: types.NewTestMetadata(),
+				Instances: []sql.DatabaseInstance{
+					{
+						Metadata:        types.NewTestMetadata(),
+						DatabaseVersion: types.String("POSTGRES_12", types.NewTestMetadata()),
+						Settings: sql.Settings{
+							Metadata: types.NewTestMetadata(),
+							Flags: sql.Flags{
+								Metadata:       types.NewTestMetadata(),
+								LogMinMessages: types.String("ERROR", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
