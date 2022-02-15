@@ -6,24 +6,49 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Network interface with public IP",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Instances: []compute.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						NetworkInterfaces: []compute.NetworkInterface{
+							{
+								Metadata:    types.NewTestMetadata(),
+								HasPublicIP: types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Network interface without public IP",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Instances: []compute.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						NetworkInterfaces: []compute.NetworkInterface{
+							{
+								Metadata:    types.NewTestMetadata(),
+								HasPublicIP: types.Bool(false, types.NewTestMetadata()),
+							},
+						},
+					},
+				}},
 			expected: false,
 		},
 	}

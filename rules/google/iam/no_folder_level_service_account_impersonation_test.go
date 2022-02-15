@@ -6,24 +6,88 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoFolderLevelServiceAccountImpersonation(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    iam.IAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    iam.IAM{},
+			name: "Member role set to service account user",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Folders: []iam.Folder{
+							{
+								Metadata: types.NewTestMetadata(),
+								Members: []iam.Member{
+									{
+										Metadata: types.NewTestMetadata(),
+										Role:     types.String("roles/iam.serviceAccountUser", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    iam.IAM{},
+			name: "Member role set to service account token creator",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Folders: []iam.Folder{
+							{
+								Metadata: types.NewTestMetadata(),
+								Bindings: []iam.Binding{
+									{
+										Metadata:                      types.NewTestMetadata(),
+										IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+										Role:                          types.String("roles/iam.serviceAccountTokenCreator", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Member role set to something particular",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Folders: []iam.Folder{
+							{
+								Metadata: types.NewTestMetadata(),
+								Members: []iam.Member{
+									{
+										Metadata: types.NewTestMetadata(),
+										Role:     types.String("roles/nothingInParticular", types.NewTestMetadata()),
+									},
+								},
+								Bindings: []iam.Binding{
+									{
+										Metadata:                      types.NewTestMetadata(),
+										IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+										Role:                          types.String("roles/nothingInParticular", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

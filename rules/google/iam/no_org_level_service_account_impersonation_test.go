@@ -6,24 +6,72 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoOrgLevelServiceAccountImpersonation(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    iam.IAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    iam.IAM{},
+			name: "Member role set to service account user",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Members: []iam.Member{
+							{
+								Metadata: types.NewTestMetadata(),
+								Role:     types.String("roles/iam.serviceAccountUser", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    iam.IAM{},
+			name: "Member role set to service account token creator",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Bindings: []iam.Binding{
+							{
+								Metadata: types.NewTestMetadata(),
+								Role:     types.String("roles/iam.serviceAccountTokenCreator", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+
+		{
+			name: "Member roles custom set",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Members: []iam.Member{
+							{
+								Metadata: types.NewTestMetadata(),
+								Role:     types.String("roles/some-custom-role", types.NewTestMetadata()),
+							},
+						},
+						Bindings: []iam.Binding{
+							{
+								Metadata: types.NewTestMetadata(),
+								Role:     types.String("roles/some-custom-role", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

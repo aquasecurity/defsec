@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/gke"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableStackdriverLogging(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    gke.GKE
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    gke.GKE{},
+			name: "Cluster missing logging service provider",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata:       types.NewTestMetadata(),
+						LoggingService: types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    gke.GKE{},
+			name: "Cluster with StackDriver logging configured",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata:       types.NewTestMetadata(),
+						LoggingService: types.String("logging.googleapis.com/kubernetes", types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}
