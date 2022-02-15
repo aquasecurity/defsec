@@ -6,24 +6,48 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/gke"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckUseServiceAccount(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    gke.GKE
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    gke.GKE{},
+			name: "Cluster node config with default service account",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata:              types.NewTestMetadata(),
+						RemoveDefaultNodePool: types.Bool(false, types.NewTestMetadata()),
+						NodeConfig: gke.NodeConfig{
+							Metadata:       types.NewTestMetadata(),
+							ServiceAccount: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    gke.GKE{},
+			name: "Cluster node config with service account provided",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata:              types.NewTestMetadata(),
+						RemoveDefaultNodePool: types.Bool(false, types.NewTestMetadata()),
+						NodeConfig: gke.NodeConfig{
+							Metadata:       types.NewTestMetadata(),
+							ServiceAccount: types.String("service-account", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

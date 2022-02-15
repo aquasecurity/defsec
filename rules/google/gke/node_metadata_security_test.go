@@ -6,24 +6,83 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/gke"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNodeMetadataSecurity(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    gke.GKE
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    gke.GKE{},
+			name: "Cluster node pools metadata exposed by default",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						NodeConfig: gke.NodeConfig{
+							Metadata: types.NewTestMetadata(),
+							WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
+								Metadata:     types.NewTestMetadata(),
+								NodeMetadata: types.String("UNSPECIFIED", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    gke.GKE{},
+			name: "Node pool metadata exposed",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						NodeConfig: gke.NodeConfig{
+							Metadata: types.NewTestMetadata(),
+							WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
+								Metadata:     types.NewTestMetadata(),
+								NodeMetadata: types.String("SECURE", types.NewTestMetadata()),
+							},
+						},
+						NodePools: []gke.NodePool{
+							{
+								Metadata: types.NewTestMetadata(),
+								NodeConfig: gke.NodeConfig{
+									Metadata: types.NewTestMetadata(),
+									WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
+										Metadata:     types.NewTestMetadata(),
+										NodeMetadata: types.String("EXPOSE", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Cluster node pools metadata secured",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						NodeConfig: gke.NodeConfig{
+							Metadata: types.NewTestMetadata(),
+							WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
+								Metadata:     types.NewTestMetadata(),
+								NodeMetadata: types.String("SECURE", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

@@ -6,24 +6,62 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoDefaultServiceAccount(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Instance service account missing email",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Instances: []compute.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						ServiceAccount: compute.ServiceAccount{
+							Metadata: types.NewTestMetadata(),
+							Email:    types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Instance service account using the default email",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Instances: []compute.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						ServiceAccount: compute.ServiceAccount{
+							Metadata: types.NewTestMetadata(),
+							Email:    types.String("1234567890-compute@developer.gserviceaccount.com", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Instance service account with email provided",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Instances: []compute.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						ServiceAccount: compute.ServiceAccount{
+							Metadata: types.NewTestMetadata(),
+							Email:    types.String("proper@email.com", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
