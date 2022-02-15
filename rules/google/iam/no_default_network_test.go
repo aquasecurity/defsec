@@ -6,24 +6,82 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoDefaultNetwork(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    iam.IAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    iam.IAM{},
+			name: "Project automatic network creation enabled",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Projects: []iam.Project{
+							{
+								Metadata:          types.NewTestMetadata(),
+								AutoCreateNetwork: types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    iam.IAM{},
+			name: "Project automatic network creation enabled #2",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+
+						Folders: []iam.Folder{
+							{
+								Metadata: types.NewTestMetadata(),
+								Projects: []iam.Project{
+									{
+										Metadata:          types.NewTestMetadata(),
+										AutoCreateNetwork: types.Bool(false, types.NewTestMetadata()),
+									},
+								},
+								Folders: []iam.Folder{
+									{
+										Metadata: types.NewTestMetadata(),
+										Projects: []iam.Project{
+											{
+												Metadata:          types.NewTestMetadata(),
+												AutoCreateNetwork: types.Bool(true, types.NewTestMetadata()),
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Project automatic network creation disabled",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Projects: []iam.Project{
+							{
+								Metadata:          types.NewTestMetadata(),
+								AutoCreateNetwork: types.Bool(false, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
