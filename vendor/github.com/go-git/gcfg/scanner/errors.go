@@ -8,9 +8,7 @@ import (
 	"fmt"
 	"io"
 	"sort"
-)
 
-import (
 	"github.com/go-git/gcfg/token"
 )
 

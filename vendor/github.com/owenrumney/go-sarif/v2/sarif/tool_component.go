@@ -84,7 +84,7 @@ func (driver *ToolComponent) AddTaxa(taxa *ReportingDescriptor) {
 	driver.Taxa = append(driver.Taxa, taxa)
 }
 
-func (driver *ToolComponent) getRuleIndex(id *string) int{
+func (driver *ToolComponent) getRuleIndex(id *string) int {
 	for i, rule := range driver.Rules {
 		if rule.ID == *id {
 			return i

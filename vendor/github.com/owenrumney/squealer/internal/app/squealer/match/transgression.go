@@ -2,8 +2,9 @@ package match
 
 import (
 	"fmt"
-	"github.com/go-git/go-git/v5/plumbing/object"
 	"strings"
+
+	"github.com/go-git/go-git/v5/plumbing/object"
 )
 
 type Transgression struct {
