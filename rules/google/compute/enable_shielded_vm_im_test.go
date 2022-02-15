@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableShieldedVMIntegrityMonitoring(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Instance shielded VM integrity monitoring disabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Instances: []compute.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						ShieldedVM: compute.ShieldedVMConfig{
+							Metadata:                   types.NewTestMetadata(),
+							IntegrityMonitoringEnabled: types.Bool(false, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Instance shielded VM integrity monitoring enabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Instances: []compute.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						ShieldedVM: compute.ShieldedVMConfig{
+							Metadata:                   types.NewTestMetadata(),
+							IntegrityMonitoringEnabled: types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

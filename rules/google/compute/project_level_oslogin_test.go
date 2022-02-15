@@ -6,24 +6,36 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckProjectLevelOslogin(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Compute OS login disabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				ProjectMetadata: compute.ProjectMetadata{
+					Metadata:      types.NewTestMetadata(),
+					EnableOSLogin: types.Bool(false, types.NewTestMetadata()),
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Compute OS login enabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				ProjectMetadata: compute.ProjectMetadata{
+					Metadata:      types.NewTestMetadata(),
+					EnableOSLogin: types.Bool(true, types.NewTestMetadata()),
+				},
+			},
 			expected: false,
 		},
 	}
