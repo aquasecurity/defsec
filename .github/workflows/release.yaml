@@ -35,6 +35,9 @@ jobs:
         run: |
           tags=(latest ${{ env.RELEASE_VERSION}} ${{env.MINOR_VERSION }} ${{ env.MAJOR_VERSION }})
           for tag in ${tags[@]}; do
+              oras push ghcr.io/appshield:${tag} \
+              --manifest-config /dev/null:application/vnd.cncf.openpolicyagent.config.v1+json \
+              bundle.tar.gz:application/vnd.cncf.openpolicyagent.layer.v1.tar+gzip
               oras push ghcr.io/${{ github.repository }}:${tag} \
               --manifest-config /dev/null:application/vnd.cncf.openpolicyagent.config.v1+json \
               bundle.tar.gz:application/vnd.cncf.openpolicyagent.layer.v1.tar+gzip
