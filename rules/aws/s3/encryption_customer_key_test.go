@@ -6,7 +6,7 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/s3"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
-	"github.com/aquasecurity/defsec/types"
+	"github.com/aquasecurity/trivy-config-parsers/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,7 +26,7 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 						Encryption: s3.Encryption{
 							Metadata: types.Metadata{},
 							Enabled:  types.Bool(true, types.NewTestMetadata()),
-							KMSKeyId: types.String("", *types.NewTestMetadata().GetMetadata()),
+							KMSKeyId: types.String("", types.NewTestMetadata()),
 						},
 					},
 				},
@@ -43,7 +43,7 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 						Encryption: s3.Encryption{
 							Metadata: types.Metadata{},
 							Enabled:  types.Bool(true, types.NewTestMetadata()),
-							KMSKeyId: types.String("some-sort-of-key", *types.NewTestMetadata().GetMetadata()),
+							KMSKeyId: types.String("some-sort-of-key", types.NewTestMetadata()),
 						},
 					},
 				},
