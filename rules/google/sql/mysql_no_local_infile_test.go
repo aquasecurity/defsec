@@ -6,24 +6,54 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/sql"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckMysqlNoLocalInfile(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    sql.SQL
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    sql.SQL{},
+			name: "DB instance local file read access enabled",
+			input: sql.SQL{
+				Metadata: types.NewTestMetadata(),
+				Instances: []sql.DatabaseInstance{
+					{
+						Metadata:        types.NewTestMetadata(),
+						DatabaseVersion: types.String("MYSQL_5_6", types.NewTestMetadata()),
+						Settings: sql.Settings{
+							Metadata: types.NewTestMetadata(),
+							Flags: sql.Flags{
+								Metadata:    types.NewTestMetadata(),
+								LocalInFile: types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    sql.SQL{},
+			name: "DB instance local file read access disabled",
+			input: sql.SQL{
+				Metadata: types.NewTestMetadata(),
+				Instances: []sql.DatabaseInstance{
+					{
+						Metadata:        types.NewTestMetadata(),
+						DatabaseVersion: types.String("MYSQL_5_6", types.NewTestMetadata()),
+						Settings: sql.Settings{
+							Metadata: types.NewTestMetadata(),
+							Flags: sql.Flags{
+								Metadata:    types.NewTestMetadata(),
+								LocalInFile: types.Bool(false, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

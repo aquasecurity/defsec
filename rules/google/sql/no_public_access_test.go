@@ -6,24 +6,87 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/sql"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicAccess(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    sql.SQL
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    sql.SQL{},
+			name: "Instance settings set with IPv4 enabled",
+			input: sql.SQL{
+				Metadata: types.NewTestMetadata(),
+				Instances: []sql.DatabaseInstance{
+					{
+						Metadata: types.NewTestMetadata(),
+						Settings: sql.Settings{
+							Metadata: types.NewTestMetadata(),
+							IPConfiguration: sql.IPConfiguration{
+								Metadata:   types.NewTestMetadata(),
+								EnableIPv4: types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    sql.SQL{},
+			name: "Instance settings set with IPv4 disabled but public CIDR in authorized networks",
+			input: sql.SQL{
+				Metadata: types.NewTestMetadata(),
+				Instances: []sql.DatabaseInstance{
+					{
+						Metadata: types.NewTestMetadata(),
+						Settings: sql.Settings{
+							Metadata: types.NewTestMetadata(),
+							IPConfiguration: sql.IPConfiguration{
+								Metadata:   types.NewTestMetadata(),
+								EnableIPv4: types.Bool(false, types.NewTestMetadata()),
+								AuthorizedNetworks: []struct {
+									Name types.StringValue
+									CIDR types.StringValue
+								}{
+									{
+										CIDR: types.String("0.0.0.0/0", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Instance settings set with IPv4 disabled and private CIDR",
+			input: sql.SQL{
+				Metadata: types.NewTestMetadata(),
+				Instances: []sql.DatabaseInstance{
+					{
+						Metadata: types.NewTestMetadata(),
+						Settings: sql.Settings{
+							Metadata: types.NewTestMetadata(),
+							IPConfiguration: sql.IPConfiguration{
+								Metadata:   types.NewTestMetadata(),
+								EnableIPv4: types.Bool(false, types.NewTestMetadata()),
+								AuthorizedNetworks: []struct {
+									Name types.StringValue
+									CIDR types.StringValue
+								}{
+									{
+										CIDR: types.String("10.0.0.1/24", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
