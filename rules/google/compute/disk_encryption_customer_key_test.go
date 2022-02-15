@@ -6,24 +6,46 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckDiskEncryptionCustomerKey(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Disk missing KMS key link",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Disks: []compute.Disk{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: compute.DiskEncryption{
+							Metadata:   types.NewTestMetadata(),
+							KMSKeyLink: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Disk with KMS key link provided",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Disks: []compute.Disk{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: compute.DiskEncryption{
+							Metadata:   types.NewTestMetadata(),
+							KMSKeyLink: types.String("kms-key-link", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

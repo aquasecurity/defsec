@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/gke"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNodeShieldingEnabled(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    gke.GKE
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    gke.GKE{},
+			name: "Cluster shielded nodes disabled",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata:            types.NewTestMetadata(),
+						EnableShieldedNodes: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    gke.GKE{},
+			name: "Cluster shielded nodes enabled",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata:            types.NewTestMetadata(),
+						EnableShieldedNodes: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

@@ -6,24 +6,40 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/gke"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckUseRbacPermissions(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    gke.GKE
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    gke.GKE{},
+			name: "Cluster legacy ABAC enabled",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata:         types.NewTestMetadata(),
+						EnableLegacyABAC: types.Bool(true, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    gke.GKE{},
+			name: "Cluster legacy ABAC disabled",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata:         types.NewTestMetadata(),
+						EnableLegacyABAC: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
 			expected: false,
 		},
 	}

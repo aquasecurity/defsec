@@ -6,24 +6,90 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckDiskEncryptionRequired(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Disk with plaintext encryption key",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Disks: []compute.Disk{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: compute.DiskEncryption{
+							Metadata: types.NewTestMetadata(),
+							RawKey:   types.Bytes([]byte("b2ggbm8gdGhpcyBpcyBiYWQ"), types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Instance disk with plaintext encryption key",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Instances: []compute.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						BootDisks: []compute.Disk{
+							{
+								Metadata: types.NewTestMetadata(),
+								Encryption: compute.DiskEncryption{
+									Metadata: types.NewTestMetadata(),
+									RawKey:   types.Bytes([]byte("b2ggbm8gdGhpcyBpcyBiYWQ"), types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Disks with no plaintext encryption keys",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Disks: []compute.Disk{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: compute.DiskEncryption{
+							Metadata: types.NewTestMetadata(),
+							RawKey:   types.Bytes([]byte(""), types.NewTestMetadata()),
+						},
+					},
+				},
+				Instances: []compute.Instance{
+					{
+						Metadata: types.NewTestMetadata(),
+						BootDisks: []compute.Disk{
+							{
+								Metadata: types.NewTestMetadata(),
+								Encryption: compute.DiskEncryption{
+									Metadata: types.NewTestMetadata(),
+									RawKey:   types.Bytes([]byte(""), types.NewTestMetadata()),
+								},
+							},
+						},
+						AttachedDisks: []compute.Disk{
+							{
+								Metadata: types.NewTestMetadata(),
+								Encryption: compute.DiskEncryption{
+									Metadata: types.NewTestMetadata(),
+									RawKey:   types.Bytes([]byte(""), types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

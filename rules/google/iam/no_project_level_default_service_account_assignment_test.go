@@ -6,24 +6,91 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoProjectLevelDefaultServiceAccountAssignment(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    iam.IAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    iam.IAM{},
+			name: "Default service account disabled but default account used",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Projects: []iam.Project{
+							{
+								Metadata: types.NewTestMetadata(),
+								Members: []iam.Member{
+									{
+										Metadata:              types.NewTestMetadata(),
+										DefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+										Member:                types.String("123-compute@developer.gserviceaccount.com", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    iam.IAM{},
+			name: "Default account enabled",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Projects: []iam.Project{
+							{
+								Metadata: types.NewTestMetadata(),
+								Bindings: []iam.Binding{
+									{
+										Metadata:                      types.NewTestMetadata(),
+										IncludesDefaultServiceAccount: types.Bool(true, types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Default accounts disabled and proper accounts provided",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Projects: []iam.Project{
+							{
+								Metadata: types.NewTestMetadata(),
+								Members: []iam.Member{
+									{
+										Metadata:              types.NewTestMetadata(),
+										DefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+										Member:                types.String("proper@email.com", types.NewTestMetadata()),
+									},
+								},
+								Bindings: []iam.Binding{
+									{
+										Metadata:                      types.NewTestMetadata(),
+										IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+										Members: []types.StringValue{
+											types.String("proper@email.com", types.NewTestMetadata()),
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

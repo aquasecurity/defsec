@@ -6,24 +6,153 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoUserGrantedPermissions(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    iam.IAM
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    iam.IAM{},
+			name: "Permissions granted to users",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Projects: []iam.Project{
+							{
+								Metadata: types.NewTestMetadata(),
+								Members: []iam.Member{
+									{
+										Metadata: types.NewTestMetadata(),
+										Member:   types.String("user:test@example.com", types.NewTestMetadata()),
+										Role:     types.String("some-role", types.NewTestMetadata()),
+									},
+								},
+								Bindings: []iam.Binding{
+									{
+										Metadata: types.NewTestMetadata(),
+										Members: []types.StringValue{
+											types.String("user:test@example.com", types.NewTestMetadata()),
+										},
+										Role: types.String("some-role", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    iam.IAM{},
+			name: "Permissions granted to users #2",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Members: []iam.Member{
+							{
+								Metadata: types.NewTestMetadata(),
+								Member:   types.String("user:test@example.com", types.NewTestMetadata()),
+								Role:     types.String("some-role", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Permissions granted to users #3",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Folders: []iam.Folder{
+							{
+								Metadata: types.NewTestMetadata(),
+								Members: []iam.Member{
+									{
+										Metadata: types.NewTestMetadata(),
+										Member:   types.String("user:test@example.com", types.NewTestMetadata()),
+										Role:     types.String("some-role", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Permissions granted to users #4",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Folders: []iam.Folder{
+							{
+								Metadata: types.NewTestMetadata(),
+								Bindings: []iam.Binding{
+									{
+										Metadata: types.NewTestMetadata(),
+										Members: []types.StringValue{
+											types.String("user:test@example.com", types.NewTestMetadata()),
+										},
+										Role: types.String("some-role", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Permissions granted on groups",
+			input: iam.IAM{
+				Organizations: []iam.Organization{
+					{
+						Metadata: types.NewTestMetadata(),
+						Members: []iam.Member{
+							{
+								Metadata: types.NewTestMetadata(),
+								Member:   types.String("group:test@example.com", types.NewTestMetadata()),
+								Role:     types.String("some-role", types.NewTestMetadata()),
+							},
+						},
+						Bindings: []iam.Binding{
+							{
+								Metadata: types.NewTestMetadata(),
+								Members: []types.StringValue{
+									types.String("group:test@example.com", types.NewTestMetadata()),
+								},
+								Role: types.String("some-role", types.NewTestMetadata()),
+							},
+						},
+						Folders: []iam.Folder{
+							{
+								Metadata: types.NewTestMetadata(),
+								Bindings: []iam.Binding{
+									{
+										Metadata: types.NewTestMetadata(),
+										Members: []types.StringValue{
+											types.String("group:test@example.com", types.NewTestMetadata()),
+										},
+										Role: types.String("some-role", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

@@ -6,24 +6,50 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckEnableVPCFlowLogs(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    compute.Compute
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    compute.Compute{},
+			name: "Subnetwork VPC flow logs disabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Networks: []compute.Network{
+					{
+						Metadata: types.NewTestMetadata(),
+						Subnetworks: []compute.SubNetwork{
+							{
+								Metadata:       types.NewTestMetadata(),
+								EnableFlowLogs: types.Bool(false, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    compute.Compute{},
+			name: "Subnetwork VPC flow logs enabled",
+			input: compute.Compute{
+				Metadata: types.NewTestMetadata(),
+				Networks: []compute.Network{
+					{
+						Metadata: types.NewTestMetadata(),
+						Subnetworks: []compute.SubNetwork{
+							{
+								Metadata:       types.NewTestMetadata(),
+								EnableFlowLogs: types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
