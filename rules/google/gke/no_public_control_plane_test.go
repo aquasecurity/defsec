@@ -6,24 +6,50 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/gke"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoPublicControlPlane(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    gke.GKE
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    gke.GKE{},
+			name: "Master authorized network with public CIDR",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						MasterAuthorizedNetworks: gke.MasterAuthorizedNetworks{
+							Metadata: types.NewTestMetadata(),
+							CIDRs: []types.StringValue{
+								types.String("0.0.0.0/0", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    gke.GKE{},
+			name: "Master authorized network with private CIDR",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						MasterAuthorizedNetworks: gke.MasterAuthorizedNetworks{
+							Metadata: types.NewTestMetadata(),
+							CIDRs: []types.StringValue{
+								types.String("10.10.128.0/24", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}

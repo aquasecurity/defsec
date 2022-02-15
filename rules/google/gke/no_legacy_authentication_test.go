@@ -6,24 +6,73 @@ import (
 	"github.com/aquasecurity/defsec/provider/google/gke"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
+	"github.com/aquasecurity/defsec/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCheckNoLegacyAuthentication(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    gke.GKE
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    gke.GKE{},
+			name: "Cluster master authentication by certificate",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						MasterAuth: gke.MasterAuth{
+							Metadata: types.NewTestMetadata(),
+							ClientCertificate: gke.ClientCertificate{
+								Metadata:         types.NewTestMetadata(),
+								IssueCertificate: types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 			expected: true,
 		},
 		{
-			name:     "negative result",
-			input:    gke.GKE{},
+			name: "Cluster master authentication by username/password",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						MasterAuth: gke.MasterAuth{
+							Metadata: types.NewTestMetadata(),
+							ClientCertificate: gke.ClientCertificate{
+								Metadata:         types.NewTestMetadata(),
+								IssueCertificate: types.Bool(false, types.NewTestMetadata()),
+							},
+							Username: types.String("username", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "Cluster master authentication by certificate or username/password disabled",
+			input: gke.GKE{
+				Metadata: types.NewTestMetadata(),
+				Clusters: []gke.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						MasterAuth: gke.MasterAuth{
+							Metadata: types.NewTestMetadata(),
+							ClientCertificate: gke.ClientCertificate{
+								Metadata:         types.NewTestMetadata(),
+								IssueCertificate: types.Bool(false, types.NewTestMetadata()),
+							},
+							Username: types.String("", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
 			expected: false,
 		},
 	}
