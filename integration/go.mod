@@ -3,7 +3,7 @@ module github.com/aquasecurity/defsec/integration
 go 1.17
 
 require (
-	github.com/aquasecurity/fanal v0.0.0-20220208104902-9680a15403e0
+	github.com/aquasecurity/fanal v0.0.0-20220211180815-aee82113cb10
 	github.com/stretchr/testify v1.7.0
 )
 
@@ -19,7 +19,7 @@ require (
 	github.com/aquasecurity/defsec v0.0.37 // indirect
 	github.com/aquasecurity/go-dep-parser v0.0.0-20211224170007-df43bca6b6ff // indirect
 	github.com/aquasecurity/tfsec v0.63.1 // indirect
-	github.com/aws/aws-sdk-go v1.42.30 // indirect
+	github.com/aws/aws-sdk-go v1.42.51 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/containerd/typeurl v1.0.2 // indirect
@@ -54,7 +54,7 @@ require (
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/moby/buildkit v0.9.3 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/open-policy-agent/opa v0.36.1 // indirect
+	github.com/open-policy-agent/opa v0.37.2 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/owenrumney/squealer v0.2.28 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -74,7 +74,7 @@ require (
 	go.etcd.io/bbolt v1.3.6 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	go.uber.org/zap v1.20.0 // indirect
+	go.uber.org/zap v1.21.0 // indirect
 	golang.org/x/crypto v0.0.0-20220112180741-5e0467b6c7ce // indirect
 	golang.org/x/mod v0.5.1 // indirect
 	golang.org/x/net v0.0.0-20220114011407-0dd24b26b47d // indirect
