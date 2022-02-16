@@ -21,8 +21,9 @@ func getLaunchConfigurations(file parser.FileContext) (launchConfigurations []au
 
 		blockDevices := getBlockDevices(r)
 		for i, device := range blockDevices {
+			copyDevice := device
 			if i == 0 {
-				launchConfig.RootBlockDevice = &device
+				launchConfig.RootBlockDevice = &copyDevice
 				continue
 			}
 			launchConfig.EBSBlockDevices = append(launchConfig.EBSBlockDevices, device)

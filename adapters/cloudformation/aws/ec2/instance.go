@@ -3,7 +3,6 @@ package ec2
 import (
 	"github.com/aquasecurity/defsec/provider/aws/ec2"
 	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
-	"github.com/aquasecurity/trivy-config-parsers/types"
 )
 
 func getInstances(ctx parser.FileContext) (instances []ec2.Instance) {
@@ -23,12 +22,4 @@ func getInstances(ctx parser.FileContext) (instances []ec2.Instance) {
 	}
 
 	return instances
-}
-
-func getUserData(r *parser.Resource) types.StringValue {
-	userDataProp := r.GetProperty("UserData")
-	if userDataProp.IsNil() || userDataProp.IsNotString() {
-		return types.StringDefault("", r.Metadata())
-	}
-	return userDataProp.AsStringValue()
 }
