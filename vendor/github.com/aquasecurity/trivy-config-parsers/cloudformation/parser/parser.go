@@ -14,7 +14,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// Parser ...
 type Parser struct {
 	parameters  map[string]Parameter
 	debugWriter io.Writer
@@ -38,7 +37,6 @@ func (p *Parser) debug(format string, args ...interface{}) {
 	_, _ = p.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
-// ParseFiles ...
 func (p *Parser) ParseFiles(filepaths ...string) (FileContexts, error) {
 	var parsingErrors []error
 	var contexts FileContexts
@@ -85,8 +83,6 @@ func (p *Parser) ParseFiles(filepaths ...string) (FileContexts, error) {
 	return contexts, nil
 }
 
-// Parse parses content from an io.Reader, which may not necessarily be a traditional file.
-// the 'source' argument should identify the source of the content, be it a url, a filesystem path, a container etc.
 func (p *Parser) Parse(reader io.Reader, source string) (*FileContext, error) {
 
 	sourceFmt := YamlSourceFormat
@@ -165,7 +161,6 @@ func checkIsCloudformation(content []byte, sourceFmt SourceFormat) bool {
 	return false
 }
 
-// ParseDirectory ...
 func (p *Parser) ParseDirectory(dir string) (FileContexts, error) {
 
 	if stat, err := os.Stat(dir); err != nil || !stat.IsDir() {

@@ -6,7 +6,6 @@ import (
 	"github.com/aquasecurity/trivy-config-parsers/cloudformation/cftypes"
 )
 
-// ResolveBase64 ...
 func ResolveBase64(property *Property) (*Property, bool) {
 	if !property.isFunction() {
 		return property, true

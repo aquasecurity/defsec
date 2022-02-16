@@ -4,7 +4,6 @@ import (
 	"github.com/aquasecurity/trivy-config-parsers/cloudformation/cftypes"
 )
 
-// ResolveReference ...
 func ResolveReference(property *Property) (resolved *Property, success bool) {
 	if !property.isFunction() {
 		return property, true
@@ -34,9 +33,7 @@ func ResolveReference(property *Property) (resolved *Property, success bool) {
 			case int:
 				resolvedType = cftypes.Int
 			}
-			if resolvedType != param.Type() {
-				//
-			}
+
 			resolved = property.deriveResolved(resolvedType, param.Default())
 			return resolved, true
 		}

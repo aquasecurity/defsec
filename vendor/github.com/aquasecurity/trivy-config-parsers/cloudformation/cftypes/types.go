@@ -1,14 +1,12 @@
 package cftypes
 
-// CfType ...
 type CfType string
 
-// String ...
 const (
 	String  CfType = "string"
-	Int            = "int"
-	Float64        = "float64"
-	Bool           = "bool"
-	Map            = "map"
-	List           = "list"
+	Int     CfType = "int"
+	Float64 CfType = "float64"
+	Bool    CfType = "bool"
+	Map     CfType = "map"
+	List    CfType = "list"
 )

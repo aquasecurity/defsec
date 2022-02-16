@@ -6,7 +6,6 @@ import (
 	"github.com/aquasecurity/trivy-config-parsers/cloudformation/cftypes"
 )
 
-// ResolveGetAtt ...
 func ResolveGetAtt(property *Property) (resolved *Property, success bool) {
 	if !property.isFunction() {
 		return property, true
@@ -40,7 +39,6 @@ func ResolveGetAtt(property *Property) (resolved *Property, success bool) {
 
 	referencedProperty := referencedResource.GetProperty(attribute)
 	if referencedProperty.IsNil() {
-		// if the attribute value can't be found, just return the ID for the resource
 		return property.deriveResolved(cftypes.String, referencedResource.ID()), true
 	}
 

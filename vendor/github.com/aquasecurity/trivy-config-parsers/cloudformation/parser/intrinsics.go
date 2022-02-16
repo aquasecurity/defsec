@@ -49,7 +49,6 @@ func IsIntrinsicFunc(node *yaml.Node) bool {
 	return false
 }
 
-// IsIntrinsic ...
 func IsIntrinsic(key string) bool {
 	for tag := range intrinsicFuncs {
 		if tag == key {
@@ -59,7 +58,6 @@ func IsIntrinsic(key string) bool {
 	return false
 }
 
-// ResolveIntrinsicFunc ...
 func ResolveIntrinsicFunc(property *Property) (*Property, bool) {
 	if property == nil {
 		return nil, false
