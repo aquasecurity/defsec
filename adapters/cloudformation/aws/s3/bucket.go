@@ -22,10 +22,12 @@ func getBuckets(cfFile parser.FileContext) []s3.Bucket {
 			Encryption: getEncryption(r, cfFile),
 			ACL:        convertAclValue(r.GetStringProperty("AccessControl", "private")),
 			Logging: s3.Logging{
-				Enabled: hasLogging(r),
+				Metadata: r.Metadata(),
+				Enabled:  hasLogging(r),
 			},
 			Versioning: s3.Versioning{
-				Enabled: hasVersioning(r),
+				Metadata: r.Metadata(),
+				Enabled:  hasVersioning(r),
 			},
 			PublicAccessBlock: getPublicAccessBlock(r),
 		}
@@ -41,6 +43,7 @@ func getPublicAccessBlock(r *parser.Resource) *s3.PublicAccessBlock {
 	}
 
 	return &s3.PublicAccessBlock{
+		Metadata:              r.Metadata(),
 		BlockPublicACLs:       r.GetBoolProperty("PublicAccessBlockConfiguration.BlockPublicAcls"),
 		BlockPublicPolicy:     r.GetBoolProperty("PublicAccessBlockConfiguration.BlockPublicPolicy"),
 		IgnorePublicACLs:      r.GetBoolProperty("PublicAccessBlockConfiguration.IgnorePublicAcls"),
@@ -87,6 +90,7 @@ func getEncryption(r *parser.Resource, _ parser.FileContext) s3.Encryption {
 
 	if encryptProps.IsNil() {
 		return s3.Encryption{
+			Metadata:  r.Metadata(),
 			Enabled:   types.BoolDefault(false, r.Metadata()),
 			Algorithm: types.StringDefault("", r.Metadata()),
 			KMSKeyId:  types.StringDefault("", r.Metadata()),
@@ -94,6 +98,7 @@ func getEncryption(r *parser.Resource, _ parser.FileContext) s3.Encryption {
 	}
 
 	enc := s3.Encryption{
+		Metadata:  r.Metadata(),
 		Algorithm: types.StringDefault("", r.Metadata()),
 		KMSKeyId:  types.StringDefault("", r.Metadata()),
 	}
