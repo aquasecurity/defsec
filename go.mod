@@ -3,7 +3,7 @@ module github.com/aquasecurity/defsec
 go 1.17
 
 require (
-	github.com/aquasecurity/trivy-config-parsers v0.0.1
+	github.com/aquasecurity/trivy-config-parsers v0.0.2-0.20220216103905-677272ac972e
 	github.com/google/uuid v1.3.0
 	github.com/liamg/iamgo v0.0.2
 	github.com/liamg/tml v0.6.0
@@ -29,6 +29,7 @@ require (
 	github.com/hashicorp/go-uuid v1.0.2 // indirect
 	github.com/hashicorp/hcl/v2 v2.11.1 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
+	github.com/liamg/jfather v0.0.2 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
