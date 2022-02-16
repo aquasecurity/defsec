@@ -4,7 +4,6 @@ import (
 	"github.com/aquasecurity/trivy-config-parsers/cloudformation/cftypes"
 )
 
-// ResolveSelect attempts to resolve the value from a Fn::Select with a Property
 func ResolveSelect(property *Property) (resolved *Property, success bool) {
 	if !property.isFunction() {
 		return property, true

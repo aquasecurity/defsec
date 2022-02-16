@@ -6,7 +6,6 @@ import (
 	"github.com/aquasecurity/trivy-config-parsers/cloudformation/cftypes"
 )
 
-// ResolveJoin ...
 func ResolveJoin(property *Property) (resolved *Property, success bool) {
 	if !property.isFunction() {
 		return property, true

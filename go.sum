@@ -67,6 +67,8 @@ github.com/aquasecurity/trivy-config-parsers v0.0.2-0.20220216095758-dc1ffa97de9
 github.com/aquasecurity/trivy-config-parsers v0.0.2-0.20220216095758-dc1ffa97de9e/go.mod h1:852vZ4Kb8CDjkTz1PqQTXnGv1O+nRv1mvZ/1ukVbkus=
 github.com/aquasecurity/trivy-config-parsers v0.0.2-0.20220216103905-677272ac972e h1:jdXSaxTiR3zxky/JaKrBHvzodGfHnEy2zDattbjzaYQ=
 github.com/aquasecurity/trivy-config-parsers v0.0.2-0.20220216103905-677272ac972e/go.mod h1:852vZ4Kb8CDjkTz1PqQTXnGv1O+nRv1mvZ/1ukVbkus=
+github.com/aquasecurity/trivy-config-parsers v0.0.2 h1:WU9Sz7JSxUrof1qr2Q4EKA/GSPb9Ht88qlCZaKxFy9g=
+github.com/aquasecurity/trivy-config-parsers v0.0.2/go.mod h1:PEfKH2Uuim1Qa8YAMQSn84JsBzPlEbBlm3PjI/9rlNU=
 github.com/armon/circbuf v0.0.0-20150827004946-bbbad097214e/go.mod h1:3U/XgcO3hCbHZ8TKRvWD2dDTCfh9M9ya+I9JpbB7O8o=
 github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da/go.mod h1:Q73ZrmVTwzkszR9V5SSuryQ31EELlFMUz1kKyl939pY=
 github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
