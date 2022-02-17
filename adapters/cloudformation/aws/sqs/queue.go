@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	"github.com/aquasecurity/defsec/provider/aws/iam"
-	"github.com/aquasecurity/defsec/provider/aws/sqs"
+	"github.com/aquasecurity/defsec/providers/aws/iam"
+	"github.com/aquasecurity/defsec/providers/aws/sqs"
 	"github.com/liamg/iamgo"
 )
 

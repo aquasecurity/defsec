@@ -3,8 +3,8 @@ package ecr
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/ecr"
-	iamp "github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/aquasecurity/defsec/providers/aws/ecr"
+	iamp "github.com/aquasecurity/defsec/providers/aws/iam"
 	"github.com/liamg/iamgo"
 )
 

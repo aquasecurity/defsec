@@ -2,7 +2,7 @@ package autoscaling
 
 import (
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/ec2"
+	"github.com/aquasecurity/defsec/providers/aws/ec2"
 )
 
 type Autoscaling struct {

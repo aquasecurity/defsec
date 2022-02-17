@@ -2,7 +2,7 @@ package iam
 
 import (
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/google/iam"
+	"github.com/aquasecurity/defsec/providers/google/iam"
 	"github.com/google/uuid"
 )
 

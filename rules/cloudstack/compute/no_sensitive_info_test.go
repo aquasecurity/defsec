@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/cloudstack/compute"
+	"github.com/aquasecurity/defsec/providers/cloudstack/compute"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"

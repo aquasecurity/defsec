@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/aquasecurity/defsec/providers/aws/iam"
 )
 
 func sameProvider(b1, b2 *terraform.Block) bool {

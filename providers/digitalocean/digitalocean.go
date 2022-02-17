@@ -2,8 +2,8 @@ package digitalocean
 
 import (
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/digitalocean/compute"
-	"github.com/aquasecurity/defsec/provider/digitalocean/spaces"
+	"github.com/aquasecurity/defsec/providers/digitalocean/compute"
+	"github.com/aquasecurity/defsec/providers/digitalocean/spaces"
 )
 
 type DigitalOcean struct {

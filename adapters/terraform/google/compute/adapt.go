@@ -2,7 +2,7 @@ package compute
 
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/provider/google/compute"
+	"github.com/aquasecurity/defsec/providers/google/compute"
 )
 
 func Adapt(modules terraform.Modules) compute.Compute {

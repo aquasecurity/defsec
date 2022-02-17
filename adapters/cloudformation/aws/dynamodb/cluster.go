@@ -2,7 +2,7 @@ package dynamodb
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	"github.com/aquasecurity/defsec/provider/aws/dynamodb"
+	"github.com/aquasecurity/defsec/providers/aws/dynamodb"
 )
 
 func getClusters(file parser.FileContext) (clusters []dynamodb.DAXCluster) {

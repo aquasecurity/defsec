@@ -1,7 +1,7 @@
 package eks
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEncryptSecrets = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0039",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "eks",
 		ShortCode:   "encrypt-secrets",
 		Summary:     "EKS should have the encryption of secrets enabled",

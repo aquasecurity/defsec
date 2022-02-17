@@ -3,7 +3,7 @@ package eks
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/eks"
+	"github.com/aquasecurity/defsec/providers/aws/eks"
 )
 
 func Adapt(modules terraform.Modules) eks.EKS {

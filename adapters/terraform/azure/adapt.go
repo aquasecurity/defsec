@@ -15,7 +15,7 @@ import (
 	"github.com/aquasecurity/defsec/adapters/terraform/azure/storage"
 	"github.com/aquasecurity/defsec/adapters/terraform/azure/synapse"
 	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/provider/azure"
+	"github.com/aquasecurity/defsec/providers/azure"
 )
 
 func Adapt(modules terraform.Modules) azure.Azure {

@@ -3,7 +3,7 @@ package ec2
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -15,7 +15,7 @@ var scanner = squealer.NewStringScanner()
 var CheckNoSecretsInUserData = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0029",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "ec2",
 		ShortCode:   "no-secrets-in-user-data",
 		Summary:     "User data for EC2 instances must not contain sensitive AWS keys",

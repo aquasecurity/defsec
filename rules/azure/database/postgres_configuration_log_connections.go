@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckPostgresConfigurationLogConnections = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AZU-0019",
-		Provider:    provider.AzureProvider,
+		Provider:    providers.AzureProvider,
 		Service:     "database",
 		ShortCode:   "postgres-configuration-log-connections",
 		Summary:     "Ensure server parameter 'log_connections' is set to 'ON' for PostgreSQL Database Server",

@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/autoscaling"
-	"github.com/aquasecurity/defsec/provider/aws/ec2"
+	"github.com/aquasecurity/defsec/providers/aws/autoscaling"
+	"github.com/aquasecurity/defsec/providers/aws/ec2"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"

@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/azure/keyvault"
+	"github.com/aquasecurity/defsec/providers/azure/keyvault"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 	"github.com/stretchr/testify/assert"

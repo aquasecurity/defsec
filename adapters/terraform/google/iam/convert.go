@@ -3,7 +3,7 @@ package iam
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/google/iam"
+	"github.com/aquasecurity/defsec/providers/google/iam"
 )
 
 func ParsePolicyBlock(block *terraform.Block) []iam.Binding {

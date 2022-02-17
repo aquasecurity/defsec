@@ -3,7 +3,7 @@ package ecr
 import (
 	"strings"
 
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -12,7 +12,7 @@ import (
 var CheckNoPublicAccess = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0032",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "ecr",
 		ShortCode:   "no-public-access",
 		Summary:     "ECR repository policy must block public access",

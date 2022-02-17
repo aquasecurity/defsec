@@ -1,8 +1,8 @@
 package apigateway
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/apigateway"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckEnableTracing = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0003",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "api-gateway",
 		ShortCode:   "enable-tracing",
 		Summary:     "API Gateway must have X-Ray tracing enabled",

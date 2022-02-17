@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoPublicIp = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-OCI-0001",
-		Provider:   provider.OracleProvider,
+		Provider:   providers.OracleProvider,
 		Service:    "compute",
 		ShortCode:  "no-public-ip",
 		Summary:    "Compute instance requests an IP reservation from a public pool",

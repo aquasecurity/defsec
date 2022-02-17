@@ -1,7 +1,7 @@
 package mq
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableGeneralLogging = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0071",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "mq",
 		ShortCode:   "enable-general-logging",
 		Summary:     "MQ Broker should have general logging enabled",

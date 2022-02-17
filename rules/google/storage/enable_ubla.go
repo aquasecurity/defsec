@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableUbla = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0002",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "storage",
 		ShortCode:   "enable-ubla",
 		Summary:     "Ensure that Cloud Storage buckets have uniform bucket-level access enabled",

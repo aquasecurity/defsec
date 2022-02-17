@@ -3,7 +3,7 @@ package documentdb
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/documentdb"
+	"github.com/aquasecurity/defsec/providers/aws/documentdb"
 )
 
 func getClusters(ctx parser.FileContext) (clusters []documentdb.Cluster) {

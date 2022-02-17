@@ -1,8 +1,8 @@
 package kinesis
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/kinesis"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/aws/kinesis"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckEnableInTransitEncryption = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0064",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "kinesis",
 		ShortCode:   "enable-in-transit-encryption",
 		Summary:     "Kinesis stream is unencrypted.",

@@ -2,7 +2,7 @@ package vpc
 
 import (
 	"github.com/aquasecurity/defsec/cidr"
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckNoPublicEgressSgr = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0104",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "vpc",
 		ShortCode:   "no-public-egress-sgr",
 		Summary:     "An egress security group rule allows traffic to /0.",

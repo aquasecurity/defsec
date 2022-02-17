@@ -1,7 +1,7 @@
 package apigateway
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckUseSecureTlsPolicy = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0005",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "api-gateway",
 		ShortCode:   "use-secure-tls-policy",
 		Summary:     "API Gateway domain name uses outdated SSL/TLS protocols.",

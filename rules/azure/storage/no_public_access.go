@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/azure/storage"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/azure/storage"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckNoPublicAccess = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AZU-0007",
-		Provider:   provider.AzureProvider,
+		Provider:   providers.AzureProvider,
 		Service:    "storage",
 		ShortCode:  "no-public-access",
 		Summary:    "Storage containers in blob storage mode should not have public access",

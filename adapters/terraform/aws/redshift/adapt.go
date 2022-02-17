@@ -3,7 +3,7 @@ package redshift
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/redshift"
+	"github.com/aquasecurity/defsec/providers/aws/redshift"
 )
 
 func Adapt(modules terraform.Modules) redshift.Redshift {

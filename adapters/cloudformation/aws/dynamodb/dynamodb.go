@@ -2,7 +2,7 @@ package dynamodb
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	"github.com/aquasecurity/defsec/provider/aws/dynamodb"
+	"github.com/aquasecurity/defsec/providers/aws/dynamodb"
 )
 
 // Adapt ...

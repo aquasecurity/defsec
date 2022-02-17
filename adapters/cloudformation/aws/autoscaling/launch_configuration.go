@@ -3,8 +3,8 @@ package autoscaling
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/autoscaling"
-	"github.com/aquasecurity/defsec/provider/aws/ec2"
+	"github.com/aquasecurity/defsec/providers/aws/autoscaling"
+	"github.com/aquasecurity/defsec/providers/aws/ec2"
 )
 
 func getLaunchConfigurations(file parser.FileContext) (launchConfigurations []autoscaling.LaunchConfiguration) {

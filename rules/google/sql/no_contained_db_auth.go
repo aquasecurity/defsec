@@ -1,8 +1,8 @@
 package sql
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/google/sql"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/google/sql"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckNoContainedDbAuth = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0023",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "sql",
 		ShortCode:   "no-contained-db-auth",
 		Summary:     "Contained database authentication should be disabled",

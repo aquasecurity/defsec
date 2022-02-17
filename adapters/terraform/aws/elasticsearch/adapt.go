@@ -3,7 +3,7 @@ package elasticsearch
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/elasticsearch"
+	"github.com/aquasecurity/defsec/providers/aws/elasticsearch"
 )
 
 func Adapt(modules terraform.Modules) elasticsearch.Elasticsearch {

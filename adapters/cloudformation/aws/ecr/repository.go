@@ -7,8 +7,8 @@ import (
 
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/ecr"
-	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/aquasecurity/defsec/providers/aws/ecr"
+	"github.com/aquasecurity/defsec/providers/aws/iam"
 )
 
 func getRepositories(ctx parser.FileContext) (repositories []ecr.Repository) {

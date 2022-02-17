@@ -3,7 +3,7 @@ package apigateway
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/apigateway"
+	"github.com/aquasecurity/defsec/providers/aws/apigateway"
 )
 
 func adaptDomainNamesV1(modules terraform.Modules) []apigateway.DomainName {

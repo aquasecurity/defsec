@@ -2,7 +2,7 @@ package compute
 
 import (
 	"github.com/aquasecurity/defsec/cidr"
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckNoPublicAccess = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-OPNSTK-0002",
-		Provider:    provider.OpenStackProvider,
+		Provider:    providers.OpenStackProvider,
 		Service:     "compute",
 		ShortCode:   "no-public-access",
 		Summary:     "A firewall rule allows traffic from/to the public internet",

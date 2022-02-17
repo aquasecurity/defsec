@@ -1,7 +1,7 @@
 package eks
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoPublicClusterAccess = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0040",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "eks",
 		ShortCode:   "no-public-cluster-access",
 		Summary:     "EKS Clusters should have the public access disabled",

@@ -1,7 +1,7 @@
 package elb
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -17,7 +17,7 @@ var outdatedSSLPolicies = []string{
 var CheckUseSecureTlsPolicy = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0047",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "elb",
 		ShortCode:   "use-secure-tls-policy",
 		Summary:     "An outdated SSL policy is in use by a load balancer.",

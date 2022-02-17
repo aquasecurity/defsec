@@ -2,7 +2,7 @@ package ebs
 
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/provider/aws/ebs"
+	"github.com/aquasecurity/defsec/providers/aws/ebs"
 )
 
 func Adapt(modules terraform.Modules) ebs.EBS {

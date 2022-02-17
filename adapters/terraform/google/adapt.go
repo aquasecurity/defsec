@@ -10,7 +10,7 @@ import (
 	"github.com/aquasecurity/defsec/adapters/terraform/google/sql"
 	"github.com/aquasecurity/defsec/adapters/terraform/google/storage"
 	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/provider/google"
+	"github.com/aquasecurity/defsec/providers/google"
 )
 
 func Adapt(modules terraform.Modules) google.Google {

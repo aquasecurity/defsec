@@ -3,7 +3,7 @@ package spaces
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/digitalocean/spaces"
+	"github.com/aquasecurity/defsec/providers/digitalocean/spaces"
 	"github.com/google/uuid"
 )
 

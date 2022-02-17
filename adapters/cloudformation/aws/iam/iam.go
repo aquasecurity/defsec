@@ -2,7 +2,7 @@ package iam
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/aquasecurity/defsec/providers/aws/iam"
 )
 
 // Adapt ...

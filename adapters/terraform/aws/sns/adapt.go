@@ -2,7 +2,7 @@ package sns
 
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/provider/aws/sns"
+	"github.com/aquasecurity/defsec/providers/aws/sns"
 )
 
 func Adapt(modules terraform.Modules) sns.SNS {

@@ -3,7 +3,7 @@ package ssm
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/ssm"
+	"github.com/aquasecurity/defsec/providers/aws/ssm"
 )
 
 func Adapt(modules terraform.Modules) ssm.SSM {

@@ -1,7 +1,7 @@
 package ec2
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableAtRestEncryption = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0131",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "ec2",
 		ShortCode:   "enable-at-rest-encryption",
 		Summary:     "Instance with unencrypted block device.",

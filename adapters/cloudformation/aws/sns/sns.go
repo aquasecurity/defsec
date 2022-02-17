@@ -2,7 +2,7 @@ package sns
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	"github.com/aquasecurity/defsec/provider/aws/sns"
+	"github.com/aquasecurity/defsec/providers/aws/sns"
 )
 
 // Adapt ...

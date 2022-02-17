@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/google/kms"
+	"github.com/aquasecurity/defsec/providers/google/kms"
 )
 
 func Adapt(modules terraform.Modules) kms.KMS {

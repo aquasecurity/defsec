@@ -1,7 +1,7 @@
 package s3
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEncryptionCustomerKey = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0132",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "s3",
 		ShortCode:   "encryption-customer-key",
 		Summary:     "S3 encryption should use Customer Managed Keys",

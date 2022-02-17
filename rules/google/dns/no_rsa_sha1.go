@@ -1,7 +1,7 @@
 package dns
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoRsaSha1 = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0012",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "dns",
 		ShortCode:   "no-rsa-sha1",
 		Summary:     "Zone signing should not use RSA SHA1",

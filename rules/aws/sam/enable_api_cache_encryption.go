@@ -1,7 +1,7 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableApiCacheEncryption = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0110",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "sam",
 		ShortCode:   "enable-api-cache-encryption",
 		Summary:     "SAM API must have data cache enabled",

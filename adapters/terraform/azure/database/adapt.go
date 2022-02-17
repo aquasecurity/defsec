@@ -3,7 +3,7 @@ package database
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/azure/database"
+	"github.com/aquasecurity/defsec/providers/azure/database"
 )
 
 func Adapt(modules terraform.Modules) database.Database {

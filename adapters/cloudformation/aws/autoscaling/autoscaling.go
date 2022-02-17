@@ -2,7 +2,7 @@ package autoscaling
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	"github.com/aquasecurity/defsec/provider/aws/autoscaling"
+	"github.com/aquasecurity/defsec/providers/aws/autoscaling"
 )
 
 // Adapt ...

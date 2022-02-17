@@ -2,7 +2,7 @@ package openstack
 
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/provider/openstack"
+	"github.com/aquasecurity/defsec/providers/openstack"
 )
 
 func Adapt(modules terraform.Modules) openstack.OpenStack {

@@ -1,7 +1,7 @@
 package eks
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableControlPlaneLogging = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0038",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "eks",
 		ShortCode:   "enable-control-plane-logging",
 		Summary:     "EKS Clusters should have cluster control plane logging turned on",

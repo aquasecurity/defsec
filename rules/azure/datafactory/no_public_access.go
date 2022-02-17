@@ -1,7 +1,7 @@
 package datafactory
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoPublicAccess = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AZU-0035",
-		Provider:   provider.AzureProvider,
+		Provider:   providers.AzureProvider,
 		Service:    "datafactory",
 		ShortCode:  "no-public-access",
 		Summary:    "Data Factory should have public access disabled, the default is enabled.",

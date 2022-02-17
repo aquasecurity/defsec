@@ -2,7 +2,7 @@ package cloudstack
 
 import (
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/cloudstack/compute"
+	"github.com/aquasecurity/defsec/providers/cloudstack/compute"
 )
 
 type CloudStack struct {

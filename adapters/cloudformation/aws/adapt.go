@@ -37,7 +37,7 @@ import (
 	"github.com/aquasecurity/defsec/adapters/cloudformation/aws/ssm"
 	"github.com/aquasecurity/defsec/adapters/cloudformation/aws/vpc"
 	"github.com/aquasecurity/defsec/adapters/cloudformation/aws/workspaces"
-	"github.com/aquasecurity/defsec/provider/aws"
+	"github.com/aquasecurity/defsec/providers/aws"
 )
 
 // Adapt ...

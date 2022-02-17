@@ -1,7 +1,7 @@
 package container
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckLimitAuthorizedIps = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AZU-0041",
-		Provider:    provider.AzureProvider,
+		Provider:    providers.AzureProvider,
 		Service:     "container",
 		ShortCode:   "limit-authorized-ips",
 		Summary:     "Ensure AKS has an API Server Authorized IP Ranges enabled",

@@ -2,8 +2,8 @@ package database
 
 import (
 	"github.com/aquasecurity/defsec/cidr"
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/azure/database"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/azure/database"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -12,7 +12,7 @@ import (
 var CheckNoPublicFirewallAccess = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AZU-0029",
-		Provider:    provider.AzureProvider,
+		Provider:    providers.AzureProvider,
 		Service:     "database",
 		ShortCode:   "no-public-firewall-access",
 		Summary:     "Ensure database firewalls do not permit public access",

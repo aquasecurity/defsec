@@ -3,7 +3,7 @@ package ec2
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/ec2"
+	"github.com/aquasecurity/defsec/providers/aws/ec2"
 )
 
 func Adapt(modules terraform.Modules) ec2.EC2 {

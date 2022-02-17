@@ -2,7 +2,7 @@ package rds
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	"github.com/aquasecurity/defsec/provider/aws/rds"
+	"github.com/aquasecurity/defsec/providers/aws/rds"
 )
 
 // Adapt ...

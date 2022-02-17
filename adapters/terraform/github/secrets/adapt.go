@@ -2,7 +2,7 @@ package secrets
 
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/provider/github"
+	"github.com/aquasecurity/defsec/providers/github"
 )
 
 func Adapt(modules terraform.Modules) []github.EnvironmentSecret {

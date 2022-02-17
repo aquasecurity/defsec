@@ -1,7 +1,7 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableHttpApiAccessLogging = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0116",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "sam",
 		ShortCode:   "enable-http-api-access-logging",
 		Summary:     "SAM HTTP API stages for V1 and V2 should have access logging enabled",

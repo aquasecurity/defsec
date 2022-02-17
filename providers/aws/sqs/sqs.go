@@ -2,7 +2,7 @@ package sqs
 
 import (
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/aquasecurity/defsec/providers/aws/iam"
 )
 
 type SQS struct {

@@ -2,7 +2,7 @@ package athena
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	"github.com/aquasecurity/defsec/provider/aws/athena"
+	"github.com/aquasecurity/defsec/providers/aws/athena"
 )
 
 // Adapt ...

@@ -2,7 +2,7 @@ package lambda
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	"github.com/aquasecurity/defsec/provider/aws/lambda"
+	"github.com/aquasecurity/defsec/providers/aws/lambda"
 )
 
 func getFunctions(ctx parser.FileContext) (functions []lambda.Function) {

@@ -2,7 +2,7 @@ package ec2
 
 import (
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/vpc"
+	"github.com/aquasecurity/defsec/providers/aws/vpc"
 	"github.com/owenrumney/squealer/pkg/squealer"
 )
 

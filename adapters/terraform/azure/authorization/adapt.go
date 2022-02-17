@@ -3,7 +3,7 @@ package authorization
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/azure/authorization"
+	"github.com/aquasecurity/defsec/providers/azure/authorization"
 )
 
 func Adapt(modules terraform.Modules) authorization.Authorization {

@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/aws/config"
+	"github.com/aquasecurity/defsec/providers/aws/config"
 )
 
 func getConfiguraionAggregator(ctx parser.FileContext) (aggregator config.ConfigurationAggregrator) {

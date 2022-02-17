@@ -2,7 +2,7 @@ package elasticache
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	"github.com/aquasecurity/defsec/provider/aws/elasticache"
+	"github.com/aquasecurity/defsec/providers/aws/elasticache"
 )
 
 func getSecurityGroups(ctx parser.FileContext) (securityGroups []elasticache.SecurityGroup) {

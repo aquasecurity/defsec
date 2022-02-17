@@ -1,7 +1,7 @@
 package keyvault
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnsureSecretExpiry = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AZU-0017",
-		Provider:   provider.AzureProvider,
+		Provider:   providers.AzureProvider,
 		Service:    "keyvault",
 		ShortCode:  "ensure-secret-expiry",
 		Summary:    "Key Vault Secret should have an expiration date set",

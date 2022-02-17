@@ -2,7 +2,7 @@ package datafactory
 
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/provider/azure/datafactory"
+	"github.com/aquasecurity/defsec/providers/azure/datafactory"
 )
 
 func Adapt(modules terraform.Modules) datafactory.DataFactory {

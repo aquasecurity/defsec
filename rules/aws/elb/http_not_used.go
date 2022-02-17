@@ -1,8 +1,8 @@
 package elb
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/elb"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/aws/elb"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckHttpNotUsed = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AWS-0054",
-		Provider:   provider.AWSProvider,
+		Provider:   providers.AWSProvider,
 		Service:    "elb",
 		ShortCode:  "http-not-used",
 		Summary:    "Use of plain HTTP.",

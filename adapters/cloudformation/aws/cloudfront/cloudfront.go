@@ -2,7 +2,7 @@ package cloudfront
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	"github.com/aquasecurity/defsec/provider/aws/cloudfront"
+	"github.com/aquasecurity/defsec/providers/aws/cloudfront"
 )
 
 // Adapt ...

@@ -3,7 +3,7 @@ package dns
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/aquasecurity/defsec/provider/google/dns"
+	"github.com/aquasecurity/defsec/providers/google/dns"
 )
 
 func Adapt(modules terraform.Modules) dns.DNS {

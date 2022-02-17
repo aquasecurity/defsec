@@ -1,8 +1,8 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/sam"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/aws/sam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckEnableFunctionTracing = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0125",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "sam",
 		ShortCode:   "enable-function-tracing",
 		Summary:     "SAM Function must have X-Ray tracing enabled",

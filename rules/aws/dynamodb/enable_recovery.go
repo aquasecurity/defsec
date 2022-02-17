@@ -1,7 +1,7 @@
 package dynamodb
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableRecovery = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AWS-0024",
-		Provider:   provider.AWSProvider,
+		Provider:   providers.AWSProvider,
 		Service:    "dynamodb",
 		ShortCode:  "enable-recovery",
 		Summary:    "Point in time recovery should be enabled to protect DynamoDB table",

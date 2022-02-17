@@ -2,7 +2,7 @@ package oracle
 
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/provider/oracle"
+	"github.com/aquasecurity/defsec/providers/oracle"
 )
 
 func Adapt(modules terraform.Modules) oracle.Oracle {
