@@ -1,8 +1,8 @@
 package eks
 
 import (
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
 	"github.com/aquasecurity/defsec/provider/aws/eks"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
 )
 
 // Adapt ...

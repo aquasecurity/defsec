@@ -1,9 +1,9 @@
 package documentdb
 
 import (
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/provider/aws/documentdb"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
-	"github.com/aquasecurity/trivy-config-parsers/types"
 )
 
 func getClusters(ctx parser.FileContext) (clusters []documentdb.Cluster) {

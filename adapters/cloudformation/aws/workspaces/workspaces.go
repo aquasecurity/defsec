@@ -1,8 +1,8 @@
 package workspaces
 
 import (
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
 	"github.com/aquasecurity/defsec/provider/aws/workspaces"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
 )
 
 // Adapt ...

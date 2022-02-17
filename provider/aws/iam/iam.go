@@ -1,7 +1,7 @@
 package iam
 
 import (
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/liamg/iamgo"
 )
 

@@ -1,6 +1,6 @@
 package datalake
 
-import "github.com/aquasecurity/trivy-config-parsers/types"
+import "github.com/aquasecurity/defsec/parsers/types"
 
 type DataLake struct {
 	types.Metadata

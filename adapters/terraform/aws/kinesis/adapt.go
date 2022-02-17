@@ -1,9 +1,9 @@
 package kinesis
 
 import (
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/provider/aws/kinesis"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
-	"github.com/aquasecurity/trivy-config-parsers/types"
 )
 
 func Adapt(modules terraform.Modules) kinesis.Kinesis {

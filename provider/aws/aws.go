@@ -1,6 +1,7 @@
 package aws
 
 import (
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/provider/aws/apigateway"
 	"github.com/aquasecurity/defsec/provider/aws/athena"
 	"github.com/aquasecurity/defsec/provider/aws/autoscaling"
@@ -36,7 +37,6 @@ import (
 	"github.com/aquasecurity/defsec/provider/aws/ssm"
 	"github.com/aquasecurity/defsec/provider/aws/vpc"
 	"github.com/aquasecurity/defsec/provider/aws/workspaces"
-	"github.com/aquasecurity/trivy-config-parsers/types"
 )
 
 type AWS struct {

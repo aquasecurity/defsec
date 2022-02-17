@@ -1,6 +1,6 @@
 package workspaces
 
-import "github.com/aquasecurity/trivy-config-parsers/types"
+import "github.com/aquasecurity/defsec/parsers/types"
 
 type WorkSpaces struct {
 	types.Metadata

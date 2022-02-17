@@ -1,6 +1,6 @@
 package spaces
 
-import "github.com/aquasecurity/trivy-config-parsers/types"
+import "github.com/aquasecurity/defsec/parsers/types"
 
 type Spaces struct {
 	types.Metadata

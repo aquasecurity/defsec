@@ -3,8 +3,8 @@ package iam
 import (
 	"strings"
 
+	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/provider/aws/iam"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
 )
 
 func sameProvider(b1, b2 *terraform.Block) bool {

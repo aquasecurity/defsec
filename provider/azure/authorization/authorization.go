@@ -1,6 +1,6 @@
 package authorization
 
-import "github.com/aquasecurity/trivy-config-parsers/types"
+import "github.com/aquasecurity/defsec/parsers/types"
 
 type Authorization struct {
 	types.Metadata

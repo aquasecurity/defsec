@@ -3,10 +3,10 @@ package autoscaling
 import (
 	"encoding/base64"
 
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/provider/aws/autoscaling"
 	"github.com/aquasecurity/defsec/provider/aws/ec2"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
-	"github.com/aquasecurity/trivy-config-parsers/types"
 )
 
 func Adapt(modules terraform.Modules) autoscaling.Autoscaling {

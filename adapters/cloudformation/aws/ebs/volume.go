@@ -1,8 +1,8 @@
 package ebs
 
 import (
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
 	"github.com/aquasecurity/defsec/provider/aws/ebs"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
 )
 
 func getVolumes(ctx parser.FileContext) (volumes []ebs.Volume) {

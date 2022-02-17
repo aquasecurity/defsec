@@ -1,8 +1,8 @@
 package cloudtrail
 
 import (
+	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/provider/aws/cloudtrail"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
 )
 
 func Adapt(modules terraform.Modules) cloudtrail.CloudTrail {

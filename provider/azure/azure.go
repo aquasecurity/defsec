@@ -1,6 +1,7 @@
 package azure
 
 import (
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/provider/azure/appservice"
 	"github.com/aquasecurity/defsec/provider/azure/authorization"
 	"github.com/aquasecurity/defsec/provider/azure/compute"
@@ -14,7 +15,6 @@ import (
 	"github.com/aquasecurity/defsec/provider/azure/securitycenter"
 	"github.com/aquasecurity/defsec/provider/azure/storage"
 	"github.com/aquasecurity/defsec/provider/azure/synapse"
-	"github.com/aquasecurity/trivy-config-parsers/types"
 )
 
 type Azure struct {

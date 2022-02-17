@@ -1,8 +1,8 @@
 package ssm
 
 import (
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
 	"github.com/aquasecurity/defsec/provider/aws/ssm"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
 )
 
 func getSecrets(ctx parser.FileContext) (secrets []ssm.Secret) {

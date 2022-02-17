@@ -5,10 +5,10 @@ import (
 
 	"github.com/liamg/iamgo"
 
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/provider/aws/ecr"
 	"github.com/aquasecurity/defsec/provider/aws/iam"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
-	"github.com/aquasecurity/trivy-config-parsers/types"
 )
 
 func getRepositories(ctx parser.FileContext) (repositories []ecr.Repository) {

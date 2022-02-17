@@ -1,8 +1,8 @@
 package sqs
 
 import (
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/provider/aws/iam"
-	"github.com/aquasecurity/trivy-config-parsers/types"
 )
 
 type SQS struct {

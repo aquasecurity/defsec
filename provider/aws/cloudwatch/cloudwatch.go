@@ -1,6 +1,6 @@
 package cloudwatch
 
-import "github.com/aquasecurity/trivy-config-parsers/types"
+import "github.com/aquasecurity/defsec/parsers/types"
 
 type CloudWatch struct {
 	types.Metadata

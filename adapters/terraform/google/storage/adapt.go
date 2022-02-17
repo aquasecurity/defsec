@@ -1,8 +1,8 @@
 package storage
 
 import (
+	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/provider/google/storage"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
 )
 
 func Adapt(modules terraform.Modules) storage.Storage {

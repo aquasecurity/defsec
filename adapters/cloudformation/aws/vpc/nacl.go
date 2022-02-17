@@ -3,9 +3,9 @@ package vpc
 import (
 	"strconv"
 
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/provider/aws/vpc"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
-	"github.com/aquasecurity/trivy-config-parsers/types"
 )
 
 func getNetworkACLs(ctx parser.FileContext) (acls []vpc.NetworkACL) {

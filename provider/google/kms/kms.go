@@ -1,7 +1,7 @@
 package kms
 
 import (
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/types"
 )
 
 type KMS struct {

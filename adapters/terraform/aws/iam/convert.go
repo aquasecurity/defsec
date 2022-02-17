@@ -5,8 +5,8 @@ import (
 
 	"github.com/aquasecurity/defsec/provider/aws/iam"
 
+	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/rules"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
 	"github.com/liamg/iamgo"
 )
 

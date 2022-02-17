@@ -1,6 +1,6 @@
 package mq
 
-import "github.com/aquasecurity/trivy-config-parsers/types"
+import "github.com/aquasecurity/defsec/parsers/types"
 
 type MQ struct {
 	types.Metadata

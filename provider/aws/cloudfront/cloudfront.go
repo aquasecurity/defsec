@@ -1,6 +1,6 @@
 package cloudfront
 
-import "github.com/aquasecurity/trivy-config-parsers/types"
+import "github.com/aquasecurity/defsec/parsers/types"
 
 type Cloudfront struct {
 	types.Metadata

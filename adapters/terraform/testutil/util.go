@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
-	"github.com/aquasecurity/trivy-config-parsers/terraform/parser"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/terraform/parser"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

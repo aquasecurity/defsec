@@ -1,8 +1,8 @@
 package iam
 
 import (
+	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/provider/aws/iam"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
 )
 
 func adaptUsers(modules terraform.Modules) []iam.User {

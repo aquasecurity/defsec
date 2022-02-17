@@ -3,7 +3,7 @@ package sql
 import (
 	"strings"
 
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/types"
 )
 
 type SQL struct {

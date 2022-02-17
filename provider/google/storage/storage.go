@@ -1,8 +1,8 @@
 package storage
 
 import (
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/provider/google/iam"
-	"github.com/aquasecurity/trivy-config-parsers/types"
 )
 
 type Storage struct {
