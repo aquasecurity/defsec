@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckDefaultActionDeny = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AZU-0012",
-		Provider:   provider.AzureProvider,
+		Provider:   providers.AzureProvider,
 		Service:    "storage",
 		ShortCode:  "default-action-deny",
 		Summary:    "The default action on Storage account network rules should be set to deny",

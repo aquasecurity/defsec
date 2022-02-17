@@ -4,11 +4,11 @@ import (
 	"github.com/liamg/iamgo"
 
 	"github.com/aquasecurity/defsec/adapters/terraform/aws/iam"
-	iamp "github.com/aquasecurity/defsec/provider/aws/iam"
+	iamp "github.com/aquasecurity/defsec/providers/aws/iam"
 
-	"github.com/aquasecurity/defsec/provider/aws/sqs"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/providers/aws/sqs"
 	"github.com/google/uuid"
 )
 

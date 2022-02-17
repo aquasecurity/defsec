@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 
-	"github.com/aquasecurity/defsec/provider/azure/datalake"
+	"github.com/aquasecurity/defsec/providers/azure/datalake"
 )
 
 func Test_Adapt(t *testing.T) {

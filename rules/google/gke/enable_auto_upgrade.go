@@ -1,7 +1,7 @@
 package gke
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableAutoUpgrade = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0058",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "gke",
 		ShortCode:   "enable-auto-upgrade",
 		Summary:     "Kubernetes should have 'Automatic upgrade' enabled",

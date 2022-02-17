@@ -1,7 +1,7 @@
 package iam
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoDefaultNetwork = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0010",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "iam",
 		ShortCode:   "no-default-network",
 		Summary:     "Default network should not be created at project level",

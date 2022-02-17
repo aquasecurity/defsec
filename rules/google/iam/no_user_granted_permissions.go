@@ -1,7 +1,7 @@
 package iam
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoUserGrantedPermissions = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-GCP-0003",
-		Provider:   provider.GoogleProvider,
+		Provider:   providers.GoogleProvider,
 		Service:    "iam",
 		ShortCode:  "no-user-granted-permissions",
 		Summary:    "IAM granted directly to user.",

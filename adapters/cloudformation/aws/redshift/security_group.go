@@ -1,9 +1,9 @@
 package redshift
 
 import (
-	"github.com/aquasecurity/defsec/provider/aws/redshift"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/providers/aws/redshift"
 )
 
 func getSecurityGroups(ctx parser.FileContext) (groups []redshift.SecurityGroup) {

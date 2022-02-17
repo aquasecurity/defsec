@@ -4,9 +4,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aquasecurity/defsec/provider/azure/network"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/providers/azure/network"
 	"github.com/google/uuid"
 )
 

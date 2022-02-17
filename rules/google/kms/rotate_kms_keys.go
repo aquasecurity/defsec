@@ -1,7 +1,7 @@
 package kms
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckRotateKmsKeys = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0065",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "kms",
 		ShortCode:   "rotate-kms-keys",
 		Summary:     "KMS keys should be rotated at least every 90 days",

@@ -10,8 +10,8 @@ import (
 	"github.com/aquasecurity/defsec/adapters/terraform/kubernetes"
 	"github.com/aquasecurity/defsec/adapters/terraform/openstack"
 	"github.com/aquasecurity/defsec/adapters/terraform/oracle"
+	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/state"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
 )
 
 func Adapt(modules terraform.Modules) *state.State {

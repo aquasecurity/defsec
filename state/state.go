@@ -1,15 +1,15 @@
 package state
 
 import (
-	"github.com/aquasecurity/defsec/provider/aws"
-	"github.com/aquasecurity/defsec/provider/azure"
-	"github.com/aquasecurity/defsec/provider/cloudstack"
-	"github.com/aquasecurity/defsec/provider/digitalocean"
-	"github.com/aquasecurity/defsec/provider/github"
-	"github.com/aquasecurity/defsec/provider/google"
-	"github.com/aquasecurity/defsec/provider/kubernetes"
-	"github.com/aquasecurity/defsec/provider/openstack"
-	"github.com/aquasecurity/defsec/provider/oracle"
+	"github.com/aquasecurity/defsec/providers/aws"
+	"github.com/aquasecurity/defsec/providers/azure"
+	"github.com/aquasecurity/defsec/providers/cloudstack"
+	"github.com/aquasecurity/defsec/providers/digitalocean"
+	"github.com/aquasecurity/defsec/providers/github"
+	"github.com/aquasecurity/defsec/providers/google"
+	"github.com/aquasecurity/defsec/providers/kubernetes"
+	"github.com/aquasecurity/defsec/providers/openstack"
+	"github.com/aquasecurity/defsec/providers/oracle"
 )
 
 type State struct {

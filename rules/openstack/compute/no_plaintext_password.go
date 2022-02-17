@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoPlaintextPassword = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-OPNSTK-0001",
-		Provider:    provider.OpenStackProvider,
+		Provider:    providers.OpenStackProvider,
 		Service:     "compute",
 		ShortCode:   "no-plaintext-password",
 		Summary:     "No plaintext password for compute instance",

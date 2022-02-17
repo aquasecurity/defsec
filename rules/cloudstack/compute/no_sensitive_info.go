@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -13,7 +13,7 @@ var scanner = squealer.NewStringScanner()
 var CheckNoSensitiveInfo = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-CLDSTK-0001",
-		Provider:    provider.CloudStackProvider,
+		Provider:    providers.CloudStackProvider,
 		Service:     "compute",
 		ShortCode:   "no-sensitive-info",
 		Summary:     "No sensitive data stored in user_data",

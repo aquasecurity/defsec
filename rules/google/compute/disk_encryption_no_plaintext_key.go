@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckDiskEncryptionRequired = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0037",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "compute",
 		ShortCode:   "disk-encryption-no-plaintext-key",
 		Summary:     "The encryption key used to encrypt a compute disk has been specified in plaintext.",

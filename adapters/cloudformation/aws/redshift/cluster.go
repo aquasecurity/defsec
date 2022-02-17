@@ -1,8 +1,8 @@
 package redshift
 
 import (
-	"github.com/aquasecurity/defsec/provider/aws/redshift"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/providers/aws/redshift"
 )
 
 func getClusters(ctx parser.FileContext) (clusters []redshift.Cluster) {

@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 
-	"github.com/aquasecurity/defsec/provider/google/storage"
+	"github.com/aquasecurity/defsec/providers/google/storage"
 )
 
 func Test_Adapt(t *testing.T) {

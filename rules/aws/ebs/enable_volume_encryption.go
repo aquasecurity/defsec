@@ -1,7 +1,7 @@
 package ebs
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableVolumeEncryption = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0026",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "ebs",
 		ShortCode:   "enable-volume-encryption",
 		Summary:     "EBS volumes must be encrypted",

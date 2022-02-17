@@ -1,7 +1,7 @@
 package autoscaling
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoPublicIp = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0009",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "autoscaling",
 		ShortCode:   "no-public-ip",
 		Summary:     "Launch configuration should not have a public IP address.",

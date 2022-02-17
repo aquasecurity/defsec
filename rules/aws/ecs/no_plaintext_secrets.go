@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/security"
 	"github.com/aquasecurity/defsec/severity"
@@ -15,7 +15,7 @@ import (
 var CheckNoPlaintextSecrets = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0036",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "ecs",
 		ShortCode:   "no-plaintext-secrets",
 		Summary:     "Task definition defines sensitive environment variable(s).",

@@ -3,7 +3,7 @@ package s3
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -12,7 +12,7 @@ import (
 var CheckForPublicACL = rules.Register(
 	rules.Rule{
 		AVDID:     "AVD-AWS-0092",
-		Provider:  provider.AWSProvider,
+		Provider:  providers.AWSProvider,
 		Service:   "s3",
 		ShortCode: "no-public-access-with-acl",
 		Summary:   "S3 Buckets not publicly accessible through ACL.",

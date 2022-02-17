@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckUseSecureTlsPolicy = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0039",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "compute",
 		ShortCode:   "use-secure-tls-policy",
 		Summary:     "SSL policies should enforce secure versions of TLS",

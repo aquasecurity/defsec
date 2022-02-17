@@ -1,7 +1,7 @@
 package vpc
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoDefaultVpc = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0101",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "vpc",
 		ShortCode:   "no-default-vpc",
 		Summary:     "AWS best practice to not use the default VPC for workflows",

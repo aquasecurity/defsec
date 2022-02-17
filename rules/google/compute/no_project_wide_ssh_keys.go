@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoProjectWideSshKeys = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0030",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "compute",
 		ShortCode:   "no-project-wide-ssh-keys",
 		Summary:     "Disable project-wide SSH keys for all instances",

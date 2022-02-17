@@ -1,7 +1,7 @@
 package rds
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckBackupRetentionSpecified = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0077",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "rds",
 		ShortCode:   "specify-backup-retention",
 		Summary:     "RDS Cluster and RDS instance should have backup retention longer than default 1 day",

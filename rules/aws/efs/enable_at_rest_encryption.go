@@ -1,7 +1,7 @@
 package efs
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableAtRestEncryption = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0037",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "efs",
 		ShortCode:   "enable-at-rest-encryption",
 		Summary:     "EFS Encryption has not been enabled",

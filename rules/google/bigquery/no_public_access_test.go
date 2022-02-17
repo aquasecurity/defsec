@@ -3,10 +3,10 @@ package bigquery
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/provider/google/bigquery"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/providers/google/bigquery"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
-	"github.com/aquasecurity/trivy-config-parsers/types"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -1,7 +1,7 @@
 package workspaces
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableDiskEncryption = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0109",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "workspaces",
 		ShortCode:   "enable-disk-encryption",
 		Summary:     "Root and user volumes on Workspaces should be encrypted",

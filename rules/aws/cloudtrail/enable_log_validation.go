@@ -1,7 +1,7 @@
 package cloudtrail
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableLogValidation = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0016",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "cloudtrail",
 		ShortCode:   "enable-log-validation",
 		Summary:     "Cloudtrail log validation should be enabled to prevent tampering of log data",

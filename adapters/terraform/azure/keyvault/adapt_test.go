@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 
-	"github.com/aquasecurity/defsec/provider/azure/keyvault"
+	"github.com/aquasecurity/defsec/providers/azure/keyvault"
 )
 
 func Test_Adapt(t *testing.T) {

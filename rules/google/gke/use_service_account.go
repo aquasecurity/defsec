@@ -1,7 +1,7 @@
 package gke
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckUseServiceAccount = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0050",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "gke",
 		ShortCode:   "use-service-account",
 		Summary:     "Checks for service account defined for GKE nodes",

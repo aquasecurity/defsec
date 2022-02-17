@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 
-	"github.com/aquasecurity/defsec/provider/aws/apigateway"
+	"github.com/aquasecurity/defsec/providers/aws/apigateway"
 )
 
 func Test_adaptDomainNamesV2(t *testing.T) {
