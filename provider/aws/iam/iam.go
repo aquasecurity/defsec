@@ -24,6 +24,7 @@ type Document struct {
 	types.Metadata
 	Parsed   iamgo.Document
 	IsOffset bool
+	HasRefs  bool
 }
 
 type Group struct {
@@ -48,10 +49,13 @@ type Role struct {
 
 func (d Document) MetadataFromIamGo(r ...iamgo.Range) types.Metadata {
 	m := d.GetMetadata()
+	if d.HasRefs {
+		return m
+	}
 	newRange := m.Range()
 	var start int
 	if !d.IsOffset {
-		start = newRange.GetStartLine() - 1
+		start = newRange.GetStartLine()
 	}
 	for _, rng := range r {
 		newRange := types.NewRange(
