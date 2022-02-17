@@ -8,7 +8,6 @@ import (
 	"github.com/aquasecurity/trivy-config-parsers/cloudformation/cftypes"
 )
 
-// ResolveSub attempts to resolve the value of a string with substitutions with a Property
 func ResolveSub(property *Property) (resolved *Property, success bool) {
 	if !property.isFunction() {
 		return property, true
