@@ -1,9 +1,11 @@
 package sam
 
 import (
+	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/defsec/provider/aws/sam"
 	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
 	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/liamg/iamgo"
 )
 
 func getStateMachines(cfFile parser.FileContext) (stateMachines []sam.StateMachine) {
@@ -46,7 +48,17 @@ func setStateMachinePolicies(r *parser.Resource, stateMachine *sam.StateMachine)
 			stateMachine.ManagedPolicies = append(stateMachine.ManagedPolicies, policies.AsStringValue())
 		} else if policies.IsList() {
 			for _, property := range policies.AsList() {
-				stateMachine.Policies = append(stateMachine.Policies, types.String(property.GetJsonBytesAsString(), property.Metadata()))
+				parsed, err := iamgo.Parse(property.GetJsonBytes())
+				if err != nil {
+					continue
+				}
+				policy := iam.Policy{
+					Document: iam.Document{
+						Parsed:   *parsed,
+						Metadata: property.Metadata(),
+					},
+				}
+				stateMachine.Policies = append(stateMachine.Policies, policy)
 			}
 		}
 	}

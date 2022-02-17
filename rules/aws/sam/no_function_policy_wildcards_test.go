@@ -3,6 +3,9 @@ package sam
 import (
 	"testing"
 
+	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/liamg/iamgo"
+
 	"github.com/aquasecurity/defsec/provider/aws/sam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
@@ -23,21 +26,30 @@ func TestCheckNoFunctionPolicyWildcards(t *testing.T) {
 				Functions: []sam.Function{
 					{
 						Metadata: types.NewTestMetadata(),
-						Policies: []types.StringValue{
-							types.String(`{
-								"Version": "2012-10-17",
-								"Statement": [
-								  {
-									"Effect": "Allow",
-									"Action": ["s3:*"],
-									"Resource": ["arn:aws:s3:::my-bucket/*"],
-									"Principal": {
-										"AWS": "*"
-									}
-								  }
-								]
-							  }`, types.NewTestMetadata()),
-						},
+						Policies: func() []iam.Policy {
+
+							sb := iamgo.NewStatementBuilder()
+							sb.WithSid("new policy")
+							sb.WithEffect("Allow")
+							sb.WithActions([]string{
+								"s3:*",
+							})
+							sb.WithResources([]string{"arn:aws:s3:::my-bucket/*"})
+							sb.WithAWSPrincipals([]string{"*"})
+
+							builder := iamgo.NewPolicyBuilder()
+							builder.WithVersion("2012-10-17")
+							builder.WithStatement(sb.Build())
+
+							return []iam.Policy{
+								{
+									Document: iam.Document{
+										Metadata: types.NewTestMetadata(),
+										Parsed:   builder.Build(),
+									},
+								},
+							}
+						}(),
 					},
 				},
 			},
@@ -50,21 +62,30 @@ func TestCheckNoFunctionPolicyWildcards(t *testing.T) {
 				Functions: []sam.Function{
 					{
 						Metadata: types.NewTestMetadata(),
-						Policies: []types.StringValue{
-							types.String(`{
-								"Version": "2012-10-17",
-								"Statement": [
-								  {
-									"Effect": "Allow",
-									"Action": ["s3:GetObject"],
-									"Resource": ["arn:aws:s3:::my-bucket/*"],
-									"Principal": {
-										"AWS": "proper-value"
-									}
-								  }
-								]
-							  }`, types.NewTestMetadata()),
-						},
+						Policies: func() []iam.Policy {
+
+							sb := iamgo.NewStatementBuilder()
+							sb.WithSid("new policy")
+							sb.WithEffect("Allow")
+							sb.WithActions([]string{
+								"s3:GetObject",
+							})
+							sb.WithResources([]string{"arn:aws:s3:::my-bucket/*"})
+							sb.WithAWSPrincipals([]string{"proper-value"})
+
+							builder := iamgo.NewPolicyBuilder()
+							builder.WithVersion("2012-10-17")
+							builder.WithStatement(sb.Build())
+
+							return []iam.Policy{
+								{
+									Document: iam.Document{
+										Metadata: types.NewTestMetadata(),
+										Parsed:   builder.Build(),
+									},
+								},
+							}
+						}(),
 					},
 				},
 			},

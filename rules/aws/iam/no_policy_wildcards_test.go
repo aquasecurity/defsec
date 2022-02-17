@@ -3,6 +3,8 @@ package iam
 import (
 	"testing"
 
+	"github.com/liamg/iamgo"
+
 	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
@@ -27,20 +29,25 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 						Policies: []iam.Policy{
 							{
 								Metadata: types.NewTestMetadata(),
-								Document: types.String(` {
-									"Version": "2012-10-17",
-									"Statement": [
-										{
-											"Sid": "ListYourObjects",
-											"Effect": "Allow",
-											"Action": "s3:ListBucket",
-											"Resource": ["arn:aws:s3:::*"],
-											"Principal": {
-												"AWS": "arn:aws:iam::1234567890:root"
-											}
-										}
-									]
-								}`, types.NewTestMetadata()),
+								Document: func() iam.Document {
+
+									builder := iamgo.NewPolicyBuilder()
+									builder.WithVersion("2012-10-17")
+
+									sb := iamgo.NewStatementBuilder()
+									sb.WithSid("ListYourObjects")
+									sb.WithEffect(iamgo.EffectAllow)
+									sb.WithActions([]string{"s3:ListBucket"})
+									sb.WithResources([]string{"arn:aws:s3:::*"})
+									sb.WithAWSPrincipals([]string{"arn:aws:iam::1234567890:root"})
+
+									builder.WithStatement(sb.Build())
+
+									return iam.Document{
+										Parsed:   builder.Build(),
+										Metadata: types.NewTestMetadata(),
+									}
+								}(),
 							},
 						},
 					},
@@ -55,20 +62,25 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 				Policies: []iam.Policy{
 					{
 						Metadata: types.NewTestMetadata(),
-						Document: types.String(` {
-							"Version": "2012-10-17",
-							"Statement": [
-								{
-									"Sid": "ListYourObjects",
-									"Effect": "Allow",
-									"Action": "s3:*",
-									"Resource": ["arn:aws:s3:::bucket-name"],
-									"Principal": {
-										"AWS": "arn:aws:iam::1234567890:root"
-									}
-								}
-							]
-						}`, types.NewTestMetadata()),
+						Document: func() iam.Document {
+
+							builder := iamgo.NewPolicyBuilder()
+							builder.WithVersion("2012-10-17")
+
+							sb := iamgo.NewStatementBuilder()
+							sb.WithSid("ListYourObjects")
+							sb.WithEffect(iamgo.EffectAllow)
+							sb.WithActions([]string{"s3:*"})
+							sb.WithResources([]string{"arn:aws:s3:::bucket-name"})
+							sb.WithAWSPrincipals([]string{"arn:aws:iam::1234567890:root"})
+
+							builder.WithStatement(sb.Build())
+
+							return iam.Document{
+								Parsed:   builder.Build(),
+								Metadata: types.NewTestMetadata(),
+							}
+						}(),
 					},
 				},
 			},
@@ -81,16 +93,24 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 				Policies: []iam.Policy{
 					{
 						Metadata: types.NewTestMetadata(),
-						Document: types.String(`{
-						statement {
-							principals {
-							  type        = "AWS"
-							  identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+						Document: func() iam.Document {
+
+							builder := iamgo.NewPolicyBuilder()
+							builder.WithVersion("2012-10-17")
+
+							sb := iamgo.NewStatementBuilder()
+							sb.WithEffect(iamgo.EffectAllow)
+							sb.WithActions([]string{"s3:GetObject"})
+							sb.WithResources([]string{"arn:aws:s3:::bucket-name"})
+							sb.WithAWSPrincipals([]string{"arn:aws:iam::1234567890:root"})
+
+							builder.WithStatement(sb.Build())
+
+							return iam.Document{
+								Parsed:   builder.Build(),
+								Metadata: types.NewTestMetadata(),
 							}
-							actions   = ["s3:GetObject"]
-							resources = [aws_s3_bucket.example.arn]
-						  }
-						}`, types.NewTestMetadata()),
+						}(),
 					},
 				},
 				Roles: []iam.Role{
@@ -99,19 +119,23 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 						Policies: []iam.Policy{
 							{
 								Metadata: types.NewTestMetadata(),
-								Document: types.String(`{
-									Version = "2012-10-17"
-									Statement = [
-									{
-										Action = "sts:AssumeRole"
-										Effect = "Allow"
-										Sid    = ""
-										Principal = {
-										Service = "s3.amazonaws.com"
-										}
-									},
-									]
-								}`, types.NewTestMetadata()),
+								Document: func() iam.Document {
+
+									builder := iamgo.NewPolicyBuilder()
+									builder.WithVersion("2012-10-17")
+
+									sb := iamgo.NewStatementBuilder()
+									sb.WithEffect(iamgo.EffectAllow)
+									sb.WithActions([]string{"sts:AssumeRole"})
+									sb.WithServicePrincipals([]string{"s3.amazonaws.com"})
+
+									builder.WithStatement(sb.Build())
+
+									return iam.Document{
+										Parsed:   builder.Build(),
+										Metadata: types.NewTestMetadata(),
+									}
+								}(),
 							},
 						},
 					},

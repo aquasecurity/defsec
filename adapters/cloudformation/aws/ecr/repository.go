@@ -3,7 +3,10 @@ package ecr
 import (
 	"fmt"
 
+	"github.com/liamg/iamgo"
+
 	"github.com/aquasecurity/defsec/provider/aws/ecr"
+	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
 	"github.com/aquasecurity/trivy-config-parsers/types"
 )
@@ -27,7 +30,7 @@ func getRepositories(ctx parser.FileContext) (repositories []ecr.Repository) {
 		}
 
 		if policy, err := getPolicy(r); err == nil {
-			repository.Policies = append(repository.Policies, policy)
+			repository.Policies = append(repository.Policies, *policy)
 		}
 
 		repositories = append(repositories, repository)
@@ -36,14 +39,23 @@ func getRepositories(ctx parser.FileContext) (repositories []ecr.Repository) {
 	return repositories
 }
 
-func getPolicy(r *parser.Resource) (types.StringValue, error) {
+func getPolicy(r *parser.Resource) (*iam.Policy, error) {
 	policyProp := r.GetProperty("RepositoryPolicyText")
 	if policyProp.IsNil() {
 		return nil, fmt.Errorf("missing policy")
 	}
 
-	return types.String(string(policyProp.GetJsonBytes()), policyProp.Metadata()), nil
+	parsed, err := iamgo.Parse(policyProp.GetJsonBytes())
+	if err != nil {
+		return nil, err
+	}
 
+	return &iam.Policy{
+		Document: iam.Document{
+			Parsed:   *parsed,
+			Metadata: policyProp.Metadata(),
+		},
+	}, nil
 }
 
 func hasImmutableImageTags(r *parser.Resource) types.BoolValue {

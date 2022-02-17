@@ -3,6 +3,9 @@ package sqs
 import (
 	"testing"
 
+	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/liamg/iamgo"
+
 	"github.com/aquasecurity/defsec/provider/aws/sqs"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
@@ -23,18 +26,29 @@ func TestCheckNoWildcardsInPolicyDocuments(t *testing.T) {
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),
-						Policies: []types.StringValue{
-							types.String(`
-							{
-							  "Statement": [
+						Policies: func() []iam.Policy {
+
+							sb := iamgo.NewStatementBuilder()
+							sb.WithSid("new policy")
+							sb.WithEffect("Allow")
+							sb.WithActions([]string{
+								"sqs:*",
+							})
+							sb.WithResources([]string{"arn:aws:sqs:::my-queue"})
+
+							builder := iamgo.NewPolicyBuilder()
+							builder.WithVersion("2012-10-17")
+							builder.WithStatement(sb.Build())
+
+							return []iam.Policy{
 								{
-								  "Effect": "Allow",
-								  "Action": "sqs:*"
-								}
-							  ]
+									Document: iam.Document{
+										Metadata: types.NewTestMetadata(),
+										Parsed:   builder.Build(),
+									},
+								},
 							}
-							`, types.NewTestMetadata()),
-						},
+						}(),
 					},
 				},
 			},
@@ -47,19 +61,31 @@ func TestCheckNoWildcardsInPolicyDocuments(t *testing.T) {
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),
-						Policies: []types.StringValue{
-							types.String(`
-							{
-							  "Statement": [
+						Policies: func() []iam.Policy {
+
+							sb := iamgo.NewStatementBuilder()
+							sb.WithSid("new policy")
+							sb.WithEffect("Allow")
+							sb.WithActions([]string{
+								"sqs:SendMessage",
+								"sqs:ReceiveMessage",
+							})
+							sb.WithResources([]string{"arn:aws:sqs:::my-queue"})
+							sb.WithAWSPrincipals([]string{"*"})
+
+							builder := iamgo.NewPolicyBuilder()
+							builder.WithVersion("2012-10-17")
+							builder.WithStatement(sb.Build())
+
+							return []iam.Policy{
 								{
-								  "Effect": "Allow",
-								  "Principal": "*",
-								  "Action": ["sqs:SendMessage", "sqs:ReceiveMessage"]
-								}
-							  ]
+									Document: iam.Document{
+										Metadata: types.NewTestMetadata(),
+										Parsed:   builder.Build(),
+									},
+								},
 							}
-							`, types.NewTestMetadata()),
-						},
+						}(),
 					},
 				},
 			},

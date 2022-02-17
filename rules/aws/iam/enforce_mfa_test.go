@@ -3,6 +3,8 @@ package iam
 import (
 	"testing"
 
+	"github.com/liamg/iamgo"
+
 	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
@@ -26,17 +28,21 @@ func TestCheckEnforceMFA(t *testing.T) {
 						Policies: []iam.Policy{
 							{
 								Metadata: types.NewTestMetadata(),
-								Document: types.String(`{
-								"Version": "2012-10-17",
-								"Statement": [
-								  {
-									"Sid": "",
-									"Effect": "Allow",
-									"Action": "ec2:*",
-									"Resource": "*"
-								  }
-								]
-							  }`, types.NewTestMetadata()),
+								Document: func() iam.Document {
+
+									builder := iamgo.NewPolicyBuilder()
+									builder.WithVersion("2012-10-17")
+
+									sb := iamgo.NewStatementBuilder()
+									sb.WithEffect(iamgo.EffectAllow)
+									sb.WithActions([]string{"ec2:*"})
+
+									builder.WithStatement(sb.Build())
+
+									return iam.Document{
+										Parsed: builder.Build(),
+									}
+								}(),
 							},
 						},
 					},
@@ -54,22 +60,22 @@ func TestCheckEnforceMFA(t *testing.T) {
 						Policies: []iam.Policy{
 							{
 								Metadata: types.NewTestMetadata(),
-								Document: types.String(`{
-								"Version": "2012-10-17",
-								"Statement": [
-								  {
-									"Sid": "",
-									"Effect": "Allow",
-									"Action": "ec2:*",
-									"Resource": "*",
-									"Condition": {
-										"Bool": {
-											"aws:MultiFactorAuthPresent": ["true"]
-										}
+								Document: func() iam.Document {
+
+									builder := iamgo.NewPolicyBuilder()
+									builder.WithVersion("2012-10-17")
+
+									sb := iamgo.NewStatementBuilder()
+									sb.WithEffect(iamgo.EffectAllow)
+									sb.WithActions([]string{"ec2:*"})
+									sb.WithCondition("Bool", "aws:MultiFactorAuthPresent", []string{"true"})
+
+									builder.WithStatement(sb.Build())
+
+									return iam.Document{
+										Parsed: builder.Build(),
 									}
-								  }
-								]
-							  }`, types.NewTestMetadata()),
+								}(),
 							},
 						},
 					},
