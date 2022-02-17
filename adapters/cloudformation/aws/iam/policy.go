@@ -3,7 +3,7 @@ package iam
 import (
 	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/liamg/iamgo"
 )
 
 func getPolicies(ctx parser.FileContext) (policies []iam.Policy) {
@@ -11,10 +11,18 @@ func getPolicies(ctx parser.FileContext) (policies []iam.Policy) {
 		policyProp := policyResource.GetProperty("PolicyDocument")
 		policyName := policyResource.GetStringProperty("PolicyName")
 
+		doc, err := iamgo.Parse(policyProp.GetJsonBytes())
+		if err != nil {
+			continue
+		}
+
 		policies = append(policies, iam.Policy{
 			Metadata: policyProp.Metadata(),
 			Name:     policyName,
-			Document: types.String(string(policyProp.GetJsonBytes()), policyProp.Metadata()),
+			Document: iam.Document{
+				Metadata: policyProp.Metadata(),
+				Parsed:   *doc,
+			},
 		})
 	}
 	return policies
@@ -69,10 +77,18 @@ func getPoliciesDocs(policiesProp *parser.Property) []iam.Policy {
 		policyProp := policy.GetProperty("PolicyDocument")
 		policyName := policy.GetStringProperty("PolicyName")
 
+		doc, err := iamgo.Parse(policyProp.GetJsonBytes())
+		if err != nil {
+			continue
+		}
+
 		policies = append(policies, iam.Policy{
 			Metadata: policyProp.Metadata(),
 			Name:     policyName,
-			Document: types.String(string(policyProp.GetJsonBytes()), policyProp.Metadata()),
+			Document: iam.Document{
+				Metadata: policyProp.Metadata(),
+				Parsed:   *doc,
+			},
 		})
 	}
 	return policies

@@ -3,9 +3,10 @@ package sqs
 import (
 	"fmt"
 
+	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/defsec/provider/aws/sqs"
 	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/liamg/iamgo"
 )
 
 func getQueues(ctx parser.FileContext) (queues []sqs.Queue) {
@@ -15,30 +16,39 @@ func getQueues(ctx parser.FileContext) (queues []sqs.Queue) {
 			Encryption: sqs.Encryption{
 				KMSKeyID: r.GetStringProperty("KmsMasterKeyId"),
 			},
-			Policies: []types.StringValue{},
+			Policies: []iam.Policy{},
 		}
 		if policy, err := getPolicy(r.ID(), ctx); err == nil {
-			queue.Policies = append(queue.Policies, policy)
+			queue.Policies = append(queue.Policies, *policy)
 		}
 		queues = append(queues, queue)
 	}
 	return queues
 }
 
-func getPolicy(id string, ctx parser.FileContext) (types.StringValue, error) {
+func getPolicy(id string, ctx parser.FileContext) (*iam.Policy, error) {
 	for _, policyResource := range ctx.GetResourceByType("AWS::SQS::QueuePolicy") {
 		documentProp := policyResource.GetProperty("PolicyDocument")
 		if documentProp.IsNil() {
 			continue
 		}
-		doc := types.String(documentProp.GetJsonBytesAsString(), documentProp.Metadata())
 		queuesProp := policyResource.GetProperty("Queues")
 		if queuesProp.IsNil() {
 			continue
 		}
 		for _, queueRef := range queuesProp.AsList() {
 			if queueRef.IsString() && queueRef.AsString() == id {
-				return doc, nil
+				raw := documentProp.GetJsonBytes()
+				parsed, err := iamgo.Parse(raw)
+				if err != nil {
+					continue
+				}
+				return &iam.Policy{
+					Document: iam.Document{
+						Metadata: documentProp.Metadata(),
+						Parsed:   *parsed,
+					},
+				}, nil
 			}
 		}
 	}

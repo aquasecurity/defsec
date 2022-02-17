@@ -1,9 +1,10 @@
 package sam
 
 import (
+	"github.com/aquasecurity/defsec/provider/aws/iam"
 	"github.com/aquasecurity/defsec/provider/aws/sam"
 	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/liamg/iamgo"
 )
 
 func getFunctions(cfFile parser.FileContext) (functions []sam.Function) {
@@ -31,7 +32,17 @@ func setFunctionPolicies(r *parser.Resource, function *sam.Function) {
 		} else if policies.IsList() {
 			for _, property := range policies.AsList() {
 				if property.IsMap() {
-					function.Policies = append(function.Policies, types.String(property.GetJsonBytesAsString(), property.Metadata()))
+					parsed, err := iamgo.Parse(property.GetJsonBytes())
+					if err != nil {
+						continue
+					}
+					policy := iam.Policy{
+						Document: iam.Document{
+							Parsed:   *parsed,
+							Metadata: property.Metadata(),
+						},
+					}
+					function.Policies = append(function.Policies, policy)
 				} else {
 					function.ManagedPolicies = append(function.ManagedPolicies, property.AsStringValue())
 				}

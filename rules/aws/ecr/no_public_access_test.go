@@ -3,6 +3,9 @@ package ecr
 import (
 	"testing"
 
+	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/liamg/iamgo"
+
 	"github.com/aquasecurity/defsec/provider/aws/ecr"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
@@ -23,34 +26,42 @@ func TestCheckNoPublicAccess(t *testing.T) {
 				Repositories: []ecr.Repository{
 					{
 						Metadata: types.NewTestMetadata(),
-						Policies: []types.StringValue{
-							types.String(`{
-								"Version": "2008-10-17",
-								"Statement": [
-									{
-										"Sid": "new policy",
-										"Effect": "Allow",
-										"Principal": "*",
-										"Action": [
-											"ecr:GetDownloadUrlForLayer",
-											"ecr:BatchGetImage",
-											"ecr:BatchCheckLayerAvailability",
-											"ecr:PutImage",
-											"ecr:InitiateLayerUpload",
-											"ecr:UploadLayerPart",
-											"ecr:CompleteLayerUpload",
-											"ecr:DescribeRepositories",
-											"ecr:GetRepositoryPolicy",
-											"ecr:ListImages",
-											"ecr:DeleteRepository",
-											"ecr:BatchDeleteImage",
-											"ecr:SetRepositoryPolicy",
-											"ecr:DeleteRepositoryPolicy"
-										]
-									}
-								]
-							}`, types.NewTestMetadata()),
-						},
+						Policies: func() []iam.Policy {
+
+							sb := iamgo.NewStatementBuilder()
+							sb.WithSid("new policy")
+							sb.WithEffect("Allow")
+							sb.WithAllPrincipals(true)
+							sb.WithActions([]string{
+								"ecr:GetDownloadUrlForLayer",
+								"ecr:BatchGetImage",
+								"ecr:BatchCheckLayerAvailability",
+								"ecr:PutImage",
+								"ecr:InitiateLayerUpload",
+								"ecr:UploadLayerPart",
+								"ecr:CompleteLayerUpload",
+								"ecr:DescribeRepositories",
+								"ecr:GetRepositoryPolicy",
+								"ecr:ListImages",
+								"ecr:DeleteRepository",
+								"ecr:BatchDeleteImage",
+								"ecr:SetRepositoryPolicy",
+								"ecr:DeleteRepositoryPolicy",
+							})
+
+							builder := iamgo.NewPolicyBuilder()
+							builder.WithVersion("2021-10-07")
+							builder.WithStatement(sb.Build())
+
+							return []iam.Policy{
+								{
+									Document: iam.Document{
+										Metadata: types.NewTestMetadata(),
+										Parsed:   builder.Build(),
+									},
+								},
+							}
+						}(),
 					},
 				},
 			},
@@ -63,34 +74,42 @@ func TestCheckNoPublicAccess(t *testing.T) {
 				Repositories: []ecr.Repository{
 					{
 						Metadata: types.NewTestMetadata(),
-						Policies: []types.StringValue{
-							types.String(`{
-								"Version": "2008-10-17",
-								"Statement": [
-									{
-										"Sid": "new policy",
-										"Effect": "Allow",
-										"Principal": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
-										"Action": [
-											"ecr:GetDownloadUrlForLayer",
-											"ecr:BatchGetImage",
-											"ecr:BatchCheckLayerAvailability",
-											"ecr:PutImage",
-											"ecr:InitiateLayerUpload",
-											"ecr:UploadLayerPart",
-											"ecr:CompleteLayerUpload",
-											"ecr:DescribeRepositories",
-											"ecr:GetRepositoryPolicy",
-											"ecr:ListImages",
-											"ecr:DeleteRepository",
-											"ecr:BatchDeleteImage",
-											"ecr:SetRepositoryPolicy",
-											"ecr:DeleteRepositoryPolicy"
-										]
-									}
-								]
-							}`, types.NewTestMetadata()),
-						},
+						Policies: func() []iam.Policy {
+
+							sb := iamgo.NewStatementBuilder()
+							sb.WithSid("new policy")
+							sb.WithEffect("Allow")
+							sb.WithAWSPrincipals([]string{"arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"})
+							sb.WithActions([]string{
+								"ecr:GetDownloadUrlForLayer",
+								"ecr:BatchGetImage",
+								"ecr:BatchCheckLayerAvailability",
+								"ecr:PutImage",
+								"ecr:InitiateLayerUpload",
+								"ecr:UploadLayerPart",
+								"ecr:CompleteLayerUpload",
+								"ecr:DescribeRepositories",
+								"ecr:GetRepositoryPolicy",
+								"ecr:ListImages",
+								"ecr:DeleteRepository",
+								"ecr:BatchDeleteImage",
+								"ecr:SetRepositoryPolicy",
+								"ecr:DeleteRepositoryPolicy",
+							})
+
+							builder := iamgo.NewPolicyBuilder()
+							builder.WithVersion("2021-10-07")
+							builder.WithStatement(sb.Build())
+
+							return []iam.Policy{
+								{
+									Document: iam.Document{
+										Metadata: types.NewTestMetadata(),
+										Parsed:   builder.Build(),
+									},
+								},
+							}
+						}(),
 					},
 				},
 			},

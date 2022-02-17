@@ -33,9 +33,14 @@ func (n *node) decodeArray(v reflect.Value) error {
 		targetElement := reflect.New(elementType).Elem()
 		if targetElement.Kind() == reflect.Ptr {
 			targetElement.Set(reflect.New(elementType.Elem()))
+		} else {
+			targetElement = targetElement.Addr()
 		}
 		if err := node.decodeToValue(targetElement); err != nil {
 			return err
+		}
+		if targetElement.Type().Kind() == reflect.Ptr {
+			targetElement = targetElement.Elem()
 		}
 		v.Index(i).Set(targetElement)
 	}

@@ -27,7 +27,7 @@ import (
 )
 
 type ExampleParent struct {
-	Child *ExampleChild `json:"child"`
+	Child ExampleChild `json:"child"`
 }
 
 type ExampleChild struct {

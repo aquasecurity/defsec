@@ -37,9 +37,14 @@ func (n *node) decodeObjectToMap(v reflect.Value) error {
 		target := reflect.New(valueType).Elem()
 		if target.Kind() == reflect.Ptr {
 			target.Set(reflect.New(valueType.Elem()))
+		} else {
+			target = target.Addr()
 		}
 		if err := value.(*node).decodeToValue(target); err != nil {
 			return err
+		}
+		if target.Type().Kind() == reflect.Ptr {
+			target = target.Elem()
 		}
 		newMap.SetMapIndex(reflect.ValueOf(key), target)
 	}
@@ -103,8 +108,12 @@ func (n *node) decodeObjectToStruct(v reflect.Value) error {
 		subject := v.Field(i)
 
 		// if fields are nil pointers, initialise them with values of the correct type
-		if subject.Kind() == reflect.Ptr && subject.IsNil() {
-			subject.Set(reflect.New(subject.Type().Elem()))
+		if subject.Kind() == reflect.Ptr {
+			if subject.IsNil() {
+				subject.Set(reflect.New(subject.Type().Elem()))
+			}
+		} else {
+			subject = subject.Addr()
 		}
 
 		if err := value.(*node).decodeToValue(subject); err != nil {
