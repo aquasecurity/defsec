@@ -101,7 +101,10 @@ func ConvertTerraformDocument(modules terraform.Modules, block *terraform.Block)
 //nolint
 func parseStatement(statementBlock *terraform.Block) iamgo.Statement {
 
+	metadata := statementBlock.GetMetadata()
+
 	builder := iamgo.NewStatementBuilder()
+	builder.WithRange(metadata.Range().GetStartLine(), metadata.Range().GetEndLine())
 
 	if sidAttr := statementBlock.GetAttribute("sid"); sidAttr.IsString() {
 		r := sidAttr.GetMetadata().Range()
@@ -139,21 +142,17 @@ func parseStatement(statementBlock *terraform.Block) iamgo.Statement {
 		if !identifiersAttr.IsIterable() {
 			continue
 		}
+		r := principalBlock.GetMetadata().Range()
 		switch typeAttr.Value().AsString() {
 		case "*":
-			r := typeAttr.GetMetadata().Range()
 			builder.WithAllPrincipals(true, r.GetStartLine(), r.GetEndLine())
 		case "AWS":
-			r := identifiersAttr.GetMetadata().Range()
 			builder.WithAWSPrincipals(identifiersAttr.ValueAsStrings(), r.GetStartLine(), r.GetEndLine())
 		case "Federated":
-			r := identifiersAttr.GetMetadata().Range()
 			builder.WithFederatedPrincipals(identifiersAttr.ValueAsStrings(), r.GetStartLine(), r.GetEndLine())
 		case "Service":
-			r := identifiersAttr.GetMetadata().Range()
 			builder.WithServicePrincipals(identifiersAttr.ValueAsStrings(), r.GetStartLine(), r.GetEndLine())
 		case "CanonicalUser":
-			r := identifiersAttr.GetMetadata().Range()
 			builder.WithCanonicalUsersPrincipals(identifiersAttr.ValueAsStrings(), r.GetStartLine(), r.GetEndLine())
 		}
 	}

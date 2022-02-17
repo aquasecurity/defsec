@@ -237,6 +237,8 @@ github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0
 github.com/kylelemons/godebug v1.1.0/go.mod h1:9/0rRGxNHcop5bhtWyNeEfOS8JIWk580+fNqagV/RAw=
 github.com/liamg/iamgo v0.0.4 h1:rm0v/roFVMDcarkEWhofMm2KmMzvXYacNtfkesGwItg=
 github.com/liamg/iamgo v0.0.4/go.mod h1:esUin2ui3vX8YjLco+cU5Q04UNcecnslHWNlY3TC0rs=
+github.com/liamg/iamgo v0.0.5 h1:C5I/sxmwIyef3FnPYf3iwF5IIK9zevFmjaKWiT/chGE=
+github.com/liamg/iamgo v0.0.5/go.mod h1:esUin2ui3vX8YjLco+cU5Q04UNcecnslHWNlY3TC0rs=
 github.com/liamg/jfather v0.0.2/go.mod h1:xXBGiBoiZ6tmHhfy5Jzw8sugzajwYdi6VosIpB3/cPM=
 github.com/liamg/jfather v0.0.5 h1:pH0ZGUSJD//nA8yYozSssvoYCpUkxvi+O/nOXFk0rb4=
 github.com/liamg/jfather v0.0.5/go.mod h1:xXBGiBoiZ6tmHhfy5Jzw8sugzajwYdi6VosIpB3/cPM=

@@ -103,7 +103,7 @@ github.com/hashicorp/hcl/v2/json
 # github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99
 ## explicit
 github.com/jbenet/go-context/io
-# github.com/liamg/iamgo v0.0.4
+# github.com/liamg/iamgo v0.0.5
 ## explicit; go 1.17
 github.com/liamg/iamgo
 # github.com/liamg/jfather v0.0.5

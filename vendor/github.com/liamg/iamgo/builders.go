@@ -155,9 +155,15 @@ func (s *StatementBuilder) WithAllPrincipals(all bool, lines ...int) *StatementB
 	s.stmt.inner.Principal.inner.All.inner = all
 	if len(lines) > 0 {
 		s.stmt.inner.Principal.inner.All.r.StartLine = lines[0]
+		if lines[0] < s.stmt.inner.Principal.r.StartLine || s.stmt.inner.Principal.r.StartLine == 0 {
+			s.stmt.inner.Principal.r.StartLine = lines[0]
+		}
 	}
 	if len(lines) > 1 {
 		s.stmt.inner.Principal.inner.All.r.EndLine = lines[1]
+		if lines[1] > s.stmt.inner.Principal.r.EndLine {
+			s.stmt.inner.Principal.r.EndLine = lines[1]
+		}
 	}
 	return s
 }
@@ -166,9 +172,15 @@ func (s *StatementBuilder) WithAWSPrincipals(aws []string, lines ...int) *Statem
 	s.stmt.inner.Principal.inner.AWS.inner = aws
 	if len(lines) > 0 {
 		s.stmt.inner.Principal.inner.AWS.r.StartLine = lines[0]
+		if lines[0] < s.stmt.inner.Principal.r.StartLine || s.stmt.inner.Principal.r.StartLine == 0 {
+			s.stmt.inner.Principal.r.StartLine = lines[0]
+		}
 	}
 	if len(lines) > 1 {
 		s.stmt.inner.Principal.inner.AWS.r.EndLine = lines[1]
+		if lines[1] > s.stmt.inner.Principal.r.EndLine {
+			s.stmt.inner.Principal.r.EndLine = lines[1]
+		}
 	}
 	return s
 }
@@ -177,9 +189,15 @@ func (s *StatementBuilder) WithCanonicalUsersPrincipals(cu []string, lines ...in
 	s.stmt.inner.Principal.inner.CanonicalUsers.inner = cu
 	if len(lines) > 0 {
 		s.stmt.inner.Principal.inner.CanonicalUsers.r.StartLine = lines[0]
+		if lines[0] < s.stmt.inner.Principal.r.StartLine || s.stmt.inner.Principal.r.StartLine == 0 {
+			s.stmt.inner.Principal.r.StartLine = lines[0]
+		}
 	}
 	if len(lines) > 1 {
 		s.stmt.inner.Principal.inner.CanonicalUsers.r.EndLine = lines[1]
+		if lines[1] > s.stmt.inner.Principal.r.EndLine {
+			s.stmt.inner.Principal.r.EndLine = lines[1]
+		}
 	}
 	return s
 }
@@ -188,9 +206,15 @@ func (s *StatementBuilder) WithFederatedPrincipals(federated []string, lines ...
 	s.stmt.inner.Principal.inner.Federated.inner = federated
 	if len(lines) > 0 {
 		s.stmt.inner.Principal.inner.Federated.r.StartLine = lines[0]
+		if lines[0] < s.stmt.inner.Principal.r.StartLine || s.stmt.inner.Principal.r.StartLine == 0 {
+			s.stmt.inner.Principal.r.StartLine = lines[0]
+		}
 	}
 	if len(lines) > 1 {
 		s.stmt.inner.Principal.inner.Federated.r.EndLine = lines[1]
+		if lines[1] > s.stmt.inner.Principal.r.EndLine {
+			s.stmt.inner.Principal.r.EndLine = lines[1]
+		}
 	}
 	return s
 }
@@ -199,9 +223,15 @@ func (s *StatementBuilder) WithServicePrincipals(service []string, lines ...int)
 	s.stmt.inner.Principal.inner.Service.inner = service
 	if len(lines) > 0 {
 		s.stmt.inner.Principal.inner.Service.r.StartLine = lines[0]
+		if lines[0] < s.stmt.inner.Principal.r.StartLine || s.stmt.inner.Principal.r.StartLine == 0 {
+			s.stmt.inner.Principal.r.StartLine = lines[0]
+		}
 	}
 	if len(lines) > 1 {
 		s.stmt.inner.Principal.inner.Service.r.EndLine = lines[1]
+		if lines[1] > s.stmt.inner.Principal.r.EndLine {
+			s.stmt.inner.Principal.r.EndLine = lines[1]
+		}
 	}
 	return s
 }
@@ -210,9 +240,15 @@ func (s *StatementBuilder) WithNotAllPrincipals(all bool, lines ...int) *Stateme
 	s.stmt.inner.NotPrincipal.inner.All.inner = all
 	if len(lines) > 0 {
 		s.stmt.inner.NotPrincipal.inner.All.r.StartLine = lines[0]
+		if lines[0] < s.stmt.inner.NotPrincipal.r.StartLine || s.stmt.inner.NotPrincipal.r.StartLine == 0 {
+			s.stmt.inner.NotPrincipal.r.StartLine = lines[0]
+		}
 	}
 	if len(lines) > 1 {
 		s.stmt.inner.NotPrincipal.inner.All.r.EndLine = lines[1]
+		if lines[1] > s.stmt.inner.NotPrincipal.r.EndLine {
+			s.stmt.inner.NotPrincipal.r.EndLine = lines[1]
+		}
 	}
 	return s
 }
@@ -221,9 +257,15 @@ func (s *StatementBuilder) WithNotAWSPrincipals(aws []string, lines ...int) *Sta
 	s.stmt.inner.NotPrincipal.inner.AWS.inner = aws
 	if len(lines) > 0 {
 		s.stmt.inner.NotPrincipal.inner.AWS.r.StartLine = lines[0]
+		if lines[0] < s.stmt.inner.NotPrincipal.r.StartLine || s.stmt.inner.NotPrincipal.r.StartLine == 0 {
+			s.stmt.inner.NotPrincipal.r.StartLine = lines[0]
+		}
 	}
 	if len(lines) > 1 {
 		s.stmt.inner.NotPrincipal.inner.AWS.r.EndLine = lines[1]
+		if lines[1] > s.stmt.inner.NotPrincipal.r.EndLine {
+			s.stmt.inner.NotPrincipal.r.EndLine = lines[1]
+		}
 	}
 	return s
 }
@@ -232,9 +274,15 @@ func (s *StatementBuilder) WithNotCanonicalUsersPrincipals(cu []string, lines ..
 	s.stmt.inner.NotPrincipal.inner.CanonicalUsers.inner = cu
 	if len(lines) > 0 {
 		s.stmt.inner.NotPrincipal.inner.CanonicalUsers.r.StartLine = lines[0]
+		if lines[0] < s.stmt.inner.NotPrincipal.r.StartLine || s.stmt.inner.NotPrincipal.r.StartLine == 0 {
+			s.stmt.inner.NotPrincipal.r.StartLine = lines[0]
+		}
 	}
 	if len(lines) > 1 {
 		s.stmt.inner.NotPrincipal.inner.CanonicalUsers.r.EndLine = lines[1]
+		if lines[1] > s.stmt.inner.NotPrincipal.r.EndLine {
+			s.stmt.inner.NotPrincipal.r.EndLine = lines[1]
+		}
 	}
 	return s
 }
@@ -243,9 +291,15 @@ func (s *StatementBuilder) WithNotFederatedPrincipals(federated []string, lines 
 	s.stmt.inner.NotPrincipal.inner.Federated.inner = federated
 	if len(lines) > 0 {
 		s.stmt.inner.NotPrincipal.inner.Federated.r.StartLine = lines[0]
+		if lines[0] < s.stmt.inner.NotPrincipal.r.StartLine || s.stmt.inner.NotPrincipal.r.StartLine == 0 {
+			s.stmt.inner.NotPrincipal.r.StartLine = lines[0]
+		}
 	}
 	if len(lines) > 1 {
 		s.stmt.inner.NotPrincipal.inner.Federated.r.EndLine = lines[1]
+		if lines[1] > s.stmt.inner.NotPrincipal.r.EndLine {
+			s.stmt.inner.NotPrincipal.r.EndLine = lines[1]
+		}
 	}
 	return s
 }
@@ -254,9 +308,15 @@ func (s *StatementBuilder) WithNotServicePrincipals(service []string, lines ...i
 	s.stmt.inner.NotPrincipal.inner.Service.inner = service
 	if len(lines) > 0 {
 		s.stmt.inner.NotPrincipal.inner.Service.r.StartLine = lines[0]
+		if lines[0] < s.stmt.inner.NotPrincipal.r.StartLine || s.stmt.inner.NotPrincipal.r.StartLine == 0 {
+			s.stmt.inner.NotPrincipal.r.StartLine = lines[0]
+		}
 	}
 	if len(lines) > 1 {
 		s.stmt.inner.NotPrincipal.inner.Service.r.EndLine = lines[1]
+		if lines[1] > s.stmt.inner.NotPrincipal.r.EndLine {
+			s.stmt.inner.NotPrincipal.r.EndLine = lines[1]
+		}
 	}
 	return s
 }
