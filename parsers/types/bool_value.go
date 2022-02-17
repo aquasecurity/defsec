@@ -3,64 +3,64 @@ package types
 import "encoding/json"
 
 type BoolValue interface {
-    metadataProvider
-    Value() bool
-    IsTrue() bool
-    IsFalse() bool
+	metadataProvider
+	Value() bool
+	IsTrue() bool
+	IsFalse() bool
 }
 
 type boolValue struct {
-    BaseAttribute
-    value bool
+	BaseAttribute
+	value bool
 }
 
 func (b *boolValue) MarshalJSON() ([]byte, error) {
-    return json.Marshal(b.value)
+	return json.Marshal(b.value)
 }
 
 func Bool(value bool, metadata Metadata) BoolValue {
-    return &boolValue{
-        value:         value,
-        BaseAttribute: BaseAttribute{metadata: metadata},
-    }
+	return &boolValue{
+		value:         value,
+		BaseAttribute: BaseAttribute{metadata: metadata},
+	}
 }
 
 func BoolDefault(value bool, metadata Metadata) BoolValue {
-    b := Bool(value, metadata)
-    b.(*boolValue).BaseAttribute.metadata.isDefault = true
-    return b
+	b := Bool(value, metadata)
+	b.(*boolValue).BaseAttribute.metadata.isDefault = true
+	return b
 }
 
 func BoolUnresolvable(m Metadata) BoolValue {
-    b := Bool(false, m)
-    b.(*boolValue).BaseAttribute.metadata.isUnresolvable = true
-    return b
+	b := Bool(false, m)
+	b.(*boolValue).BaseAttribute.metadata.isUnresolvable = true
+	return b
 }
 
 func BoolExplicit(value bool, metadata Metadata) BoolValue {
-    b := Bool(value, metadata)
-    b.(*boolValue).BaseAttribute.metadata.isExplicit = true
-    return b
+	b := Bool(value, metadata)
+	b.(*boolValue).BaseAttribute.metadata.isExplicit = true
+	return b
 }
 
 func (b *boolValue) Value() bool {
-    return b.value
+	return b.value
 }
 
 func (b *boolValue) GetRawValue() interface{} {
-    return b.value
+	return b.value
 }
 
 func (b *boolValue) IsTrue() bool {
-    if b.metadata.isUnresolvable {
-        return false
-    }
-    return b.Value()
+	if b.metadata.isUnresolvable {
+		return false
+	}
+	return b.Value()
 }
 
 func (b *boolValue) IsFalse() bool {
-    if b.metadata.isUnresolvable {
-        return false
-    }
-    return !b.Value()
+	if b.metadata.isUnresolvable {
+		return false
+	}
+	return !b.Value()
 }

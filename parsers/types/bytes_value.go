@@ -3,57 +3,57 @@ package types
 import "encoding/json"
 
 type BytesValue interface {
-    metadataProvider
-    Value() []byte
-    Len() int
+	metadataProvider
+	Value() []byte
+	Len() int
 }
 
 type bytesValue struct {
-    BaseAttribute
-    value []byte
+	BaseAttribute
+	value []byte
 }
 
 func (b *bytesValue) MarshalJSON() ([]byte, error) {
-    return json.Marshal(b.value)
+	return json.Marshal(b.value)
 }
 
 func (b *bytesValue) Value() []byte {
-    return b.value
+	return b.value
 }
 
 func (b *bytesValue) GetRawValue() interface{} {
-    return b.value
+	return b.value
 }
 
 func (b *bytesValue) Len() int {
-    return len(b.value)
+	return len(b.value)
 }
 
 func (b *bytesValue) GetMetadata() Metadata {
-    return b.metadata
+	return b.metadata
 }
 
 func Bytes(value []byte, m Metadata) BytesValue {
-    return &bytesValue{
-        value:         value,
-        BaseAttribute: BaseAttribute{metadata: m},
-    }
+	return &bytesValue{
+		value:         value,
+		BaseAttribute: BaseAttribute{metadata: m},
+	}
 }
 
 func BytesDefault(value []byte, m Metadata) BytesValue {
-    b := Bytes(value, m)
-    b.(*bytesValue).BaseAttribute.metadata.isDefault = true
-    return b
+	b := Bytes(value, m)
+	b.(*bytesValue).BaseAttribute.metadata.isDefault = true
+	return b
 }
 
 func BytesExplicit(value []byte, m Metadata) BytesValue {
-    b := Bytes(value, m)
-    b.(*bytesValue).BaseAttribute.metadata.isExplicit = true
-    return b
+	b := Bytes(value, m)
+	b.(*bytesValue).BaseAttribute.metadata.isExplicit = true
+	return b
 }
 
 func BytesUnresolvable(m Metadata) BytesValue {
-    b := Bytes(nil, m)
-    b.(*bytesValue).BaseAttribute.metadata.isUnresolvable = true
-    return b
+	b := Bytes(nil, m)
+	b.(*bytesValue).BaseAttribute.metadata.isUnresolvable = true
+	return b
 }

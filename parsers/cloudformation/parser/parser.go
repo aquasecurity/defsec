@@ -67,7 +67,7 @@ func (p *Parser) ParseFiles(filepaths ...string) (FileContexts, error) {
 			contexts = append(contexts, context)
 			return nil
 		}(); err != nil {
-			var err2 *ErrNotCloudFormation
+			var err2 *NotCloudFormationError
 			if errors.As(err, &err2) {
 				p.debug(err.Error())
 				continue
