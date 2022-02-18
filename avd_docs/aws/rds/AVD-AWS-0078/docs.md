@@ -1,6 +1,4 @@
 
-### Encryption for RDS Performance Insights should be enabled.
-
 When enabling Performance Insights on an RDS cluster or RDS DB Instance, and encryption key should be provided.
 
 The encryption key specified in `performance_insights_kms_key_id` references a KMS ARN

@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckAutoUpgrade = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-DIG-0006",
-		Provider:    provider.DigitalOceanProvider,
+		Provider:    providers.DigitalOceanProvider,
 		Service:     "compute",
 		ShortCode:   "kubernetes-auto-upgrades-not-enabled",
 		Summary:     "Kubernetes clusters should be auto-upgraded to ensure that they always contain the latest security patches.",

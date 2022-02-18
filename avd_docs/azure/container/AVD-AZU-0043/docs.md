@@ -1,6 +1,4 @@
 
-### Ensure AKS cluster has Network Policy configured
-
 The Kubernetes object type NetworkPolicy should be defined to have opportunity allow or block traffic to pods, as in a Kubernetes cluster configured with default settings, all pods can discover and communicate with each other without any restrictions.
 
 ### Impact

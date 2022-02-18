@@ -1,7 +1,7 @@
 package s3
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckBucketsHavePublicAccessBlocks = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0094",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "s3",
 		ShortCode:   "specify-public-access-block",
 		Summary:     "S3 buckets should each define an aws_s3_bucket_public_access_block",

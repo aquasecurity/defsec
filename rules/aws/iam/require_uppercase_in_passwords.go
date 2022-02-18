@@ -1,7 +1,7 @@
 package iam
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckRequireUppercaseInPasswords = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AWS-0061",
-		Provider:   provider.AWSProvider,
+		Provider:   providers.AWSProvider,
 		Service:    "iam",
 		ShortCode:  "require-uppercase-in-passwords",
 		Summary:    "IAM Password policy should have requirement for at least one uppercase character.",

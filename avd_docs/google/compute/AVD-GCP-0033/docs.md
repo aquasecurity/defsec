@@ -1,6 +1,4 @@
 
-### VM disks should be encrypted with Customer Supplied Encryption Keys
-
 Using unmanaged keys makes rotation and general management difficult.
 
 ### Impact

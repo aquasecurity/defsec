@@ -1,7 +1,7 @@
 package network
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckRetentionPolicySet = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AZU-0049",
-		Provider:   provider.AzureProvider,
+		Provider:   providers.AzureProvider,
 		Service:    "network",
 		ShortCode:  "retention-policy-set",
 		Summary:    "Retention policy for flow logs should be enabled and set to greater than 90 days",

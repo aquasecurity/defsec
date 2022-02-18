@@ -1,6 +1,4 @@
 
-### Pod security policy enforcement not defined.
-
 By default, Pods in Kubernetes can operate with capabilities beyond what they require. You should constrain the Pod's capabilities to only those required for that workload.
 
 Kubernetes offers controls for restricting your Pods to execute with only explicitly granted capabilities. 

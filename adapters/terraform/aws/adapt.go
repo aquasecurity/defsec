@@ -35,8 +35,8 @@ import (
 	"github.com/aquasecurity/defsec/adapters/terraform/aws/ssm"
 	"github.com/aquasecurity/defsec/adapters/terraform/aws/vpc"
 	"github.com/aquasecurity/defsec/adapters/terraform/aws/workspaces"
-	"github.com/aquasecurity/defsec/provider/aws"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/providers/aws"
 )
 
 func Adapt(modules terraform.Modules) aws.AWS {

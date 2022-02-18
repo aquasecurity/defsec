@@ -2,7 +2,7 @@ package gke
 
 import (
 	"github.com/aquasecurity/defsec/cidr"
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckNoPublicControlPlane = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0053",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "gke",
 		ShortCode:   "no-public-control-plane",
 		Summary:     "GKE Control Plane should not be publicly accessible",

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/aws/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -15,7 +15,7 @@ import (
 var CheckNoPolicyWildcards = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0057",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "iam",
 		ShortCode:   "no-policy-wildcards",
 		Summary:     "IAM policy should avoid use of wildcards and instead apply the principle of least privilege",

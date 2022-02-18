@@ -1,6 +1,4 @@
 
-### Ensure log profile captures all activities
-
 Log profiles should capture all categories to ensure that all events are logged
 
 ### Impact

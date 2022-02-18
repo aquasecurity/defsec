@@ -1,6 +1,4 @@
 
-### GKE Control Plane should not be publicly accessible
-
 The GKE control plane is exposed to the public internet by default.
 
 ### Impact

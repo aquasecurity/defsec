@@ -1,6 +1,4 @@
 
-### Ensure that the expiration date is set on all keys
-
 Expiration Date is an optional Key Vault Key behavior and is not set by default.
 
 Set when the resource will be become inactive.

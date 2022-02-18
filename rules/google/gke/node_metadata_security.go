@@ -1,7 +1,7 @@
 package gke
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNodeMetadataSecurity = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-GCP-0057",
-		Provider:   provider.GoogleProvider,
+		Provider:   providers.GoogleProvider,
 		Service:    "gke",
 		ShortCode:  "node-metadata-security",
 		Summary:    "Node metadata value disables metadata concealment.",

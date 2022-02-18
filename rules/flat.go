@@ -1,25 +1,25 @@
 package rules
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/severity"
 )
 
 type FlatResult struct {
-	RuleID          string            `json:"rule_id"`
-	LongID          string            `json:"long_id"`
-	RuleSummary     string            `json:"rule_description"`
-	RuleProvider    provider.Provider `json:"rule_provider"`
-	RuleService     string            `json:"rule_service"`
-	Impact          string            `json:"impact"`
-	Resolution      string            `json:"resolution"`
-	Links           []string          `json:"links"`
-	Description     string            `json:"description"`
-	RangeAnnotation string            `json:"-"`
-	Severity        severity.Severity `json:"severity"`
-	Status          Status            `json:"status"`
-	Resource        string            `json:"resource"`
-	Location        FlatRange         `json:"location"`
+	RuleID          string             `json:"rule_id"`
+	LongID          string             `json:"long_id"`
+	RuleSummary     string             `json:"rule_description"`
+	RuleProvider    providers.Provider `json:"rule_provider"`
+	RuleService     string             `json:"rule_service"`
+	Impact          string             `json:"impact"`
+	Resolution      string             `json:"resolution"`
+	Links           []string           `json:"links"`
+	Description     string             `json:"description"`
+	RangeAnnotation string             `json:"-"`
+	Severity        severity.Severity  `json:"severity"`
+	Status          Status             `json:"status"`
+	Resource        string             `json:"resource"`
+	Location        FlatRange          `json:"location"`
 }
 
 type FlatRange struct {

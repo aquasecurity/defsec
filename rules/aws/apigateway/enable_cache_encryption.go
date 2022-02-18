@@ -1,8 +1,8 @@
 package apigateway
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/apigateway"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckEnableCacheEncryption = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0002",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "api-gateway",
 		ShortCode:   "enable-cache-encryption",
 		Summary:     "API Gateway must have cache enabled",

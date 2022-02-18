@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/azure/monitor"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/azure/monitor"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -14,7 +14,7 @@ import (
 var CheckCaptureAllRegions = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AZU-0032",
-		Provider:    provider.AzureProvider,
+		Provider:    providers.AzureProvider,
 		Service:     "monitor",
 		ShortCode:   "capture-all-regions",
 		Summary:     "Ensure activitys are captured for all locations",

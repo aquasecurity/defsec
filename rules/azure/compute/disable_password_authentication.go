@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckDisablePasswordAuthentication = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AZU-0039",
-		Provider:    provider.AzureProvider,
+		Provider:    providers.AzureProvider,
 		Service:     "compute",
 		ShortCode:   "disable-password-authentication",
 		Summary:     "Password authentication should be disabled on Azure virtual machines",

@@ -3,9 +3,9 @@ package iam
 import (
 	"strings"
 
-	"github.com/aquasecurity/defsec/provider/google/iam"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/providers/google/iam"
 )
 
 // see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam

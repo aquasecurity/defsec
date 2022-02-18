@@ -1,6 +1,4 @@
 
-### Ensure that logging of lock waits is enabled.
-
 Lock waits are often an indication of poor performance and often an indicator of a potential denial of service vulnerability, therefore occurrences should be logged for analysis.
 
 ### Impact

@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckUseSshKeys = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-DIG-0004",
-		Provider:    provider.DigitalOceanProvider,
+		Provider:    providers.DigitalOceanProvider,
 		Service:     "compute",
 		ShortCode:   "use-ssh-keys",
 		Summary:     "SSH Keys are the preferred way to connect to your droplet, no keys are supplied",

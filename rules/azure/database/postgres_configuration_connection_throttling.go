@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckPostgresConfigurationLogConnectionThrottling = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AZU-0021",
-		Provider:    provider.AzureProvider,
+		Provider:    providers.AzureProvider,
 		Service:     "database",
 		ShortCode:   "postgres-configuration-connection-throttling",
 		Summary:     "Ensure server parameter 'connection_throttling' is set to 'ON' for PostgreSQL Database Server",

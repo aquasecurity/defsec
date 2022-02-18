@@ -1,7 +1,7 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckApiUseSecureTlsPolicy = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0112",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "sam",
 		ShortCode:   "api-use-secure-tls-policy",
 		Summary:     "SAM API domain name uses outdated SSL/TLS protocols.",

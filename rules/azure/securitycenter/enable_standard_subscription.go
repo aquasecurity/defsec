@@ -1,8 +1,8 @@
 package securitycenter
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/azure/securitycenter"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/azure/securitycenter"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckEnableStandardSubscription = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AZU-0045",
-		Provider:   provider.AzureProvider,
+		Provider:   providers.AzureProvider,
 		Service:    "security-center",
 		ShortCode:  "enable-standard-subscription",
 		Summary:    "Enable the standard security center subscription tier",

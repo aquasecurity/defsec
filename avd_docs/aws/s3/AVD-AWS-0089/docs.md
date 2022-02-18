@@ -1,6 +1,4 @@
 
-### S3 Bucket does not have logging enabled.
-
 Buckets should have logging enabled so that access can be audited.
 
 ### Impact

@@ -1,6 +1,4 @@
 
-### Cloudfront distribution should have Access Logging configured
-
 You should configure CloudFront Access Logging to create log files that contain detailed information about every user request that CloudFront receives
 
 ### Impact

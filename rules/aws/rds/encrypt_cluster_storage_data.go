@@ -1,7 +1,7 @@
 package rds
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEncryptClusterStorageData = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AWS-0079",
-		Provider:   provider.AWSProvider,
+		Provider:   providers.AWSProvider,
 		Service:    "rds",
 		ShortCode:  "encrypt-cluster-storage-data",
 		Summary:    "There is no encryption specified or encryption is disabled on the RDS Cluster.",

@@ -1,7 +1,7 @@
 package actions
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoPlainTextActionEnvironmentSecrets = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-GIT-0002",
-		Provider:   provider.GitHubProvider,
+		Provider:   providers.GitHubProvider,
 		Service:    "actions",
 		ShortCode:  "no-plain-text-action-secrets",
 		Summary:    "Ensure plaintext value is not used for GitHub Action Environment Secret.",

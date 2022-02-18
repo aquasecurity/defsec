@@ -1,6 +1,4 @@
 
-### IAM granted directly to user.
-
 Permissions should not be directly granted to users, you identify roles that contain the appropriate permissions, and then grant those roles to the user. 
 
 Granting permissions to users quickly become unwieldy and complex to make large scale changes to remove access to a particular resource.

@@ -1,7 +1,7 @@
 package monitor
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckActivityLogRetentionSet = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AZU-0031",
-		Provider:    provider.AzureProvider,
+		Provider:    providers.AzureProvider,
 		Service:     "monitor",
 		ShortCode:   "activity-log-retention-set",
 		Summary:     "Ensure the activity retention log is set to at least a year",

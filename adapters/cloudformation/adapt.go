@@ -2,8 +2,8 @@ package adapter
 
 import (
 	"github.com/aquasecurity/defsec/adapters/cloudformation/aws"
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
 	"github.com/aquasecurity/defsec/state"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
 )
 
 // Adapt ...

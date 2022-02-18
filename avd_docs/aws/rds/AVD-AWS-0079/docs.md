@@ -1,6 +1,4 @@
 
-### There is no encryption specified or encryption is disabled on the RDS Cluster.
-
 Encryption should be enabled for an RDS Aurora cluster. 
 
 When enabling encryption by setting the kms_key_id, the storage_encrypted must also be set to true.

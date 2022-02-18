@@ -1,8 +1,8 @@
 package synapse
 
 import (
-	"github.com/aquasecurity/defsec/provider/azure/synapse"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/providers/azure/synapse"
 )
 
 func Adapt(modules terraform.Modules) synapse.Synapse {

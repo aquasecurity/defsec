@@ -1,7 +1,7 @@
 package spaces
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckDisableForceDestroy = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-DIG-0005",
-		Provider:    provider.DigitalOceanProvider,
+		Provider:    providers.DigitalOceanProvider,
 		Service:     "spaces",
 		ShortCode:   "disable-force-destroy",
 		Summary:     "Force destroy is enabled on Spaces bucket which is dangerous",

@@ -1,6 +1,4 @@
 
-### Domain logging should be enabled for Elastic Search domains
-
 Amazon ES exposes four Elasticsearch logs through Amazon CloudWatch Logs: error logs, search slow logs, index slow logs, and audit logs. 
 
 Search slow logs, index slow logs, and error logs are useful for troubleshooting performance and stability issues. 

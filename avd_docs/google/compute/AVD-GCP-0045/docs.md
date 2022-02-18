@@ -1,6 +1,4 @@
 
-### Instances should have Shielded VM integrity monitoring enabled
-
 Integrity monitoring helps you understand and make decisions about the state of your VM instances.
 
 ### Impact

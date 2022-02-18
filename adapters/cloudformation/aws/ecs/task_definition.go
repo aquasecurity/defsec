@@ -1,9 +1,9 @@
 package ecs
 
 import (
-	"github.com/aquasecurity/defsec/provider/aws/ecs"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/providers/aws/ecs"
 )
 
 func getTaskDefinitions(ctx parser.FileContext) (taskDefinitions []ecs.TaskDefinition) {

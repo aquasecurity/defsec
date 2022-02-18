@@ -1,6 +1,4 @@
 
-### Auditing should be enabled on Azure SQL Databases
-
 Auditing helps you maintain regulatory compliance, understand database activity, and gain insight into discrepancies and anomalies that could indicate business concerns or suspected security violations.
 
 ### Impact

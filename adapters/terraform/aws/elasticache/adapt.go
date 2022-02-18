@@ -1,8 +1,8 @@
 package elasticache
 
 import (
-	"github.com/aquasecurity/defsec/provider/aws/elasticache"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/providers/aws/elasticache"
 )
 
 func Adapt(modules terraform.Modules) elasticache.ElastiCache {

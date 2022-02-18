@@ -1,9 +1,9 @@
 package monitor
 
 import (
-	"github.com/aquasecurity/defsec/provider/azure/monitor"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/providers/azure/monitor"
 )
 
 func Adapt(modules terraform.Modules) monitor.Monitor {

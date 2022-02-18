@@ -1,7 +1,7 @@
 package elasticsearch
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckUseSecureTlsPolicy = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0126",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "elastic-search",
 		ShortCode:   "use-secure-tls-policy",
 		Summary:     "Elasticsearch domain endpoint is using outdated TLS policy.",

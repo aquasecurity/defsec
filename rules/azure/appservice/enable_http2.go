@@ -1,7 +1,7 @@
 package appservice
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableHttp2 = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AZU-0005",
-		Provider:    provider.AzureProvider,
+		Provider:    providers.AzureProvider,
 		Service:     "appservice",
 		ShortCode:   "enable-http2",
 		Summary:     "Web App uses the latest HTTP version",

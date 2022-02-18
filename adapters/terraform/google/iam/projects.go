@@ -1,7 +1,7 @@
 package iam
 
 import (
-	"github.com/aquasecurity/defsec/provider/google/iam"
+	"github.com/aquasecurity/defsec/providers/google/iam"
 )
 
 type parentedProject struct {

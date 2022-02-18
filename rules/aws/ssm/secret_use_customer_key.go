@@ -1,8 +1,8 @@
 package ssm
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/ssm"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/aws/ssm"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckSecretUseCustomerKey = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0098",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "ssm",
 		ShortCode:   "secret-use-customer-key",
 		Summary:     "Secrets Manager should use customer managed keys",

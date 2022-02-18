@@ -1,6 +1,4 @@
 
-### Enable the standard security center subscription tier
-
 To benefit from Azure Defender you should use the Standard subscription tier.
 			
 			Enabling Azure Defender extends the capabilities of the free mode to workloads running in private and other public clouds, providing unified security management and threat protection across your hybrid cloud workloads.

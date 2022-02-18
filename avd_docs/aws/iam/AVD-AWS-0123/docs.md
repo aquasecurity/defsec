@@ -1,6 +1,4 @@
 
-### IAM Groups should have MFA enforcement activated.
-
 
 IAM user accounts should be protected with multi factor authentication to add safe guards to password compromise.
 			

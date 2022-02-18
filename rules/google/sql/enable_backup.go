@@ -1,7 +1,7 @@
 package sql
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableBackup = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0024",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "sql",
 		ShortCode:   "enable-backup",
 		Summary:     "Enable automated backups to recover from data-loss",

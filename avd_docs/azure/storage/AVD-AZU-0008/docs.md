@@ -1,6 +1,4 @@
 
-### Storage accounts should be configured to only accept transfers that are over secure connections
-
 You can configure your storage account to accept requests from secure connections only by setting the Secure transfer required property for the storage account. 
 
 When you require secure transfer, any requests originating from an insecure connection are rejected. 

@@ -1,6 +1,4 @@
 
-### Launch configuration with unencrypted block device.
-
 Block devices should be encrypted to ensure sensitive data is held securely at rest.
 
 ### Impact

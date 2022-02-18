@@ -1,6 +1,4 @@
 
-### CloudFront distribution does not have a WAF in front.
-
 You should configure a Web Application Firewall in front of your CloudFront distribution. This will mitigate many types of attacks on your web application.
 
 ### Impact

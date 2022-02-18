@@ -1,8 +1,8 @@
 package kubernetes
 
 import (
-	"github.com/aquasecurity/defsec/provider/kubernetes"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/providers/kubernetes"
 )
 
 func Adapt(modules terraform.Modules) kubernetes.Kubernetes {

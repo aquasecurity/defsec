@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableAudit = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AZU-0027",
-		Provider:    provider.AzureProvider,
+		Provider:    providers.AzureProvider,
 		Service:     "database",
 		ShortCode:   "enable-audit",
 		Summary:     "Auditing should be enabled on Azure SQL Databases",

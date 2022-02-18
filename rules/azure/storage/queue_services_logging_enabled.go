@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckQueueServicesLoggingEnabled = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AZU-0009",
-		Provider:   provider.AzureProvider,
+		Provider:   providers.AzureProvider,
 		Service:    "storage",
 		ShortCode:  "queue-services-logging-enabled",
 		Summary:    "When using Queue Services for a storage account, logging should be enabled.",

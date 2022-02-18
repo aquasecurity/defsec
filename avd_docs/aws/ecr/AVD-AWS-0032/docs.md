@@ -1,6 +1,4 @@
 
-### ECR repository policy must block public access
-
 Allowing public access to the ECR repository risks leaking sensitive of abusable information
 
 ### Impact

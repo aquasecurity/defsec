@@ -1,6 +1,4 @@
 
-### Key vault Secret should have a content type set
-
 Content Type is an optional Key Vault Secret behavior and is not enabled by default.
 
 Clients may specify the content type of a secret to assist in interpreting the secret data when it's retrieved. The maximum length of this field is 255 characters. There are no pre-defined values. The suggested usage is as a hint for interpreting the secret data.

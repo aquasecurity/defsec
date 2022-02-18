@@ -1,7 +1,7 @@
 package elasticsearch
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableDomainLogging = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AWS-0042",
-		Provider:   provider.AWSProvider,
+		Provider:   providers.AWSProvider,
 		Service:    "elastic-search",
 		ShortCode:  "enable-domain-logging",
 		Summary:    "Domain logging should be enabled for Elastic Search domains",

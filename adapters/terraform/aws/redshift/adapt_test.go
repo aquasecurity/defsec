@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 
-	"github.com/aquasecurity/defsec/provider/aws/redshift"
+	"github.com/aquasecurity/defsec/providers/aws/redshift"
 )
 
 func Test_Adapt(t *testing.T) {

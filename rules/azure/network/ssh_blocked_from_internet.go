@@ -2,7 +2,7 @@ package network
 
 import (
 	"github.com/aquasecurity/defsec/cidr"
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckSshBlockedFromInternet = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AZU-0050",
-		Provider:   provider.AzureProvider,
+		Provider:   providers.AzureProvider,
 		Service:    "network",
 		ShortCode:  "ssh-blocked-from-internet",
 		Summary:    "SSH access should not be accessible from the Internet, should be blocked on port 22",

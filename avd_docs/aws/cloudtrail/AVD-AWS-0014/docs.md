@@ -1,6 +1,4 @@
 
-### Cloudtrail should be enabled in all regions regardless of where your AWS resources are generally homed
-
 When creating Cloudtrail in the AWS Management Console the trail is configured by default to be multi-region, this isn't the case with the Terraform resource. Cloudtrail should cover the full AWS account to ensure you can track changes in regions you are not actively operting in.
 
 ### Impact

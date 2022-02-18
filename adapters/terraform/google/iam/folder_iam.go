@@ -1,8 +1,8 @@
 package iam
 
 import (
-	"github.com/aquasecurity/defsec/provider/google/iam"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/providers/google/iam"
 )
 
 // see https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_folder_iam

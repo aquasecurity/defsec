@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 
-	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/aquasecurity/defsec/providers/aws/iam"
 )
 
 func Test_adaptPasswordPolicy(t *testing.T) {

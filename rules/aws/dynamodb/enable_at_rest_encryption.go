@@ -1,7 +1,7 @@
 package dynamodb
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableAtRestEncryption = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0023",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "dynamodb",
 		ShortCode:   "enable-at-rest-encryption",
 		Summary:     "DAX Cluster should always encrypt data at rest",

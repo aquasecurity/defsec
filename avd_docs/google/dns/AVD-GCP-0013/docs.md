@@ -1,6 +1,4 @@
 
-### Cloud DNS should use DNSSEC
-
 DNSSEC authenticates DNS responses, preventing MITM attacks and impersonation.
 
 ### Impact

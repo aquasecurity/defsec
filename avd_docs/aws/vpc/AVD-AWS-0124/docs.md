@@ -1,6 +1,4 @@
 
-### Missing description for security group rule.
-
 Security group rules should include a description for auditing purposes.
 
 Simplifies auditing, debugging, and managing security groups.

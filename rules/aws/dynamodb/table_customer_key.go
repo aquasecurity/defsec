@@ -1,8 +1,8 @@
 package dynamodb
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/dynamodb"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/aws/dynamodb"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckTableCustomerKey = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0025",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "dynamodb",
 		ShortCode:   "table-customer-key",
 		Summary:     "DynamoDB tables should use at rest encryption with a Customer Managed Key",

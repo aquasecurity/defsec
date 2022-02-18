@@ -1,6 +1,4 @@
 
-### Trusted Microsoft Services should have bypass access to Storage accounts
-
 Some Microsoft services that interact with storage accounts operate from networks that can't be granted access through network rules. 
 
 To help this type of service work as intended, allow the set of trusted Microsoft services to bypass the network rules

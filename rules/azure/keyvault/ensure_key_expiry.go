@@ -1,7 +1,7 @@
 package keyvault
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnsureKeyExpiry = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AZU-0014",
-		Provider:   provider.AzureProvider,
+		Provider:   providers.AzureProvider,
 		Service:    "keyvault",
 		ShortCode:  "ensure-key-expiry",
 		Summary:    "Ensure that the expiration date is set on all keys",
