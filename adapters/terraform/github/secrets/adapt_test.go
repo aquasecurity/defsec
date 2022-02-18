@@ -3,10 +3,8 @@ package secrets
 import (
 	"testing"
 
-	"github.com/aquasecurity/trivy-config-parsers/types"
-
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
-
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/providers/github"
 )
 
