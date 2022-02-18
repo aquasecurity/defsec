@@ -1,6 +1,4 @@
 
-### Ensure MQ Broker is not publicly exposed
-
 Public access of the MQ broker should be disabled and only allow routes to applications that require access.
 
 ### Impact

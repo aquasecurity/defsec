@@ -1,6 +1,4 @@
 
-### IAM Password policy should have requirement for at least one number in the password.
-
 IAM account password policies should ensure that passwords content including at least one number.
 
 ### Impact

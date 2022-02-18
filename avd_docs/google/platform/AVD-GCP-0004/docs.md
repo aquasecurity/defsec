@@ -1,6 +1,4 @@
 
-### Roles should not be assigned to default service accounts
-
 Deault service accounts should not be used - consider creating specialised service accounts for individual purposes.
 
 ### Impact

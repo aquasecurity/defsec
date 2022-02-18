@@ -1,6 +1,4 @@
 
-### ECS clusters should have container insights enabled
-
 Cloudwatch Container Insights provide more metrics and logs for container based applications and micro services.
 
 ### Impact

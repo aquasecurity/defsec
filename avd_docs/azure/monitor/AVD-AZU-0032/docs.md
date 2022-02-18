@@ -1,6 +1,4 @@
 
-### Ensure activitys are captured for all locations
-
 Log profiles should capture all regions to ensure that all events are logged
 
 ### Impact

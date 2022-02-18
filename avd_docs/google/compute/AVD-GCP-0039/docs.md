@@ -1,6 +1,4 @@
 
-### SSL policies should enforce secure versions of TLS
-
 TLS versions prior to 1.2 are outdated and insecure. You should use 1.2 as aminimum version.
 
 ### Impact

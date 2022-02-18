@@ -1,6 +1,4 @@
 
-### Contained database authentication should be disabled
-
 Users with ALTER permissions on users can grant access to a contained database without the knowledge of an administrator
 
 ### Impact

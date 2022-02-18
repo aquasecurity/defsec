@@ -1,6 +1,4 @@
 
-### Retention policy for flow logs should be enabled and set to greater than 90 days
-
 Flow logs are the source of truth for all network activity in your cloud environment. 
 To enable analysis in security event that was detected late, you need to have the logs available. 
 			

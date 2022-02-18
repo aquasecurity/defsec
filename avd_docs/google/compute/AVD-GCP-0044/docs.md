@@ -1,6 +1,4 @@
 
-### Instances should not use the default service account
-
 The default service account has full project access. Instances should instead be assigned the minimal access they need.
 
 ### Impact

@@ -1,6 +1,4 @@
 
-### Ensure MSK Cluster logging is enabled
-
 Managed streaming for Kafka can log to Cloud Watch, Kinesis Firehose and S3, at least one of these locations should be logged to
 
 ### Impact

@@ -1,6 +1,4 @@
 
-### EKS Clusters should have cluster control plane logging turned on
-
 By default cluster control plane logging is not turned on. Logging is available for audit, api, authenticator, controllerManager and scheduler. All logging should be turned on for cluster control plane.
 
 ### Impact

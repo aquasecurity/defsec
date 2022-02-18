@@ -1,6 +1,4 @@
 
-### OS Login should be enabled at project level
-
 OS Login automatically revokes the relevant SSH keys when an IAM user has their access revoked.
 
 ### Impact

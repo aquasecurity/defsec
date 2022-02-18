@@ -1,6 +1,4 @@
 
-### EKS cluster should not have open CIDR range for public access
-
 EKS Clusters have public access cidrs set to 0.0.0.0/0 by default which is wide open to the internet. This should be explicitly set to a more specific private CIDR range
 
 ### Impact

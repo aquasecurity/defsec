@@ -1,6 +1,4 @@
 
-### Elasticsearch domain uses plaintext traffic for node to node communication.
-
 Traffic flowing between Elasticsearch nodes should be encrypted to ensure sensitive data is kept private.
 
 ### Impact

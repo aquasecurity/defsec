@@ -1,6 +1,4 @@
 
-### Network Policy should be enabled on GKE clusters
-
 Enabling a network policy allows the segregation of network traffic by namespace
 
 ### Impact

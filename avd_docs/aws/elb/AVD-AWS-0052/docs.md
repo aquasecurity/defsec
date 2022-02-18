@@ -1,6 +1,4 @@
 
-### Load balancers should drop invalid headers
-
 Passing unknown or invalid headers through to the target poses a potential risk of compromise. 
 
 By setting drop_invalid_header_fields to true, anything that doe not conform to well known, defined headers will be removed by the load balancer.

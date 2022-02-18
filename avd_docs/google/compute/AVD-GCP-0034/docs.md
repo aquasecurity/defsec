@@ -1,6 +1,4 @@
 
-### Disks should be encrypted with customer managed encryption keys
-
 Using unmanaged keys makes rotation and general management difficult.
 
 ### Impact

@@ -1,6 +1,4 @@
 
-### Users should not be granted service account access at the folder level
-
 Users with service account access at folder level can impersonate any service account. Instead, they should be given access to particular service accounts as required.
 
 ### Impact

@@ -1,6 +1,4 @@
 
-### Ensure that logging of disconnections is enabled.
-
 Logging disconnections provides useful diagnostic data such as session length, which can identify performance issues in an application and potential DoS vectors.
 
 ### Impact

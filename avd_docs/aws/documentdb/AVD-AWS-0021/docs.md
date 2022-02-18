@@ -1,6 +1,4 @@
 
-### DocumentDB storage must be encrypted
-
 Encryption of the underlying storage used by DocumentDB ensures that if their is compromise of the disks, the data is still protected.
 
 ### Impact

@@ -1,6 +1,4 @@
 
-### Checks for service account defined for GKE nodes
-
 You should create and use a minimally privileged service account to run your GKE cluster instead of using the Compute Engine default service account.
 
 ### Impact

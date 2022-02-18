@@ -1,6 +1,4 @@
 
-### An ingress Network ACL rule allows ALL ports.
-
 Ensure access to specific required ports is allowed, and nothing else.
 
 ### Impact

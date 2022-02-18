@@ -1,6 +1,4 @@
 
-### VM disk encryption keys should not be provided in plaintext
-
 Providing your encryption key in plaintext format means anyone with access to the source code also has access to the key.
 
 ### Impact

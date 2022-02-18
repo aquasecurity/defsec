@@ -1,6 +1,4 @@
 
-### Neptune logs export should be enabled
-
 Neptune does not have auditing by default. To ensure that you are able to accurately audit the usage of your Neptune instance you should enable export logs.
 
 ### Impact
