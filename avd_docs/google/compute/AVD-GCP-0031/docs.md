@@ -1,6 +1,4 @@
 
-### Instances should not have public IP addresses
-
 Instances should not be publicly exposed to the internet
 
 ### Impact

@@ -1,6 +1,4 @@
 
-### Root and user volumes on Workspaces should be encrypted
-
 Workspace volumes for both user and root should be encrypted to protect the data stored on them.
 
 ### Impact

@@ -1,6 +1,4 @@
 
-### The encryption key used to encrypt a compute disk has been specified in plaintext.
-
 Sensitive values such as raw encryption keys should not be included in your Terraform code, and should be stored securely by a secrets manager.
 
 ### Impact

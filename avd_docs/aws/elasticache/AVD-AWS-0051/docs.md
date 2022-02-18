@@ -1,6 +1,4 @@
 
-### Elasticache Replication Group uses unencrypted traffic.
-
 Traffic flowing between Elasticache replication nodes should be encrypted to ensure sensitive data is kept private.
 
 ### Impact

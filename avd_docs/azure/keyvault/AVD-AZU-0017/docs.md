@@ -1,6 +1,4 @@
 
-### Key Vault Secret should have an expiration date set
-
 Expiration Date is an optional Key Vault Secret behavior and is not set by default.
 
 Set when the resource will be become inactive.

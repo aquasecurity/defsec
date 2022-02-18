@@ -1,6 +1,4 @@
 
-### Enable disk encryption on managed disk
-
 Manage disks should be encrypted at rest. When specifying the <code>encryption_settings</code> block, the enabled attribute should be set to <code>true</code>.
 
 ### Impact

@@ -1,6 +1,4 @@
 
-### Database auditing rentention period should be longer than 90 days
-
 When Auditing is configured for a SQL database, if the retention period is not set, the retention will be unlimited.
 
 If the retention period is to be explicitly set, it should be set for no less than 90 days.

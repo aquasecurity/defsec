@@ -1,6 +1,4 @@
 
-### Missing description for security group.
-
 Security groups should include a description for auditing purposes.
 
 Simplifies auditing, debugging, and managing security groups.

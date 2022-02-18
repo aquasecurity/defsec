@@ -1,6 +1,4 @@
 
-### Elasticsearch domain endpoint is using outdated TLS policy.
-
 You should not use outdated/insecure TLS versions for encryption. You should be using TLS v1.2+.
 
 ### Impact

@@ -1,6 +1,4 @@
 
-### S3 Buckets not publically accessible through ACL
-
 
 Buckets should have logging enabled so that access can be audited. 
 

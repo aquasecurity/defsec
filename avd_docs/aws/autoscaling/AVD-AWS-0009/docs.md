@@ -1,6 +1,4 @@
 
-### Launch configuration should not have a public IP address.
-
 You should limit the provision of public IP addresses for resources. Resources should not be exposed on the public internet, but should have access limited to consumers required for the function of your application.
 
 ### Impact

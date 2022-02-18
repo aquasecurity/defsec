@@ -1,6 +1,4 @@
 
-### Redshift clusters should use at rest encryption
-
 Redshift clusters that contain sensitive data or are subject to regulation should be encrypted at rest to prevent data leakage should the infrastructure be compromised.
 
 ### Impact

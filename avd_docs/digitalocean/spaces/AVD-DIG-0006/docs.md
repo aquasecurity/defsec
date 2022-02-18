@@ -1,6 +1,4 @@
 
-### Spaces bucket or bucket object has public read acl set
-
 Space bucket and bucket object permissions should be set to deny public access unless explicitly required.
 
 ### Impact

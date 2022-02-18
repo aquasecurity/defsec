@@ -1,6 +1,4 @@
 
-### Legacy ABAC permissions are enabled.
-
 You should disable Attribute-Based Access Control (ABAC), and instead use Role-Based Access Control (RBAC) in GKE.
 
 RBAC has significant security advantages and is now stable in Kubernetes, so it’s time to disable ABAC.

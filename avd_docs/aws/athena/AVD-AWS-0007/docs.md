@@ -1,6 +1,4 @@
 
-### Athena workgroups should enforce configuration to prevent client disabling encryption
-
 Athena workgroup configuration should be enforced to prevent client side changes to disable encryption settings.
 
 ### Impact

@@ -1,6 +1,4 @@
 
-### Config configuration aggregator should be using all regions for source
-
 The configuration aggregator should be configured with all_regions for the source. 
 
 This will help limit the risk of any unmonitored configuration in regions that are thought to be unused.

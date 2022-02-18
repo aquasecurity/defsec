@@ -1,6 +1,4 @@
 
-### Instances should have Shielded VM VTPM enabled
-
 The virtual TPM provides numerous security measures to your VM.
 
 ### Impact

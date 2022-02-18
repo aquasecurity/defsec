@@ -1,6 +1,4 @@
 
-### Ensure that Postgres errors are logged
-
 Setting the minimum log severity too high will cause errors not to be logged
 
 ### Impact

@@ -1,6 +1,4 @@
 
-### S3 Data should be versioned
-
 
 Versioning in Amazon S3 is a means of keeping multiple variants of an object in the same bucket. 
 You can use the S3 Versioning feature to preserve, retrieve, and restore every version of every object stored in your buckets. 

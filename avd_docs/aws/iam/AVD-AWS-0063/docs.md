@@ -1,6 +1,4 @@
 
-### IAM Password policy should have minimum password length of 14 or more characters.
-
 IAM account password policies should ensure that passwords have a minimum length. 
 
 The account password policy should be set to enforce minimum password length of at least 14 characters.
