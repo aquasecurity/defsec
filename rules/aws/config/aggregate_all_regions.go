@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckAggregateAllRegions = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AWS-0019",
-		Provider:   provider.AWSProvider,
+		Provider:   providers.AWSProvider,
 		Service:    "config",
 		ShortCode:  "aggregate-all-regions",
 		Summary:    "Config configuration aggregator should be using all regions for source",

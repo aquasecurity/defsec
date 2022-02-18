@@ -25,7 +25,7 @@ linters:
 
 linters-settings: 
   cyclop:
-    max-complexity: 15
+    max-complexity: 18
   gocritic:
     disabled-checks:
       - singleCaseSwitch
@@ -35,4 +35,9 @@ issues:
     - path: rules/
       linters:
         - gosec
-
+    - path: parsers/terraform/parser/funcs/
+      linters:
+        - cyclop
+        - errorlint
+        - gocritic
+        - gosec

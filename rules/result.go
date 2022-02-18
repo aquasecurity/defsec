@@ -6,7 +6,7 @@ import (
 
 	"github.com/aquasecurity/defsec/severity"
 
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/types"
 )
 
 type Status uint8

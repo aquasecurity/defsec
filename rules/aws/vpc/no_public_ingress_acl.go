@@ -2,8 +2,8 @@ package vpc
 
 import (
 	"github.com/aquasecurity/defsec/cidr"
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/vpc"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/aws/vpc"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -12,7 +12,7 @@ import (
 var CheckNoPublicIngress = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0105",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "vpc",
 		ShortCode:   "no-public-ingress-acl",
 		Summary:     "An ingress Network ACL rule allows specific ports from /0.",

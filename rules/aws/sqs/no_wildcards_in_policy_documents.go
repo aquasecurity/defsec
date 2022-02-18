@@ -3,7 +3,7 @@ package sqs
 import (
 	"strings"
 
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -13,7 +13,7 @@ import (
 var CheckNoWildcardsInPolicyDocuments = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AWS-0097",
-		Provider:   provider.AWSProvider,
+		Provider:   providers.AWSProvider,
 		Service:    "sqs",
 		ShortCode:  "no-wildcards-in-policy-documents",
 		Summary:    "AWS SQS policy document has wildcard action statement.",

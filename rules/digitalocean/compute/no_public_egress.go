@@ -2,7 +2,7 @@ package compute
 
 import (
 	"github.com/aquasecurity/defsec/cidr"
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckNoPublicEgress = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-DIG-0003",
-		Provider:    provider.DigitalOceanProvider,
+		Provider:    providers.DigitalOceanProvider,
 		Service:     "compute",
 		ShortCode:   "no-public-egress",
 		Summary:     "The firewall has an outbound rule with open access",

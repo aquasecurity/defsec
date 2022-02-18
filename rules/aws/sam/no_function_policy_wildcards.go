@@ -3,8 +3,8 @@ package sam
 import (
 	"strings"
 
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/aws/iam"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -14,7 +14,7 @@ import (
 var CheckNoFunctionPolicyWildcards = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0114",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "sam",
 		ShortCode:   "no-function-policy-wildcards",
 		Summary:     "Function policies should avoid use of wildcards and instead apply the principle of least privilege",

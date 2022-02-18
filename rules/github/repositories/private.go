@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckPrivate = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-GIT-0001",
-		Provider:   provider.GitHubProvider,
+		Provider:   providers.GitHubProvider,
 		Service:    "repositories",
 		ShortCode:  "private",
 		Summary:    "Github repository shouldn't be public.",

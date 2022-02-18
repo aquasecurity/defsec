@@ -1,8 +1,8 @@
 package s3
 
 import (
-	"github.com/aquasecurity/defsec/provider/aws/s3"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/providers/aws/s3"
 )
 
 // Adapt ...

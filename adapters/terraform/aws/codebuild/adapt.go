@@ -1,9 +1,9 @@
 package codebuild
 
 import (
-	"github.com/aquasecurity/defsec/provider/aws/codebuild"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/providers/aws/codebuild"
 )
 
 func Adapt(modules terraform.Modules) codebuild.CodeBuild {

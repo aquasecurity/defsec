@@ -1,8 +1,8 @@
 package documentdb
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/documentdb"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/aws/documentdb"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckEnableLogExport = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0020",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "documentdb",
 		ShortCode:   "enable-log-export",
 		Summary:     "DocumentDB logs export should be enabled",

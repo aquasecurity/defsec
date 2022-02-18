@@ -1,8 +1,8 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider/google/compute"
-	"github.com/aquasecurity/trivy-config-parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/providers/google/compute"
 )
 
 func adaptSSLPolicies(modules terraform.Modules) (policies []compute.SSLPolicy) {

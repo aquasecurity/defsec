@@ -1,8 +1,8 @@
 package sqs
 
 import (
-	"github.com/aquasecurity/defsec/provider/aws/sqs"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/providers/aws/sqs"
 )
 
 // Adapt ...

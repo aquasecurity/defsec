@@ -1,7 +1,7 @@
 package apigateway
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableAccessLogging = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0001",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "api-gateway",
 		ShortCode:   "enable-access-logging",
 		Summary:     "API Gateway stages for V1 and V2 should have access logging enabled",

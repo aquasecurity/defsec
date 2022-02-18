@@ -1,7 +1,7 @@
 package sqs
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnableQueueEncryption = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0096",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "sqs",
 		ShortCode:   "enable-queue-encryption",
 		Summary:     "Unencrypted SQS queue.",

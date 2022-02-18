@@ -3,13 +3,13 @@ package ecr
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/provider/aws/iam"
+	"github.com/aquasecurity/defsec/providers/aws/iam"
 	"github.com/liamg/iamgo"
 
-	"github.com/aquasecurity/defsec/provider/aws/ecr"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/providers/aws/ecr"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
-	"github.com/aquasecurity/trivy-config-parsers/types"
 	"github.com/stretchr/testify/assert"
 )
 

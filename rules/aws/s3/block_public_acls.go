@@ -1,7 +1,7 @@
 package s3
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckPublicACLsAreBlocked = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-AWS-0086",
-		Provider:   provider.AWSProvider,
+		Provider:   providers.AWSProvider,
 		Service:    "s3",
 		ShortCode:  "block-public-acls",
 		Summary:    "S3 Access block should block public ACL",

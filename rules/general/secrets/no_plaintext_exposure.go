@@ -1,7 +1,7 @@
 package secrets
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNotExposed = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GEN-0004",
-		Provider:    provider.GeneralProvider,
+		Provider:    providers.GeneralProvider,
 		Service:     "secrets",
 		ShortCode:   "no-plaintext-exposure",
 		Summary:     "Secret/sensitive data should not be exposed in plaintext.",

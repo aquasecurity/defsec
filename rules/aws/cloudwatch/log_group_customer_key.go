@@ -1,7 +1,7 @@
 package cloudwatch
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckLogGroupCustomerKey = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0017",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "cloudwatch",
 		ShortCode:   "log-group-customer-key",
 		Summary:     "CloudWatch log groups should be encrypted using CMK",

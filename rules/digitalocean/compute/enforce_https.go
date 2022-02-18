@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckEnforceHttps = rules.Register(
 	rules.Rule{
 		AVDID:      "AVD-DIG-0002",
-		Provider:   provider.DigitalOceanProvider,
+		Provider:   providers.DigitalOceanProvider,
 		Service:    "compute",
 		ShortCode:  "enforce-https",
 		Summary:    "The load balancer forwarding rule is using an insecure protocol as an entrypoint",

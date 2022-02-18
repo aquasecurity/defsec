@@ -1,7 +1,7 @@
 package iam
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoProjectLevelDefaultServiceAccountAssignment = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0006",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "iam",
 		ShortCode:   "no-project-level-default-service-account-assignment",
 		Summary:     "Roles should not be assigned to default service accounts",

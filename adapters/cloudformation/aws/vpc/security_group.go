@@ -1,9 +1,9 @@
 package vpc
 
 import (
-	"github.com/aquasecurity/defsec/provider/aws/vpc"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
-	"github.com/aquasecurity/trivy-config-parsers/types"
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/providers/aws/vpc"
 )
 
 func getSecurityGroups(ctx parser.FileContext) (groups []vpc.SecurityGroup) {

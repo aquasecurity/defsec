@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckKubernetesSurgeUpgrades = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-DIG-0005",
-		Provider:    provider.DigitalOceanProvider,
+		Provider:    providers.DigitalOceanProvider,
 		Service:     "compute",
 		ShortCode:   "surge-upgrades-not-enabled",
 		Summary:     "The Kubernetes cluster does not enable surge upgrades",

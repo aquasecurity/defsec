@@ -3,17 +3,17 @@ SHELL=/usr/bin/bash
 .PHONY: test
 test:
 	which gotestsum || go install gotest.tools/gotestsum@latest
-	gotestsum -- --mod=vendor -bench=^$$ -race ./...
+	gotestsum -- -bench=^$$ -race ./...
 
 .PHONY: typos
 typos:
 	which codespell || pip install codespell
-	codespell -S vendor,funcs,.terraform,.git --ignore-words .codespellignore -f
+	codespell -S funcs,.terraform,.git --ignore-words .codespellignore -f
 
 .PHONY: fix-typos
 fix-typos:
 	which codespell || pip install codespell
-	codespell -S vendor,funcs,.terraform --ignore-words .codespellignore -f -w -i1
+	codespell -S funcs,.terraform --ignore-words .codespellignore -f -w -i1
 
 .PHONY: quality
 quality:

@@ -3,7 +3,7 @@ package iam
 import (
 	"strings"
 
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -12,7 +12,7 @@ import (
 var CheckNoPrivilegedServiceAccounts = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0007",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "iam",
 		ShortCode:   "no-privileged-service-accounts",
 		Summary:     "Service accounts should not have roles assigned with excessive privileges",

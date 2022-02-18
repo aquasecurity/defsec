@@ -1,8 +1,8 @@
 package kms
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/aws/kms"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/aws/kms"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckAutoRotateKeys = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0065",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "kms",
 		ShortCode:   "auto-rotate-keys",
 		Summary:     "A KMS key is not configured to auto-rotate.",

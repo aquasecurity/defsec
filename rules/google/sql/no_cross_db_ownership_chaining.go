@@ -1,8 +1,8 @@
 package sql
 
 import (
-	"github.com/aquasecurity/defsec/provider"
-	"github.com/aquasecurity/defsec/provider/google/sql"
+	"github.com/aquasecurity/defsec/providers"
+	"github.com/aquasecurity/defsec/providers/google/sql"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -11,7 +11,7 @@ import (
 var CheckNoCrossDbOwnershipChaining = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-GCP-0019",
-		Provider:    provider.GoogleProvider,
+		Provider:    providers.GoogleProvider,
 		Service:     "sql",
 		ShortCode:   "no-cross-db-ownership-chaining",
 		Summary:     "Cross-database ownership chaining should be disabled",

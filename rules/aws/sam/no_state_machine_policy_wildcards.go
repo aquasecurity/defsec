@@ -1,7 +1,7 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckNoStateMachinePolicyWildcards = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AWS-0120",
-		Provider:    provider.AWSProvider,
+		Provider:    providers.AWSProvider,
 		Service:     "sam",
 		ShortCode:   "no-state-machine-policy-wildcards",
 		Summary:     "State machine policies should avoid use of wildcards and instead apply the principle of least privilege",

@@ -1,8 +1,8 @@
 package elasticache
 
 import (
-	"github.com/aquasecurity/defsec/provider/aws/elasticache"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/providers/aws/elasticache"
 )
 
 func getReplicationGroups(ctx parser.FileContext) (replicationGroups []elasticache.ReplicationGroup) {

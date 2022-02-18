@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -13,7 +13,7 @@ var scanner = squealer.NewStringScanner()
 var CheckNoSecretsInCustomData = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AZU-0037",
-		Provider:    provider.AzureProvider,
+		Provider:    providers.AzureProvider,
 		Service:     "compute",
 		ShortCode:   "no-secrets-in-custom-data",
 		Summary:     "Ensure that no sensitive credentials are exposed in VM custom_data",

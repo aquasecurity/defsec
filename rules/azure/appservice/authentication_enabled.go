@@ -1,7 +1,7 @@
 package appservice
 
 import (
-	"github.com/aquasecurity/defsec/provider"
+	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/state"
@@ -10,7 +10,7 @@ import (
 var CheckAuthenticationEnabled = rules.Register(
 	rules.Rule{
 		AVDID:       "AVD-AZU-0003",
-		Provider:    provider.AzureProvider,
+		Provider:    providers.AzureProvider,
 		Service:     "appservice",
 		ShortCode:   "authentication-enabled",
 		Summary:     "App Service authentication is activated",

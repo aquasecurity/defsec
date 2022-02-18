@@ -1,8 +1,8 @@
 package config
 
 import (
-	"github.com/aquasecurity/defsec/provider/aws/config"
-	"github.com/aquasecurity/trivy-config-parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/providers/aws/config"
 )
 
 // Adapt ...
