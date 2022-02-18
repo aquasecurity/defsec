@@ -7,7 +7,8 @@ import (
 
 func Adapt(modules terraform.Modules) openstack.OpenStack {
 	return openstack.OpenStack{
-		Compute: adaptCompute(modules),
+		Compute:    adaptCompute(modules),
+		Networking: adaptNetworking(modules),
 	}
 }
 
@@ -56,7 +57,7 @@ func adaptFirewall(modules terraform.Modules) openstack.Firewall {
 			enabledVal := enabledAttr.AsBoolValueOrDefault(true, resource)
 
 			if resource.GetAttribute("action").Equals("allow") {
-				firewall.AllowRules = append(firewall.AllowRules, openstack.Rule{
+				firewall.AllowRules = append(firewall.AllowRules, openstack.FirewallRule{
 					Metadata:        resource.GetMetadata(),
 					Source:          sourceVal,
 					Destination:     destinationVal,
@@ -65,7 +66,7 @@ func adaptFirewall(modules terraform.Modules) openstack.Firewall {
 					Enabled:         enabledVal,
 				})
 			} else if resource.GetAttribute("action").Equals("deny") {
-				firewall.DenyRules = append(firewall.DenyRules, openstack.Rule{
+				firewall.DenyRules = append(firewall.DenyRules, openstack.FirewallRule{
 					Metadata:        resource.GetMetadata(),
 					Source:          sourceVal,
 					Destination:     destinationVal,

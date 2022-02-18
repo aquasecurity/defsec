@@ -22,7 +22,7 @@ func TestCheckNoPublicAccess(t *testing.T) {
 				Metadata: types.NewTestMetadata(),
 				Firewall: openstack.Firewall{
 					Metadata: types.NewTestMetadata(),
-					AllowRules: []openstack.Rule{
+					AllowRules: []openstack.FirewallRule{
 						{
 							Metadata:    types.NewTestMetadata(),
 							Enabled:     types.Bool(true, types.NewTestMetadata()),
@@ -40,7 +40,7 @@ func TestCheckNoPublicAccess(t *testing.T) {
 				Metadata: types.NewTestMetadata(),
 				Firewall: openstack.Firewall{
 					Metadata: types.NewTestMetadata(),
-					AllowRules: []openstack.Rule{
+					AllowRules: []openstack.FirewallRule{
 						{
 							Metadata:    types.NewTestMetadata(),
 							Enabled:     types.Bool(true, types.NewTestMetadata()),
@@ -58,7 +58,7 @@ func TestCheckNoPublicAccess(t *testing.T) {
 				Metadata: types.NewTestMetadata(),
 				Firewall: openstack.Firewall{
 					Metadata: types.NewTestMetadata(),
-					AllowRules: []openstack.Rule{
+					AllowRules: []openstack.FirewallRule{
 						{
 							Metadata:    types.NewTestMetadata(),
 							Enabled:     types.Bool(true, types.NewTestMetadata()),
@@ -76,7 +76,7 @@ func TestCheckNoPublicAccess(t *testing.T) {
 				Metadata: types.NewTestMetadata(),
 				Firewall: openstack.Firewall{
 					Metadata: types.NewTestMetadata(),
-					AllowRules: []openstack.Rule{
+					AllowRules: []openstack.FirewallRule{
 						{
 							Metadata:    types.NewTestMetadata(),
 							Enabled:     types.Bool(true, types.NewTestMetadata()),

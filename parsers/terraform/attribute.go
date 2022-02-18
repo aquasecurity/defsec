@@ -730,38 +730,6 @@ func createDotReferenceFromTraversal(parentRef string, traversals ...hcl.Travers
 	return ref, nil
 }
 
-func (a *Attribute) SingleReference() (*Reference, error) {
-	if a == nil {
-		return nil, fmt.Errorf("attribute is nil")
-	}
-
-	switch t := a.hclAttribute.Expr.(type) {
-	case *hclsyntax.RelativeTraversalExpr:
-		switch s := t.Source.(type) {
-		case *hclsyntax.IndexExpr:
-			collectionRef, err := createDotReferenceFromTraversal(a.module, s.Collection.Variables()...)
-			if err != nil {
-				return nil, err
-			}
-			key, _ := s.Key.Value(a.ctx.Inner())
-			collectionRef.SetKey(key)
-			return collectionRef, nil
-		default:
-			return createDotReferenceFromTraversal(a.module, t.Source.Variables()...)
-		}
-	case *hclsyntax.ScopeTraversalExpr:
-		return createDotReferenceFromTraversal(a.module, t.Traversal)
-	case *hclsyntax.TemplateExpr:
-		refs := a.referencesInTemplate()
-		if len(refs) == 0 {
-			return nil, fmt.Errorf("no references in template")
-		}
-		return refs[0], nil
-	default:
-		return nil, fmt.Errorf("not a reference: no scope traversal")
-	}
-}
-
 func (a *Attribute) ReferencesBlock(b *Block) bool {
 	if a == nil {
 		return false
@@ -779,13 +747,7 @@ func (a *Attribute) AllReferences(blocks ...*Block) []*Reference {
 	if a == nil {
 		return nil
 	}
-	var refs []*Reference
-	refs = append(refs, a.referencesInTemplate()...)
-	refs = append(refs, a.referencesInConditional()...)
-	ref, err := a.SingleReference()
-	if err == nil {
-		refs = append(refs, ref)
-	}
+	refs := a.extractReferences()
 	for _, block := range blocks {
 		for _, ref := range refs {
 			if ref.TypeLabel() == "each" && block.HasChild("for_each") {
@@ -796,35 +758,9 @@ func (a *Attribute) AllReferences(blocks ...*Block) []*Reference {
 	return refs
 }
 
-func (a *Attribute) referencesInTemplate() []*Reference {
-	if a == nil {
-		return nil
-	}
+func (a *Attribute) referencesFromExpression(expression hcl.Expression) []*Reference {
 	var refs []*Reference
-	switch t := a.hclAttribute.Expr.(type) {
-	case *hclsyntax.TemplateExpr:
-		for _, part := range t.Parts {
-			ref, err := createDotReferenceFromTraversal(a.module, part.Variables()...)
-			if err != nil {
-				continue
-			}
-			refs = append(refs, ref)
-		}
-	case *hclsyntax.TupleConsExpr:
-		ref, err := createDotReferenceFromTraversal(a.module, t.Variables()...)
-		if err == nil {
-			refs = append(refs, ref)
-		}
-	}
-	return refs
-}
-
-func (a *Attribute) referencesInConditional() []*Reference {
-	if a == nil {
-		return nil
-	}
-	var refs []*Reference
-	switch t := a.hclAttribute.Expr.(type) {
+	switch t := expression.(type) {
 	case *hclsyntax.ConditionalExpr:
 		if ref, err := createDotReferenceFromTraversal(a.module, t.TrueResult.Variables()...); err == nil {
 			refs = append(refs, ref)
@@ -835,8 +771,46 @@ func (a *Attribute) referencesInConditional() []*Reference {
 		if ref, err := createDotReferenceFromTraversal(a.module, t.Condition.Variables()...); err == nil {
 			refs = append(refs, ref)
 		}
+	case *hclsyntax.ScopeTraversalExpr:
+		if ref, err := createDotReferenceFromTraversal(a.module, t.Variables()...); err == nil {
+			refs = append(refs, ref)
+		}
+	case *hclsyntax.TemplateWrapExpr:
+		refs = a.referencesFromExpression(t.Wrapped)
+	case *hclsyntax.TemplateExpr:
+		for _, part := range t.Parts {
+			ref, err := createDotReferenceFromTraversal(a.module, part.Variables()...)
+			if err != nil {
+				continue
+			}
+			refs = append(refs, ref)
+		}
+	case *hclsyntax.TupleConsExpr:
+		if ref, err := createDotReferenceFromTraversal(a.module, t.Variables()...); err == nil {
+			refs = append(refs, ref)
+		}
+	case *hclsyntax.RelativeTraversalExpr:
+		switch s := t.Source.(type) {
+		case *hclsyntax.IndexExpr:
+			if collectionRef, err := createDotReferenceFromTraversal(a.module, s.Collection.Variables()...); err == nil {
+				key, _ := s.Key.Value(a.ctx.Inner())
+				collectionRef.SetKey(key)
+				refs = append(refs, collectionRef)
+			}
+		default:
+			if ref, err := createDotReferenceFromTraversal(a.module, t.Source.Variables()...); err == nil {
+				refs = append(refs, ref)
+			}
+		}
 	}
 	return refs
+}
+
+func (a *Attribute) extractReferences() []*Reference {
+	if a == nil {
+		return nil
+	}
+	return a.referencesFromExpression(a.hclAttribute.Expr)
 }
 
 func (a *Attribute) IsResourceBlockReference(resourceType string) bool {

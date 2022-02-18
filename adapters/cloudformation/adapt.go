@@ -1,4 +1,4 @@
-package adapter
+package cloudformation
 
 import (
 	"github.com/aquasecurity/defsec/adapters/cloudformation/aws"

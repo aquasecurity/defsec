@@ -19,7 +19,7 @@ type Parser struct {
 	debugWriter io.Writer
 }
 
-func NewParser(options ...Option) *Parser {
+func New(options ...Option) *Parser {
 	p := &Parser{}
 
 	for _, option := range options {
