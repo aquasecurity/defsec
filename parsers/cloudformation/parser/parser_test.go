@@ -36,7 +36,7 @@ Resources:
 	testFile := testutil.CreateTestFile(source, testutil.YamlTestFileExt)
 	defer func() { _ = os.RemoveAll(testFile) }()
 
-	files, err := NewParser().ParseFiles(testFile)
+	files, err := New().ParseFiles(testFile)
 	require.NoError(t, err)
 	assert.Len(t, files, 1)
 	file := files[0]
@@ -82,7 +82,7 @@ func Test_parse_json(t *testing.T) {
 	testFile := testutil.CreateTestFile(source, testutil.JsonTestFileExt)
 	defer func() { _ = os.RemoveAll(testFile) }()
 
-	files, err := NewParser().ParseFiles(testFile)
+	files, err := New().ParseFiles(testFile)
 	require.NoError(t, err)
 	assert.Len(t, files, 1)
 	file := files[0]
@@ -115,7 +115,7 @@ Resources:
 	testFile := testutil.CreateTestFile(source, testutil.YamlTestFileExt)
 	defer func() { _ = os.RemoveAll(testFile) }()
 
-	files, err := NewParser().ParseFiles(testFile)
+	files, err := New().ParseFiles(testFile)
 	require.NoError(t, err)
 	assert.Len(t, files, 1)
 	file := files[0]
@@ -154,7 +154,7 @@ Resources:
 	testFile := testutil.CreateTestFile(source, testutil.YamlTestFileExt)
 	defer func() { _ = os.RemoveAll(testFile) }()
 
-	files, err := NewParser().ParseFiles(testFile)
+	files, err := New().ParseFiles(testFile)
 	require.NoError(t, err)
 	assert.Len(t, files, 1)
 	ctx := files[0]
@@ -189,7 +189,7 @@ func createTestFileContext(t *testing.T, source string) *FileContext {
 		t.Fatal(err)
 	}
 
-	fileContext, err := NewParser().Parse(bytes.NewReader([]byte(source)), filename)
+	fileContext, err := New().Parse(bytes.NewReader([]byte(source)), filename)
 	require.NoError(t, err)
 	return fileContext
 }

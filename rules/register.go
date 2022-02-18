@@ -13,6 +13,10 @@ type RegisteredRule struct {
 	checkFunc CheckFunc
 }
 
+func (r RegisteredRule) HasLogic() bool {
+	return r.checkFunc != nil
+}
+
 func (r RegisteredRule) Evaluate(s *state.State) Results {
 	if r.checkFunc == nil {
 		return nil

@@ -82,7 +82,7 @@ func (s *Scanner) AddPath(path string) error {
 
 func (s *Scanner) Scan() (results []rules.Result, err error) {
 
-	cfParser := parser.NewParser()
+	cfParser := parser.New()
 	contexts, err := cfParser.ParseFiles(s.paths...)
 	if err != nil {
 		return nil, err

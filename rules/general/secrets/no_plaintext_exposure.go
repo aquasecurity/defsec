@@ -4,7 +4,6 @@ import (
 	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
-	"github.com/aquasecurity/defsec/state"
 )
 
 var CheckNotExposed = rules.Register(
@@ -26,8 +25,5 @@ var CheckNotExposed = rules.Register(
 		},
 		Severity: severity.Critical,
 	},
-	func(s *state.State) (results rules.Results) {
-		// (exposure detection is handled by individual tools e.g. tfsec)
-		return
-	},
+	nil,
 )

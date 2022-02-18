@@ -8,8 +8,8 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-uuid v1.0.2
 	github.com/hashicorp/hcl/v2 v2.11.1
-	github.com/liamg/iamgo v0.0.5
-	github.com/liamg/jfather v0.0.6
+	github.com/liamg/iamgo v0.0.6
+	github.com/liamg/jfather v0.0.7
 	github.com/liamg/tml v0.6.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/owenrumney/go-sarif/v2 v2.0.13

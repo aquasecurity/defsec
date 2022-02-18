@@ -4,7 +4,8 @@ import "github.com/aquasecurity/defsec/parsers/types"
 
 type OpenStack struct {
 	types.Metadata
-	Compute Compute
+	Compute    Compute
+	Networking Networking
 }
 
 type Compute struct {
@@ -15,11 +16,11 @@ type Compute struct {
 
 type Firewall struct {
 	types.Metadata
-	AllowRules []Rule
-	DenyRules  []Rule
+	AllowRules []FirewallRule
+	DenyRules  []FirewallRule
 }
 
-type Rule struct {
+type FirewallRule struct {
 	types.Metadata
 	Source          types.StringValue
 	Destination     types.StringValue

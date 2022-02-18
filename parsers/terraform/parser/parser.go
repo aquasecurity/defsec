@@ -24,6 +24,7 @@ type sourceFile struct {
 
 type Parser interface {
 	ParseFile(path string) error
+	ParseContent(data []byte, fullPath string) error
 	ParseDirectory(path string) error
 	EvaluateAll() (terraform.Modules, cty.Value, error)
 	Metrics() Metrics
@@ -107,7 +108,7 @@ func (p *parser) Metrics() Metrics {
 	return total
 }
 
-func (p *parser) ParseFile(fullPath string) error {
+func (p *parser) ParseContent(data []byte, fullPath string) error {
 
 	if dir := filepath.Dir(fullPath); p.projectRoot == "" || len(dir) < len(p.projectRoot) {
 		p.projectRoot = dir
@@ -120,15 +121,10 @@ func (p *parser) ParseFile(fullPath string) error {
 		return nil
 	}
 
-	diskStart := time.Now()
-	data, err := ioutil.ReadFile(fullPath)
-	if err != nil {
-		return err
-	}
-	p.metrics.Timings.DiskIODuration += time.Since(diskStart)
 	start := time.Now()
 	var file *hcl.File
 	var diag hcl.Diagnostics
+
 	if isHCL {
 		file, diag = p.underlying.ParseHCL(data, fullPath)
 	} else {
@@ -145,6 +141,16 @@ func (p *parser) ParseFile(fullPath string) error {
 	p.metrics.Timings.ParseDuration += time.Since(start)
 	p.debug("Added file %s.", fullPath)
 	return nil
+}
+
+func (p *parser) ParseFile(fullPath string) error {
+	diskStart := time.Now()
+	data, err := ioutil.ReadFile(fullPath)
+	if err != nil {
+		return err
+	}
+	p.metrics.Timings.DiskIODuration += time.Since(diskStart)
+	return p.ParseContent(data, fullPath)
 }
 
 // ParseDirectory parses all terraform files within a given directory
