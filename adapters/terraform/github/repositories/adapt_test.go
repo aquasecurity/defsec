@@ -4,87 +4,73 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
-
-	"github.com/aquasecurity/defsec/providers/github"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
-func Test_Adapt(t *testing.T) {
-	t.SkipNow()
-	tests := []struct {
-		name      string
-		terraform string
-		expected  []github.Repository
-	}{
-		{
-			name: "basic",
-			terraform: `
-resource "" "example" {
-    
-}
-`,
-			expected: []github.Repository{},
-		},
-	}
+func Test_AdaptDefaults(t *testing.T) {
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
-			adapted := Adapt(modules)
-			testutil.AssertDefsecEqual(t, test.expected, adapted)
-		})
-	}
+	src := `
+resource "github_repository" "my-repo" {
+	
+}
+`
+	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	repositories := Adapt(modules)
+	require.Len(t, repositories, 1)
+	repo := repositories[0]
+
+	assert.True(t, repo.Public.IsTrue())
 }
 
-func Test_adaptRepositories(t *testing.T) {
-	t.SkipNow()
-	tests := []struct {
-		name      string
-		terraform string
-		expected  []github.Repository
-	}{
-		{
-			name: "basic",
-			terraform: `
-resource "" "example" {
-    
-}
-`,
-			expected: []github.Repository{},
-		},
-	}
+func Test_Adapt_Private(t *testing.T) {
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
-			adapted := adaptRepositories(modules)
-			testutil.AssertDefsecEqual(t, test.expected, adapted)
-		})
-	}
+	src := `
+resource "github_repository" "my-repo" {
+	private = true
+}
+`
+	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	repositories := Adapt(modules)
+	require.Len(t, repositories, 1)
+	repo := repositories[0]
+
+	assert.False(t, repo.Public.IsTrue())
+	assert.Equal(t, 3, repo.Public.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 3, repo.Public.GetMetadata().Range().GetEndLine())
 }
 
-func Test_adaptRepository(t *testing.T) {
-	t.SkipNow()
-	tests := []struct {
-		name      string
-		terraform string
-		expected  github.Repository
-	}{
-		{
-			name: "basic",
-			terraform: `
-resource "" "example" {
-    
-}
-`,
-			expected: github.Repository{},
-		},
-	}
+func Test_Adapt_Public(t *testing.T) {
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
-			adapted := adaptRepository(modules.GetBlocks()[0])
-			testutil.AssertDefsecEqual(t, test.expected, adapted)
-		})
-	}
+	src := `
+resource "github_repository" "my-repo" {
+	private = false
+}
+`
+	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	repositories := Adapt(modules)
+	require.Len(t, repositories, 1)
+	repo := repositories[0]
+
+	assert.True(t, repo.Public.IsTrue())
+	assert.Equal(t, 3, repo.Public.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 3, repo.Public.GetMetadata().Range().GetEndLine())
+}
+
+func Test_Adapt_VisibilityOverride(t *testing.T) {
+
+	src := `
+resource "github_repository" "my-repo" {
+	private = true
+	visibility = "public"
+}
+`
+	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	repositories := Adapt(modules)
+	require.Len(t, repositories, 1)
+	repo := repositories[0]
+
+	assert.True(t, repo.Public.IsTrue())
+	assert.Equal(t, 4, repo.Public.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 4, repo.Public.GetMetadata().Range().GetEndLine())
 }

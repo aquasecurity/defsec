@@ -22,30 +22,25 @@ func adaptRepositories(modules terraform.Modules) []github.Repository {
 
 func adaptRepository(resource *terraform.Block) github.Repository {
 
-	// visibility overrides private
-	visibilityAttr := resource.GetAttribute("visibility")
-	if visibilityAttr.Equals("private") || visibilityAttr.Equals("internal") {
-		return github.Repository{
-			Metadata: resource.GetMetadata(),
-			Public:   types.Bool(false, resource.GetMetadata()),
-		}
-	} else if visibilityAttr.Equals("public") {
-		return github.Repository{
-			Metadata: resource.GetMetadata(),
-			Public:   types.Bool(true, resource.GetMetadata()),
-		}
+	repo := github.Repository{
+		Metadata: resource.GetMetadata(),
+		Public:   types.Bool(true, resource.GetMetadata()),
 	}
 
 	privateAttr := resource.GetAttribute("private")
 	if privateAttr.IsTrue() {
-		return github.Repository{
-			Metadata: resource.GetMetadata(),
-			Public:   types.Bool(false, resource.GetMetadata()),
-		}
+		repo.Public = types.Bool(false, privateAttr.GetMetadata())
+	} else if privateAttr.IsFalse() {
+		repo.Public = types.Bool(true, privateAttr.GetMetadata())
 	}
 
-	return github.Repository{
-		Metadata: resource.GetMetadata(),
-		Public:   types.Bool(true, resource.GetMetadata()),
+	// visibility overrides private
+	visibilityAttr := resource.GetAttribute("visibility")
+	if visibilityAttr.Equals("private") || visibilityAttr.Equals("internal") {
+		repo.Public = types.Bool(false, visibilityAttr.GetMetadata())
+	} else if visibilityAttr.Equals("public") {
+		repo.Public = types.Bool(true, visibilityAttr.GetMetadata())
 	}
+
+	return repo
 }
