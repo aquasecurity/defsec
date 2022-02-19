@@ -36,6 +36,9 @@ Permissions should be granted on roles, groups, services accounts instead.`,
 	func(s *state.State) (results rules.Results) {
 		for _, project := range s.Google.IAM.AllProjects() {
 			for _, member := range project.Members {
+				if member.IsUnmanaged() {
+					continue
+				}
 				if member.Member.StartsWith("user:") {
 					results.Add(
 						"Permissions are granted directly to a user.",
@@ -63,6 +66,9 @@ Permissions should be granted on roles, groups, services accounts instead.`,
 
 		for _, folder := range s.Google.IAM.AllFolders() {
 			for _, member := range folder.Members {
+				if member.IsUnmanaged() {
+					continue
+				}
 				if member.Member.StartsWith("user:") {
 					results.Add(
 						"Permissions are granted directly to a user.",
@@ -90,6 +96,9 @@ Permissions should be granted on roles, groups, services accounts instead.`,
 
 		for _, org := range s.Google.IAM.Organizations {
 			for _, member := range org.Members {
+				if member.IsUnmanaged() {
+					continue
+				}
 				if member.Member.StartsWith("user:") {
 					results.Add(
 						"Permissions are granted directly to a user.",

@@ -31,6 +31,9 @@ var CheckNoProjectLevelServiceAccountImpersonation = rules.Register(
 	func(s *state.State) (results rules.Results) {
 		for _, project := range s.Google.IAM.AllProjects() {
 			for _, member := range project.Members {
+				if member.IsUnmanaged() {
+					continue
+				}
 				if member.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {
 					results.Add(
 						"Service account access is granted to a user at project level.",
@@ -41,6 +44,9 @@ var CheckNoProjectLevelServiceAccountImpersonation = rules.Register(
 				}
 			}
 			for _, binding := range project.Bindings {
+				if binding.IsUnmanaged() {
+					continue
+				}
 				if binding.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {
 					results.Add(
 						"Service account access is granted to a user at project level.",
