@@ -33,6 +33,9 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 	func(s *state.State) (results rules.Results) {
 		for _, project := range s.Google.IAM.AllProjects() {
 			for _, member := range project.Members {
+				if member.IsUnmanaged() {
+					continue
+				}
 				if member.Member.StartsWith("serviceAccount:") {
 					if isRolePrivileged(member.Role.Value()) {
 						results.Add(
@@ -46,6 +49,9 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 				}
 			}
 			for _, binding := range project.Bindings {
+				if binding.IsUnmanaged() {
+					continue
+				}
 				if isRolePrivileged(binding.Role.Value()) {
 					for _, member := range binding.Members {
 						if member.StartsWith("serviceAccount:") {
@@ -63,6 +69,9 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 		}
 		for _, folder := range s.Google.IAM.AllFolders() {
 			for _, member := range folder.Members {
+				if member.IsUnmanaged() {
+					continue
+				}
 				if member.Member.StartsWith("serviceAccount:") {
 					if isRolePrivileged(member.Role.Value()) {
 						results.Add(
@@ -76,6 +85,9 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 				}
 			}
 			for _, binding := range folder.Bindings {
+				if binding.IsUnmanaged() {
+					continue
+				}
 				if isRolePrivileged(binding.Role.Value()) {
 					for _, member := range binding.Members {
 						if member.StartsWith("serviceAccount:") {
@@ -95,6 +107,9 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 
 		for _, org := range s.Google.IAM.Organizations {
 			for _, member := range org.Members {
+				if member.IsUnmanaged() {
+					continue
+				}
 				if member.Member.StartsWith("serviceAccount:") {
 					if isRolePrivileged(member.Role.Value()) {
 						results.Add(
@@ -108,6 +123,9 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 				}
 			}
 			for _, binding := range org.Bindings {
+				if binding.IsUnmanaged() {
+					continue
+				}
 				if isRolePrivileged(binding.Role.Value()) {
 					for _, member := range binding.Members {
 						if member.StartsWith("serviceAccount:") {

@@ -31,6 +31,9 @@ var CheckNoOrgLevelDefaultServiceAccountAssignment = rules.Register(
 	func(s *state.State) (results rules.Results) {
 		for _, org := range s.Google.IAM.Organizations {
 			for _, binding := range org.Bindings {
+				if binding.IsUnmanaged() {
+					continue
+				}
 				if binding.IncludesDefaultServiceAccount.IsTrue() {
 					results.Add(
 						"Role is assigned to a default service account at organisation level.",
@@ -51,6 +54,9 @@ var CheckNoOrgLevelDefaultServiceAccountAssignment = rules.Register(
 				}
 			}
 			for _, member := range org.Members {
+				if member.IsUnmanaged() {
+					continue
+				}
 				if isMemberDefaultServiceAccount(member.Member.Value()) {
 					results.Add(
 						"Role is assigned to a default service account at organisation level.",

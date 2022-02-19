@@ -31,6 +31,9 @@ var CheckNoOrgLevelServiceAccountImpersonation = rules.Register(
 	func(s *state.State) (results rules.Results) {
 		for _, org := range s.Google.IAM.Organizations {
 			for _, member := range org.Members {
+				if member.IsUnmanaged() {
+					continue
+				}
 				if member.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {
 					results.Add(
 						"Service account access is granted to a user at organization level.",
@@ -42,6 +45,9 @@ var CheckNoOrgLevelServiceAccountImpersonation = rules.Register(
 
 			}
 			for _, binding := range org.Bindings {
+				if binding.IsUnmanaged() {
+					continue
+				}
 				if binding.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {
 					results.Add(
 						"Service account access is granted to a user at organization level.",

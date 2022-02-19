@@ -31,6 +31,9 @@ var CheckNoProjectLevelDefaultServiceAccountAssignment = rules.Register(
 	func(s *state.State) (results rules.Results) {
 		for _, project := range s.Google.IAM.AllProjects() {
 			for _, binding := range project.Bindings {
+				if binding.IsUnmanaged() {
+					continue
+				}
 				if binding.IncludesDefaultServiceAccount.IsTrue() {
 					results.Add(
 						"Role is assigned to a default service account at project level.",
@@ -51,6 +54,9 @@ var CheckNoProjectLevelDefaultServiceAccountAssignment = rules.Register(
 				}
 			}
 			for _, member := range project.Members {
+				if member.IsUnmanaged() {
+					continue
+				}
 				if member.DefaultServiceAccount.IsTrue() {
 					results.Add(
 						"Role is assigned to a default service account at project level.",

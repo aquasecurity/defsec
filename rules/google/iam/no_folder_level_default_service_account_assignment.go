@@ -18,7 +18,7 @@ var CheckNoFolderLevelDefaultServiceAccountAssignment = rules.Register(
 		Summary:     "Roles should not be assigned to default service accounts",
 		Impact:      "Violation of principal of least privilege",
 		Resolution:  "Use specialised service accounts for specific purposes.",
-		Explanation: `Deault service accounts should not be used - consider creating specialised service accounts for individual purposes.`,
+		Explanation: `Default service accounts should not be used - consider creating specialised service accounts for individual purposes.`,
 		Links: []string{
 			"",
 		},
@@ -33,6 +33,9 @@ var CheckNoFolderLevelDefaultServiceAccountAssignment = rules.Register(
 	func(s *state.State) (results rules.Results) {
 		for _, folder := range s.Google.IAM.AllFolders() {
 			for _, member := range folder.Members {
+				if member.IsUnmanaged() {
+					continue
+				}
 				if member.DefaultServiceAccount.IsTrue() {
 					results.Add(
 						"Role is assigned to a default service account at folder level.",
@@ -49,6 +52,9 @@ var CheckNoFolderLevelDefaultServiceAccountAssignment = rules.Register(
 
 			}
 			for _, binding := range folder.Bindings {
+				if binding.IsUnmanaged() {
+					continue
+				}
 				if binding.IncludesDefaultServiceAccount.IsTrue() {
 					results.Add(
 						"Role is assigned to a default service account at folder level.",
