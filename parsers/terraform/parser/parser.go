@@ -167,10 +167,13 @@ func (p *parser) ParseDirectory(fullPath string) error {
 	}
 
 	for _, info := range fileInfos {
+		info = resolveSymlink(fullPath, info)
 		if info.IsDir() {
 			continue
 		}
-		if err := p.ParseFile(filepath.Join(fullPath, info.Name())); err != nil {
+
+		currentFilePath := filepath.Join(fullPath, info.Name())
+		if err := p.ParseFile(currentFilePath); err != nil {
 			if p.stopOnHCLError {
 				return err
 			}
@@ -260,4 +263,15 @@ func (p *parser) readBlocks(files []sourceFile) (terraform.Blocks, terraform.Ign
 
 	sortBlocksByHierarchy(blocks)
 	return blocks, ignores, nil
+}
+
+func resolveSymlink(dir string, file os.FileInfo) os.FileInfo {
+
+	if resolvedLink, err := os.Readlink(filepath.Join(dir, file.Name())); err == nil {
+		resolvedPath := filepath.Clean(filepath.Join(dir, resolvedLink))
+		if info, err := os.Lstat(resolvedPath); err == nil {
+			return info
+		}
+	}
+	return file
 }
