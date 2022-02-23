@@ -10,3 +10,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "github.com/zclconf/go-cty"
+        versions: ["1.x"]
