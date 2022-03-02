@@ -168,19 +168,14 @@ func (p *parser) ParseDirectory(fullPath string) error {
 	}
 
 	var paths []string
-
 	for _, info := range fileInfos {
 		info = resolveSymlink(fullPath, info)
 		if info.IsDir() {
 			continue
 		}
-
 		currentFilePath := filepath.Join(fullPath, info.Name())
-
 		paths = append(paths, currentFilePath)
-
 	}
-
 	sort.Strings(paths)
 	for _, path := range paths {
 		if err := p.ParseFile(path); err != nil {
