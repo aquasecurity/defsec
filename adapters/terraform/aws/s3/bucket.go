@@ -172,7 +172,7 @@ func hasLogging(b *terraform.Block) types.BoolValue {
 		return types.BoolDefault(false, loggingBlock.GetMetadata())
 	}
 	if targetBucket := b.GetAttribute("target_bucket"); targetBucket.IsNotNil() {
-		return types.Bool(true, b.GetMetadata())
+		return types.Bool(true, targetBucket.GetMetadata())
 	}
 	return types.BoolDefault(false, b.GetMetadata())
 }
