@@ -186,7 +186,7 @@ func isVersioned(b *terraform.Block) types.BoolValue {
 		if status.Equals("Enabled", terraform.IgnoreCase) {
 			return types.Bool(true, status.GetMetadata())
 		} else {
-			return types.Bool(false, versioningBlock.GetMetadata())
+			return types.Bool(false, b.GetMetadata())
 		}
 	}
 	return types.BoolDefault(
