@@ -4,12 +4,14 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/providers/google/bigquery"
 )
 
 func Test_Adapt(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name      string
 		terraform string
@@ -18,11 +20,84 @@ func Test_Adapt(t *testing.T) {
 		{
 			name: "basic",
 			terraform: `
-resource "" "example" {
-    
-}
+			resource "google_bigquery_dataset" "my_dataset" {
+				access {
+				  role          = "OWNER"
+				  special_group = "allAuthenticatedUsers"
+				}
+			  
+				access {
+				  role   = "READER"
+				  domain = "hashicorp.com"
+				}
+			  }
 `,
-			expected: bigquery.BigQuery{},
+			expected: bigquery.BigQuery{
+				Metadata: types.NewTestMetadata(),
+				Datasets: []bigquery.Dataset{
+					{
+						Metadata: types.NewTestMetadata(),
+						ID:       types.String("", types.NewTestMetadata()),
+						AccessGrants: []bigquery.AccessGrant{
+							{
+								Metadata:     types.NewTestMetadata(),
+								Role:         types.String("OWNER", types.NewTestMetadata()),
+								Domain:       types.String("", types.NewTestMetadata()),
+								SpecialGroup: types.String(bigquery.SpecialGroupAllAuthenticatedUsers, types.NewTestMetadata()),
+							},
+							{
+								Metadata:     types.NewTestMetadata(),
+								Role:         types.String("READER", types.NewTestMetadata()),
+								Domain:       types.String("hashicorp.com", types.NewTestMetadata()),
+								SpecialGroup: types.String("", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "no access blocks",
+			terraform: `
+			resource "google_bigquery_dataset" "my_dataset" {
+				dataset_id                  = "example_dataset"
+			  }
+`,
+			expected: bigquery.BigQuery{
+				Metadata: types.NewTestMetadata(),
+				Datasets: []bigquery.Dataset{
+					{
+						Metadata: types.NewTestMetadata(),
+						ID:       types.String("example_dataset", types.NewTestMetadata()),
+					},
+				},
+			},
+		},
+		{
+			name: "access block without fields",
+			terraform: `
+			resource "google_bigquery_dataset" "my_dataset" {
+				access {
+				}
+			  }
+`,
+			expected: bigquery.BigQuery{
+				Metadata: types.NewTestMetadata(),
+				Datasets: []bigquery.Dataset{
+					{
+						Metadata: types.NewTestMetadata(),
+						ID:       types.String("", types.NewTestMetadata()),
+						AccessGrants: []bigquery.AccessGrant{
+							{
+								Metadata:     types.NewTestMetadata(),
+								Role:         types.String("", types.NewTestMetadata()),
+								Domain:       types.String("", types.NewTestMetadata()),
+								SpecialGroup: types.String("", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -35,56 +110,46 @@ resource "" "example" {
 	}
 }
 
-func Test_adaptDatasets(t *testing.T) {
-	t.SkipNow()
-	tests := []struct {
-		name      string
-		terraform string
-		expected  []bigquery.Dataset
-	}{
-		{
-			name: "basic",
-			terraform: `
-resource "" "example" {
-    
-}
-`,
-			expected: []bigquery.Dataset{},
-		},
-	}
+func TestLines(t *testing.T) {
+	src := `
+	resource "google_bigquery_dataset" "my_dataset" {
+		dataset_id                  = "example_dataset"
+		friendly_name               = "test"
+		description                 = "This is a test description"
+		location                    = "EU"
+		default_table_expiration_ms = 3600000
+	  
+		labels = {
+		  env = "default"
+		}
+	  
+		access {
+		  role          = "OWNER"
+		  special_group = "allAuthenticatedUsers"
+		}
+	  
+		access {
+		  role   = "READER"
+		  domain = "hashicorp.com"
+		}
+	}`
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
-			adapted := adaptDatasets(modules)
-			testutil.AssertDefsecEqual(t, test.expected, adapted)
-		})
-	}
-}
+	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	adapted := Adapt(modules)
 
-func Test_adaptDataset(t *testing.T) {
-	t.SkipNow()
-	tests := []struct {
-		name      string
-		terraform string
-		expected  bigquery.Dataset
-	}{
-		{
-			name: "basic",
-			terraform: `
-resource "" "example" {
-    
-}
-`,
-			expected: bigquery.Dataset{},
-		},
-	}
+	require.Len(t, adapted.Datasets, 1)
+	dataset := adapted.Datasets[0]
+	require.Len(t, dataset.AccessGrants, 2)
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
-			adapted := adaptDataset(modules.GetBlocks()[0])
-			testutil.AssertDefsecEqual(t, test.expected, adapted)
-		})
-	}
+	assert.Equal(t, 14, dataset.AccessGrants[0].Role.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 14, dataset.AccessGrants[0].Role.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 15, dataset.AccessGrants[0].SpecialGroup.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 15, dataset.AccessGrants[0].SpecialGroup.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 19, dataset.AccessGrants[1].Role.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 19, dataset.AccessGrants[1].Role.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 20, dataset.AccessGrants[1].Domain.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 20, dataset.AccessGrants[1].Domain.GetMetadata().Range().GetEndLine())
 }
