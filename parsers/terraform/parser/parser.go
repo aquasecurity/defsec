@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -166,20 +167,25 @@ func (p *parser) ParseDirectory(fullPath string) error {
 		return err
 	}
 
+	var paths []string
 	for _, info := range fileInfos {
 		info = resolveSymlink(fullPath, info)
 		if info.IsDir() {
 			continue
 		}
-
 		currentFilePath := filepath.Join(fullPath, info.Name())
-		if err := p.ParseFile(currentFilePath); err != nil {
+		paths = append(paths, currentFilePath)
+	}
+	sort.Strings(paths)
+	for _, path := range paths {
+		if err := p.ParseFile(path); err != nil {
 			if p.stopOnHCLError {
 				return err
 			}
 			continue
 		}
 	}
+
 	p.debug("Added directory %s.", fullPath)
 	return nil
 }
