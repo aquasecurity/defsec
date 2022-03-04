@@ -1,5 +1,3 @@
-SHELL=/usr/bin/bash
-
 .PHONY: test
 test:
 	which gotestsum || go install gotest.tools/gotestsum@latest
@@ -7,12 +5,12 @@ test:
 
 .PHONY: typos
 typos:
-	which codespell || pip install codespell
+	which codespell || pip3 install codespell
 	codespell -S funcs,.terraform,.git --ignore-words .codespellignore -f
 
 .PHONY: fix-typos
 fix-typos:
-	which codespell || pip install codespell
+	which codespell || pip3 install codespell
 	codespell -S funcs,.terraform --ignore-words .codespellignore -f -w -i1
 
 .PHONY: quality
