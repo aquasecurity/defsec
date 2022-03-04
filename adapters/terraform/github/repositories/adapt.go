@@ -25,6 +25,7 @@ func adaptRepository(resource *terraform.Block) github.Repository {
 	repo := github.Repository{
 		Metadata:            resource.GetMetadata(),
 		Public:              types.Bool(true, resource.GetMetadata()),
+		Archived:            types.Bool(false, resource.GetMetadata()),
 		VulnerabilityAlerts: types.BoolDefault(false, resource.GetMetadata()),
 	}
 
