@@ -12,7 +12,7 @@ require (
 	github.com/liamg/jfather v0.0.7
 	github.com/liamg/tml v0.6.0
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/owenrumney/go-sarif/v2 v2.0.13
+	github.com/owenrumney/go-sarif/v2 v2.1.1
 	github.com/owenrumney/squealer v0.3.1
 	github.com/stretchr/testify v1.7.0
 	github.com/zclconf/go-cty v1.10.0
