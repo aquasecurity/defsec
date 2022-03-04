@@ -265,8 +265,8 @@ github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLA
 github.com/owenrumney/go-sarif v1.0.14/go.mod h1:dNDiPlF04ESR/6fHlPyq7gHKmrM0sHUvAGjsoh8ZH0U=
 github.com/owenrumney/go-sarif v1.1.1 h1:QNObu6YX1igyFKhdzd7vgzmw7XsWN3/6NMGuDzBgXmE=
 github.com/owenrumney/go-sarif v1.1.1/go.mod h1:dNDiPlF04ESR/6fHlPyq7gHKmrM0sHUvAGjsoh8ZH0U=
-github.com/owenrumney/go-sarif/v2 v2.0.13 h1:Z4MzJtJO4OR2ygruUtA4ze8wZJHrI0C/qazNK8XdzRw=
-github.com/owenrumney/go-sarif/v2 v2.0.13/go.mod h1:MSqMMx9WqlBSY7pXoOZWgEsVB4FDNfhcaXDA1j6Sr+w=
+github.com/owenrumney/go-sarif/v2 v2.1.1 h1:JVUO0cEhG8bvEWIxsRmURY4u7wBZUTgdh4zikkkiPM8=
+github.com/owenrumney/go-sarif/v2 v2.1.1/go.mod h1:MSqMMx9WqlBSY7pXoOZWgEsVB4FDNfhcaXDA1j6Sr+w=
 github.com/owenrumney/squealer v0.3.1 h1:iBo817khHVpcP65om+iXuSYg+G6iaVvjsY0amcy1UAA=
 github.com/owenrumney/squealer v0.3.1/go.mod h1:mRMvbRyrnE2mYghLpn4M2jATJhIddp4XOAKKY60X7nY=
 github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c/go.mod h1:lzWF7FIEvWOWxwDKqyGYQf6ZUaNfKdP144TG7ZOy1lc=
