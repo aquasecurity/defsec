@@ -294,12 +294,6 @@ func (a *mariaDBAdapter) adaptMariaDBServer(resource *terraform.Block, module *t
 func (a *postgresqlAdapter) adaptPostgreSQLServer(resource *terraform.Block, module *terraform.Module) database.PostgreSQLServer {
 	var firewallRules []database.FirewallRule
 
-	config := database.PostgresSQLConfig{
-		LogCheckpoints:       types.BoolDefault(false, resource.GetMetadata()),
-		ConnectionThrottling: types.BoolDefault(false, resource.GetMetadata()),
-		LogConnections:       types.BoolDefault(false, resource.GetMetadata()),
-	}
-
 	enableSSLEnforcementAttr := resource.GetAttribute("ssl_enforcement_enabled")
 	enableSSLEnforcementVal := enableSSLEnforcementAttr.AsBoolValueOrDefault(false, resource)
 
@@ -316,9 +310,7 @@ func (a *postgresqlAdapter) adaptPostgreSQLServer(resource *terraform.Block, mod
 	}
 
 	configBlocks := module.GetReferencingResources(resource, "azurerm_postgresql_configuration", "server_name")
-	for _, configBlock := range configBlocks {
-		config = adaptPostgreSQLConfig(configBlock)
-	}
+	config := adaptPostgreSQLConfig(resource, configBlocks)
 
 	return database.PostgreSQLServer{
 		Metadata: resource.GetMetadata(),
@@ -333,32 +325,30 @@ func (a *postgresqlAdapter) adaptPostgreSQLServer(resource *terraform.Block, mod
 	}
 }
 
-func adaptPostgreSQLConfig(resource *terraform.Block) database.PostgresSQLConfig {
-	nameAttr := resource.GetAttribute("name")
-	valAttr := resource.GetAttribute("value")
+func adaptPostgreSQLConfig(resource *terraform.Block, configBlocks []*terraform.Block) database.PostgresSQLConfig {
+	config := database.PostgresSQLConfig{
+		LogCheckpoints:       types.BoolDefault(false, resource.GetMetadata()),
+		ConnectionThrottling: types.BoolDefault(false, resource.GetMetadata()),
+		LogConnections:       types.BoolDefault(false, resource.GetMetadata()),
+	}
 
-	logCheckpoints := types.BoolDefault(false, resource.GetMetadata())
-	connectionThrottling := types.BoolDefault(false, resource.GetMetadata())
-	logConnections := types.BoolDefault(false, resource.GetMetadata())
+	for _, configBlock := range configBlocks {
 
-	if valAttr.Equals("on") {
+		nameAttr := configBlock.GetAttribute("name")
+		valAttr := configBlock.GetAttribute("value")
+
 		if nameAttr.Equals("log_checkpoints") {
-			logCheckpoints = types.Bool(true, valAttr.GetMetadata())
+			config.LogCheckpoints = types.Bool(valAttr.Equals("on"), valAttr.GetMetadata())
 		}
 		if nameAttr.Equals("connection_throttling") {
-			connectionThrottling = types.Bool(true, valAttr.GetMetadata())
+			config.ConnectionThrottling = types.Bool(valAttr.Equals("on"), valAttr.GetMetadata())
 		}
 		if nameAttr.Equals("log_connections") {
-			logConnections = types.Bool(true, valAttr.GetMetadata())
+			config.LogConnections = types.Bool(valAttr.Equals("on"), valAttr.GetMetadata())
 		}
 	}
 
-	return database.PostgresSQLConfig{
-		Metadata:             resource.GetMetadata(),
-		LogCheckpoints:       logCheckpoints,
-		ConnectionThrottling: connectionThrottling,
-		LogConnections:       logConnections,
-	}
+	return config
 }
 
 func adaptMSSQLSecurityAlertPolicy(resource *terraform.Block) database.SecurityAlertPolicy {

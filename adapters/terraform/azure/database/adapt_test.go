@@ -56,7 +56,7 @@ resource "" "example" {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
-			adapted := adaptPostgreSQLConfig(modules.GetBlocks()[0])
+			adapted := adaptPostgreSQLConfig(modules.GetBlocks()[0], nil)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
 	}
