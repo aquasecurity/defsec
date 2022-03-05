@@ -23,10 +23,8 @@ func adaptRepositories(modules terraform.Modules) []github.Repository {
 func adaptRepository(resource *terraform.Block) github.Repository {
 
 	repo := github.Repository{
-		Metadata:            resource.GetMetadata(),
-		Public:              types.Bool(true, resource.GetMetadata()),
-		Archived:            types.Bool(false, resource.GetMetadata()),
-		VulnerabilityAlerts: types.BoolDefault(false, resource.GetMetadata()),
+		Metadata: resource.GetMetadata(),
+		Public:   types.Bool(true, resource.GetMetadata()),
 	}
 
 	privateAttr := resource.GetAttribute("private")
@@ -36,19 +34,15 @@ func adaptRepository(resource *terraform.Block) github.Repository {
 		repo.Public = types.Bool(true, privateAttr.GetMetadata())
 	}
 
+	repo.Archived = resource.GetAttribute("archived").AsBoolValueOrDefault(false, resource)
+	repo.VulnerabilityAlerts = resource.GetAttribute("vulnerability_alerts").AsBoolValueOrDefault(false, resource)
+
 	// visibility overrides private
 	visibilityAttr := resource.GetAttribute("visibility")
 	if visibilityAttr.Equals("private") || visibilityAttr.Equals("internal") {
 		repo.Public = types.Bool(false, visibilityAttr.GetMetadata())
 	} else if visibilityAttr.Equals("public") {
 		repo.Public = types.Bool(true, visibilityAttr.GetMetadata())
-	}
-
-	vulnerabilityAlertsAttr := resource.GetAttribute("vulnerability_alerts")
-	if vulnerabilityAlertsAttr.IsTrue() {
-		repo.VulnerabilityAlerts = types.Bool(true, vulnerabilityAlertsAttr.GetMetadata())
-	} else if vulnerabilityAlertsAttr.IsFalse() {
-		repo.VulnerabilityAlerts = types.Bool(false, vulnerabilityAlertsAttr.GetMetadata())
 	}
 
 	return repo
