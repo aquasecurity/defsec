@@ -28,11 +28,15 @@ func adaptStore(resource *terraform.Block) datalake.Store {
 
 	if encryptionStateAttr.Equals("Disabled") {
 		return datalake.Store{
-			EnableEncryption: types.Bool(false, resource.GetMetadata()),
+			EnableEncryption: types.Bool(false, encryptionStateAttr.GetMetadata()),
+		}
+	} else if encryptionStateAttr.Equals("Enabled") {
+		return datalake.Store{
+			EnableEncryption: types.Bool(true, encryptionStateAttr.GetMetadata()),
 		}
 	}
 	return datalake.Store{
 		Metadata:         resource.GetMetadata(),
-		EnableEncryption: types.Bool(true, resource.GetMetadata()),
+		EnableEncryption: types.BoolDefault(true, resource.GetMetadata()),
 	}
 }
