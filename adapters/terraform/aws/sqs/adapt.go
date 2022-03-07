@@ -86,6 +86,7 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 		if err == nil {
 			policy.Document.Parsed = *parsed
 			policy.Document.Metadata = attr.GetMetadata()
+			policy.Metadata = attr.GetMetadata()
 			policies = append(policies, policy)
 		}
 	} else if refBlock, err := a.modules.GetReferencedBlock(attr, resource); err == nil {
