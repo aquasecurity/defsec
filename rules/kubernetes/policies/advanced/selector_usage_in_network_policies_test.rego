@@ -82,3 +82,31 @@ test_networkpolicy_with_egress_pod_selector {
 
 	count(r) == 0
 }
+
+test_networkpolicy_with_deny_all_egress_pod_selector {
+	r := deny with input as {
+		"apiVersion": "networking.k8s.io/v1",
+		"kind": "NetworkPolicy",
+		"metadata": {"name": "deny-all-egress"},
+		"spec": {
+			"podSelector": {},
+			"policyType": ["Egress"],
+		},
+	}
+
+	count(r) == 0
+}
+
+test_networkpolicy_with_deny_all_ingress_pod_selector {
+	r := deny with input as {
+		"apiVersion": "networking.k8s.io/v1",
+		"kind": "NetworkPolicy",
+		"metadata": {"name": "deny-all-ingress"},
+		"spec": {
+			"podSelector": {},
+			"policyType": ["Ingress"],
+		},
+	}
+
+	count(r) == 0
+}

@@ -71,3 +71,19 @@ hasSelector(spec) {
 	kubernetes.has_field(spec.egress[_], "to")
 	kubernetes.has_field(spec.egress[_].to[_], "namespaceSelector")
 }
+
+hasSelector(spec) {
+	lower(kubernetes.kind) == "networkpolicy"
+	kubernetes.spec.podSelector == {}
+	contains(input.spec.policyType, "Egress")
+}
+
+hasSelector(spec) {
+	lower(kubernetes.kind) == "networkpolicy"
+	kubernetes.spec.podSelector == {}
+	contains(input.spec.policyType, "Ingress")
+}
+
+contains(arr, elem) {
+	arr[_] = elem
+}
