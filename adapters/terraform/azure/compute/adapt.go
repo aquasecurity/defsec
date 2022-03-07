@@ -52,7 +52,7 @@ func adaptManagedDisk(resource *terraform.Block) compute.ManagedDisk {
 
 	if encryptionBlock.IsNotNil() {
 		enabledAttr := encryptionBlock.GetAttribute("enabled")
-		enabledVal = enabledAttr.AsBoolValueOrDefault(false, encryptionBlock)
+		enabledVal = enabledAttr.AsBoolValueOrDefault(true, encryptionBlock)
 	}
 
 	return compute.ManagedDisk{
@@ -78,7 +78,7 @@ func adaptLinuxVM(resource *terraform.Block) compute.LinuxVirtualMachine {
 		if err != nil {
 			encoded = []byte(customDataAttr.Value().AsString())
 		}
-		customDataVal = types.String(string(encoded), workingBlock.GetMetadata())
+		customDataVal = types.String(string(encoded), customDataAttr.GetMetadata())
 	}
 
 	if resource.TypeLabel() == "azurerm_virtual_machine" {
@@ -115,7 +115,7 @@ func adaptWindowsVM(resource *terraform.Block) compute.WindowsVirtualMachine {
 		if err != nil {
 			encoded = []byte(customDataAttr.Value().AsString())
 		}
-		customDataVal = types.String(string(encoded), workingBlock.GetMetadata())
+		customDataVal = types.String(string(encoded), customDataAttr.GetMetadata())
 	}
 
 	return compute.WindowsVirtualMachine{
