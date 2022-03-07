@@ -34,10 +34,14 @@ func adaptInstance(resource *terraform.Block) compute.Instance {
 		if err != nil {
 			encoded = []byte(userDataAttr.Value().AsString())
 		}
+		return compute.Instance{
+			Metadata: resource.GetMetadata(),
+			UserData: types.String(string(encoded), userDataAttr.GetMetadata()),
+		}
 	}
 
 	return compute.Instance{
 		Metadata: resource.GetMetadata(),
-		UserData: types.String(string(encoded), resource.GetMetadata()),
+		UserData: types.StringDefault("", resource.GetMetadata()),
 	}
 }

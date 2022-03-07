@@ -50,7 +50,7 @@ func adaptContact(resource *terraform.Block) securitycenter.Contact {
 
 func adaptSubscription(resource *terraform.Block) securitycenter.SubscriptionPricing {
 	tierAttr := resource.GetAttribute("tier")
-	tierVal := tierAttr.AsStringValueOrDefault("", resource)
+	tierVal := tierAttr.AsStringValueOrDefault("Free", resource)
 
 	return securitycenter.SubscriptionPricing{
 		Metadata: resource.GetMetadata(),
