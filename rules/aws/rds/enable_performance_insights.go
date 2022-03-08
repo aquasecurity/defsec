@@ -14,7 +14,7 @@ var CheckEnablePerformanceInsights = rules.Register(
 		Service:    "rds",
 		ShortCode:  "enable-performance-insights",
 		Summary:    "Enable Performance Insights to detect potential problems",
-		Impact:     "Without adaquate monitoring, performance related issues may go unreported and potentially lead to compromise.",
+		Impact:     "Without adequate monitoring, performance related issues may go unreported and potentially lead to compromise.",
 		Resolution: "Enable performance insights",
 		Explanation: `Enabling Performance insights allows for greater depth in monitoring data.
 		
