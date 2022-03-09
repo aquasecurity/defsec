@@ -226,7 +226,7 @@ func (a *Attribute) Value() (ctyVal cty.Value) {
 		}
 	}()
 	ctyVal, _ = a.hclAttribute.Expr.Value(a.ctx.Inner())
-	if !ctyVal.IsKnown() {
+	if !ctyVal.IsKnown() || ctyVal.IsNull() {
 		return cty.NilVal
 	}
 	return ctyVal
