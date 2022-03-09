@@ -27,9 +27,15 @@ type LaunchTemplate struct {
 }
 
 func (i *LaunchConfiguration) RequiresIMDSToken() bool {
-	return i.MetadataOptions.HttpTokens.EqualTo("required")
+	if i.MetadataOptions.HttpTokens != nil {
+		return i.MetadataOptions.HttpTokens.EqualTo("required")
+	}
+	return false
 }
 
 func (i *LaunchConfiguration) HasHTTPEndpointDisabled() bool {
-	return i.MetadataOptions.HttpEndpoint.EqualTo("disabled")
+	if i.MetadataOptions.HttpEndpoint != nil {
+		return i.MetadataOptions.HttpEndpoint.EqualTo("disabled")
+	}
+	return false
 }
