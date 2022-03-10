@@ -52,7 +52,6 @@ import (
 	_ "github.com/aquasecurity/defsec/rules/cloudstack/compute"
 	_ "github.com/aquasecurity/defsec/rules/digitalocean/compute"
 	_ "github.com/aquasecurity/defsec/rules/digitalocean/spaces"
-	_ "github.com/aquasecurity/defsec/rules/general/secrets"
 	_ "github.com/aquasecurity/defsec/rules/github/actions"
 	_ "github.com/aquasecurity/defsec/rules/github/repositories"
 	_ "github.com/aquasecurity/defsec/rules/google/bigquery"
