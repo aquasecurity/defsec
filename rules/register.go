@@ -8,7 +8,10 @@ type CheckFunc func(s *state.State) (results Results)
 
 var registeredRules []RegisteredRule
 
+var index int
+
 type RegisteredRule struct {
+	number    int
 	rule      Rule
 	checkFunc CheckFunc
 }
@@ -30,13 +33,24 @@ func (r RegisteredRule) Evaluate(s *state.State) Results {
 
 func Register(rule Rule, f CheckFunc) RegisteredRule {
 	registeredRule := RegisteredRule{
+		number:    index,
 		rule:      rule,
 		checkFunc: f,
 	}
+	index++
 
 	registeredRules = append(registeredRules, registeredRule)
 
 	return registeredRule
+}
+
+func Deregister(rule RegisteredRule) {
+	for i, registered := range registeredRules {
+		if registered.number == rule.number {
+			registeredRules = append(registeredRules[:i], registeredRules[i+1:]...)
+			return
+		}
+	}
 }
 
 func (r RegisteredRule) Rule() Rule {
