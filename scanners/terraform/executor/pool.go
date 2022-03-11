@@ -126,34 +126,30 @@ func (h *hclModuleRuleJob) Run() (results rules.Results, err error) {
 
 func isCustomCheckRequiredForBlock(custom *rules.TerraformCustomCheck, b *terraform.Block) bool {
 
-	if len(custom.RequiredTypes) > 0 {
-		var found bool
-		for _, requiredType := range custom.RequiredTypes {
-			if b.Type() == requiredType {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
+	var found bool
+	for _, requiredType := range custom.RequiredTypes {
+		if b.Type() == requiredType {
+			found = true
+			break
 		}
 	}
-
-	if len(custom.RequiredLabels) > 0 {
-		var found bool
-		for _, requiredLabel := range custom.RequiredLabels {
-			if requiredLabel == "*" || (len(b.Labels()) > 0 && wildcardMatch(requiredLabel, b.TypeLabel())) {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return false
-		}
+	if !found && len(custom.RequiredTypes) > 0 {
+		return false
 	}
 
+	found = false
+	for _, requiredLabel := range custom.RequiredLabels {
+		if requiredLabel == "*" || (len(b.Labels()) > 0 && wildcardMatch(requiredLabel, b.TypeLabel())) {
+			found = true
+			break
+		}
+	}
+	if !found && len(custom.RequiredLabels) > 0 {
+		return false
+	}
+
+	found = false
 	if len(custom.RequiredSources) > 0 && b.Type() == terraform.TypeModule.Name() {
-		var found bool
 		if sourceAttr := b.GetAttribute("source"); sourceAttr.IsNotNil() {
 			sourcePath := sourceAttr.ValueAsStrings()[0]
 
@@ -169,9 +165,7 @@ func isCustomCheckRequiredForBlock(custom *rules.TerraformCustomCheck, b *terraf
 				}
 			}
 		}
-		if !found {
-			return false
-		}
+		return found
 	}
 
 	return true

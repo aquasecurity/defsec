@@ -88,6 +88,8 @@ func (s *Scanner) Scan() (rules.Results, Metrics, error) {
 	// parse all root module directories
 	for _, dir := range rootDirs {
 
+		s.debug("Scanning root module '%s'...", dir)
+
 		p := parser.New(s.parserOpt...)
 		e := executor.New(s.executorOpt...)
 
