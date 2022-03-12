@@ -53,6 +53,6 @@ func adaptKey(resource *terraform.Block) kms.Key {
 		return key
 	}
 
-	key.RotationPeriodSeconds = types.Int(seconds, resource.GetMetadata())
+	key.RotationPeriodSeconds = types.Int(seconds, rotationPeriodAttr.GetMetadata())
 	return key
 }
