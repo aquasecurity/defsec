@@ -4,12 +4,14 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/providers/google/dns"
 )
 
 func Test_Adapt(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name      string
 		terraform string
@@ -18,11 +20,44 @@ func Test_Adapt(t *testing.T) {
 		{
 			name: "basic",
 			terraform: `
-resource "" "example" {
-    
-}
+			resource "google_dns_managed_zone" "example" {
+				name        = "example-zone"
+				dns_name    = "example-${random_id.rnd.hex}.com."
+				description = "Example DNS zone"
+				labels = {
+				  foo = "bar"
+				}
+				dnssec_config {
+				  state = "on"
+				  default_key_specs {
+					  algorithm = "rsasha1"
+					  key_type = "keySigning"
+				  }
+				}
+			}
 `,
-			expected: dns.DNS{},
+			expected: dns.DNS{
+				Metadata: types.NewTestMetadata(),
+				ManagedZones: []dns.ManagedZone{
+					{
+						Metadata: types.NewTestMetadata(),
+						DNSSec: dns.DNSSec{
+							Enabled: types.Bool(true, types.NewTestMetadata()),
+							DefaultKeySpecs: dns.KeySpecs{
+								Metadata: types.NewTestMetadata(),
+								ZoneSigningKey: dns.Key{
+									Metadata:  types.NewTestMetadata(),
+									Algorithm: types.String("", types.NewTestMetadata()),
+								},
+								KeySigningKey: dns.Key{
+									Metadata:  types.NewTestMetadata(),
+									Algorithm: types.String("rsasha1", types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 
@@ -35,62 +70,7 @@ resource "" "example" {
 	}
 }
 
-func Test_adaptManagedZones(t *testing.T) {
-	t.SkipNow()
-	tests := []struct {
-		name      string
-		terraform string
-		expected  []dns.ManagedZone
-	}{
-		{
-			name: "basic",
-			terraform: `
-resource "" "example" {
-    
-}
-`,
-			expected: []dns.ManagedZone{},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
-			adapted := adaptManagedZones(modules)
-			testutil.AssertDefsecEqual(t, test.expected, adapted)
-		})
-	}
-}
-
-func Test_adaptManagedZone(t *testing.T) {
-	t.SkipNow()
-	tests := []struct {
-		name      string
-		terraform string
-		expected  dns.ManagedZone
-	}{
-		{
-			name: "basic",
-			terraform: `
-resource "" "example" {
-    
-}
-`,
-			expected: dns.ManagedZone{},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
-			adapted := adaptManagedZone(modules.GetBlocks()[0])
-			testutil.AssertDefsecEqual(t, test.expected, adapted)
-		})
-	}
-}
-
 func Test_adaptKeySpecs(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name      string
 		terraform string
@@ -99,11 +79,25 @@ func Test_adaptKeySpecs(t *testing.T) {
 		{
 			name: "basic",
 			terraform: `
-resource "" "example" {
-    
-}
+
+			data "google_dns_keys" "foo_dns_keys" {
+				managed_zone = google_dns_managed_zone.example.id
+				zone_signing_keys {
+					algorithm = "rsasha512"
+				}
+			}
 `,
-			expected: dns.KeySpecs{},
+			expected: dns.KeySpecs{
+				Metadata: types.NewTestMetadata(),
+				ZoneSigningKey: dns.Key{
+					Metadata:  types.NewTestMetadata(),
+					Algorithm: types.String("rsasha512", types.NewTestMetadata()),
+				},
+				KeySigningKey: dns.Key{
+					Metadata:  types.NewTestMetadata(),
+					Algorithm: types.String("", types.NewTestMetadata()),
+				},
+			},
 		},
 	}
 
@@ -114,4 +108,38 @@ resource "" "example" {
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
 	}
+}
+
+func TestLines(t *testing.T) {
+	src := `
+	resource "google_dns_managed_zone" "example" {
+		name        = "example-zone"
+		dns_name    = "example-${random_id.rnd.hex}.com."
+
+		dnssec_config {
+		  state = "on"
+		  default_key_specs {
+			  algorithm = "rsasha1"
+			  key_type = "keySigning"
+		  }
+		}
+	}`
+
+	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	adapted := Adapt(modules)
+
+	require.Len(t, adapted.ManagedZones, 1)
+	zone := adapted.ManagedZones[0]
+
+	assert.Equal(t, 2, zone.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 13, zone.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 7, zone.DNSSec.Enabled.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 7, zone.DNSSec.Enabled.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 8, zone.DNSSec.DefaultKeySpecs.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 11, zone.DNSSec.DefaultKeySpecs.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 9, zone.DNSSec.DefaultKeySpecs.KeySigningKey.Algorithm.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 9, zone.DNSSec.DefaultKeySpecs.KeySigningKey.Algorithm.GetMetadata().Range().GetEndLine())
 }
