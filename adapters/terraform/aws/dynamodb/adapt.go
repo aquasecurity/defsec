@@ -38,7 +38,7 @@ func adaptCluster(resource *terraform.Block, module *terraform.Module) dynamodb.
 	}
 
 	if ssEncryptionBlock := resource.GetBlock("server_side_encryption"); ssEncryptionBlock.IsNotNil() {
-		cluster.Metadata = ssEncryptionBlock.GetMetadata()
+		cluster.ServerSideEncryption.Metadata = ssEncryptionBlock.GetMetadata()
 		enabledAttr := ssEncryptionBlock.GetAttribute("enabled")
 		cluster.ServerSideEncryption.Enabled = enabledAttr.AsBoolValueOrDefault(false, ssEncryptionBlock)
 
