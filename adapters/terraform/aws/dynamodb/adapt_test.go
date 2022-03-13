@@ -62,6 +62,31 @@ func Test_adaptCluster(t *testing.T) {
 				PointInTimeRecovery: types.Bool(false, types.NewTestMetadata()),
 			},
 		},
+		{
+			name: "reference key",
+			terraform: `
+			resource "aws_dynamodb_table" "example" {
+				name             = "example"
+			
+				server_side_encryption {
+					enabled     = true
+					kms_key_arn = aws_kms_key.a.arn
+				}
+			}
+
+			resource "aws_kms_key" "a" {
+			  }
+`,
+			expected: dynamodb.DAXCluster{
+				Metadata: types.NewTestMetadata(),
+				ServerSideEncryption: dynamodb.ServerSideEncryption{
+					Metadata: types.NewTestMetadata(),
+					Enabled:  types.Bool(true, types.NewTestMetadata()),
+					KMSKeyID: types.String("aws_kms_key.a", types.NewTestMetadata()),
+				},
+				PointInTimeRecovery: types.Bool(false, types.NewTestMetadata()),
+			},
+		},
 	}
 
 	for _, test := range tests {
