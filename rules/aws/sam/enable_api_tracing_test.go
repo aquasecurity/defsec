@@ -50,7 +50,7 @@ func TestCheckEnableApiTracing(t *testing.T) {
 			results := CheckEnableApiTracing.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableApiTracing.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableApiTracing.Rule().LongID() {
 					found = true
 				}
 			}

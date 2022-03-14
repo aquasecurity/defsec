@@ -14,6 +14,7 @@ type Status uint8
 const (
 	StatusFailed Status = iota
 	StatusPassed
+	StatusIgnored
 )
 
 type Result struct {
@@ -42,6 +43,10 @@ func (r *Result) OverrideDescription(description string) {
 
 func (r *Result) OverrideMetadata(metadata types.Metadata) {
 	r.metadata = metadata
+}
+
+func (r *Result) OverrideStatus(status Status) {
+	r.status = status
 }
 
 func (r *Result) OverrideAnnotation(annotation string) {
@@ -95,6 +100,15 @@ func (r *Results) AddPassed(source MetadataProvider, descriptions ...string) {
 	res := Result{
 		description: strings.Join(descriptions, " "),
 		status:      StatusPassed,
+	}
+	res.metadata = source.GetMetadata()
+	*r = append(*r, res)
+}
+
+func (r *Results) AddIgnored(source MetadataProvider, descriptions ...string) {
+	res := Result{
+		description: strings.Join(descriptions, " "),
+		status:      StatusIgnored,
 	}
 	res.metadata = source.GetMetadata()
 	*r = append(*r, res)

@@ -117,7 +117,6 @@ func (s *Scanner) Scan() (rules.Results, Metrics, error) {
 		metrics.Executor.Counts.Passed += execMetrics.Counts.Passed
 		metrics.Executor.Counts.Failed += execMetrics.Counts.Failed
 		metrics.Executor.Counts.Ignored += execMetrics.Counts.Ignored
-		metrics.Executor.Counts.Excluded += execMetrics.Counts.Excluded
 		metrics.Executor.Counts.Critical += execMetrics.Counts.Critical
 		metrics.Executor.Counts.High += execMetrics.Counts.High
 		metrics.Executor.Counts.Medium += execMetrics.Counts.Medium

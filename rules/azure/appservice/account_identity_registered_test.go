@@ -54,7 +54,7 @@ func TestCheckAccountIdentityRegistered(t *testing.T) {
 			results := CheckAccountIdentityRegistered.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckAccountIdentityRegistered.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckAccountIdentityRegistered.Rule().LongID() {
 					found = true
 				}
 			}

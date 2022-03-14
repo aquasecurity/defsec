@@ -50,7 +50,7 @@ func TestCheckKubernetesSurgeUpgrades(t *testing.T) {
 			results := CheckKubernetesSurgeUpgrades.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckKubernetesSurgeUpgrades.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckKubernetesSurgeUpgrades.Rule().LongID() {
 					found = true
 				}
 			}

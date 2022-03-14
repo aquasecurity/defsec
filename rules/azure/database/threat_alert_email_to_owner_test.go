@@ -60,7 +60,7 @@ func TestCheckThreatAlertEmailToOwner(t *testing.T) {
 			results := CheckThreatAlertEmailToOwner.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckThreatAlertEmailToOwner.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckThreatAlertEmailToOwner.Rule().LongID() {
 					found = true
 				}
 			}

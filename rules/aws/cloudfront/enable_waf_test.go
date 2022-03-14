@@ -50,7 +50,7 @@ func TestCheckEnableWaf(t *testing.T) {
 			results := CheckEnableWaf.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableWaf.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableWaf.Rule().LongID() {
 					found = true
 				}
 			}

@@ -64,7 +64,7 @@ func TestCheckPgLogLockWaits(t *testing.T) {
 			results := CheckPgLogLockWaits.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckPgLogLockWaits.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckPgLogLockWaits.Rule().LongID() {
 					found = true
 				}
 			}

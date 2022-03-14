@@ -114,7 +114,7 @@ func TestCheckSecureTlsPolicy(t *testing.T) {
 			results := CheckSecureTlsPolicy.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckSecureTlsPolicy.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckSecureTlsPolicy.Rule().LongID() {
 					found = true
 				}
 			}

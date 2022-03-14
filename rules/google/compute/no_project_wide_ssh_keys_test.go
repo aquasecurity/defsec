@@ -50,7 +50,7 @@ func TestCheckNoProjectWideSshKeys(t *testing.T) {
 			results := CheckNoProjectWideSshKeys.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckNoProjectWideSshKeys.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckNoProjectWideSshKeys.Rule().LongID() {
 					found = true
 				}
 			}

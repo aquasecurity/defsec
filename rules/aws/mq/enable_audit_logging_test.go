@@ -56,7 +56,7 @@ func TestCheckEnableAuditLogging(t *testing.T) {
 			results := CheckEnableAuditLogging.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableAuditLogging.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableAuditLogging.Rule().LongID() {
 					found = true
 				}
 			}

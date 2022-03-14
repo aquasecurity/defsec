@@ -120,7 +120,7 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 			results := CheckEnableSslEnforcement.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableSslEnforcement.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableSslEnforcement.Rule().LongID() {
 					found = true
 				}
 			}

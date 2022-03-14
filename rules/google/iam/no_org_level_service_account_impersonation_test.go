@@ -82,7 +82,7 @@ func TestCheckNoOrgLevelServiceAccountImpersonation(t *testing.T) {
 			results := CheckNoOrgLevelServiceAccountImpersonation.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckNoOrgLevelServiceAccountImpersonation.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckNoOrgLevelServiceAccountImpersonation.Rule().LongID() {
 					found = true
 				}
 			}

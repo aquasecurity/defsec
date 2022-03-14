@@ -50,7 +50,7 @@ func TestCheckNoEncryptionOverride(t *testing.T) {
 			results := CheckNoEncryptionOverride.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckNoEncryptionOverride.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckNoEncryptionOverride.Rule().LongID() {
 					found = true
 				}
 			}

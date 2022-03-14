@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/aquasecurity/defsec/rules"
+
 	"github.com/aquasecurity/defsec/scanners/cloudformation/scanner"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -41,7 +43,7 @@ func Test_cloudformation_scanning_has_expected_errors(t *testing.T) {
 	}
 	assert.Len(t, errorCodes, 7)
 
-	assert.Equal(t, []string{"AVD-AWS-0086", "AVD-AWS-0087", "AVD-AWS-0088", "AVD-AWS-0089", "AVD-AWS-0090", "AVD-AWS-0132", "AVD-AWS-0093"}, errorCodes)
+	assert.Equal(t, []string{"AVD-AWS-0086", "AVD-AWS-0087", "AVD-AWS-0088", "AVD-AWS-0089", "AVD-AWS-0090", "AVD-AWS-0093", "AVD-AWS-0132"}, errorCodes)
 }
 
 func Test_cloudformation_scanning_with_debug(t *testing.T) {
@@ -84,15 +86,18 @@ func Test_cloudformation_scanning_with_exclusions_has_expected_errors(t *testing
 	require.NoError(t, err)
 
 	// check the number of expected results
-	assert.Len(t, results, 6)
+	assert.Equal(t, len(results), 7)
 	var errorCodes []string
 
 	for _, result := range results {
+		if result.Status() != rules.StatusFailed {
+			continue
+		}
 		errorCodes = append(errorCodes, result.Flatten().RuleID)
 	}
 	assert.Len(t, errorCodes, 6)
 
-	assert.Equal(t, []string{"AVD-AWS-0086", "AVD-AWS-0088", "AVD-AWS-0089", "AVD-AWS-0090", "AVD-AWS-0132", "AVD-AWS-0093"}, errorCodes)
+	assert.Equal(t, []string{"AVD-AWS-0086", "AVD-AWS-0088", "AVD-AWS-0089", "AVD-AWS-0090", "AVD-AWS-0093", "AVD-AWS-0132"}, errorCodes)
 }
 
 func Test_cloudformation_scanning_with_include_passed(t *testing.T) {
@@ -124,13 +129,16 @@ func Test_cloudformation_scanning_with_ignores_has_expected_errors(t *testing.T)
 	require.NoError(t, err)
 
 	// check the number of expected results
-	assert.Len(t, results, 6)
+	assert.Len(t, results, 7)
 	var errorCodes []string
 
 	for _, result := range results {
+		if result.Status() != rules.StatusFailed {
+			continue
+		}
 		errorCodes = append(errorCodes, result.Flatten().RuleID)
 	}
 	assert.Len(t, errorCodes, 6)
 
-	assert.Equal(t, []string{"AVD-AWS-0086", "AVD-AWS-0088", "AVD-AWS-0089", "AVD-AWS-0090", "AVD-AWS-0132", "AVD-AWS-0093"}, errorCodes)
+	assert.Equal(t, []string{"AVD-AWS-0086", "AVD-AWS-0088", "AVD-AWS-0089", "AVD-AWS-0090", "AVD-AWS-0093", "AVD-AWS-0132"}, errorCodes)
 }

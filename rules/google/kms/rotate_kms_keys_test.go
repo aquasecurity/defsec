@@ -60,7 +60,7 @@ func TestCheckRotateKmsKeys(t *testing.T) {
 			results := CheckRotateKmsKeys.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckRotateKmsKeys.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckRotateKmsKeys.Rule().LongID() {
 					found = true
 				}
 			}

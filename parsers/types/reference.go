@@ -20,3 +20,23 @@ func (f *FakeReference) RefersTo(r Reference) bool {
 func (f *FakeReference) LogicalID() string {
 	return ""
 }
+
+type NamedReference struct {
+	name string
+}
+
+func NewNamedReference(name string) Reference {
+	return &NamedReference{name: name}
+}
+
+func (f *NamedReference) String() string {
+	return f.name
+}
+
+func (f *NamedReference) RefersTo(r Reference) bool {
+	return false
+}
+
+func (f *NamedReference) LogicalID() string {
+	return f.String()
+}

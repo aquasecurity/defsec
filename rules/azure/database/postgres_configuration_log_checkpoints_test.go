@@ -56,7 +56,7 @@ func TestCheckPostgresConfigurationLogCheckpoints(t *testing.T) {
 			results := CheckPostgresConfigurationLogCheckpoints.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckPostgresConfigurationLogCheckpoints.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckPostgresConfigurationLogCheckpoints.Rule().LongID() {
 					found = true
 				}
 			}

@@ -72,7 +72,7 @@ func TestCheckNoDefaultServiceAccount(t *testing.T) {
 			results := CheckNoDefaultServiceAccount.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckNoDefaultServiceAccount.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckNoDefaultServiceAccount.Rule().LongID() {
 					found = true
 				}
 			}

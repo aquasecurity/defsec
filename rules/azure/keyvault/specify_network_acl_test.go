@@ -56,7 +56,7 @@ func TestCheckSpecifyNetworkAcl(t *testing.T) {
 			results := CheckSpecifyNetworkAcl.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckSpecifyNetworkAcl.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckSpecifyNetworkAcl.Rule().LongID() {
 					found = true
 				}
 			}

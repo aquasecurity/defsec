@@ -64,7 +64,7 @@ func TestCheckNoContainedDbAuth(t *testing.T) {
 			results := CheckNoContainedDbAuth.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckNoContainedDbAuth.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckNoContainedDbAuth.Rule().LongID() {
 					found = true
 				}
 			}

@@ -54,7 +54,7 @@ func TestCheckEnableBackupRetention(t *testing.T) {
 			results := CheckEnableBackupRetention.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableBackupRetention.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableBackupRetention.Rule().LongID() {
 					found = true
 				}
 			}

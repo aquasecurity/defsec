@@ -56,7 +56,7 @@ func TestCheckEnableShieldedVMIntegrityMonitoring(t *testing.T) {
 			results := CheckEnableShieldedVMIntegrityMonitoring.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableShieldedVMIntegrityMonitoring.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableShieldedVMIntegrityMonitoring.Rule().LongID() {
 					found = true
 				}
 			}

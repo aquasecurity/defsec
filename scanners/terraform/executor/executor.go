@@ -37,7 +37,6 @@ type Metrics struct {
 	}
 	Counts struct {
 		Ignored  int
-		Excluded int
 		Failed   int
 		Passed   int
 		Critical int
@@ -137,10 +136,8 @@ func (e *Executor) Execute(modules terraform.Modules) (rules.Results, Metrics, e
 		resultsAfterIgnores = results
 	}
 
-	metrics.Counts.Ignored = len(results) - len(resultsAfterIgnores)
-
-	filtered, excludeCount := e.filterResults(resultsAfterIgnores)
-	metrics.Counts.Excluded = excludeCount
+	filtered := e.filterResults(resultsAfterIgnores)
+	metrics.Counts.Ignored = len(results) - len(filtered)
 
 	filtered = e.updateSeverity(filtered)
 
@@ -195,7 +192,7 @@ func (e *Executor) updateSeverity(results []rules.Result) []rules.Result {
 	return overriddenResults
 }
 
-func (e *Executor) filterResults(results []rules.Result) ([]rules.Result, int) {
+func (e *Executor) filterResults(results []rules.Result) []rules.Result {
 	var filtered []rules.Result
 	var countExcluded int
 
@@ -219,7 +216,7 @@ func (e *Executor) filterResults(results []rules.Result) ([]rules.Result, int) {
 	for _, filter := range e.resultsFilters {
 		filtered = filter(filtered)
 	}
-	return filtered, countExcluded
+	return filtered
 }
 
 func (e *Executor) sortResults(results []rules.Result) {

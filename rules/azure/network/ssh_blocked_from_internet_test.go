@@ -82,7 +82,7 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 			results := CheckSshBlockedFromInternet.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckSshBlockedFromInternet.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckSshBlockedFromInternet.Rule().LongID() {
 					found = true
 				}
 			}

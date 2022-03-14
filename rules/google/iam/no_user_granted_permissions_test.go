@@ -163,7 +163,7 @@ func TestCheckNoUserGrantedPermissions(t *testing.T) {
 			results := CheckNoUserGrantedPermissions.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckNoUserGrantedPermissions.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckNoUserGrantedPermissions.Rule().LongID() {
 					found = true
 				}
 			}

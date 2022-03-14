@@ -56,7 +56,7 @@ func TestCheckEnablePrivateCluster(t *testing.T) {
 			results := CheckEnablePrivateCluster.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnablePrivateCluster.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnablePrivateCluster.Rule().LongID() {
 					found = true
 				}
 			}

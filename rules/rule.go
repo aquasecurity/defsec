@@ -31,6 +31,7 @@ type TerraformCustomCheck struct {
 
 type Rule struct {
 	AVDID          string             `json:"avd_id"`
+	LegacyID       string             `json:"id"`
 	ShortCode      string             `json:"short_code"`
 	Summary        string             `json:"summary"`
 	Explanation    string             `json:"explanation"`

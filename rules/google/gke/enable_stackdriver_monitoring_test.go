@@ -50,7 +50,7 @@ func TestCheckEnableStackdriverMonitoring(t *testing.T) {
 			results := CheckEnableStackdriverMonitoring.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableStackdriverMonitoring.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableStackdriverMonitoring.Rule().LongID() {
 					found = true
 				}
 			}

@@ -56,7 +56,7 @@ func TestCheckEnableStateMachineLogging(t *testing.T) {
 			results := CheckEnableStateMachineLogging.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableStateMachineLogging.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableStateMachineLogging.Rule().LongID() {
 					found = true
 				}
 			}

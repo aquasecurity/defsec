@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	adapter "github.com/aquasecurity/defsec/adapters/cloudformation"
@@ -102,8 +103,8 @@ func (s *Scanner) Scan() (results []rules.Result, err error) {
 			if len(evalResult) > 0 {
 				s.debug("Found %d results for %s", len(evalResult), rule.Rule().AVDID)
 				for _, scanResult := range evalResult {
-					if s.isExcluded(scanResult) {
-						continue
+					if s.isExcluded(scanResult) || isIgnored(scanResult) {
+						scanResult.OverrideStatus(rules.StatusIgnored)
 					}
 
 					ref := scanResult.Metadata().Reference()
@@ -113,19 +114,20 @@ func (s *Scanner) Scan() (results []rules.Result, err error) {
 					}
 
 					reference := ref.(*parser.CFReference)
-
-					if !isIgnored(scanResult) {
-						description := getDescription(scanResult, reference)
-						scanResult.OverrideDescription(description)
-						if scanResult.Status() == rules.StatusPassed && !s.includePassed {
-							continue
-						}
-						results = append(results, scanResult)
+					description := getDescription(scanResult, reference)
+					scanResult.OverrideDescription(description)
+					if scanResult.Status() == rules.StatusPassed && !s.includePassed {
+						continue
 					}
+
+					results = append(results, scanResult)
 				}
 			}
 		}
 	}
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Rule().AVDID < results[j].Rule().AVDID
+	})
 	return results, nil
 }
 
@@ -139,8 +141,12 @@ func (s *Scanner) isExcluded(result rules.Result) bool {
 }
 
 func getDescription(scanResult rules.Result, location *parser.CFReference) string {
-	if scanResult.Status() != rules.StatusPassed {
+	switch scanResult.Status() {
+	case rules.StatusPassed:
+		return fmt.Sprintf("Resource '%s' passed check: %s", location.LogicalID(), scanResult.Rule().Summary)
+	case rules.StatusIgnored:
+		return fmt.Sprintf("Resource '%s' had check ignored: %s", location.LogicalID(), scanResult.Rule().Summary)
+	default:
 		return scanResult.Description()
 	}
-	return fmt.Sprintf("Resource '%s' passed check: %s", location.LogicalID(), scanResult.Rule().Summary)
 }

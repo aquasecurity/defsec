@@ -81,7 +81,7 @@ func TestCheckNodePoolUsesCos(t *testing.T) {
 			results := CheckNodePoolUsesCos.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckNodePoolUsesCos.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckNodePoolUsesCos.Rule().LongID() {
 					found = true
 				}
 			}
