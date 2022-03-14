@@ -166,7 +166,7 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 		if err != nil {
 			return nil, err
 		}
-		ruleResults := s.convertResults(set)
+		ruleResults := s.convertResults(set, input.Path)
 		if len(ruleResults) == 0 {
 			var result regoResult
 			result.Filepath = input.Path
@@ -196,9 +196,7 @@ func (s *Scanner) applyRuleCombined(ctx context.Context, namespace string, rule 
 	if err != nil {
 		return nil, err
 	}
-	partialResults := s.convertResults(set)
-	fmt.Println(partialResults)
-	return results, nil
+	return s.convertResults(set, ""), nil
 }
 
 // severity is now set with metadata, so deny/warn/violation now behave the same way

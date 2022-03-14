@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0019",
 	"title": "'dnf clean all' missing",
 	"short_code": "purge-dnf-package-cache",
-	"version": "v1.0.0",
 	"severity": "HIGH",
 	"type": "Dockerfile Security Check",
 	"description": "Cached package data should be cleaned after installation to reduce image size.",
@@ -24,18 +23,28 @@ install_regex := `(dnf install)|(dnf in)|(dnf reinstall)|(dnf rei)|(dnf install-
 
 dnf_regex = sprintf("%s|(dnf clean all)", [install_regex])
 
-get_dnf[arg] {
+get_dnf[output] {
 	run := docker.run[_]
 	arg := run.Value[0]
 
 	regex.match(install_regex, arg)
 
 	not contains_clean_after_dnf(arg)
+	output := {
+	    "arg": arg,
+	    "cmd": run,
+	}
 }
 
 deny[res] {
-	args := get_dnf[_]
-	res := sprintf("'dnf clean all' is missed: %s", [args])
+	output := get_dnf[_]
+	msg := sprintf("'dnf clean all' is missed: %s", [output.arg])
+    res := {
+        "msg": msg,
+        "filepath": output.cmd.Path,
+        "startline": docker.startline(output.cmd),
+        "endline": docker.endline(output.cmd),
+    }
 }
 
 contains_clean_after_dnf(cmd) {

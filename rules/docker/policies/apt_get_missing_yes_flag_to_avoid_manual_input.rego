@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0021",
 	"title": "'apt-get' missing '-y' to avoid manual input",
 	"short_code": "use-apt-auto-confirm",
-	"version": "v1.0.0",
 	"severity": "HIGH",
 	"type": "Dockerfile Security Check",
 	"description": "'apt-get' calls should use the flag '-y' to avoid manual user input.",
@@ -21,17 +20,28 @@ __rego_input__ := {
 }
 
 deny[res] {
-	args := get_apt_get[_]
-	res := sprintf("'-y' flag is missed: '%s'", [args])
+	output := get_apt_get[_]
+	msg := sprintf("'-y' flag is missed: '%s'", [output.arg])
+	res := {
+       	"msg": msg,
+       	"filepath": output.cmd.Path,
+      	"startline": docker.startline(output.cmd),
+        "endline": docker.endline(output.cmd),
+    }
 }
 
-get_apt_get[arg] {
+get_apt_get[output] {
 	run = docker.run[_]
 
 	count(run.Value) == 1
 	arg := run.Value[0]
 
 	is_apt_get(arg)
+
+    output := {
+        "arg": arg,
+        "cmd": run,
+    }
 
 	not includes_assume_yes(arg)
 }

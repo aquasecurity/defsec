@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0008",
 	"title": "Exposed port out of range",
 	"short_code": "port-out-of-range",
-	"version": "v1.0.0",
 	"severity": "CRITICAL",
 	"type": "Dockerfile Security Check",
 	"description": "UNIX ports outside the range 0-65535 are exposed.",
@@ -20,13 +19,23 @@ __rego_input__ := {
 	"selector": [{"type": "dockerfile"}],
 }
 
-invalid_ports[port] {
+invalid_ports[output] {
 	expose := docker.expose[_]
 	port := to_number(split(expose.Value[_], "/")[0])
 	port > 65535
+	output := {
+	    "port": port,
+	    "cmd": expose,
+	}
 }
 
 deny[res] {
-	port := invalid_ports[_]
-	res := sprintf("'EXPOSE' contains port which is out of range [0, 65535]: %d", [port])
+	output := invalid_ports[_]
+	msg := sprintf("'EXPOSE' contains port which is out of range [0, 65535]: %d", [output.port])
+    res := {
+        "msg": msg,
+        "filepath": output.cmd.Path,
+        "startline": docker.startline(output.cmd),
+        "endline": docker.endline(output.cmd),
+    }
 }

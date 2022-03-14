@@ -64,3 +64,9 @@ workdir[instruction] {
 	instruction := input.stages[_][_]
 	instruction.Cmd == "workdir"
 }
+
+startline(x) = 0 { not x.StartLine }
+startline(x) = x.StartLine { x.StartLine }
+
+endline(x) = 0 { not x.EndLine }
+endline(x) = x.EndLine { x.EndLine }

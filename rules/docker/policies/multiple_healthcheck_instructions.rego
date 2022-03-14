@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0023",
 	"title": "Multiple HEALTHCHECK defined",
 	"short_code": "only-one-healthcheck",
-	"version": "v1.0.0",
 	"severity": "MEDIUM",
 	"type": "Dockerfile Security Check",
 	"description": "Providing more than one HEALTHCHECK instruction per stage is confusing and error-prone.",
@@ -24,5 +23,11 @@ deny[res] {
 	healthchecks := docker.stage_healthcheck[name]
 	cnt := count(healthchecks)
 	cnt > 1
-	res := sprintf("There are %d duplicate HEALTHCHECK instructions in the stage '%s'", [cnt, name])
+	msg := sprintf("There are %d duplicate HEALTHCHECK instructions in the stage '%s'", [cnt, name])
+    res := {
+        "msg": msg,
+        "filepath": healthchecks[1].Path,
+        "startline": docker.startline(healthchecks[1]),
+        "endline": docker.endline(healthchecks[1]),
+    }
 }

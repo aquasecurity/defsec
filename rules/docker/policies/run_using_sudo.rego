@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0010",
 	"title": "RUN using 'sudo'",
 	"short_code": "no-sudo-run",
-	"version": "v1.0.0",
 	"severity": "CRITICAL",
 	"type": "Dockerfile Security Check",
 	"description": "Avoid using 'RUN' with 'sudo' commands, as it can lead to unpredictable behavior.",
@@ -27,16 +26,20 @@ has_sudo(commands) {
 	regex.match(`^\s*sudo`, instruction)
 }
 
-get_sudo[arg] {
+get_sudo[run] {
 	run = docker.run[_]
 	count(run.Value) == 1
-
 	arg := run.Value[0]
-
 	has_sudo(arg)
 }
 
 deny[res] {
-	count(get_sudo) > 0
-	res := "Using 'sudo' in Dockerfile should be avoided"
+    cmd := get_sudo[_]
+	msg := "Using 'sudo' in Dockerfile should be avoided"
+    res := {
+        "msg": msg,
+        "filepath": cmd.Path,
+        "startline": docker.startline(cmd),
+        "endline": docker.endline(cmd),
+    }
 }

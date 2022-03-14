@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0016",
 	"title": "Multiple CMD instructions listed",
 	"short_code": "only-one-cmd",
-	"version": "v1.0.0",
 	"severity": "HIGH",
 	"type": "Dockerfile Security Check",
 	"description": "There can only be one CMD instruction in a Dockerfile. If you list more than one CMD then only the last CMD will take effect.",
@@ -24,5 +23,11 @@ deny[res] {
 	cmds := docker.stage_cmd[name]
 	cnt := count(cmds)
 	cnt > 1
-	res := sprintf("There are %d duplicate CMD instructions for stage '%s'", [cnt, name])
+	msg := sprintf("There are %d duplicate CMD instructions for stage '%s'", [cnt, name])
+    res := {
+        "msg": msg,
+        "filepath": cmds[1].Path,
+        "startline": docker.startline(cmds[1]),
+        "endline": docker.endline(cmds[1]),
+    }
 }

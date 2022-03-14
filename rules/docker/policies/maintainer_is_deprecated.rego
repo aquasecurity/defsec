@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0022",
 	"title": "Deprecated MAINTAINER used",
 	"short_code": "no-maintainer",
-	"version": "v1.0.0",
 	"severity": "HIGH",
 	"type": "Dockerfile Security Check",
 	"description": "MAINTAINER has been deprecated since Docker 1.13.0.",
@@ -27,5 +26,11 @@ get_maintainer[mntnr] {
 
 deny[res] {
 	mntnr := get_maintainer[_]
-	res := sprintf("MAINTAINER should not be used: 'MAINTAINER %s'", [mntnr.Value[0]])
+	msg := sprintf("MAINTAINER should not be used: 'MAINTAINER %s'", [mntnr.Value[0]])
+	res := {
+        "msg": msg,
+        "filepath": mntnr.Path,
+        "startline": docker.startline(mntnr),
+        "endline": docker.endline(mntnr),
+    }
 }

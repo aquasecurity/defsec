@@ -50,7 +50,7 @@ func parseLineNumber(raw interface{}) int {
 	return n
 }
 
-func (s *Scanner) convertResults(set rego.ResultSet) rules.Results {
+func (s *Scanner) convertResults(set rego.ResultSet, filepath string) rules.Results {
 	var results rules.Results
 	for _, result := range set {
 		for _, expression := range result.Expressions {
@@ -64,6 +64,9 @@ func (s *Scanner) convertResults(set rego.ResultSet) rules.Results {
 				if err != nil {
 					// TODO: handle
 					continue
+				}
+				if regoResult.Filepath == "" && filepath != "" {
+					regoResult.Filepath = filepath
 				}
 				results.Add(regoResult.Message, regoResult)
 			}

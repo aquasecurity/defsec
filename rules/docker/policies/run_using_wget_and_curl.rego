@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0014",
 	"title": "RUN using 'wget' and 'curl'",
 	"short_code": "standardise-remote-get",
-	"version": "v1.0.0",
 	"severity": "LOW",
 	"type": "Dockerfile Security Check",
 	"description": "Avoid using both 'wget' and 'curl' since these tools have the same effect.",
@@ -27,7 +26,15 @@ deny[res] {
 	count(wget) > 0
 	count(curl) > 0
 
-	res := "Shouldn't use both curl and wget"
+	cmd := wget[0]
+
+	msg := "Shouldn't use both curl and wget"
+    res := {
+        "msg": msg,
+        "filepath": cmd.Path,
+        "startline": docker.startline(cmd),
+        "endline": docker.endline(cmd),
+    }
 }
 
 # chained commands
@@ -45,16 +52,14 @@ get_tool_usage(cmd, cmd_name) = r {
 		#install is allowed (it may be required by installed app)
 		not contains(instruction, "install ")
 		regex.match(reg_exp, instruction)
-		x := cmd.Value[0]
+		x := cmd
 	]
 }
 
 # JSON array is specified
 # e.g. RUN ["curl", "http://example.com"]
-get_tool_usage(cmd, cmd_name) = res {
+get_tool_usage(cmd, cmd_name) = cmd {
 	count(cmd.Value) > 1
 
 	cmd.Value[0] == cmd_name
-
-	res := [concat(" ", cmd.Value)]
 }
