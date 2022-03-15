@@ -4,79 +4,67 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/providers/aws/codebuild"
 )
 
-func Test_Adapt(t *testing.T) {
-	t.SkipNow()
-	tests := []struct {
-		name      string
-		terraform string
-		expected  codebuild.CodeBuild
-	}{
-		{
-			name: "basic",
-			terraform: `
-resource "" "example" {
-    
-}
-`,
-			expected: codebuild.CodeBuild{},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
-			adapted := Adapt(modules)
-			testutil.AssertDefsecEqual(t, test.expected, adapted)
-		})
-	}
-}
-
-func Test_adaptProjects(t *testing.T) {
-	t.SkipNow()
-	tests := []struct {
-		name      string
-		terraform string
-		expected  []codebuild.Project
-	}{
-		{
-			name: "basic",
-			terraform: `
-resource "" "example" {
-    
-}
-`,
-			expected: []codebuild.Project{},
-		},
-	}
-
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
-			adapted := adaptProjects(modules)
-			testutil.AssertDefsecEqual(t, test.expected, adapted)
-		})
-	}
-}
-
 func Test_adaptProject(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name      string
 		terraform string
 		expected  codebuild.Project
 	}{
 		{
-			name: "basic",
+			name: "configured",
 			terraform: `
-resource "" "example" {
-    
-}
+			resource "aws_codebuild_project" "codebuild" {
+
+				artifacts {
+					encryption_disabled = false
+				}
+
+				secondary_artifacts {
+					encryption_disabled = false
+				}
+				secondary_artifacts {
+					encryption_disabled = true
+				}
+			}
 `,
-			expected: codebuild.Project{},
+			expected: codebuild.Project{
+				Metadata: types.NewTestMetadata(),
+				ArtifactSettings: codebuild.ArtifactSettings{
+					Metadata:          types.NewTestMetadata(),
+					EncryptionEnabled: types.Bool(true, types.NewTestMetadata()),
+				},
+				SecondaryArtifactSettings: []codebuild.ArtifactSettings{
+					{
+						Metadata:          types.NewTestMetadata(),
+						EncryptionEnabled: types.Bool(true, types.NewTestMetadata()),
+					},
+					{
+						Metadata:          types.NewTestMetadata(),
+						EncryptionEnabled: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
+		},
+		{
+			name: "defaults - encryption enabled",
+			terraform: `
+			resource "aws_codebuild_project" "codebuild" {
+			}
+`,
+			expected: codebuild.Project{
+				Metadata: types.NewTestMetadata(),
+				ArtifactSettings: codebuild.ArtifactSettings{
+					Metadata:          types.NewTestMetadata(),
+					EncryptionEnabled: types.Bool(true, types.NewTestMetadata()),
+				},
+			},
 		},
 	}
 
@@ -87,4 +75,39 @@ resource "" "example" {
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
 	}
+}
+
+func TestLines(t *testing.T) {
+	src := `
+	resource "aws_codebuild_project" "codebuild" {
+		artifacts {
+			encryption_disabled = false
+		}
+
+		secondary_artifacts {
+			encryption_disabled = false
+		}
+
+		secondary_artifacts {
+			encryption_disabled = true
+		}
+	}`
+
+	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	adapted := Adapt(modules)
+
+	require.Len(t, adapted.Projects, 1)
+	project := adapted.Projects[0]
+
+	assert.Equal(t, 2, project.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 14, project.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 3, project.ArtifactSettings.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 5, project.ArtifactSettings.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 7, project.SecondaryArtifactSettings[0].GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 9, project.SecondaryArtifactSettings[0].GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 11, project.SecondaryArtifactSettings[1].GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 13, project.SecondaryArtifactSettings[1].GetMetadata().Range().GetEndLine())
 }
