@@ -49,16 +49,18 @@ func adaptManagedZone(resource *terraform.Block) dns.ManagedZone {
 
 	if resource.HasChild("dnssec_config") {
 		DNSSecBlock := resource.GetBlock("dnssec_config")
+		zone.DNSSec.Metadata = DNSSecBlock.GetMetadata()
 
 		stateAttr := DNSSecBlock.GetAttribute("state")
 		if stateAttr.Equals("on") {
-			zone.DNSSec.Enabled = types.Bool(true, DNSSecBlock.GetMetadata())
+			zone.DNSSec.Enabled = types.Bool(true, stateAttr.GetMetadata())
 		} else if stateAttr.Equals("off") || stateAttr.Equals("transfer") {
-			zone.DNSSec.Enabled = types.Bool(false, DNSSecBlock.GetMetadata())
+			zone.DNSSec.Enabled = types.Bool(false, stateAttr.GetMetadata())
 		}
 
 		if DNSSecBlock.HasChild("default_key_specs") {
 			DefaultKeySpecsBlock := DNSSecBlock.GetBlock("default_key_specs")
+			zone.DNSSec.DefaultKeySpecs.Metadata = DefaultKeySpecsBlock.GetMetadata()
 
 			algorithmAttr := DefaultKeySpecsBlock.GetAttribute("algorithm")
 			algorithmVal := algorithmAttr.AsStringValueOrDefault("", DefaultKeySpecsBlock)
@@ -66,8 +68,10 @@ func adaptManagedZone(resource *terraform.Block) dns.ManagedZone {
 			keyTypeAttr := DefaultKeySpecsBlock.GetAttribute("key_type")
 			if keyTypeAttr.Equals("keySigning") {
 				zone.DNSSec.DefaultKeySpecs.KeySigningKey.Algorithm = algorithmVal
+				zone.DNSSec.DefaultKeySpecs.KeySigningKey.Metadata = keyTypeAttr.GetMetadata()
 			} else if keyTypeAttr.Equals("zoneSigning") {
 				zone.DNSSec.DefaultKeySpecs.ZoneSigningKey.Algorithm = algorithmVal
+				zone.DNSSec.DefaultKeySpecs.ZoneSigningKey.Metadata = keyTypeAttr.GetMetadata()
 			}
 		}
 	}
