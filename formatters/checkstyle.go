@@ -4,10 +4,11 @@ import (
 	"encoding/xml"
 
 	"github.com/aquasecurity/defsec/rules"
+	"github.com/aquasecurity/defsec/severity"
 )
 
 type checkstyleResult struct {
-	Rule     string `xml:"rule,attr"`
+	Source   string `xml:"source,attr"`
 	Line     int    `xml:"line,attr"`
 	Column   int    `xml:"column,attr"`
 	Severity string `xml:"severity,attr"`
@@ -22,12 +23,15 @@ type checkstyleFile struct {
 
 type checkstyleOutput struct {
 	XMLName xml.Name         `xml:"checkstyle"`
+	Version string           `xml:"version,attr"`
 	Files   []checkstyleFile `xml:"file"`
 }
 
 func outputCheckStyle(b ConfigurableFormatter, results []rules.Result) error {
 
-	output := checkstyleOutput{}
+	output := checkstyleOutput{
+		Version: "5.0",
+	}
 
 	files := make(map[string][]checkstyleResult)
 
@@ -46,9 +50,9 @@ func outputCheckStyle(b ConfigurableFormatter, results []rules.Result) error {
 		files[rng.GetFilename()] = append(
 			files[rng.GetFilename()],
 			checkstyleResult{
-				Rule:     res.Rule().LongID(),
+				Source:   res.Rule().LongID(),
 				Line:     rng.GetStartLine(),
-				Severity: string(res.Severity()),
+				Severity: convertSeverity(res.Severity()),
 				Message:  res.Description(),
 				Link:     link,
 			},
@@ -73,4 +77,18 @@ func outputCheckStyle(b ConfigurableFormatter, results []rules.Result) error {
 	xmlEncoder.Indent("", "\t")
 
 	return xmlEncoder.Encode(output)
+}
+
+func convertSeverity(s severity.Severity) string {
+	switch s {
+	case severity.Low:
+		return "info"
+	case severity.Medium:
+		return "warning"
+	case severity.High:
+		return "error"
+	case severity.Critical:
+		return "error"
+	}
+	return "error"
 }
