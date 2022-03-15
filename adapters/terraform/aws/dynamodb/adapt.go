@@ -38,19 +38,18 @@ func adaptCluster(resource *terraform.Block, module *terraform.Module) dynamodb.
 	}
 
 	if ssEncryptionBlock := resource.GetBlock("server_side_encryption"); ssEncryptionBlock.IsNotNil() {
-		cluster.Metadata = ssEncryptionBlock.GetMetadata()
+		cluster.ServerSideEncryption.Metadata = ssEncryptionBlock.GetMetadata()
 		enabledAttr := ssEncryptionBlock.GetAttribute("enabled")
 		cluster.ServerSideEncryption.Enabled = enabledAttr.AsBoolValueOrDefault(false, ssEncryptionBlock)
 
 		if resource.TypeLabel() == "aws_dynamodb_table" {
 			kmsKeyIdAttr := ssEncryptionBlock.GetAttribute("kms_key_arn")
-
-			kmsData, err := module.GetReferencedBlock(kmsKeyIdAttr, resource)
-			if err == nil && kmsData.IsNotNil() && kmsData.GetAttribute("key_id").IsNotNil() {
-				kmsKeyIdAttr = kmsData.GetAttribute("key_id")
-			}
-
 			cluster.ServerSideEncryption.KMSKeyID = kmsKeyIdAttr.AsStringValueOrDefault("alias/aws/dynamodb", ssEncryptionBlock)
+
+			kmsBlock, err := module.GetReferencedBlock(kmsKeyIdAttr, resource)
+			if err == nil && kmsBlock.IsNotNil() {
+				cluster.ServerSideEncryption.KMSKeyID = types.String(kmsBlock.FullName(), kmsBlock.GetMetadata())
+			}
 		}
 	}
 
