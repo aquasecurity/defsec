@@ -13,7 +13,7 @@ test_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'-y' flag is missed: 'apt-get install python=2.7'"
+	r[_].msg == "'-y' flag is missed: 'apt-get install python=2.7'"
 }
 
 test_json_array_denied {
@@ -33,7 +33,7 @@ test_json_array_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'-y' flag is missed: 'apt-get install apt-utils'"
+	r[_].msg == "'-y' flag is missed: 'apt-get install apt-utils'"
 }
 
 test_allowed {

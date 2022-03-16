@@ -7,7 +7,7 @@ test_mixed_commands_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "Consider using 'COPY /target/app.jar app.jar' command instead of 'ADD /target/app.jar app.jar'"
+	r[_].msg == "Consider using 'COPY /target/app.jar app.jar' command instead of 'ADD /target/app.jar app.jar'"
 }
 
 test_add_command_denied {
@@ -17,7 +17,7 @@ test_add_command_denied {
 	}]}}
 
 	count(r) == 1
-	r[_] == "Consider using 'COPY /target/app.jar app.jar' command instead of 'ADD /target/app.jar app.jar'"
+	r[_].msg == "Consider using 'COPY /target/app.jar app.jar' command instead of 'ADD /target/app.jar app.jar'"
 }
 
 test_run_allowed {

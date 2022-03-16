@@ -24,10 +24,5 @@ deny[res] {
 	cnt := count(healthchecks)
 	cnt > 1
 	msg := sprintf("There are %d duplicate HEALTHCHECK instructions in the stage '%s'", [cnt, name])
-	res := {
-		"msg": msg,
-		"filepath": healthchecks[1].Path,
-		"startline": docker.startline(healthchecks[1]),
-		"endline": docker.endline(healthchecks[1]),
-	}
+	res := docker.result(msg, healthchecks[1])
 }

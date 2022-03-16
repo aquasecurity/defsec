@@ -17,7 +17,7 @@ test_basic_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "Shouldn't use both curl and wget"
+	r[_].msg == "Shouldn't use both curl and wget"
 }
 
 test_json_array_denied {
@@ -40,7 +40,7 @@ test_json_array_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "Shouldn't use both curl and wget"
+	r[_].msg == "Shouldn't use both curl and wget"
 }
 
 test_basic_allowed {

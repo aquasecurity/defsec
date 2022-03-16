@@ -22,12 +22,7 @@ __rego_input__ := {
 deny[res] {
 	output := get_apt_get[_]
 	msg := sprintf("'-y' flag is missed: '%s'", [output.arg])
-	res := {
-		"msg": msg,
-		"filepath": output.cmd.Path,
-		"startline": docker.startline(output.cmd),
-		"endline": docker.endline(output.cmd),
-	}
+	res := docker.result(msg, output.cmd)
 }
 
 get_apt_get[output] {
@@ -38,16 +33,16 @@ get_apt_get[output] {
 
 	is_apt_get(arg)
 
-	output := {
-		"arg": arg,
-		"cmd": run,
-	}
-
 	not includes_assume_yes(arg)
+
+	output := {
+   		"arg": arg,
+   		"cmd": run,
+   	}
 }
 
 # checking json array
-get_apt_get[arg] {
+get_apt_get[output] {
 	run = docker.run[_]
 
 	count(run.Value) > 1
@@ -57,6 +52,11 @@ get_apt_get[arg] {
 	is_apt_get(arg)
 
 	not includes_assume_yes(arg)
+
+	output := {
+    	"arg": arg,
+    	"cmd": run,
+    }
 }
 
 is_apt_get(command) {

@@ -43,7 +43,7 @@ test_basic_denied {
 	}}
 
 	count(r) == 1
-	r[_] == "Duplicate aliases 'build' are found in different FROMs"
+	r[_].msg == "Duplicate aliases 'build' are found in different FROMs"
 }
 
 test_missed_alias_denied {
@@ -89,7 +89,7 @@ test_missed_alias_denied {
 	}}
 
 	count(r) == 1
-	r[_] == "Duplicate aliases 'build' are found in different FROMs"
+	r[_].msg == "Duplicate aliases 'build' are found in different FROMs"
 }
 
 test_no_alias_allowed {
@@ -166,7 +166,7 @@ test_extra_spaces_denied {
 	}}
 
 	count(r) == 1
-	r[_] == "Duplicate aliases 'build' are found in different FROMs"
+	r[_].msg == "Duplicate aliases 'build' are found in different FROMs"
 }
 
 test_basic_allowed {

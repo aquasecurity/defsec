@@ -103,10 +103,5 @@ fail_latest[output] {
 deny[res] {
 	output := fail_latest[_]
 	msg := sprintf("Specify a tag in the 'FROM' statement for image '%s'", [output.img])
-	res := {
-		"msg": msg,
-		"filepath": output.cmd.Path,
-		"startline": docker.startline(output.cmd),
-		"endline": docker.endline(output.cmd),
-	}
+	res := docker.result(msg, output.cmd)
 }

@@ -33,4 +33,4 @@ jobs:
             exit 1
           fi
       - name: OPA Test
-        run: opa test -v rules/kubernetes/ rules/docker/
+        run: opa test rules --explain fails

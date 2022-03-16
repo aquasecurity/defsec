@@ -36,10 +36,5 @@ get_copy_arg[output] {
 deny[res] {
 	output := get_copy_arg[_]
 	msg := sprintf("Slash is expected at the end of COPY command argument '%s'", [output.arg])
-	res := {
-		"msg": msg,
-		"filepath": output.cmd.Path,
-		"startline": docker.startline(output.cmd),
-		"endline": docker.endline(output.cmd),
-	}
+	res := docker.result(msg, output.cmd)
 }

@@ -39,12 +39,7 @@ get_zypper[output] {
 deny[res] {
 	output := get_zypper[_]
 	msg := sprintf("'zypper clean' is missed: '%s'", [output.arg])
-	res := {
-		"msg": msg,
-		"filepath": output.cmd.Path,
-		"startline": docker.startline(output.cmd),
-		"endline": docker.endline(output.cmd),
-	}
+	res := docker.result(msg, output.cmd)
 }
 
 contains_zipper_clean(cmd) {

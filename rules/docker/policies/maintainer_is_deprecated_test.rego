@@ -13,7 +13,7 @@ test_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "MAINTAINER should not be used: 'MAINTAINER admin@example.com'"
+	r[_].msg == "MAINTAINER should not be used: 'MAINTAINER admin@example.com'"
 }
 
 test_allowed {

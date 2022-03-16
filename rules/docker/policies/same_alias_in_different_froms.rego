@@ -50,10 +50,5 @@ get_aliased_name[output] {
 deny[res] {
 	output := get_duplicate_alias[_]
 	msg := sprintf("Duplicate aliases '%s' are found in different FROMs", [output.alias])
-	res := {
-		"msg": msg,
-		"filepath": output.cmd.Path,
-		"startline": docker.startline(output.cmd),
-		"endline": docker.endline(output.cmd),
-	}
+	res := docker.result(msg, output.cmd)
 }

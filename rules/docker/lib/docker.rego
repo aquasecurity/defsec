@@ -65,18 +65,9 @@ workdir[instruction] {
 	instruction.Cmd == "workdir"
 }
 
-startline(x) = 0 {
-	not x.StartLine
-}
-
-startline(x) = x.StartLine {
-	x.StartLine
-}
-
-endline(x) = 0 {
-	not x.EndLine
-}
-
-endline(x) = x.EndLine {
-	x.EndLine
+result(msg, cmd) = result {
+    result := {
+        "msg": msg,
+        "startline": object.get(cmd, "StartLine", 0),
+    }
 }

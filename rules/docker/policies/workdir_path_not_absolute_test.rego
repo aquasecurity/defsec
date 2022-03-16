@@ -18,7 +18,7 @@ test_basic_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "WORKDIR path 'workdir' should be absolute"
+	r[_].msg == "WORKDIR path 'workdir' should be absolute"
 }
 
 test_no_work_dir_allowed {

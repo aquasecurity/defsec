@@ -20,7 +20,7 @@ test_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'zypper clean' is missed: 'zypper install'"
+	r[_].msg == "'zypper clean' is missed: 'zypper install'"
 }
 
 test_patch_denied {
@@ -43,7 +43,7 @@ test_patch_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'zypper clean' is missed: 'zypper patch bash'"
+	r[_].msg == "'zypper clean' is missed: 'zypper patch bash'"
 }
 
 test_wrong_order_of_commands_denied {
@@ -59,7 +59,7 @@ test_wrong_order_of_commands_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'zypper clean' is missed: 'zypper cc && zypper remove bash'"
+	r[_].msg == "'zypper clean' is missed: 'zypper cc && zypper remove bash'"
 }
 
 test_multiple_install_denied {
@@ -75,7 +75,7 @@ test_multiple_install_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'zypper clean' is missed: 'zypper install bash && zypper clean && zypper remove bash'"
+	r[_].msg == "'zypper clean' is missed: 'zypper install bash && zypper clean && zypper remove bash'"
 }
 
 test_multiple_install_allowed {

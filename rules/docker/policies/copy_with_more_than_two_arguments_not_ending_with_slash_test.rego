@@ -13,7 +13,7 @@ test_basic_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "Slash is expected at the end of COPY command argument 'my_app'"
+	r[_].msg == "Slash is expected at the end of COPY command argument 'my_app'"
 }
 
 test_two_args_allowed {

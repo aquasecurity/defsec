@@ -50,10 +50,5 @@ is_alias_current_from_alias(current_name, current_alias) = allow {
 deny[res] {
 	output := get_alias_from_copy[_]
 	msg := sprintf("'COPY --from' should not mention current alias '%s' since it is impossible to copy from itself", [output.args])
-	res := {
-		"msg": msg,
-		"filepath": output.cmd.Path,
-		"startline": docker.startline(output.cmd),
-		"endline": docker.endline(output.cmd),
-	}
+	res := docker.result(msg, output.cmd)
 }
