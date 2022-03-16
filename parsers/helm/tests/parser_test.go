@@ -31,7 +31,8 @@ func Test_helm_parser(t *testing.T) {
 		helmParser := parser.New(chartName)
 		testFilePaths := getAllPaths(t, filepath.Join("testdata", chartName))
 
-		helmParser.AddPaths(testFilePaths...)
+		err := helmParser.AddPaths(testFilePaths...)
+		require.NoError(t, err)
 		manifests, err := helmParser.RenderedChartFiles()
 		require.NoError(t, err)
 
@@ -78,7 +79,8 @@ func Test_helm_tarball_parser(t *testing.T) {
 
 		helmParser := parser.New(test.chartName)
 
-		helmParser.AddPaths(filepath.Join("testdata", test.archiveFile))
+		err := helmParser.AddPaths(filepath.Join("testdata", test.archiveFile))
+		require.NoError(t, err)
 
 		manifests, err := helmParser.RenderedChartFiles()
 		require.NoError(t, err)

@@ -80,8 +80,7 @@ func (s *Scanner) Scan() (rules.Results, error) {
 			Type:     types.SourceKubernetes,
 		})
 		if err != nil {
-			fmt.Println(err)
-			//return nil, fmt.Errorf("scanning error: %w", err)
+			return nil, fmt.Errorf("scanning error: %w", err)
 		}
 		results = append(results, fileResults...)
 	}

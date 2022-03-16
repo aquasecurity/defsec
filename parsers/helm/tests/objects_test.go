@@ -15,7 +15,8 @@ func Test_unpack_object(t *testing.T) {
 
 	p := parser.New("testchart")
 	testFilePaths := getAllPaths(t, filepath.Join("testdata", "testchart"))
-	p.AddPaths(testFilePaths...)
+	err := p.AddPaths(testFilePaths...)
+	require.NoError(t, err)
 
 	charts, err := p.RenderedChartFiles()
 	require.NoError(t, err)
@@ -37,7 +38,8 @@ func Test_unpack_object(t *testing.T) {
 func Test_unpack_archived_object(t *testing.T) {
 
 	p := parser.New("mysql")
-	p.AddPaths(filepath.Join("testdata", "mysql-8.8.26.tgz"))
+	err := p.AddPaths(filepath.Join("testdata", "mysql-8.8.26.tgz"))
+	require.NoError(t, err)
 
 	charts, err := p.RenderedChartFiles()
 	require.NoError(t, err)

@@ -3,6 +3,7 @@ package parser
 import (
 	"archive/tar"
 	"compress/gzip"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -31,7 +32,7 @@ func (p *Parser) addTarball(path string) error {
 	for {
 		header, err := tr.Next()
 		if err != nil {
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				break
 			}
 			return err
@@ -42,7 +43,6 @@ func (p *Parser) addTarball(path string) error {
 
 		switch header.Typeflag {
 		case tar.TypeDir:
-			path = filepath.Join(p.rootPath, path)
 			if err := os.MkdirAll(path, os.FileMode(header.Mode)); err != nil {
 				return err
 			}
@@ -54,12 +54,23 @@ func (p *Parser) addTarball(path string) error {
 			if err != nil {
 				return err
 			}
-			io.Copy(writer, tr)
+			for {
+				_, err := io.CopyN(writer, tr, 1024)
+				if err != nil {
+					if errors.Is(err, io.EOF) {
+						break
+					}
+					return err
+				}
+			}
+
 			if err := os.Chmod(path, os.FileMode(header.Mode)); err != nil {
 				return err
 			}
 			writer.Close()
-			p.AddPaths(path)
+			if err := p.AddPaths(path); err != nil {
+				return err
+			}
 		default:
 			return fmt.Errorf("could not untar the section")
 		}

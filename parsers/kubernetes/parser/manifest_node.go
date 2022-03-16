@@ -48,17 +48,27 @@ func (r ManifestNode) UnmarshalYAML(node *yaml.Node) error {
 
 	switch node.Tag {
 	case TagString:
-		r.decodeString(node)
+		if err := r.decodeString(node); err != nil {
+			return err
+		}
 	case TagInt:
-		return r.decodeInt(node)
+		if err := r.decodeInt(node); err != nil {
+			return err
+		}
 	case TagBool:
-		return r.decodeBool(node)
+		if err := r.decodeBool(node); err != nil {
+			return err
+		}
 	case TagMap:
-		return r.decodeMap(node)
+		if err := r.decodeMap(node); err != nil {
+			return err
+		}
 	case TagSlice:
-		return r.decodeSlice(node)
+		if err := r.decodeSlice(node); err != nil {
+			return err
+		}
 	default:
-		panic(node.Tag)
+		return fmt.Errorf("node tag is not supported %s", node.Tag)
 	}
 
 	return nil
