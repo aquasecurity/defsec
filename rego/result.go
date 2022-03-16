@@ -28,20 +28,22 @@ func (r regoResult) GetRawValue() interface{} {
 	return nil
 }
 
-func parseResult(raw interface{}) (*regoResult, error) {
+func parseResult(raw interface{}) *regoResult {
 	var result regoResult
 	switch val := raw.(type) {
 	case string:
 		result.Message = val
 	case map[string]interface{}:
 		result.Message = fmt.Sprintf("%s", val["msg"])
-		result.Filepath = fmt.Sprintf("%s", val["filepath"])
+		if filepath, ok := val["filepath"]; ok {
+			result.Filepath = fmt.Sprintf("%s", filepath)
+		}
 		result.StartLine = parseLineNumber(val["startline"])
 		result.EndLine = parseLineNumber(val["endline"])
 	default:
-		return nil, fmt.Errorf("invalid result type: %#v", raw)
+		result.Message = "Rego policy resulted in DENY"
 	}
-	return &result, nil
+	return &result
 }
 
 func parseLineNumber(raw interface{}) int {
@@ -56,15 +58,16 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string) rules.Resu
 		for _, expression := range result.Expressions {
 			values, ok := expression.Value.([]interface{})
 			if !ok {
+				regoResult := parseResult(expression.Value)
+				if regoResult.Filepath == "" && filepath != "" {
+					regoResult.Filepath = filepath
+				}
+				results.Add(regoResult.Message, regoResult)
 				continue
 			}
 
 			for _, value := range values {
-				regoResult, err := parseResult(value)
-				if err != nil {
-					// TODO: handle
-					continue
-				}
+				regoResult := parseResult(value)
 				if regoResult.Filepath == "" && filepath != "" {
 					regoResult.Filepath = filepath
 				}

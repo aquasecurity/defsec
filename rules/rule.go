@@ -44,6 +44,7 @@ type Rule struct {
 	Terraform      *EngineMetadata    `json:"terraform,omitempty"`
 	CloudFormation *EngineMetadata    `json:"cloud_formation,omitempty"`
 	CustomChecks   CustomChecks       `json:"-"`
+	RegoPackage    string             `json:"-"`
 }
 
 func (r Rule) LongID() string {

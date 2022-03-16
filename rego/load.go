@@ -77,6 +77,6 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, paths ...string) error {
 	s.compiler = compiler
 
 	s.retriever = NewMetadataRetriever(compiler)
-
+	
 	return nil
 }

@@ -23,6 +23,7 @@ type StaticMetadata struct {
 	PrimaryURL         string
 	References         []string
 	InputOptions       InputOptions
+	Package            string
 }
 
 type InputOptions struct {
@@ -47,6 +48,7 @@ func (m StaticMetadata) ToRule() rules.Rule {
 		Service:     "",
 		Links:       m.References,
 		Severity:    severity.Severity(m.Severity),
+		RegoPackage: m.Package,
 	}
 }
 
@@ -66,11 +68,13 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 	metadataQuery := fmt.Sprintf("data.%s.__rego_metadata__", namespace)
 
 	metadata := StaticMetadata{
-		ID:          "N/A",
-		Type:        "N/A",
-		Title:       "N/A",
-		Severity:    "UNKNOWN",
-		Description: fmt.Sprintf("Rego policy: %s", module.String()),
+		ID:           "N/A",
+		Type:         "N/A",
+		Title:        "N/A",
+		Severity:     "UNKNOWN",
+		Description:  fmt.Sprintf("Rego module: %s", module.Package.Path.String()),
+		Package:      module.Package.Path.String(),
+		InputOptions: m.queryInputOptions(ctx, module),
 	}
 
 	options := []func(*rego.Rego){
@@ -128,7 +132,6 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		metadata.References = append(metadata.References, fmt.Sprintf("%s", raw))
 	}
 
-	metadata.InputOptions = m.queryInputOptions(ctx, module)
 	return &metadata, nil
 }
 

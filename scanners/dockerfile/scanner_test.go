@@ -76,6 +76,7 @@ deny[res] {
 		Links: []string{
 			"https://docs.docker.com/develop/develop-images/multistage-build/",
 		},
-		Severity: severity.Critical,
+		Severity:    severity.Critical,
+		RegoPackage: "data.appshield.dockerfile.DS006",
 	}, results.GetFailed()[0].Rule())
 }
