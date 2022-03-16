@@ -25,18 +25,18 @@ get_work_dir[output] {
 
 	not regex.match("(^/[A-z0-9-_+]*)|(^[A-z0-9-_+]:\\\\.*)|(^\\$[{}A-z0-9-_+].*)", arg)
 	output := {
-	    "cmd": workdir,
-	    "arg": arg,
+		"cmd": workdir,
+		"arg": arg,
 	}
 }
 
 deny[res] {
 	output := get_work_dir[_]
 	msg := sprintf("WORKDIR path '%s' should be absolute", [output.arg])
-    res := {
-        "msg": msg,
-        "filepath": output.cmd.Path,
-        "startline": docker.startline(output.cmd),
-        "endline": docker.endline(output.cmd),
-    }
+	res := {
+		"msg": msg,
+		"filepath": output.cmd.Path,
+		"startline": docker.startline(output.cmd),
+		"endline": docker.endline(output.cmd),
+	}
 }

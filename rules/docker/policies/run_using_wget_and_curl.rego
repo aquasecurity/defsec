@@ -29,12 +29,12 @@ deny[res] {
 	cmd := wget[0]
 
 	msg := "Shouldn't use both curl and wget"
-    res := {
-        "msg": msg,
-        "filepath": cmd.Path,
-        "startline": docker.startline(cmd),
-        "endline": docker.endline(cmd),
-    }
+	res := {
+		"msg": msg,
+		"filepath": cmd.Path,
+		"startline": docker.startline(cmd),
+		"endline": docker.endline(cmd),
+	}
 }
 
 # chained commands

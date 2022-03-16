@@ -48,10 +48,10 @@ deny[msg] {
 deny[res] {
 	cmd := fail_last_user_root
 	msg := "Last USER command in Dockerfile should not be 'root'"
-    res := {
-        "msg": msg,
-        "filepath": cmd.Path,
-        "startline": docker.startline(cmd),
-        "endline": docker.endline(cmd),
-    }
+	res := {
+		"msg": msg,
+		"filepath": cmd.Path,
+		"startline": docker.startline(cmd),
+		"endline": docker.endline(cmd),
+	}
 }

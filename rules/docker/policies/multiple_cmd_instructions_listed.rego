@@ -24,10 +24,10 @@ deny[res] {
 	cnt := count(cmds)
 	cnt > 1
 	msg := sprintf("There are %d duplicate CMD instructions for stage '%s'", [cnt, name])
-    res := {
-        "msg": msg,
-        "filepath": cmds[1].Path,
-        "startline": docker.startline(cmds[1]),
-        "endline": docker.endline(cmds[1]),
-    }
+	res := {
+		"msg": msg,
+		"filepath": cmds[1].Path,
+		"startline": docker.startline(cmds[1]),
+		"endline": docker.endline(cmds[1]),
+	}
 }

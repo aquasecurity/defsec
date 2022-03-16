@@ -23,11 +23,11 @@ deny[res] {
 	output := get_apt_get[_]
 	msg := sprintf("'-y' flag is missed: '%s'", [output.arg])
 	res := {
-       	"msg": msg,
-       	"filepath": output.cmd.Path,
-      	"startline": docker.startline(output.cmd),
-        "endline": docker.endline(output.cmd),
-    }
+		"msg": msg,
+		"filepath": output.cmd.Path,
+		"startline": docker.startline(output.cmd),
+		"endline": docker.endline(output.cmd),
+	}
 }
 
 get_apt_get[output] {
@@ -38,10 +38,10 @@ get_apt_get[output] {
 
 	is_apt_get(arg)
 
-    output := {
-        "arg": arg,
-        "cmd": run,
-    }
+	output := {
+		"arg": arg,
+		"cmd": run,
+	}
 
 	not includes_assume_yes(arg)
 }

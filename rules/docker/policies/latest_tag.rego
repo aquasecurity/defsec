@@ -53,28 +53,28 @@ parse_tag(img) = [img, tag] {
 #base scenario
 image_tags[output] {
 	from := docker.from[_]
-   	name := from.Value[0]
+	name := from.Value[0]
 	not startswith(name, "$")
 	[img, tag] = parse_tag(name)
 	output := {
-        "img": img,
-        "tag": tag,
-        "cmd": from,
-    }
+		"img": img,
+		"tag": tag,
+		"cmd": from,
+	}
 }
 
 # If variable is used with FROM then it's value should contain a tag
 image_tags[output] {
 	some i, j, k, l
 	from := docker.from[i]
-   	name := from.Value[0]
+	name := from.Value[0]
 
 	cmd_obj := input.stages[j][k]
 
 	possibilities := {"arg", "env"}
 	cmd_obj.Cmd == possibilities[l]
 
-    startswith(name, "$")
+	startswith(name, "$")
 
 	bare_var := trim_prefix(name, "$")
 
@@ -84,9 +84,9 @@ image_tags[output] {
 
 	[img, tag] = parse_tag(bare_image_name)
 	output := {
-	    "img": img,
-	    "tag": tag,
-	    "cmd": from,
+		"img": img,
+		"tag": tag,
+		"cmd": from,
 	}
 }
 
@@ -103,10 +103,10 @@ fail_latest[output] {
 deny[res] {
 	output := fail_latest[_]
 	msg := sprintf("Specify a tag in the 'FROM' statement for image '%s'", [output.img])
-    res := {
-        "msg": msg,
-        "filepath": output.cmd.Path,
-        "startline": docker.startline(output.cmd),
-        "endline": docker.endline(output.cmd),
-    }
+	res := {
+		"msg": msg,
+		"filepath": output.cmd.Path,
+		"startline": docker.startline(output.cmd),
+		"endline": docker.endline(output.cmd),
+	}
 }

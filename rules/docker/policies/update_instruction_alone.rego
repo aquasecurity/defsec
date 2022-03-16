@@ -28,12 +28,12 @@ deny[res] {
 	not update_followed_by_install(command)
 
 	msg := "The instruction 'RUN <package-manager> update' should always be followed by '<package-manager> install' in the same RUN statement."
-    res := {
-        "msg": msg,
-        "filepath": run.Path,
-        "startline": docker.startline(run),
-        "endline": docker.endline(run),
-    }
+	res := {
+		"msg": msg,
+		"filepath": run.Path,
+		"startline": docker.startline(run),
+		"endline": docker.endline(run),
+	}
 }
 
 is_valid_update(command) {

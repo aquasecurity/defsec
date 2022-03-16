@@ -22,7 +22,7 @@ __rego_input__ := {
 get_alias_from_copy[output] {
 	copies := docker.stage_copies[stage]
 
-    copy := copies[_]
+	copy := copies[_]
 	flag := copy.Flags[_]
 	contains(flag, "--from=")
 	parts := split(flag, "=")
@@ -30,8 +30,8 @@ get_alias_from_copy[output] {
 	is_alias_current_from_alias(stage, parts[1])
 	args := parts[1]
 	output := {
-	    "args": args,
-	    "cmd": copy,
+		"args": args,
+		"cmd": copy,
 	}
 }
 
@@ -51,9 +51,9 @@ deny[res] {
 	output := get_alias_from_copy[_]
 	msg := sprintf("'COPY --from' should not mention current alias '%s' since it is impossible to copy from itself", [output.args])
 	res := {
-       	"msg": msg,
-       	"filepath": output.cmd.Path,
-      	"startline": docker.startline(output.cmd),
-        "endline": docker.endline(output.cmd),
-   }
+		"msg": msg,
+		"filepath": output.cmd.Path,
+		"startline": docker.startline(output.cmd),
+		"endline": docker.endline(output.cmd),
+	}
 }

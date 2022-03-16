@@ -25,8 +25,8 @@ get_add[output] {
 
 	not contains(args, ".tar")
 	output := {
-	    "args": args,
-	    "cmd": add,
+		"args": args,
+		"cmd": add,
 	}
 }
 
@@ -34,9 +34,9 @@ deny[res] {
 	output := get_add[_]
 	msg := sprintf("Consider using 'COPY %s' command instead of 'ADD %s'", [output.args, output.args])
 	res := {
-    	"msg": msg,
-    	"filepath": output.cmd.Path,
-    	"startline": docker.startline(output.cmd),
-        "endline": docker.endline(output.cmd),
-    }
+		"msg": msg,
+		"filepath": output.cmd.Path,
+		"startline": docker.startline(output.cmd),
+		"endline": docker.endline(output.cmd),
+	}
 }

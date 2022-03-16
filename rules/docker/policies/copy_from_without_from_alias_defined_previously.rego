@@ -31,20 +31,20 @@ get_copy_arg[output] {
 
 	not alias_exists(aux_split[1], copy.Stage)
 	output := {
-	    "arg": arg,
-	    "cmd": copy,
+		"arg": arg,
+		"cmd": copy,
 	}
 }
 
 deny[res] {
 	output := get_copy_arg[_]
 	msg := sprintf("The alias '%s' is not defined in the previous stages", [output.arg])
-    res := {
-        "msg": msg,
-        "filepath": output.cmd.Path,
-        "startline": docker.startline(output.cmd),
-        "endline": docker.endline(output.cmd),
-    }
+	res := {
+		"msg": msg,
+		"filepath": output.cmd.Path,
+		"startline": docker.startline(output.cmd),
+		"endline": docker.endline(output.cmd),
+	}
 }
 
 alias_exists(from_alias, max_stage_idx) {

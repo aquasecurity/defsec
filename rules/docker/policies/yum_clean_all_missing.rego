@@ -27,20 +27,20 @@ get_yum[output] {
 
 	not contains_clean_after_yum(arg)
 	output := {
-	    "cmd": run,
-	    "arg": arg,
+		"cmd": run,
+		"arg": arg,
 	}
 }
 
 deny[res] {
 	output := get_yum[_]
 	msg := sprintf("'yum clean all' is missed: %s", [output.arg])
-    res := {
-        "msg": msg,
-        "filepath": output.cmd.Path,
-        "startline": docker.startline(output.cmd),
-        "endline": docker.endline(output.cmd),
-    }
+	res := {
+		"msg": msg,
+		"filepath": output.cmd.Path,
+		"startline": docker.startline(output.cmd),
+		"endline": docker.endline(output.cmd),
+	}
 }
 
 contains_clean_after_yum(cmd) {

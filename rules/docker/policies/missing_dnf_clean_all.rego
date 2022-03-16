@@ -31,20 +31,20 @@ get_dnf[output] {
 
 	not contains_clean_after_dnf(arg)
 	output := {
-	    "arg": arg,
-	    "cmd": run,
+		"arg": arg,
+		"cmd": run,
 	}
 }
 
 deny[res] {
 	output := get_dnf[_]
 	msg := sprintf("'dnf clean all' is missed: %s", [output.arg])
-    res := {
-        "msg": msg,
-        "filepath": output.cmd.Path,
-        "startline": docker.startline(output.cmd),
-        "endline": docker.endline(output.cmd),
-    }
+	res := {
+		"msg": msg,
+		"filepath": output.cmd.Path,
+		"startline": docker.startline(output.cmd),
+		"endline": docker.endline(output.cmd),
+	}
 }
 
 contains_clean_after_dnf(cmd) {

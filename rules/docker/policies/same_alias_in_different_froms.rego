@@ -28,8 +28,8 @@ get_duplicate_alias[output] {
 	[_, alias2] := regex.split(`\s+as\s+`, output2.arg)
 	alias1 == alias2
 	output := {
-	    "alias": alias1,
-	    "cmd": output1.cmd,
+		"alias": alias1,
+		"cmd": output1.cmd,
 	}
 }
 
@@ -37,13 +37,13 @@ get_aliased_name[output] {
 	some name
 	stage := input.stages[name]
 
-    cmd := stage[0]
+	cmd := stage[0]
 
 	arg = lower(name)
 	contains(arg, " as ")
 	output := {
-	    "arg": arg,
-	    "cmd": cmd,
+		"arg": arg,
+		"cmd": cmd,
 	}
 }
 
@@ -51,9 +51,9 @@ deny[res] {
 	output := get_duplicate_alias[_]
 	msg := sprintf("Duplicate aliases '%s' are found in different FROMs", [output.alias])
 	res := {
-        "msg": msg,
-        "filepath": output.cmd.Path,
-        "startline": docker.startline(output.cmd),
-        "endline": docker.endline(output.cmd),
-    }
+		"msg": msg,
+		"filepath": output.cmd.Path,
+		"startline": docker.startline(output.cmd),
+		"endline": docker.endline(output.cmd),
+	}
 }

@@ -28,9 +28,9 @@ deny[res] {
 	mntnr := get_maintainer[_]
 	msg := sprintf("MAINTAINER should not be used: 'MAINTAINER %s'", [mntnr.Value[0]])
 	res := {
-        "msg": msg,
-        "filepath": mntnr.Path,
-        "startline": docker.startline(mntnr),
-        "endline": docker.endline(mntnr),
-    }
+		"msg": msg,
+		"filepath": mntnr.Path,
+		"startline": docker.startline(mntnr),
+		"endline": docker.endline(mntnr),
+	}
 }

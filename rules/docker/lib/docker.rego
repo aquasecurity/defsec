@@ -65,8 +65,18 @@ workdir[instruction] {
 	instruction.Cmd == "workdir"
 }
 
-startline(x) = 0 { not x.StartLine }
-startline(x) = x.StartLine { x.StartLine }
+startline(x) = 0 {
+	not x.StartLine
+}
 
-endline(x) = 0 { not x.EndLine }
-endline(x) = x.EndLine { x.EndLine }
+startline(x) = x.StartLine {
+	x.StartLine
+}
+
+endline(x) = 0 {
+	not x.EndLine
+}
+
+endline(x) = x.EndLine {
+	x.EndLine
+}
