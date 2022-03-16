@@ -27,7 +27,7 @@ type checkstyleOutput struct {
 	Files   []checkstyleFile `xml:"file"`
 }
 
-func outputCheckStyle(b ConfigurableFormatter, results []rules.Result) error {
+func outputCheckStyle(b ConfigurableFormatter, results rules.Results) error {
 
 	output := checkstyleOutput{
 		Version: "5.0",
@@ -36,9 +36,18 @@ func outputCheckStyle(b ConfigurableFormatter, results []rules.Result) error {
 	files := make(map[string][]checkstyleResult)
 
 	for _, res := range results {
-		if res.Status() == rules.StatusPassed {
-			continue
+
+		switch res.Status() {
+		case rules.StatusIgnored:
+			if !b.IncludeIgnored() {
+				continue
+			}
+		case rules.StatusPassed:
+			if !b.IncludePassed() {
+				continue
+			}
 		}
+
 		var link string
 		links := b.GetLinks(res)
 		if len(links) > 0 {

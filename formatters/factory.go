@@ -20,6 +20,16 @@ func (f *factory) Build() Formatter {
 	return f.base
 }
 
+func (f *factory) WithIncludePassed(include bool) *factory {
+	f.base.includePassed = include
+	return f
+}
+
+func (f *factory) WithIncludeIgnored(include bool) *factory {
+	f.base.includeIgnored = include
+	return f
+}
+
 func (f *factory) WithMetricsEnabled(enabled bool) *factory {
 	f.base.enableMetrics = enabled
 	return f
@@ -45,7 +55,7 @@ func (f *factory) WithBaseDir(dir string) *factory {
 	return f
 }
 
-func (f *factory) WithCustomFormatterFunc(fn func(ConfigurableFormatter, []rules.Result) error) *factory {
+func (f *factory) WithCustomFormatterFunc(fn func(ConfigurableFormatter, rules.Results) error) *factory {
 	f.base.outputOverride = fn
 	return f
 }

@@ -40,7 +40,7 @@ type jUnitFailure struct {
 	Contents string `xml:",chardata"`
 }
 
-func outputJUnit(b ConfigurableFormatter, results []rules.Result) error {
+func outputJUnit(b ConfigurableFormatter, results rules.Results) error {
 
 	output := jUnitTestSuite{
 		Name:     filepath.Base(os.Args[0]),
@@ -49,6 +49,16 @@ func outputJUnit(b ConfigurableFormatter, results []rules.Result) error {
 	}
 
 	for _, res := range results {
+		switch res.Status() {
+		case rules.StatusIgnored:
+			if !b.IncludeIgnored() {
+				continue
+			}
+		case rules.StatusPassed:
+			if !b.IncludePassed() {
+				continue
+			}
+		}
 		rng := res.Range()
 		output.TestCases = append(output.TestCases,
 			jUnitTestCase{

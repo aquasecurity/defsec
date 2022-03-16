@@ -9,7 +9,7 @@ import (
 	"github.com/owenrumney/go-sarif/v2/sarif"
 )
 
-func outputSARIF(b ConfigurableFormatter, results []rules.Result) error {
+func outputSARIF(b ConfigurableFormatter, results rules.Results) error {
 	report, err := sarif.New(sarif.Version210)
 	if err != nil {
 		return err
@@ -22,8 +22,15 @@ func outputSARIF(b ConfigurableFormatter, results []rules.Result) error {
 
 	for _, res := range results {
 
-		if res.Status() == rules.StatusPassed {
-			continue
+		switch res.Status() {
+		case rules.StatusIgnored:
+			if !b.IncludeIgnored() {
+				continue
+			}
+		case rules.StatusPassed:
+			if !b.IncludePassed() {
+				continue
+			}
 		}
 
 		rule := run.AddRule(res.Rule().LongID()).

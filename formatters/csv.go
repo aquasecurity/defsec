@@ -8,13 +8,23 @@ import (
 	"github.com/aquasecurity/defsec/rules"
 )
 
-func outputCSV(b ConfigurableFormatter, results []rules.Result) error {
+func outputCSV(b ConfigurableFormatter, results rules.Results) error {
 
 	records := [][]string{
 		{"file", "start_line", "end_line", "rule_id", "severity", "description", "link", "passed"},
 	}
 
 	for _, res := range results {
+		switch res.Status() {
+		case rules.StatusIgnored:
+			if !b.IncludeIgnored() {
+				continue
+			}
+		case rules.StatusPassed:
+			if !b.IncludePassed() {
+				continue
+			}
+		}
 		var link string
 		links := b.GetLinks(res)
 		if len(links) > 0 {
