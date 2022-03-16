@@ -169,12 +169,11 @@ func (p *parser) ParseDirectory(fullPath string) error {
 
 	var paths []string
 	for _, info := range fileInfos {
-		info = resolveSymlink(fullPath, info)
+		realPath, info := resolveSymlink(fullPath, info)
 		if info.IsDir() {
 			continue
 		}
-		currentFilePath := filepath.Join(fullPath, info.Name())
-		paths = append(paths, currentFilePath)
+		paths = append(paths, realPath)
 	}
 	sort.Strings(paths)
 	for _, path := range paths {
@@ -271,13 +270,13 @@ func (p *parser) readBlocks(files []sourceFile) (terraform.Blocks, terraform.Ign
 	return blocks, ignores, nil
 }
 
-func resolveSymlink(dir string, file os.FileInfo) os.FileInfo {
-
-	if resolvedLink, err := os.Readlink(filepath.Join(dir, file.Name())); err == nil {
-		resolvedPath := filepath.Clean(filepath.Join(dir, resolvedLink))
-		if info, err := os.Lstat(resolvedPath); err == nil {
-			return info
+func resolveSymlink(dir string, file os.FileInfo) (string, os.FileInfo) {
+	if file.Mode()&os.ModeSymlink != 0 {
+		if resolvedLink, err := os.Readlink(filepath.Join(dir, file.Name())); err == nil {
+			if info, err := os.Lstat(resolvedLink); err == nil {
+				return resolvedLink, info
+			}
 		}
 	}
-	return file
+	return filepath.Join(dir, file.Name()), file
 }
