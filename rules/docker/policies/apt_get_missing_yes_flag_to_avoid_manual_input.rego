@@ -36,9 +36,9 @@ get_apt_get[output] {
 	not includes_assume_yes(arg)
 
 	output := {
-   		"arg": arg,
-   		"cmd": run,
-   	}
+		"arg": arg,
+		"cmd": run,
+	}
 }
 
 # checking json array
@@ -54,9 +54,9 @@ get_apt_get[output] {
 	not includes_assume_yes(arg)
 
 	output := {
-    	"arg": arg,
-    	"cmd": run,
-    }
+		"arg": arg,
+		"cmd": run,
+	}
 }
 
 is_apt_get(command) {

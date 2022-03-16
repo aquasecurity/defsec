@@ -66,8 +66,10 @@ workdir[instruction] {
 }
 
 result(msg, cmd) = result {
-    result := {
-        "msg": msg,
-        "startline": object.get(cmd, "StartLine", 0),
-    }
+	result := {
+		"msg": msg,
+		"startline": object.get(cmd, "StartLine", 0),
+		"endline": object.get(cmd, "EndLine", 0),
+		"filepath": object.get(cmd, "Path", ""),
+	}
 }
