@@ -3,6 +3,8 @@ package executor
 import (
 	"io"
 
+	"github.com/aquasecurity/defsec/rego"
+
 	"github.com/aquasecurity/defsec/rules"
 )
 
@@ -32,15 +34,9 @@ func OptionWithDebugWriter(w io.Writer) Option {
 	}
 }
 
-func OptionIncludePassed(include bool) Option {
+func OptionNoIgnores() Option {
 	return func(s *Executor) {
-		s.includePassed = include
-	}
-}
-
-func OptionIncludeIgnored(include bool) Option {
-	return func(s *Executor) {
-		s.includeIgnored = include
+		s.enableIgnores = false
 	}
 }
 
@@ -71,5 +67,11 @@ func OptionWithWorkspaceName(workspaceName string) Option {
 func OptionWithSingleThread(single bool) Option {
 	return func(s *Executor) {
 		s.useSingleThread = single
+	}
+}
+
+func OptionWithRegoScanner(s *rego.Scanner) Option {
+	return func(e *Executor) {
+		e.regoScanner = s
 	}
 }

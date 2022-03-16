@@ -1,6 +1,7 @@
 package executor
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -8,7 +9,10 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/aquasecurity/defsec/parsers/types"
+
 	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/rego"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"
 )
@@ -19,15 +23,17 @@ type Pool struct {
 	state        *state.State
 	rules        []rules.RegisteredRule
 	ignoreErrors bool
+	rs           *rego.Scanner
 }
 
-func NewPool(size int, rules []rules.RegisteredRule, modules terraform.Modules, state *state.State, ignoreErrors bool) *Pool {
+func NewPool(size int, rules []rules.RegisteredRule, modules terraform.Modules, state *state.State, ignoreErrors bool, regoScanner *rego.Scanner) *Pool {
 	return &Pool{
 		size:         size,
 		rules:        rules,
 		state:        state,
 		modules:      modules,
 		ignoreErrors: ignoreErrors,
+		rs:           regoScanner,
 	}
 }
 
@@ -41,6 +47,13 @@ func (p *Pool) Run() (rules.Results, error) {
 		worker := NewWorker(outgoing)
 		go worker.Start()
 		workers = append(workers, worker)
+	}
+
+	if p.rs != nil {
+		outgoing <- &regoJob{
+			state:   p.state,
+			scanner: p.rs,
+		}
 	}
 
 	for _, r := range p.rules {
@@ -94,6 +107,11 @@ type hclModuleRuleJob struct {
 	ignoreErrors bool
 }
 
+type regoJob struct {
+	state   *state.State
+	scanner *rego.Scanner
+}
+
 func (h *infraRuleJob) Run() (_ rules.Results, err error) {
 	if h.ignoreErrors {
 		defer func() {
@@ -122,6 +140,17 @@ func (h *hclModuleRuleJob) Run() (results rules.Results, err error) {
 	}
 	results.SetRule(h.rule.Rule())
 	return
+}
+
+func (h *regoJob) Run() (results rules.Results, err error) {
+	regoResults, err := h.scanner.ScanInput(context.TODO(), rego.Input{
+		Contents: h.state.ToRego(),
+		Type:     types.SourceDefsec,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("rego scan error: %w", err)
+	}
+	return regoResults, nil
 }
 
 func isCustomCheckRequiredForBlock(custom *rules.TerraformCustomCheck, b *terraform.Block) bool {

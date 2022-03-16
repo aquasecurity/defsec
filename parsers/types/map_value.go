@@ -56,3 +56,13 @@ func (b *mapValue) HasKey(key string) bool {
 	_, ok := b.value[key]
 	return ok
 }
+
+func (s *mapValue) ToRego() interface{} {
+	return map[string]interface{}{
+		"filepath":  s.metadata.Range().GetFilename(),
+		"startline": s.metadata.Range().GetStartLine(),
+		"endline":   s.metadata.Range().GetEndLine(),
+		"managed":   s.metadata.isManaged,
+		"value":     s.Value(),
+	}
+}

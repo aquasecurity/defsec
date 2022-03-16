@@ -21,7 +21,7 @@ jobs:
         run: rsync -avr --exclude=README.md --exclude="*_test.rego" --exclude="*.go" --exclude=test --exclude=advanced rules/docker rules/kubernetes bundle/
       - name: Copy manifest
         run: |
-          cp .manifest bundle/
+          cp rules/.manifest bundle/
           sed -i -e "s/\[GITHUB_SHA\]/${RELEASE_VERSION}/" bundle/.manifest
       - name: Compress
         run: tar -C bundle -czvf bundle.tar.gz .

@@ -30,8 +30,6 @@ get_add[output] {
 	}
 }
 
-
-
 deny[res] {
 	output := get_add[_]
 	msg := sprintf("Consider using 'COPY %s' command instead of 'ADD %s'", [output.args, output.args])

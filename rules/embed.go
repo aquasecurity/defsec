@@ -4,5 +4,5 @@ import (
 	"embed"
 )
 
-//go:embed docker/lib docker/policies kubernetes/lib kubernetes/policies
+//go:embed */lib */policies
 var EmbeddedPolicyFileSystem embed.FS

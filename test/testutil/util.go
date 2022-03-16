@@ -4,23 +4,22 @@ import (
 	"path/filepath"
 	"testing"
 
-	executor2 "github.com/aquasecurity/defsec/scanners/terraform/executor"
-
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/terraform/parser"
 	"github.com/aquasecurity/defsec/rules"
+	"github.com/aquasecurity/defsec/scanners/terraform/executor"
 	"github.com/aquasecurity/defsec/test/testutil/filesystem"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func ScanHCL(source string, t *testing.T, additionalOptions ...executor2.Option) rules.Results {
+func ScanHCL(source string, t *testing.T, additionalOptions ...executor.Option) rules.Results {
 	modules := CreateModulesFromSource(source, ".tf", t)
-	s := executor2.New()
+	s := executor.New()
 	for _, opt := range additionalOptions {
 		opt(s)
 	}
-	executor2.OptionStopOnErrors(true)(s)
+	executor.OptionStopOnErrors(true)(s)
 	res, _, err := s.Execute(modules)
 	require.NoError(t, err)
 	for _, result := range res {
@@ -33,7 +32,7 @@ func ScanHCL(source string, t *testing.T, additionalOptions ...executor2.Option)
 
 func ScanJSON(source string, t *testing.T) rules.Results {
 	modules := CreateModulesFromSource(source, ".tf.json", t)
-	res, _, _ := executor2.New().Execute(modules)
+	res, _, _ := executor.New().Execute(modules)
 	return res
 }
 
@@ -58,10 +57,10 @@ func CreateModulesFromSource(source string, ext string, t *testing.T) terraform.
 	return modules
 }
 
-func AssertRuleFound(t *testing.T, ruleID string, results []rules.Result, message string, args ...interface{}) {
-	found := ruleIDInResults(ruleID, results)
+func AssertRuleFound(t *testing.T, ruleID string, results rules.Results, message string, args ...interface{}) {
+	found := ruleIDInResults(ruleID, results.GetFailed())
 	assert.True(t, found, append([]interface{}{message}, args...)...)
-	for _, result := range results {
+	for _, result := range results.GetFailed() {
 		if result.Rule().LongID() == ruleID {
 			m := result.Metadata()
 			meta := &m
@@ -75,16 +74,13 @@ func AssertRuleFound(t *testing.T, ruleID string, results []rules.Result, messag
 	}
 }
 
-func AssertRuleNotFound(t *testing.T, ruleID string, results []rules.Result, message string, args ...interface{}) {
-	found := ruleIDInResults(ruleID, results)
+func AssertRuleNotFound(t *testing.T, ruleID string, results rules.Results, message string, args ...interface{}) {
+	found := ruleIDInResults(ruleID, results.GetFailed())
 	assert.False(t, found, append([]interface{}{message}, args...)...)
 }
 
-func ruleIDInResults(ruleID string, results []rules.Result) bool {
+func ruleIDInResults(ruleID string, results rules.Results) bool {
 	for _, res := range results {
-		if res.Status() == rules.StatusPassed {
-			continue
-		}
 		if res.Rule().LongID() == ruleID {
 			return true
 		}

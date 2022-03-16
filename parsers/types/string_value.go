@@ -1,7 +1,6 @@
 package types
 
 import (
-	"encoding/json"
 	"strings"
 )
 
@@ -11,10 +10,6 @@ const (
 	IgnoreCase StringEqualityOption = iota
 	IsPallindrome
 )
-
-func (v *stringValue) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.value)
-}
 
 func String(str string, m Metadata) StringValue {
 	return &stringValue{
@@ -59,6 +54,16 @@ type stringValue struct {
 }
 
 type stringCheckFunc func(string, string) bool
+
+func (s *stringValue) ToRego() interface{} {
+	return map[string]interface{}{
+		"filepath":  s.metadata.Range().GetFilename(),
+		"startline": s.metadata.Range().GetStartLine(),
+		"endline":   s.metadata.Range().GetEndLine(),
+		"managed":   s.metadata.isManaged,
+		"value":     s.Value(),
+	}
+}
 
 func (s *stringValue) IsOneOf(values ...string) bool {
 	if s.metadata.isUnresolvable {

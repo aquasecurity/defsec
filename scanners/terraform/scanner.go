@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aquasecurity/defsec/rego"
+
 	"github.com/aquasecurity/defsec/parsers/terraform/parser"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/scanners/terraform/executor"
@@ -21,6 +23,7 @@ type Scanner struct {
 	dirs         map[string]struct{}
 	forceAllDirs bool
 	debugWriter  io.Writer
+	policyDirs   []string
 }
 
 type Metrics struct {
@@ -82,6 +85,12 @@ func (s *Scanner) Scan() (rules.Results, Metrics, error) {
 	// find directories which directly contain tf files (and have no parent containing tf files)
 	rootDirs := s.findRootModules(simplifiedDirs)
 	sort.Strings(rootDirs)
+
+	regoScanner := rego.NewScanner()
+	if err := regoScanner.LoadPolicies(true, s.policyDirs...); err != nil {
+		return nil, Metrics{}, err
+	}
+	s.executorOpt = append(s.executorOpt, executor.OptionWithRegoScanner(regoScanner))
 
 	var allResults rules.Results
 

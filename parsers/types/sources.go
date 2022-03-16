@@ -8,4 +8,5 @@ const (
 	SourceKubernetes     Source = "kubernetes"
 	SourceCloudFormation Source = "cloudformation"
 	SourceAnsible        Source = "ansible"
+	SourceDefsec         Source = "defsec"
 )

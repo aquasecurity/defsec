@@ -66,6 +66,8 @@ func (s *Scanner) Scan(ctx context.Context) (rules.Results, error) {
 	var inputs []rego.Input
 	for _, path := range s.paths {
 
+		s.debug("Scanning %s...", path)
+
 		data, err := os.ReadFile(path)
 		if err != nil {
 			return nil, err
@@ -87,7 +89,7 @@ func (s *Scanner) Scan(ctx context.Context) (rules.Results, error) {
 	regoScanner := rego.NewScanner(
 		rego.OptionWithDebug(s.debugWriter),
 	)
-	if err := regoScanner.LoadPolicies(s.policyDirs...); err != nil {
+	if err := regoScanner.LoadPolicies(len(s.policyDirs) == 0, s.policyDirs...); err != nil {
 		return nil, err
 	}
 

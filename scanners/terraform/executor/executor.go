@@ -8,6 +8,8 @@ import (
 	"sort"
 	"time"
 
+	"github.com/aquasecurity/defsec/rego"
+
 	"github.com/aquasecurity/defsec/severity"
 
 	adapter "github.com/aquasecurity/defsec/adapters/terraform"
@@ -17,8 +19,7 @@ import (
 
 // Executor scans HCL blocks by running all registered rules against them
 type Executor struct {
-	includePassed             bool
-	includeIgnored            bool
+	enableIgnores             bool
 	excludedRuleIDs           []string
 	includedRuleIDs           []string
 	ignoreCheckErrors         bool
@@ -28,6 +29,7 @@ type Executor struct {
 	resultsFilters            []func(rules.Results) rules.Results
 	alternativeIDProviderFunc func(string) string
 	severityOverrides         map[string]string
+	regoScanner               *rego.Scanner
 }
 
 type Metrics struct {
@@ -50,6 +52,7 @@ type Metrics struct {
 func New(options ...Option) *Executor {
 	s := &Executor{
 		ignoreCheckErrors: true,
+		enableIgnores:     true,
 		debugWriter:       ioutil.Discard,
 	}
 	for _, option := range options {
@@ -96,7 +99,8 @@ func (e *Executor) Execute(modules terraform.Modules) (rules.Results, Metrics, e
 	checksTime := time.Now()
 	registeredRules := rules.GetRegistered()
 	e.debug("Initialised %d rule(s).", len(registeredRules))
-	pool := NewPool(threads, registeredRules, modules, infra, e.ignoreCheckErrors)
+
+	pool := NewPool(threads, registeredRules, modules, infra, e.ignoreCheckErrors, e.regoScanner)
 	e.debug("Created pool with %d worker(s) to apply rules.", threads)
 	results, err := pool.Run()
 	if err != nil {
@@ -105,21 +109,18 @@ func (e *Executor) Execute(modules terraform.Modules) (rules.Results, Metrics, e
 	metrics.Timings.RunningChecks = time.Since(checksTime)
 	e.debug("Finished applying rules.")
 
-	var resultsAfterIgnores []rules.Result
-	if !e.includeIgnored {
+	if e.enableIgnores {
 		var ignores terraform.Ignores
 		for _, module := range modules {
 			ignores = append(ignores, module.Ignores()...)
 		}
 
-		for _, result := range results {
-
+		for i, result := range results {
 			var altID string
 			if e.alternativeIDProviderFunc != nil {
 				altID = e.alternativeIDProviderFunc(result.Rule().LongID())
 			}
-
-			if !e.includeIgnored && ignores.Covering(
+			if ignores.Covering(
 				modules,
 				result.Metadata(),
 				e.workspaceName,
@@ -128,47 +129,40 @@ func (e *Executor) Execute(modules terraform.Modules) (rules.Results, Metrics, e
 				result.Rule().AVDID,
 			) != nil {
 				e.debug("Ignored '%s' at '%s'.", result.Rule().LongID(), result.Range())
-				continue
-			}
-			resultsAfterIgnores = append(resultsAfterIgnores, result)
-		}
-	} else {
-		resultsAfterIgnores = results
-	}
-
-	filtered := e.filterResults(resultsAfterIgnores)
-	metrics.Counts.Ignored = len(results) - len(filtered)
-
-	filtered = e.updateSeverity(filtered)
-
-	for _, res := range filtered {
-		if res.Status() == rules.StatusPassed {
-			metrics.Counts.Passed++
-		} else {
-			metrics.Counts.Failed++
-			switch res.Severity() {
-			case severity.Critical:
-				metrics.Counts.Critical++
-			case severity.High:
-				metrics.Counts.High++
-			case severity.Medium:
-				metrics.Counts.Medium++
-			case severity.Low:
-				metrics.Counts.Low++
+				results[i].OverrideStatus(rules.StatusIgnored)
 			}
 		}
 	}
 
-	e.sortResults(filtered)
-	return filtered, metrics, nil
+	results = e.updateSeverity(results)
+	results = e.filterResults(results)
+	metrics.Counts.Ignored = len(results.GetIgnored())
+	metrics.Counts.Passed = len(results.GetPassed())
+	metrics.Counts.Failed = len(results.GetFailed())
+
+	for _, res := range results.GetFailed() {
+		switch res.Severity() {
+		case severity.Critical:
+			metrics.Counts.Critical++
+		case severity.High:
+			metrics.Counts.High++
+		case severity.Medium:
+			metrics.Counts.Medium++
+		case severity.Low:
+			metrics.Counts.Low++
+		}
+	}
+
+	e.sortResults(results)
+	return results, metrics, nil
 }
 
-func (e *Executor) updateSeverity(results []rules.Result) []rules.Result {
+func (e *Executor) updateSeverity(results []rules.Result) rules.Results {
 	if len(e.severityOverrides) == 0 {
 		return results
 	}
 
-	var overriddenResults []rules.Result
+	var overriddenResults rules.Results
 	for _, res := range results {
 		for code, sev := range e.severityOverrides {
 
@@ -192,31 +186,22 @@ func (e *Executor) updateSeverity(results []rules.Result) []rules.Result {
 	return overriddenResults
 }
 
-func (e *Executor) filterResults(results []rules.Result) []rules.Result {
-	var filtered []rules.Result
-	var countExcluded int
-
+func (e *Executor) filterResults(results []rules.Result) rules.Results {
 	includedOnly := len(e.includedRuleIDs) > 0
-
-	for _, result := range results {
+	for i, result := range results {
 		id := result.Rule().LongID()
 		var altID string
 		if e.alternativeIDProviderFunc != nil {
 			altID = e.alternativeIDProviderFunc(id)
 		}
-		if !includedOnly || checkInList(id, altID, e.includedRuleIDs) {
-			if !e.includeIgnored && checkInList(id, altID, e.excludedRuleIDs) {
+		if includedOnly && !checkInList(id, altID, e.includedRuleIDs) {
+			if checkInList(id, altID, e.excludedRuleIDs) {
 				e.debug("Excluding '%s' at '%s'.", result.Rule().LongID(), result.Range())
-				countExcluded++
-			} else if e.includePassed || result.Status() != rules.StatusPassed {
-				filtered = append(filtered, result)
+				results[i].OverrideStatus(rules.StatusIgnored)
 			}
 		}
 	}
-	for _, filter := range e.resultsFilters {
-		filtered = filter(filtered)
-	}
-	return filtered
+	return results
 }
 
 func (e *Executor) sortResults(results []rules.Result) {

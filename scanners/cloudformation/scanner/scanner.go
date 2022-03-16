@@ -1,6 +1,7 @@
 package scanner
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"io/fs"
@@ -8,6 +9,10 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/aquasecurity/defsec/parsers/types"
+
+	"github.com/aquasecurity/defsec/rego"
 
 	adapter "github.com/aquasecurity/defsec/adapters/cloudformation"
 
@@ -24,6 +29,7 @@ type Scanner struct {
 	ignoreCheckErrors bool
 	paths             []string
 	debugWriter       io.Writer
+	policyDirs        []string
 }
 
 // New creates a new Scanner
@@ -81,7 +87,7 @@ func (s *Scanner) AddPath(path string) error {
 	return nil
 }
 
-func (s *Scanner) Scan() (results []rules.Result, err error) {
+func (s *Scanner) Scan(ctx context.Context) (results rules.Results, err error) {
 
 	cfParser := parser.New()
 	contexts, err := cfParser.ParseFiles(s.paths...)
@@ -89,11 +95,16 @@ func (s *Scanner) Scan() (results []rules.Result, err error) {
 		return nil, err
 	}
 
-	for _, ctx := range contexts {
-		if ctx == nil {
+	regoScanner := rego.NewScanner()
+	if err := regoScanner.LoadPolicies(true, s.policyDirs...); err != nil {
+		return nil, err
+	}
+
+	for _, cfctx := range contexts {
+		if cfctx == nil {
 			continue
 		}
-		state := adapter.Adapt(*ctx)
+		state := adapter.Adapt(*cfctx)
 		if state == nil {
 			continue
 		}
@@ -124,6 +135,15 @@ func (s *Scanner) Scan() (results []rules.Result, err error) {
 				}
 			}
 		}
+		regoResults, err := regoScanner.ScanInput(ctx, rego.Input{
+			Path:     cfctx.Metadata().Range().GetFilename(),
+			Contents: state,
+			Type:     types.SourceDefsec,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("rego scan error: %w", err)
+		}
+		results = append(results, regoResults...)
 	}
 	sort.Slice(results, func(i, j int) bool {
 		return results[i].Rule().AVDID < results[j].Rule().AVDID

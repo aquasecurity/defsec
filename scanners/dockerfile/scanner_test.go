@@ -2,33 +2,29 @@ package dockerfile
 
 import (
 	"context"
-	"io/ioutil"
-	"os"
-	"path/filepath"
 	"testing"
 
+	"github.com/aquasecurity/defsec/severity"
+
+	"github.com/aquasecurity/defsec/rules"
+	"github.com/stretchr/testify/assert"
+
+	"github.com/aquasecurity/defsec/test/testutil/filesystem"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_BasicScan(t *testing.T) {
 
-	src := `FROM ubuntu
+	fs, err := filesystem.New()
+	require.NoError(t, err)
+	defer func() { _ = fs.Close() }()
+
+	require.NoError(t, fs.WriteTextFile("/code/Dockerfile", `FROM ubuntu
 
 USER root
-`
+`))
 
-	dir, err := ioutil.TempDir(os.TempDir(), "defsec")
-	require.NoError(t, err)
-	defer func() {
-		_ = os.RemoveAll(dir)
-	}()
-	path := filepath.Join(dir, "Dockerfile")
-	require.NoError(
-		t,
-		ioutil.WriteFile(path, []byte(src), 0o600),
-	)
-
-	regoSrc := `package appshield.dockerfile.DS006
+	require.NoError(t, fs.WriteTextFile("/rules/rule.rego", `package appshield.dockerfile.DS006
 
 __rego_metadata__ := {
 	"id": "DS006",
@@ -57,22 +53,29 @@ deny[res] {
 	}
 }
 
-`
+`))
 
-	regoPath := filepath.Join(dir, "rule.rego")
-	require.NoError(
-		t,
-		ioutil.WriteFile(regoPath, []byte(regoSrc), 0o600),
-	)
-
-	scanner := NewScanner(OptionWithPolicyDirs(dir))
-	require.NoError(t, scanner.AddPath(path))
+	scanner := NewScanner(OptionWithPolicyDirs(fs.RealPath("/rules")))
+	require.NoError(t, scanner.AddPath(fs.RealPath("/code/Dockerfile")))
 
 	results, err := scanner.Scan(context.TODO())
 	require.NoError(t, err)
 
-	require.Len(t, results, 1)
+	require.Len(t, results.GetFailed(), 1)
 
-	//t.Error("add more assertions above")
-
+	assert.Equal(t, rules.Rule{
+		AVDID:       "AVD-DS-0006",
+		LegacyID:    "DS006",
+		ShortCode:   "no-self-referencing-copy-from",
+		Summary:     "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself.",
+		Explanation: "",
+		Impact:      "",
+		Resolution:  "Change the '--from' so that it will not refer to itself",
+		Provider:    "",
+		Service:     "",
+		Links: []string{
+			"https://docs.docker.com/develop/develop-images/multistage-build/",
+		},
+		Severity: severity.Critical,
+	}, results.GetFailed()[0].Rule())
 }

@@ -35,9 +35,11 @@ func init() {
 		if err != nil {
 			continue
 		}
+		if metadata.AVDID == "" {
+			continue
+		}
 		rules.Register(
 			metadata.ToRule(),
-			// TODO check type selector and inject correct resource as rego input here
 			nil,
 		)
 	}

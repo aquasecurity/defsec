@@ -48,6 +48,6 @@ locals {
 		modules, _, err := p.EvaluateAll()
 		require.NoError(t, err)
 		results, _, _ := executor.New().Execute(modules)
-		require.Len(t, results, 2)
+		require.Len(t, results.GetFailed(), 2)
 	}
 }

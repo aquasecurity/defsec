@@ -20,7 +20,6 @@ type Scanner struct {
 	ruleNamespaces map[string]struct{}
 	policies       map[string]*ast.Module
 	store          storage.Store
-	policyDirs     []string
 	dataDirs       []string
 	runtimeValues  *ast.Term
 	compiler       *ast.Compiler
@@ -102,7 +101,6 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (rules.Results
 			continue
 		}
 
-		//read metadata
 		staticMeta, err := s.retriever.RetrieveMetadata(ctx, module)
 		if err != nil {
 			return nil, err

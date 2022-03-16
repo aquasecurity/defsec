@@ -26,18 +26,30 @@ func (s *Scanner) loadPoliciesFromDirs(paths []string) (map[string]*ast.Module, 
 	return loaded.ParsedModules(), nil
 }
 
-func (s *Scanner) LoadPolicies(paths ...string) error {
+func (s *Scanner) LoadPolicies(loadEmbedded bool, paths ...string) error {
+
+	if s.policies == nil {
+		s.policies = make(map[string]*ast.Module)
+	}
+
+	if loadEmbedded {
+		loaded, err := loadEmbeddedPolicies()
+		if err != nil {
+			return fmt.Errorf("failed to load embedded rego policies: %w", err)
+		}
+		for name, policy := range loaded {
+			s.policies[name] = policy
+		}
+	}
 
 	var err error
 	if len(paths) > 0 {
-		s.policies, err = s.loadPoliciesFromDirs(paths)
+		loaded, err := s.loadPoliciesFromDirs(paths)
 		if err != nil {
 			return fmt.Errorf("failed to load rego policies from %s: %w", paths, err)
 		}
-	} else {
-		s.policies, err = loadEmbeddedPolicies()
-		if err != nil {
-			return fmt.Errorf("failed to load embedded rego policies: %w", err)
+		for name, policy := range loaded {
+			s.policies[name] = policy
 		}
 	}
 

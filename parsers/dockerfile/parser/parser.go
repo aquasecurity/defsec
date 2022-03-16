@@ -78,15 +78,5 @@ func (p *Parser) Parse(path string, r io.Reader) (*dockerfile.Dockerfile, error)
 
 	}
 
-	//j, err := json.Marshal()
-	//if err != nil {
-	//	return nil, xerrors.Errorf("json marshal error: %w", err)
-	//}
-	//
-	//var res interface{}
-	//if err = json.Unmarshal(j, &res); err != nil {
-	//	return nil, xerrors.Errorf("json unmarshal error: %w", err)
-	//}
-
 	return &parsedFile, nil
 }

@@ -66,10 +66,11 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 	metadataQuery := fmt.Sprintf("data.%s.__rego_metadata__", namespace)
 
 	metadata := StaticMetadata{
-		ID:       "N/A",
-		Type:     "N/A",
-		Title:    "N/A",
-		Severity: "UNKNOWN",
+		ID:          "N/A",
+		Type:        "N/A",
+		Title:       "N/A",
+		Severity:    "UNKNOWN",
+		Description: fmt.Sprintf("Rego policy: %s", module.String()),
 	}
 
 	options := []func(*rego.Rego){
@@ -80,6 +81,11 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 	set, err := instance.Eval(ctx)
 	if err != nil {
 		return nil, err
+	}
+
+	// no metadata supplied
+	if set == nil {
+		return &metadata, nil
 	}
 
 	if len(set) != 1 {

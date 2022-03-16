@@ -48,7 +48,7 @@ resource "bad" "my-rule" {
     secure = false // tfsec:ignore:*
 }
 `, t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 
 }
 
@@ -62,7 +62,7 @@ resource "bad" "my-rule" {
    secure = false 
 }
 `, t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreLineAboveTheBlockMatchingParamBool(t *testing.T) {
@@ -75,7 +75,7 @@ resource "bad" "my-rule" {
    secure = false
 }
 `, t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreLineAboveTheBlockNotMatchingParamBool(t *testing.T) {
@@ -88,7 +88,7 @@ resource "bad" "my-rule" {
    secure = false 
 }
 `, t)
-	assert.Len(t, results, 1)
+	assert.Len(t, results.GetFailed(), 1)
 }
 
 func Test_IgnoreLineAboveTheBlockMatchingParamString(t *testing.T) {
@@ -102,7 +102,7 @@ resource "bad" "my-rule" {
     secure = false
 }
 `, t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreLineAboveTheBlockNotMatchingParamString(t *testing.T) {
@@ -116,7 +116,7 @@ resource "bad" "my-rule" {
     secure = false 
 }
 `, t)
-	assert.Len(t, results, 1)
+	assert.Len(t, results.GetFailed(), 1)
 }
 
 func Test_IgnoreLineAboveTheBlockMatchingParamInt(t *testing.T) {
@@ -130,7 +130,7 @@ resource "bad" "my-rule" {
    port = 123
 }
 `, t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreLineAboveTheBlockNotMatchingParamInt(t *testing.T) {
@@ -144,7 +144,7 @@ resource "bad" "my-rule" {
    port = 123
 }
 `, t)
-	assert.Len(t, results, 1)
+	assert.Len(t, results.GetFailed(), 1)
 }
 
 func Test_IgnoreLineStackedAboveTheBlock(t *testing.T) {
@@ -161,7 +161,7 @@ resource "bad" "my-rule" {
    secure = false 
 }
 `, t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreLineStackedAboveTheBlockWithoutMatch(t *testing.T) {
@@ -180,7 +180,7 @@ resource "bad" "my-rule" {
    secure = false 
 }
 `, t)
-	assert.Len(t, results, 1)
+	assert.Len(t, results.GetFailed(), 1)
 }
 
 func Test_IgnoreLineStackedAboveTheBlockWithHashesWithoutSpaces(t *testing.T) {
@@ -197,7 +197,7 @@ resource "bad" "my-rule" {
    secure = false 
 }
 `, t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreLineStackedAboveTheBlockWithoutSpaces(t *testing.T) {
@@ -214,7 +214,7 @@ resource "bad" "my-rule" {
    secure = false 
 }
 `, t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreLineAboveTheLine(t *testing.T) {
@@ -226,7 +226,7 @@ resource "bad" "my-rule" {
     secure = false
 }
 `, t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreWithExpDateIfDateBreachedThenDontIgnore(t *testing.T) {
@@ -238,7 +238,7 @@ resource "bad" "my-rule" {
     secure = false # tfsec:ignore:aws-service-abc123:exp:2000-01-02
 }
 `, t)
-	assert.Len(t, results, 1)
+	assert.Len(t, results.GetFailed(), 1)
 }
 
 func Test_IgnoreWithExpDateIfDateNotBreachedThenIgnoreIgnore(t *testing.T) {
@@ -250,7 +250,7 @@ resource "bad" "my-rule" {
     secure = false # tfsec:ignore:aws-service-abc123:exp:2221-01-02
 }
 `, t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreWithExpDateIfDateInvalidThenDropTheIgnore(t *testing.T) {
@@ -262,7 +262,7 @@ resource "bad" "my-rule" {
    secure = false # tfsec:ignore:aws-service-abc123:exp:2221-13-02
 }
 `, t)
-	assert.Len(t, results, 1)
+	assert.Len(t, results.GetFailed(), 1)
 }
 
 func Test_IgnoreAboveResourceBlockWithExpDateIfDateNotBreachedThenIgnoreIgnore(t *testing.T) {
@@ -274,7 +274,7 @@ func Test_IgnoreAboveResourceBlockWithExpDateIfDateNotBreachedThenIgnoreIgnore(t
 resource "bad" "my-rule" {
 }
 `, t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreAboveResourceBlockWithExpDateAndMultipleIgnoresIfDateNotBreachedThenIgnoreIgnore(t *testing.T) {
@@ -287,7 +287,7 @@ resource "bad" "my-rule" {
 	
 }
 `, t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreIgnoreWithExpiryAndWorkspaceAndWorkspaceSupplied(t *testing.T) {
@@ -299,7 +299,7 @@ func Test_IgnoreIgnoreWithExpiryAndWorkspaceAndWorkspaceSupplied(t *testing.T) {
 resource "bad" "my-rule" {
 }
 `, t, executor.OptionWithWorkspaceName("testworkspace"))
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreInline(t *testing.T) {
@@ -311,7 +311,7 @@ func Test_IgnoreInline(t *testing.T) {
 		  secure = false # tfsec:ignore:%s
 	}
 	  `, exampleRule.LongID()), t)
-	assert.Len(t, results, 0)
+	assert.Len(t, results.GetFailed(), 0)
 }
 
 func Test_IgnoreIgnoreWithExpiryAndWorkspaceButWrongWorkspaceSupplied(t *testing.T) {
@@ -324,5 +324,5 @@ resource "bad" "my-rule" {
 	
 }
 `, t, executor.OptionWithWorkspaceName("testworkspace"))
-	assert.Len(t, results, 1)
+	assert.Len(t, results.GetFailed(), 1)
 }
