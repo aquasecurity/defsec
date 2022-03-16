@@ -194,9 +194,9 @@ func (e *Executor) filterResults(results []rules.Result) rules.Results {
 		if e.alternativeIDProviderFunc != nil {
 			altID = e.alternativeIDProviderFunc(id)
 		}
-        if (includedOnly && !checkInList(id, altID, e.includedRuleIDs)) || checkInList(id, altID, e.excludedRuleIDs) {
-				e.debug("Excluding '%s' at '%s'.", result.Rule().LongID(), result.Range())
-				results[i].OverrideStatus(rules.StatusIgnored)
+		if (includedOnly && !checkInList(id, altID, e.includedRuleIDs)) || checkInList(id, altID, e.excludedRuleIDs) {
+			e.debug("Excluding '%s' at '%s'.", result.Rule().LongID(), result.Range())
+			results[i].OverrideStatus(rules.StatusIgnored)
 		}
 	}
 	return results
