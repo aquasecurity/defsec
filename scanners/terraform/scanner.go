@@ -10,6 +10,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aquasecurity/defsec/rego"
+
 	"github.com/aquasecurity/defsec/parsers/terraform/parser"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/scanners/terraform/executor"
@@ -21,6 +23,7 @@ type Scanner struct {
 	dirs         map[string]struct{}
 	forceAllDirs bool
 	debugWriter  io.Writer
+	policyDirs   []string
 }
 
 type Metrics struct {
@@ -83,6 +86,12 @@ func (s *Scanner) Scan() (rules.Results, Metrics, error) {
 	rootDirs := s.findRootModules(simplifiedDirs)
 	sort.Strings(rootDirs)
 
+	regoScanner := rego.NewScanner()
+	if err := regoScanner.LoadPolicies(true, s.policyDirs...); err != nil {
+		return nil, Metrics{}, err
+	}
+	s.executorOpt = append(s.executorOpt, executor.OptionWithRegoScanner(regoScanner))
+
 	var allResults rules.Results
 
 	// parse all root module directories
@@ -117,7 +126,6 @@ func (s *Scanner) Scan() (rules.Results, Metrics, error) {
 		metrics.Executor.Counts.Passed += execMetrics.Counts.Passed
 		metrics.Executor.Counts.Failed += execMetrics.Counts.Failed
 		metrics.Executor.Counts.Ignored += execMetrics.Counts.Ignored
-		metrics.Executor.Counts.Excluded += execMetrics.Counts.Excluded
 		metrics.Executor.Counts.Critical += execMetrics.Counts.Critical
 		metrics.Executor.Counts.High += execMetrics.Counts.High
 		metrics.Executor.Counts.Medium += execMetrics.Counts.Medium

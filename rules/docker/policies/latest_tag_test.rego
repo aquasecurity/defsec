@@ -17,7 +17,7 @@ test_latest_tag_denied {
 	}]}}
 
 	count(r) == 1
-	r[_] == "Specify a tag in the 'FROM' statement for image 'openjdk'"
+	r[_].msg == "Specify a tag in the 'FROM' statement for image 'openjdk'"
 }
 
 # Test FROM image with no tag
@@ -28,7 +28,7 @@ test_no_tag_denied {
 	}]}}
 
 	count(r) == 1
-	r[_] == "Specify a tag in the 'FROM' statement for image 'openjdk'"
+	r[_].msg == "Specify a tag in the 'FROM' statement for image 'openjdk'"
 }
 
 # Test FROM with scratch
@@ -99,7 +99,7 @@ test_with_variables_denied {
 	}}
 
 	count(r) == 1
-	r[_] == "Specify a tag in the 'FROM' statement for image 'all-in-one'"
+	r[_].msg == "Specify a tag in the 'FROM' statement for image 'all-in-one'"
 }
 
 test_multi_stage_allowed {
@@ -163,7 +163,7 @@ test_multi_stage_denied {
 	}}
 
 	count(r) == 1
-	r[_] == "Specify a tag in the 'FROM' statement for image 'alpine'"
+	r[_].msg == "Specify a tag in the 'FROM' statement for image 'alpine'"
 }
 
 test_multi_stage_no_tag_denied {
@@ -185,5 +185,5 @@ test_multi_stage_no_tag_denied {
 	}}
 
 	count(r) == 1
-	r[_] == "Specify a tag in the 'FROM' statement for image 'alpine'"
+	r[_].msg == "Specify a tag in the 'FROM' statement for image 'alpine'"
 }

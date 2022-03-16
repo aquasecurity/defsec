@@ -1,6 +1,7 @@
 package loader
 
 import (
+	_ "github.com/aquasecurity/defsec/rego"
 	_ "github.com/aquasecurity/defsec/rules/aws/apigateway"
 	_ "github.com/aquasecurity/defsec/rules/aws/athena"
 	_ "github.com/aquasecurity/defsec/rules/aws/autoscaling"

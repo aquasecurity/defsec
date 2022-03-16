@@ -1,6 +1,8 @@
 package types
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type BytesValue interface {
 	metadataProvider
@@ -56,4 +58,14 @@ func BytesUnresolvable(m Metadata) BytesValue {
 	b := Bytes(nil, m)
 	b.(*bytesValue).BaseAttribute.metadata.isUnresolvable = true
 	return b
+}
+
+func (s *bytesValue) ToRego() interface{} {
+	return map[string]interface{}{
+		"filepath":  s.metadata.Range().GetFilename(),
+		"startline": s.metadata.Range().GetStartLine(),
+		"endline":   s.metadata.Range().GetEndLine(),
+		"managed":   s.metadata.isManaged,
+		"value":     string(s.Value()),
+	}
 }

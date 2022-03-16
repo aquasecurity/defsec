@@ -75,7 +75,7 @@ func TestCheckRetentionPolicySet(t *testing.T) {
 			results := CheckRetentionPolicySet.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckRetentionPolicySet.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckRetentionPolicySet.Rule().LongID() {
 					found = true
 				}
 			}

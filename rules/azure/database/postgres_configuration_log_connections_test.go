@@ -56,7 +56,7 @@ func TestCheckPostgresConfigurationLogConnections(t *testing.T) {
 			results := CheckPostgresConfigurationLogConnections.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckPostgresConfigurationLogConnections.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckPostgresConfigurationLogConnections.Rule().LongID() {
 					found = true
 				}
 			}

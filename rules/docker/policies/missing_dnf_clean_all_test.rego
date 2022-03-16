@@ -20,7 +20,7 @@ test_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'dnf clean all' is missed: set -uex &&     dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo &&     sed -i 's/\\$releasever/26/g' /etc/yum.repos.d/docker-ce.repo &&     dnf install -vy docker-ce"
+	r[_].msg == "'dnf clean all' is missed: set -uex &&     dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo &&     sed -i 's/\\$releasever/26/g' /etc/yum.repos.d/docker-ce.repo &&     dnf install -vy docker-ce"
 }
 
 test_allowed {
@@ -58,7 +58,7 @@ test_wrong_order_of_commands_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'dnf clean all' is missed: dnf clean all && dnf install -vy docker-ce"
+	r[_].msg == "'dnf clean all' is missed: dnf clean all && dnf install -vy docker-ce"
 }
 
 test_multiple_install_denied {
@@ -74,7 +74,7 @@ test_multiple_install_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'dnf clean all' is missed: dnf install bash && dnf clean all && dnf install zsh"
+	r[_].msg == "'dnf clean all' is missed: dnf install bash && dnf clean all && dnf install zsh"
 }
 
 test_multiple_install_allowed {

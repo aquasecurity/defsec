@@ -66,7 +66,7 @@ func TestCheckEnableAutoUpgrade(t *testing.T) {
 			results := CheckEnableAutoUpgrade.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableAutoUpgrade.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableAutoUpgrade.Rule().LongID() {
 					found = true
 				}
 			}

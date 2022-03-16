@@ -50,7 +50,7 @@ func TestCheckVirtualNetworkEnabled(t *testing.T) {
 			results := CheckVirtualNetworkEnabled.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckVirtualNetworkEnabled.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckVirtualNetworkEnabled.Rule().LongID() {
 					found = true
 				}
 			}

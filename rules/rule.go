@@ -31,6 +31,7 @@ type TerraformCustomCheck struct {
 
 type Rule struct {
 	AVDID          string             `json:"avd_id"`
+	LegacyID       string             `json:"id"`
 	ShortCode      string             `json:"short_code"`
 	Summary        string             `json:"summary"`
 	Explanation    string             `json:"explanation"`
@@ -43,6 +44,7 @@ type Rule struct {
 	Terraform      *EngineMetadata    `json:"terraform,omitempty"`
 	CloudFormation *EngineMetadata    `json:"cloud_formation,omitempty"`
 	CustomChecks   CustomChecks       `json:"-"`
+	RegoPackage    string             `json:"-"`
 }
 
 func (r Rule) LongID() string {

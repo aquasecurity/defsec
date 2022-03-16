@@ -56,7 +56,7 @@ func TestCheckCaptureAllActivities(t *testing.T) {
 			results := CheckCaptureAllActivities.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckCaptureAllActivities.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckCaptureAllActivities.Rule().LongID() {
 					found = true
 				}
 			}

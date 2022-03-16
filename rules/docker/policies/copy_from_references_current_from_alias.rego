@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0006",
 	"title": "COPY '--from' referring to the current image",
 	"short_code": "no-self-referencing-copy-from",
-	"version": "v1.0.0",
 	"severity": "CRITICAL",
 	"type": "Dockerfile Security Check",
 	"description": "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself.",
@@ -20,15 +19,20 @@ __rego_input__ := {
 	"selector": [{"type": "dockerfile"}],
 }
 
-get_alias_from_copy[args] {
+get_alias_from_copy[output] {
 	copies := docker.stage_copies[stage]
 
-	flag := copies[_].Flags[_]
+	copy := copies[_]
+	flag := copy.Flags[_]
 	contains(flag, "--from=")
 	parts := split(flag, "=")
 
 	is_alias_current_from_alias(stage, parts[1])
 	args := parts[1]
+	output := {
+		"args": args,
+		"cmd": copy,
+	}
 }
 
 is_alias_current_from_alias(current_name, current_alias) = allow {
@@ -44,6 +48,7 @@ is_alias_current_from_alias(current_name, current_alias) = allow {
 }
 
 deny[res] {
-	args := get_alias_from_copy[_]
-	res := sprintf("'COPY --from' should not mention current alias '%s' since it is impossible to copy from itself", [args])
+	output := get_alias_from_copy[_]
+	msg := sprintf("'COPY --from' should not mention current alias '%s' since it is impossible to copy from itself", [output.args])
+	res := docker.result(msg, output.cmd)
 }

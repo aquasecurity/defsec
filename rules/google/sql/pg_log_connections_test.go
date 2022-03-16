@@ -64,7 +64,7 @@ func TestCheckPgLogConnections(t *testing.T) {
 			results := CheckPgLogConnections.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckPgLogConnections.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckPgLogConnections.Rule().LongID() {
 					found = true
 				}
 			}

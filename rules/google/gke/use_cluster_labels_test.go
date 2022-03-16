@@ -52,7 +52,7 @@ func TestCheckUseClusterLabels(t *testing.T) {
 			results := CheckUseClusterLabels.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckUseClusterLabels.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckUseClusterLabels.Rule().LongID() {
 					found = true
 				}
 			}

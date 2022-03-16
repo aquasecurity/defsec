@@ -35,15 +35,9 @@ func OptionWithDebugWriter(w io.Writer) Option {
 	}
 }
 
-func OptionIncludePassed(include bool) Option {
+func OptionNoIgnores() Option {
 	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionIncludePassed(include))
-	}
-}
-
-func OptionIncludeIgnored(include bool) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionIncludeIgnored(include))
+		s.executorOpt = append(s.executorOpt, executor.OptionNoIgnores())
 	}
 }
 
@@ -102,17 +96,16 @@ func OptionSkipDownloaded(skip bool) Option {
 			return
 		}
 		s.executorOpt = append(s.executorOpt, executor.OptionWithResultsFilter(func(results rules.Results) rules.Results {
-			var filtered rules.Results
-			for _, result := range results {
+			for i, result := range results {
 				if result.Range() == nil {
 					continue
 				}
 				search := fmt.Sprintf("%c.terraform%c", filepath.Separator, filepath.Separator)
-				if !strings.Contains(result.Range().GetFilename(), search) {
-					filtered = append(filtered, result)
+				if strings.Contains(result.Range().GetFilename(), search) {
+					results[i].OverrideStatus(rules.StatusIgnored)
 				}
 			}
-			return filtered
+			return results
 		}))
 	}
 }
@@ -120,8 +113,7 @@ func OptionSkipDownloaded(skip bool) Option {
 func OptionWithExcludePaths(paths []string) Option {
 	return func(s *Scanner) {
 		s.executorOpt = append(s.executorOpt, executor.OptionWithResultsFilter(func(results rules.Results) rules.Results {
-			var filtered rules.Results
-			for _, result := range results {
+			for i, result := range results {
 				if result.Range() == nil {
 					continue
 				}
@@ -136,11 +128,11 @@ func OptionWithExcludePaths(paths []string) Option {
 						break
 					}
 				}
-				if good {
-					filtered = append(filtered, result)
+				if !good {
+					results[i].OverrideStatus(rules.StatusIgnored)
 				}
 			}
-			return filtered
+			return results
 		}))
 	}
 }
@@ -148,15 +140,19 @@ func OptionWithExcludePaths(paths []string) Option {
 func OptionWithIncludeOnlyResults(ids []string) Option {
 	return func(s *Scanner) {
 		s.executorOpt = append(s.executorOpt, executor.OptionWithResultsFilter(func(results rules.Results) rules.Results {
-			var filtered rules.Results
-			for _, result := range results {
+			for i, result := range results {
+				var included bool
 				for _, ruleID := range ids {
 					if result.Rule().LongID() == ruleID {
-						filtered = append(filtered, result)
+						included = true
+						break
 					}
 				}
+				if !included {
+					results[i].OverrideStatus(rules.StatusIgnored)
+				}
 			}
-			return filtered
+			return results
 		}))
 	}
 }
@@ -165,14 +161,20 @@ func OptionWithMinimumSeverity(minimum severity.Severity) Option {
 	min := severityAsOrdinal(minimum)
 	return func(s *Scanner) {
 		s.executorOpt = append(s.executorOpt, executor.OptionWithResultsFilter(func(results rules.Results) rules.Results {
-			var filtered rules.Results
-			for _, result := range results {
-				if severityAsOrdinal(result.Severity()) >= min {
-					filtered = append(filtered, result)
+			for i, result := range results {
+				if severityAsOrdinal(result.Severity()) < min {
+					results[i].OverrideStatus(rules.StatusIgnored)
 				}
 			}
-			return filtered
+			return results
 		}))
+	}
+}
+
+// OptionWithPolicyDirs - location of rego policy directories - policies are loaded recursively
+func OptionWithPolicyDirs(dirs []string) func(s *Scanner) {
+	return func(s *Scanner) {
+		s.policyDirs = dirs
 	}
 }
 

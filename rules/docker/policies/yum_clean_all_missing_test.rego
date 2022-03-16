@@ -36,7 +36,7 @@ test_basic_denied {
 	}}
 
 	count(r) == 1
-	r[_] == "'yum clean all' is missed: yum install vim"
+	r[_].msg == "'yum clean all' is missed: yum install vim"
 }
 
 test_wrong_order_of_commands_denied {
@@ -52,7 +52,7 @@ test_wrong_order_of_commands_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'yum clean all' is missed: yum clean all && yum -y install"
+	r[_].msg == "'yum clean all' is missed: yum clean all && yum -y install"
 }
 
 test_multiple_install_denied {
@@ -68,7 +68,7 @@ test_multiple_install_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'yum clean all' is missed: yum -y install bash && yum clean all && yum -y install zsh"
+	r[_].msg == "'yum clean all' is missed: yum -y install bash && yum clean all && yum -y install zsh"
 }
 
 test_multiple_install_allowed {

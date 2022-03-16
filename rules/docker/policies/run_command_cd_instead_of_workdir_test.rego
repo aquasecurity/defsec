@@ -17,7 +17,7 @@ test_basic_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "RUN should not be used to change directory: 'cd /usr/share/nginx/html'. Use 'WORKDIR' statement instead."
+	r[_].msg == "RUN should not be used to change directory: 'cd /usr/share/nginx/html'. Use 'WORKDIR' statement instead."
 }
 
 test_chaining_denied {
@@ -44,7 +44,7 @@ test_chaining_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "RUN should not be used to change directory: 'apt-get install vim && cd /usr/share/nginx/html'. Use 'WORKDIR' statement instead."
+	r[_].msg == "RUN should not be used to change directory: 'apt-get install vim && cd /usr/share/nginx/html'. Use 'WORKDIR' statement instead."
 }
 
 test_basic_allowed {

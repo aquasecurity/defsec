@@ -60,7 +60,7 @@ func TestCheckEnableVPCFlowLogs(t *testing.T) {
 			results := CheckEnableVPCFlowLogs.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableVPCFlowLogs.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableVPCFlowLogs.Rule().LongID() {
 					found = true
 				}
 			}

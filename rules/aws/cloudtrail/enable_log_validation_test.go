@@ -50,7 +50,7 @@ func TestCheckEnableLogValidation(t *testing.T) {
 			results := CheckEnableLogValidation.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableLogValidation.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableLogValidation.Rule().LongID() {
 					found = true
 				}
 			}

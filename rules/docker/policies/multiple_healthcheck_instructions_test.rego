@@ -42,7 +42,7 @@ test_denied {
 	}}
 
 	count(r) == 1
-	r[_] == "There are 2 duplicate HEALTHCHECK instructions in the stage 'golang:1.7.3'"
+	r[_].msg == "There are 2 duplicate HEALTHCHECK instructions in the stage 'golang:1.7.3'"
 }
 
 test_allowed {

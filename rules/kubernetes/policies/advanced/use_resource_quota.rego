@@ -8,12 +8,16 @@ __rego_metadata__ := {
 	"avd_id": "AVD-KSV-0040",
 	"title": "resource quota usage",
 	"short_code": "resource-quota-usage",
-	"version": "v1.0.0",
 	"severity": "LOW",
 	"type": "Kubernetes Security Check",
 	"description": "ensure resource quota policy has configure in order to limit aggregate resource usage within namespace",
 	"recommended_actions": "create resource quota policy with mem and cpu quota per each namespace",
 	"url": "https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/quota-memory-cpu-namespace/",
+}
+
+__rego_input__ := {
+	"combine": false,
+	"selector": [{"type": "kubernetes"}],
 }
 
 deny[res] {

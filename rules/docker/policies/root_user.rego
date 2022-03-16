@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0002",
 	"title": "root user",
 	"short_code": "least-privilege-user",
-	"version": "v1.0.0",
 	"severity": "HIGH",
 	"type": "Dockerfile Security Check",
 	"description": "Running containers with 'root' user can lead to a container escape situation. It is a best practice to run containers as non-root users, which can be done by adding a 'USER' statement to the Dockerfile.",
@@ -34,18 +33,22 @@ fail_user_count {
 
 # fail_last_user_root is true if the last USER command
 # value is "root"
-fail_last_user_root {
+fail_last_user_root[last] {
 	stage_users := docker.stage_user[_]
 	len := count(stage_users)
-	stage_users[len - 1].Value[0] == "root"
-}
-
-deny[msg] {
-	fail_user_count
-	msg = "Specify at least 1 USER command in Dockerfile with non-root user as argument"
+	last := stage_users[len - 1]
+	user := last.Value[0]
+	user == "root"
 }
 
 deny[res] {
-	fail_last_user_root
-	res := "Last USER command in Dockerfile should not be 'root'"
+	fail_user_count
+	msg := "Specify at least 1 USER command in Dockerfile with non-root user as argument"
+	res := docker.result(msg, {})
+}
+
+deny[res] {
+	cmd := fail_last_user_root[_]
+	msg := "Last USER command in Dockerfile should not be 'root'"
+	res := docker.result(msg, cmd)
 }

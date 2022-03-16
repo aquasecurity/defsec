@@ -66,7 +66,7 @@ func TestCheckEnableAccessLogging(t *testing.T) {
 			results := CheckEnableAccessLogging.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableAccessLogging.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableAccessLogging.Rule().LongID() {
 					found = true
 				}
 			}

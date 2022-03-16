@@ -50,7 +50,7 @@ func TestCheckUsesVPC(t *testing.T) {
 			results := CheckUsesVPC.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckUsesVPC.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckUsesVPC.Rule().LongID() {
 					found = true
 				}
 			}

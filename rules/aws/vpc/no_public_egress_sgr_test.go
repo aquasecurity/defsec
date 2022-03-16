@@ -64,7 +64,7 @@ func TestCheckNoPublicEgressSgr(t *testing.T) {
 			results := CheckNoPublicEgressSgr.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckNoPublicEgressSgr.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckNoPublicEgressSgr.Rule().LongID() {
 					found = true
 				}
 			}

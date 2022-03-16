@@ -14,6 +14,7 @@ type Status uint8
 const (
 	StatusFailed Status = iota
 	StatusPassed
+	StatusIgnored
 )
 
 type Result struct {
@@ -42,6 +43,10 @@ func (r *Result) OverrideDescription(description string) {
 
 func (r *Result) OverrideMetadata(metadata types.Metadata) {
 	r.metadata = metadata
+}
+
+func (r *Result) OverrideStatus(status Status) {
+	r.status = status
 }
 
 func (r *Result) OverrideAnnotation(annotation string) {
@@ -79,6 +84,31 @@ type MetadataProvider interface {
 	GetRawValue() interface{}
 }
 
+func (r *Results) GetPassed() Results {
+	return r.filterStatus(StatusPassed)
+}
+
+func (r *Results) GetIgnored() Results {
+	return r.filterStatus(StatusIgnored)
+}
+
+func (r *Results) GetFailed() Results {
+	return r.filterStatus(StatusFailed)
+}
+
+func (r *Results) filterStatus(status Status) Results {
+	var filtered Results
+	if r == nil {
+		return filtered
+	}
+	for _, res := range *r {
+		if res.Status() == status {
+			filtered = append(filtered, res)
+		}
+	}
+	return filtered
+}
+
 func (r *Results) Add(description string, source MetadataProvider) {
 	result := Result{
 		description: description,
@@ -95,6 +125,15 @@ func (r *Results) AddPassed(source MetadataProvider, descriptions ...string) {
 	res := Result{
 		description: strings.Join(descriptions, " "),
 		status:      StatusPassed,
+	}
+	res.metadata = source.GetMetadata()
+	*r = append(*r, res)
+}
+
+func (r *Results) AddIgnored(source MetadataProvider, descriptions ...string) {
+	res := Result{
+		description: strings.Join(descriptions, " "),
+		status:      StatusIgnored,
 	}
 	res.metadata = source.GetMetadata()
 	*r = append(*r, res)

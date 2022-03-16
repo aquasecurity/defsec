@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0005",
 	"title": "ADD instead of COPY",
 	"short_code": "use-copy-over-add",
-	"version": "v1.0.0",
 	"severity": "LOW",
 	"type": "Dockerfile Security Check",
 	"description": "You should use COPY instead of ADD unless you want to extract a tar file. Note that an ADD command will extract a tar file, which adds the risk of Zip-based vulnerabilities. Accordingly, it is advised to use a COPY command, which does not extract tar files.",
@@ -20,14 +19,19 @@ __rego_input__ := {
 	"selector": [{"type": "dockerfile"}],
 }
 
-get_add[args] {
+get_add[output] {
 	add := docker.add[_]
 	args := concat(" ", add.Value)
 
 	not contains(args, ".tar")
+	output := {
+		"args": args,
+		"cmd": add,
+	}
 }
 
 deny[res] {
-	args := get_add[_]
-	res := sprintf("Consider using 'COPY %s' command instead of 'ADD %s'", [args, args])
+	output := get_add[_]
+	msg := sprintf("Consider using 'COPY %s' command instead of 'ADD %s'", [output.args, output.args])
+	res := docker.result(msg, output.cmd)
 }

@@ -24,7 +24,7 @@ test_basic_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "Using 'sudo' in Dockerfile should be avoided"
+	r[_].msg == "Using 'sudo' in Dockerfile should be avoided"
 }
 
 test_chaining_denied {
@@ -40,7 +40,7 @@ test_chaining_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "Using 'sudo' in Dockerfile should be avoided"
+	r[_].msg == "Using 'sudo' in Dockerfile should be avoided"
 }
 
 test_multi_vuls_denied {
@@ -60,7 +60,7 @@ test_multi_vuls_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "Using 'sudo' in Dockerfile should be avoided"
+	r[_].msg == "Using 'sudo' in Dockerfile should be avoided"
 }
 
 test_basic_allowed {

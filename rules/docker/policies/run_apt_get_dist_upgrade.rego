@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0024",
 	"title": "'apt-get dist-upgrade' used",
 	"short_code": "no-dist-upgrade",
-	"version": "v1.0.0",
 	"severity": "HIGH",
 	"type": "Dockerfile Security Check",
 	"description": "'apt-get dist-upgrade' upgrades a major version so it doesn't make more sense in Dockerfile.",
@@ -19,13 +18,13 @@ __rego_input__ := {
 	"selector": [{"type": "dockerfile"}],
 }
 
-get_apt_get_dist_upgrade[args] {
+get_apt_get_dist_upgrade[run] {
 	run := docker.run[_]
 	regex.match(`apt-get .* dist-upgrade`, run.Value[0])
-	args := run.Value[0]
 }
 
 deny[res] {
-	get_apt_get_dist_upgrade[_]
-	res := "'apt-get dist-upgrade' should not be used in Dockerfile"
+	cmd := get_apt_get_dist_upgrade[_]
+	msg := "'apt-get dist-upgrade' should not be used in Dockerfile"
+	res := docker.result(msg, cmd)
 }

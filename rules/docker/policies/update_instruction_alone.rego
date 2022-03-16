@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0017",
 	"title": "'RUN <package-manager> update' instruction alone",
 	"short_code": "no-orphan-package-update",
-	"version": "v1.0.0",
 	"severity": "HIGH",
 	"type": "Dockerfile Security Check",
 	"description": "The instruction 'RUN <package-manager> update' should always be followed by '<package-manager> install' in the same RUN statement.",
@@ -28,7 +27,8 @@ deny[res] {
 	is_valid_update(command)
 	not update_followed_by_install(command)
 
-	res := __rego_metadata__.description
+	msg := "The instruction 'RUN <package-manager> update' should always be followed by '<package-manager> install' in the same RUN statement."
+	res := docker.result(msg, run)
 }
 
 is_valid_update(command) {

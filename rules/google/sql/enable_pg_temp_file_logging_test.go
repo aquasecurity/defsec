@@ -84,7 +84,7 @@ func TestCheckEnablePgTempFileLogging(t *testing.T) {
 			results := CheckEnablePgTempFileLogging.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnablePgTempFileLogging.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnablePgTempFileLogging.Rule().LongID() {
 					found = true
 				}
 			}

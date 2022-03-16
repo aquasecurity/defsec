@@ -56,7 +56,7 @@ func TestCheckEnableStateMachineTracing(t *testing.T) {
 			results := CheckEnableStateMachineTracing.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableStateMachineTracing.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableStateMachineTracing.Rule().LongID() {
 					found = true
 				}
 			}

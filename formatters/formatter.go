@@ -12,7 +12,7 @@ import (
 )
 
 type Formatter interface {
-	Output(results []rules.Result) error
+	Output(results rules.Results) error
 }
 
 type ConfigurableFormatter interface {
@@ -21,6 +21,8 @@ type ConfigurableFormatter interface {
 	BaseDir() string
 	DebugEnabled() bool
 	GroupResults([]rules.Result) ([]GroupedResult, error)
+	IncludePassed() bool
+	IncludeIgnored() bool
 }
 
 type Base struct {
@@ -28,9 +30,11 @@ type Base struct {
 	enableMetrics  bool
 	enableColours  bool
 	enableDebug    bool
+	includePassed  bool
+	includeIgnored bool
 	baseDir        string
 	writer         io.Writer
-	outputOverride func(b ConfigurableFormatter, results []rules.Result) error
+	outputOverride func(b ConfigurableFormatter, results rules.Results) error
 	linksOverride  func(result rules.Result) []string
 }
 
@@ -40,6 +44,8 @@ func NewBase() *Base {
 		enableMetrics:  true,
 		enableColours:  true,
 		enableDebug:    false,
+		includePassed:  false,
+		includeIgnored: false,
 		baseDir:        ".",
 		writer:         os.Stdout,
 		outputOverride: outputSARIF,
@@ -47,6 +53,14 @@ func NewBase() *Base {
 			return result.Rule().Links
 		},
 	}
+}
+
+func (b *Base) IncludePassed() bool {
+	return b.includePassed
+}
+
+func (b *Base) IncludeIgnored() bool {
+	return b.includeIgnored
 }
 
 func (b *Base) Writer() io.Writer {
@@ -65,7 +79,7 @@ func (b *Base) BaseDir() string {
 	return b.baseDir
 }
 
-func (b *Base) Output(results []rules.Result) error {
+func (b *Base) Output(results rules.Results) error {
 	if !b.enableColours {
 		tml.DisableFormatting()
 	}

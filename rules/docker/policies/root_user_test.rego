@@ -33,7 +33,7 @@ test_no_user_cmd_denied {
 	}]}}
 
 	count(r) == 1
-	startswith(r[_], "Specify at least 1 USER command in Dockerfile")
+	startswith(r[_].msg, "Specify at least 1 USER command in Dockerfile")
 }
 
 test_last_root_denied {
@@ -61,7 +61,7 @@ test_last_root_denied {
 	]}}
 
 	count(r) > 0
-	startswith(r[_], "Last USER command in Dockerfile should not be 'root'")
+	startswith(r[_].msg, "Last USER command in Dockerfile should not be 'root'")
 }
 
 test_last_root_case_2 {
@@ -77,7 +77,7 @@ test_last_root_case_2 {
 	]}}
 
 	count(r) > 0
-	startswith(r[_], "Last USER command in Dockerfile should not be 'root'")
+	startswith(r[_].msg, "Last USER command in Dockerfile should not be 'root'")
 }
 
 test_empty_user_denied {
@@ -87,5 +87,5 @@ test_empty_user_denied {
 	}]}}
 
 	count(r) == 1
-	startswith(r[_], "Specify at least 1 USER command in Dockerfile")
+	startswith(r[_].msg, "Specify at least 1 USER command in Dockerfile")
 }

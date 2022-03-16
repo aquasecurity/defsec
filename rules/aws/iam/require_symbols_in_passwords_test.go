@@ -46,7 +46,7 @@ func TestCheckRequireSymbolsInPasswords(t *testing.T) {
 			results := CheckRequireSymbolsInPasswords.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckRequireSymbolsInPasswords.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckRequireSymbolsInPasswords.Rule().LongID() {
 					found = true
 				}
 			}

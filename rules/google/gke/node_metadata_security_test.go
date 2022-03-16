@@ -93,7 +93,7 @@ func TestCheckNodeMetadataSecurity(t *testing.T) {
 			results := CheckNodeMetadataSecurity.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckNodeMetadataSecurity.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckNodeMetadataSecurity.Rule().LongID() {
 					found = true
 				}
 			}

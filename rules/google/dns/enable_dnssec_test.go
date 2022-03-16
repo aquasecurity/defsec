@@ -56,7 +56,7 @@ func TestCheckEnableDnssec(t *testing.T) {
 			results := CheckEnableDnssec.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableDnssec.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableDnssec.Rule().LongID() {
 					found = true
 				}
 			}

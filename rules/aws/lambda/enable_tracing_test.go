@@ -56,7 +56,7 @@ func TestCheckEnableTracing(t *testing.T) {
 			results := CheckEnableTracing.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableTracing.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableTracing.Rule().LongID() {
 					found = true
 				}
 			}

@@ -46,7 +46,7 @@ func TestCheckNoPasswordReuse(t *testing.T) {
 			results := CheckNoPasswordReuse.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckNoPasswordReuse.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckNoPasswordReuse.Rule().LongID() {
 					found = true
 				}
 			}

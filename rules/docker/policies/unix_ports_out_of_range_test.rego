@@ -30,7 +30,7 @@ test_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'EXPOSE' contains port which is out of range [0, 65535]: 65536"
+	r[_].msg == "'EXPOSE' contains port which is out of range [0, 65535]: 65536"
 }
 
 test_allowed {

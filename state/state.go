@@ -1,6 +1,8 @@
 package state
 
 import (
+	"reflect"
+
 	"github.com/aquasecurity/defsec/providers/aws"
 	"github.com/aquasecurity/defsec/providers/azure"
 	"github.com/aquasecurity/defsec/providers/cloudstack"
@@ -10,6 +12,7 @@ import (
 	"github.com/aquasecurity/defsec/providers/kubernetes"
 	"github.com/aquasecurity/defsec/providers/openstack"
 	"github.com/aquasecurity/defsec/providers/oracle"
+	"github.com/aquasecurity/defsec/rego/convert"
 )
 
 type State struct {
@@ -22,4 +25,8 @@ type State struct {
 	Kubernetes   kubernetes.Kubernetes
 	OpenStack    openstack.OpenStack
 	Oracle       oracle.Oracle
+}
+
+func (s *State) ToRego() interface{} {
+	return convert.StructToRego(reflect.ValueOf(s))
 }

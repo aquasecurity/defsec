@@ -60,7 +60,7 @@ func TestCheckContentTypeForSecret(t *testing.T) {
 			results := CheckContentTypeForSecret.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckContentTypeForSecret.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckContentTypeForSecret.Rule().LongID() {
 					found = true
 				}
 			}

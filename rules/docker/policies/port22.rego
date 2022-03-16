@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0004",
 	"title": "Port 22 exposed",
 	"short_code": "no-ssh-port",
-	"version": "v1.0.0",
 	"severity": "MEDIUM",
 	"type": "Dockerfile Security Check",
 	"description": "Exposing port 22 might allow users to SSH into the container.",
@@ -23,12 +22,13 @@ __rego_input__ := {
 denied_ports := ["22", "22/tcp", "22/udp"]
 
 # fail_port_check is true if the Dockerfile contains an expose statement for value 22
-fail_port_check {
+fail_port_check[expose] {
 	expose := docker.expose[_]
 	expose.Value[_] == denied_ports[_]
 }
 
 deny[res] {
-	fail_port_check
-	res := "Port 22 should not be exposed in Dockerfile"
+	cmd := fail_port_check[_]
+	msg := "Port 22 should not be exposed in Dockerfile"
+	res := docker.result(msg, cmd)
 }

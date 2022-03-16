@@ -93,7 +93,7 @@ func TestCheckHttpNotUsed(t *testing.T) {
 			results := CheckHttpNotUsed.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckHttpNotUsed.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckHttpNotUsed.Rule().LongID() {
 					found = true
 				}
 			}

@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0020",
 	"title": "'zypper clean' missing",
 	"short_code": "purge-zipper-cache",
-	"version": "v1.0.0",
 	"severity": "HIGH",
 	"type": "Dockerfile Security Check",
 	"description": "The layer and image size should be reduced by deleting unneeded caches after running zypper.",
@@ -24,18 +23,23 @@ install_regex := `(zypper in)|(zypper remove)|(zypper rm)|(zypper source-install
 
 zypper_regex = sprintf("%s|(zypper clean)|(zypper cc)", [install_regex])
 
-get_zypper[arg] {
+get_zypper[output] {
 	run := docker.run[_]
 	arg := run.Value[0]
 
 	regex.match(install_regex, arg)
 
 	not contains_zipper_clean(arg)
+	output := {
+		"arg": arg,
+		"cmd": run,
+	}
 }
 
 deny[res] {
-	args := get_zypper[_]
-	res := sprintf("'zypper clean' is missed: '%s'", [args])
+	output := get_zypper[_]
+	msg := sprintf("'zypper clean' is missed: '%s'", [output.arg])
+	res := docker.result(msg, output.cmd)
 }
 
 contains_zipper_clean(cmd) {

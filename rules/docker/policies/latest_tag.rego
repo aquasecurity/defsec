@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0001",
 	"title": "':latest' tag used",
 	"short_code": "use-specific-tags",
-	"version": "v1.0.0",
 	"severity": "MEDIUM",
 	"type": "Dockerfile Security Check",
 	"description": "When using a 'FROM' statement you should use a specific tag to avoid uncontrolled behavior when the image is updated.",
@@ -52,21 +51,30 @@ parse_tag(img) = [img, tag] {
 }
 
 #base scenario
-image_tags[[img, tag]] {
-	name := image_names[_]
+image_tags[output] {
+	from := docker.from[_]
+	name := from.Value[0]
 	not startswith(name, "$")
 	[img, tag] = parse_tag(name)
+	output := {
+		"img": img,
+		"tag": tag,
+		"cmd": from,
+	}
 }
 
-#If variable is using with FROM then it's value should contain a tag
-image_tags[[img, tag]] {
+# If variable is used with FROM then it's value should contain a tag
+image_tags[output] {
 	some i, j, k, l
-	name := image_names[i]
+	from := docker.from[i]
+	name := from.Value[0]
 
 	cmd_obj := input.stages[j][k]
 
 	possibilities := {"arg", "env"}
 	cmd_obj.Cmd == possibilities[l]
+
+	startswith(name, "$")
 
 	bare_var := trim_prefix(name, "$")
 
@@ -75,19 +83,25 @@ image_tags[[img, tag]] {
 	[_, bare_image_name] := regex.split(`\s*=\s*`, cmd_obj.Value[0])
 
 	[img, tag] = parse_tag(bare_image_name)
+	output := {
+		"img": img,
+		"tag": tag,
+		"cmd": from,
+	}
 }
 
 # fail_latest is true if image is not scratch
 # and image is not an alias
 # and tag is latest.
-fail_latest[img] {
-	[img, tag] := image_tags[_]
-	img != "scratch"
-	not is_alias(img)
-	tag == "latest"
+fail_latest[output] {
+	output := image_tags[_]
+	output.img != "scratch"
+	not is_alias(output.img)
+	output.tag == "latest"
 }
 
 deny[res] {
-	img := fail_latest[_]
-	res := sprintf("Specify a tag in the 'FROM' statement for image '%s'", [img])
+	output := fail_latest[_]
+	msg := sprintf("Specify a tag in the 'FROM' statement for image '%s'", [output.img])
+	res := docker.result(msg, output.cmd)
 }

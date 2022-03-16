@@ -91,7 +91,7 @@ func TestCheckEnforceMFA(t *testing.T) {
 			results := CheckEnforceMFA.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnforceMFA.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnforceMFA.Rule().LongID() {
 					found = true
 				}
 			}

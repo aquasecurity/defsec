@@ -50,7 +50,7 @@ func TestCheckEnableUbla(t *testing.T) {
 			results := CheckEnableUbla.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckEnableUbla.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckEnableUbla.Rule().LongID() {
 					found = true
 				}
 			}

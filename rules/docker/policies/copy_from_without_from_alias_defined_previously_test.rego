@@ -42,7 +42,7 @@ test_denied {
 	}}
 
 	count(r) == 1
-	r[_] == "The alias '--from=builder2' is not defined in the previous stages"
+	r[_].msg == "The alias '--from=builder2' is not defined in the previous stages"
 }
 
 test_allowed {
@@ -215,5 +215,5 @@ test_from_next_stage_denied {
 	}}
 
 	count(r) == 1
-	r[_] == "The alias '--from=build3' is not defined in the previous stages"
+	r[_].msg == "The alias '--from=build3' is not defined in the previous stages"
 }

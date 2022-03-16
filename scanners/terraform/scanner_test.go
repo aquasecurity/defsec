@@ -1,9 +1,9 @@
-package test
+package terraform
 
 import (
 	"testing"
 
-	executor2 "github.com/aquasecurity/defsec/scanners/terraform/executor"
+	"github.com/aquasecurity/defsec/scanners/terraform/executor"
 
 	"github.com/aquasecurity/defsec/test/testutil/filesystem"
 
@@ -57,7 +57,7 @@ resource "problem" "this" {
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll()
 	require.NoError(t, err)
-	results, _, _ := executor2.New().Execute(modules)
+	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleNotFound(t, panicRule.LongID(), results, "")
 }
 
@@ -81,7 +81,7 @@ resource "problem" "this" {
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll()
 	require.NoError(t, err)
-	_, _, err = executor2.New(executor2.OptionStopOnErrors(false)).Execute(modules)
+	_, _, err = executor.New(executor.OptionStopOnErrors(false)).Execute(modules)
 	assert.Error(t, err)
 }
 
@@ -105,7 +105,7 @@ resource "problem" "this" {
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll()
 	require.NoError(t, err)
-	results, _, _ := executor2.New().Execute(modules)
+	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleNotFound(t, panicRule.LongID(), results, "")
 }
 
@@ -130,6 +130,6 @@ resource "problem" "this" {
 	modules, _, err := p.EvaluateAll()
 	require.NoError(t, err)
 
-	_, _, err = executor2.New(executor2.OptionStopOnErrors(false)).Execute(modules)
+	_, _, err = executor.New(executor.OptionStopOnErrors(false)).Execute(modules)
 	assert.Error(t, err)
 }

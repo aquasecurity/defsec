@@ -64,7 +64,7 @@ func TestCheckPgLogErrors(t *testing.T) {
 			results := CheckPgLogErrors.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckPgLogErrors.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckPgLogErrors.Rule().LongID() {
 					found = true
 				}
 			}

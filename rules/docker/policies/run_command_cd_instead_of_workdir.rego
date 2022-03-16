@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0013",
 	"title": "'RUN cd ...' to change directory",
 	"short_code": "use-workdir-over-cd",
-	"version": "v1.0.0",
 	"severity": "MEDIUM",
 	"type": "Dockerfile Security Check",
 	"description": "Use WORKDIR instead of proliferating instructions like 'RUN cd … && do-something', which are hard to read, troubleshoot, and maintain.",
@@ -20,14 +19,19 @@ __rego_input__ := {
 	"selector": [{"type": "dockerfile"}],
 }
 
-get_cd[args] {
+get_cd[output] {
 	run := docker.run[_]
 	parts = regex.split(`\s*&&\s*`, run.Value[_])
 	startswith(parts[_], "cd ")
 	args := concat(" ", run.Value)
+	output := {
+		"args": args,
+		"cmd": run,
+	}
 }
 
 deny[res] {
-	args := get_cd[_]
-	res := sprintf("RUN should not be used to change directory: '%s'. Use 'WORKDIR' statement instead.", [args])
+	output := get_cd[_]
+	msg := sprintf("RUN should not be used to change directory: '%s'. Use 'WORKDIR' statement instead.", [output.args])
+	res := docker.result(msg, output.cmd)
 }

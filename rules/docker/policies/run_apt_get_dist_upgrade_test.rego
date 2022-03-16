@@ -20,7 +20,7 @@ test_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'apt-get dist-upgrade' should not be used in Dockerfile"
+	r[_].msg == "'apt-get dist-upgrade' should not be used in Dockerfile"
 }
 
 test_shortflag_denied {
@@ -43,7 +43,7 @@ test_shortflag_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'apt-get dist-upgrade' should not be used in Dockerfile"
+	r[_].msg == "'apt-get dist-upgrade' should not be used in Dockerfile"
 }
 
 test_longflag_denied {
@@ -66,7 +66,7 @@ test_longflag_denied {
 	]}}
 
 	count(r) == 1
-	r[_] == "'apt-get dist-upgrade' should not be used in Dockerfile"
+	r[_].msg == "'apt-get dist-upgrade' should not be used in Dockerfile"
 }
 
 test_allowed {

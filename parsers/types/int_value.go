@@ -84,3 +84,13 @@ func (b *intValue) GreaterThan(i int) bool {
 	}
 	return b.value > i
 }
+
+func (s *intValue) ToRego() interface{} {
+	return map[string]interface{}{
+		"filepath":  s.metadata.Range().GetFilename(),
+		"startline": s.metadata.Range().GetStartLine(),
+		"endline":   s.metadata.Range().GetEndLine(),
+		"managed":   s.metadata.isManaged,
+		"value":     s.Value(),
+	}
+}

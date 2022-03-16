@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0018",
 	"title": "'COPY --from' refers to alias not defined previously",
 	"short_code": "no-orphan-from-alias",
-	"version": "v1.0.0",
 	"severity": "HIGH",
 	"type": "Dockerfile Security Check",
 	"description": "COPY commands with the flag '--from' should mention a previously defined FROM alias.",
@@ -20,7 +19,7 @@ __rego_input__ := {
 	"selector": [{"type": "dockerfile"}],
 }
 
-get_copy_arg[arg] {
+get_copy_arg[output] {
 	copy := docker.copy[_]
 
 	arg := copy.Flags[_]
@@ -31,11 +30,16 @@ get_copy_arg[arg] {
 	aux_split := split(arg, "=")
 
 	not alias_exists(aux_split[1], copy.Stage)
+	output := {
+		"arg": arg,
+		"cmd": copy,
+	}
 }
 
 deny[res] {
-	arg := get_copy_arg[_]
-	res := sprintf("The alias '%s' is not defined in the previous stages", [arg])
+	output := get_copy_arg[_]
+	msg := sprintf("The alias '%s' is not defined in the previous stages", [output.arg])
+	res := docker.result(msg, output.cmd)
 }
 
 alias_exists(from_alias, max_stage_idx) {

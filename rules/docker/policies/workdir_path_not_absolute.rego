@@ -7,7 +7,6 @@ __rego_metadata__ := {
 	"avd_id": "AVD-DS-0009",
 	"title": "WORKDIR path not absolute",
 	"short_code": "user-absolute-workdir",
-	"version": "v1.0.0",
 	"severity": "HIGH",
 	"type": "Dockerfile Security Check",
 	"description": "For clarity and reliability, you should always use absolute paths for your WORKDIR.",
@@ -20,14 +19,19 @@ __rego_input__ := {
 	"selector": [{"type": "dockerfile"}],
 }
 
-get_work_dir[arg] {
+get_work_dir[output] {
 	workdir := docker.workdir[_]
 	arg := workdir.Value[0]
 
 	not regex.match("(^/[A-z0-9-_+]*)|(^[A-z0-9-_+]:\\\\.*)|(^\\$[{}A-z0-9-_+].*)", arg)
+	output := {
+		"cmd": workdir,
+		"arg": arg,
+	}
 }
 
 deny[res] {
-	arg := get_work_dir[_]
-	res := sprintf("WORKDIR path '%s' should be absolute", [arg])
+	output := get_work_dir[_]
+	msg := sprintf("WORKDIR path '%s' should be absolute", [output.arg])
+	res := docker.result(msg, output.cmd)
 }

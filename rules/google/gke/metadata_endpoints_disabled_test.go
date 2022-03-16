@@ -56,7 +56,7 @@ func TestCheckMetadataEndpointsDisabled(t *testing.T) {
 			results := CheckMetadataEndpointsDisabled.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() != rules.StatusPassed && result.Rule().LongID() == CheckMetadataEndpointsDisabled.Rule().LongID() {
+				if result.Status() == rules.StatusFailed && result.Rule().LongID() == CheckMetadataEndpointsDisabled.Rule().LongID() {
 					found = true
 				}
 			}

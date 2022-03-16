@@ -1,12 +1,18 @@
 package scanner
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
+
+	"github.com/aquasecurity/defsec/parsers/types"
+
+	"github.com/aquasecurity/defsec/rego"
 
 	adapter "github.com/aquasecurity/defsec/adapters/cloudformation"
 
@@ -23,6 +29,7 @@ type Scanner struct {
 	ignoreCheckErrors bool
 	paths             []string
 	debugWriter       io.Writer
+	policyDirs        []string
 }
 
 // New creates a new Scanner
@@ -80,7 +87,7 @@ func (s *Scanner) AddPath(path string) error {
 	return nil
 }
 
-func (s *Scanner) Scan() (results []rules.Result, err error) {
+func (s *Scanner) Scan(ctx context.Context) (results rules.Results, err error) {
 
 	cfParser := parser.New()
 	contexts, err := cfParser.ParseFiles(s.paths...)
@@ -88,11 +95,16 @@ func (s *Scanner) Scan() (results []rules.Result, err error) {
 		return nil, err
 	}
 
-	for _, ctx := range contexts {
-		if ctx == nil {
+	regoScanner := rego.NewScanner()
+	if err := regoScanner.LoadPolicies(true, s.policyDirs...); err != nil {
+		return nil, err
+	}
+
+	for _, cfctx := range contexts {
+		if cfctx == nil {
 			continue
 		}
-		state := adapter.Adapt(*ctx)
+		state := adapter.Adapt(*cfctx)
 		if state == nil {
 			continue
 		}
@@ -102,8 +114,8 @@ func (s *Scanner) Scan() (results []rules.Result, err error) {
 			if len(evalResult) > 0 {
 				s.debug("Found %d results for %s", len(evalResult), rule.Rule().AVDID)
 				for _, scanResult := range evalResult {
-					if s.isExcluded(scanResult) {
-						continue
+					if s.isExcluded(scanResult) || isIgnored(scanResult) {
+						scanResult.OverrideStatus(rules.StatusIgnored)
 					}
 
 					ref := scanResult.Metadata().Reference()
@@ -113,19 +125,29 @@ func (s *Scanner) Scan() (results []rules.Result, err error) {
 					}
 
 					reference := ref.(*parser.CFReference)
-
-					if !isIgnored(scanResult) {
-						description := getDescription(scanResult, reference)
-						scanResult.OverrideDescription(description)
-						if scanResult.Status() == rules.StatusPassed && !s.includePassed {
-							continue
-						}
-						results = append(results, scanResult)
+					description := getDescription(scanResult, reference)
+					scanResult.OverrideDescription(description)
+					if scanResult.Status() == rules.StatusPassed && !s.includePassed {
+						continue
 					}
+
+					results = append(results, scanResult)
 				}
 			}
 		}
+		regoResults, err := regoScanner.ScanInput(ctx, rego.Input{
+			Path:     cfctx.Metadata().Range().GetFilename(),
+			Contents: state,
+			Type:     types.SourceDefsec,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("rego scan error: %w", err)
+		}
+		results = append(results, regoResults...)
 	}
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Rule().AVDID < results[j].Rule().AVDID
+	})
 	return results, nil
 }
 
@@ -139,8 +161,12 @@ func (s *Scanner) isExcluded(result rules.Result) bool {
 }
 
 func getDescription(scanResult rules.Result, location *parser.CFReference) string {
-	if scanResult.Status() != rules.StatusPassed {
+	switch scanResult.Status() {
+	case rules.StatusPassed:
+		return fmt.Sprintf("Resource '%s' passed check: %s", location.LogicalID(), scanResult.Rule().Summary)
+	case rules.StatusIgnored:
+		return fmt.Sprintf("Resource '%s' had check ignored: %s", location.LogicalID(), scanResult.Rule().Summary)
+	default:
 		return scanResult.Description()
 	}
-	return fmt.Sprintf("Resource '%s' passed check: %s", location.LogicalID(), scanResult.Rule().Summary)
 }

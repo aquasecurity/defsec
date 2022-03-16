@@ -8,12 +8,16 @@ __rego_metadata__ := {
 	"avd_id": "AVD-KSV-0039",
 	"title": "limit range usage",
 	"short_code": "limit-range-usage",
-	"version": "v1.0.0",
 	"severity": "LOW",
 	"type": "Kubernetes Security Check",
 	"description": "ensure limit range policy has configure in order to limit resource usage for namespaces or nodes",
 	"recommended_actions": "create limit range policy with a default request and limit, min and max request, for each container.",
 	"url": "https://kubernetes.io/docs/concepts/policy/limit-range/",
+}
+
+__rego_input__ := {
+	"combine": false,
+	"selector": [{"type": "kubernetes"}],
 }
 
 deny[res] {
