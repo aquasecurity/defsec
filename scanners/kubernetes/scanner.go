@@ -8,9 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"golang.org/x/xerrors"
-	"sigs.k8s.io/yaml"
-
+	"github.com/aquasecurity/defsec/parsers/kubernetes/parser"
 	"github.com/aquasecurity/defsec/parsers/types"
 
 	"github.com/aquasecurity/defsec/rego"
@@ -74,14 +72,14 @@ func (s *Scanner) Scan(ctx context.Context) (rules.Results, error) {
 			return nil, err
 		}
 
-		var v interface{}
-		if err := yaml.Unmarshal(data, &v); err != nil {
-			return nil, xerrors.Errorf("unmarshal yaml: %w", err)
+		manifest, err := parser.New().Parse(path, string(data))
+		if err != nil {
+			return nil, err
 		}
 
 		inputs = append(inputs, rego.Input{
 			Path:     path,
-			Contents: v,
+			Contents: manifest.ToRegoMap(),
 			Type:     types.SourceKubernetes,
 		})
 
