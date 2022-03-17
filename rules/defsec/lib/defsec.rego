@@ -1,7 +1,7 @@
 package lib.defsec
 
 result(msg, cause) = result {
-    metadata := object.get(cause, "__defsec_metadata", cause)
+	metadata := object.get(cause, "__defsec_metadata", cause)
 	result := {
 		"msg": msg,
 		"startline": object.get(metadata, "startline", 0),
