@@ -16,6 +16,11 @@ __rego_metadata__ := {
 	"url": "https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#serviceaccount-admission-controller",
 }
 
+__rego_input__ := {
+	"combine": false,
+	"selector": [{"type": "kubernetes"}],
+}
+
 deny[res] {
 	mountServiceAccountToken(input.spec)
 	msg := kubernetes.format(sprintf("Container of %s '%s' should set 'spec.automountServiceAccountToken' to false", [kubernetes.kind, kubernetes.name]))

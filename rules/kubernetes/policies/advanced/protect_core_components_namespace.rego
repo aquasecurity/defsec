@@ -16,6 +16,11 @@ __rego_metadata__ := {
 	"url": "https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/",
 }
 
+__rego_input__ := {
+	"combine": false,
+	"selector": [{"type": "kubernetes"}],
+}
+
 deny[res] {
 	systemNamespaceInUse(input.metadata, input.spec)
 	msg := sprintf("%s '%s' should not be set with 'kube-system' namespace", [kubernetes.kind, kubernetes.name])
