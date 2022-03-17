@@ -15,7 +15,7 @@ import (
 
 type Option func(s *Scanner)
 
-func OptionWithAlternativeIDProvider(f func(string) string) Option {
+func OptionWithAlternativeIDProvider(f func(string) []string) Option {
 	return func(s *Scanner) {
 		s.executorOpt = append(s.executorOpt, executor.OptionWithAlternativeIDProvider(f))
 	}
@@ -129,26 +129,6 @@ func OptionWithExcludePaths(paths []string) Option {
 					}
 				}
 				if !good {
-					results[i].OverrideStatus(rules.StatusIgnored)
-				}
-			}
-			return results
-		}))
-	}
-}
-
-func OptionWithIncludeOnlyResults(ids []string) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionWithResultsFilter(func(results rules.Results) rules.Results {
-			for i, result := range results {
-				var included bool
-				for _, ruleID := range ids {
-					if result.Rule().LongID() == ruleID {
-						included = true
-						break
-					}
-				}
-				if !included {
 					results[i].OverrideStatus(rules.StatusIgnored)
 				}
 			}

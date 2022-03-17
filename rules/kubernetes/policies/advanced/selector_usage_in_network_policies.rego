@@ -16,6 +16,11 @@ __rego_metadata__ := {
 	"url": "https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/",
 }
 
+__rego_input__ := {
+	"combine": false,
+	"selector": [{"type": "kubernetes"}],
+}
+
 deny[res] {
 	not hasSelector(input.spec)
 	msg := "Network policy should uses podSelector and/or the namespaceSelector to restrict ingress and egress traffic within the Pod network"

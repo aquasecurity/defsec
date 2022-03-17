@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aquasecurity/defsec/providers"
+
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
 	"github.com/open-policy-agent/opa/rego"
@@ -36,6 +38,12 @@ type Selector struct {
 }
 
 func (m StaticMetadata) ToRule() rules.Rule {
+
+	provider := "generic"
+	if len(m.InputOptions.Selectors) > 0 {
+		provider = m.InputOptions.Selectors[0].Type
+	}
+
 	return rules.Rule{
 		AVDID:       m.AVDID,
 		LegacyID:    m.ID,
@@ -44,8 +52,8 @@ func (m StaticMetadata) ToRule() rules.Rule {
 		Explanation: "",
 		Impact:      "",
 		Resolution:  m.RecommendedActions,
-		Provider:    "",
-		Service:     "",
+		Provider:    providers.Provider(provider),
+		Service:     "general",
 		Links:       m.References,
 		Severity:    severity.Severity(m.Severity),
 		RegoPackage: m.Package,

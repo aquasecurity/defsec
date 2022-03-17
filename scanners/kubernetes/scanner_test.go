@@ -286,8 +286,8 @@ deny[res] {
 		Explanation: "",
 		Impact:      "",
 		Resolution:  "Set a limit value under 'containers[].resources.limits.cpu'.",
-		Provider:    "",
-		Service:     "",
+		Provider:    "kubernetes",
+		Service:     "general",
 		Links: []string{
 			"https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
 		},

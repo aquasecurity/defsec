@@ -14,14 +14,20 @@ type regoResult struct {
 	StartLine int
 	EndLine   int
 	Message   string
+	Explicit  bool
+	Managed   bool
 }
 
 func (r regoResult) GetMetadata() types.Metadata {
+	if !r.Managed {
+		return types.NewUnmanagedMetadata()
+	}
 	rng := types.NewRange(r.Filepath, r.StartLine, r.EndLine)
-	return types.NewMetadata(
-		rng,
-		types.NewNamedReference(rng.String()),
-	)
+	ref := types.NewNamedReference(rng.String())
+	if r.Explicit {
+		return types.NewExplicitMetadata(rng, ref)
+	}
+	return types.NewMetadata(rng, ref)
 }
 
 func (r regoResult) GetRawValue() interface{} {
@@ -30,20 +36,55 @@ func (r regoResult) GetRawValue() interface{} {
 
 func parseResult(raw interface{}) *regoResult {
 	var result regoResult
+	result.Managed = true
 	switch val := raw.(type) {
+	case []interface{}:
+		var msg string
+		for _, item := range val {
+			switch raw := item.(type) {
+			case map[string]interface{}:
+				result = parseCause(raw)
+			case string:
+				msg = raw
+			}
+		}
+		result.Message = msg
 	case string:
 		result.Message = val
 	case map[string]interface{}:
-		result.Message = fmt.Sprintf("%s", val["msg"])
-		if filepath, ok := val["filepath"]; ok {
-			result.Filepath = fmt.Sprintf("%s", filepath)
-		}
-		result.StartLine = parseLineNumber(val["startline"])
-		result.EndLine = parseLineNumber(val["endline"])
+		result = parseCause(val)
 	default:
 		result.Message = "Rego policy resulted in DENY"
 	}
 	return &result
+}
+
+func parseCause(cause map[string]interface{}) regoResult {
+	var result regoResult
+	result.Managed = true
+	if msg, ok := cause["msg"]; ok {
+		result.Message = fmt.Sprintf("%s", msg)
+	}
+	if filepath, ok := cause["filepath"]; ok {
+		result.Filepath = fmt.Sprintf("%s", filepath)
+	}
+	if start, ok := cause["startline"]; ok {
+		result.StartLine = parseLineNumber(start)
+	}
+	if end, ok := cause["endline"]; ok {
+		result.EndLine = parseLineNumber(end)
+	}
+	if explicit, ok := cause["explicit"]; ok {
+		if set, ok := explicit.(bool); ok {
+			result.Explicit = set
+		}
+	}
+	if managed, ok := cause["managed"]; ok {
+		if set, ok := managed.(bool); ok {
+			result.Managed = set
+		}
+	}
+	return result
 }
 
 func parseLineNumber(raw interface{}) int {
@@ -52,7 +93,7 @@ func parseLineNumber(raw interface{}) int {
 	return n
 }
 
-func (s *Scanner) convertResults(set rego.ResultSet, filepath string) rules.Results {
+func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace string, rule string) rules.Results {
 	var results rules.Results
 	for _, result := range set {
 		for _, expression := range result.Expressions {
@@ -62,7 +103,10 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string) rules.Resu
 				if regoResult.Filepath == "" && filepath != "" {
 					regoResult.Filepath = filepath
 				}
-				results.Add(regoResult.Message, regoResult)
+				if regoResult.Message == "" {
+					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
+				}
+				results.AddRego(regoResult.Message, namespace, rule, regoResult)
 				continue
 			}
 
@@ -71,7 +115,10 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string) rules.Resu
 				if regoResult.Filepath == "" && filepath != "" {
 					regoResult.Filepath = filepath
 				}
-				results.Add(regoResult.Message, regoResult)
+				if regoResult.Message == "" {
+					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
+				}
+				results.AddRego(regoResult.Message, namespace, rule, regoResult)
 			}
 		}
 	}
@@ -79,7 +126,6 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string) rules.Resu
 }
 
 func (s *Scanner) embellishResultsWithRuleMetadata(results rules.Results, metadata StaticMetadata) rules.Results {
-	// TODO: improve this conversion
 	results.SetRule(metadata.ToRule())
 	return results
 }

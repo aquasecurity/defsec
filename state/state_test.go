@@ -38,6 +38,7 @@ func Test_RegoConversion(t *testing.T) {
 							"endline":   3,
 							"value":     "my-bucket",
 							"managed":   true,
+							"explicit":  false,
 						},
 					},
 				},
