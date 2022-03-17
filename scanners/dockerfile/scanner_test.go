@@ -71,7 +71,7 @@ deny[res] {
 		Explanation: "",
 		Impact:      "",
 		Resolution:  "Change the '--from' so that it will not refer to itself",
-		Provider:    "kubernetes",
+		Provider:    "dockerfile",
 		Service:     "general",
 		Links: []string{
 			"https://docs.docker.com/develop/develop-images/multistage-build/",
