@@ -34,12 +34,18 @@ func parseResult(raw interface{}) *regoResult {
 	case string:
 		result.Message = val
 	case map[string]interface{}:
-		result.Message = fmt.Sprintf("%s", val["msg"])
+		if msg, ok := val["msg"]; ok {
+			result.Message = fmt.Sprintf("%s", msg)
+		}
 		if filepath, ok := val["filepath"]; ok {
 			result.Filepath = fmt.Sprintf("%s", filepath)
 		}
-		result.StartLine = parseLineNumber(val["startline"])
-		result.EndLine = parseLineNumber(val["endline"])
+		if start, ok := val["startline"]; ok {
+			result.StartLine = parseLineNumber(start)
+		}
+		if end, ok := val["endline"]; ok {
+			result.EndLine = parseLineNumber(end)
+		}
 	default:
 		result.Message = "Rego policy resulted in DENY"
 	}
@@ -52,7 +58,7 @@ func parseLineNumber(raw interface{}) int {
 	return n
 }
 
-func (s *Scanner) convertResults(set rego.ResultSet, filepath string) rules.Results {
+func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace string, rule string) rules.Results {
 	var results rules.Results
 	for _, result := range set {
 		for _, expression := range result.Expressions {
@@ -62,6 +68,9 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string) rules.Resu
 				if regoResult.Filepath == "" && filepath != "" {
 					regoResult.Filepath = filepath
 				}
+				if regoResult.Message == "" {
+					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
+				}
 				results.Add(regoResult.Message, regoResult)
 				continue
 			}
@@ -70,6 +79,9 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string) rules.Resu
 				regoResult := parseResult(value)
 				if regoResult.Filepath == "" && filepath != "" {
 					regoResult.Filepath = filepath
+				}
+				if regoResult.Message == "" {
+					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
 				}
 				results.Add(regoResult.Message, regoResult)
 			}
