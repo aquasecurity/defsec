@@ -66,7 +66,7 @@ func Test_adaptCluster(t *testing.T) {
 			},
 		},
 		{
-			name: "defaults with a new syntax",
+			name: "rbac with a new syntax",
 			terraform: `
 			resource "azurerm_kubernetes_cluster" "example" {
 				role_based_access_control_enabled = true
