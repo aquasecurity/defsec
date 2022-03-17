@@ -21,7 +21,6 @@ __rego_input__ := {
 	"selector": [{"type": "kubernetes"}],
 }
 
-
 deny[res] {
 	not hasSelector(input.spec)
 	msg := "Network policy should uses podSelector and/or the namespaceSelector to restrict ingress and egress traffic within the Pod network"
