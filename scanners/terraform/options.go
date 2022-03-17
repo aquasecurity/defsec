@@ -15,7 +15,7 @@ import (
 
 type Option func(s *Scanner)
 
-func OptionWithAlternativeIDProvider(f func(string) string) Option {
+func OptionWithAlternativeIDProvider(f func(string) []string) Option {
 	return func(s *Scanner) {
 		s.executorOpt = append(s.executorOpt, executor.OptionWithAlternativeIDProvider(f))
 	}

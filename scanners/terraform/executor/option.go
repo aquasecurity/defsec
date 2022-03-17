@@ -10,7 +10,7 @@ import (
 
 type Option func(s *Executor)
 
-func OptionWithAlternativeIDProvider(f func(string) string) Option {
+func OptionWithAlternativeIDProvider(f func(string) []string) Option {
 	return func(s *Executor) {
 		s.alternativeIDProviderFunc = f
 	}

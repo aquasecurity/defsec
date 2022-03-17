@@ -27,7 +27,7 @@ type Executor struct {
 	useSingleThread           bool
 	debugWriter               io.Writer
 	resultsFilters            []func(rules.Results) rules.Results
-	alternativeIDProviderFunc func(string) string
+	alternativeIDProviderFunc func(string) []string
 	severityOverrides         map[string]string
 	regoScanner               *rego.Scanner
 }
@@ -62,10 +62,15 @@ func New(options ...Option) *Executor {
 }
 
 // Find element in list
-func checkInList(id string, altID string, list []string) bool {
+func checkInList(id string, altIDs []string, list []string) bool {
 	for _, codeIgnored := range list {
-		if codeIgnored == id || (altID != "" && codeIgnored == altID) {
+		if codeIgnored == id {
 			return true
+		}
+		for _, alt := range altIDs {
+			if alt == codeIgnored {
+				return true
+			}
 		}
 	}
 	return false
@@ -116,17 +121,18 @@ func (e *Executor) Execute(modules terraform.Modules) (rules.Results, Metrics, e
 		}
 
 		for i, result := range results {
-			var altID string
+			allIDs := []string{
+				result.Rule().LongID(),
+				result.Rule().AVDID,
+			}
 			if e.alternativeIDProviderFunc != nil {
-				altID = e.alternativeIDProviderFunc(result.Rule().LongID())
+				allIDs = append(allIDs, e.alternativeIDProviderFunc(result.Rule().LongID())...)
 			}
 			if ignores.Covering(
 				modules,
 				result.Metadata(),
 				e.workspaceName,
-				result.Rule().LongID(),
-				altID,
-				result.Rule().AVDID,
+				allIDs...,
 			) != nil {
 				e.debug("Ignored '%s' at '%s'.", result.Rule().LongID(), result.Range())
 				results[i].OverrideStatus(rules.StatusIgnored)
@@ -168,8 +174,13 @@ func (e *Executor) updateSeverity(results []rules.Result) rules.Results {
 
 			var altMatch bool
 			if e.alternativeIDProviderFunc != nil {
-				alt := e.alternativeIDProviderFunc(res.Rule().LongID())
-				altMatch = alt == code
+				alts := e.alternativeIDProviderFunc(res.Rule().LongID())
+				for _, alt := range alts {
+					if alt == code {
+						altMatch = true
+						break
+					}
+				}
 			}
 
 			if altMatch || res.Rule().LongID() == code {
@@ -190,11 +201,11 @@ func (e *Executor) filterResults(results []rules.Result) rules.Results {
 	includedOnly := len(e.includedRuleIDs) > 0
 	for i, result := range results {
 		id := result.Rule().LongID()
-		var altID string
+		var altIDs []string
 		if e.alternativeIDProviderFunc != nil {
-			altID = e.alternativeIDProviderFunc(id)
+			altIDs = e.alternativeIDProviderFunc(id)
 		}
-		if (includedOnly && !checkInList(id, altID, e.includedRuleIDs)) || checkInList(id, altID, e.excludedRuleIDs) {
+		if (includedOnly && !checkInList(id, altIDs, e.includedRuleIDs)) || checkInList(id, altIDs, e.excludedRuleIDs) {
 			e.debug("Excluding '%s' at '%s'.", result.Rule().LongID(), result.Range())
 			results[i].OverrideStatus(rules.StatusIgnored)
 		}
