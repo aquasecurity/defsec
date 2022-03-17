@@ -200,7 +200,7 @@ func (e *Executor) filterResults(results []rules.Result) rules.Results {
 		}
 	}
 
-        for _, filter := range e.resultsFilters {
+	for _, filter := range e.resultsFilters {
 		results = filter(results)
 	}
 
