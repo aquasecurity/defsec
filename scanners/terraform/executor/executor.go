@@ -199,6 +199,11 @@ func (e *Executor) filterResults(results []rules.Result) rules.Results {
 			results[i].OverrideStatus(rules.StatusIgnored)
 		}
 	}
+
+        for _, filter := range e.resultsFilters {
+		results = filter(results)
+	}
+
 	return results
 }
 
