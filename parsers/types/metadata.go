@@ -29,6 +29,12 @@ func NewMetadata(r Range, ref Reference) Metadata {
 	}
 }
 
+func NewExplicitMetadata(r Range, ref Reference) Metadata {
+	m := NewMetadata(r, ref)
+	m.isExplicit = true
+	return m
+}
+
 func (m Metadata) WithParent(p Metadata) Metadata {
 	m.parent = &p
 	return m

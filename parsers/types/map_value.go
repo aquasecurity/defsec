@@ -63,6 +63,7 @@ func (s *mapValue) ToRego() interface{} {
 		"startline": s.metadata.Range().GetStartLine(),
 		"endline":   s.metadata.Range().GetEndLine(),
 		"managed":   s.metadata.isManaged,
+		"explicit":  s.metadata.isExplicit,
 		"value":     s.Value(),
 	}
 }

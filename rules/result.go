@@ -24,6 +24,16 @@ type Result struct {
 	status           Status
 	metadata         types.Metadata
 	severityOverride *severity.Severity
+	regoNamespace    string
+	regoRule         string
+}
+
+func (r Result) RegoNamespace() string {
+	return r.regoNamespace
+}
+
+func (r Result) RegoRule() string {
+	return r.regoRule
 }
 
 func (r Result) Severity() severity.Severity {
@@ -112,6 +122,20 @@ func (r *Results) filterStatus(status Status) Results {
 func (r *Results) Add(description string, source MetadataProvider) {
 	result := Result{
 		description: description,
+	}
+	result.metadata = source.GetMetadata()
+	if result.metadata.IsExplicit() {
+		annotationStr := rawToString(source.GetRawValue())
+		result.annotation = annotationStr
+	}
+	*r = append(*r, result)
+}
+
+func (r *Results) AddRego(description string, namespace string, rule string, source MetadataProvider) {
+	result := Result{
+		description:   description,
+		regoNamespace: namespace,
+		regoRule:      rule,
 	}
 	result.metadata = source.GetMetadata()
 	if result.metadata.IsExplicit() {
