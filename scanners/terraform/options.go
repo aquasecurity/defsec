@@ -137,26 +137,6 @@ func OptionWithExcludePaths(paths []string) Option {
 	}
 }
 
-func OptionWithIncludeOnlyResults(ids []string) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionWithResultsFilter(func(results rules.Results) rules.Results {
-			for i, result := range results {
-				var included bool
-				for _, ruleID := range ids {
-					if result.Rule().LongID() == ruleID {
-						included = true
-						break
-					}
-				}
-				if !included {
-					results[i].OverrideStatus(rules.StatusIgnored)
-				}
-			}
-			return results
-		}))
-	}
-}
-
 func OptionWithMinimumSeverity(minimum severity.Severity) Option {
 	min := severityAsOrdinal(minimum)
 	return func(s *Scanner) {

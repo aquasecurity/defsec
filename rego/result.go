@@ -79,7 +79,6 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string) rules.Resu
 }
 
 func (s *Scanner) embellishResultsWithRuleMetadata(results rules.Results, metadata StaticMetadata) rules.Results {
-	// TODO: improve this conversion
 	results.SetRule(metadata.ToRule())
 	return results
 }
