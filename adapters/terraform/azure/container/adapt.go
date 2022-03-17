@@ -74,11 +74,16 @@ func adaptCluster(resource *terraform.Block) container.KubernetesCluster {
 		}
 	}
 
+	// azurerm < 2.99.0
 	roleBasedAccessControlBlock := resource.GetBlock("role_based_access_control")
 	if roleBasedAccessControlBlock.IsNotNil() {
 		rbEnabledAttr := roleBasedAccessControlBlock.GetAttribute("enabled")
 		cluster.RoleBasedAccessControl.Metadata = roleBasedAccessControlBlock.GetMetadata()
 		cluster.RoleBasedAccessControl.Enabled = rbEnabledAttr.AsBoolValueOrDefault(false, roleBasedAccessControlBlock)
+	} else {
+		// azurerm >= 2.99.0
+		roleBasedAccessControlEnabledAttr := resource.GetAttribute("role_based_access_control_enabled")
+		cluster.RoleBasedAccessControl.Enabled = roleBasedAccessControlEnabledAttr.AsBoolValueOrDefault(false, resource)
 	}
 	return cluster
 }

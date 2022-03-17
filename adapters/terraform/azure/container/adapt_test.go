@@ -66,6 +66,33 @@ func Test_adaptCluster(t *testing.T) {
 			},
 		},
 		{
+			name: "defaults with a new syntax",
+			terraform: `
+			resource "azurerm_kubernetes_cluster" "example" {
+				role_based_access_control_enabled = true
+			}
+`,
+			expected: container.KubernetesCluster{
+				Metadata: types.NewTestMetadata(),
+				NetworkProfile: container.NetworkProfile{
+					Metadata:      types.NewTestMetadata(),
+					NetworkPolicy: types.String("", types.NewTestMetadata()),
+				},
+				EnablePrivateCluster: types.Bool(false, types.NewTestMetadata()),
+				AddonProfile: container.AddonProfile{
+					Metadata: types.NewTestMetadata(),
+					OMSAgent: container.OMSAgent{
+						Metadata: types.NewTestMetadata(),
+						Enabled:  types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+				RoleBasedAccessControl: container.RoleBasedAccessControl{
+					Metadata: types.NewTestMetadata(),
+					Enabled:  types.Bool(true, types.NewTestMetadata()),
+				},
+			},
+		},
+		{
 			name: "defaults",
 			terraform: `
 			resource "azurerm_kubernetes_cluster" "example" {
