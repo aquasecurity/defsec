@@ -2,29 +2,29 @@ package container
 
 var terraformUseRbacPermissionsGoodExamples = []string{
 	`
- // azurerm < 2.99.0
  resource "azurerm_kubernetes_cluster" "good_example" {
- 	role_based_access_control {
+	// azurerm < 2.99.0
+	role_based_access_control {
  		enabled = true
  	}
- }
 
- // azurerm >= 2.99.0
- role_based_access_control_enabled = true
+	// azurerm >= 2.99.0
+ 	role_based_access_control_enabled = true
+ }
  `,
 }
 
 var terraformUseRbacPermissionsBadExamples = []string{
 	`
- // azurerm < 2.99.0
  resource "azurerm_kubernetes_cluster" "bad_example" {
+	// azurerm < 2.99.0
  	role_based_access_control {
  		enabled = false
  	}
- }
 
- // azurerm >= 2.99.0
- role_based_access_control_enabled = false
+	// azurerm >= 2.99.0
+	role_based_access_control_enabled = false
+ }
  `,
 }
 
