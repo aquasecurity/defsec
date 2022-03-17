@@ -14,14 +14,20 @@ type regoResult struct {
 	StartLine int
 	EndLine   int
 	Message   string
+	Explicit  bool
+	Managed   bool
 }
 
 func (r regoResult) GetMetadata() types.Metadata {
+	if !r.Managed {
+		return types.NewUnmanagedMetadata()
+	}
 	rng := types.NewRange(r.Filepath, r.StartLine, r.EndLine)
-	return types.NewMetadata(
-		rng,
-		types.NewNamedReference(rng.String()),
-	)
+	ref := types.NewNamedReference(rng.String())
+	if r.Explicit {
+		return types.NewExplicitMetadata(rng, ref)
+	}
+	return types.NewMetadata(rng, ref)
 }
 
 func (r regoResult) GetRawValue() interface{} {
@@ -30,6 +36,7 @@ func (r regoResult) GetRawValue() interface{} {
 
 func parseResult(raw interface{}) *regoResult {
 	var result regoResult
+	result.Managed = true
 	switch val := raw.(type) {
 	case []interface{}:
 		var msg string
@@ -54,6 +61,7 @@ func parseResult(raw interface{}) *regoResult {
 
 func parseCause(cause map[string]interface{}) regoResult {
 	var result regoResult
+	result.Managed = true
 	if msg, ok := cause["msg"]; ok {
 		result.Message = fmt.Sprintf("%s", msg)
 	}
@@ -65,6 +73,16 @@ func parseCause(cause map[string]interface{}) regoResult {
 	}
 	if end, ok := cause["endline"]; ok {
 		result.EndLine = parseLineNumber(end)
+	}
+	if explicit, ok := cause["explicit"]; ok {
+		if set, ok := explicit.(bool); ok {
+			result.Explicit = set
+		}
+	}
+	if managed, ok := cause["managed"]; ok {
+		if set, ok := managed.(bool); ok {
+			result.Managed = set
+		}
 	}
 	return result
 }
@@ -88,7 +106,7 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace 
 				if regoResult.Message == "" {
 					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
 				}
-				results.Add(regoResult.Message, regoResult)
+				results.AddRego(regoResult.Message, namespace, rule, regoResult)
 				continue
 			}
 
@@ -100,7 +118,7 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace 
 				if regoResult.Message == "" {
 					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
 				}
-				results.Add(regoResult.Message, regoResult)
+				results.AddRego(regoResult.Message, namespace, rule, regoResult)
 			}
 		}
 	}
