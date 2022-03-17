@@ -53,8 +53,8 @@ func Test_OptionWithAlternativeIDProvider(t *testing.T) {
 	defer rules.Deregister(reg)
 
 	options := []Option{
-		OptionWithAlternativeIDProvider(func(s string) string {
-			return "altid"
+		OptionWithAlternativeIDProvider(func(s string) []string {
+			return []string{"something", "altid", "blah"}
 		}),
 	}
 	results := scanWithOptions(t, `
