@@ -36,6 +36,7 @@ func (r regoResult) GetRawValue() interface{} {
 
 func parseResult(raw interface{}) *regoResult {
 	var result regoResult
+	result.Managed = true
 	switch val := raw.(type) {
 	case []interface{}:
 		var msg string
@@ -60,6 +61,7 @@ func parseResult(raw interface{}) *regoResult {
 
 func parseCause(cause map[string]interface{}) regoResult {
 	var result regoResult
+	result.Managed = true
 	if msg, ok := cause["msg"]; ok {
 		result.Message = fmt.Sprintf("%s", msg)
 	}
