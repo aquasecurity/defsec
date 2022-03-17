@@ -19,7 +19,6 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "S3 Bucket missing KMS key",
 			input: s3.S3{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -36,7 +35,6 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "S3 Bucket with KMS key",
 			input: s3.S3{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),

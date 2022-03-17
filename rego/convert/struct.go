@@ -3,7 +3,15 @@ package convert
 import (
 	"reflect"
 	"strings"
+
+	"github.com/aquasecurity/defsec/parsers/types"
 )
+
+type metadataProvider interface {
+	GetMetadata() types.Metadata
+}
+
+var metadataInterface = reflect.TypeOf((*metadataProvider)(nil)).Elem()
 
 func StructToRego(inputValue reflect.Value) map[string]interface{} {
 
@@ -34,7 +42,18 @@ func StructToRego(inputValue reflect.Value) map[string]interface{} {
 		if val == nil {
 			continue
 		}
+		key := strings.ToLower(name)
+		if _, ok := field.Interface().(types.Metadata); key == "metadata" && ok {
+			continue
+		}
 		output[strings.ToLower(name)] = val
+	}
+
+	if inputValue.Type().Implements(metadataInterface) {
+		returns := inputValue.MethodByName("GetMetadata").Call(nil)
+		if metadata, ok := returns[0].Interface().(types.Metadata); ok {
+			output["__defsec_metadata"] = metadata.ToRego()
+		}
 	}
 
 	return output

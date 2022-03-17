@@ -12,14 +12,16 @@ import (
 func Test_RegoConversion(t *testing.T) {
 	s := State{
 		AWS: aws.AWS{
-			Metadata: types.Metadata{},
 			S3: s3.S3{
-				Metadata: types.Metadata{},
 				Buckets: []s3.Bucket{
 					{
+						Metadata: types.NewMetadata(
+							types.NewRange("main.tf", 2, 4),
+							types.NewNamedReference("aws_s3_bucket.example"),
+						),
 						Name: types.String("my-bucket", types.NewMetadata(
 							types.NewRange("main.tf", 3, 3),
-							types.NewNamedReference("whatever"),
+							types.NewNamedReference("aws_s3_bucket.example.bucket"),
 						)),
 					},
 				},
@@ -32,6 +34,13 @@ func Test_RegoConversion(t *testing.T) {
 			"s3": map[string]interface{}{
 				"buckets": []interface{}{
 					map[string]interface{}{
+						"__defsec_metadata": map[string]interface{}{
+							"filepath":  "main.tf",
+							"startline": 2,
+							"endline":   4,
+							"managed":   true,
+							"explicit":  false,
+						},
 						"name": map[string]interface{}{
 							"filepath":  "main.tf",
 							"startline": 3,

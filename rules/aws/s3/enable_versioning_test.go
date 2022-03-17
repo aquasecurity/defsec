@@ -19,7 +19,6 @@ func TestCheckVersioningIsEnabled(t *testing.T) {
 		{
 			name: "S3 bucket versioning disabled",
 			input: s3.S3{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckVersioningIsEnabled(t *testing.T) {
 		{
 			name: "S3 bucket versioning enabled",
 			input: s3.S3{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),

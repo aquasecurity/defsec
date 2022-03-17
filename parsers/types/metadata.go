@@ -15,6 +15,22 @@ type Metadata struct {
 	parent         *Metadata
 }
 
+func (m *Metadata) ToRego() interface{} {
+	if m.rnge == nil {
+		return map[string]interface{}{
+			"managed":  m.isManaged,
+			"explicit": m.isExplicit,
+		}
+	}
+	return map[string]interface{}{
+		"filepath":  m.Range().GetFilename(),
+		"startline": m.Range().GetStartLine(),
+		"endline":   m.Range().GetEndLine(),
+		"managed":   m.isManaged,
+		"explicit":  m.isExplicit,
+	}
+}
+
 func NewMetadata(r Range, ref Reference) Metadata {
 	if r == nil {
 		panic("range is nil")
