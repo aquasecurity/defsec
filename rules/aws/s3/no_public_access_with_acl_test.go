@@ -19,7 +19,6 @@ func TestCheckForPublicACL(t *testing.T) {
 		{
 			name: "positive result",
 			input: s3.S3{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -32,7 +31,6 @@ func TestCheckForPublicACL(t *testing.T) {
 		{
 			name: "negative result",
 			input: s3.S3{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),

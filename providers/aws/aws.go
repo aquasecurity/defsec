@@ -1,7 +1,6 @@
 package aws
 
 import (
-	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/providers/aws/athena"
 	"github.com/aquasecurity/defsec/providers/aws/autoscaling"
@@ -40,7 +39,6 @@ import (
 )
 
 type AWS struct {
-	types.Metadata
 	APIGateway    apigateway.APIGateway
 	Athena        athena.Athena
 	Autoscaling   autoscaling.Autoscaling

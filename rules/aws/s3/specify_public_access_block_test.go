@@ -19,7 +19,6 @@ func TestCheckBucketsHavePublicAccessBlocks(t *testing.T) {
 		{
 			name: "Public access block missing",
 			input: s3.S3{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -31,7 +30,6 @@ func TestCheckBucketsHavePublicAccessBlocks(t *testing.T) {
 		{
 			name: "Public access block present",
 			input: s3.S3{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -19,7 +19,6 @@ func TestCheckEncryptionIsEnabled(t *testing.T) {
 		{
 			name: "Bucket encryption disabled",
 			input: s3.S3{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEncryptionIsEnabled(t *testing.T) {
 		{
 			name: "Bucket encryption enabled",
 			input: s3.S3{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),

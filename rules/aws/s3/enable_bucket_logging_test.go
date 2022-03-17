@@ -19,7 +19,6 @@ func TestCheckLoggingIsEnabled(t *testing.T) {
 		{
 			name: "S3 bucket logging disabled",
 			input: s3.S3{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -36,7 +35,6 @@ func TestCheckLoggingIsEnabled(t *testing.T) {
 		{
 			name: "S3 bucket logging enabled",
 			input: s3.S3{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
