@@ -22,3 +22,10 @@ func OptionWithDataDirs(paths ...string) func(s *Scanner) {
 		s.dataDirs = paths
 	}
 }
+
+// OptionWithPolicyNamespaces - namespaces which indicate rego policies containing enforced rules
+func OptionWithPolicyNamespaces(namespaces ...string) func(s *Scanner) {
+	return func(s *Scanner) {
+		s.policyNamespaces = namespaces
+	}
+}

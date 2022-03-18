@@ -3,6 +3,7 @@ package terraform
 import (
 	"bytes"
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -170,7 +171,7 @@ resource "aws_s3_bucket" "my-bucket" {
 	require.NoError(t, err)
 
 	err = fs.WriteFile("/rules/test.rego", []byte(`
-package users.abcdefg
+package defsec.abcdefg
 
 __rego_metadata__ := {
 	"id": "TEST123",
@@ -223,6 +224,112 @@ deny[cause] {
 
 	if t.Failed() {
 		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
+	}
+
+}
+
+func Test_OptionWithPolicyNamespaces(t *testing.T) {
+
+	tests := []struct {
+		includedNamespaces []string
+		policyNamespace    string
+		wantFailure        bool
+	}{
+		{
+			includedNamespaces: nil,
+			policyNamespace:    "blah",
+			wantFailure:        false,
+		},
+		{
+			includedNamespaces: nil,
+			policyNamespace:    "appshield.something",
+			wantFailure:        true,
+		},
+		{
+			includedNamespaces: nil,
+			policyNamespace:    "defsec.blah",
+			wantFailure:        true,
+		},
+		{
+			includedNamespaces: []string{"user"},
+			policyNamespace:    "users",
+			wantFailure:        false,
+		},
+		{
+			includedNamespaces: []string{"users"},
+			policyNamespace:    "something.users",
+			wantFailure:        false,
+		},
+		{
+			includedNamespaces: []string{"users"},
+			policyNamespace:    "users",
+			wantFailure:        true,
+		},
+		{
+			includedNamespaces: []string{"users"},
+			policyNamespace:    "users.my_rule",
+			wantFailure:        true,
+		},
+		{
+			includedNamespaces: []string{"a", "users", "b"},
+			policyNamespace:    "users",
+			wantFailure:        true,
+		},
+		{
+			includedNamespaces: []string{"user"},
+			policyNamespace:    "defsec",
+			wantFailure:        true,
+		},
+	}
+
+	for i, test := range tests {
+
+		t.Run(strconv.Itoa(i), func(t *testing.T) {
+
+			fs, err := filesystem.New()
+			require.NoError(t, err)
+			defer func() { _ = fs.Close() }()
+
+			err = fs.WriteFile("/code/main.tf", []byte(`
+resource "aws_s3_bucket" "my-bucket" {
+	bucket = "evil"
+}
+`))
+			require.NoError(t, err)
+
+			err = fs.WriteFile("/rules/test.rego", []byte(fmt.Sprintf(`
+package %s
+
+deny[cause] {
+	bucket := input.aws.s3.buckets[_]
+	bucket.name.value == "evil"
+	cause := bucket.name
+}
+
+`, test.policyNamespace)))
+			require.NoError(t, err)
+
+			scanner := New(
+				OptionWithPolicyDirs([]string{fs.RealPath("rules")}),
+				OptionWithPolicyNamespaces(test.includedNamespaces...),
+			)
+			if err := scanner.AddPath(fs.RealPath("/code/main.tf")); err != nil {
+				t.Error(err)
+			}
+
+			results, _, err := scanner.Scan()
+			require.NoError(t, err)
+
+			var found bool
+			for _, result := range results.GetFailed() {
+				if result.RegoNamespace() == test.policyNamespace && result.RegoRule() == "deny" {
+					found = true
+					break
+				}
+			}
+			assert.Equal(t, test.wantFailure, found)
+
+		})
 	}
 
 }

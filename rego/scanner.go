@@ -40,7 +40,6 @@ func NewScanner(options ...Option) *Scanner {
 		ruleNamespaces: map[string]struct{}{
 			"appshield": {},
 			"defsec":    {},
-			"users":     {},
 		},
 		runtimeValues: addRuntimeValues(),
 	}
