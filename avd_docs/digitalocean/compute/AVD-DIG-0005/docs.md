@@ -1,8 +1,13 @@
 
-Upgrading a Kubernetes cluster can affect availability of your cluster. By enabling surge upgrades, loads will temporarily be moved onto new nodes while upgrading existing nodes. Please note constraints on the droplet limit described in the documentation.
+While upgrading your cluster, workloads will temporarily be moved to new nodes. A small cost will follow, but as a bonus, you won't experience downtime.
+
+### Impact
+Upgrades may influence availability of your Kubernetes cluster
 
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
 ### Links
 - https://docs.digitalocean.com/products/kubernetes/how-to/upgrade-cluster/#surge-upgrades
+
+

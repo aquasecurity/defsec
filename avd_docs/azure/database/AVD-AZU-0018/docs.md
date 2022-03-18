@@ -7,3 +7,4 @@ Nobody will be prompty alerted in the case of a threat being detected
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
+

@@ -4,8 +4,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/aquasecurity/defsec/severity"
-
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/stretchr/testify/assert"
 
@@ -67,16 +65,13 @@ deny[res] {
 		AVDID:       "AVD-DS-0006",
 		LegacyID:    "DS006",
 		ShortCode:   "no-self-referencing-copy-from",
-		Summary:     "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself.",
-		Explanation: "",
+		Summary:     "COPY '--from' referring to the current image",
+		Explanation: "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself.",
 		Impact:      "",
 		Resolution:  "Change the '--from' so that it will not refer to itself",
 		Provider:    "dockerfile",
 		Service:     "general",
-		Links: []string{
-			"https://docs.docker.com/develop/develop-images/multistage-build/",
-		},
-		Severity:    severity.Critical,
-		RegoPackage: "data.appshield.dockerfile.DS006",
-	}, results.GetFailed()[0].Rule())
+		Links:       []string{"https://docs.docker.com/develop/develop-images/multistage-build/"},
+		Severity:    "CRITICAL",
+		Terraform:   (*rules.EngineMetadata)(nil), CloudFormation: (*rules.EngineMetadata)(nil), CustomChecks: rules.CustomChecks{Terraform: (*rules.TerraformCustomCheck)(nil)}, RegoPackage: "data.appshield.dockerfile.DS006"}, results.GetFailed()[0].Rule())
 }

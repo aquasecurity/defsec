@@ -11,4 +11,5 @@ Data in the storage container could be exposed publicly
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/storage/blobs/anonymous-read-access-configure?tabs=portal#set-the-public-access-level-for-a-container
-        
+
+

@@ -11,4 +11,5 @@ Long life password increase the likelihood of a password eventually being compro
 
 ### Links
 - https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html#password-policy-details
-        
+
+

@@ -9,4 +9,5 @@ Outdated SSL policies increase exposure to known vulnerabilities
 
 ### Links
 - https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-data-protection.html
-        
+
+

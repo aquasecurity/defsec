@@ -9,4 +9,5 @@ Access can be granted without knowledge of the database administrator
 
 ### Links
 - https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/contained-database-authentication-server-configuration-option?view=sql-server-ver15
-        
+
+

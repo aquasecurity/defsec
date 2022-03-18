@@ -9,5 +9,7 @@ Loss of error logging
 
 ### Links
 - https://postgresqlco.nf/doc/en/param/log_min_messages/
- - https://www.postgresql.org/docs/13/runtime-config-logging.html#GUC-LOG-MIN-MESSAGES
-        
+
+- https://www.postgresql.org/docs/13/runtime-config-logging.html#GUC-LOG-MIN-MESSAGES
+
+

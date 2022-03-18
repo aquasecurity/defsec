@@ -13,4 +13,5 @@ Insecure transfer of data into secure accounts could be read if intercepted
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/storage/common/storage-require-secure-transfer
-        
+
+

@@ -390,7 +390,7 @@ deny[res] {
 	assert.Equal(t, 456, failure.Metadata().Range().GetEndLine())
 	assert.Equal(t, "AVD-XX-9999", failure.Rule().AVDID)
 	assert.Equal(t, "AA001", failure.Rule().LegacyID)
-	assert.Equal(t, "This is a description", failure.Rule().Summary)
+	assert.Equal(t, "This is a title", failure.Rule().Summary)
 	assert.Equal(t, severity.Low, failure.Rule().Severity)
 	assert.Equal(t, "This is a recommendation", failure.Rule().Resolution)
 	assert.Equal(t, "https://google.com", failure.Rule().Links[0])

@@ -9,5 +9,7 @@ Unencrypted sensitive plaintext value can be easily accessible in code.
 
 ### Links
 - https://registry.terraform.io/providers/integrations/github/latest/docs/resources/actions_environment_secret
- - https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
-        
+
+- https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
+
+

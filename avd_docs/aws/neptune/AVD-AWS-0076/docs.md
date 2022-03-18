@@ -9,4 +9,5 @@ Unencrypted sensitive data is vulnerable to compromise.
 
 ### Links
 - https://docs.aws.amazon.com/neptune/latest/userguide/encrypt.html
-        
+
+

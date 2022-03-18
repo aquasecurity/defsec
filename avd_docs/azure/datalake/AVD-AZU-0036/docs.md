@@ -9,4 +9,5 @@ Data could be read if compromised
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/data-lake-store/data-lake-store-security-overview
-        
+
+

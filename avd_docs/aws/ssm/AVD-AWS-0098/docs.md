@@ -9,4 +9,5 @@ Using AWS managed keys reduces the flexibility and control over the encryption k
 
 ### Links
 - https://docs.aws.amazon.com/kms/latest/developerguide/services-secrets-manager.html#asm-encrypt
-        
+
+

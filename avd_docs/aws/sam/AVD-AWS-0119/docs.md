@@ -9,4 +9,5 @@ Without logging enabled it is difficult to identify suspicious activity
 
 ### Links
 - https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-statemachine.html#sam-statemachine-logging
-        
+
+

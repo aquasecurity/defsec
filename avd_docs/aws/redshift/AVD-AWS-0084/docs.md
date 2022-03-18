@@ -9,4 +9,5 @@ Data may be leaked if infrastructure is compromised
 
 ### Links
 - https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html
-        
+
+

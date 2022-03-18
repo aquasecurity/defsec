@@ -11,4 +11,5 @@ Node identity and integrity can't be verified without shielded GKE nodes
 
 ### Links
 - https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#shielded_nodes
-        
+
+

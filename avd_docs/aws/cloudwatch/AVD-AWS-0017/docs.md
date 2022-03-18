@@ -9,4 +9,5 @@ Log data may be leaked if the logs are compromised. No auditing of who have view
 
 ### Links
 - https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/encrypt-log-data-kms.html
-        
+
+

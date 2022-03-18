@@ -1,7 +1,5 @@
 
-
-S3 Buckets should be encrypted with customer managed KMS keys and not default AWS managed keys, in order to allow granular control over access to specific buckets.
-
+Encryption using AWS keys provides protection for your S3 buckets. To increase control of the encryption and manage factors like rotation use customer managed keys.
 
 ### Impact
 Using AWS managed keys does not allow for fine grained control
@@ -11,4 +9,5 @@ Using AWS managed keys does not allow for fine grained control
 
 ### Links
 - https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-encryption.html
-        
+
+

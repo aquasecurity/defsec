@@ -9,4 +9,5 @@ Data can be freely read if compromised
 
 ### Links
 - https://docs.aws.amazon.com/awscloudtrail/latest/userguide/encrypting-cloudtrail-log-files-with-aws-kms.html
-        
+
+

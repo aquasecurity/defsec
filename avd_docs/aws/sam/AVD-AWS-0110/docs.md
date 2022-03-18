@@ -9,4 +9,5 @@ Data stored in the cache that is unencrypted may be vulnerable to compromise
 
 ### Links
 - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-stage-methodsetting.html#cfn-apigateway-stage-methodsetting-cachedataencrypted
-        
+
+

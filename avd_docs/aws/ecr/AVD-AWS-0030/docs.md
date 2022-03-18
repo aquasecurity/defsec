@@ -9,4 +9,5 @@ The ability to scan images is not being used and vulnerabilities will not be hig
 
 ### Links
 - https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-scanning.html
-        
+
+

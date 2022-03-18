@@ -9,4 +9,5 @@ Public exposure of sensitive data.
 
 ### Links
 - https://jbrojbrojbro.medium.com/you-make-the-rules-with-authentication-controls-for-cloud-storage-53c32543747b
-        
+
+

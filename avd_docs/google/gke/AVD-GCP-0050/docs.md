@@ -9,4 +9,5 @@ Service accounts with wide permissions can increase the risk of compromise
 
 ### Links
 - https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa
-        
+
+

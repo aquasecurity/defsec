@@ -9,4 +9,5 @@ EKS secrets could be read if compromised
 
 ### Links
 - https://aws.amazon.com/about-aws/whats-new/2020/03/amazon-eks-adds-envelope-encryption-for-secrets-with-aws-kms/
-        
+
+

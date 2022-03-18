@@ -9,4 +9,5 @@ Sensitive data could be exposed in the database logs.
 
 ### Links
 - https://www.postgresql.org/docs/13/runtime-config-logging.html#GUC-LOG-MIN-DURATION-STATEMENT
-        
+
+

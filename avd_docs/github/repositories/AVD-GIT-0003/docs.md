@@ -1,6 +1,4 @@
 
-### GitHub repository has vulnerability alerts disabled.
-
 GitHub repository should be set to use vulnerability alerts.
 
 You can do this by setting the <code>vulnerability_alerts</code> attribute to 'true'.
@@ -13,3 +11,5 @@ Known vulnerabilities may not be discovered
 
 ### Links
 - https://docs.github.com/en/code-security/supply-chain-security/managing-vulnerabilities-in-your-projects-dependencies/about-alerts-for-vulnerable-dependencies
+
+

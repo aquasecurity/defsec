@@ -1,6 +1,4 @@
 
-### The minimum TLS version for Storage Accounts should be TLS1_2
-
 Azure Storage currently supports three versions of the TLS protocol: 1.0, 1.1, and 1.2. 
 
 Azure Storage uses TLS 1.2 on public HTTPS endpoints, but TLS 1.0 and TLS 1.1 are still supported for backward compatibility.
@@ -15,4 +13,5 @@ The TLS version being outdated and has known vulnerabilities
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/storage/common/transport-layer-security-configure-minimum-version
-        
+
+

@@ -11,4 +11,5 @@ Short logging retention could result in missing valuable historical information
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/azure-sql/database/auditing-overview
-        
+
+

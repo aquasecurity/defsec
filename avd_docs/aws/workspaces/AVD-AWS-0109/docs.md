@@ -9,4 +9,5 @@ Data can be freely read if compromised
 
 ### Links
 - https://docs.aws.amazon.com/workspaces/latest/adminguide/encrypt-workspaces.html
-        
+
+

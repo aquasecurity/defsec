@@ -1,6 +1,4 @@
 
-### Github repository shouldn't be public.
-
 Github repository should be set to be private.
 
 You can do this by either setting <code>private</code> attribute to 'true' or <code>visibility</code> attribute to 'internal' or 'private'.
@@ -13,5 +11,7 @@ Anyone can read the contents of the GitHub repository and leak IP
 
 ### Links
 - https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility
- - https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories
-        
+
+- https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-repository-visibility#about-internal-repositories
+
+

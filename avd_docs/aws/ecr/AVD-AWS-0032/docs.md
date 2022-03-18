@@ -9,4 +9,5 @@ Risk of potential data leakage of sensitive artifacts
 
 ### Links
 - https://docs.aws.amazon.com/AmazonECR/latest/public/public-repository-policies.html
-        
+
+

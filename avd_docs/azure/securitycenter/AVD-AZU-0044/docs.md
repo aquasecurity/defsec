@@ -10,4 +10,5 @@ The ability to react to high severity notifications could be delayed
 
 ### Links
 - https://azure.microsoft.com/en-us/services/security-center/
-        
+
+

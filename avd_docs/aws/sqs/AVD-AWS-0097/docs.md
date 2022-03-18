@@ -11,4 +11,5 @@ SQS policies with wildcard actions allow more that is required
 
 ### Links
 - https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-security-best-practices.html
-        
+
+

@@ -9,4 +9,5 @@ Data stored in the table that is unencrypted may be vulnerable to compromise
 
 ### Links
 - https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-simpletable.html#sam-simpletable-ssespecification
-        
+
+

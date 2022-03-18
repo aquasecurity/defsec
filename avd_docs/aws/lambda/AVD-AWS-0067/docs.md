@@ -13,4 +13,5 @@ Not providing the source ARN allows any resource from principal, even from other
 
 ### Links
 - https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-permission.html
-        
+
+

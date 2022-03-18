@@ -1,6 +1,4 @@
 
-### When using Queue Services for a storage account, logging should be enabled.
-
 Storage Analytics logs detailed information about successful and failed requests to a storage service. 
 
 This information can be used to monitor individual requests and to diagnose issues with a storage service. 
@@ -15,4 +13,5 @@ Logging provides valuable information about access and usage
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/storage/common/storage-analytics-logging?tabs=dotnet
-        
+
+

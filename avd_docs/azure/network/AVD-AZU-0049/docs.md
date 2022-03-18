@@ -12,4 +12,5 @@ Not enabling retention or having short expiry on flow logs could lead to comprom
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-monitoring-overview
-        
+
+

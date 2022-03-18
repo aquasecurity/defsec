@@ -11,4 +11,5 @@ Password reuse increase the risk of compromised passwords being abused
 
 ### Links
 - https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html#password-policy-details
-        
+
+

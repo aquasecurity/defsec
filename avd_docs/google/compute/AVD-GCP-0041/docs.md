@@ -9,4 +9,5 @@ Unable to prevent unwanted system state modification
 
 ### Links
 - https://cloud.google.com/blog/products/identity-security/virtual-trusted-platform-module-for-shielded-vms-security-in-plaintext
-        
+
+

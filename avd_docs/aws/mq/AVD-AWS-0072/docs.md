@@ -9,4 +9,5 @@ Publicly accessible MQ Broker may be vulnerable to compromise
 
 ### Links
 - https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/using-amazon-mq-securely.html#prefer-brokers-without-public-accessibility
-        
+
+

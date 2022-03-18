@@ -11,4 +11,5 @@ Accidental or malicious writes and deletes can't be rolled back
 
 ### Links
 - https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/PointInTimeRecovery.html
-        
+
+

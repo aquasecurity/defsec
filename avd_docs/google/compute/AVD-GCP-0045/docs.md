@@ -9,4 +9,5 @@ No visibility of VM instance boot state.
 
 ### Links
 - https://cloud.google.com/security/shielded-cloud/shielded-vm#integrity-monitoring
-        
+
+

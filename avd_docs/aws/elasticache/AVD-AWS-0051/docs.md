@@ -9,4 +9,5 @@ In transit data in the Replication Group could be read if intercepted
 
 ### Links
 - https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/in-transit-encryption.html
-        
+
+

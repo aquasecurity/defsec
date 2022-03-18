@@ -11,4 +11,5 @@ Using free subscription does not enable Azure Defender for the resource type
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/security-center/security-center-pricing
-        
+
+
