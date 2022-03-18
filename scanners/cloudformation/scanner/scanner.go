@@ -30,6 +30,7 @@ type Scanner struct {
 	paths             []string
 	debugWriter       io.Writer
 	policyDirs        []string
+	policyNamespaces  []string
 }
 
 // New creates a new Scanner
@@ -95,7 +96,7 @@ func (s *Scanner) Scan(ctx context.Context) (results rules.Results, err error) {
 		return nil, err
 	}
 
-	regoScanner := rego.NewScanner()
+	regoScanner := rego.NewScanner(rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...))
 	if err := regoScanner.LoadPolicies(true, s.policyDirs...); err != nil {
 		return nil, err
 	}

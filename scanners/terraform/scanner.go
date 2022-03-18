@@ -18,12 +18,13 @@ import (
 )
 
 type Scanner struct {
-	parserOpt    []parser.Option
-	executorOpt  []executor.Option
-	dirs         map[string]struct{}
-	forceAllDirs bool
-	debugWriter  io.Writer
-	policyDirs   []string
+	parserOpt        []parser.Option
+	executorOpt      []executor.Option
+	dirs             map[string]struct{}
+	forceAllDirs     bool
+	debugWriter      io.Writer
+	policyDirs       []string
+	policyNamespaces []string
 }
 
 type Metrics struct {
@@ -86,7 +87,9 @@ func (s *Scanner) Scan() (rules.Results, Metrics, error) {
 	rootDirs := s.findRootModules(simplifiedDirs)
 	sort.Strings(rootDirs)
 
-	regoScanner := rego.NewScanner()
+	regoScanner := rego.NewScanner(
+		rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...),
+	)
 	if err := regoScanner.LoadPolicies(true, s.policyDirs...); err != nil {
 		return nil, Metrics{}, err
 	}

@@ -18,10 +18,11 @@ import (
 )
 
 type Scanner struct {
-	debugWriter io.Writer
-	policyDirs  []string
-	dataDirs    []string
-	paths       []string
+	debugWriter      io.Writer
+	policyDirs       []string
+	dataDirs         []string
+	paths            []string
+	policyNamespaces []string
 }
 
 func NewScanner(options ...Option) *Scanner {
@@ -88,6 +89,7 @@ func (s *Scanner) Scan(ctx context.Context) (rules.Results, error) {
 
 	regoScanner := rego.NewScanner(
 		rego.OptionWithDebug(s.debugWriter),
+		rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...),
 	)
 	if err := regoScanner.LoadPolicies(len(s.policyDirs) == 0, s.policyDirs...); err != nil {
 		return nil, err

@@ -158,6 +158,13 @@ func OptionWithPolicyDirs(dirs []string) func(s *Scanner) {
 	}
 }
 
+// OptionWithPolicyNamespaces - namespaces which indicate rego policies containing enforced rules
+func OptionWithPolicyNamespaces(namespaces ...string) func(s *Scanner) {
+	return func(s *Scanner) {
+		s.policyNamespaces = namespaces
+	}
+}
+
 func severityAsOrdinal(sev severity.Severity) int {
 	switch sev {
 	case severity.Critical:
