@@ -9,4 +9,5 @@ Clients can ignore encryption requirements
 
 ### Links
 - https://docs.aws.amazon.com/athena/latest/ug/manage-queries-control-costs-with-workgroups.html
-        
+
+

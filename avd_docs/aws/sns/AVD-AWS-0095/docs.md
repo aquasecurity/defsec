@@ -9,4 +9,5 @@ The SNS topic messages could be read if compromised
 
 ### Links
 - https://docs.aws.amazon.com/sns/latest/dg/sns-server-side-encryption.html
-        
+
+

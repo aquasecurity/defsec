@@ -11,4 +11,5 @@ Redshift cluster does not benefit from VPC security if it is deployed in EC2 cla
 
 ### Links
 - https://docs.aws.amazon.com/redshift/latest/mgmt/managing-clusters-vpc.html
-        
+
+

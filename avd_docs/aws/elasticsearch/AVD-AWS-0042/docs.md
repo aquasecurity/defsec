@@ -15,4 +15,5 @@ Logging provides vital information about access and usage
 
 ### Links
 - https://docs.aws.amazon.com/elasticsearch-service/latest/developerguide/es-createdomain-configure-slow-logs.html
-        
+
+

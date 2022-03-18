@@ -10,4 +10,5 @@ Classic resources are running in a shared environment with other customers
 
 ### Links
 - https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-classic-platform.html
-        
+
+

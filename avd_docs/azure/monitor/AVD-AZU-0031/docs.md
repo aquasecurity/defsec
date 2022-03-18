@@ -9,4 +9,5 @@ Short life activity logs can lead to missing records when investigating a breach
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/azure-monitor/essentials/platform-logs-overview
-        
+
+

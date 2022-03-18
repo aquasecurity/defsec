@@ -15,4 +15,5 @@ Pods could be operating with more permissions than required to be effective
 
 ### Links
 - https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#admission_controllers
-        
+
+

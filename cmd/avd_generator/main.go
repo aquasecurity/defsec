@@ -3,51 +3,53 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 	"text/template"
 
-	"github.com/aquasecurity/defsec/cmd/rego"
+	_ "github.com/aquasecurity/defsec/loader"
+
+	"github.com/aquasecurity/defsec/rules"
 )
 
 func main() {
-	regoFiles, err := rego.GetAllNonTestRegoFiles()
-	if err != nil {
-		fail("failed to get the rego files. %v", err)
-	}
 
 	var generateCount int
-	for _, regoMeta := range regoFiles {
 
-		if _, err := os.Stat(regoMeta.DocsFilePath()); err == nil {
-			continue
-		}
-
-		if err := os.MkdirAll(regoMeta.DocsFolder(), 0755); err != nil {
-			fail("an error occurred creating the docs folder for %s. %v", regoMeta.DocsFolder(), err)
-		}
-
-		writeDocsFile(regoMeta)
+	for _, metadata := range rules.GetRegistered() {
+		writeDocsFile(metadata)
 		generateCount++
 	}
 
 	fmt.Printf("\nGenerated %d files in avd_docs\n", generateCount)
 }
 
-func writeDocsFile(meta *rego.RegoMetadata) {
+func writeDocsFile(meta rules.RegisteredRule) {
 
 	tmpl, err := template.New("appshield").Parse(docsMarkdownTemplate)
 	if err != nil {
 		fail("error occurred creating the template %v\n", err)
 	}
 
-	file, err := os.Create(meta.DocsFilePath())
-	if err != nil {
-		fail("error occurred creating the file for %s", meta.DocsFilePath())
+	docpath := filepath.Join("avd_docs",
+		strings.ToLower(meta.Rule().Provider.ConstName()),
+		strings.ToLower(strings.ReplaceAll(meta.Rule().Service, "-", "")),
+		meta.Rule().AVDID,
+	)
+
+	if err := os.MkdirAll(docpath, os.ModePerm); err != nil {
+		panic(err)
 	}
 
-	if err := tmpl.Execute(file, meta); err != nil {
+	file, err := os.Create(filepath.Join(docpath, "docs.md"))
+	if err != nil {
+		fail("error occurred creating the file for %s", docpath)
+	}
+
+	if err := tmpl.Execute(file, meta.Rule()); err != nil {
 		fail("error occurred generating the document %v", err)
 	}
-	fmt.Printf("Generating file for policy %s\n", meta.Name)
+	fmt.Printf("Generating file for policy %s\n", meta.Rule().AVDID)
 }
 
 func fail(msg string, args ...interface{}) {
@@ -56,16 +58,16 @@ func fail(msg string, args ...interface{}) {
 }
 
 var docsMarkdownTemplate = `
-### {{ .Title }}
-{{ .Description }}
+{{ .Explanation }}
 
 ### Impact
-<!-- Add Impact here -->
+{{ if .Impact }}{{ .Impact }}{{ else }}<!-- Add Impact here -->{{ end }}
 
 <!-- DO NOT CHANGE -->
 {{ ` + "`{{ " + `remediationActions ` + "`}}" + `}}
 
-{{ if .Url }}### Links
-- {{ .Url }}
+{{ if .Links }}### Links{{ range .Links }}
+- {{ . }}
+{{ end}}
 {{ end }}
 `

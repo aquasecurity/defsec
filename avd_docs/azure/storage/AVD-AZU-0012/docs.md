@@ -11,4 +11,5 @@ Network rules that allow could cause data to be exposed publicly
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/firewall/rule-processing
-        
+
+

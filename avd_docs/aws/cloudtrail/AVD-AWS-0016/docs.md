@@ -9,4 +9,5 @@ Illicit activity could be removed from the logs
 
 ### Links
 - https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html
-        
+
+

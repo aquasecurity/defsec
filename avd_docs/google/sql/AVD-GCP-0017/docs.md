@@ -9,4 +9,5 @@ Public exposure of sensitive data
 
 ### Links
 - https://www.cloudconformity.com/knowledge-base/gcp/CloudSQL/publicly-accessible-cloud-sql-instances.html
-        
+
+

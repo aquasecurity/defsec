@@ -9,4 +9,5 @@ Direct exposure of an instance to the public internet
 
 ### Links
 - https://cloud.google.com/compute/docs/ip-addresses#externaladdresses
-        
+
+

@@ -9,4 +9,5 @@ Using AWS managed keys does not allow for fine grained control
 
 ### Links
 - https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html
-        
+
+

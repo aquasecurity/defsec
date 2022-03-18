@@ -9,4 +9,5 @@ Overly permissive policies may grant access to sensitive resources
 
 ### Links
 - https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-statemachine.html#sam-statemachine-policies
-        
+
+

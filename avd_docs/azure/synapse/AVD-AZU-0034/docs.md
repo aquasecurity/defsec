@@ -1,6 +1,4 @@
 
-### Synapse Workspace should have managed virtual network enabled, the default is disabled.
-
 Synapse Workspace does not have managed virtual network enabled by default.
 
 When you create your Azure Synapse workspace, you can choose to associate it to a Microsoft Azure Virtual Network. The Virtual Network associated with your workspace is managed by Azure Synapse. This Virtual Network is called a Managed workspace Virtual Network.
@@ -14,5 +12,7 @@ Your Synapse workspace is not using the private endpoints
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/synapse-analytics/security/synapse-workspace-managed-private-endpoints
- - https://docs.microsoft.com/en-us/azure/synapse-analytics/security/synapse-workspace-managed-vnet
-        
+
+- https://docs.microsoft.com/en-us/azure/synapse-analytics/security/synapse-workspace-managed-vnet
+
+

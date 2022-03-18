@@ -9,4 +9,5 @@ Activity may be occurring in locations that aren't being monitored
 
 ### Links
 - https://docs.microsoft.com/en-us/cli/azure/monitor/log-profiles?view=azure-cli-latest#az_monitor_log_profiles_create-required-parameters
-        
+
+

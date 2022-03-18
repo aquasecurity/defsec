@@ -9,4 +9,5 @@ The SQS queue messages could be read if compromised
 
 ### Links
 - https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html
-        
+
+

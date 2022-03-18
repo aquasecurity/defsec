@@ -9,4 +9,5 @@ Issues leading to denial of service may not be identified.
 
 ### Links
 - https://www.postgresql.org/docs/13/runtime-config-logging.html#GUC-LOG-LOCK-WAITS
-        
+
+

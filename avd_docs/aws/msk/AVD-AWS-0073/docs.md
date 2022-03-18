@@ -9,4 +9,5 @@ Intercepted data can be read in transit
 
 ### Links
 - https://docs.aws.amazon.com/msk/latest/developerguide/msk-encryption.html
-        
+
+

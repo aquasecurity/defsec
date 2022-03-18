@@ -9,4 +9,5 @@ Auditing provides valuable information about access and usage
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/azure-sql/database/auditing-overview
-        
+
+

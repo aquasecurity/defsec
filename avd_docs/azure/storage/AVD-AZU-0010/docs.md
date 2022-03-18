@@ -11,4 +11,5 @@ Trusted Microsoft Services won't be able to access storage account unless rules 
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security#trusted-microsoft-services
-        
+
+

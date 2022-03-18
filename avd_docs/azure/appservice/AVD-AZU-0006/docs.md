@@ -7,3 +7,4 @@ The minimum TLS version for apps should be TLS1_2
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
+

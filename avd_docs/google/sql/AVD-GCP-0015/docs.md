@@ -9,4 +9,5 @@ Intercepted data can be read in transit
 
 ### Links
 - https://cloud.google.com/sql/docs/mysql/configure-ssl-instance
-        
+
+

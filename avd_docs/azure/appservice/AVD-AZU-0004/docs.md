@@ -9,5 +9,7 @@ Anyone can access the Function App using HTTP.
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/app-service/configure-ssl-bindings#enforce-https
- - https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts
-        
+
+- https://docs.microsoft.com/en-us/azure/azure-functions/security-concepts
+
+

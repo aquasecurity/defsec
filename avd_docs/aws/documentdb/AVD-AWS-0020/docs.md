@@ -9,4 +9,5 @@ Limited visibility of audit trail for changes to the DocumentDB
 
 ### Links
 - https://docs.aws.amazon.com/documentdb/latest/developerguide/event-auditing.html
-        
+
+

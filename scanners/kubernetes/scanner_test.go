@@ -4,8 +4,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/aquasecurity/defsec/severity"
-
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/stretchr/testify/assert"
 
@@ -279,19 +277,19 @@ deny[res] {
 	require.Len(t, results.GetFailed(), 1)
 
 	assert.Equal(t, rules.Rule{
-		AVDID:       "AVD-KSV-0011",
-		LegacyID:    "KSV011",
-		ShortCode:   "limit-cpu",
-		Summary:     "Enforcing CPU limits prevents DoS via resource exhaustion.",
-		Explanation: "",
-		Impact:      "",
-		Resolution:  "Set a limit value under 'containers[].resources.limits.cpu'.",
-		Provider:    "kubernetes",
-		Service:     "general",
-		Links: []string{
-			"https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
-		},
-		Severity:    severity.Low,
-		RegoPackage: "data.appshield.kubernetes.KSV011",
-	}, results.GetFailed()[0].Rule())
+		AVDID:          "AVD-KSV-0011",
+		LegacyID:       "KSV011",
+		ShortCode:      "limit-cpu",
+		Summary:        "CPU not limited",
+		Explanation:    "Enforcing CPU limits prevents DoS via resource exhaustion.",
+		Impact:         "",
+		Resolution:     "Set a limit value under 'containers[].resources.limits.cpu'.",
+		Provider:       "kubernetes",
+		Service:        "general",
+		Links:          []string{"https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits"},
+		Severity:       "LOW",
+		Terraform:      (*rules.EngineMetadata)(nil),
+		CloudFormation: (*rules.EngineMetadata)(nil),
+		CustomChecks:   rules.CustomChecks{Terraform: (*rules.TerraformCustomCheck)(nil)},
+		RegoPackage:    "data.appshield.kubernetes.KSV011"}, results.GetFailed()[0].Rule())
 }

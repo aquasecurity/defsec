@@ -9,4 +9,5 @@ Publicly accessible databases could lead to compromised data
 
 ### Links
 - https://docs.microsoft.com/en-us/rest/api/sql/2021-02-01-preview/firewall-rules/create-or-update
-        
+
+

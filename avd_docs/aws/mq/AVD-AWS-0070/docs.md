@@ -9,4 +9,5 @@ Without audit logging it is difficult to trace activity in the MQ broker
 
 ### Links
 - https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/configure-logging-monitoring-activemq.html
-        
+
+

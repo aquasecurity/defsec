@@ -11,4 +11,5 @@ Keys could be purged from the vault without protection
 
 ### Links
 - https://docs.microsoft.com/en-us/azure/key-vault/general/soft-delete-overview#purge-protection
-        
+
+

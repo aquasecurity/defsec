@@ -9,4 +9,5 @@ The default VPC does not have critical security features applied
 
 ### Links
 - https://docs.aws.amazon.com/vpc/latest/userguide/default-vpc.html
-        
+
+

@@ -9,4 +9,5 @@ Insufficient diagnostic data.
 
 ### Links
 - https://www.postgresql.org/docs/13/runtime-config-logging.html#GUC-LOG-CONNECTIONS
-        
+
+
