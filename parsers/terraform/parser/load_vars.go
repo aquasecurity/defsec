@@ -3,6 +3,7 @@ package parser
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/hashicorp/hcl/v2"
@@ -13,6 +14,20 @@ import (
 
 func loadTFVars(filenames []string) (map[string]cty.Value, error) {
 	combinedVars := make(map[string]cty.Value)
+
+	for _, env := range os.Environ() {
+		split := strings.Split(env, "=")
+		key := split[0]
+		if !strings.HasPrefix(key, "TF_VAR_") {
+			continue
+		}
+		key = strings.TrimPrefix(key, "TF_VAR_")
+		var val string
+		if len(split) > 1 {
+			val = split[1]
+		}
+		combinedVars[key] = cty.StringVal(val)
+	}
 
 	for _, filename := range filenames {
 		vars, err := loadTFVarsFile(filename)

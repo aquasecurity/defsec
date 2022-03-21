@@ -838,6 +838,10 @@ func (a *Attribute) References(r types.Reference) bool {
 }
 
 func getRawValue(value cty.Value) interface{} {
+	if value.IsNull() || !value.IsKnown() {
+		return value
+	}
+
 	typeName := value.Type().FriendlyName()
 
 	switch typeName {
