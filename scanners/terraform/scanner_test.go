@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/aquasecurity/defsec/state"
 	"github.com/aquasecurity/defsec/test/testutil/filesystem"
 
 	"github.com/aquasecurity/defsec/providers"
@@ -330,6 +331,44 @@ deny[cause] {
 			assert.Equal(t, test.wantFailure, found)
 
 		})
+	}
+
+}
+
+func Test_OptionWithStateFunc(t *testing.T) {
+
+	fs, err := filesystem.New()
+	require.NoError(t, err)
+	defer func() { _ = fs.Close() }()
+
+	err = fs.WriteFile("/code/main.tf", []byte(`
+resource "aws_s3_bucket" "my-bucket" {
+	bucket = "evil"
+}
+`))
+	require.NoError(t, err)
+
+	var actual state.State
+
+	debugLog := bytes.NewBuffer([]byte{})
+	scanner := New(
+		OptionWithDebugWriter(debugLog),
+		OptionWithStateFunc(func(s *state.State) {
+			require.NotNil(t, s)
+			actual = *s
+		}),
+	)
+	if err := scanner.AddPath(fs.RealPath("/code/main.tf")); err != nil {
+		t.Error(err)
+	}
+
+	_, _, err = scanner.Scan()
+	require.NoError(t, err)
+
+	assert.Equal(t, 1, len(actual.AWS.S3.Buckets))
+
+	if t.Failed() {
+		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
 	}
 
 }
