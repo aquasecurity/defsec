@@ -14,7 +14,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/moby/buildkit v0.9.3
 	github.com/olekukonko/tablewriter v0.0.5
-	github.com/open-policy-agent/opa v0.37.2
+	github.com/open-policy-agent/opa v0.38.1
 	github.com/owenrumney/go-sarif/v2 v2.1.1
 	github.com/owenrumney/squealer v0.3.1
 	github.com/stretchr/testify v1.7.1
@@ -47,7 +47,6 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
 	github.com/mattn/go-runewidth v0.0.9 // indirect
