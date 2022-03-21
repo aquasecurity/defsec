@@ -9,6 +9,7 @@ import (
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/scanners/terraform/executor"
 	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/state"
 
 	"github.com/aquasecurity/defsec/parsers/terraform/parser"
 )
@@ -177,5 +178,11 @@ func severityAsOrdinal(sev severity.Severity) int {
 		return 1
 	default:
 		return 0
+	}
+}
+
+func OptionWithStateFunc(f ...func(*state.State)) Option {
+	return func(s *Scanner) {
+		s.executorOpt = append(s.executorOpt, executor.OptionWithStateFunc(f...))
 	}
 }
