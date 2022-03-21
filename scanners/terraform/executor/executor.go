@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/aquasecurity/defsec/rego"
+	"github.com/aquasecurity/defsec/state"
 
 	"github.com/aquasecurity/defsec/severity"
 
@@ -30,6 +31,7 @@ type Executor struct {
 	alternativeIDProviderFunc func(string) []string
 	severityOverrides         map[string]string
 	regoScanner               *rego.Scanner
+	stateFuncs                []func(*state.State)
 }
 
 type Metrics struct {
@@ -99,6 +101,10 @@ func (e *Executor) Execute(modules terraform.Modules) (rules.Results, Metrics, e
 	}
 	if e.useSingleThread {
 		threads = 1
+	}
+
+	for _, f := range e.stateFuncs {
+		f(infra)
 	}
 
 	checksTime := time.Now()

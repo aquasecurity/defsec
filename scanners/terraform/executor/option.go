@@ -4,6 +4,7 @@ import (
 	"io"
 
 	"github.com/aquasecurity/defsec/rego"
+	"github.com/aquasecurity/defsec/state"
 
 	"github.com/aquasecurity/defsec/rules"
 )
@@ -73,5 +74,11 @@ func OptionWithSingleThread(single bool) Option {
 func OptionWithRegoScanner(s *rego.Scanner) Option {
 	return func(e *Executor) {
 		e.regoScanner = s
+	}
+}
+
+func OptionWithStateFunc(f ...func(*state.State)) Option {
+	return func(e *Executor) {
+		e.stateFuncs = f
 	}
 }
