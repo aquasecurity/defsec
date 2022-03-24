@@ -9,7 +9,7 @@ import (
 
 var CheckDisableForceDestroy = rules.Register(
 	rules.Rule{
-		AVDID:       "AVD-DIG-0005",
+		AVDID:       "AVD-DIG-0009",
 		Provider:    providers.DigitalOceanProvider,
 		Service:     "spaces",
 		ShortCode:   "disable-force-destroy",

@@ -30,3 +30,7 @@ metadata_lint:
 .PHONY: generate_missing_docs
 generate_missing_docs:
 	go run ./cmd/avd_generator
+
+.PHONY: id
+id:
+	@go run ./cmd/id

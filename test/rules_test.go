@@ -9,13 +9,19 @@ import (
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
-func TestDefSecUsage(t *testing.T) {
+func TestAVDIDs(t *testing.T) {
+	existing := make(map[string]struct{})
 	for _, rule := range rules.GetRegistered() {
 		t.Run(rule.Rule().LongID(), func(t *testing.T) {
 			if rule.Rule().AVDID == "" {
 				t.Errorf("Rule has no AVD ID: %#v", rule)
+				return
+			}
+			if _, ok := existing[rule.Rule().AVDID]; ok {
+				t.Errorf("Rule detected with duplicate AVD ID: %s", rule.Rule().AVDID)
 			}
 		})
+		existing[rule.Rule().AVDID] = struct{}{}
 	}
 }
 
