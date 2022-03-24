@@ -9,7 +9,7 @@ import (
 
 var CheckAutoUpgrade = rules.Register(
 	rules.Rule{
-		AVDID:       "AVD-DIG-0006",
+		AVDID:       "AVD-DIG-0008",
 		Provider:    providers.DigitalOceanProvider,
 		Service:     "compute",
 		ShortCode:   "kubernetes-auto-upgrades-not-enabled",
