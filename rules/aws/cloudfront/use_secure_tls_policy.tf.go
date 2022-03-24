@@ -4,7 +4,7 @@ var terraformUseSecureTlsPolicyGoodExamples = []string{
 	`
  resource "aws_cloudfront_distribution" "good_example" {
    viewer_certificate {
-     cloudfront_default_certificate = true
+     cloudfront_default_certificate = aws_acm_certificate.example.arn
      minimum_protocol_version = "TLSv1.2_2021"
    }
  }
@@ -15,7 +15,7 @@ var terraformUseSecureTlsPolicyBadExamples = []string{
 	`
  resource "aws_cloudfront_distribution" "bad_example" {
    viewer_certificate {
-     cloudfront_default_certificate = true
+     cloudfront_default_certificate = aws_acm_certificate.example.arn
      minimum_protocol_version = "TLSv1.0"
    }
  }
