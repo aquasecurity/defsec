@@ -311,7 +311,7 @@ func (b *Block) FullName() string {
 
 	if b.moduleBlock != nil {
 		return fmt.Sprintf(
-			"%s:%s",
+			"%s.%s",
 			b.moduleBlock.FullName(),
 			b.LocalName(),
 		)

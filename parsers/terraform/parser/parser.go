@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -10,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aquasecurity/defsec/parsers/terraform/context"
+	tfcontext "github.com/aquasecurity/defsec/parsers/terraform/context"
 	"github.com/zclconf/go-cty/cty"
 
 	"github.com/aquasecurity/defsec/parsers/terraform"
@@ -27,7 +28,7 @@ type Parser interface {
 	ParseFile(path string) error
 	ParseContent(data []byte, fullPath string) error
 	ParseDirectory(path string) error
-	EvaluateAll() (terraform.Modules, cty.Value, error)
+	EvaluateAll(ctx context.Context) (terraform.Modules, cty.Value, error)
 	Metrics() Metrics
 	NewModuleParser(modulePath string, moduleName string, moduleBlock *terraform.Block) Parser
 }
@@ -59,16 +60,18 @@ type parser struct {
 	metrics        Metrics
 	options        []Option
 	debugWriter    io.Writer
+	allowDownloads bool
 }
 
 // New creates a new Parser
 func New(options ...Option) Parser {
 	p := &parser{
-		workspaceName: "default",
-		underlying:    hclparse.NewParser(),
-		options:       options,
-		moduleName:    "root",
-		debugWriter:   ioutil.Discard,
+		workspaceName:  "default",
+		underlying:     hclparse.NewParser(),
+		options:        options,
+		moduleName:     "root",
+		debugWriter:    ioutil.Discard,
+		allowDownloads: true,
 	}
 
 	for _, option := range options {
@@ -189,7 +192,7 @@ func (p *parser) ParseDirectory(fullPath string) error {
 	return nil
 }
 
-func (p *parser) EvaluateAll() (terraform.Modules, cty.Value, error) {
+func (p *parser) EvaluateAll(ctx context.Context) (terraform.Modules, cty.Value, error) {
 
 	if len(p.files) == 0 {
 		p.debug("No files found, nothing to do.")
@@ -239,8 +242,9 @@ func (p *parser) EvaluateAll() (terraform.Modules, cty.Value, error) {
 		p.workspaceName,
 		ignores,
 		p.debugWriter,
+		p.allowDownloads,
 	)
-	modules, parseDuration := evaluator.EvaluateAll()
+	modules, parseDuration := evaluator.EvaluateAll(ctx)
 	p.metrics.Counts.Modules = len(modules)
 	p.metrics.Timings.ParseDuration = parseDuration
 	p.debug("Finished parsing module '%s'.", p.moduleName)
@@ -250,7 +254,7 @@ func (p *parser) EvaluateAll() (terraform.Modules, cty.Value, error) {
 func (p *parser) readBlocks(files []sourceFile) (terraform.Blocks, terraform.Ignores, error) {
 	var blocks terraform.Blocks
 	var ignores terraform.Ignores
-	moduleCtx := context.NewContext(&hcl.EvalContext{}, nil)
+	moduleCtx := tfcontext.NewContext(&hcl.EvalContext{}, nil)
 	for _, file := range files {
 		fileBlocks, fileIgnores, err := loadBlocksFromFile(file)
 		if err != nil {

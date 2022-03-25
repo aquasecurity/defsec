@@ -104,6 +104,12 @@ func OptionSkipDownloaded(skip bool) Option {
 				search := fmt.Sprintf("%c.terraform%c", filepath.Separator, filepath.Separator)
 				if strings.Contains(result.Range().GetFilename(), search) {
 					results[i].OverrideStatus(rules.StatusIgnored)
+					continue
+				}
+				search = fmt.Sprintf("%c.tfsec%c", filepath.Separator, filepath.Separator)
+				if strings.Contains(result.Range().GetFilename(), search) {
+					results[i].OverrideStatus(rules.StatusIgnored)
+					continue
 				}
 			}
 			return results
@@ -184,5 +190,11 @@ func severityAsOrdinal(sev severity.Severity) int {
 func OptionWithStateFunc(f ...func(*state.State)) Option {
 	return func(s *Scanner) {
 		s.executorOpt = append(s.executorOpt, executor.OptionWithStateFunc(f...))
+	}
+}
+
+func OptionWithDownloads(allowed bool) Option {
+	return func(s *Scanner) {
+		s.parserOpt = append(s.parserOpt, parser.OptionWithDownloads(allowed))
 	}
 }

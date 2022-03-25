@@ -2,6 +2,7 @@ package test
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"testing"
 
@@ -76,7 +77,7 @@ func runRuleAgainstTerraform(rule rules.RegisteredRule, src string) ([]rules.Res
 	if err := p.ParseContent([]byte(src), "main.tf"); err != nil {
 		return nil, err
 	}
-	modules, _, err := p.EvaluateAll()
+	modules, _, err := p.EvaluateAll(context.TODO())
 	if err != nil {
 		return nil, err
 	}

@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"context"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -55,7 +56,7 @@ data "cats_cat" "the-cats-mother" {
 	if err := parser.ParseDirectory(filepath.Dir(path)); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := parser.EvaluateAll()
+	modules, _, err := parser.EvaluateAll(context.TODO())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -141,7 +142,7 @@ output "mod_result" {
 	if err := parser.ParseDirectory(path); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := parser.EvaluateAll()
+	modules, _, err := parser.EvaluateAll(context.TODO())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -169,7 +170,7 @@ output "mod_result" {
 
 	childOutputs := childModule.GetBlocks().OfType("output")
 	require.Len(t, childOutputs, 1)
-	assert.Equal(t, "module.my-mod:output.mod_result", childOutputs[0].FullName())
+	assert.Equal(t, "module.my-mod.output.mod_result", childOutputs[0].FullName())
 	childValAttr := childOutputs[0].GetAttribute("value")
 	require.NotNil(t, childValAttr)
 	require.Equal(t, cty.String, childValAttr.Type())
@@ -205,7 +206,7 @@ output "mod_result" {
 	if err := parser.ParseDirectory(path); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := parser.EvaluateAll()
+	modules, _, err := parser.EvaluateAll(context.TODO())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -232,7 +233,7 @@ output "mod_result" {
 
 	childOutputs := childModule.GetBlocks().OfType("output")
 	require.Len(t, childOutputs, 1)
-	assert.Equal(t, "module.my-mod:output.mod_result", childOutputs[0].FullName())
+	assert.Equal(t, "module.my-mod.output.mod_result", childOutputs[0].FullName())
 	childValAttr := childOutputs[0].GetAttribute("value")
 	require.NotNil(t, childValAttr)
 	require.Equal(t, cty.String, childValAttr.Type())
