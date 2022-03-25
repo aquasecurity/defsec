@@ -27,3 +27,9 @@ func OptionWithWorkspaceName(workspaceName string) Option {
 		p.workspaceName = workspaceName
 	}
 }
+
+func OptionWithDownloads(allowed bool) Option {
+	return func(p *parser) {
+		p.allowDownloads = allowed
+	}
+}

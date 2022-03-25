@@ -1,12 +1,14 @@
 package parser
 
 import (
+	"context"
 	"errors"
 	"fmt"
-	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/aquasecurity/defsec/parsers/terraform/parser/resolvers"
 
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/zclconf/go-cty/cty"
@@ -48,7 +50,7 @@ func (e *evaluator) getModuleKeyName(name string) (keyName string) {
 }
 
 // LoadModules reads all module blocks and loads the underlying modules, adding blocks to e.moduleBlocks
-func (e *evaluator) loadModules() []*ModuleDefinition {
+func (e *evaluator) loadModules(ctx context.Context) []*ModuleDefinition {
 
 	blocks := e.blocks
 
@@ -62,7 +64,7 @@ func (e *evaluator) loadModules() []*ModuleDefinition {
 		if moduleBlock.Label() == "" {
 			continue
 		}
-		moduleDefinition, err := e.loadModule(moduleBlock)
+		moduleDefinition, err := e.loadModule(ctx, moduleBlock)
 		if err != nil {
 			var loadErr *moduleLoadError
 			if errors.As(err, &loadErr) {
@@ -89,7 +91,7 @@ func (e *evaluator) loadModules() []*ModuleDefinition {
 }
 
 // takes in a module "x" {} block and loads resources etc. into e.moduleBlocks - additionally returns variables to add to ["module.x.*"] variables
-func (e *evaluator) loadModule(b *terraform.Block) (*ModuleDefinition, error) {
+func (e *evaluator) loadModule(ctx context.Context, b *terraform.Block) (*ModuleDefinition, error) {
 
 	metadata := b.GetMetadata()
 
@@ -128,17 +130,23 @@ func (e *evaluator) loadModule(b *terraform.Block) (*ModuleDefinition, error) {
 		}
 	}
 	if modulePath == "" {
-		// if we have no metadata, we can only support modules available on the local filesystem
-		// users wanting this feature should run a `terraform init` before running tfsec to cache all modules locally
-		if !strings.HasPrefix(source, fmt.Sprintf(".%c", os.PathSeparator)) && !strings.HasPrefix(source, fmt.Sprintf("..%c", os.PathSeparator)) {
-			return nil, &moduleLoadError{
-				source: source,
-				err:    errors.New("missing source code"),
-			}
-		}
 
-		// combine the current calling module with relative source of the module
-		modulePath = filepath.Join(e.modulePath, source)
+		version := b.GetAttribute("version").AsStringValueOrDefault("", b).Value()
+		opt := resolvers.Options{
+			Source:         source,
+			Version:        version,
+			WorkingDir:     e.projectRootPath,
+			Name:           b.FullName(),
+			ModulePath:     e.modulePath,
+			DebugWriter:    e.debugWriter,
+			AllowDownloads: e.allowDownloads,
+		}
+		path, err := resolveModule(ctx, opt)
+		if err != nil {
+			return nil, err
+		}
+		e.debug("Module '%s' resolved to path '%s'", b.FullName(), path)
+		modulePath = path
 	}
 
 	moduleParser := e.parentParser.NewModuleParser(modulePath, b.Label(), b)

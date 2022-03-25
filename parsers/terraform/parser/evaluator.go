@@ -1,13 +1,15 @@
 package parser
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"reflect"
 	"time"
 
+	tfcontext "github.com/aquasecurity/defsec/parsers/terraform/context"
+
 	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/parsers/terraform/context"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/zclconf/go-cty/cty"
@@ -19,7 +21,7 @@ const (
 )
 
 type evaluator struct {
-	ctx             *context.Context
+	ctx             *tfcontext.Context
 	blocks          terraform.Blocks
 	inputVars       map[string]cty.Value
 	moduleMetadata  *modulesMetadata
@@ -29,6 +31,7 @@ type evaluator struct {
 	ignores         terraform.Ignores
 	parentParser    Parser
 	debugWriter     io.Writer
+	allowDownloads  bool
 }
 
 func newEvaluator(
@@ -43,10 +46,11 @@ func newEvaluator(
 	workspace string,
 	ignores []terraform.Ignore,
 	debugWriter io.Writer,
+	allowDownloads bool,
 ) *evaluator {
 
 	// create a context to store variables and make functions available
-	ctx := context.NewContext(&hcl.EvalContext{
+	ctx := tfcontext.NewContext(&hcl.EvalContext{
 		Functions: Functions(modulePath),
 	}, nil)
 
@@ -72,6 +76,7 @@ func newEvaluator(
 		moduleMetadata:  moduleMetadata,
 		ignores:         ignores,
 		debugWriter:     debugWriter,
+		allowDownloads:  allowDownloads,
 	}
 }
 
@@ -112,7 +117,7 @@ func (e *evaluator) exportOutputs() cty.Value {
 	return cty.ObjectVal(data)
 }
 
-func (e *evaluator) EvaluateAll() (terraform.Modules, time.Duration) {
+func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, time.Duration) {
 
 	var parseDuration time.Duration
 
@@ -142,8 +147,8 @@ func (e *evaluator) EvaluateAll() (terraform.Modules, time.Duration) {
 	parseDuration += time.Since(start)
 
 	var modules []*terraform.Module
-	for _, definition := range e.loadModules() {
-		submodules, outputs, err := definition.Parser.EvaluateAll()
+	for _, definition := range e.loadModules(ctx) {
+		submodules, outputs, err := definition.Parser.EvaluateAll(ctx)
 		if err != nil {
 			e.debug("Failed to evaluate submodule '%s': %s.", definition.Name, err)
 			continue

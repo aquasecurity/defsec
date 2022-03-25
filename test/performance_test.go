@@ -1,6 +1,7 @@
 package test
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -26,7 +27,7 @@ func BenchmarkCalculate(b *testing.B) {
 		if err := p.ParseDirectory(fs.RealPath("/project")); err != nil {
 			panic(err)
 		}
-		modules, _, err := p.EvaluateAll()
+		modules, _, err := p.EvaluateAll(context.TODO())
 		if err != nil {
 			panic(err)
 		}
