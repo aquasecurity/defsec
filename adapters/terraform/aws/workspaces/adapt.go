@@ -2,6 +2,7 @@ package workspaces
 
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/providers/aws/workspaces"
 )
 
@@ -22,27 +23,35 @@ func adaptWorkspaces(modules terraform.Modules) []workspaces.WorkSpace {
 }
 
 func adaptWorkspace(resource *terraform.Block) workspaces.WorkSpace {
-	rootVolumeEncryptAttr := resource.GetAttribute("root_volume_encryption_enabled")
-	rootVolumeEncryptVal := rootVolumeEncryptAttr.AsBoolValueOrDefault(false, resource)
 
-	userVolumeEncryptAttr := resource.GetAttribute("user_volume_encryption_enabled")
-	userVolumeEncryptVal := userVolumeEncryptAttr.AsBoolValueOrDefault(false, resource)
-
-	return workspaces.WorkSpace{
+	workspace := workspaces.WorkSpace{
 		Metadata: resource.GetMetadata(),
 		RootVolume: workspaces.Volume{
 			Metadata: resource.GetMetadata(),
 			Encryption: workspaces.Encryption{
 				Metadata: resource.GetMetadata(),
-				Enabled:  rootVolumeEncryptVal,
+				Enabled:  types.BoolDefault(false, resource.GetMetadata()),
 			},
 		},
 		UserVolume: workspaces.Volume{
 			Metadata: resource.GetMetadata(),
 			Encryption: workspaces.Encryption{
 				Metadata: resource.GetMetadata(),
-				Enabled:  userVolumeEncryptVal,
+				Enabled:  types.BoolDefault(false, resource.GetMetadata()),
 			},
 		},
 	}
+	if rootVolumeEncryptAttr := resource.GetAttribute("root_volume_encryption_enabled"); rootVolumeEncryptAttr.IsNotNil() {
+		workspace.RootVolume.Metadata = rootVolumeEncryptAttr.GetMetadata()
+		workspace.RootVolume.Encryption.Metadata = rootVolumeEncryptAttr.GetMetadata()
+		workspace.RootVolume.Encryption.Enabled = rootVolumeEncryptAttr.AsBoolValueOrDefault(false, resource)
+	}
+
+	if userVolumeEncryptAttr := resource.GetAttribute("user_volume_encryption_enabled"); userVolumeEncryptAttr.IsNotNil() {
+		workspace.UserVolume.Metadata = userVolumeEncryptAttr.GetMetadata()
+		workspace.UserVolume.Encryption.Metadata = userVolumeEncryptAttr.GetMetadata()
+		workspace.UserVolume.Encryption.Enabled = userVolumeEncryptAttr.AsBoolValueOrDefault(false, resource)
+	}
+
+	return workspace
 }
