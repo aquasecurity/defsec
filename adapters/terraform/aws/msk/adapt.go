@@ -51,7 +51,7 @@ func adaptCluster(resource *terraform.Block) msk.Cluster {
 
 	if encryptBlock := resource.GetBlock("encryption_info"); encryptBlock.IsNotNil() {
 		if encryptionInTransitBlock := encryptBlock.GetBlock("encryption_in_transit"); encryptionInTransitBlock.IsNotNil() {
-			cluster.EncryptionInTransit.Metadata = encryptBlock.GetMetadata()
+			cluster.EncryptionInTransit.Metadata = encryptionInTransitBlock.GetMetadata()
 			if clientBrokerAttr := encryptionInTransitBlock.GetAttribute("client_broker"); clientBrokerAttr.IsNotNil() {
 				cluster.EncryptionInTransit.ClientBroker = clientBrokerAttr.AsStringValueOrDefault("TLS", encryptionInTransitBlock)
 			}
@@ -76,7 +76,7 @@ func adaptCluster(resource *terraform.Block) msk.Cluster {
 			}
 			if firehoseBlock := brokerLogsBlock.GetBlock("firehose"); firehoseBlock.IsNotNil() {
 				firehoseEnabledAttr := firehoseBlock.GetAttribute("enabled")
-				cluster.Logging.Broker.Firehose.Metadata = firehoseEnabledAttr.GetMetadata()
+				cluster.Logging.Broker.Firehose.Metadata = firehoseBlock.GetMetadata()
 				cluster.Logging.Broker.Firehose.Enabled = firehoseEnabledAttr.AsBoolValueOrDefault(false, firehoseBlock)
 			}
 		}
