@@ -11,6 +11,7 @@ const (
 	TypeApplication = "application"
 	TypeGateway     = "gateway"
 	TypeNetwork     = "network"
+	TypeClassic     = "classic"
 )
 
 type LoadBalancer struct {
