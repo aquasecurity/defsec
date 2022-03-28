@@ -43,6 +43,18 @@ func TestCheckDropInvalidHeaders(t *testing.T) {
 				},
 			},
 			expected: false,
+		}, {
+			name: "Classic load balanace doesn't fail when no drop headers",
+			input: elb.ELB{
+				Metadata: types.NewTestMetadata(),
+				LoadBalancers: []elb.LoadBalancer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Type:     types.String(elb.TypeClassic, types.NewTestMetadata()),
+					},
+				},
+			},
+			expected: false,
 		},
 	}
 	for _, test := range tests {
