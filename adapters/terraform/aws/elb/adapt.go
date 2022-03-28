@@ -30,7 +30,7 @@ func (a *adapter) adaptLoadBalancers(modules terraform.Modules) []elb.LoadBalanc
 		loadBalancers = append(loadBalancers, a.adaptLoadBalancer(resource, modules))
 	}
 	for _, resource := range modules.GetResourcesByType("aws_elb") {
-		loadBalancers = append(loadBalancers, a.adaptLoadBalancer(resource, modules))
+		loadBalancers = append(loadBalancers, a.adaptClassicLoadBalancer(resource, modules))
 	}
 
 	orphanResources := modules.GetResourceByIDs(a.listenerIDs.Orphans()...)
@@ -73,6 +73,18 @@ func (a *adapter) adaptLoadBalancer(resource *terraform.Block, module terraform.
 		DropInvalidHeaderFields: dropInvalidHeadersVal,
 		Internal:                internalVal,
 		Listeners:               listeners,
+	}
+}
+
+func (a *adapter) adaptClassicLoadBalancer(resource *terraform.Block, module terraform.Modules) elb.LoadBalancer {
+	internalAttr := resource.GetAttribute("internal")
+	internalVal := internalAttr.AsBoolValueOrDefault(false, resource)
+
+	return elb.LoadBalancer{
+		Metadata:                resource.GetMetadata(),
+		Type:                    types.String("classic", resource.GetMetadata()),
+		DropInvalidHeaderFields: types.BoolDefault(false, resource.GetMetadata()),
+		Internal:                internalVal,
 	}
 }
 
