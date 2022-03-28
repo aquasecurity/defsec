@@ -4,25 +4,74 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/providers/aws/ssm"
 )
 
 func Test_Adapt(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name      string
 		terraform string
 		expected  ssm.SSM
 	}{
 		{
-			name: "basic",
+			name: "reference key",
 			terraform: `
-resource "" "example" {
-    
-}
+			resource "aws_kms_key" "secrets" {
+				enable_key_rotation = true
+			}
+			
+			resource "aws_secretsmanager_secret" "example" {
+			  name       = "lambda_password"
+			  kms_key_id = aws_kms_key.secrets.arn
+			}
 `,
-			expected: ssm.SSM{},
+			expected: ssm.SSM{
+				Metadata: types.NewTestMetadata(),
+				Secrets: []ssm.Secret{
+					{
+						Metadata: types.NewTestMetadata(),
+						KMSKeyID: types.String("aws_kms_key.secrets", types.NewTestMetadata()),
+					},
+				},
+			},
+		},
+		{
+			name: "string key",
+			terraform: `
+			resource "aws_secretsmanager_secret" "example" {
+			  name       = "lambda_password"
+			  kms_key_id = "key_id"
+			}
+`,
+			expected: ssm.SSM{
+				Metadata: types.NewTestMetadata(),
+				Secrets: []ssm.Secret{
+					{
+						Metadata: types.NewTestMetadata(),
+						KMSKeyID: types.String("key_id", types.NewTestMetadata()),
+					},
+				},
+			},
+		},
+		{
+			name: "defaults",
+			terraform: `
+			resource "aws_secretsmanager_secret" "example" {
+			}
+`,
+			expected: ssm.SSM{
+				Metadata: types.NewTestMetadata(),
+				Secrets: []ssm.Secret{
+					{
+						Metadata: types.NewTestMetadata(),
+						KMSKeyID: types.String("", types.NewTestMetadata()),
+					},
+				},
+			},
 		},
 	}
 
@@ -35,56 +84,27 @@ resource "" "example" {
 	}
 }
 
-func Test_adaptSecrets(t *testing.T) {
-	t.SkipNow()
-	tests := []struct {
-		name      string
-		terraform string
-		expected  []ssm.Secret
-	}{
-		{
-			name: "basic",
-			terraform: `
-resource "" "example" {
-    
-}
-`,
-			expected: []ssm.Secret{},
-		},
+func TestLines(t *testing.T) {
+	src := `
+	resource "aws_kms_key" "secrets" {
+		enable_key_rotation = true
 	}
+	
+	resource "aws_secretsmanager_secret" "example" {
+	  name       = "lambda_password"
+	  kms_key_id = aws_kms_key.secrets.arn
+	}`
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
-			adapted := adaptSecrets(modules)
-			testutil.AssertDefsecEqual(t, test.expected, adapted)
-		})
-	}
-}
+	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	adapted := Adapt(modules)
 
-func Test_adaptSecret(t *testing.T) {
-	t.SkipNow()
-	tests := []struct {
-		name      string
-		terraform string
-		expected  ssm.Secret
-	}{
-		{
-			name: "basic",
-			terraform: `
-resource "" "example" {
-    
-}
-`,
-			expected: ssm.Secret{},
-		},
-	}
+	require.Len(t, adapted.Secrets, 1)
+	secret := adapted.Secrets[0]
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
-			adapted := adaptSecret(modules.GetBlocks()[0], modules[0])
-			testutil.AssertDefsecEqual(t, test.expected, adapted)
-		})
-	}
+	assert.Equal(t, 6, secret.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 9, secret.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 2, secret.KMSKeyID.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 4, secret.KMSKeyID.GetMetadata().Range().GetEndLine())
+
 }
