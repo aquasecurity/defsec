@@ -7,13 +7,21 @@ import (
 	"net/http"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/Masterminds/semver"
 )
 
-type registryResolver struct{}
+type registryResolver struct {
+	client *http.Client
+}
 
-var Registry = &registryResolver{}
+var Registry = &registryResolver{
+	client: &http.Client{
+		// give it a maximum 5 seconds to resolve the module
+		Timeout: time.Second * 5,
+	},
+}
 
 type moduleVersions struct {
 	Modules []struct {
@@ -89,7 +97,7 @@ func (r *registryResolver) Resolve(ctx context.Context, opt Options) (downloadPa
 		req.Header.Set("X-Terraform-Version", opt.Version)
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := r.client.Do(req)
 	if err != nil {
 		return "", true, err
 	}

@@ -4,14 +4,29 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"sync/atomic"
 
 	"github.com/hashicorp/go-getter"
 	"golang.org/x/xerrors"
 )
 
-type remoteResolver struct{}
+type remoteResolver struct {
+	count int32
+}
 
-var Remote = &remoteResolver{}
+var Remote = &remoteResolver{
+	count: 0,
+}
+
+func (r *remoteResolver) incrementCount(o Options) {
+	o.Debug("Incrementing the download counter")
+	atomic.CompareAndSwapInt32(&r.count, int32(r.count), int32(r.count+1))
+	o.Debug("Download counter is now %d", r.count)
+}
+
+func (r *remoteResolver) GetDownloadCount() int {
+	return int(r.count)
+}
 
 func (r *remoteResolver) Resolve(ctx context.Context, opt Options) (downloadPath string, applies bool, err error) {
 	if !opt.hasPrefix("github.com/", "bitbucket.org/", "s3:", "git@", "git:", "hg:", "https:", "gcs:") {
@@ -26,6 +41,8 @@ func (r *remoteResolver) Resolve(ctx context.Context, opt Options) (downloadPath
 	if err := r.download(ctx, opt, cacheDir); err != nil {
 		return "", true, err
 	}
+	r.incrementCount(opt)
+	opt.Debug("Successfully downloaded %s from %s", opt.Name, opt.Source)
 	if err := writeCacheRecord(cacheDir, opt.Source, opt.Version); err != nil {
 		return "", true, err
 	}

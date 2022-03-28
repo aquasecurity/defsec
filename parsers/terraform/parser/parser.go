@@ -39,9 +39,10 @@ type Metrics struct {
 		ParseDuration  time.Duration
 	}
 	Counts struct {
-		Blocks  int
-		Modules int
-		Files   int
+		Blocks          int
+		Modules         int
+		ModuleDownloads int
+		Files           int
 	}
 }
 

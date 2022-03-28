@@ -14,6 +14,7 @@ import (
 	"github.com/aquasecurity/defsec/rego"
 
 	"github.com/aquasecurity/defsec/parsers/terraform/parser"
+	"github.com/aquasecurity/defsec/parsers/terraform/parser/resolvers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/scanners/terraform/executor"
 )
@@ -139,6 +140,8 @@ func (s *Scanner) Scan() (rules.Results, Metrics, error) {
 
 		allResults = append(allResults, results...)
 	}
+
+	metrics.Parser.Counts.ModuleDownloads = resolvers.Remote.GetDownloadCount()
 
 	metrics.Timings.Total += metrics.Parser.Timings.DiskIODuration
 	metrics.Timings.Total += metrics.Parser.Timings.ParseDuration
