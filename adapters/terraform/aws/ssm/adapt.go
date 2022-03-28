@@ -26,13 +26,10 @@ func adaptSecret(resource *terraform.Block, module *terraform.Module) ssm.Secret
 	KMSKeyIDAttr := resource.GetAttribute("kms_key_id")
 	KMSKeyIDVal := KMSKeyIDAttr.AsStringValueOrDefault("alias/aws/secretsmanager", resource)
 
-	if KMSKeyIDAttr.IsDataBlockReference() {
-		kmsData, err := module.GetReferencedBlock(KMSKeyIDAttr, resource)
-		if err != nil {
-			KMSKeyIDVal = types.StringDefault("alias/aws/secretsmanager", KMSKeyIDAttr.GetMetadata())
-		} else {
-			keyIDAttr := kmsData.GetAttribute("key_id")
-			KMSKeyIDVal = keyIDAttr.AsStringValueOrDefault("alias/aws/secretsmanager", kmsData)
+	if KMSKeyIDAttr.IsResourceBlockReference("aws_kms_key") {
+		kmsBlock, err := module.GetReferencedBlock(KMSKeyIDAttr, resource)
+		if err == nil {
+			KMSKeyIDVal = types.String(kmsBlock.FullName(), kmsBlock.GetMetadata())
 		}
 	}
 
