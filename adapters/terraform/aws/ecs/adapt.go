@@ -36,11 +36,16 @@ func adaptClusterSettings(resourceBlock *terraform.Block) ecs.ClusterSettings {
 		ContainerInsightsEnabled: types.BoolDefault(false, resourceBlock.GetMetadata()),
 	}
 
-	if settingBlock := resourceBlock.GetBlock("setting"); settingBlock.IsNotNil() && settingBlock.GetAttribute("name").Equals("containerInsights") {
-		containerInsightsEnabled := settingBlock.GetAttribute("value").Equals("enabled")
-		settings.ContainerInsightsEnabled = types.Bool(containerInsightsEnabled, settingBlock.GetMetadata())
+	if settingBlock := resourceBlock.GetBlock("setting"); settingBlock.IsNotNil() {
+		settings.Metadata = settingBlock.GetMetadata()
+		if settingBlock.GetAttribute("name").Equals("containerInsights") {
+			insightsAttr := settingBlock.GetAttribute("value")
+			settings.ContainerInsightsEnabled = types.Bool(insightsAttr.Equals("enabled"), settingBlock.GetMetadata())
+			if insightsAttr.IsNotNil() {
+				settings.ContainerInsightsEnabled = types.Bool(insightsAttr.Equals("enabled"), insightsAttr.GetMetadata())
+			}
+		}
 	}
-
 	return settings
 }
 
@@ -78,16 +83,19 @@ func adaptVolumes(resourceBlock *terraform.Block) []ecs.Volume {
 }
 
 func adaptEFSVolumeConfiguration(volumeBlock *terraform.Block) ecs.EFSVolumeConfiguration {
-	if EFSConfigBlock := volumeBlock.GetBlock("efs_volume_configuration"); EFSConfigBlock.IsNotNil() {
-		transitEncryptionEnabled := EFSConfigBlock.GetAttribute("transit_encryption").Equals("ENABLED")
-		return ecs.EFSVolumeConfiguration{
-			Metadata:                 EFSConfigBlock.GetMetadata(),
-			TransitEncryptionEnabled: types.Bool(transitEncryptionEnabled, EFSConfigBlock.GetMetadata()),
-		}
-	}
-
-	return ecs.EFSVolumeConfiguration{
+	EFSVolumeConfiguration := ecs.EFSVolumeConfiguration{
 		Metadata:                 volumeBlock.GetMetadata(),
 		TransitEncryptionEnabled: types.BoolDefault(true, volumeBlock.GetMetadata()),
 	}
+
+	if EFSConfigBlock := volumeBlock.GetBlock("efs_volume_configuration"); EFSConfigBlock.IsNotNil() {
+		EFSVolumeConfiguration.Metadata = EFSConfigBlock.GetMetadata()
+		transitEncryptionAttr := EFSConfigBlock.GetAttribute("transit_encryption")
+		EFSVolumeConfiguration.TransitEncryptionEnabled = types.Bool(transitEncryptionAttr.Equals("ENABLED"), EFSConfigBlock.GetMetadata())
+		if transitEncryptionAttr.IsNotNil() {
+			EFSVolumeConfiguration.TransitEncryptionEnabled = types.Bool(transitEncryptionAttr.Equals("ENABLED"), transitEncryptionAttr.GetMetadata())
+		}
+	}
+
+	return EFSVolumeConfiguration
 }

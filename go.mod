@@ -18,7 +18,7 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/open-policy-agent/opa v0.38.1
 	github.com/owenrumney/go-sarif/v2 v2.1.1
-	github.com/owenrumney/squealer v0.3.1
+	github.com/owenrumney/squealer v0.3.2
 	github.com/stretchr/testify v1.7.1
 	github.com/zclconf/go-cty v1.10.0
 	github.com/zclconf/go-cty-yaml v1.0.2
