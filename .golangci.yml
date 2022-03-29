@@ -35,7 +35,7 @@ issues:
     - path: rules/
       linters:
         - gosec
-    - path: parsers/terraform/parser/funcs/
+    - path: pkg/scanners/terraform/parser/funcs/
       linters:
         - cyclop
         - errorlint

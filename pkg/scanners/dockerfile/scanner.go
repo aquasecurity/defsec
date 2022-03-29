@@ -70,6 +70,7 @@ func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (scan.Res
 	if err != nil {
 		return nil, err
 	}
+	s.debug("Scanning %s...", path)
 	return s.scanRego(ctx, rego.Input{
 		Path:     path,
 		Contents: dockerfile.ToRego(),

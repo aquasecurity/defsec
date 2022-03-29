@@ -97,7 +97,7 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 			return nil, metrics, err
 		}
 
-		modules, _, err := p.EvaluateAll(context.TODO(), target)
+		modules, _, err := p.EvaluateAll(ctx, target)
 		if err != nil {
 			return nil, metrics, err
 		}

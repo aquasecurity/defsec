@@ -68,5 +68,6 @@ func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (scan.Re
 		return nil, err
 	}
 
+	s.debug("Scanning %d files...", len(inputs))
 	return regoScanner.ScanInput(ctx, inputs...)
 }

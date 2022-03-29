@@ -33,7 +33,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[st
 		if entry.IsDir() {
 			return nil
 		}
-		if !p.Required(target, path) {
+		if !p.required(ctx, target, path) {
 			return nil
 		}
 		parsed, err := p.ParseFile(ctx, target, path)
@@ -59,12 +59,12 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (interface{
 	return p.parse(f)
 }
 
-func (p *Parser) Required(fs fs.FS, path string) bool {
+func (p *Parser) required(ctx context.Context, fs fs.FS, path string) bool {
 	ext := filepath.Ext(path)
 	if !strings.EqualFold(ext, ".yaml") && !strings.EqualFold(ext, ".yml") {
 		return false
 	}
-	parsed, err := p.ParseFile(context.TODO(), fs, path)
+	parsed, err := p.ParseFile(ctx, fs, path)
 	if err != nil {
 		// TODO: debug
 		return false
