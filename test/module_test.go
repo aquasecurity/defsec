@@ -6,20 +6,26 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/aquasecurity/defsec/scanners/terraform/executor"
+	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
+	"github.com/aquasecurity/defsec/pkg/terraform"
+
+	"github.com/aquasecurity/defsec/pkg/severity"
+
+	"github.com/aquasecurity/defsec/pkg/scan"
+
+	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/internal/rules/aws/iam"
+
+	"github.com/aquasecurity/defsec/pkg/scanners/terraform/executor"
+
+	"github.com/aquasecurity/defsec/pkg/providers"
+
 	"github.com/stretchr/testify/require"
 
-	"github.com/aquasecurity/defsec/rules/aws/iam"
-
-	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/parsers/terraform/parser"
-	"github.com/aquasecurity/defsec/providers"
-	"github.com/aquasecurity/defsec/rules"
-	"github.com/aquasecurity/defsec/severity"
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
-var badRule = rules.Rule{
+var badRule = scan.Rule{
 	Provider:    providers.AWSProvider,
 	Service:     "service",
 	ShortCode:   "abc",
@@ -28,11 +34,11 @@ var badRule = rules.Rule{
 	Resolution:  "Don't do stupid stuff",
 	Explanation: "Bad should not be set.",
 	Severity:    severity.High,
-	CustomChecks: rules.CustomChecks{
-		Terraform: &rules.TerraformCustomCheck{
+	CustomChecks: scan.CustomChecks{
+		Terraform: &scan.TerraformCustomCheck{
 			RequiredTypes:  []string{"resource"},
 			RequiredLabels: []string{"problem"},
-			Check: func(resourceBlock *terraform.Block, _ *terraform.Module) (results rules.Results) {
+			Check: func(resourceBlock *terraform.Block, _ *terraform.Module) (results scan.Results) {
 				if attr := resourceBlock.GetAttribute("bad"); attr.IsTrue() {
 					results.Add("bad", attr)
 				}
@@ -512,15 +518,15 @@ resource "bad" "thing" {
 `})
 	defer tidy()
 
-	r1 := rules.Rule{
+	r1 := scan.Rule{
 		Provider:  providers.AWSProvider,
 		Service:   "service",
 		ShortCode: "abc123",
 		Severity:  severity.High,
-		CustomChecks: rules.CustomChecks{
-			Terraform: &rules.TerraformCustomCheck{
+		CustomChecks: scan.CustomChecks{
+			Terraform: &scan.TerraformCustomCheck{
 				RequiredLabels: []string{"bad"},
-				Check: func(resourceBlock *terraform.Block, _ *terraform.Module) (results rules.Results) {
+				Check: func(resourceBlock *terraform.Block, _ *terraform.Module) (results scan.Results) {
 					if resourceBlock.GetAttribute("secure").IsTrue() {
 						return
 					}
@@ -562,15 +568,15 @@ resource "bad" "thing" {
 `})
 	defer tidy()
 
-	r1 := rules.Rule{
+	r1 := scan.Rule{
 		Provider:  providers.AWSProvider,
 		Service:   "service",
 		ShortCode: "abc123",
 		Severity:  severity.High,
-		CustomChecks: rules.CustomChecks{
-			Terraform: &rules.TerraformCustomCheck{
+		CustomChecks: scan.CustomChecks{
+			Terraform: &scan.TerraformCustomCheck{
 				RequiredLabels: []string{"bad"},
-				Check: func(resourceBlock *terraform.Block, _ *terraform.Module) (results rules.Results) {
+				Check: func(resourceBlock *terraform.Block, _ *terraform.Module) (results scan.Results) {
 					if resourceBlock.GetAttribute("secure").IsTrue() {
 						return
 					}

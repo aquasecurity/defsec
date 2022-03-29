@@ -4,15 +4,15 @@ import (
 	"context"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
+
+	"github.com/aquasecurity/defsec/internal/rules"
+
+	"github.com/aquasecurity/defsec/pkg/scanners/terraform/executor"
+
 	"github.com/aquasecurity/defsec/test/testutil"
 
-	"github.com/aquasecurity/defsec/scanners/terraform/executor"
-
-	"github.com/aquasecurity/defsec/rules"
-
 	"github.com/stretchr/testify/require"
-
-	"github.com/aquasecurity/defsec/parsers/terraform/parser"
 )
 
 func Test_DeterministicResults(t *testing.T) {

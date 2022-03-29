@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/aquasecurity/defsec/rules"
+	"github.com/aquasecurity/defsec/internal/rules"
 
 	"github.com/aquasecurity/defsec/test/testutil"
 )

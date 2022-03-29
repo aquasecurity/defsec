@@ -7,9 +7,7 @@ import (
 	"strings"
 	"text/template"
 
-	_ "github.com/aquasecurity/defsec/loader"
-
-	"github.com/aquasecurity/defsec/rules"
+	"github.com/aquasecurity/defsec/internal/rules"
 )
 
 func main() {

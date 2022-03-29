@@ -4,24 +4,28 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/aquasecurity/defsec/providers"
-	"github.com/aquasecurity/defsec/rules"
-	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/pkg/terraform"
 
-	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/pkg/severity"
+
+	"github.com/aquasecurity/defsec/pkg/scan"
+
+	"github.com/aquasecurity/defsec/internal/rules"
+
+	"github.com/aquasecurity/defsec/pkg/providers"
 
 	"github.com/stretchr/testify/assert"
 )
 
-var exampleRule = rules.Rule{
+var exampleRule = scan.Rule{
 	Provider:  providers.AWSProvider,
 	Service:   "service",
 	ShortCode: "abc123",
 	Severity:  severity.High,
-	CustomChecks: rules.CustomChecks{
-		Terraform: &rules.TerraformCustomCheck{
+	CustomChecks: scan.CustomChecks{
+		Terraform: &scan.TerraformCustomCheck{
 			RequiredLabels: []string{"bad"},
-			Check: func(resourceBlock *terraform.Block, _ *terraform.Module) (results rules.Results) {
+			Check: func(resourceBlock *terraform.Block, _ *terraform.Module) (results scan.Results) {
 				attr := resourceBlock.GetAttribute("secure")
 				if attr.IsNil() {
 					results.Add("example problem", resourceBlock)

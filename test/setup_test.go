@@ -4,12 +4,15 @@ import (
 	"context"
 	"testing"
 
-	"github.com/aquasecurity/defsec/rules"
+	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
+	"github.com/aquasecurity/defsec/pkg/terraform"
+
+	"github.com/aquasecurity/defsec/pkg/scan"
+
+	scanner "github.com/aquasecurity/defsec/pkg/scanners/terraform"
+
 	"github.com/stretchr/testify/require"
 
-	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/parsers/terraform/parser"
-	scanner "github.com/aquasecurity/defsec/scanners/terraform"
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -29,11 +32,11 @@ func createModulesFromSource(t *testing.T, source string, ext string) terraform.
 	return modules
 }
 
-func scanHCLWithWorkspace(t *testing.T, source string, workspace string) rules.Results {
+func scanHCLWithWorkspace(t *testing.T, source string, workspace string) scan.Results {
 	return scanHCL(t, source, scanner.OptionWithWorkspaceName(workspace))
 }
 
-func scanHCL(t *testing.T, source string, options ...scanner.Option) rules.Results {
+func scanHCL(t *testing.T, source string, options ...scanner.Option) scan.Results {
 
 	fs, _, tidy := testutil.CreateFS(t, map[string]string{
 		"main.tf": source,
@@ -41,12 +44,12 @@ func scanHCL(t *testing.T, source string, options ...scanner.Option) rules.Resul
 	defer tidy()
 
 	s := scanner.New(options...)
-	results, _, err := s.Scan(context.TODO(), fs, ".")
+	results, err := s.ScanFS(context.TODO(), fs, ".")
 	require.NoError(t, err)
 	return results
 }
 
-func scanJSON(t *testing.T, source string) rules.Results {
+func scanJSON(t *testing.T, source string) scan.Results {
 
 	fs, _, tidy := testutil.CreateFS(t, map[string]string{
 		"main.tf.json": source,
@@ -54,7 +57,7 @@ func scanJSON(t *testing.T, source string) rules.Results {
 	defer tidy()
 
 	s := scanner.New()
-	results, _, err := s.Scan(context.TODO(), fs, ".")
+	results, _, err := s.ScanFSWithMetrics(context.TODO(), fs, ".")
 	require.NoError(t, err)
 	return results
 }

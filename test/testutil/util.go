@@ -7,12 +7,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/aquasecurity/defsec/rules"
+	"github.com/aquasecurity/defsec/pkg/scan"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func AssertRuleFound(t *testing.T, ruleID string, results rules.Results, message string, args ...interface{}) {
+func AssertRuleFound(t *testing.T, ruleID string, results scan.Results, message string, args ...interface{}) {
 	found := ruleIDInResults(ruleID, results.GetFailed())
 	assert.True(t, found, append([]interface{}{message}, args...)...)
 	for _, result := range results.GetFailed() {
@@ -29,12 +30,12 @@ func AssertRuleFound(t *testing.T, ruleID string, results rules.Results, message
 	}
 }
 
-func AssertRuleNotFound(t *testing.T, ruleID string, results rules.Results, message string, args ...interface{}) {
+func AssertRuleNotFound(t *testing.T, ruleID string, results scan.Results, message string, args ...interface{}) {
 	found := ruleIDInResults(ruleID, results.GetFailed())
 	assert.False(t, found, append([]interface{}{message}, args...)...)
 }
 
-func ruleIDInResults(ruleID string, results rules.Results) bool {
+func ruleIDInResults(ruleID string, results scan.Results) bool {
 	for _, res := range results {
 		if res.Rule().LongID() == ruleID {
 			return true

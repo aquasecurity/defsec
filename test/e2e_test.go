@@ -7,20 +7,22 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/aquasecurity/defsec/test/testutil"
+	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	tfParser "github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
 
-	"github.com/aquasecurity/defsec/adapters/terraform"
+	"github.com/aquasecurity/defsec/pkg/scan"
+
+	"github.com/aquasecurity/defsec/internal/rules"
+	_ "github.com/aquasecurity/defsec/pkg/rules"
+
+	"github.com/aquasecurity/defsec/internal/adapters/cloudformation"
+	"github.com/aquasecurity/defsec/internal/adapters/terraform"
+
+	"github.com/aquasecurity/defsec/test/testutil"
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/aquasecurity/defsec/adapters/cloudformation"
-	cfParser "github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	tfParser "github.com/aquasecurity/defsec/parsers/terraform/parser"
-
 	"github.com/stretchr/testify/assert"
-
-	_ "github.com/aquasecurity/defsec/loader"
-	"github.com/aquasecurity/defsec/rules"
 )
 
 func Test_AllRules(t *testing.T) {
@@ -75,7 +77,7 @@ func Test_AllRules(t *testing.T) {
 	}
 }
 
-func runRuleAgainstTerraform(t *testing.T, rule rules.RegisteredRule, src string) ([]rules.Result, error) {
+func runRuleAgainstTerraform(t *testing.T, rule rules.RegisteredRule, src string) ([]scan.Result, error) {
 	fs, _, tidy := testutil.CreateFS(t, map[string]string{
 		"main.tf": src,
 	})
@@ -92,16 +94,16 @@ func runRuleAgainstTerraform(t *testing.T, rule rules.RegisteredRule, src string
 	return rule.Evaluate(state), nil
 }
 
-func parseCF(t *testing.T, source string, name string) (cfParser.FileContexts, error) {
+func parseCF(t *testing.T, source string, name string) (parser.FileContexts, error) {
 	tmp, err := os.MkdirTemp(os.TempDir(), "defsec")
 	require.NoError(t, err)
 	defer func() { _ = os.RemoveAll(tmp) }()
 	require.NoError(t, os.WriteFile(filepath.Join(tmp, name), []byte(source), 0600))
 	fs := os.DirFS(tmp)
-	return cfParser.New().ParseFS(context.TODO(), fs, ".")
+	return parser.New().ParseFS(context.TODO(), fs, ".")
 }
 
-func runRuleAgainstCloudFormation(t *testing.T, rule rules.RegisteredRule, src string) ([]rules.Result, error) {
+func runRuleAgainstCloudFormation(t *testing.T, rule rules.RegisteredRule, src string) ([]scan.Result, error) {
 	contexts, err := parseCF(t, src, "main.yaml")
 	if err != nil {
 		return nil, err
@@ -113,7 +115,7 @@ func runRuleAgainstCloudFormation(t *testing.T, rule rules.RegisteredRule, src s
 	return rule.Evaluate(state), nil
 }
 
-func assertRuleFound(t *testing.T, ruleID string, results []rules.Result, message string, args ...interface{}) {
+func assertRuleFound(t *testing.T, ruleID string, results []scan.Result, message string, args ...interface{}) {
 	found := ruleIDInResults(ruleID, results)
 	assert.True(t, found, append([]interface{}{message}, args...)...)
 	for _, result := range results {
@@ -130,14 +132,14 @@ func assertRuleFound(t *testing.T, ruleID string, results []rules.Result, messag
 	}
 }
 
-func assertRuleNotFound(t *testing.T, ruleID string, results []rules.Result, message string, args ...interface{}) {
+func assertRuleNotFound(t *testing.T, ruleID string, results []scan.Result, message string, args ...interface{}) {
 	found := ruleIDInResults(ruleID, results)
 	assert.False(t, found, append([]interface{}{message}, args...)...)
 }
 
-func ruleIDInResults(ruleID string, results []rules.Result) bool {
+func ruleIDInResults(ruleID string, results []scan.Result) bool {
 	for _, res := range results {
-		if res.Status() == rules.StatusPassed {
+		if res.Status() == scan.StatusPassed {
 			continue
 		}
 		if res.Rule().LongID() == ruleID {

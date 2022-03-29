@@ -7,9 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/aquasecurity/defsec/rules"
-
-	"github.com/aquasecurity/defsec/scanners/dockerfile"
+	"github.com/aquasecurity/defsec/pkg/scan"
+	"github.com/aquasecurity/defsec/pkg/scanners/dockerfile"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -35,14 +34,14 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 				t.Run(file.Name(), func(t *testing.T) {
 					expectPositive := strings.HasSuffix(file.Name(), ".denied")
 					scanner := dockerfile.NewScanner(
-						dockerfile.OptionWithPolicyDirs("../rules/"),
+						dockerfile.OptionWithPolicyDirs("../internal/rules/"),
 					)
 					fs := os.DirFS(dir)
 					results, err := scanner.ScanFile(context.TODO(), fs, file.Name())
 					require.NoError(t, err)
 					var matched bool
 					for _, result := range results {
-						if (result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name()) && result.Status() == rules.StatusFailed {
+						if (result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name()) && result.Status() == scan.StatusFailed {
 							if result.Description() != "Specify at least 1 USER command in Dockerfile with non-root user as argument" {
 								assert.Greater(t, result.Range().GetStartLine(), 0)
 								assert.Greater(t, result.Range().GetEndLine(), 0)
@@ -86,7 +85,7 @@ func Test_Docker_RegoPoliciesEmbedded(t *testing.T) {
 					require.NoError(t, err)
 					var matched bool
 					for _, result := range results {
-						if (result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name()) && result.Status() == rules.StatusFailed {
+						if (result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name()) && result.Status() == scan.StatusFailed {
 							if result.Description() != "Specify at least 1 USER command in Dockerfile with non-root user as argument" {
 								assert.Greater(t, result.Range().GetStartLine(), 0)
 								assert.Greater(t, result.Range().GetEndLine(), 0)
