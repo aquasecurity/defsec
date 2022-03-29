@@ -51,7 +51,7 @@ func (r *remoteResolver) Resolve(ctx context.Context, opt Options) (downloadPath
 
 func (r *remoteResolver) download(ctx context.Context, opt Options, dst string) error {
 	_ = os.RemoveAll(dst)
-	if err := os.MkdirAll(filepath.Dir(dst), 0700); err != nil {
+	if err := os.MkdirAll(filepath.Dir(dst), 0o666); err != nil {
 		return err
 	}
 
