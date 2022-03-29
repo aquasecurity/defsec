@@ -320,6 +320,18 @@ func (b *Block) FullName() string {
 	return b.LocalName()
 }
 
+func (b *Block) ModuleName() string {
+	name := strings.TrimPrefix(b.LocalName(), "module.")
+	if b.moduleBlock != nil {
+		name = fmt.Sprintf(
+			"%s.%s",
+			strings.TrimPrefix(b.moduleBlock.FullName(), "module."),
+			name,
+		)
+	}
+	return strings.Split(name, "[")[0]
+}
+
 func (b *Block) UniqueName() string {
 	if b.moduleBlock != nil {
 		return fmt.Sprintf("%s:%s:%s", b.FullName(), b.metadata.Range().GetFilename(), b.moduleBlock.UniqueName())

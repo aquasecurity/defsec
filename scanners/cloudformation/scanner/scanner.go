@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"os"
-	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/aquasecurity/defsec/scanners"
 
 	"github.com/aquasecurity/defsec/parsers/types"
 
@@ -27,16 +27,19 @@ type Scanner struct {
 	includeIgnored    bool
 	excludedRuleIDs   []string
 	ignoreCheckErrors bool
-	paths             []string
 	debugWriter       io.Writer
 	policyDirs        []string
 	policyNamespaces  []string
+	parser            *parser.Parser
 }
+
+var _ scanners.Scanner = (*Scanner)(nil)
 
 // New creates a new Scanner
 func New(options ...Option) *Scanner {
 	s := &Scanner{
 		ignoreCheckErrors: true,
+		parser:            parser.New(),
 	}
 	for _, option := range options {
 		option(s)
@@ -52,104 +55,111 @@ func (s *Scanner) debug(format string, args ...interface{}) {
 	_, _ = s.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
-func (s *Scanner) AddPath(path string) error {
-	path, err := filepath.Abs(path)
-	if err != nil {
-		return err
-	}
-	path = filepath.Clean(path)
-	stat, err := os.Stat(path)
-	if err != nil {
-		return err
-	}
-
-	if stat.IsDir() {
-		s.debug("supplied path is a directory, searching for relevant files")
-		if err := filepath.Walk(path, func(foundPath string, info fs.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			if info.IsDir() {
-				return nil
-			}
-
-			if filepath.Ext(foundPath) == ".yaml" ||
-				filepath.Ext(foundPath) == ".yml" ||
-				filepath.Ext(foundPath) == ".json" {
-				s.paths = append(s.paths, foundPath)
-			}
-			return nil
-		}); err != nil {
-			return err
-		}
-	}
-
-	s.paths = append(s.paths, path)
-	return nil
-}
-
-func (s *Scanner) Scan(ctx context.Context) (results rules.Results, err error) {
-
-	cfParser := parser.New()
-	contexts, err := cfParser.ParseFiles(s.paths...)
-	if err != nil {
-		return nil, err
-	}
-
+func (s *Scanner) initRegoScanner() (*rego.Scanner, error) {
 	regoScanner := rego.NewScanner(rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...))
 	if err := regoScanner.LoadPolicies(true, s.policyDirs...); err != nil {
 		return nil, err
 	}
+	return regoScanner, nil
+}
 
-	for _, cfctx := range contexts {
-		if cfctx == nil {
+func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, dir string) (results rules.Results, err error) {
+
+	contexts, err := s.parser.ParseFS(ctx, fs, dir)
+	if err != nil {
+		return nil, err
+	}
+
+	regoScanner, err := s.initRegoScanner()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, cfCtx := range contexts {
+		if cfCtx == nil {
 			continue
 		}
-		state := adapter.Adapt(*cfctx)
-		if state == nil {
-			continue
-		}
-		for _, rule := range rules.GetRegistered() {
-			s.debug("Executing rule: %s", rule.Rule().AVDID)
-			evalResult := rule.Evaluate(state)
-			if len(evalResult) > 0 {
-				s.debug("Found %d results for %s", len(evalResult), rule.Rule().AVDID)
-				for _, scanResult := range evalResult {
-					if s.isExcluded(scanResult) || isIgnored(scanResult) {
-						scanResult.OverrideStatus(rules.StatusIgnored)
-					}
-
-					ref := scanResult.Metadata().Reference()
-
-					if ref == nil && scanResult.Metadata().Parent() != nil {
-						ref = scanResult.Metadata().Parent().Reference()
-					}
-
-					reference := ref.(*parser.CFReference)
-					description := getDescription(scanResult, reference)
-					scanResult.OverrideDescription(description)
-					if scanResult.Status() == rules.StatusPassed && !s.includePassed {
-						continue
-					}
-
-					results = append(results, scanResult)
-				}
-			}
-		}
-		regoResults, err := regoScanner.ScanInput(ctx, rego.Input{
-			Path:     cfctx.Metadata().Range().GetFilename(),
-			Contents: state,
-			Type:     types.SourceDefsec,
-		})
+		fileResults, err := s.scanFileContext(ctx, regoScanner, cfCtx)
 		if err != nil {
-			return nil, fmt.Errorf("rego scan error: %w", err)
+			return nil, err
 		}
-		results = append(results, regoResults...)
+		results = append(results, fileResults...)
 	}
 	sort.Slice(results, func(i, j int) bool {
 		return results[i].Rule().AVDID < results[j].Rule().AVDID
 	})
 	return results, nil
+}
+
+func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (rules.Results, error) {
+
+	cfCtx, err := s.parser.ParseFile(ctx, fs, path)
+	if err != nil {
+		return nil, err
+	}
+
+	regoScanner, err := s.initRegoScanner()
+	if err != nil {
+		return nil, err
+	}
+
+	results, err := s.scanFileContext(ctx, regoScanner, cfCtx)
+	if err != nil {
+		return nil, err
+	}
+
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Rule().AVDID < results[j].Rule().AVDID
+	})
+	return results, nil
+}
+
+func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner, cfCtx *parser.FileContext) (results rules.Results, err error) {
+	state := adapter.Adapt(*cfCtx)
+	if state == nil {
+		return nil, nil
+	}
+	for _, rule := range rules.GetRegistered() {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
+		s.debug("Executing rule: %s", rule.Rule().AVDID)
+		evalResult := rule.Evaluate(state)
+		if len(evalResult) > 0 {
+			s.debug("Found %d results for %s", len(evalResult), rule.Rule().AVDID)
+			for _, scanResult := range evalResult {
+				if s.isExcluded(scanResult) || isIgnored(scanResult) {
+					scanResult.OverrideStatus(rules.StatusIgnored)
+				}
+
+				ref := scanResult.Metadata().Reference()
+
+				if ref == nil && scanResult.Metadata().Parent() != nil {
+					ref = scanResult.Metadata().Parent().Reference()
+				}
+
+				reference := ref.(*parser.CFReference)
+				description := getDescription(scanResult, reference)
+				scanResult.OverrideDescription(description)
+				if scanResult.Status() == rules.StatusPassed && !s.includePassed {
+					continue
+				}
+
+				results = append(results, scanResult)
+			}
+		}
+	}
+	regoResults, err := regoScanner.ScanInput(ctx, rego.Input{
+		Path:     cfCtx.Metadata().Range().GetFilename(),
+		Contents: state,
+		Type:     types.SourceDefsec,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("rego scan error: %w", err)
+	}
+	return append(results, regoResults...), nil
 }
 
 func (s *Scanner) isExcluded(result rules.Result) bool {

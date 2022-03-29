@@ -11,25 +11,25 @@ func Test_resolve_get_attr_value(t *testing.T) {
 
 	source := `---
 Resources:
-	ElasticacheSecurityGroup:
-	  Type: 'AWS::EC2::SecurityGroup'
-	  Properties:
-	    GroupDescription: Elasticache Security Group
-	    SecurityGroupIngress:
-	      - IpProtocol: tcp
-	        FromPort: 11211
-	        ToPort: 11211
-	        SourceSecurityGroupName: !Ref InstanceSecurityGroup
-	ElasticacheCluster:
-	  Type: 'AWS::ElastiCache::CacheCluster'
-	  Properties:    
-	    Engine: memcached
-	    CacheNodeType: cache.t2.micro
-	    NumCacheNodes: '1'
-	    VpcSecurityGroupIds:
-	      - !GetAtt 
-	        - ElasticacheSecurityGroup
-	        - GroupId
+    ElasticacheSecurityGroup:
+      Type: 'AWS::EC2::SecurityGroup'
+      Properties:
+        GroupDescription: Elasticache Security Group
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: 11211
+            ToPort: 11211
+            SourceSecurityGroupName: !Ref InstanceSecurityGroup
+    ElasticacheCluster:
+      Type: 'AWS::ElastiCache::CacheCluster'
+      Properties:    
+        Engine: memcached
+        CacheNodeType: cache.t2.micro
+        NumCacheNodes: '1'
+        VpcSecurityGroupIds:
+          - !GetAtt 
+            - ElasticacheSecurityGroup
+            - GroupId
 `
 	ctx := createTestFileContext(t, source)
 	require.NotNil(t, ctx)

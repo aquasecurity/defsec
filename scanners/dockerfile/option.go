@@ -1,6 +1,8 @@
 package dockerfile
 
-import "io"
+import (
+	"io"
+)
 
 type Option func(s *Scanner)
 

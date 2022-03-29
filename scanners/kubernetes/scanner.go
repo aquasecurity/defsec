@@ -4,11 +4,9 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"io/fs"
 	"io/ioutil"
-	"os"
-	"path/filepath"
 
-	"golang.org/x/xerrors"
 	"sigs.k8s.io/yaml"
 
 	"github.com/aquasecurity/defsec/parsers/types"
@@ -21,7 +19,6 @@ type Scanner struct {
 	debugWriter      io.Writer
 	policyDirs       []string
 	dataDirs         []string
-	paths            []string
 	policyNamespaces []string
 }
 
@@ -43,40 +40,33 @@ func (s *Scanner) debug(format string, args ...interface{}) {
 	_, _ = s.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
-func (s *Scanner) AddPath(path string) error {
-	path, err := filepath.Abs(path)
-	if err != nil {
-		return err
-	}
-	path = filepath.Clean(path)
-	stat, err := os.Stat(path)
-	if err != nil {
-		return err
-	}
-
-	if stat.IsDir() {
-		return fmt.Errorf("path is directory")
-	}
-
-	s.paths = append(s.paths, path)
-	return nil
-}
-
-func (s *Scanner) Scan(ctx context.Context) (rules.Results, error) {
+func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (rules.Results, error) {
 
 	var inputs []rego.Input
-	for _, path := range s.paths {
 
+	if err := fs.WalkDir(target, dir, func(path string, info fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
 		s.debug("Scanning %s...", path)
 
-		data, err := os.ReadFile(path)
+		f, err := target.Open(path)
 		if err != nil {
-			return nil, err
+			return err
+		}
+		defer func() { _ = f.Close() }()
+
+		data, err := ioutil.ReadAll(f)
+		if err != nil {
+			return err
 		}
 
 		var v interface{}
 		if err := yaml.Unmarshal(data, &v); err != nil {
-			return nil, xerrors.Errorf("unmarshal yaml: %w", err)
+			return fmt.Errorf("unmarshal yaml: %w", err)
 		}
 
 		inputs = append(inputs, rego.Input{
@@ -84,7 +74,9 @@ func (s *Scanner) Scan(ctx context.Context) (rules.Results, error) {
 			Contents: v,
 			Type:     types.SourceKubernetes,
 		})
-
+		return nil
+	}); err != nil {
+		return nil, err
 	}
 
 	regoScanner := rego.NewScanner(

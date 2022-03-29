@@ -3,8 +3,9 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
 	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/test/testutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -50,7 +51,7 @@ resource "azurerm_managed_disk" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptManagedDisk(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -126,7 +127,7 @@ export DATABASE_PASSWORD=\"SomeSortOfPassword\"
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptLinuxVM(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -183,7 +184,7 @@ export GREETING="Hello there"
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptWindowsVM(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -215,7 +216,7 @@ resource "azurerm_virtual_machine" "example" {
 	}
 }`
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
 	require.Len(t, adapted.ManagedDisks, 1)

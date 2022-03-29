@@ -3,9 +3,10 @@ package secrets
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
 	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/providers/github"
+	"github.com/aquasecurity/defsec/test/testutil"
 )
 
 func Test_Adapt(t *testing.T) {
@@ -57,7 +58,7 @@ resource "github_actions_environment_secret" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := Adapt(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})

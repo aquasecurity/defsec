@@ -15,12 +15,12 @@ Parameters:
       Type: Integer
       Default: 1
 Resources:
-	ElasticacheCluster:
-	  Type: 'AWS::ElastiCache::CacheCluster'
-	  Properties:    
-	    Engine: !Select [ !Ref EngineIndex, [memcached, redis ]]
-	    CacheNodeType: cache.t2.micro
-	    NumCacheNodes: '1'
+    ElasticacheCluster:
+      Type: 'AWS::ElastiCache::CacheCluster'
+      Properties:    
+        Engine: !Select [ !Ref EngineIndex, [memcached, redis ]]
+        CacheNodeType: cache.t2.micro
+        NumCacheNodes: '1'
 `
 	ctx := createTestFileContext(t, source)
 	require.NotNil(t, ctx)

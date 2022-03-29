@@ -4,9 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io/fs"
 	"path/filepath"
-	"regexp"
-	"strings"
 
 	"github.com/aquasecurity/defsec/parsers/terraform/parser/resolvers"
 
@@ -27,30 +26,11 @@ type ModuleDefinition struct {
 	Name       string
 	Path       string
 	Definition *terraform.Block
-	Parser     Parser
-}
-
-// getModuleKeyName constructs the module keyname from the block label and the modulename
-func (e *evaluator) getModuleKeyName(name string) (keyName string) {
-	// regular expression for removing count and or for_each indexes
-	indexRegExp := regexp.MustCompile(`\\[.+?\\]`)
-
-	if e.moduleName == "root" {
-		return indexRegExp.ReplaceAllString(name, "")
-	}
-
-	modules := strings.Split(e.moduleName, ":")
-	for i := range modules {
-		keyName += strings.TrimPrefix(modules[i], "module.")
-		if i != len(modules)-1 {
-			keyName += "."
-		}
-	}
-	return indexRegExp.ReplaceAllString(keyName+"."+name, "")
+	Parser     *Parser
 }
 
 // LoadModules reads all module blocks and loads the underlying modules, adding blocks to e.moduleBlocks
-func (e *evaluator) loadModules(ctx context.Context) []*ModuleDefinition {
+func (e *evaluator) loadModules(ctx context.Context, fs fs.FS) []*ModuleDefinition {
 
 	blocks := e.blocks
 
@@ -64,7 +44,7 @@ func (e *evaluator) loadModules(ctx context.Context) []*ModuleDefinition {
 		if moduleBlock.Label() == "" {
 			continue
 		}
-		moduleDefinition, err := e.loadModule(ctx, moduleBlock)
+		moduleDefinition, err := e.loadModule(ctx, moduleBlock, fs)
 		if err != nil {
 			var loadErr *moduleLoadError
 			if errors.As(err, &loadErr) {
@@ -91,7 +71,7 @@ func (e *evaluator) loadModules(ctx context.Context) []*ModuleDefinition {
 }
 
 // takes in a module "x" {} block and loads resources etc. into e.moduleBlocks - additionally returns variables to add to ["module.x.*"] variables
-func (e *evaluator) loadModule(ctx context.Context, b *terraform.Block) (*ModuleDefinition, error) {
+func (e *evaluator) loadModule(ctx context.Context, b *terraform.Block, target fs.FS) (*ModuleDefinition, error) {
 
 	metadata := b.GetMetadata()
 
@@ -118,12 +98,9 @@ func (e *evaluator) loadModule(ctx context.Context, b *terraform.Block) (*Module
 
 	if e.moduleMetadata != nil {
 		// if we have module metadata we can parse all the modules as they'll be cached locally!
-
-		name := e.getModuleKeyName(b.Label())
-
+		name := b.ModuleName()
 		for _, module := range e.moduleMetadata.Modules {
-			clean := strings.Split(name, "[")[0]
-			if module.Key == clean {
+			if module.Key == name {
 				modulePath = filepath.Clean(filepath.Join(e.projectRootPath, module.Dir))
 				break
 			}
@@ -149,8 +126,8 @@ func (e *evaluator) loadModule(ctx context.Context, b *terraform.Block) (*Module
 		modulePath = path
 	}
 
-	moduleParser := e.parentParser.NewModuleParser(modulePath, b.Label(), b)
-	if err := moduleParser.ParseDirectory(modulePath); err != nil {
+	moduleParser := e.parentParser.newModuleParser(modulePath, b.Label(), b)
+	if err := moduleParser.ParseFS(ctx, target, modulePath); err != nil {
 		return nil, err
 	}
 

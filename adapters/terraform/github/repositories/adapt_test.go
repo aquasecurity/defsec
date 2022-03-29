@@ -3,7 +3,7 @@ package repositories
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -15,7 +15,7 @@ resource "github_repository" "my-repo" {
 	
 }
 `
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	repositories := Adapt(modules)
 	require.Len(t, repositories, 1)
 	repo := repositories[0]
@@ -30,7 +30,7 @@ resource "github_repository" "my-repo" {
 	private = true
 }
 `
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	repositories := Adapt(modules)
 	require.Len(t, repositories, 1)
 	repo := repositories[0]
@@ -47,7 +47,7 @@ resource "github_repository" "my-repo" {
 	private = false
 }
 `
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	repositories := Adapt(modules)
 	require.Len(t, repositories, 1)
 	repo := repositories[0]
@@ -65,7 +65,7 @@ resource "github_repository" "my-repo" {
 	visibility = "public"
 }
 `
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	repositories := Adapt(modules)
 	require.Len(t, repositories, 1)
 	repo := repositories[0]
@@ -82,7 +82,7 @@ resource "github_repository" "my-repo" {
 	vulnerability_alerts = true
 }
 `
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	repositories := Adapt(modules)
 	require.Len(t, repositories, 1)
 	repo := repositories[0]
@@ -99,7 +99,7 @@ resource "github_repository" "my-repo" {
 	vulnerability_alerts = false
 }
 `
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	repositories := Adapt(modules)
 	require.Len(t, repositories, 1)
 	repo := repositories[0]

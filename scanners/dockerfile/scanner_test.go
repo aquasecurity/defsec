@@ -2,27 +2,25 @@ package dockerfile
 
 import (
 	"context"
+	"path/filepath"
 	"testing"
+
+	"github.com/aquasecurity/defsec/test/testutil"
 
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/aquasecurity/defsec/test/testutil/filesystem"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_BasicScan(t *testing.T) {
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("/code/Dockerfile", `FROM ubuntu
+	fs, tmp, tidy := testutil.CreateFS(t, map[string]string{
+		"/code/Dockerfile": `FROM ubuntu
 
 USER root
-`))
-
-	require.NoError(t, fs.WriteTextFile("/rules/rule.rego", `package appshield.dockerfile.DS006
+`,
+		"/rules/rule.rego": `package appshield.dockerfile.DS006
 
 __rego_metadata__ := {
 	"id": "DS006",
@@ -51,12 +49,13 @@ deny[res] {
 	}
 }
 
-`))
+`,
+	})
+	defer tidy()
 
-	scanner := NewScanner(OptionWithPolicyDirs(fs.RealPath("/rules")))
-	require.NoError(t, scanner.AddPath(fs.RealPath("/code/Dockerfile")))
+	scanner := NewScanner(OptionWithPolicyDirs(filepath.Join(tmp, "/rules")))
 
-	results, err := scanner.Scan(context.TODO())
+	results, err := scanner.ScanFS(context.TODO(), fs, "code")
 	require.NoError(t, err)
 
 	require.Len(t, results.GetFailed(), 1)

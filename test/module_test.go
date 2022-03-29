@@ -1,22 +1,22 @@
 package test
 
 import (
+	"bytes"
 	"context"
+	"fmt"
 	"testing"
 
 	"github.com/aquasecurity/defsec/scanners/terraform/executor"
+	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/rules/aws/iam"
-
-	"github.com/aquasecurity/defsec/test/testutil"
-	"github.com/aquasecurity/defsec/test/testutil/filesystem"
-	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/terraform/parser"
 	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/test/testutil"
 )
 
 var badRule = rules.Rule{
@@ -47,11 +47,8 @@ func Test_GoCtyCompatibilityIssue(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("/project/main.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"/project/main.tf": `
 data "aws_vpc" "default" {
   default = true
 }
@@ -60,8 +57,8 @@ module "test" {
   source     = "../modules/problem/"
   cidr_block = data.aws_vpc.default.cidr_block
 }
-`))
-	require.NoError(t, fs.WriteTextFile("/modules/problem/main.tf", `
+`,
+		"/modules/problem/main.tf": `
 variable "cidr_block" {}
 
 variable "open" {                
@@ -84,16 +81,23 @@ resource "aws_security_group" "this" {
 resource "problem" "uhoh" {
 	bad = true
 }
-`))
+`,
+	})
+	defer tidy()
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	debug := bytes.NewBuffer([]byte{})
+
+	p := parser.New(parser.OptionStopOnHCLError(true), parser.OptionWithDebugWriter(debug))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, err := executor.New().Execute(modules)
 	require.NoError(t, err)
 	testutil.AssertRuleFound(t, badRule.LongID(), results, "")
+	if t.Failed() {
+		fmt.Println(debug.String())
+	}
 }
 
 func Test_ProblemInModuleInSiblingDir(t *testing.T) {
@@ -101,25 +105,24 @@ func Test_ProblemInModuleInSiblingDir(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("/project/main.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"/project/main.tf": `
 module "something" {
 	source = "../modules/problem"
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/problem/main.tf", `
+`,
+		"modules/problem/main.tf": `
 resource "problem" "uhoh" {
 	bad = true
 }
-`))
+`},
+	)
+	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleFound(t, badRule.LongID(), results, "")
@@ -131,26 +134,25 @@ func Test_ProblemInModuleIgnored(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("/project/main.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"/project/main.tf": `
 #tfsec:ignore:aws-service-abc
 module "something" {
 	source = "../modules/problem"
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/problem/main.tf", `
+`,
+		"modules/problem/main.tf": `
 resource "problem" "uhoh" {
 	bad = true
 }
-`))
+`},
+	)
+	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleNotFound(t, badRule.LongID(), results, "")
@@ -162,25 +164,23 @@ func Test_ProblemInModuleInSubdirectory(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("project/main.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"project/main.tf": `
 module "something" {
 	source = "./modules/problem"
 }
-`))
-	require.NoError(t, fs.WriteTextFile("project/modules/problem/main.tf", `
+`,
+		"project/modules/problem/main.tf": `
 resource "problem" "uhoh" {
 	bad = true
 }
-`))
+`})
+	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleFound(t, badRule.LongID(), results, "")
@@ -192,25 +192,23 @@ func Test_ProblemInModuleInParentDir(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("project/main.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"project/main.tf": `
 module "something" {
 	source = "../problem"
 }
-`))
-	require.NoError(t, fs.WriteTextFile("problem/main.tf", `
+`,
+		"problem/main.tf": `
 resource "problem" "uhoh" {
 	bad = true
 }
-`))
+`})
+	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleFound(t, badRule.LongID(), results, "")
@@ -222,11 +220,8 @@ func Test_ProblemInModuleReuse(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("project/main.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"project/main.tf": `
 module "something_good" {
 	source = "../modules/problem"
 	bad = false
@@ -236,20 +231,21 @@ module "something_bad" {
 	source = "../modules/problem"
 	bad = true
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/problem/main.tf", `
+`,
+		"modules/problem/main.tf": `
 variable "bad" {
 	default = false
 }
 resource "problem" "uhoh" {
 	bad = var.bad
 }
-`))
+`})
+	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleFound(t, badRule.LongID(), results, "")
@@ -261,35 +257,34 @@ func Test_ProblemInNestedModule(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("project/main.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"project/main.tf": `
 module "something" {
 	source = "../modules/a"
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/a/main.tf", `
+`,
+		"modules/a/main.tf": `
 	module "something" {
 	source = "../../modules/b"
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/b/main.tf", `
+`,
+		"modules/b/main.tf": `
 module "something" {
 	source = "../c"
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/c/main.tf", `
+`,
+		"modules/c/main.tf": `
 resource "problem" "uhoh" {
 	bad = true
 }
-`))
+`,
+	})
+	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleFound(t, badRule.LongID(), results, "")
@@ -301,11 +296,8 @@ func Test_ProblemInReusedNestedModule(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("project/main.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"project/main.tf": `
 module "something" {
   source = "../modules/a"
   bad = false
@@ -315,8 +307,8 @@ module "something-bad" {
 	source = "../modules/a"
 	bad = true
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/a/main.tf", `
+`,
+		"modules/a/main.tf": `
 variable "bad" {
 	default = false
 }
@@ -324,8 +316,8 @@ module "something" {
 	source = "../../modules/b"
 	bad = var.bad
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/b/main.tf", `
+`,
+		"modules/b/main.tf": `
 variable "bad" {
 	default = false
 }
@@ -333,24 +325,25 @@ module "something" {
 	source = "../c"
 	bad = var.bad
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/c/main.tf", `
+`,
+		"modules/c/main.tf": `
 variable "bad" {
 	default = false
 }
 resource "problem" "uhoh" {
 	bad = var.bad
 }
-`))
+`,
+	})
+	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleFound(t, badRule.LongID(), results, "")
-
 }
 
 func Test_ProblemInInitialisedModule(t *testing.T) {
@@ -358,17 +351,14 @@ func Test_ProblemInInitialisedModule(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("project/main.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"project/main.tf": `
 module "something" {
   	source = "../modules/somewhere"
 	bad = false
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/somewhere/main.tf", `
+`,
+		"modules/somewhere/main.tf": `
 module "something_nested" {
 	count = 1
   	source = "github.com/some/module.git"
@@ -379,41 +369,40 @@ variable "bad" {
 	default = false
 }
 
-`))
-	require.NoError(t, fs.WriteTextFile("project/.terraform/modules/something.something_nested/main.tf", `
+`,
+		"project/.terraform/modules/something.something_nested/main.tf": `
 variable "bad" {
 	default = false
 }
 resource "problem" "uhoh" {
 	bad = var.bad
 }
-`))
-	require.NoError(t, fs.WriteTextFile("project/.terraform/modules/modules.json", `
+`,
+		"project/.terraform/modules/modules.json": `
 	{"Modules":[
         {"Key":"something","Source":"../modules/somewhere","Version":"2.35.0","Dir":"../modules/somewhere"},
         {"Key":"something.something_nested","Source":"git::https://github.com/some/module.git","Version":"2.35.0","Dir":".terraform/modules/something.something_nested"}
     ]}
-`))
+`,
+	})
+	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleFound(t, badRule.LongID(), results, "")
-
 }
+
 func Test_ProblemInReusedInitialisedModule(t *testing.T) {
 
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("project/main.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"project/main.tf": `
 module "something" {
   	source = "/nowhere"
 	bad = false
@@ -422,23 +411,25 @@ module "something2" {
 	source = "/nowhere"
   	bad = true
 }
-`))
-	require.NoError(t, fs.WriteTextFile("project/.terraform/modules/a/main.tf", `
+`,
+		"project/.terraform/modules/a/main.tf": `
 variable "bad" {
 	default = false
 }
 resource "problem" "uhoh" {
 	bad = var.bad
 }
-`))
-	require.NoError(t, fs.WriteTextFile("project/.terraform/modules/modules.json", `
+`,
+		"project/.terraform/modules/modules.json": `
 	{"Modules":[{"Key":"something","Source":"/nowhere","Version":"2.35.0","Dir":".terraform/modules/a"},{"Key":"something2","Source":"/nowhere","Version":"2.35.0","Dir":".terraform/modules/a"}]}
-`))
+`,
+	})
+	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleFound(t, badRule.LongID(), results, "")
@@ -449,11 +440,8 @@ func Test_ProblemInDuplicateModuleNameAndPath(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("project/main.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"project/main.tf": `
 module "something" {
   source = "../modules/a"
   bad = 0
@@ -463,8 +451,8 @@ module "something-bad" {
 	source = "../modules/a"
 	bad = 1
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/a/main.tf", `
+`,
+		"modules/a/main.tf": `
 variable "bad" {
 	default = 0
 }
@@ -472,8 +460,8 @@ module "something" {
 	source = "../b"
 	bad = var.bad
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/b/main.tf", `
+`,
+		"modules/b/main.tf": `
 variable "bad" {
 	default = 0
 }
@@ -481,8 +469,8 @@ module "something" {
 	source = "../c"
 	bad = var.bad
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/c/main.tf", `
+`,
+		"modules/c/main.tf": `
 variable "bad" {
 	default = 0
 }
@@ -490,12 +478,14 @@ resource "problem" "uhoh" {
 	count = var.bad
 	bad = true
 }
-`))
+`,
+	})
+	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleFound(t, badRule.LongID(), results, "")
@@ -503,7 +493,8 @@ resource "problem" "uhoh" {
 }
 
 func Test_Dynamic_Variables(t *testing.T) {
-	example := `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"project/main.tf": `
 resource "something" "this" {
 
 	dynamic "blah" {
@@ -518,12 +509,8 @@ resource "something" "this" {
 resource "bad" "thing" {
 	secure = something.this.blah.ok
 }
-`
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("project/main.tf", example))
+`})
+	defer tidy()
 
 	r1 := rules.Rule{
 		Provider:  providers.AWSProvider,
@@ -547,16 +534,17 @@ resource "bad" "thing" {
 	defer rules.Deregister(reg)
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleFound(t, r1.LongID(), results, "")
 }
 
 func Test_Dynamic_Variables_FalsePositive(t *testing.T) {
-	example := `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"project/main.tf": `
 resource "something" "else" {
 	x = 1
 	dynamic "blah" {
@@ -571,12 +559,8 @@ resource "something" "else" {
 resource "bad" "thing" {
 	secure = something.else.blah.ok
 }
-`
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("project/main.tf", example))
+`})
+	defer tidy()
 
 	r1 := rules.Rule{
 		Provider:  providers.AWSProvider,
@@ -600,9 +584,9 @@ resource "bad" "thing" {
 	defer rules.Deregister(reg)
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleNotFound(t, r1.LongID(), results, "")
@@ -610,11 +594,8 @@ resource "bad" "thing" {
 
 func Test_ReferencesPassedToNestedModule(t *testing.T) {
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("project/main.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"project/main.tf": `
 
 resource "aws_iam_group" "developers" {
     name = "developers"
@@ -624,9 +605,8 @@ module "something" {
 	source = "../modules/a"
     group = aws_iam_group.developers.name
 }
-`))
-	require.NoError(t, fs.WriteTextFile("modules/a/main.tf", `
-
+`,
+		"modules/a/main.tf": `
 variable "group" {
     type = "string"
 }
@@ -650,12 +630,13 @@ data "aws_iam_policy_document" "policy" {
     }
   }
 }
+`})
+	defer tidy()
 
-`))
 	p := parser.New(parser.OptionStopOnHCLError(true))
-	err = p.ParseDirectory(fs.RealPath("project/"))
+	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
 	testutil.AssertRuleNotFound(t, iam.CheckEnforceMFA.Rule().LongID(), results, "")

@@ -8,14 +8,12 @@ import (
 	"sort"
 	"time"
 
-	"github.com/aquasecurity/defsec/rego"
-	"github.com/aquasecurity/defsec/state"
-
-	"github.com/aquasecurity/defsec/severity"
-
 	adapter "github.com/aquasecurity/defsec/adapters/terraform"
 	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/rego"
 	"github.com/aquasecurity/defsec/rules"
+	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/state"
 )
 
 // Executor scans HCL blocks by running all registered rules against them

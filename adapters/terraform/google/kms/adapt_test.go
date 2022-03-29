@@ -3,8 +3,9 @@ package kms
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
 	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/test/testutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -84,7 +85,7 @@ func Test_adaptKeyRings(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptKeyRings(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -103,7 +104,7 @@ func TestLines(t *testing.T) {
 		rotation_period = "7776000s"
 	  }`
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
 	require.Len(t, adapted.KeyRings, 1)

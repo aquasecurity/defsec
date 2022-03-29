@@ -23,25 +23,25 @@ Mappings:
     dev:
       NodeType: cache.t2.micro
 Resources:
-	ElasticacheSecurityGroup:
-	  Type: 'AWS::EC2::SecurityGroup'
-	  Properties:
-	    GroupDescription: Elasticache Security Group
-	    SecurityGroupIngress:
-	      - IpProtocol: tcp
-	        FromPort: 11211
-	        ToPort: 11211
-	        SourceSecurityGroupName: !Ref InstanceSecurityGroup
-	ElasticacheCluster:
-	  Type: 'AWS::ElastiCache::CacheCluster'
-	  Properties:    
-	    Engine: memcached
-	    CacheNodeType: !FindInMap [ CacheNodeTypes, production, NodeType ]
-	    NumCacheNodes: '1'
-	    VpcSecurityGroupIds:
-	      - !GetAtt 
-	        - ElasticacheSecurityGroup
-	        - GroupId
+    ElasticacheSecurityGroup:
+      Type: 'AWS::EC2::SecurityGroup'
+      Properties:
+        GroupDescription: Elasticache Security Group
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: 11211
+            ToPort: 11211
+            SourceSecurityGroupName: !Ref InstanceSecurityGroup
+    ElasticacheCluster:
+      Type: 'AWS::ElastiCache::CacheCluster'
+      Properties:    
+        Engine: memcached
+        CacheNodeType: !FindInMap [ CacheNodeTypes, production, NodeType ]
+        NumCacheNodes: '1'
+        VpcSecurityGroupIds:
+          - !GetAtt 
+            - ElasticacheSecurityGroup
+            - GroupId
 `
 	ctx := createTestFileContext(t, source)
 	require.NotNil(t, ctx)
@@ -69,25 +69,25 @@ Mappings:
     dev:
       NodeType: cache.t2.micro
 Resources:
-	ElasticacheSecurityGroup:
-	  Type: 'AWS::EC2::SecurityGroup'
-	  Properties:
-	    GroupDescription: Elasticache Security Group
-	    SecurityGroupIngress:
-	      - IpProtocol: tcp
-	        FromPort: 11211
-	        ToPort: 11211
-	        SourceSecurityGroupName: !Ref InstanceSecurityGroup
-	ElasticacheCluster:
-	  Type: 'AWS::ElastiCache::CacheCluster'
-	  Properties:    
-	    Engine: memcached
-	    CacheNodeType: !FindInMap [ CacheNodeTypes, !Ref Environment, NodeType ]
-	    NumCacheNodes: '1'
-	    VpcSecurityGroupIds:
-	      - !GetAtt 
-	        - ElasticacheSecurityGroup
-	        - GroupId
+    ElasticacheSecurityGroup:
+      Type: 'AWS::EC2::SecurityGroup'
+      Properties:
+        GroupDescription: Elasticache Security Group
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: 11211
+            ToPort: 11211
+            SourceSecurityGroupName: !Ref InstanceSecurityGroup
+    ElasticacheCluster:
+      Type: 'AWS::ElastiCache::CacheCluster'
+      Properties:    
+        Engine: memcached
+        CacheNodeType: !FindInMap [ CacheNodeTypes, !Ref Environment, NodeType ]
+        NumCacheNodes: '1'
+        VpcSecurityGroupIds:
+          - !GetAtt 
+            - ElasticacheSecurityGroup
+            - GroupId
 `
 	ctx := createTestFileContext(t, source)
 	require.NotNil(t, ctx)

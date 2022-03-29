@@ -2,14 +2,17 @@ package terraform
 
 import (
 	"bytes"
+	"context"
 	"fmt"
+	"path/filepath"
 	"strconv"
 	"testing"
+
+	"github.com/aquasecurity/defsec/test/testutil"
 
 	"github.com/stretchr/testify/assert"
 
 	"github.com/aquasecurity/defsec/state"
-	"github.com/aquasecurity/defsec/test/testutil/filesystem"
 
 	"github.com/aquasecurity/defsec/providers"
 	"github.com/aquasecurity/defsec/rules"
@@ -38,14 +41,14 @@ var alwaysFailRule = rules.Rule{
 }
 
 func scanWithOptions(t *testing.T, code string, opt ...Option) rules.Results {
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
 
-	require.NoError(t, fs.WriteTextFile("project/main.tf", code))
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"project/main.tf": code,
+	})
+	defer tidy()
+
 	scanner := New(opt...)
-	require.NoError(t, scanner.AddPath(fs.RealPath("project")))
-	results, _, err := scanner.Scan()
+	results, _, err := scanner.Scan(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	return results
 }
@@ -160,18 +163,13 @@ resource "something" "else" {}
 
 func Test_OptionWithPolicyDirs(t *testing.T) {
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	err = fs.WriteFile("/code/main.tf", []byte(`
+	fs, tmp, tidy := testutil.CreateFS(t, map[string]string{
+		"/code/main.tf": `
 resource "aws_s3_bucket" "my-bucket" {
 	bucket = "evil"
 }
-`))
-	require.NoError(t, err)
-
-	err = fs.WriteFile("/rules/test.rego", []byte(`
+`,
+		"/rules/test.rego": `
 package defsec.abcdefg
 
 __rego_metadata__ := {
@@ -196,20 +194,17 @@ deny[cause] {
 	bucket.name.value == "evil"
 	cause := bucket.name
 }
-
-`))
-	require.NoError(t, err)
+`,
+	})
+	defer tidy()
 
 	debugLog := bytes.NewBuffer([]byte{})
 	scanner := New(
 		OptionWithDebugWriter(debugLog),
-		OptionWithPolicyDirs([]string{fs.RealPath("rules")}),
+		OptionWithPolicyDirs([]string{filepath.Join(tmp, "rules")}),
 	)
-	if err := scanner.AddPath(fs.RealPath("/code/main.tf")); err != nil {
-		t.Error(err)
-	}
 
-	results, _, err := scanner.Scan()
+	results, _, err := scanner.Scan(context.TODO(), fs, "code")
 	require.NoError(t, err)
 
 	assert.Equal(t, 1, len(results.GetFailed()))
@@ -287,38 +282,31 @@ func Test_OptionWithPolicyNamespaces(t *testing.T) {
 
 		t.Run(strconv.Itoa(i), func(t *testing.T) {
 
-			fs, err := filesystem.New()
-			require.NoError(t, err)
-			defer func() { _ = fs.Close() }()
-
-			err = fs.WriteFile("/code/main.tf", []byte(`
+			fs, tmp, tidy := testutil.CreateFS(t, map[string]string{
+				"/code/main.tf": `
 resource "aws_s3_bucket" "my-bucket" {
 	bucket = "evil"
 }
-`))
-			require.NoError(t, err)
+`,
+				"/rules/test.rego": fmt.Sprintf(`
+				package %s
 
-			err = fs.WriteFile("/rules/test.rego", []byte(fmt.Sprintf(`
-package %s
+				deny[cause] {
+				bucket := input.aws.s3.buckets[_]
+				bucket.name.value == "evil"
+				cause := bucket.name
+				}
 
-deny[cause] {
-	bucket := input.aws.s3.buckets[_]
-	bucket.name.value == "evil"
-	cause := bucket.name
-}
-
-`, test.policyNamespace)))
-			require.NoError(t, err)
+				`, test.policyNamespace),
+			})
+			defer tidy()
 
 			scanner := New(
-				OptionWithPolicyDirs([]string{fs.RealPath("rules")}),
+				OptionWithPolicyDirs([]string{filepath.Join(tmp, "rules")}),
 				OptionWithPolicyNamespaces(test.includedNamespaces...),
 			)
-			if err := scanner.AddPath(fs.RealPath("/code/main.tf")); err != nil {
-				t.Error(err)
-			}
 
-			results, _, err := scanner.Scan()
+			results, _, err := scanner.Scan(context.TODO(), fs, "code")
 			require.NoError(t, err)
 
 			var found bool
@@ -337,16 +325,14 @@ deny[cause] {
 
 func Test_OptionWithStateFunc(t *testing.T) {
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	err = fs.WriteFile("/code/main.tf", []byte(`
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"code/main.tf": `
 resource "aws_s3_bucket" "my-bucket" {
 	bucket = "evil"
 }
-`))
-	require.NoError(t, err)
+`,
+	})
+	defer tidy()
 
 	var actual state.State
 
@@ -358,11 +344,8 @@ resource "aws_s3_bucket" "my-bucket" {
 			actual = *s
 		}),
 	)
-	if err := scanner.AddPath(fs.RealPath("/code/main.tf")); err != nil {
-		t.Error(err)
-	}
 
-	_, _, err = scanner.Scan()
+	_, _, err := scanner.Scan(context.TODO(), fs, "code")
 	require.NoError(t, err)
 
 	assert.Equal(t, 1, len(actual.AWS.S3.Buckets))

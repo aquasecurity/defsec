@@ -172,7 +172,7 @@ variable "things" {
 			}
 			reg := rules.Register(r1, nil)
 			defer rules.Deregister(reg)
-			results := testutil.ScanHCL(test.source, t)
+			results := scanHCL(t, test.source)
 			var include string
 			var exclude string
 			if test.expectedResults > 0 {

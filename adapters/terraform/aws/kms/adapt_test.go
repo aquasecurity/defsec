@@ -3,9 +3,10 @@ package kms
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
 	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/providers/aws/kms"
+	"github.com/aquasecurity/defsec/test/testutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -44,7 +45,7 @@ func Test_adaptKey(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptKey(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -58,7 +59,7 @@ func TestLines(t *testing.T) {
 		key_usage = SIGN_VERIFY
 	}`
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
 	require.Len(t, adapted.Keys, 1)

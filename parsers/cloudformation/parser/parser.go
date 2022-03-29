@@ -1,12 +1,12 @@
 package parser
 
 import (
+	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -21,11 +21,9 @@ type Parser struct {
 
 func New(options ...Option) *Parser {
 	p := &Parser{}
-
 	for _, option := range options {
 		option(p)
 	}
-
 	return p
 }
 
@@ -37,95 +35,121 @@ func (p *Parser) debug(format string, args ...interface{}) {
 	_, _ = p.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
-func (p *Parser) ParseFiles(filepaths ...string) (FileContexts, error) {
-	var parsingErrors []error
+func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) (FileContexts, error) {
 	var contexts FileContexts
-	for _, path := range filepaths {
-		path, err := filepath.Abs(path)
+	if err := fs.WalkDir(target, dir, func(path string, entry fs.DirEntry, err error) error {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		default:
+		}
 		if err != nil {
-			return nil, err
+			return err
 		}
-
-		if err := func() error {
-			p.debug("Starting to process file %s", path)
-
-			if _, err := os.Stat(path); err != nil {
-				return err
-			}
-
-			file, err := os.Open(path)
-			if err != nil {
-				return err
-			}
-			defer func() { _ = file.Close() }()
-
-			context, err := p.Parse(file, path)
-			if err != nil {
-				parsingErrors = append(parsingErrors, err)
-			}
-
-			contexts = append(contexts, context)
+		if entry.IsDir() {
 			return nil
-		}(); err != nil {
-			var err2 *NotCloudFormationError
-			if errors.As(err, &err2) {
-				p.debug(err.Error())
-				continue
-			} else {
-				return nil, err
-			}
 		}
-	}
-	if len(parsingErrors) > 0 {
-		return contexts, NewErrParsingErrors(parsingErrors)
-	}
 
+		if !p.Required(target, path) {
+			p.debug("not a CloudFormation file, skipping %s", path)
+			return nil
+		}
+
+		c, err := p.ParseFile(ctx, target, path)
+		if err != nil {
+			return err
+		}
+		contexts = append(contexts, c)
+		return nil
+	}); err != nil {
+		return nil, err
+	}
 	return contexts, nil
 }
 
-func (p *Parser) Parse(reader io.Reader, source string) (*FileContext, error) {
+func (p *Parser) Required(fs fs.FS, path string) bool {
+
+	var unmarshalFunc func([]byte, interface{}) error
+
+	switch strings.ToLower(filepath.Ext(path)) {
+	case ".yaml", ".yml":
+		unmarshalFunc = yaml.Unmarshal
+	case ".json":
+		unmarshalFunc = json.Unmarshal
+	default:
+		return false
+	}
+
+	f, err := fs.Open(path)
+	if err != nil {
+		return false
+	}
+	defer func() { _ = f.Close() }()
+
+	data, err := ioutil.ReadAll(f)
+	if err != nil {
+		return false
+	}
+
+	contents := make(map[string]interface{})
+	if err := unmarshalFunc(data, &contents); err != nil {
+		p.debug("file '%s' is not valid: %s", path, err)
+		return false
+	}
+	_, ok := contents["Resources"]
+	return ok
+}
+
+func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (*FileContext, error) {
+
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
+	}
 
 	sourceFmt := YamlSourceFormat
-	if strings.HasSuffix(strings.ToLower(source), ".json") {
+	if strings.HasSuffix(strings.ToLower(path), ".json") {
 		sourceFmt = JsonSourceFormat
 	}
 
-	content, err := ioutil.ReadAll(reader)
+	f, err := fs.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = f.Close() }()
+
+	content, err := ioutil.ReadAll(f)
 	if err != nil {
 		return nil, err
 	}
 
 	lines := strings.Split(string(content), "\n")
 
-	if !checkIsCloudformation(content, sourceFmt) {
-		p.debug("%s not a CloudFormation file, skipping", source)
-		return nil, nil
-	}
-
 	context := &FileContext{
-		filepath:     source,
+		filepath:     path,
 		lines:        lines,
 		SourceFormat: sourceFmt,
 	}
 
-	if strings.HasSuffix(strings.ToLower(source), ".json") {
+	if strings.HasSuffix(strings.ToLower(path), ".json") {
 		if err := jfather.Unmarshal(content, context); err != nil {
-			return nil, NewErrInvalidContent(source, err)
+			return nil, NewErrInvalidContent(path, err)
 		}
 	} else {
 		if err := yaml.Unmarshal(content, context); err != nil {
-			return nil, NewErrInvalidContent(source, err)
+			return nil, NewErrInvalidContent(path, err)
 		}
 	}
 
 	context.lines = lines
 	context.SourceFormat = sourceFmt
-	context.filepath = source
+	context.filepath = path
 
-	p.debug("Context loaded from source %s", source)
+	p.debug("Context loaded from source %s", path)
 
 	for name, r := range context.Resources {
-		r.ConfigureResource(name, source, context)
+		r.ConfigureResource(name, path, context)
 	}
 
 	if p.parameters != nil {
@@ -135,61 +159,4 @@ func (p *Parser) Parse(reader io.Reader, source string) (*FileContext, error) {
 	}
 
 	return context, nil
-
-}
-
-func checkIsCloudformation(content []byte, sourceFmt SourceFormat) bool {
-	checker := make(map[string]interface{})
-
-	switch sourceFmt {
-	case YamlSourceFormat:
-		if err := yaml.Unmarshal(content, &checker); err != nil {
-			return false
-		}
-	case JsonSourceFormat:
-		if err := json.Unmarshal(content, &checker); err != nil {
-			return false
-		}
-	}
-
-	for key := range checker {
-		if key == "Resources" {
-			return true
-		}
-	}
-
-	return false
-}
-
-func (p *Parser) ParseDirectory(dir string) (FileContexts, error) {
-
-	if stat, err := os.Stat(dir); err != nil || !stat.IsDir() {
-		return nil, fmt.Errorf("cannot use the provided filepath: %s", dir)
-	}
-
-	var files []string
-
-	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() || !includeFile(info.Name()) {
-			return nil
-		}
-		files = append(files, path)
-		return nil
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return p.ParseFiles(files...)
-}
-
-func includeFile(filename string) bool {
-
-	for _, ext := range []string{".yml", ".yaml", ".json"} {
-		if strings.HasSuffix(strings.ToLower(filename), ext) {
-			return true
-		}
-	}
-	return false
-
 }

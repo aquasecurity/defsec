@@ -16,7 +16,7 @@ RUN make /app
 CMD python /app/app.py
 `
 
-	df, err := New().Parse("Dockerfile", strings.NewReader(input))
+	df, err := New().parse("Dockerfile", strings.NewReader(input))
 	require.NoError(t, err)
 
 	assert.Equal(t, 1, len(df.Stages))

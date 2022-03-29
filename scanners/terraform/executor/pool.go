@@ -9,9 +9,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/aquasecurity/defsec/parsers/types"
-
 	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/rego"
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/state"

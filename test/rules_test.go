@@ -34,7 +34,7 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 			t.Run("good examples", func(t *testing.T) {
 				for i, example := range rule.Rule().Terraform.GoodExamples {
 					t.Run(fmt.Sprintf("example %d", i), func(t *testing.T) {
-						results := testutil.ScanHCL(example, t)
+						results := scanHCL(t, example)
 						testutil.AssertRuleNotFound(t, rule.Rule().LongID(), results, "Rule %s was detected in good example #%d:\n%s", rule.Rule().LongID(), i, example)
 					})
 				}
@@ -42,7 +42,7 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 			t.Run("bad examples", func(t *testing.T) {
 				for i, example := range rule.Rule().Terraform.BadExamples {
 					t.Run(fmt.Sprintf("example %d", i), func(t *testing.T) {
-						results := testutil.ScanHCL(example, t)
+						results := scanHCL(t, example)
 						testutil.AssertRuleFound(t, rule.Rule().LongID(), results, "Rule %s was not detected in bad example #%d:\n%s", rule.Rule().LongID(), i, example)
 
 					})

@@ -4,9 +4,8 @@ import (
 	"io"
 
 	"github.com/aquasecurity/defsec/rego"
-	"github.com/aquasecurity/defsec/state"
-
 	"github.com/aquasecurity/defsec/rules"
+	"github.com/aquasecurity/defsec/state"
 )
 
 type Option func(s *Executor)

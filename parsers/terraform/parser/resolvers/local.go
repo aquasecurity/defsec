@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path/filepath"
 )
 
 type localResolver struct{}
@@ -14,6 +15,7 @@ func (r *localResolver) Resolve(_ context.Context, opt Options) (downloadPath st
 	if !opt.hasPrefix(fmt.Sprintf(".%c", os.PathSeparator), fmt.Sprintf("..%c", os.PathSeparator)) {
 		return "", false, nil
 	}
-	opt.Debug("Module '%s' resolving via local...", opt.Name)
-	return opt.Source, true, nil
+	source := filepath.Clean(filepath.Join(opt.ModulePath, opt.Source))
+	opt.Debug("Module '%s' resolving via local (in %s)...", opt.Name, opt.ModulePath)
+	return source, true, nil
 }

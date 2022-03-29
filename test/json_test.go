@@ -84,7 +84,7 @@ func TestScanningJSON(t *testing.T) {
 			reg := rules.Register(r1, nil)
 			defer rules.Deregister(reg)
 
-			results := testutil.ScanJSON(test.source, t)
+			results := scanJSON(t, test.source)
 			var include, exclude string
 			if test.shouldFail {
 				include = r1.LongID()

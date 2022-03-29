@@ -1,10 +1,13 @@
 package test
 
 import (
-	"bytes"
 	"context"
 	"fmt"
+	"os"
+	"path/filepath"
 	"testing"
+
+	"github.com/aquasecurity/defsec/test/testutil"
 
 	"github.com/aquasecurity/defsec/adapters/terraform"
 
@@ -30,7 +33,7 @@ func Test_AllRules(t *testing.T) {
 				t.Run("terraform: good examples", func(t *testing.T) {
 					for i, example := range rule.Rule().Terraform.GoodExamples {
 						t.Run(fmt.Sprintf("example %d", i), func(t *testing.T) {
-							results, err := runRuleAgainstTerraform(rule, example)
+							results, err := runRuleAgainstTerraform(t, rule, example)
 							require.NoError(t, err)
 							assertRuleNotFound(t, rule.Rule().LongID(), results, "Rule %s was detected in good example #%d:\n%s", rule.Rule().LongID(), i, example)
 						})
@@ -39,7 +42,7 @@ func Test_AllRules(t *testing.T) {
 				t.Run("terraform: bad examples", func(t *testing.T) {
 					for i, example := range rule.Rule().Terraform.BadExamples {
 						t.Run(fmt.Sprintf("example %d", i), func(t *testing.T) {
-							results, err := runRuleAgainstTerraform(rule, example)
+							results, err := runRuleAgainstTerraform(t, rule, example)
 							require.NoError(t, err)
 							assertRuleFound(t, rule.Rule().LongID(), results, "Rule %s was not detected in bad example #%d:\n%s", rule.Rule().LongID(), i, example)
 						})
@@ -51,7 +54,7 @@ func Test_AllRules(t *testing.T) {
 					t.Skip()
 					for i, example := range rule.Rule().CloudFormation.GoodExamples {
 						t.Run(fmt.Sprintf("example %d", i), func(t *testing.T) {
-							results, err := runRuleAgainstCloudFormation(rule, example)
+							results, err := runRuleAgainstCloudFormation(t, rule, example)
 							require.NoError(t, err)
 							assertRuleNotFound(t, rule.Rule().LongID(), results, "Rule %s was detected in good example #%d:\n%s", rule.Rule().LongID(), i, example)
 						})
@@ -61,7 +64,7 @@ func Test_AllRules(t *testing.T) {
 					t.Skip()
 					for i, example := range rule.Rule().CloudFormation.BadExamples {
 						t.Run(fmt.Sprintf("example %d", i), func(t *testing.T) {
-							results, err := runRuleAgainstCloudFormation(rule, example)
+							results, err := runRuleAgainstCloudFormation(t, rule, example)
 							require.NoError(t, err)
 							assertRuleFound(t, rule.Rule().LongID(), results, "Rule %s was not detected in bad example #%d:\n%s", rule.Rule().LongID(), i, example)
 						})
@@ -72,12 +75,16 @@ func Test_AllRules(t *testing.T) {
 	}
 }
 
-func runRuleAgainstTerraform(rule rules.RegisteredRule, src string) ([]rules.Result, error) {
+func runRuleAgainstTerraform(t *testing.T, rule rules.RegisteredRule, src string) ([]rules.Result, error) {
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"main.tf": src,
+	})
+	defer tidy()
 	p := tfParser.New()
-	if err := p.ParseContent([]byte(src), "main.tf"); err != nil {
+	if err := p.ParseFile(context.TODO(), fs, "main.tf"); err != nil {
 		return nil, err
 	}
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll(context.TODO(), fs)
 	if err != nil {
 		return nil, err
 	}
@@ -85,13 +92,24 @@ func runRuleAgainstTerraform(rule rules.RegisteredRule, src string) ([]rules.Res
 	return rule.Evaluate(state), nil
 }
 
-func runRuleAgainstCloudFormation(rule rules.RegisteredRule, src string) ([]rules.Result, error) {
-	p := cfParser.New()
-	ctx, err := p.Parse(bytes.NewReader([]byte(src)), "main.yaml")
+func parseCF(t *testing.T, source string, name string) (cfParser.FileContexts, error) {
+	tmp, err := os.MkdirTemp(os.TempDir(), "defsec")
+	require.NoError(t, err)
+	defer func() { _ = os.RemoveAll(tmp) }()
+	require.NoError(t, os.WriteFile(filepath.Join(tmp, name), []byte(source), 0600))
+	fs := os.DirFS(tmp)
+	return cfParser.New().ParseFS(context.TODO(), fs, ".")
+}
+
+func runRuleAgainstCloudFormation(t *testing.T, rule rules.RegisteredRule, src string) ([]rules.Result, error) {
+	contexts, err := parseCF(t, src, "main.yaml")
 	if err != nil {
 		return nil, err
 	}
-	state := cloudformation.Adapt(*ctx)
+	if len(contexts) != 1 {
+		return nil, fmt.Errorf("bad contexts")
+	}
+	state := cloudformation.Adapt(*contexts[0])
 	return rule.Evaluate(state), nil
 }
 

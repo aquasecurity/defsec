@@ -2,11 +2,10 @@ package parser
 
 import (
 	"context"
-	"io/ioutil"
-	"os"
-	"path/filepath"
 	"sort"
 	"testing"
+
+	"github.com/aquasecurity/defsec/test/testutil"
 
 	"github.com/zclconf/go-cty/cty"
 
@@ -17,7 +16,8 @@ import (
 
 func Test_BasicParsing(t *testing.T) {
 
-	path := createTestFile("test.tf", `
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"test.tf": `
 
 locals {
 	proxy = var.cats_mother
@@ -49,14 +49,15 @@ data "cats_cat" "the-cats-mother" {
 	name = local.proxy
 }
 
-
-`)
+`,
+	})
+	defer tidy()
 
 	parser := New(OptionStopOnHCLError(true))
-	if err := parser.ParseDirectory(filepath.Dir(path)); err != nil {
+	if err := parser.ParseFS(context.TODO(), fs, "."); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := parser.EvaluateAll(context.TODO())
+	modules, _, err := parser.EvaluateAll(context.TODO(), fs)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -116,7 +117,8 @@ data "cats_cat" "the-cats-mother" {
 
 func Test_Modules(t *testing.T) {
 
-	path := createTestFileWithModule(`
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"code/test.tf": `
 module "my-mod" {
 	source = "../module"
 	input = "ok"
@@ -126,7 +128,7 @@ output "result" {
 	value = module.my-mod.mod_result
 }
 `,
-		`
+		"module/module.tf": `
 variable "input" {
 	default = "?"
 }
@@ -135,14 +137,14 @@ output "mod_result" {
 	value = var.input
 }
 `,
-		"module",
-	)
+	})
+	defer tidy()
 
 	parser := New(OptionStopOnHCLError(true))
-	if err := parser.ParseDirectory(path); err != nil {
+	if err := parser.ParseFS(context.TODO(), fs, "code"); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := parser.EvaluateAll(context.TODO())
+	modules, _, err := parser.EvaluateAll(context.TODO(), fs)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -180,7 +182,8 @@ output "mod_result" {
 
 func Test_NestedParentModule(t *testing.T) {
 
-	path := createTestFileWithModule(`
+	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+		"code/test.tf": `
 module "my-mod" {
 	source = "../."
 	input = "ok"
@@ -190,7 +193,7 @@ output "result" {
 	value = module.my-mod.mod_result
 }
 `,
-		`
+		"root.tf": `
 variable "input" {
 	default = "?"
 }
@@ -199,14 +202,14 @@ output "mod_result" {
 	value = var.input
 }
 `,
-		"",
-	)
+	})
+	defer tidy()
 
 	parser := New(OptionStopOnHCLError(true))
-	if err := parser.ParseDirectory(path); err != nil {
+	if err := parser.ParseFS(context.TODO(), fs, "code"); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := parser.EvaluateAll(context.TODO())
+	modules, _, err := parser.EvaluateAll(context.TODO(), fs)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -238,49 +241,4 @@ output "mod_result" {
 	require.NotNil(t, childValAttr)
 	require.Equal(t, cty.String, childValAttr.Type())
 	assert.Equal(t, "ok", childValAttr.Value().AsString())
-}
-
-func createTestFile(filename, contents string) string {
-	dir, err := ioutil.TempDir(os.TempDir(), "tfsec")
-	if err != nil {
-		panic(err)
-	}
-	path := filepath.Join(dir, filename)
-	if err := ioutil.WriteFile(path, []byte(contents), 0600); err != nil {
-		panic(err)
-	}
-	return path
-}
-
-func createTestFileWithModule(contents string, moduleContents string, moduleName string) string {
-	dir, err := ioutil.TempDir(os.TempDir(), "tfsec")
-	if err != nil {
-		panic(err)
-	}
-
-	rootPath := filepath.Join(dir, "main")
-	modulePath := dir
-	if len(moduleName) > 0 {
-		modulePath = filepath.Join(modulePath, moduleName)
-	}
-
-	if err := os.Mkdir(rootPath, 0700); err != nil {
-		panic(err)
-	}
-
-	if modulePath != dir {
-		if err := os.Mkdir(modulePath, 0700); err != nil {
-			panic(err)
-		}
-	}
-
-	if err := ioutil.WriteFile(filepath.Join(rootPath, "main.tf"), []byte(contents), 0600); err != nil {
-		panic(err)
-	}
-
-	if err := ioutil.WriteFile(filepath.Join(modulePath, "main.tf"), []byte(moduleContents), 0600); err != nil {
-		panic(err)
-	}
-
-	return rootPath
 }

@@ -3,10 +3,9 @@ package openstack
 import (
 	"testing"
 
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 )
 
 func Test_Networking(t *testing.T) {
@@ -28,7 +27,7 @@ resource "openstack_networking_secgroup_rule_v2" "secgroup_rule_1" {
 }
 `
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
 	require.Len(t, adapted.Networking.SecurityGroups, 1)

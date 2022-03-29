@@ -3,8 +3,10 @@ package apigateway
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
+	"github.com/aquasecurity/defsec/test/testutil"
 
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/providers/aws/apigateway"
 )
 
@@ -55,30 +57,30 @@ resource "aws_apigatewayv2_domain_name" "example" {
 			expected: apigateway.APIGateway{
 				APIs: []apigateway.API{
 					{
-						Name:         testutil.String("MyDemoAPI"),
-						Version:      testutil.Int(1),
-						ProtocolType: testutil.String("REST"),
+						Name:         String("MyDemoAPI"),
+						Version:      Int(1),
+						ProtocolType: String("REST"),
 						RESTMethods: []apigateway.RESTMethod{
 							{
-								HTTPMethod:        testutil.String("GET"),
-								AuthorizationType: testutil.String("NONE"),
-								APIKeyRequired:    testutil.Bool(false),
+								HTTPMethod:        String("GET"),
+								AuthorizationType: String("NONE"),
+								APIKeyRequired:    Bool(false),
 							},
 						},
 					},
 					{
-						Name:         testutil.String("tfsec"),
-						Version:      testutil.Int(2),
-						ProtocolType: testutil.String("HTTP"),
+						Name:         String("tfsec"),
+						Version:      Int(2),
+						ProtocolType: String("HTTP"),
 						Stages: []apigateway.Stage{
 							{
-								Version: testutil.Int(2),
-								Name:    testutil.String("tfsec"),
+								Version: Int(2),
+								Name:    String("tfsec"),
 								AccessLogging: apigateway.AccessLogging{
-									CloudwatchLogGroupARN: testutil.String("arn:123"),
+									CloudwatchLogGroupARN: String("arn:123"),
 								},
 								RESTMethodSettings: apigateway.RESTMethodSettings{
-									CacheDataEncrypted: testutil.Bool(true),
+									CacheDataEncrypted: Bool(true),
 								},
 							},
 						},
@@ -86,14 +88,14 @@ resource "aws_apigatewayv2_domain_name" "example" {
 				},
 				DomainNames: []apigateway.DomainName{
 					{
-						Name:           testutil.String("v1.com"),
-						Version:        testutil.Int(1),
-						SecurityPolicy: testutil.String("TLS_1_0"),
+						Name:           String("v1.com"),
+						Version:        Int(1),
+						SecurityPolicy: String("TLS_1_0"),
 					},
 					{
-						Name:           testutil.String("v2.com"),
-						Version:        testutil.Int(2),
-						SecurityPolicy: testutil.String("TLS_1_2"),
+						Name:           String("v2.com"),
+						Version:        Int(2),
+						SecurityPolicy: String("TLS_1_2"),
 					},
 				},
 			},
@@ -102,9 +104,21 @@ resource "aws_apigatewayv2_domain_name" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := Adapt(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
 	}
+}
+
+func Int(i int) types.IntValue {
+	return types.Int(i, types.NewTestMetadata())
+}
+
+func Bool(b bool) types.BoolValue {
+	return types.Bool(b, types.NewTestMetadata())
+}
+
+func String(s string) types.StringValue {
+	return types.String(s, types.NewTestMetadata())
 }

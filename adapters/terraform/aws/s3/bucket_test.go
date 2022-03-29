@@ -3,8 +3,7 @@ package s3
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
-
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -16,7 +15,7 @@ resource "aws_s3_bucket" "bucket1" {
 	
 }
 `
-	modules := testutil.CreateModulesFromSource(source, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
 
 	s3 := Adapt(modules)
 
@@ -33,7 +32,7 @@ resource "aws_s3_bucket" "example" {
 
   # ... other configuration ...
 }`
-	modules := testutil.CreateModulesFromSource(source, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
 
 	s3 := Adapt(modules)
 
@@ -53,7 +52,7 @@ resource "aws_s3_bucket_acl" "example" {
   bucket = aws_s3_bucket.example.id
   acl    = "authenticated-read"
 }`
-	modules := testutil.CreateModulesFromSource(source, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
 
 	s3 := Adapt(modules)
 
@@ -75,7 +74,7 @@ resource "aws_s3_bucket" "example" {
   }
 }
 `
-	modules := testutil.CreateModulesFromSource(source, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
 
 	s3 := Adapt(modules)
 
@@ -105,7 +104,7 @@ resource "aws_s3_bucket_logging" "example" {
   target_prefix = "log/"
 }
 `
-	modules := testutil.CreateModulesFromSource(source, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
 
 	s3 := Adapt(modules)
 
@@ -124,7 +123,7 @@ resource "aws_s3_bucket" "example" {
     enabled = true
   }
 }`
-	modules := testutil.CreateModulesFromSource(source, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
 
 	s3 := Adapt(modules)
 
@@ -146,7 +145,7 @@ resource "aws_s3_bucket_versioning" "example" {
     status = "Enabled"
   }
 }`
-	modules := testutil.CreateModulesFromSource(source, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
 
 	s3 := Adapt(modules)
 
@@ -170,7 +169,7 @@ func Test_BucketGetEncryption(t *testing.T) {
     }
   }
 }`
-	modules := testutil.CreateModulesFromSource(source, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
 
 	s3 := Adapt(modules)
 
@@ -198,7 +197,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
   }
 }
 `
-	modules := testutil.CreateModulesFromSource(source, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
 
 	s3 := Adapt(modules)
 

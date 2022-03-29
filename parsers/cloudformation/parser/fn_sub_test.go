@@ -31,7 +31,7 @@ Resources:
 	userDataProp := testRes.GetProperty("UserData")
 	require.NotNil(t, userDataProp)
 
-	assert.Equal(t, "#!/bin/bash -xe\nyum update -y aws-cfn-bootstrap\n/opt/aws/bin/cfn-init -v --stack cfsec-test-stack --resource LaunchConfig --configsets wordpress_install --region eu-west-1\n/opt/aws/bin/cfn-signal -e $? --stack cfsec-test-stack --resource WebServerGroup --region eu-west-1", userDataProp.AsString())
+	assert.Equal(t, "#!/bin/bash -xe\nyum update -y aws-cfn-bootstrap\n/opt/aws/bin/cfn-init -v --stack cfsec-test-stack --resource LaunchConfig --configsets wordpress_install --region eu-west-1\n/opt/aws/bin/cfn-signal -e $? --stack cfsec-test-stack --resource WebServerGroup --region eu-west-1\n", userDataProp.AsString())
 }
 
 func Test_resolve_sub_value_with_base64(t *testing.T) {
@@ -49,8 +49,7 @@ Resources:
             #!/bin/bash -xe
             yum update -y aws-cfn-bootstrap
             /opt/aws/bin/cfn-init -v --stack ${AWS::StackName} --resource LaunchConfig --configsets wordpress_install --region ${AWS::Region}
-            /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WebServerGroup --region ${AWS::Region}
-`
+            /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WebServerGroup --region ${AWS::Region}`
 	ctx := createTestFileContext(t, source)
 	require.NotNil(t, ctx)
 

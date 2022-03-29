@@ -3,8 +3,9 @@ package elasticache
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
 	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/test/testutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -55,7 +56,7 @@ func Test_adaptCluster(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptCluster(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -100,7 +101,7 @@ func Test_adaptReplicationGroup(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptReplicationGroup(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -151,7 +152,7 @@ func Test_adaptSecurityGroup(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptSecurityGroup(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -189,7 +190,7 @@ func TestLines(t *testing.T) {
 		description = "something"
 	}`
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
 	require.Len(t, adapted.Clusters, 1)

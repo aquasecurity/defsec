@@ -4,12 +4,14 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"io/fs"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/aquasecurity/defsec/extrafs"
 
 	"github.com/aquasecurity/defsec/rego"
 
@@ -56,37 +58,12 @@ func (s *Scanner) debug(format string, args ...interface{}) {
 	_, _ = s.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
-func (s *Scanner) AddPath(path string) error {
-	path, err := filepath.Abs(path)
-	if err != nil {
-		return err
-	}
-	path = filepath.Clean(path)
-	info, err := os.Stat(path)
-	if err != nil {
-		return err
-	}
-	if info.IsDir() {
-		s.dirs[path] = struct{}{}
-	} else {
-		s.dirs[filepath.Dir(path)] = struct{}{}
-	}
-	return nil
-}
-
-func (s *Scanner) Scan() (rules.Results, Metrics, error) {
+func (s *Scanner) Scan(ctx context.Context, target fs.FS, dir string) (rules.Results, Metrics, error) {
 
 	var metrics Metrics
 
-	// don't scan child directories that have parent directories containing tf files!
-	var dirs []string
-	for dir := range s.dirs {
-		dirs = append(dirs, dir)
-	}
-	simplifiedDirs := s.removeNestedDirs(dirs)
-
 	// find directories which directly contain tf files (and have no parent containing tf files)
-	rootDirs := s.findRootModules(simplifiedDirs)
+	rootDirs := s.findRootModules(target, dir)
 	sort.Strings(rootDirs)
 
 	regoScanner := rego.NewScanner(
@@ -107,11 +84,11 @@ func (s *Scanner) Scan() (rules.Results, Metrics, error) {
 		p := parser.New(s.parserOpt...)
 		e := executor.New(s.executorOpt...)
 
-		if err := p.ParseDirectory(dir); err != nil {
+		if err := p.ParseFS(ctx, target, dir); err != nil {
 			return nil, metrics, err
 		}
 
-		modules, _, err := p.EvaluateAll(context.TODO())
+		modules, _, err := p.EvaluateAll(context.TODO(), target)
 		if err != nil {
 			return nil, metrics, err
 		}
@@ -174,13 +151,13 @@ func (s *Scanner) removeNestedDirs(dirs []string) []string {
 	return clean
 }
 
-func (s *Scanner) findRootModules(dirs []string) []string {
+func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
 
 	var roots []string
 	var others []string
 
 	for _, dir := range dirs {
-		if isRootModule(dir) {
+		if isRootModule(target, dir) {
 			roots = append(roots, dir)
 			if !s.forceAllDirs {
 				continue
@@ -188,38 +165,42 @@ func (s *Scanner) findRootModules(dirs []string) []string {
 		}
 
 		// if this isn't a root module, look at directories inside it
-		files, err := ioutil.ReadDir(dir)
+		files, err := fs.ReadDir(target, dir)
 		if err != nil {
 			continue
 		}
 		for _, file := range files {
-			realPath, file := resolveSymlink(dir, file)
+			realPath := filepath.Join(dir, file.Name())
+			if symFS, ok := target.(extrafs.ReadLinkFS); ok {
+				realPath, err = symFS.ResolveSymlink(realPath)
+				if err != nil {
+					s.debug("failed to resolve symlink '%s': %s", file.Name(), err)
+					continue
+				}
+			}
 			if file.IsDir() {
 				others = append(others, realPath)
+			} else if statFS, ok := target.(fs.StatFS); ok {
+				info, err := statFS.Stat(realPath)
+				if err != nil {
+					continue
+				}
+				if info.IsDir() {
+					others = append(others, realPath)
+				}
 			}
 		}
 	}
 
 	if (len(roots) == 0 || s.forceAllDirs) && len(others) > 0 {
-		roots = append(roots, s.findRootModules(others)...)
+		roots = append(roots, s.findRootModules(target, others...)...)
 	}
 
 	return s.removeNestedDirs(roots)
 }
 
-func resolveSymlink(dir string, file os.FileInfo) (string, os.FileInfo) {
-	if file.Mode()&os.ModeSymlink != 0 {
-		if resolvedLink, err := os.Readlink(filepath.Join(dir, file.Name())); err == nil {
-			if info, err := os.Lstat(resolvedLink); err == nil {
-				return resolvedLink, info
-			}
-		}
-	}
-	return filepath.Join(dir, file.Name()), file
-}
-
-func isRootModule(dir string) bool {
-	files, err := ioutil.ReadDir(dir)
+func isRootModule(target fs.FS, dir string) bool {
+	files, err := fs.ReadDir(target, dir)
 	if err != nil {
 		return false
 	}

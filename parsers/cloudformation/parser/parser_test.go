@@ -1,17 +1,23 @@
 package parser
 
 import (
-	"bytes"
-	"fmt"
+	"context"
 	"os"
-	"strings"
+	"path/filepath"
 	"testing"
 
-	"github.com/aquasecurity/defsec/parsers/testutil"
-	"github.com/aquasecurity/defsec/parsers/testutil/filesystem"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func parseFile(t *testing.T, source string, name string) (FileContexts, error) {
+	tmp, err := os.MkdirTemp(os.TempDir(), "defsec")
+	require.NoError(t, err)
+	defer func() { _ = os.RemoveAll(tmp) }()
+	require.NoError(t, os.WriteFile(filepath.Join(tmp, name), []byte(source), 0600))
+	fs := os.DirFS(tmp)
+	return New().ParseFS(context.TODO(), fs, ".")
+}
 
 func Test_parse_yaml(t *testing.T) {
 
@@ -33,10 +39,7 @@ Resources:
         - BucketKeyEnabled: 
             Ref: EncryptBucket`
 
-	testFile := testutil.CreateTestFile(source, testutil.YamlTestFileExt)
-	defer func() { _ = os.RemoveAll(testFile) }()
-
-	files, err := New().ParseFiles(testFile)
+	files, err := parseFile(t, source, "cf.yaml")
 	require.NoError(t, err)
 	assert.Len(t, files, 1)
 	file := files[0]
@@ -79,10 +82,7 @@ func Test_parse_json(t *testing.T) {
 }
 `
 
-	testFile := testutil.CreateTestFile(source, testutil.JsonTestFileExt)
-	defer func() { _ = os.RemoveAll(testFile) }()
-
-	files, err := New().ParseFiles(testFile)
+	files, err := parseFile(t, source, "cf.json")
 	require.NoError(t, err)
 	assert.Len(t, files, 1)
 	file := files[0]
@@ -112,10 +112,7 @@ Resources:
         - BucketKeyEnabled: 
             Ref: EncryptBucket`
 
-	testFile := testutil.CreateTestFile(source, testutil.YamlTestFileExt)
-	defer func() { _ = os.RemoveAll(testFile) }()
-
-	files, err := New().ParseFiles(testFile)
+	files, err := parseFile(t, source, "cf.yaml")
 	require.NoError(t, err)
 	assert.Len(t, files, 1)
 	file := files[0]
@@ -151,10 +148,7 @@ Resources:
         - BucketKeyEnabled: false
 `
 
-	testFile := testutil.CreateTestFile(source, testutil.YamlTestFileExt)
-	defer func() { _ = os.RemoveAll(testFile) }()
-
-	files, err := New().ParseFiles(testFile)
+	files, err := parseFile(t, source, "cf.yaml")
 	require.NoError(t, err)
 	assert.Len(t, files, 1)
 	ctx := files[0]
@@ -171,25 +165,8 @@ Resources:
 }
 
 func createTestFileContext(t *testing.T, source string) *FileContext {
-
-	fs, err := filesystem.New()
+	contexts, err := parseFile(t, source, "main.yaml")
 	require.NoError(t, err)
-	defer fs.Close()
-
-	source = strings.TrimSpace(strings.ReplaceAll(source, "\t", "  "))
-
-	ext := "yaml"
-	if source[0] == '{' {
-		ext = "json"
-	}
-
-	filename := fmt.Sprintf("test.%s", ext)
-
-	if err := fs.WriteTextFile(filename, source); err != nil {
-		t.Fatal(err)
-	}
-
-	fileContext, err := New().Parse(bytes.NewReader([]byte(source)), filename)
-	require.NoError(t, err)
-	return fileContext
+	require.Len(t, contexts, 1)
+	return contexts[0]
 }

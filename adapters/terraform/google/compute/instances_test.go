@@ -3,7 +3,8 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
+	"github.com/aquasecurity/defsec/test/testutil"
 
 	"github.com/aquasecurity/defsec/providers/google/compute"
 )
@@ -28,7 +29,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptInstances(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})

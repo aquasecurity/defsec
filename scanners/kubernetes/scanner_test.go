@@ -2,22 +2,21 @@ package kubernetes
 
 import (
 	"context"
+	"path/filepath"
 	"testing"
+
+	"github.com/aquasecurity/defsec/test/testutil"
 
 	"github.com/aquasecurity/defsec/rules"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/aquasecurity/defsec/test/testutil/filesystem"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_BasicScan(t *testing.T) {
 
-	fs, err := filesystem.New()
-	require.NoError(t, err)
-	defer func() { _ = fs.Close() }()
-
-	require.NoError(t, fs.WriteTextFile("/code/example.yaml", `
+	fs, tmp, tidy := testutil.CreateFS(t, map[string]string{
+		"/code/example.yaml": `
 apiVersion: v1
 kind: Pod
 metadata: 
@@ -27,9 +26,9 @@ spec:
   - command: ["sh", "-c", "echo 'Hello' && sleep 1h"]
     image: busybox
     name: hello
-`))
-
-	require.NoError(t, fs.WriteTextFile("/rules/lib.k8s.rego", `package lib.kubernetes
+`,
+		"/rules/lib.k8s.rego": `
+package lib.kubernetes
 
 default is_gatekeeper = false
 
@@ -197,16 +196,15 @@ host_aliases[host_alias] {
 	pods[pod]
 	host_alias = pod.spec
 }
-`))
-	require.NoError(t, fs.WriteTextFile("/rules/lib.util.rego", `
+`,
+		"/rules/lib.util.rego": `
 package lib.utils
 
 has_key(x, k) {
 	_ = x[k]
 }
-`))
-
-	require.NoError(t, fs.WriteTextFile("/rules/rule.rego", `
+`,
+		"/rules/rule.rego": `
 package appshield.kubernetes.KSV011
 
 import data.lib.kubernetes
@@ -265,13 +263,13 @@ deny[res] {
 		"type": __rego_metadata__.type,
 	}
 }
+`,
+	})
+	defer tidy()
 
-`))
+	scanner := NewScanner(OptionWithPolicyDirs(filepath.Join(tmp, "rules")))
 
-	scanner := NewScanner(OptionWithPolicyDirs(fs.RealPath("/rules")))
-	require.NoError(t, scanner.AddPath(fs.RealPath("/code/example.yaml")))
-
-	results, err := scanner.Scan(context.TODO())
+	results, err := scanner.ScanFS(context.TODO(), fs, "code")
 	require.NoError(t, err)
 
 	require.Len(t, results.GetFailed(), 1)

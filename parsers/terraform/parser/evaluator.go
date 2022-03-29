@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"io/fs"
 	"reflect"
 	"time"
 
@@ -29,13 +30,13 @@ type evaluator struct {
 	modulePath      string
 	moduleName      string
 	ignores         terraform.Ignores
-	parentParser    Parser
+	parentParser    *Parser
 	debugWriter     io.Writer
 	allowDownloads  bool
 }
 
 func newEvaluator(
-	parentParser Parser,
+	parentParser *Parser,
 	projectRootPath string,
 	modulePath string,
 	workingDir string,
@@ -117,7 +118,7 @@ func (e *evaluator) exportOutputs() cty.Value {
 	return cty.ObjectVal(data)
 }
 
-func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, time.Duration) {
+func (e *evaluator) EvaluateAll(ctx context.Context, target fs.FS) (terraform.Modules, time.Duration) {
 
 	var parseDuration time.Duration
 
@@ -147,8 +148,8 @@ func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, time.Du
 	parseDuration += time.Since(start)
 
 	var modules []*terraform.Module
-	for _, definition := range e.loadModules(ctx) {
-		submodules, outputs, err := definition.Parser.EvaluateAll(ctx)
+	for _, definition := range e.loadModules(ctx, target) {
+		submodules, outputs, err := definition.Parser.EvaluateAll(ctx, target)
 		if err != nil {
 			e.debug("Failed to evaluate submodule '%s': %s.", definition.Name, err)
 			continue

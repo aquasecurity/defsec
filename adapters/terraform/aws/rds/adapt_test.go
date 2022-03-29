@@ -3,7 +3,8 @@ package rds
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
+	"github.com/aquasecurity/defsec/test/testutil"
 
 	"github.com/aquasecurity/defsec/providers/aws/rds"
 )
@@ -28,7 +29,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := Adapt(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -55,7 +56,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptClusterInstance(modules.GetBlocks()[0], modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -82,7 +83,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptClassicDBSecurityGroup(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -109,7 +110,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptInstance(modules.GetBlocks()[0], modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -136,7 +137,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted, _ := adaptCluster(modules.GetBlocks()[0], modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -163,7 +164,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptPerformanceInsights(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -190,7 +191,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptEncryption(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})

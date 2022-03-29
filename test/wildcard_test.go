@@ -72,7 +72,7 @@ func Test_WildcardMatchingOnRequiredLabels(t *testing.T) {
 			reg := rules.Register(rule, nil)
 			defer rules.Deregister(reg)
 
-			results := testutil.ScanHCL(test.input, t)
+			results := scanHCL(t, test.input)
 
 			if test.expectedFailure {
 				testutil.AssertRuleFound(t, fmt.Sprintf("custom-service-%s", code), results, "")

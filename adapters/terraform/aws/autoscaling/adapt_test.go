@@ -3,8 +3,9 @@ package autoscaling
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
 	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/test/testutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -144,7 +145,7 @@ export AWS_DEFAULT_REGION=us-west-2
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := Adapt(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -176,7 +177,7 @@ export AWS_DEFAULT_REGION=us-west-2
 		}
 	}`
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
 	require.Len(t, adapted.LaunchConfigurations, 1)

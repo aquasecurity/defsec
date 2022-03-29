@@ -3,8 +3,9 @@ package ecr
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
 	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/test/testutil"
 	"github.com/liamg/iamgo"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -148,7 +149,7 @@ func Test_adaptRepository(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptRepository(modules.GetBlocks()[0], modules[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -208,7 +209,7 @@ func TestLines(t *testing.T) {
 	  EOF
 	  }`
 
-	module := testutil.CreateModulesFromSource(src, ".tf", t)
+	module := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(module)
 
 	require.Len(t, adapted.Repositories, 1)

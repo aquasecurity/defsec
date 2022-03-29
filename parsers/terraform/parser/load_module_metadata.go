@@ -2,7 +2,7 @@ package parser
 
 import (
 	"encoding/json"
-	"os"
+	"io/fs"
 	"path/filepath"
 )
 
@@ -15,13 +15,10 @@ type modulesMetadata struct {
 	} `json:"Modules"`
 }
 
-func loadModuleMetadata(fullPath string) (*modulesMetadata, error) {
+func loadModuleMetadata(target fs.FS, fullPath string) (*modulesMetadata, error) {
 	metadataPath := filepath.Join(fullPath, ".terraform/modules/modules.json")
-	if _, err := os.Stat(metadataPath); err != nil {
-		return nil, err
-	}
 
-	f, err := os.Open(metadataPath)
+	f, err := target.Open(metadataPath)
 	if err != nil {
 		return nil, err
 	}

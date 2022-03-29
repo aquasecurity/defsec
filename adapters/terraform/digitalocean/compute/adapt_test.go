@@ -3,9 +3,9 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
-
+	"github.com/aquasecurity/defsec/adapters/terraform/tftestutil"
 	"github.com/aquasecurity/defsec/providers/digitalocean/compute"
+	"github.com/aquasecurity/defsec/test/testutil"
 )
 
 func Test_Adapt(t *testing.T) {
@@ -28,7 +28,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := Adapt(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -55,7 +55,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptDroplets(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -82,7 +82,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptFirewalls(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -109,7 +109,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptLoadBalancers(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -136,7 +136,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptKubernetesClusters(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})

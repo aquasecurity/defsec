@@ -94,6 +94,12 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (rules.Results
 
 	for _, module := range s.policies {
 
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
+
 		namespace := getModuleNamespace(module)
 		topLevel := strings.Split(namespace, ".")[0]
 		if _, ok := s.ruleNamespaces[topLevel]; !ok {
