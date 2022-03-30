@@ -3,6 +3,7 @@ package formatters
 import (
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
 	"sort"
 
@@ -14,7 +15,7 @@ import (
 )
 
 type Formatter interface {
-	Output(results scan.Results) error
+	Output(fs.FS, scan.Results) error
 }
 
 type ConfigurableFormatter interface {
@@ -36,7 +37,7 @@ type Base struct {
 	includeIgnored bool
 	baseDir        string
 	writer         io.Writer
-	outputOverride func(b ConfigurableFormatter, results scan.Results) error
+	outputOverride func(ConfigurableFormatter, fs.FS, scan.Results) error
 	linksOverride  func(result scan.Result) []string
 }
 
@@ -81,11 +82,11 @@ func (b *Base) BaseDir() string {
 	return b.baseDir
 }
 
-func (b *Base) Output(results scan.Results) error {
+func (b *Base) Output(fs fs.FS, results scan.Results) error {
 	if !b.enableColours {
 		tml.DisableFormatting()
 	}
-	return b.outputOverride(b, results)
+	return b.outputOverride(b, fs, results)
 }
 
 func key(result scan.Result) string {

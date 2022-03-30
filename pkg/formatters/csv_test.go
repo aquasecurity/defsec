@@ -31,7 +31,7 @@ test.test,123,123,aws-dynamodb-enable-at-rest-encryption,HIGH,Cluster encryption
 			Enabled:  types.Bool(false, types.NewTestMetadata()),
 		})
 	results.SetRule(scan.Rule{Severity: severity.High, Provider: providers.AWSProvider, Service: "dynamodb", ShortCode: "enable-at-rest-encryption"})
-	require.NoError(t, formatter.Output(results))
+	require.NoError(t, formatter.Output(nil, results))
 	assert.Equal(t, want, buffer.String())
 }
 
@@ -49,7 +49,7 @@ test.test,123,123,aws-dynamodb-enable-at-rest-encryption,HIGH,Cluster encryption
 		})
 	results.AddPassed(types.NewTestMetadata(), "Everything is fine.")
 	results.SetRule(scan.Rule{Severity: severity.High, Provider: providers.AWSProvider, Service: "dynamodb", ShortCode: "enable-at-rest-encryption"})
-	require.NoError(t, formatter.Output(results))
+	require.NoError(t, formatter.Output(nil, results))
 	assert.Equal(t, want, buffer.String())
 }
 
@@ -68,6 +68,6 @@ test.test,123,123,aws-dynamodb-enable-at-rest-encryption,HIGH,Everything is fine
 		})
 	results.AddPassed(types.NewTestMetadata(), "Everything is fine.")
 	results.SetRule(scan.Rule{Severity: severity.High, Provider: providers.AWSProvider, Service: "dynamodb", ShortCode: "enable-at-rest-encryption"})
-	require.NoError(t, formatter.Output(results))
+	require.NoError(t, formatter.Output(nil, results))
 	assert.Equal(t, want, buffer.String())
 }

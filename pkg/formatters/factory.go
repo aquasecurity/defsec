@@ -2,6 +2,7 @@ package formatters
 
 import (
 	"io"
+	"io/fs"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 )
@@ -55,7 +56,7 @@ func (f *factory) WithBaseDir(dir string) *factory {
 	return f
 }
 
-func (f *factory) WithCustomFormatterFunc(fn func(ConfigurableFormatter, scan.Results) error) *factory {
+func (f *factory) WithCustomFormatterFunc(fn func(ConfigurableFormatter, fs.FS, scan.Results) error) *factory {
 	f.base.outputOverride = fn
 	return f
 }

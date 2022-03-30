@@ -12,11 +12,12 @@ import (
 )
 
 func main() {
-	results, err := universal.New(universal.OptionWithDebug(os.Stderr)).ScanFS(context.TODO(), extrafs.OSDir("."), ".")
+	fsys := extrafs.OSDir(".")
+	results, err := universal.New(universal.OptionWithDebug(os.Stderr)).ScanFS(context.TODO(), fsys, ".")
 	if err != nil {
 		panic(err)
 	}
-	if err := formatters.New().AsSARIF().Build().Output(results); err != nil {
+	if err := formatters.New().AsSARIF().Build().Output(fsys, results); err != nil {
 		panic(err)
 	}
 }

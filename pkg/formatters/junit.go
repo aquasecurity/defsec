@@ -3,7 +3,7 @@ package formatters
 import (
 	"encoding/xml"
 	"fmt"
-	"io/ioutil"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -40,7 +40,7 @@ type jUnitFailure struct {
 	Contents string `xml:",chardata"`
 }
 
-func outputJUnit(b ConfigurableFormatter, results scan.Results) error {
+func outputJUnit(b ConfigurableFormatter, srcFS fs.FS, results scan.Results) error {
 
 	output := jUnitTestSuite{
 		Name:     filepath.Base(os.Args[0]),
@@ -65,7 +65,7 @@ func outputJUnit(b ConfigurableFormatter, results scan.Results) error {
 				Classname: rng.GetFilename(),
 				Name:      fmt.Sprintf("[%s][%s] - %s", res.Rule().LongID(), res.Severity(), res.Description()),
 				Time:      "0",
-				Failure:   buildFailure(b, res),
+				Failure:   buildFailure(b, srcFS, res),
 			},
 		)
 	}
@@ -81,9 +81,13 @@ func outputJUnit(b ConfigurableFormatter, results scan.Results) error {
 }
 
 // highlight the lines of code which caused a problem, if available
-func highlightCodeJunit(res scan.Result) string {
+func highlightCodeJunit(srcFS fs.FS, res scan.Result) string {
 
-	data, err := ioutil.ReadFile(res.Range().GetFilename())
+	if srcFS == nil {
+		return ""
+	}
+
+	data, err := fs.ReadFile(srcFS, res.Range().GetFilename())
 	if err != nil {
 		return ""
 	}
@@ -119,7 +123,7 @@ func highlightCodeJunit(res scan.Result) string {
 	return output
 }
 
-func buildFailure(b ConfigurableFormatter, res scan.Result) *jUnitFailure {
+func buildFailure(b ConfigurableFormatter, srcFS fs.FS, res scan.Result) *jUnitFailure {
 	if res.Status() == scan.StatusPassed {
 		return nil
 	}
@@ -134,7 +138,7 @@ func buildFailure(b ConfigurableFormatter, res scan.Result) *jUnitFailure {
 		Message: res.Description(),
 		Contents: fmt.Sprintf("%s\n%s\n%s",
 			res.Range().String(),
-			highlightCodeJunit(res),
+			highlightCodeJunit(srcFS, res),
 			link,
 		),
 	}

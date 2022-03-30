@@ -2,11 +2,12 @@ package formatters
 
 import (
 	"encoding/json"
+	"io/fs"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 )
 
-func outputJSON(b ConfigurableFormatter, results scan.Results) error {
+func outputJSON(b ConfigurableFormatter, _ fs.FS, results scan.Results) error {
 	jsonWriter := json.NewEncoder(b.Writer())
 	jsonWriter.SetIndent("", "\t")
 	var flatResults []scan.FlatResult

@@ -50,6 +50,6 @@ func Test_JUnit(t *testing.T) {
 		},
 		Severity: severity.High,
 	})
-	require.NoError(t, formatter.Output(results))
+	require.NoError(t, formatter.Output(nil, results))
 	assert.Equal(t, want, buffer.String())
 }

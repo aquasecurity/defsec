@@ -3,12 +3,13 @@ package formatters
 import (
 	"encoding/csv"
 	"fmt"
+	"io/fs"
 	"strconv"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 )
 
-func outputCSV(b ConfigurableFormatter, results scan.Results) error {
+func outputCSV(b ConfigurableFormatter, _ fs.FS, results scan.Results) error {
 
 	records := [][]string{
 		{"file", "start_line", "end_line", "rule_id", "severity", "description", "link", "passed"},
