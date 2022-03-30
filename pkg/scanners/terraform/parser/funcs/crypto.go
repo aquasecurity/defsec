@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"hash"
 	"io"
+	"io/fs"
 	"strings"
 
 	uuidv5 "github.com/google/uuid"
@@ -75,8 +76,8 @@ var Base64Sha256Func = makeStringHashFunction(sha256.New, base64.StdEncoding.Enc
 
 // MakeFileBase64Sha256Func constructs a function that is like Base64Sha256Func but reads the
 // contents of a file rather than hashing a given literal string.
-func MakeFileBase64Sha256Func(baseDir string) function.Function {
-	return makeFileHashFunction(baseDir, sha256.New, base64.StdEncoding.EncodeToString)
+func MakeFileBase64Sha256Func(target fs.FS, baseDir string) function.Function {
+	return makeFileHashFunction(target, baseDir, sha256.New, base64.StdEncoding.EncodeToString)
 }
 
 // Base64Sha512Func constructs a function that computes the SHA256 hash of a given string
@@ -85,8 +86,8 @@ var Base64Sha512Func = makeStringHashFunction(sha512.New, base64.StdEncoding.Enc
 
 // MakeFileBase64Sha512Func constructs a function that is like Base64Sha512Func but reads the
 // contents of a file rather than hashing a given literal string.
-func MakeFileBase64Sha512Func(baseDir string) function.Function {
-	return makeFileHashFunction(baseDir, sha512.New, base64.StdEncoding.EncodeToString)
+func MakeFileBase64Sha512Func(target fs.FS, baseDir string) function.Function {
+	return makeFileHashFunction(target, baseDir, sha512.New, base64.StdEncoding.EncodeToString)
 }
 
 // BcryptFunc constructs a function that computes a hash of the given string using the Blowfish cipher.
@@ -132,8 +133,8 @@ var Md5Func = makeStringHashFunction(md5.New, hex.EncodeToString)
 
 // MakeFileMd5Func constructs a function that is like Md5Func but reads the
 // contents of a file rather than hashing a given literal string.
-func MakeFileMd5Func(baseDir string) function.Function {
-	return makeFileHashFunction(baseDir, md5.New, hex.EncodeToString)
+func MakeFileMd5Func(target fs.FS, baseDir string) function.Function {
+	return makeFileHashFunction(target, baseDir, md5.New, hex.EncodeToString)
 }
 
 // RsaDecryptFunc constructs a function that decrypts an RSA-encrypted ciphertext.
@@ -191,8 +192,8 @@ var Sha1Func = makeStringHashFunction(sha1.New, hex.EncodeToString)
 
 // MakeFileSha1Func constructs a function that is like Sha1Func but reads the
 // contents of a file rather than hashing a given literal string.
-func MakeFileSha1Func(baseDir string) function.Function {
-	return makeFileHashFunction(baseDir, sha1.New, hex.EncodeToString)
+func MakeFileSha1Func(target fs.FS, baseDir string) function.Function {
+	return makeFileHashFunction(target, baseDir, sha1.New, hex.EncodeToString)
 }
 
 // Sha256Func constructs a function that computes the SHA256 hash of a given string
@@ -201,8 +202,8 @@ var Sha256Func = makeStringHashFunction(sha256.New, hex.EncodeToString)
 
 // MakeFileSha256Func constructs a function that is like Sha256Func but reads the
 // contents of a file rather than hashing a given literal string.
-func MakeFileSha256Func(baseDir string) function.Function {
-	return makeFileHashFunction(baseDir, sha256.New, hex.EncodeToString)
+func MakeFileSha256Func(target fs.FS, baseDir string) function.Function {
+	return makeFileHashFunction(target, baseDir, sha256.New, hex.EncodeToString)
 }
 
 // Sha512Func constructs a function that computes the SHA512 hash of a given string
@@ -211,8 +212,8 @@ var Sha512Func = makeStringHashFunction(sha512.New, hex.EncodeToString)
 
 // MakeFileSha512Func constructs a function that is like Sha512Func but reads the
 // contents of a file rather than hashing a given literal string.
-func MakeFileSha512Func(baseDir string) function.Function {
-	return makeFileHashFunction(baseDir, sha512.New, hex.EncodeToString)
+func MakeFileSha512Func(target fs.FS, baseDir string) function.Function {
+	return makeFileHashFunction(target, baseDir, sha512.New, hex.EncodeToString)
 }
 
 func makeStringHashFunction(hf func() hash.Hash, enc func([]byte) string) function.Function {
@@ -234,7 +235,7 @@ func makeStringHashFunction(hf func() hash.Hash, enc func([]byte) string) functi
 	})
 }
 
-func makeFileHashFunction(baseDir string, hf func() hash.Hash, enc func([]byte) string) function.Function {
+func makeFileHashFunction(target fs.FS, baseDir string, hf func() hash.Hash, enc func([]byte) string) function.Function {
 	return function.New(&function.Spec{
 		Params: []function.Parameter{
 			{
@@ -245,7 +246,7 @@ func makeFileHashFunction(baseDir string, hf func() hash.Hash, enc func([]byte) 
 		Type: function.StaticReturnType(cty.String),
 		Impl: func(args []cty.Value, retType cty.Type) (ret cty.Value, err error) {
 			path := args[0].AsString()
-			f, err := openFile(baseDir, path)
+			f, err := openFile(target, baseDir, path)
 			if err != nil {
 				return cty.UnknownVal(cty.String), err
 			}

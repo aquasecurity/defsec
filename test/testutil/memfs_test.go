@@ -88,7 +88,7 @@ func Test_Basics(t *testing.T) {
 
 	t.Run("Walk directory", func(t *testing.T) {
 		var entries []fs.DirEntry
-		err := fs.WalkDir(memfs, ".", func(path string, info fs.DirEntry, err error) error {
+		err := fs.WalkDir(memfs, ".", func(_ string, info fs.DirEntry, err error) error {
 			if err != nil {
 				return err
 			}

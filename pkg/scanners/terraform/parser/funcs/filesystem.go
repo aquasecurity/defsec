@@ -4,6 +4,7 @@ package funcs
 import (
 	"encoding/base64"
 	"fmt"
+	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -20,7 +21,7 @@ import (
 // MakeFileFunc constructs a function that takes a file path and returns the
 // contents of that file, either directly as a string (where valid UTF-8 is
 // required) or as a string containing base64 bytes.
-func MakeFileFunc(baseDir string, encBase64 bool) function.Function {
+func MakeFileFunc(target fs.FS, baseDir string, encBase64 bool) function.Function {
 	return function.New(&function.Spec{
 		Params: []function.Parameter{
 			{
@@ -31,7 +32,7 @@ func MakeFileFunc(baseDir string, encBase64 bool) function.Function {
 		Type: function.StaticReturnType(cty.String),
 		Impl: func(args []cty.Value, retType cty.Type) (cty.Value, error) {
 			path := args[0].AsString()
-			src, err := readFileBytes(baseDir, path)
+			src, err := readFileBytes(target, baseDir, path)
 			if err != nil {
 				err = function.NewArgError(0, err)
 				return cty.UnknownVal(cty.String), err
@@ -64,7 +65,7 @@ func MakeFileFunc(baseDir string, encBase64 bool) function.Function {
 // As a special exception, a referenced template file may not recursively call
 // the templatefile function, since that would risk the same file being
 // included into itself indefinitely.
-func MakeTemplateFileFunc(baseDir string, funcsCb func() map[string]function.Function) function.Function {
+func MakeTemplateFileFunc(target fs.FS, baseDir string, funcsCb func() map[string]function.Function) function.Function {
 
 	params := []function.Parameter{
 		{
@@ -80,7 +81,7 @@ func MakeTemplateFileFunc(baseDir string, funcsCb func() map[string]function.Fun
 	loadTmpl := func(fn string) (hcl.Expression, error) {
 		// We re-use File here to ensure the same filename interpretation
 		// as it does, along with its other safety checks.
-		tmplVal, err := File(baseDir, cty.StringVal(fn))
+		tmplVal, err := File(target, baseDir, cty.StringVal(fn))
 		if err != nil {
 			return nil, err
 		}
@@ -353,7 +354,7 @@ var PathExpandFunc = function.New(&function.Spec{
 	},
 })
 
-func openFile(baseDir, path string) (*os.File, error) {
+func openFile(target fs.FS, baseDir, path string) (fs.File, error) {
 	path, err := homedir.Expand(path)
 	if err != nil {
 		return nil, fmt.Errorf("failed to expand ~: %s", err)
@@ -366,11 +367,14 @@ func openFile(baseDir, path string) (*os.File, error) {
 	// Ensure that the path is canonical for the host OS
 	path = filepath.Clean(path)
 
+	if target != nil {
+		return target.Open(path)
+	}
 	return os.Open(path)
 }
 
-func readFileBytes(baseDir, path string) ([]byte, error) {
-	f, err := openFile(baseDir, path)
+func readFileBytes(target fs.FS, baseDir, path string) ([]byte, error) {
+	f, err := openFile(target, baseDir, path)
 	if err != nil {
 		if os.IsNotExist(err) {
 			// An extra Terraform-specific hint for this situation
@@ -394,8 +398,8 @@ func readFileBytes(baseDir, path string) ([]byte, error) {
 // The underlying function implementation works relative to a particular base
 // directory, so this wrapper takes a base directory string and uses it to
 // construct the underlying function before calling it.
-func File(baseDir string, path cty.Value) (cty.Value, error) {
-	fn := MakeFileFunc(baseDir, false)
+func File(target fs.FS, baseDir string, path cty.Value) (cty.Value, error) {
+	fn := MakeFileFunc(target, baseDir, false)
 	return fn.Call([]cty.Value{path})
 }
 
@@ -426,8 +430,8 @@ func FileSet(baseDir string, path, pattern cty.Value) (cty.Value, error) {
 // The underlying function implementation works relative to a particular base
 // directory, so this wrapper takes a base directory string and uses it to
 // construct the underlying function before calling it.
-func FileBase64(baseDir string, path cty.Value) (cty.Value, error) {
-	fn := MakeFileFunc(baseDir, true)
+func FileBase64(target fs.FS, baseDir string, path cty.Value) (cty.Value, error) {
+	fn := MakeFileFunc(target, baseDir, true)
 	return fn.Call([]cty.Value{path})
 }
 

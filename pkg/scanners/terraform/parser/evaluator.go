@@ -21,6 +21,7 @@ const (
 )
 
 type evaluator struct {
+	filesystem      fs.FS
 	ctx             *tfcontext.Context
 	blocks          terraform.Blocks
 	inputVars       map[string]cty.Value
@@ -35,6 +36,7 @@ type evaluator struct {
 }
 
 func newEvaluator(
+	target fs.FS,
 	parentParser *Parser,
 	projectRootPath string,
 	modulePath string,
@@ -51,7 +53,7 @@ func newEvaluator(
 
 	// create a context to store variables and make functions available
 	ctx := tfcontext.NewContext(&hcl.EvalContext{
-		Functions: Functions(modulePath),
+		Functions: Functions(target, modulePath),
 	}, nil)
 
 	// these variables are made available by terraform to each module
@@ -66,6 +68,7 @@ func newEvaluator(
 	}
 
 	return &evaluator{
+		filesystem:      target,
 		parentParser:    parentParser,
 		modulePath:      modulePath,
 		moduleName:      moduleName,
@@ -117,7 +120,7 @@ func (e *evaluator) exportOutputs() cty.Value {
 	return cty.ObjectVal(data)
 }
 
-func (e *evaluator) EvaluateAll(ctx context.Context, target fs.FS) (terraform.Modules, time.Duration) {
+func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, time.Duration) {
 
 	var parseDuration time.Duration
 
@@ -147,8 +150,8 @@ func (e *evaluator) EvaluateAll(ctx context.Context, target fs.FS) (terraform.Mo
 	parseDuration += time.Since(start)
 
 	var modules []*terraform.Module
-	for _, definition := range e.loadModules(ctx, target) {
-		submodules, outputs, err := definition.Parser.EvaluateAll(ctx, target)
+	for _, definition := range e.loadModules(ctx, e.filesystem) {
+		submodules, outputs, err := definition.Parser.EvaluateAll(ctx, e.filesystem)
 		if err != nil {
 			e.debug("Failed to evaluate submodule '%s': %s.", definition.Name, err)
 			continue

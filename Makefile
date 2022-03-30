@@ -1,7 +1,6 @@
 .PHONY: test
 test:
 	which gotestsum || go install gotest.tools/gotestsum@latest
-	go clean -testcache
 	go test -race ./...
 
 .PHONY: typos

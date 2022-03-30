@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"io/fs"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser/funcs"
 	"github.com/hashicorp/hcl/v2/ext/tryfunc"
 	ctyyaml "github.com/zclconf/go-cty-yaml"
@@ -11,7 +13,7 @@ import (
 
 // Functions returns the set of functions that should be used to when evaluating
 // expressions in the receiving scope.
-func Functions(baseDir string) map[string]function.Function {
+func Functions(target fs.FS, baseDir string) map[string]function.Function {
 	return map[string]function.Function{
 		"abs":              stdlib.AbsoluteFunc,
 		"abspath":          funcs.AbsPathFunc,
@@ -39,16 +41,16 @@ func Functions(baseDir string) map[string]function.Function {
 		"distinct":         stdlib.DistinctFunc,
 		"element":          stdlib.ElementFunc,
 		"chunklist":        stdlib.ChunklistFunc,
-		"file":             funcs.MakeFileFunc(baseDir, false),
+		"file":             funcs.MakeFileFunc(target, baseDir, false),
 		"fileexists":       funcs.MakeFileExistsFunc(baseDir),
 		"fileset":          funcs.MakeFileSetFunc(baseDir),
-		"filebase64":       funcs.MakeFileFunc(baseDir, true),
-		"filebase64sha256": funcs.MakeFileBase64Sha256Func(baseDir),
-		"filebase64sha512": funcs.MakeFileBase64Sha512Func(baseDir),
-		"filemd5":          funcs.MakeFileMd5Func(baseDir),
-		"filesha1":         funcs.MakeFileSha1Func(baseDir),
-		"filesha256":       funcs.MakeFileSha256Func(baseDir),
-		"filesha512":       funcs.MakeFileSha512Func(baseDir),
+		"filebase64":       funcs.MakeFileFunc(target, baseDir, true),
+		"filebase64sha256": funcs.MakeFileBase64Sha256Func(target, baseDir),
+		"filebase64sha512": funcs.MakeFileBase64Sha512Func(target, baseDir),
+		"filemd5":          funcs.MakeFileMd5Func(target, baseDir),
+		"filesha1":         funcs.MakeFileSha1Func(target, baseDir),
+		"filesha256":       funcs.MakeFileSha256Func(target, baseDir),
+		"filesha512":       funcs.MakeFileSha512Func(target, baseDir),
 		"flatten":          stdlib.FlattenFunc,
 		"floor":            stdlib.FloorFunc,
 		"format":           stdlib.FormatFunc,

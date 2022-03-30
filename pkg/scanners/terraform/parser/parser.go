@@ -246,6 +246,7 @@ func (p *Parser) EvaluateAll(ctx context.Context, target fs.FS) (terraform.Modul
 		return nil, cty.NilVal, err
 	}
 	evaluator := newEvaluator(
+		target,
 		p,
 		p.projectRoot,
 		p.modulePath,
@@ -259,7 +260,7 @@ func (p *Parser) EvaluateAll(ctx context.Context, target fs.FS) (terraform.Modul
 		p.debugWriter,
 		p.allowDownloads,
 	)
-	modules, parseDuration := evaluator.EvaluateAll(ctx, target)
+	modules, parseDuration := evaluator.EvaluateAll(ctx)
 	p.metrics.Counts.Modules = len(modules)
 	p.metrics.Timings.ParseDuration = parseDuration
 	p.debug("Finished parsing module '%s'.", p.moduleName)
