@@ -5,7 +5,6 @@ import (
 )
 
 type Lambda struct {
-	types.Metadata
 	Functions []Function
 }
 

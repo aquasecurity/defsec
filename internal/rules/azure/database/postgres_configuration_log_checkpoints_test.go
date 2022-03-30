@@ -22,7 +22,6 @@ func TestCheckPostgresConfigurationLogCheckpoints(t *testing.T) {
 		{
 			name: "PostgreSQL server checkpoint logging disabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckPostgresConfigurationLogCheckpoints(t *testing.T) {
 		{
 			name: "PostgreSQL server checkpoint logging enabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),

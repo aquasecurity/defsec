@@ -5,13 +5,11 @@ import (
 )
 
 type OpenStack struct {
-	types.Metadata
 	Compute    Compute
 	Networking Networking
 }
 
 type Compute struct {
-	types.Metadata
 	Instances []Instance
 	Firewall  Firewall
 }

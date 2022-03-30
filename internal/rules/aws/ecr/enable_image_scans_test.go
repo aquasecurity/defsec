@@ -22,7 +22,6 @@ func TestCheckEnableImageScans(t *testing.T) {
 		{
 			name: "ECR repository with image scans disabled",
 			input: ecr.ECR{
-				Metadata: types.NewTestMetadata(),
 				Repositories: []ecr.Repository{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableImageScans(t *testing.T) {
 		{
 			name: "ECR repository with image scans enabled",
 			input: ecr.ECR{
-				Metadata: types.NewTestMetadata(),
 				Repositories: []ecr.Repository{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "Cluster with SSE disabled",
 			input: dynamodb.DynamoDB{
-				Metadata: types.NewTestMetadata(),
 				DAXClusters: []dynamodb.DAXCluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "Cluster with SSE enabled",
 			input: dynamodb.DynamoDB{
-				Metadata: types.NewTestMetadata(),
 				DAXClusters: []dynamodb.DAXCluster{
 					{
 						Metadata: types.NewTestMetadata(),

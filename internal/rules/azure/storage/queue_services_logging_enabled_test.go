@@ -22,7 +22,6 @@ func TestCheckQueueServicesLoggingEnabled(t *testing.T) {
 		{
 			name: "Storage account queue properties logging disabled",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckQueueServicesLoggingEnabled(t *testing.T) {
 		{
 			name: "Storage account queue properties logging enabled",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata: types.NewTestMetadata(),

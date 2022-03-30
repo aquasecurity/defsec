@@ -22,7 +22,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "Storage account container public access set to blob",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "Storage account container public access set to container",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -58,7 +56,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "Storage account container public access set to off",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata: types.NewTestMetadata(),

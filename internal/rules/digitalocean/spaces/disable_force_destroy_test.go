@@ -22,7 +22,6 @@ func TestCheckDisableForceDestroy(t *testing.T) {
 		{
 			name: "Space bucket force destroy enabled",
 			input: spaces.Spaces{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []spaces.Bucket{
 					{
 						Metadata:     types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckDisableForceDestroy(t *testing.T) {
 		{
 			name: "Space bucket force destroy disabled",
 			input: spaces.Spaces{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []spaces.Bucket{
 					{
 						Metadata:     types.NewTestMetadata(),

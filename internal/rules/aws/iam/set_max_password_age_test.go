@@ -22,7 +22,6 @@ func TestCheckSetMaxPasswordAge(t *testing.T) {
 		{
 			name: "Password expires in 99 days",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				PasswordPolicy: iam.PasswordPolicy{
 					Metadata:   types.NewTestMetadata(),
 					MaxAgeDays: types.Int(99, types.NewTestMetadata()),
@@ -33,7 +32,6 @@ func TestCheckSetMaxPasswordAge(t *testing.T) {
 		{
 			name: "Password expires in 60 days",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				PasswordPolicy: iam.PasswordPolicy{
 					Metadata:   types.NewTestMetadata(),
 					MaxAgeDays: types.Int(60, types.NewTestMetadata()),

@@ -22,7 +22,6 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "Redshift Cluster with encryption disabled",
 			input: redshift.Redshift{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []redshift.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -39,7 +38,6 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "Redshift Cluster missing KMS key",
 			input: redshift.Redshift{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []redshift.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -56,7 +54,6 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "Redshift Cluster encrypted with KMS key",
 			input: redshift.Redshift{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []redshift.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

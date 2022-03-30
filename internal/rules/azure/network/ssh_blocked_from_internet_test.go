@@ -22,7 +22,6 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 		{
 			name: "Security group rule allowing SSH access from the public internet",
 			input: network.Network{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []network.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -51,7 +50,6 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 		{
 			name: "Security group rule allowing SSH access from a specific address",
 			input: network.Network{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []network.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),

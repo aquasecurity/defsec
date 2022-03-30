@@ -22,7 +22,6 @@ func TestCheckNoSensitiveInfo(t *testing.T) {
 		{
 			name: "Launch configuration with sensitive info in user data",
 			input: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -39,7 +38,6 @@ func TestCheckNoSensitiveInfo(t *testing.T) {
 		{
 			name: "Launch configuration with no sensitive info in user data",
 			input: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata: types.NewTestMetadata(),

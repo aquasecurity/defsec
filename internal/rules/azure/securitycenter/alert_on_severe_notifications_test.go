@@ -22,7 +22,6 @@ func TestCheckAlertOnSevereNotifications(t *testing.T) {
 		{
 			name: "Security center alert nofifications disabled",
 			input: securitycenter.SecurityCenter{
-				Metadata: types.NewTestMetadata(),
 				Contacts: []securitycenter.Contact{
 					{
 						Metadata:                 types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckAlertOnSevereNotifications(t *testing.T) {
 		{
 			name: "Security center alert nofifications enabled",
 			input: securitycenter.SecurityCenter{
-				Metadata: types.NewTestMetadata(),
 				Contacts: []securitycenter.Contact{
 					{
 						Metadata:                 types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckEnableApiTracing(t *testing.T) {
 		{
 			name: "API X-Ray tracing disabled",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				APIs: []sam.API{
 					{
 						Metadata:       types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableApiTracing(t *testing.T) {
 		{
 			name: "API X-Ray tracing enabled",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				APIs: []sam.API{
 					{
 						Metadata:       types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckEnableUbla(t *testing.T) {
 		{
 			name: "Uniform bucket level access disabled",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []storage.Bucket{
 					{
 						Metadata:                       types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableUbla(t *testing.T) {
 		{
 			name: "Uniform bucket level access enabled",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []storage.Bucket{
 					{
 						Metadata:                       types.NewTestMetadata(),

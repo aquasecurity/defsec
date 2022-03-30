@@ -33,7 +33,6 @@ func Test_Adapt(t *testing.T) {
 			}
 `,
 			expected: ssm.SSM{
-				Metadata: types.NewTestMetadata(),
 				Secrets: []ssm.Secret{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -51,7 +50,6 @@ func Test_Adapt(t *testing.T) {
 			}
 `,
 			expected: ssm.SSM{
-				Metadata: types.NewTestMetadata(),
 				Secrets: []ssm.Secret{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -67,7 +65,6 @@ func Test_Adapt(t *testing.T) {
 			}
 `,
 			expected: ssm.SSM{
-				Metadata: types.NewTestMetadata(),
 				Secrets: []ssm.Secret{
 					{
 						Metadata: types.NewTestMetadata(),

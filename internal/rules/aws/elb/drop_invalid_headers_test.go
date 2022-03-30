@@ -22,7 +22,6 @@ func TestCheckDropInvalidHeaders(t *testing.T) {
 		{
 			name: "Load balancer drop invalid headers disabled",
 			input: elb.ELB{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata:                types.NewTestMetadata(),
@@ -36,7 +35,6 @@ func TestCheckDropInvalidHeaders(t *testing.T) {
 		{
 			name: "Load balancer drop invalid headers enabled",
 			input: elb.ELB{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata:                types.NewTestMetadata(),
@@ -49,7 +47,6 @@ func TestCheckDropInvalidHeaders(t *testing.T) {
 		}, {
 			name: "Classic load balanace doesn't fail when no drop headers",
 			input: elb.ELB{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckEnablePerformanceInsightsEncryption(t *testing.T) {
 		{
 			name: "RDS Instance with performance insights disabled",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Instances: []rds.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -39,7 +38,6 @@ func TestCheckEnablePerformanceInsightsEncryption(t *testing.T) {
 		{
 			name: "RDS Instance with performance insights enabled but missing KMS key",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []rds.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -64,7 +62,6 @@ func TestCheckEnablePerformanceInsightsEncryption(t *testing.T) {
 		{
 			name: "RDS Instance with performance insights enabled and KMS key provided",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Instances: []rds.Instance{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckRequireClientCert(t *testing.T) {
 		{
 			name: "App service client certificate disabled",
 			input: appservice.AppService{
-				Metadata: types.NewTestMetadata(),
 				Services: []appservice.Service{
 					{
 						Metadata:         types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckRequireClientCert(t *testing.T) {
 		{
 			name: "App service client certificate enabled",
 			input: appservice.AppService{
-				Metadata: types.NewTestMetadata(),
 				Services: []appservice.Service{
 					{
 						Metadata:         types.NewTestMetadata(),

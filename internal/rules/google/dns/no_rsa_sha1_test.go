@@ -22,7 +22,6 @@ func TestCheckNoRsaSha1(t *testing.T) {
 		{
 			name: "Zone signing using RSA SHA1 key",
 			input: dns.DNS{
-				Metadata: types.NewTestMetadata(),
 				ManagedZones: []dns.ManagedZone{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -48,7 +47,6 @@ func TestCheckNoRsaSha1(t *testing.T) {
 		{
 			name: "Zone signing using RSA SHA512 key",
 			input: dns.DNS{
-				Metadata: types.NewTestMetadata(),
 				ManagedZones: []dns.ManagedZone{
 					{
 						Metadata: types.NewTestMetadata(),

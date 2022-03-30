@@ -6,7 +6,6 @@ import (
 )
 
 type Autoscaling struct {
-	types.Metadata
 	LaunchConfigurations []LaunchConfiguration
 	LaunchTemplates      []LaunchTemplate
 }
@@ -27,15 +26,9 @@ type LaunchTemplate struct {
 }
 
 func (i *LaunchConfiguration) RequiresIMDSToken() bool {
-	if i.MetadataOptions.HttpTokens != nil {
-		return i.MetadataOptions.HttpTokens.EqualTo("required")
-	}
-	return false
+	return i.MetadataOptions.HttpTokens.EqualTo("required")
 }
 
 func (i *LaunchConfiguration) HasHTTPEndpointDisabled() bool {
-	if i.MetadataOptions.HttpEndpoint != nil {
-		return i.MetadataOptions.HttpEndpoint.EqualTo("disabled")
-	}
-	return false
+	return i.MetadataOptions.HttpEndpoint.EqualTo("disabled")
 }

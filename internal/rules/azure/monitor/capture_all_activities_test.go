@@ -22,7 +22,6 @@ func TestCheckCaptureAllActivities(t *testing.T) {
 		{
 			name: "Log profile captures only write activities",
 			input: monitor.Monitor{
-				Metadata: types.NewTestMetadata(),
 				LogProfiles: []monitor.LogProfile{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -37,7 +36,6 @@ func TestCheckCaptureAllActivities(t *testing.T) {
 		{
 			name: "Log profile captures action, write, delete activities",
 			input: monitor.Monitor{
-				Metadata: types.NewTestMetadata(),
 				LogProfiles: []monitor.LogProfile{
 					{
 						Metadata: types.NewTestMetadata(),

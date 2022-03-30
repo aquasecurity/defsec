@@ -22,7 +22,6 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 		{
 			name: "ElastiCache replication group with in-transit encryption disabled",
 			input: elasticache.ElastiCache{
-				Metadata: types.NewTestMetadata(),
 				ReplicationGroups: []elasticache.ReplicationGroup{
 					{
 						Metadata:                 types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 		{
 			name: "ElastiCache replication group with in-transit encryption enabled",
 			input: elasticache.ElastiCache{
-				Metadata: types.NewTestMetadata(),
 				ReplicationGroups: []elasticache.ReplicationGroup{
 					{
 						Metadata:                 types.NewTestMetadata(),

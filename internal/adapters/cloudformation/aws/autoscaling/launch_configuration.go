@@ -8,7 +8,7 @@ import (
 )
 
 func getLaunchConfigurations(file parser.FileContext) (launchConfigurations []autoscaling.LaunchConfiguration) {
-	launchConfigResources := file.GetResourceByType("AWS::AutoScaling::LaunchConfiguration")
+	launchConfigResources := file.GetResourcesByType("AWS::AutoScaling::LaunchConfiguration")
 
 	for _, r := range launchConfigResources {
 
@@ -16,7 +16,20 @@ func getLaunchConfigurations(file parser.FileContext) (launchConfigurations []au
 			Metadata:          r.Metadata(),
 			Name:              r.GetStringProperty("Name"),
 			AssociatePublicIP: r.GetBoolProperty("AssociatePublicIpAddress"),
-			EBSBlockDevices:   []ec2.BlockDevice{},
+			MetadataOptions: ec2.MetadataOptions{
+				Metadata:     r.Metadata(),
+				HttpTokens:   types.StringDefault("optional", r.Metadata()),
+				HttpEndpoint: types.StringDefault("enabled", r.Metadata()),
+			},
+			UserData: r.GetStringProperty("UserData", ""),
+		}
+
+		if opts := r.GetProperty("MetadataOptions"); opts.IsNotNil() {
+			launchConfig.MetadataOptions = ec2.MetadataOptions{
+				Metadata:     opts.Metadata(),
+				HttpTokens:   opts.GetStringProperty("HttpTokens", "optional"),
+				HttpEndpoint: opts.GetStringProperty("HttpEndpoint", "enabled"),
+			}
 		}
 
 		blockDevices := getBlockDevices(r)
@@ -54,6 +67,7 @@ func getBlockDevices(r *parser.Resource) []ec2.BlockDevice {
 		}
 
 		device := ec2.BlockDevice{
+			Metadata:  d.Metadata(),
 			Encrypted: result,
 		}
 

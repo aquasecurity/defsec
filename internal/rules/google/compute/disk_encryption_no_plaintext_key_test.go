@@ -22,7 +22,6 @@ func TestCheckDiskEncryptionRequired(t *testing.T) {
 		{
 			name: "Disk with plaintext encryption key",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Disks: []compute.Disk{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckDiskEncryptionRequired(t *testing.T) {
 		{
 			name: "Instance disk with plaintext encryption key",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -59,7 +57,6 @@ func TestCheckDiskEncryptionRequired(t *testing.T) {
 		{
 			name: "Disks with no plaintext encryption keys",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Disks: []compute.Disk{
 					{
 						Metadata: types.NewTestMetadata(),

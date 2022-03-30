@@ -12,10 +12,11 @@ import (
 )
 
 func getQueues(ctx parser.FileContext) (queues []sqs.Queue) {
-	for _, r := range ctx.GetResourceByType("AWS::SQS::Queue") {
+	for _, r := range ctx.GetResourcesByType("AWS::SQS::Queue") {
 		queue := sqs.Queue{
 			Metadata: r.Metadata(),
 			Encryption: sqs.Encryption{
+				Metadata: r.Metadata(),
 				KMSKeyID: r.GetStringProperty("KmsMasterKeyId"),
 			},
 			Policies: []iam.Policy{},
@@ -29,7 +30,7 @@ func getQueues(ctx parser.FileContext) (queues []sqs.Queue) {
 }
 
 func getPolicy(id string, ctx parser.FileContext) (*iam.Policy, error) {
-	for _, policyResource := range ctx.GetResourceByType("AWS::SQS::QueuePolicy") {
+	for _, policyResource := range ctx.GetResourcesByType("AWS::SQS::QueuePolicy") {
 		documentProp := policyResource.GetProperty("PolicyDocument")
 		if documentProp.IsNil() {
 			continue
@@ -46,6 +47,7 @@ func getPolicy(id string, ctx parser.FileContext) (*iam.Policy, error) {
 					continue
 				}
 				return &iam.Policy{
+					Metadata: documentProp.Metadata(),
 					Document: iam.Document{
 						Metadata: documentProp.Metadata(),
 						Parsed:   *parsed,

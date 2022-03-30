@@ -22,7 +22,6 @@ func TestCheckAllowMicrosoftServiceBypass(t *testing.T) {
 		{
 			name: "Azure storage rule doesn't allow bypass access",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckAllowMicrosoftServiceBypass(t *testing.T) {
 		{
 			name: "Azure storage rule allows bypass access to Microsoft services",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata: types.NewTestMetadata(),

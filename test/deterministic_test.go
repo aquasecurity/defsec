@@ -20,7 +20,7 @@ func Test_DeterministicResults(t *testing.T) {
 	reg := rules.Register(badRule, nil)
 	defer rules.Deregister(reg)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"first.tf": `
 resource "problem" "uhoh" {
 	bad = true
@@ -41,7 +41,6 @@ locals {
 }
 		`,
 	})
-	defer tidy()
 
 	for i := 0; i < 100; i++ {
 		p := parser.New(parser.OptionStopOnHCLError(true))

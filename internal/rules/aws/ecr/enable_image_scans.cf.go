@@ -9,7 +9,7 @@ Resources:
       RepositoryName: "test-repository"
       ImageTagImmutability: IMMUTABLE
       ImageScanningConfiguration:
-        ScanOnPush: true
+        ScanOnPush: True
       EncryptionConfiguration:
         EncryptionType: KMS
         KmsKey: "alias/ecr-key"
@@ -24,7 +24,7 @@ Resources:
     Properties:
       RepositoryName: "test-repository"
       ImageScanningConfiguration:
-        ScanOnPush: false
+        ScanOnPush: False
 `,
 }
 

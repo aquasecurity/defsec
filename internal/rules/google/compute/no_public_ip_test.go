@@ -22,7 +22,6 @@ func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
 		{
 			name: "Network interface with public IP",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
 		{
 			name: "Network interface without public IP",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),

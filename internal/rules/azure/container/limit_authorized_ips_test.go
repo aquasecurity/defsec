@@ -22,7 +22,6 @@ func TestCheckLimitAuthorizedIps(t *testing.T) {
 		{
 			name: "API server authorized IP ranges undefined",
 			input: container.Container{
-				Metadata: types.NewTestMetadata(),
 				KubernetesClusters: []container.KubernetesCluster{
 					{
 						Metadata:                    types.NewTestMetadata(),
@@ -36,7 +35,6 @@ func TestCheckLimitAuthorizedIps(t *testing.T) {
 		{
 			name: "API server authorized IP ranges defined",
 			input: container.Container{
-				Metadata: types.NewTestMetadata(),
 				KubernetesClusters: []container.KubernetesCluster{
 					{
 						Metadata:             types.NewTestMetadata(),

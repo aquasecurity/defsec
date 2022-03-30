@@ -22,7 +22,6 @@ func TestCheckEnforceHttps(t *testing.T) {
 		{
 			name: "Load balancer forwarding rule using HTTP",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []compute.LoadBalancer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckEnforceHttps(t *testing.T) {
 		{
 			name: "Load balancer forwarding rule using HTTPS",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []compute.LoadBalancer{
 					{
 						Metadata: types.NewTestMetadata(),

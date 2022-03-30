@@ -22,7 +22,6 @@ func TestCheckNoPublicControlPlane(t *testing.T) {
 		{
 			name: "Master authorized network with public CIDR",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckNoPublicControlPlane(t *testing.T) {
 		{
 			name: "Master authorized network with private CIDR",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

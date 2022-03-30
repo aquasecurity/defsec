@@ -22,7 +22,6 @@ func TestCheckMysqlNoLocalInfile(t *testing.T) {
 		{
 			name: "DB instance local file read access enabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),
@@ -42,7 +41,6 @@ func TestCheckMysqlNoLocalInfile(t *testing.T) {
 		{
 			name: "DB instance local file read access disabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),

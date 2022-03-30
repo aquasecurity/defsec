@@ -7,7 +7,6 @@ import (
 )
 
 type SQL struct {
-	types.Metadata
 	Instances []DatabaseInstance
 }
 

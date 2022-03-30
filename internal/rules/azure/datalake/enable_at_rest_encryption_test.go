@@ -22,7 +22,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "unencrypted Data Lake store",
 			input: datalake.DataLake{
-				Metadata: types.NewTestMetadata(),
 				Stores: []datalake.Store{
 					{
 						Metadata:         types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "encrypted Data Lake store",
 			input: datalake.DataLake{
-				Metadata: types.NewTestMetadata(),
 				Stores: []datalake.Store{
 					{
 						Metadata:         types.NewTestMetadata(),

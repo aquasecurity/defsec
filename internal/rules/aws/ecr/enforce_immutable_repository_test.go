@@ -22,7 +22,6 @@ func TestCheckEnforceImmutableRepository(t *testing.T) {
 		{
 			name: "ECR mutable image tags",
 			input: ecr.ECR{
-				Metadata: types.NewTestMetadata(),
 				Repositories: []ecr.Repository{
 					{
 						Metadata:           types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnforceImmutableRepository(t *testing.T) {
 		{
 			name: "ECR immutable image tags",
 			input: ecr.ECR{
-				Metadata: types.NewTestMetadata(),
 				Repositories: []ecr.Repository{
 					{
 						Metadata:           types.NewTestMetadata(),

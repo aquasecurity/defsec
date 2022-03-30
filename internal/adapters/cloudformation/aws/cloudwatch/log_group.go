@@ -7,13 +7,14 @@ import (
 
 func getLogGroups(ctx parser.FileContext) (logGroups []cloudwatch.LogGroup) {
 
-	logGroupResources := ctx.GetResourceByType("AWS::Logs::LogGroup")
+	logGroupResources := ctx.GetResourcesByType("AWS::Logs::LogGroup")
 
 	for _, r := range logGroupResources {
 		group := cloudwatch.LogGroup{
-			Metadata: r.Metadata(),
-			Name:     r.GetStringProperty("LogGroupName"),
-			KMSKeyID: r.GetStringProperty("KmsKeyId"),
+			Metadata:        r.Metadata(),
+			Name:            r.GetStringProperty("LogGroupName"),
+			KMSKeyID:        r.GetStringProperty("KmsKeyId"),
+			RetentionInDays: r.GetIntProperty("RetentionInDays", 0),
 		}
 		logGroups = append(logGroups, group)
 	}

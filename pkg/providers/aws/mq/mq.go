@@ -5,7 +5,6 @@ import (
 )
 
 type MQ struct {
-	types.Metadata
 	Brokers []Broker
 }
 

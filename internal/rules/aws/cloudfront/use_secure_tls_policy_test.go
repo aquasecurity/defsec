@@ -22,7 +22,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "CloudFront distribution using TLS v1.0",
 			input: cloudfront.Cloudfront{
-				Metadata: types.NewTestMetadata(),
 				Distributions: []cloudfront.Distribution{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "CloudFront distribution using TLS v1.2",
 			input: cloudfront.Cloudfront{
-				Metadata: types.NewTestMetadata(),
 				Distributions: []cloudfront.Distribution{
 					{
 						Metadata: types.NewTestMetadata(),

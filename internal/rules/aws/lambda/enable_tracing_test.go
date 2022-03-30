@@ -22,7 +22,6 @@ func TestCheckEnableTracing(t *testing.T) {
 		{
 			name: "Lambda function with no tracing mode specified",
 			input: lambda.Lambda{
-				Metadata: types.NewTestMetadata(),
 				Functions: []lambda.Function{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableTracing(t *testing.T) {
 		{
 			name: "Lambda function with active tracing mode",
 			input: lambda.Lambda{
-				Metadata: types.NewTestMetadata(),
 				Functions: []lambda.Function{
 					{
 						Metadata: types.NewTestMetadata(),

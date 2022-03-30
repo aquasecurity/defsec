@@ -5,7 +5,6 @@ import (
 )
 
 type DataFactory struct {
-	types.Metadata
 	DataFactories []Factory
 }
 

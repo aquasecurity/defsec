@@ -22,7 +22,6 @@ func TestCheckEnableContainerInsight(t *testing.T) {
 		{
 			name: "Cluster with disabled container insights",
 			input: ecs.ECS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []ecs.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableContainerInsight(t *testing.T) {
 		{
 			name: "Cluster with enabled container insights",
 			input: ecs.ECS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []ecs.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

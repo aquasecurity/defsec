@@ -22,7 +22,6 @@ func TestCheckBackupRetentionSpecified(t *testing.T) {
 		{
 			name: "RDS Cluster with 1 retention day (default)",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []rds.Cluster{
 					{
 						Metadata:                  types.NewTestMetadata(),
@@ -36,7 +35,6 @@ func TestCheckBackupRetentionSpecified(t *testing.T) {
 		{
 			name: "RDS Instance with 1 retention day (default)",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Instances: []rds.Instance{
 					{
 						Metadata:                  types.NewTestMetadata(),
@@ -50,7 +48,6 @@ func TestCheckBackupRetentionSpecified(t *testing.T) {
 		{
 			name: "RDS Cluster with 5 retention days",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []rds.Cluster{
 					{
 						Metadata:                  types.NewTestMetadata(),
@@ -64,7 +61,6 @@ func TestCheckBackupRetentionSpecified(t *testing.T) {
 		{
 			name: "RDS Instance with 5 retention days",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Instances: []rds.Instance{
 					{
 						Metadata:                  types.NewTestMetadata(),

@@ -5,7 +5,6 @@ import (
 )
 
 type DynamoDB struct {
-	types.Metadata
 	DAXClusters []DAXCluster
 }
 

@@ -22,7 +22,6 @@ func TestCheckRepositoryCustomerKey(t *testing.T) {
 		{
 			name: "ECR repository not using KMS encryption",
 			input: ecr.ECR{
-				Metadata: types.NewTestMetadata(),
 				Repositories: []ecr.Repository{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckRepositoryCustomerKey(t *testing.T) {
 		{
 			name: "ECR repository using KMS encryption but missing key",
 			input: ecr.ECR{
-				Metadata: types.NewTestMetadata(),
 				Repositories: []ecr.Repository{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -55,7 +53,6 @@ func TestCheckRepositoryCustomerKey(t *testing.T) {
 		{
 			name: "ECR repository encrypted with KMS key",
 			input: ecr.ECR{
-				Metadata: types.NewTestMetadata(),
 				Repositories: []ecr.Repository{
 					{
 						Metadata: types.NewTestMetadata(),

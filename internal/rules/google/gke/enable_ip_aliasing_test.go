@@ -22,7 +22,6 @@ func TestCheckEnableIpAliasing(t *testing.T) {
 		{
 			name: "Cluster IP aliasing disabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableIpAliasing(t *testing.T) {
 		{
 			name: "Cluster IP aliasing enabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

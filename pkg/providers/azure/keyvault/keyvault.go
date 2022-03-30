@@ -5,7 +5,6 @@ import (
 )
 
 type KeyVault struct {
-	types.Metadata
 	Vaults []Vault
 }
 

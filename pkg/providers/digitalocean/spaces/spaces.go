@@ -5,7 +5,6 @@ import (
 )
 
 type Spaces struct {
-	types.Metadata
 	Buckets []Bucket
 }
 

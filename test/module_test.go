@@ -53,7 +53,7 @@ func Test_GoCtyCompatibilityIssue(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"/project/main.tf": `
 data "aws_vpc" "default" {
   default = true
@@ -89,7 +89,6 @@ resource "problem" "uhoh" {
 }
 `,
 	})
-	defer tidy()
 
 	debug := bytes.NewBuffer([]byte{})
 
@@ -111,7 +110,7 @@ func Test_ProblemInModuleInSiblingDir(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"/project/main.tf": `
 module "something" {
 	source = "../modules/problem"
@@ -123,7 +122,6 @@ resource "problem" "uhoh" {
 }
 `},
 	)
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -140,7 +138,7 @@ func Test_ProblemInModuleIgnored(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"/project/main.tf": `
 #tfsec:ignore:aws-service-abc
 module "something" {
@@ -153,7 +151,6 @@ resource "problem" "uhoh" {
 }
 `},
 	)
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -170,7 +167,7 @@ func Test_ProblemInModuleInSubdirectory(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 module "something" {
 	source = "./modules/problem"
@@ -181,7 +178,6 @@ resource "problem" "uhoh" {
 	bad = true
 }
 `})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -198,7 +194,7 @@ func Test_ProblemInModuleInParentDir(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 module "something" {
 	source = "../problem"
@@ -209,7 +205,6 @@ resource "problem" "uhoh" {
 	bad = true
 }
 `})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -226,7 +221,7 @@ func Test_ProblemInModuleReuse(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 module "something_good" {
 	source = "../modules/problem"
@@ -246,7 +241,6 @@ resource "problem" "uhoh" {
 	bad = var.bad
 }
 `})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -263,7 +257,7 @@ func Test_ProblemInNestedModule(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 module "something" {
 	source = "../modules/a"
@@ -285,7 +279,6 @@ resource "problem" "uhoh" {
 }
 `,
 	})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -302,7 +295,7 @@ func Test_ProblemInReusedNestedModule(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 module "something" {
   source = "../modules/a"
@@ -341,7 +334,6 @@ resource "problem" "uhoh" {
 }
 `,
 	})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -357,7 +349,7 @@ func Test_ProblemInInitialisedModule(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 module "something" {
   	source = "../modules/somewhere"
@@ -391,7 +383,6 @@ resource "problem" "uhoh" {
     ]}
 `,
 	})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -407,7 +398,7 @@ func Test_ProblemInReusedInitialisedModule(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 module "something" {
   	source = "/nowhere"
@@ -430,7 +421,6 @@ resource "problem" "uhoh" {
 	{"Modules":[{"Key":"something","Source":"/nowhere","Version":"2.35.0","Dir":".terraform/modules/a"},{"Key":"something2","Source":"/nowhere","Version":"2.35.0","Dir":".terraform/modules/a"}]}
 `,
 	})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -446,7 +436,7 @@ func Test_ProblemInDuplicateModuleNameAndPath(t *testing.T) {
 	registered := rules.Register(badRule, nil)
 	defer rules.Deregister(registered)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 module "something" {
   source = "../modules/a"
@@ -486,7 +476,6 @@ resource "problem" "uhoh" {
 }
 `,
 	})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -499,7 +488,7 @@ resource "problem" "uhoh" {
 }
 
 func Test_Dynamic_Variables(t *testing.T) {
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 resource "something" "this" {
 
@@ -516,7 +505,6 @@ resource "bad" "thing" {
 	secure = something.this.blah.ok
 }
 `})
-	defer tidy()
 
 	r1 := scan.Rule{
 		Provider:  providers.AWSProvider,
@@ -549,7 +537,7 @@ resource "bad" "thing" {
 }
 
 func Test_Dynamic_Variables_FalsePositive(t *testing.T) {
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 resource "something" "else" {
 	x = 1
@@ -566,7 +554,6 @@ resource "bad" "thing" {
 	secure = something.else.blah.ok
 }
 `})
-	defer tidy()
 
 	r1 := scan.Rule{
 		Provider:  providers.AWSProvider,
@@ -600,7 +587,7 @@ resource "bad" "thing" {
 
 func Test_ReferencesPassedToNestedModule(t *testing.T) {
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 
 resource "aws_iam_group" "developers" {
@@ -637,7 +624,6 @@ data "aws_iam_policy_document" "policy" {
   }
 }
 `})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")

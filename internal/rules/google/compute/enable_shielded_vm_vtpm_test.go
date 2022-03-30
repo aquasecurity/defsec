@@ -22,7 +22,6 @@ func TestCheckEnableShieldedVMVTPM(t *testing.T) {
 		{
 			name: "Instance shielded VM VTPM disabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableShieldedVMVTPM(t *testing.T) {
 		{
 			name: "Instance shielded VM VTPM enabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),

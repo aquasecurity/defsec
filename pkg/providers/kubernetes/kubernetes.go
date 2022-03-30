@@ -5,7 +5,6 @@ import (
 )
 
 type Kubernetes struct {
-	types.Metadata
 	NetworkPolicies []NetworkPolicy
 }
 

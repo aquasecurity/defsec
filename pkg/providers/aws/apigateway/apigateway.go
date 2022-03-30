@@ -5,7 +5,6 @@ import (
 )
 
 type APIGateway struct {
-	types.Metadata
 	APIs        []API
 	DomainNames []DomainName
 }

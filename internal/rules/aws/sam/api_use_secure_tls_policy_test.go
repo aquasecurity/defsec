@@ -22,7 +22,6 @@ func TestCheckApiUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "SAM API TLS v1.0",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				APIs: []sam.API{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckApiUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "SAM API TLS v1.2",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				APIs: []sam.API{
 					{
 						Metadata: types.NewTestMetadata(),

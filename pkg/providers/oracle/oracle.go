@@ -5,12 +5,10 @@ import (
 )
 
 type Oracle struct {
-	types.Metadata
 	Compute Compute
 }
 
 type Compute struct {
-	types.Metadata
 	AddressReservations []AddressReservation
 }
 

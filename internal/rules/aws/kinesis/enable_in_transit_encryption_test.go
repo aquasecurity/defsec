@@ -22,7 +22,6 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 		{
 			name: "AWS Kinesis Stream with no encryption",
 			input: kinesis.Kinesis{
-				Metadata: types.NewTestMetadata(),
 				Streams: []kinesis.Stream{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -39,7 +38,6 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 		{
 			name: "AWS Kinesis Stream with KMS encryption but no key",
 			input: kinesis.Kinesis{
-				Metadata: types.NewTestMetadata(),
 				Streams: []kinesis.Stream{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -56,7 +54,6 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 		{
 			name: "AWS Kinesis Stream with KMS encryption and key",
 			input: kinesis.Kinesis{
-				Metadata: types.NewTestMetadata(),
 				Streams: []kinesis.Stream{
 					{
 						Metadata: types.NewTestMetadata(),

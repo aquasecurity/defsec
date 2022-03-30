@@ -22,7 +22,6 @@ func TestCheckSecretUseCustomerKey(t *testing.T) {
 		{
 			name: "AWS SSM missing KMS key",
 			input: ssm.SSM{
-				Metadata: types.NewTestMetadata(),
 				Secrets: []ssm.Secret{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckSecretUseCustomerKey(t *testing.T) {
 		{
 			name: "AWS SSM with default KMS key",
 			input: ssm.SSM{
-				Metadata: types.NewTestMetadata(),
 				Secrets: []ssm.Secret{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -48,7 +46,6 @@ func TestCheckSecretUseCustomerKey(t *testing.T) {
 		{
 			name: "AWS SSM with proper KMS key",
 			input: ssm.SSM{
-				Metadata: types.NewTestMetadata(),
 				Secrets: []ssm.Secret{
 					{
 						Metadata: types.NewTestMetadata(),

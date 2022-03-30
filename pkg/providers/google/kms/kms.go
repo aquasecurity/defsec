@@ -5,7 +5,6 @@ import (
 )
 
 type KMS struct {
-	types.Metadata
 	KeyRings []KeyRing
 }
 

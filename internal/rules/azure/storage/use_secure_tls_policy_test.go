@@ -22,7 +22,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "Storage account minimum TLS version 1.0",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata:          types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "Storage account minimum TLS version 1.2",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata:          types.NewTestMetadata(),

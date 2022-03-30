@@ -28,9 +28,7 @@ func TestFields(t *testing.T) {
 
 			}`,
 			expected: openstack.OpenStack{
-				Metadata: types.NewTestMetadata(),
 				Compute: openstack.Compute{
-					Metadata: types.NewTestMetadata(),
 					Instances: []openstack.Instance{
 						{
 							Metadata:      types.NewTestMetadata(),
@@ -46,9 +44,7 @@ func TestFields(t *testing.T) {
 			resource "openstack_compute_instance_v2" "my-instance" {
 			}`,
 			expected: openstack.OpenStack{
-				Metadata: types.NewTestMetadata(),
 				Compute: openstack.Compute{
-					Metadata: types.NewTestMetadata(),
 					Instances: []openstack.Instance{
 						{
 							Metadata:      types.NewTestMetadata(),
@@ -70,9 +66,7 @@ func TestFields(t *testing.T) {
 				enabled                = "true"
 			}`,
 			expected: openstack.OpenStack{
-				Metadata: types.NewTestMetadata(),
 				Compute: openstack.Compute{
-					Metadata: types.NewTestMetadata(),
 					Firewall: openstack.Firewall{
 						Metadata: types.NewTestMetadata(),
 						AllowRules: []openstack.FirewallRule{

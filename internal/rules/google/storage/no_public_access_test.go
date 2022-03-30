@@ -23,7 +23,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "Members set to all authenticated users",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []storage.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -43,7 +42,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "Members set to all users",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []storage.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -61,8 +59,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "Members set to specific users",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
-
 				Buckets: []storage.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),

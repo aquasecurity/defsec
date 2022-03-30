@@ -22,7 +22,6 @@ func TestCheckEnableStateMachineLogging(t *testing.T) {
 		{
 			name: "State machine logging disabled",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				StateMachines: []sam.StateMachine{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableStateMachineLogging(t *testing.T) {
 		{
 			name: "State machine logging enabled",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				StateMachines: []sam.StateMachine{
 					{
 						Metadata: types.NewTestMetadata(),

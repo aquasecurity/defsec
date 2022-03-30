@@ -22,7 +22,6 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 		{
 			name: "Cluster client broker with plaintext encryption",
 			input: msk.MSK{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []msk.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 		{
 			name: "Cluster client broker with plaintext or TLS encryption",
 			input: msk.MSK{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []msk.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -54,7 +52,6 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 		{
 			name: "Cluster client broker with TLS encryption",
 			input: msk.MSK{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []msk.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

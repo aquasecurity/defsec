@@ -1,7 +1,0 @@
-FROM golang:1.7.3 AS builder
-RUN command CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
-
-FROM alpine:3.13
-COPY --from=builder /go/src/github.com/alexellis/href-counter/app .
-USER mike
-CMD ./app

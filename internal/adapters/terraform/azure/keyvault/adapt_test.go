@@ -37,7 +37,6 @@ func Test_Adapt(t *testing.T) {
 			}
 `,
 			expected: keyvault.KeyVault{
-				Metadata: types.NewTestMetadata(),
 				Vaults: []keyvault.Vault{
 					{
 						Metadata:                types.NewTestMetadata(),
@@ -58,7 +57,6 @@ func Test_Adapt(t *testing.T) {
 			}
 `,
 			expected: keyvault.KeyVault{
-				Metadata: types.NewTestMetadata(),
 				Vaults: []keyvault.Vault{
 					{
 						Metadata:                types.NewTestMetadata(),

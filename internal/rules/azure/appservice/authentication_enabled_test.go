@@ -22,7 +22,6 @@ func TestCheckAuthenticationEnabled(t *testing.T) {
 		{
 			name: "App service authentication disabled",
 			input: appservice.AppService{
-				Metadata: types.NewTestMetadata(),
 				Services: []appservice.Service{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -37,7 +36,6 @@ func TestCheckAuthenticationEnabled(t *testing.T) {
 		{
 			name: "App service authentication enabled",
 			input: appservice.AppService{
-				Metadata: types.NewTestMetadata(),
 				Services: []appservice.Service{
 					{
 						Metadata: types.NewTestMetadata(),

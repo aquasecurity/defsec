@@ -5,7 +5,6 @@ import (
 )
 
 type Monitor struct {
-	types.Metadata
 	LogProfiles []LogProfile
 }
 

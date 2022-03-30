@@ -17,16 +17,15 @@ import (
 
 func BenchmarkCalculate(b *testing.B) {
 
-	f, tidy, err := createBadBlocks()
+	f, err := createBadBlocks()
 	if err != nil {
 		b.Fatal(err)
 	}
-	defer tidy()
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		p := parser.New(parser.OptionStopOnHCLError(true))
-		if err := p.ParseFS(context.TODO(), f, "/project"); err != nil {
+		if err := p.ParseFS(context.TODO(), f, "project"); err != nil {
 			b.Fatal(err)
 		}
 		modules, _, err := p.EvaluateAll(context.TODO(), f)
@@ -37,7 +36,7 @@ func BenchmarkCalculate(b *testing.B) {
 	}
 }
 
-func createBadBlocks() (fs.FS, func(), error) {
+func createBadBlocks() (fs.FS, error) {
 
 	files := make(map[string]string)
 
@@ -57,6 +56,6 @@ module "something" {
 		}
 	}
 
-	fs, _, tidy := testutil.CreateFS(&testing.T{}, files)
-	return fs, tidy, nil
+	fs := testutil.CreateFS(&testing.T{}, files)
+	return fs, nil
 }

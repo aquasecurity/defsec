@@ -22,7 +22,6 @@ func TestCheckEncryptInTransitData(t *testing.T) {
 		{
 			name: "DB instance TLS not required",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -41,7 +40,6 @@ func TestCheckEncryptInTransitData(t *testing.T) {
 		{
 			name: "DB instance TLS required",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata: types.NewTestMetadata(),

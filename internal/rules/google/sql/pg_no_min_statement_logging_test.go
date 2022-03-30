@@ -22,7 +22,6 @@ func TestCheckPgNoMinStatementLogging(t *testing.T) {
 		{
 			name: "Instance logging enabled for all statements",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),
@@ -42,7 +41,6 @@ func TestCheckPgNoMinStatementLogging(t *testing.T) {
 		{
 			name: "Instance logging disabled for all statements",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckEnableTableEncryption(t *testing.T) {
 		{
 			name: "SAM simple table SSE disabled",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				SimpleTables: []sam.SimpleTable{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableTableEncryption(t *testing.T) {
 		{
 			name: "SAM simple table SSE enabled",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				SimpleTables: []sam.SimpleTable{
 					{
 						Metadata: types.NewTestMetadata(),

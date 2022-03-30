@@ -8,7 +8,7 @@ import (
 
 func getApis(cfFile parser.FileContext) (apis []sam.API) {
 
-	apiResources := cfFile.GetResourceByType("AWS::Serverless::Api")
+	apiResources := cfFile.GetResourcesByType("AWS::Serverless::Api")
 	for _, r := range apiResources {
 		api := sam.API{
 			Metadata:            r.Metadata(),
@@ -25,68 +25,72 @@ func getApis(cfFile parser.FileContext) (apis []sam.API) {
 	return apis
 }
 
-func getRestMethodSettings(r *parser.Resource) (methodSettings sam.RESTMethodSettings) {
+func getRestMethodSettings(r *parser.Resource) sam.RESTMethodSettings {
 
-	settings := r.GetProperty("MethodSettings")
-	if settings.IsNil() {
-		return sam.RESTMethodSettings{
-			Metadata:           r.Metadata(),
-			CacheDataEncrypted: types.BoolDefault(false, r.Metadata()),
-			LoggingEnabled:     types.BoolDefault(false, r.Metadata()),
-			DataTraceEnabled:   types.BoolDefault(false, r.Metadata()),
-			MetricsEnabled:     types.BoolDefault(false, r.Metadata()),
+	settings := sam.RESTMethodSettings{
+		Metadata:           r.Metadata(),
+		CacheDataEncrypted: types.BoolDefault(false, r.Metadata()),
+		LoggingEnabled:     types.BoolDefault(false, r.Metadata()),
+		DataTraceEnabled:   types.BoolDefault(false, r.Metadata()),
+		MetricsEnabled:     types.BoolDefault(false, r.Metadata()),
+	}
+
+	settingsProp := r.GetProperty("MethodSettings")
+	if settingsProp.IsNotNil() {
+
+		settings = sam.RESTMethodSettings{
+			Metadata:           settingsProp.Metadata(),
+			CacheDataEncrypted: settingsProp.GetBoolProperty("CacheDataEncrypted"),
+			LoggingEnabled:     types.BoolDefault(false, settingsProp.Metadata()),
+			DataTraceEnabled:   settingsProp.GetBoolProperty("DataTraceEnabled"),
+			MetricsEnabled:     settingsProp.GetBoolProperty("MetricsEnabled"),
+		}
+
+		if loggingLevel := settingsProp.GetProperty("LoggingLevel"); loggingLevel.IsNotNil() {
+			if loggingLevel.EqualTo("OFF", parser.IgnoreCase) {
+				settings.LoggingEnabled = types.Bool(false, loggingLevel.Metadata())
+			} else {
+				settings.LoggingEnabled = types.Bool(true, loggingLevel.Metadata())
+			}
 		}
 	}
 
-	loggingEnabled := types.BoolDefault(false, settings.Metadata())
-	if settings.GetProperty("LoggingLevel").IsNotNil() {
-		loggingLevel := settings.GetProperty("LoggingLevel")
-		if settings.GetProperty("LoggingLevel").EqualTo("OFF", parser.IgnoreCase) {
-			loggingEnabled = types.BoolExplicit(false, loggingLevel.Metadata())
-		} else {
-			loggingEnabled = types.BoolExplicit(true, loggingLevel.Metadata())
-		}
-
-	}
-
-	return sam.RESTMethodSettings{
-		Metadata:           settings.Metadata(),
-		CacheDataEncrypted: settings.GetBoolProperty("CacheDataEncrypted"),
-		LoggingEnabled:     loggingEnabled,
-		DataTraceEnabled:   settings.GetBoolProperty("DataTraceEnabled"),
-		MetricsEnabled:     settings.GetBoolProperty("MetricsEnabled"),
-	}
-
+	return settings
 }
 
-func getAccessLogging(r *parser.Resource) (accessLogging sam.AccessLogging) {
+func getAccessLogging(r *parser.Resource) sam.AccessLogging {
 
-	access := r.GetProperty("AccessLogSetting")
-	if access.IsNil() {
-		return sam.AccessLogging{
-			Metadata:              r.Metadata(),
-			CloudwatchLogGroupARN: types.StringDefault("", r.Metadata()),
+	logging := sam.AccessLogging{
+		Metadata:              r.Metadata(),
+		CloudwatchLogGroupARN: types.StringDefault("", r.Metadata()),
+	}
+
+	if access := r.GetProperty("AccessLogSetting"); access.IsNotNil() {
+		logging = sam.AccessLogging{
+			Metadata:              access.Metadata(),
+			CloudwatchLogGroupARN: access.GetStringProperty("DestinationArn", ""),
 		}
 	}
 
-	return sam.AccessLogging{
-		Metadata:              access.Metadata(),
-		CloudwatchLogGroupARN: access.GetStringProperty("DestinationArn", ""),
-	}
+	return logging
 }
 
-func getDomainConfiguration(r *parser.Resource) (domainConfig sam.DomainConfiguration) {
+func getDomainConfiguration(r *parser.Resource) sam.DomainConfiguration {
 
-	domain := r.GetProperty("Domain")
-	if domain.IsNil() {
-		domainConfig.SecurityPolicy = types.StringDefault("TLS_1_0", r.Metadata())
-		return domainConfig
+	domainConfig := sam.DomainConfiguration{
+		Metadata:       r.Metadata(),
+		Name:           types.StringDefault("", r.Metadata()),
+		SecurityPolicy: types.StringDefault("TLS_1_0", r.Metadata()),
 	}
 
-	return sam.DomainConfiguration{
-		Metadata:       domain.Metadata(),
-		Name:           domain.GetStringProperty("DomainName", ""),
-		SecurityPolicy: domain.GetStringProperty("SecurityPolicy", "TLS_1_0"),
+	if domain := r.GetProperty("Domain"); domain.IsNotNil() {
+		domainConfig = sam.DomainConfiguration{
+			Metadata:       domain.Metadata(),
+			Name:           domain.GetStringProperty("DomainName", ""),
+			SecurityPolicy: domain.GetStringProperty("SecurityPolicy", "TLS_1_0"),
+		}
 	}
+
+	return domainConfig
 
 }

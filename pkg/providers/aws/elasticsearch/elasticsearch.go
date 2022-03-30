@@ -5,7 +5,6 @@ import (
 )
 
 type Elasticsearch struct {
-	types.Metadata
 	Domains []Domain
 }
 

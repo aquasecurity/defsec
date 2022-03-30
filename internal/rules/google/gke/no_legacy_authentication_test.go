@@ -22,7 +22,6 @@ func TestCheckNoLegacyAuthentication(t *testing.T) {
 		{
 			name: "Cluster master authentication by certificate",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -41,7 +40,6 @@ func TestCheckNoLegacyAuthentication(t *testing.T) {
 		{
 			name: "Cluster master authentication by username/password",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -61,7 +59,6 @@ func TestCheckNoLegacyAuthentication(t *testing.T) {
 		{
 			name: "Cluster master authentication by certificate or username/password disabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

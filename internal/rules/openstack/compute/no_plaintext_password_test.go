@@ -22,7 +22,6 @@ func TestCheckNoPlaintextPassword(t *testing.T) {
 		{
 			name: "Instance admin with plaintext password set",
 			input: openstack.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []openstack.Instance{
 					{
 						Metadata:      types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckNoPlaintextPassword(t *testing.T) {
 		{
 			name: "Instance admin with no plaintext password",
 			input: openstack.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []openstack.Instance{
 					{
 						Metadata:      types.NewTestMetadata(),

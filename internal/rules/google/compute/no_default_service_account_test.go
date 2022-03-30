@@ -22,7 +22,6 @@ func TestCheckNoDefaultServiceAccount(t *testing.T) {
 		{
 			name: "Instance service account missing email",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckNoDefaultServiceAccount(t *testing.T) {
 		{
 			name: "Instance service account using the default email",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -54,7 +52,6 @@ func TestCheckNoDefaultServiceAccount(t *testing.T) {
 		{
 			name: "Instance service account with email provided",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),

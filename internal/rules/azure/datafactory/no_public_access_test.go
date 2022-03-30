@@ -22,7 +22,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "Data Factory public access enabled",
 			input: datafactory.DataFactory{
-				Metadata: types.NewTestMetadata(),
 				DataFactories: []datafactory.Factory{
 					{
 						Metadata:            types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "Data Factory public access disabled",
 			input: datafactory.DataFactory{
-				Metadata: types.NewTestMetadata(),
 				DataFactories: []datafactory.Factory{
 					{
 						Metadata:            types.NewTestMetadata(),

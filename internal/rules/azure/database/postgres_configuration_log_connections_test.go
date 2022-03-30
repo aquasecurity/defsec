@@ -22,7 +22,6 @@ func TestCheckPostgresConfigurationLogConnections(t *testing.T) {
 		{
 			name: "PostgreSQL server connection logging disabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckPostgresConfigurationLogConnections(t *testing.T) {
 		{
 			name: "PostgreSQL server connection logging enabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),

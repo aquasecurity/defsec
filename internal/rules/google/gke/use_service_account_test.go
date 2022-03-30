@@ -22,7 +22,6 @@ func TestCheckUseServiceAccount(t *testing.T) {
 		{
 			name: "Cluster node config with default service account",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata:              types.NewTestMetadata(),
@@ -39,7 +38,6 @@ func TestCheckUseServiceAccount(t *testing.T) {
 		{
 			name: "Cluster node config with service account provided",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata:              types.NewTestMetadata(),

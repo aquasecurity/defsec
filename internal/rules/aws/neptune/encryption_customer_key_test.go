@@ -22,7 +22,6 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "Neptune Cluster missing KMS key",
 			input: neptune.Neptune{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []neptune.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "Neptune Cluster encrypted with KMS key",
 			input: neptune.Neptune{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []neptune.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

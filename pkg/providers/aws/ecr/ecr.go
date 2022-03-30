@@ -6,7 +6,6 @@ import (
 )
 
 type ECR struct {
-	types.Metadata
 	Repositories []Repository
 }
 

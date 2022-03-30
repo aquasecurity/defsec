@@ -22,7 +22,6 @@ func TestCheckNoPublicClusterAccessToCidr(t *testing.T) {
 		{
 			name: "EKS Cluster with public access CIDRs actively set to open",
 			input: eks.EKS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []eks.Cluster{
 					{
 						PublicAccessEnabled: types.Bool(true, types.NewTestMetadata()),
@@ -37,7 +36,6 @@ func TestCheckNoPublicClusterAccessToCidr(t *testing.T) {
 		{
 			name: "EKS Cluster with public access enabled but private CIDRs",
 			input: eks.EKS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []eks.Cluster{
 					{
 						PublicAccessEnabled: types.Bool(true, types.NewTestMetadata()),
@@ -52,7 +50,6 @@ func TestCheckNoPublicClusterAccessToCidr(t *testing.T) {
 		{
 			name: "EKS Cluster with public access disabled and private CIDRs",
 			input: eks.EKS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []eks.Cluster{
 					{
 						PublicAccessEnabled: types.Bool(false, types.NewTestMetadata()),

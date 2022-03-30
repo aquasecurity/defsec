@@ -22,7 +22,6 @@ func TestCheckRequireUppercaseInPasswords(t *testing.T) {
 		{
 			name: "IAM password policy uppercase not required",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				PasswordPolicy: iam.PasswordPolicy{
 					Metadata:         types.NewTestMetadata(),
 					RequireUppercase: types.Bool(false, types.NewTestMetadata()),
@@ -33,7 +32,6 @@ func TestCheckRequireUppercaseInPasswords(t *testing.T) {
 		{
 			name: "IAM password policy uppercase required",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				PasswordPolicy: iam.PasswordPolicy{
 					Metadata:         types.NewTestMetadata(),
 					RequireUppercase: types.Bool(true, types.NewTestMetadata()),

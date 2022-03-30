@@ -7,7 +7,7 @@ import (
 
 func getSecurityGroups(ctx parser.FileContext) (securityGroups []elasticache.SecurityGroup) {
 
-	sgResources := ctx.GetResourceByType("AWS::ElastiCache::SecurityGroup")
+	sgResources := ctx.GetResourcesByType("AWS::ElastiCache::SecurityGroup")
 
 	for _, r := range sgResources {
 

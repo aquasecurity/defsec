@@ -5,7 +5,6 @@ import (
 )
 
 type Kinesis struct {
-	types.Metadata
 	Streams []Stream
 }
 

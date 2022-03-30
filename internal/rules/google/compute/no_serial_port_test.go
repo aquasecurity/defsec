@@ -22,7 +22,6 @@ func TestCheckNoSerialPort(t *testing.T) {
 		{
 			name: "Instance serial port enabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata:         types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckNoSerialPort(t *testing.T) {
 		{
 			name: "Instance serial port disabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata:         types.NewTestMetadata(),

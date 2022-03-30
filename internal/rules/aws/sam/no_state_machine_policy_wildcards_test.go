@@ -25,7 +25,6 @@ func TestCheckNoStateMachinePolicyWildcards(t *testing.T) {
 		{
 			name: "Wildcard action in state machine policy",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				StateMachines: []sam.StateMachine{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -61,7 +60,6 @@ func TestCheckNoStateMachinePolicyWildcards(t *testing.T) {
 		{
 			name: "Specific action in state machine policy",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				StateMachines: []sam.StateMachine{
 					{
 						Metadata: types.NewTestMetadata(),

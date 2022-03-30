@@ -22,7 +22,6 @@ func TestCheckEnableMasterNetworks(t *testing.T) {
 		{
 			name: "Cluster master authorized networks disabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableMasterNetworks(t *testing.T) {
 		{
 			name: "Cluster master authorized networks enabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

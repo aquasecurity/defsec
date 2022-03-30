@@ -22,7 +22,6 @@ func TestCheckEnforcePodSecurityPolicy(t *testing.T) {
 		{
 			name: "Cluster pod security policy disabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnforcePodSecurityPolicy(t *testing.T) {
 		{
 			name: "Cluster pod security policy enabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

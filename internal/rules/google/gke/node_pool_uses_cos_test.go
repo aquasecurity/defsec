@@ -22,7 +22,6 @@ func TestCheckNodePoolUsesCos(t *testing.T) {
 		{
 			name: "Cluster node config image type set to Ubuntu",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckNodePoolUsesCos(t *testing.T) {
 		{
 			name: "Cluster node pool image type set to Ubuntu",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -63,7 +61,6 @@ func TestCheckNodePoolUsesCos(t *testing.T) {
 		{
 			name: "Cluster node config image type set to Container-Optimized OS",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

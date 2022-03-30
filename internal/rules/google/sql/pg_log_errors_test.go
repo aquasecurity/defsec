@@ -22,7 +22,6 @@ func TestCheckPgLogErrors(t *testing.T) {
 		{
 			name: "Instance minimum log severity set to PANIC",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),
@@ -42,7 +41,6 @@ func TestCheckPgLogErrors(t *testing.T) {
 		{
 			name: "Instance minimum log severity set to ERROR",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),

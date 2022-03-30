@@ -39,6 +39,12 @@ func OptionWithDebug(w io.Writer) Option {
 	}
 }
 
+func OptionWithTrace(w io.Writer) Option {
+	return func(s *Scanner) {
+		s.traceWriter = w
+	}
+}
+
 func OptionNoIgnores() Option {
 	return func(s *Scanner) {
 		s.executorOpt = append(s.executorOpt, executor.OptionNoIgnores())
@@ -162,9 +168,16 @@ func OptionWithMinimumSeverity(minimum severity.Severity) Option {
 }
 
 // OptionWithPolicyDirs - location of rego policy directories - policies are loaded recursively
-func OptionWithPolicyDirs(dirs []string) func(s *Scanner) {
+func OptionWithPolicyDirs(dirs ...string) func(s *Scanner) {
 	return func(s *Scanner) {
 		s.policyDirs = dirs
+	}
+}
+
+// OptionWithDataDirs - location of rego data directories
+func OptionWithDataDirs(dirs ...string) func(s *Scanner) {
+	return func(s *Scanner) {
+		s.dataDirs = dirs
 	}
 }
 

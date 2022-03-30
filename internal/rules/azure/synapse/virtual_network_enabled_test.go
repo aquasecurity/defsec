@@ -22,7 +22,6 @@ func TestCheckVirtualNetworkEnabled(t *testing.T) {
 		{
 			name: "Synapse workspace managed VN disabled",
 			input: synapse.Synapse{
-				Metadata: types.NewTestMetadata(),
 				Workspaces: []synapse.Workspace{
 					{
 						Metadata:                    types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckVirtualNetworkEnabled(t *testing.T) {
 		{
 			name: "Synapse workspace managed VN enabled",
 			input: synapse.Synapse{
-				Metadata: types.NewTestMetadata(),
 				Workspaces: []synapse.Workspace{
 					{
 						Metadata:                    types.NewTestMetadata(),

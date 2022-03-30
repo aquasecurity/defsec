@@ -5,7 +5,6 @@ import (
 )
 
 type VPC struct {
-	types.Metadata
 	DefaultVPCs    []DefaultVPC
 	SecurityGroups []SecurityGroup
 	NetworkACLs    []NetworkACL

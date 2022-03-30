@@ -22,7 +22,6 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 		{
 			name: "ECS task definition unencrypted volume",
 			input: ecs.ECS{
-				Metadata: types.NewTestMetadata(),
 				TaskDefinitions: []ecs.TaskDefinition{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -43,7 +42,6 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 		{
 			name: "ECS task definition encrypted volume",
 			input: ecs.ECS{
-				Metadata: types.NewTestMetadata(),
 				TaskDefinitions: []ecs.TaskDefinition{
 					{
 						Metadata: types.NewTestMetadata(),

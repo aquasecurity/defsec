@@ -22,7 +22,6 @@ func TestCheckCaptureAllRegions(t *testing.T) {
 		{
 			name: "Log profile captures only eastern US region",
 			input: monitor.Monitor{
-				Metadata: types.NewTestMetadata(),
 				LogProfiles: []monitor.LogProfile{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -37,7 +36,6 @@ func TestCheckCaptureAllRegions(t *testing.T) {
 		{
 			name: "Log profile captures all regions",
 			input: monitor.Monitor{
-				Metadata: types.NewTestMetadata(),
 				LogProfiles: []monitor.LogProfile{
 					{
 						Metadata: types.NewTestMetadata(),

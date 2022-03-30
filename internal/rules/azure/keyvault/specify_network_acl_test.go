@@ -22,7 +22,6 @@ func TestCheckSpecifyNetworkAcl(t *testing.T) {
 		{
 			name: "Network ACL default action set to allow",
 			input: keyvault.KeyVault{
-				Metadata: types.NewTestMetadata(),
 				Vaults: []keyvault.Vault{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckSpecifyNetworkAcl(t *testing.T) {
 		{
 			name: "Network ACL default action set to deny",
 			input: keyvault.KeyVault{
-				Metadata: types.NewTestMetadata(),
 				Vaults: []keyvault.Vault{
 					{
 						Metadata: types.NewTestMetadata(),

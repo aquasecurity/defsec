@@ -22,7 +22,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "AWS CloudTrail unencrypted",
 			input: cloudtrail.CloudTrail{
-				Metadata: types.NewTestMetadata(),
 				Trails: []cloudtrail.Trail{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "AWS CloudTrail encrypted with KMS key",
 			input: cloudtrail.CloudTrail{
-				Metadata: types.NewTestMetadata(),
 				Trails: []cloudtrail.Trail{
 					{
 						Metadata: types.NewTestMetadata(),

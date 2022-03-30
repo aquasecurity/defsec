@@ -22,7 +22,6 @@ func TestCheckUseClusterLabels(t *testing.T) {
 		{
 			name: "Cluster with no resource labels defined",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata:       types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckUseClusterLabels(t *testing.T) {
 		{
 			name: "Cluster with resource labels defined",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

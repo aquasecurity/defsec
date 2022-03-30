@@ -5,7 +5,6 @@ import (
 )
 
 type Redshift struct {
-	types.Metadata
 	Clusters       []Cluster
 	SecurityGroups []SecurityGroup
 }

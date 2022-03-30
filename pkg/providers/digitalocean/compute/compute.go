@@ -5,7 +5,6 @@ import (
 )
 
 type Compute struct {
-	types.Metadata
 	Firewalls          []Firewall
 	LoadBalancers      []LoadBalancer
 	Droplets           []Droplet

@@ -22,7 +22,6 @@ func TestCheckThreatAlertEmailSet(t *testing.T) {
 		{
 			name: "No email address provided for threat alerts",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckThreatAlertEmailSet(t *testing.T) {
 		{
 			name: "Email address provided for threat alerts",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),

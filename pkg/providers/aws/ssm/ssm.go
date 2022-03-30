@@ -5,7 +5,6 @@ import (
 )
 
 type SSM struct {
-	types.Metadata
 	Secrets []Secret
 }
 

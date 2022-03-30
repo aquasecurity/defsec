@@ -24,7 +24,6 @@ func TestCheckEnforceMFA(t *testing.T) {
 		{
 			name: "IAM policy with no MFA required",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				Groups: []iam.Group{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -56,7 +55,6 @@ func TestCheckEnforceMFA(t *testing.T) {
 		{
 			name: "IAM policy with MFA required",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				Groups: []iam.Group{
 					{
 						Metadata: types.NewTestMetadata(),

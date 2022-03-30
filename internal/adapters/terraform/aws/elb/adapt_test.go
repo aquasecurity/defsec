@@ -48,7 +48,6 @@ func Test_Adapt(t *testing.T) {
 			}
 `,
 			expected: elb.ELB{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata:                types.NewTestMetadata(),
@@ -77,7 +76,6 @@ func Test_Adapt(t *testing.T) {
 			}
 `,
 			expected: elb.ELB{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata:                types.NewTestMetadata(),

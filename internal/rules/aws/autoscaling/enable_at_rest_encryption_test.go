@@ -23,7 +23,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "Autoscaling unencrypted root block device",
 			input: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -39,7 +38,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "Autoscaling unencrypted EBS block device",
 			input: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -57,7 +55,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "Autoscaling encrypted root and EBS block devices",
 			input: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata: types.NewTestMetadata(),

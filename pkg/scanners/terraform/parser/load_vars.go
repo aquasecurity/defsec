@@ -2,7 +2,7 @@ package parser
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io/fs"
 	"os"
 	"strings"
 
@@ -12,7 +12,7 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func loadTFVars(filenames []string) (map[string]cty.Value, error) {
+func loadTFVars(srcFS fs.FS, filenames []string) (map[string]cty.Value, error) {
 	combinedVars := make(map[string]cty.Value)
 
 	for _, env := range os.Environ() {
@@ -30,7 +30,7 @@ func loadTFVars(filenames []string) (map[string]cty.Value, error) {
 	}
 
 	for _, filename := range filenames {
-		vars, err := loadTFVarsFile(filename)
+		vars, err := loadTFVarsFile(srcFS, filename)
 		if err != nil {
 			return nil, fmt.Errorf("failed to load tfvars from %s: %w", filename, err)
 		}
@@ -42,14 +42,14 @@ func loadTFVars(filenames []string) (map[string]cty.Value, error) {
 	return combinedVars, nil
 }
 
-func loadTFVarsFile(filename string) (map[string]cty.Value, error) {
+func loadTFVarsFile(srcFS fs.FS, filename string) (map[string]cty.Value, error) {
 
 	inputVars := make(map[string]cty.Value)
 	if filename == "" {
 		return inputVars, nil
 	}
 
-	src, err := ioutil.ReadFile(filename)
+	src, err := fs.ReadFile(srcFS, filename)
 	if err != nil {
 		return nil, err
 	}

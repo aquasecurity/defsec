@@ -3,8 +3,6 @@ package testutil
 import (
 	"encoding/json"
 	"io/fs"
-	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -44,14 +42,8 @@ func ruleIDInResults(ruleID string, results scan.Results) bool {
 	return false
 }
 
-func CreateFS(t *testing.T, files map[string]string) (fs.FS, string, func()) {
-	tmp, err := os.MkdirTemp(os.TempDir(), "defsec")
-	require.NoError(t, err)
-	for name, contents := range files {
-		require.NoError(t, os.MkdirAll(filepath.Dir(filepath.Join(tmp, name)), 0700))
-		require.NoError(t, os.WriteFile(filepath.Join(tmp, name), []byte(contents), 0600))
-	}
-	return os.DirFS(tmp), tmp, func() { _ = os.RemoveAll(tmp) }
+func CreateFS(t *testing.T, files map[string]string) fs.FS {
+	return NewMemFS(files)
 }
 
 func AssertDefsecEqual(t *testing.T, expected interface{}, actual interface{}) {

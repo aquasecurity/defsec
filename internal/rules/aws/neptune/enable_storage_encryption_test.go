@@ -22,7 +22,6 @@ func TestCheckEnableStorageEncryption(t *testing.T) {
 		{
 			name: "Neptune Cluster without storage encryption",
 			input: neptune.Neptune{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []neptune.Cluster{
 					{
 						Metadata:         types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableStorageEncryption(t *testing.T) {
 		{
 			name: "Neptune Cluster with storage encryption",
 			input: neptune.Neptune{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []neptune.Cluster{
 					{
 						Metadata:         types.NewTestMetadata(),

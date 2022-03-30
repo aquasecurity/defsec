@@ -22,7 +22,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "SSL policy minimum TLS version 1.0",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				SSLPolicies: []compute.SSLPolicy{
 					{
 						Metadata:          types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "SSL policy minimum TLS version 1.2",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				SSLPolicies: []compute.SSLPolicy{
 					{
 						Metadata:          types.NewTestMetadata(),

@@ -5,7 +5,6 @@ import (
 )
 
 type Neptune struct {
-	types.Metadata
 	Clusters []Cluster
 }
 

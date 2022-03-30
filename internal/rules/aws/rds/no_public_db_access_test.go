@@ -22,7 +22,6 @@ func TestCheckNoPublicDbAccess(t *testing.T) {
 		{
 			name: "RDS Instance with public access enabled",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Instances: []rds.Instance{
 					{
 						Metadata:     types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckNoPublicDbAccess(t *testing.T) {
 		{
 			name: "RDS Instance with public access disabled",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []rds.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

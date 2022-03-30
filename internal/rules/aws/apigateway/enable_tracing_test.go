@@ -22,7 +22,6 @@ func TestCheckEnableTracing(t *testing.T) {
 		{
 			name: "API Gateway stage with X-Ray tracing disabled",
 			input: apigateway.APIGateway{
-				Metadata: types.NewTestMetadata(),
 				APIs: []apigateway.API{
 					{
 						Metadata:     types.NewTestMetadata(),
@@ -42,7 +41,6 @@ func TestCheckEnableTracing(t *testing.T) {
 		{
 			name: "API Gateway stage with X-Ray tracing enabled",
 			input: apigateway.APIGateway{
-				Metadata: types.NewTestMetadata(),
 				APIs: []apigateway.API{
 					{
 						Metadata:     types.NewTestMetadata(),

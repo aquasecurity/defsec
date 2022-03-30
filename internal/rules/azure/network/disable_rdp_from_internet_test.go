@@ -22,7 +22,6 @@ func TestCheckDisableRdpFromInternet(t *testing.T) {
 		{
 			name: "Security group inbound rule allowing RDP access from the Internet",
 			input: network.Network{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []network.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -51,7 +50,6 @@ func TestCheckDisableRdpFromInternet(t *testing.T) {
 		{
 			name: "Security group inbound rule allowing RDP access from a specific address",
 			input: network.Network{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []network.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),

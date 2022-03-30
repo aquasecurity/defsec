@@ -22,7 +22,6 @@ func TestCheckUseRbacPermissions(t *testing.T) {
 		{
 			name: "Cluster legacy ABAC enabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata:         types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckUseRbacPermissions(t *testing.T) {
 		{
 			name: "Cluster legacy ABAC disabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata:         types.NewTestMetadata(),

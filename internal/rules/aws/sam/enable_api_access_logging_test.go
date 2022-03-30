@@ -22,7 +22,6 @@ func TestCheckEnableApiAccessLogging(t *testing.T) {
 		{
 			name: "API logging not configured",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				APIs: []sam.API{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableApiAccessLogging(t *testing.T) {
 		{
 			name: "API logging configured",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				APIs: []sam.API{
 					{
 						Metadata: types.NewTestMetadata(),

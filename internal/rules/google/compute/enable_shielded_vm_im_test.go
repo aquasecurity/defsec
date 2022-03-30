@@ -22,7 +22,6 @@ func TestCheckEnableShieldedVMIntegrityMonitoring(t *testing.T) {
 		{
 			name: "Instance shielded VM integrity monitoring disabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableShieldedVMIntegrityMonitoring(t *testing.T) {
 		{
 			name: "Instance shielded VM integrity monitoring enabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),

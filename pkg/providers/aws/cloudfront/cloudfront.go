@@ -5,7 +5,6 @@ import (
 )
 
 type Cloudfront struct {
-	types.Metadata
 	Distributions []Distribution
 }
 

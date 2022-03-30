@@ -22,7 +22,6 @@ func TestCheckEnableAllRegions(t *testing.T) {
 		{
 			name: "AWS CloudTrail not enabled accross all regions",
 			input: cloudtrail.CloudTrail{
-				Metadata: types.NewTestMetadata(),
 				Trails: []cloudtrail.Trail{
 					{
 						Metadata:      types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableAllRegions(t *testing.T) {
 		{
 			name: "AWS CloudTrail enabled accross all regions",
 			input: cloudtrail.CloudTrail{
-				Metadata: types.NewTestMetadata(),
 				Trails: []cloudtrail.Trail{
 					{
 						Metadata:      types.NewTestMetadata(),

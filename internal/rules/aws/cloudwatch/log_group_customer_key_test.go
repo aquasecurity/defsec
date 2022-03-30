@@ -22,7 +22,6 @@ func TestCheckLogGroupCustomerKey(t *testing.T) {
 		{
 			name: "AWS CloudWatch with unencrypted log group",
 			input: cloudwatch.CloudWatch{
-				Metadata: types.NewTestMetadata(),
 				LogGroups: []cloudwatch.LogGroup{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckLogGroupCustomerKey(t *testing.T) {
 		{
 			name: "AWS CloudWatch with encrypted log group",
 			input: cloudwatch.CloudWatch{
-				Metadata: types.NewTestMetadata(),
 				LogGroups: []cloudwatch.LogGroup{
 					{
 						Metadata: types.NewTestMetadata(),

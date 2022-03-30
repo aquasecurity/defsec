@@ -22,7 +22,6 @@ func TestCheckAggregateAllRegions(t *testing.T) {
 		{
 			name: "AWS Config aggregator source with all regions set to false",
 			input: config.Config{
-				Metadata: types.NewTestMetadata(),
 				ConfigurationAggregrator: config.ConfigurationAggregrator{
 					Metadata:         types.NewTestMetadata(),
 					SourceAllRegions: types.Bool(false, types.NewTestMetadata()),
@@ -34,7 +33,6 @@ func TestCheckAggregateAllRegions(t *testing.T) {
 		{
 			name: "AWS Config aggregator source with all regions set to true",
 			input: config.Config{
-				Metadata: types.NewTestMetadata(),
 				ConfigurationAggregrator: config.ConfigurationAggregrator{
 					Metadata:         types.NewTestMetadata(),
 					SourceAllRegions: types.Bool(true, types.NewTestMetadata()),

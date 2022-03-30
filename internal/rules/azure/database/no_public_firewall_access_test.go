@@ -22,7 +22,6 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 		{
 			name: "MySQL server firewall allows public internet access",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MySQLServers: []database.MySQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -44,7 +43,6 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 		{
 			name: "MS SQL server firewall allows public internet access",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -66,7 +64,6 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 		{
 			name: "PostgreSQL server firewall allows public internet access",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -88,7 +85,6 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 		{
 			name: "MariaDB server firewall allows public internet access",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MariaDBServers: []database.MariaDBServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -110,7 +106,6 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 		{
 			name: "MySQL server firewall allows access to Azure services",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MySQLServers: []database.MySQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -132,7 +127,6 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 		{
 			name: "MS SQL server firewall allows access to Azure services",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -154,7 +148,6 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 		{
 			name: "PostgreSQL server firewall allows access to Azure services",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -176,7 +169,6 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 		{
 			name: "MariaDB server firewall allows access to Azure services",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MariaDBServers: []database.MariaDBServer{
 					{
 						Metadata: types.NewTestMetadata(),

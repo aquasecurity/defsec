@@ -22,7 +22,6 @@ func TestCheckSetMinimumPasswordLength(t *testing.T) {
 		{
 			name: "Minimum password length set to 8",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				PasswordPolicy: iam.PasswordPolicy{
 					Metadata:      types.NewTestMetadata(),
 					MinimumLength: types.Int(8, types.NewTestMetadata()),
@@ -33,7 +32,6 @@ func TestCheckSetMinimumPasswordLength(t *testing.T) {
 		{
 			name: "Minimum password length set to 15",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				PasswordPolicy: iam.PasswordPolicy{
 					Metadata:      types.NewTestMetadata(),
 					MinimumLength: types.Int(15, types.NewTestMetadata()),

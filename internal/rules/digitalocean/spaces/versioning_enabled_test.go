@@ -22,7 +22,6 @@ func TestCheckVersioningEnabled(t *testing.T) {
 		{
 			name: "Space bucket versioning disabled",
 			input: spaces.Spaces{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []spaces.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckVersioningEnabled(t *testing.T) {
 		{
 			name: "Space bucket versioning enabled",
 			input: spaces.Spaces{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []spaces.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),

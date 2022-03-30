@@ -22,7 +22,6 @@ func TestCheckEnableHttp2(t *testing.T) {
 		{
 			name: "HTTP2 disabled",
 			input: appservice.AppService{
-				Metadata: types.NewTestMetadata(),
 				Services: []appservice.Service{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckEnableHttp2(t *testing.T) {
 		{
 			name: "HTTP2 enabled",
 			input: appservice.AppService{
-				Metadata: types.NewTestMetadata(),
 				Services: []appservice.Service{
 					{
 						Metadata: types.NewTestMetadata(),

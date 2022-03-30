@@ -24,8 +24,6 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 		{
 			name: "IAM policy with wildcard resource",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
-
 				Roles: []iam.Role{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -61,7 +59,6 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 		{
 			name: "IAM policy with wildcard action",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				Policies: []iam.Policy{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -92,7 +89,6 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 		{
 			name: "IAM policies without wildcards",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				Policies: []iam.Policy{
 					{
 						Metadata: types.NewTestMetadata(),

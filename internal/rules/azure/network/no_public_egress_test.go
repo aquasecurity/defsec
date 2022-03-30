@@ -22,7 +22,6 @@ func TestCheckNoPublicEgress(t *testing.T) {
 		{
 			name: "Security group outbound rule with wildcard destination address",
 			input: network.Network{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []network.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -44,7 +43,6 @@ func TestCheckNoPublicEgress(t *testing.T) {
 		{
 			name: "Security group outbound rule with private destination address",
 			input: network.Network{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []network.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),

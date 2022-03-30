@@ -23,7 +23,6 @@ func TestCheckEnsureKeyExpiry(t *testing.T) {
 		{
 			name: "Key vault key expiration date not set",
 			input: keyvault.KeyVault{
-				Metadata: types.NewTestMetadata(),
 				Vaults: []keyvault.Vault{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -41,7 +40,6 @@ func TestCheckEnsureKeyExpiry(t *testing.T) {
 		{
 			name: "Key vault key expiration date specified",
 			input: keyvault.KeyVault{
-				Metadata: types.NewTestMetadata(),
 				Vaults: []keyvault.Vault{
 					{
 						Metadata: types.NewTestMetadata(),

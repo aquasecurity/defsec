@@ -5,7 +5,6 @@ import (
 )
 
 type DataLake struct {
-	types.Metadata
 	Stores []Store
 }
 

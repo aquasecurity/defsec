@@ -5,7 +5,6 @@ import (
 )
 
 type EFS struct {
-	types.Metadata
 	FileSystems []FileSystem
 }
 

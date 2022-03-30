@@ -5,7 +5,6 @@ import (
 )
 
 type CodeBuild struct {
-	types.Metadata
 	Projects []Project
 }
 

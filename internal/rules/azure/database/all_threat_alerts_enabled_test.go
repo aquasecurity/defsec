@@ -22,7 +22,6 @@ func TestCheckAllThreatAlertsEnabled(t *testing.T) {
 		{
 			name: "MS SQL server alerts for SQL injection disabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -42,7 +41,6 @@ func TestCheckAllThreatAlertsEnabled(t *testing.T) {
 		{
 			name: "MS SQL server all alerts enabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),

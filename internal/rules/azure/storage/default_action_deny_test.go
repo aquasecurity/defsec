@@ -22,7 +22,6 @@ func TestCheckDefaultActionDeny(t *testing.T) {
 		{
 			name: "Storage network rule allows access by default",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckDefaultActionDeny(t *testing.T) {
 		{
 			name: "Storage network rule denies access by default",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata: types.NewTestMetadata(),

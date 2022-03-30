@@ -44,14 +44,13 @@ func Test_PanicInCheckNotAllowed(t *testing.T) {
 	reg := rules.Register(panicRule, nil)
 	defer rules.Deregister(reg)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 resource "problem" "this" {
 	panic = true
 }
 `,
 	})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -67,14 +66,13 @@ func Test_PanicInCheckAllowed(t *testing.T) {
 	reg := rules.Register(panicRule, nil)
 	defer rules.Deregister(reg)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 resource "problem" "this" {
 	panic = true
 }
 `,
 	})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -90,14 +88,13 @@ func Test_PanicNotInCheckNotIncludePassed(t *testing.T) {
 	reg := rules.Register(panicRule, nil)
 	defer rules.Deregister(reg)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 resource "problem" "this" {
 	panic = true
 }
 `,
 	})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
@@ -113,14 +110,13 @@ func Test_PanicNotInCheckNotIncludePassedStopOnError(t *testing.T) {
 	reg := rules.Register(panicRule, nil)
 	defer rules.Deregister(reg)
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": `
 resource "problem" "this" {
 	panic = true
 }
 `,
 	})
-	defer tidy()
 
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")

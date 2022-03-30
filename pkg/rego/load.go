@@ -2,31 +2,48 @@ package rego
 
 import (
 	"fmt"
-	"os"
+	"io/fs"
 	"strings"
 
-	"github.com/open-policy-agent/opa/bundle"
-
 	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/loader"
+	"github.com/open-policy-agent/opa/bundle"
 )
 
 func isRegoFile(name string) bool {
 	return strings.HasSuffix(name, bundle.RegoExt) && !strings.HasSuffix(name, "_test"+bundle.RegoExt)
 }
 
-func (s *Scanner) loadPoliciesFromDirs(paths []string) (map[string]*ast.Module, error) {
-	// load policies matching *.rego except for *_test.rego
-	loaded, err := loader.NewFileLoader().Filtered(paths, func(_ string, info os.FileInfo, depth int) bool {
-		return !info.IsDir() && !isRegoFile(info.Name())
-	})
-	if err != nil {
-		return nil, err
+func (s *Scanner) loadPoliciesFromDirs(target fs.FS, paths []string) (map[string]*ast.Module, error) {
+	modules := make(map[string]*ast.Module)
+	for _, path := range paths {
+		if err := fs.WalkDir(target, path, func(path string, info fs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if info.IsDir() {
+				return nil
+			}
+			if !isRegoFile(info.Name()) {
+				return nil
+			}
+			data, err := fs.ReadFile(target, path)
+			if err != nil {
+				return err
+			}
+			module, err := ast.ParseModuleWithOpts(path, string(data), ast.ParserOptions{})
+			if err != nil {
+				return err
+			}
+			modules[path] = module
+			return nil
+		}); err != nil {
+			return nil, err
+		}
 	}
-	return loaded.ParsedModules(), nil
+	return modules, nil
 }
 
-func (s *Scanner) LoadPolicies(loadEmbedded bool, paths ...string) error {
+func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths ...string) error {
 
 	if s.policies == nil {
 		s.policies = make(map[string]*ast.Module)
@@ -40,17 +57,19 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, paths ...string) error {
 		for name, policy := range loaded {
 			s.policies[name] = policy
 		}
+		s.debug("Loaded %d embedded policies.", len(loaded))
 	}
 
 	var err error
 	if len(paths) > 0 {
-		loaded, err := s.loadPoliciesFromDirs(paths)
+		loaded, err := s.loadPoliciesFromDirs(srcFS, paths)
 		if err != nil {
 			return fmt.Errorf("failed to load rego policies from %s: %w", paths, err)
 		}
 		for name, policy := range loaded {
 			s.policies[name] = policy
 		}
+		s.debug("Loaded %d policies from disk.", len(loaded))
 	}
 
 	// gather namespaces

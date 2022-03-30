@@ -29,3 +29,9 @@ func OptionWithPolicyNamespaces(namespaces ...string) func(s *Scanner) {
 		s.policyNamespaces = namespaces
 	}
 }
+
+func OptionWithTrace(w io.Writer) Option {
+	return func(s *Scanner) {
+		s.traceWriter = w
+	}
+}

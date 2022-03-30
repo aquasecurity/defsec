@@ -22,7 +22,6 @@ func TestCheckAccountIdentityRegistered(t *testing.T) {
 		{
 			name: "App service identity not registered",
 			input: appservice.AppService{
-				Metadata: types.NewTestMetadata(),
 				Services: []appservice.Service{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -37,7 +36,6 @@ func TestCheckAccountIdentityRegistered(t *testing.T) {
 		{
 			name: "App service identity registered",
 			input: appservice.AppService{
-				Metadata: types.NewTestMetadata(),
 				Services: []appservice.Service{
 					{
 						Metadata: types.NewTestMetadata(),

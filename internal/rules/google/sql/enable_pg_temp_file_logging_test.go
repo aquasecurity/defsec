@@ -22,7 +22,6 @@ func TestCheckEnablePgTempFileLogging(t *testing.T) {
 		{
 			name: "Instance temp files logging disabled for all files",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),
@@ -42,7 +41,6 @@ func TestCheckEnablePgTempFileLogging(t *testing.T) {
 		{
 			name: "Instance temp files logging disabled for files smaller than 100KB",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),
@@ -62,7 +60,6 @@ func TestCheckEnablePgTempFileLogging(t *testing.T) {
 		{
 			name: "Instance temp files logging enabled for all files",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),

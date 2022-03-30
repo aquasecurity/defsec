@@ -22,7 +22,6 @@ func TestCheckNoPlaintextSecrets(t *testing.T) {
 		{
 			name: "Task definition with plaintext sensitive information",
 			input: ecs.ECS{
-				Metadata: types.NewTestMetadata(),
 				TaskDefinitions: []ecs.TaskDefinition{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -45,7 +44,6 @@ func TestCheckNoPlaintextSecrets(t *testing.T) {
 		{
 			name: "Task definition without sensitive information",
 			input: ecs.ECS{
-				Metadata: types.NewTestMetadata(),
 				TaskDefinitions: []ecs.TaskDefinition{
 					{
 						Metadata: types.NewTestMetadata(),

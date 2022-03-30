@@ -22,7 +22,6 @@ func TestCheckNoPublicIp(t *testing.T) {
 		{
 			name: "Compute instance public reservation pool",
 			input: oracle.Compute{
-				Metadata: types.NewTestMetadata(),
 				AddressReservations: []oracle.AddressReservation{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckNoPublicIp(t *testing.T) {
 		{
 			name: "Compute instance cloud reservation pool",
 			input: oracle.Compute{
-				Metadata: types.NewTestMetadata(),
 				AddressReservations: []oracle.AddressReservation{
 					{
 						Metadata: types.NewTestMetadata(),

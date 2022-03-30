@@ -22,7 +22,6 @@ func TestCheckNoProjectWideSshKeys(t *testing.T) {
 		{
 			name: "Instance project level SSH keys blocked",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata:                    types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckNoProjectWideSshKeys(t *testing.T) {
 		{
 			name: "Instance project level SSH keys allowed",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata:                    types.NewTestMetadata(),

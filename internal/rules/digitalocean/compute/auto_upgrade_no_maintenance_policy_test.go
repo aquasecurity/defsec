@@ -22,7 +22,6 @@ func TestCheckAutoUpgrade(t *testing.T) {
 		{
 			name: "Kubernetes cluster auto-upgrade disabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				KubernetesClusters: []compute.KubernetesCluster{
 					{
 						Metadata:    types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckAutoUpgrade(t *testing.T) {
 		{
 			name: "Kubernetes cluster auto-upgrade enabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				KubernetesClusters: []compute.KubernetesCluster{
 					{
 						Metadata:    types.NewTestMetadata(),

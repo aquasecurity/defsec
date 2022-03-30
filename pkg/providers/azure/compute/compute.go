@@ -5,7 +5,6 @@ import (
 )
 
 type Compute struct {
-	types.Metadata
 	Name                   types.StringValue
 	Region                 types.StringValue
 	LinuxVirtualMachines   []LinuxVirtualMachine

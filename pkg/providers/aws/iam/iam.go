@@ -6,7 +6,6 @@ import (
 )
 
 type IAM struct {
-	types.Metadata
 	PasswordPolicy PasswordPolicy
 	Policies       []Policy
 	Groups         []Group

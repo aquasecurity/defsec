@@ -22,7 +22,6 @@ func TestCheckLogging(t *testing.T) {
 		{
 			name: "Logging via OMS agent disabled",
 			input: container.Container{
-				Metadata: types.NewTestMetadata(),
 				KubernetesClusters: []container.KubernetesCluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -41,7 +40,6 @@ func TestCheckLogging(t *testing.T) {
 		{
 			name: "Logging via OMS agent enabled",
 			input: container.Container{
-				Metadata: types.NewTestMetadata(),
 				KubernetesClusters: []container.KubernetesCluster{
 					{
 						Metadata: types.NewTestMetadata(),

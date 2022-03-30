@@ -5,7 +5,6 @@ import (
 )
 
 type EKS struct {
-	types.Metadata
 	Clusters []Cluster
 }
 

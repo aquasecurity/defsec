@@ -22,7 +22,6 @@ func TestCheckEnableRecovery(t *testing.T) {
 		{
 			name: "Cluster with point in time recovery disabled",
 			input: dynamodb.DynamoDB{
-				Metadata: types.NewTestMetadata(),
 				DAXClusters: []dynamodb.DAXCluster{
 					{
 						Metadata:            types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableRecovery(t *testing.T) {
 		{
 			name: "Cluster with point in time recovery enabled",
 			input: dynamodb.DynamoDB{
-				Metadata: types.NewTestMetadata(),
 				DAXClusters: []dynamodb.DAXCluster{
 					{
 						Metadata:            types.NewTestMetadata(),

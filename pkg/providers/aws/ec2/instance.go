@@ -27,23 +27,14 @@ type MetadataOptions struct {
 }
 
 func (i *Instance) RequiresIMDSToken() bool {
-	if i.MetadataOptions.HttpTokens != nil {
-		return i.MetadataOptions.HttpTokens.EqualTo("required")
-	}
-	return false
+	return i.MetadataOptions.HttpTokens.EqualTo("required")
 }
 
 func (i *Instance) HasHTTPEndpointDisabled() bool {
-	if i.MetadataOptions.HttpEndpoint != nil {
-		return i.MetadataOptions.HttpEndpoint.EqualTo("disabled")
-	}
-	return false
+	return i.MetadataOptions.HttpEndpoint.EqualTo("disabled")
 }
 
 func (i *Instance) HasSensitiveInformationInUserData() bool {
-	if i.UserData == nil {
-		return false
-	}
 	scanner := squealer.NewStringScanner()
 	return scanner.Scan(i.UserData.Value()).TransgressionFound
 }

@@ -22,7 +22,6 @@ func TestCheckEnableStackdriverMonitoring(t *testing.T) {
 		{
 			name: "Cluster missing monitoring service provider",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata:          types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableStackdriverMonitoring(t *testing.T) {
 		{
 			name: "Cluster with StackDriver monitoring configured",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata:          types.NewTestMetadata(),

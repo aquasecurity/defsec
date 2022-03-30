@@ -22,7 +22,6 @@ func TestCheckHttpNotUsed(t *testing.T) {
 		{
 			name: "Load balancer listener with HTTP protocol",
 			input: elb.ELB{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -45,7 +44,6 @@ func TestCheckHttpNotUsed(t *testing.T) {
 		{
 			name: "Load balancer listener with HTTP protocol but redirect default action",
 			input: elb.ELB{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -68,7 +66,6 @@ func TestCheckHttpNotUsed(t *testing.T) {
 		{
 			name: "Load balancer listener with HTTPS protocol",
 			input: elb.ELB{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata: types.NewTestMetadata(),

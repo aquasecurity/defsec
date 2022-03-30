@@ -22,7 +22,6 @@ func TestCheckEnablePrivateCluster(t *testing.T) {
 		{
 			name: "Cluster private nodes disabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnablePrivateCluster(t *testing.T) {
 		{
 			name: "Cluster private nodes enabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

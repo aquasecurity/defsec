@@ -22,7 +22,6 @@ func TestCheckNoPublicIngress(t *testing.T) {
 		{
 			name: "AWS VPC network ACL rule with wildcard address",
 			input: vpc.VPC{
-				Metadata: types.NewTestMetadata(),
 				NetworkACLs: []vpc.NetworkACL{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -44,7 +43,6 @@ func TestCheckNoPublicIngress(t *testing.T) {
 		{
 			name: "AWS VPC network ACL rule with private address",
 			input: vpc.VPC{
-				Metadata: types.NewTestMetadata(),
 				NetworkACLs: []vpc.NetworkACL{
 					{
 						Metadata: types.NewTestMetadata(),

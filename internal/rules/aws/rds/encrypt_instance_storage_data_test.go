@@ -22,7 +22,6 @@ func TestCheckEncryptInstanceStorageData(t *testing.T) {
 		{
 			name: "RDS Instance with unencrypted storage",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Instances: []rds.Instance{
 					{
 						Metadata:             types.NewTestMetadata(),
@@ -39,7 +38,6 @@ func TestCheckEncryptInstanceStorageData(t *testing.T) {
 		{
 			name: "RDS Instance with encrypted storage",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Instances: []rds.Instance{
 					{
 						Metadata:             types.NewTestMetadata(),

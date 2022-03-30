@@ -22,7 +22,6 @@ func TestCheckNoSensitiveInfo(t *testing.T) {
 		{
 			name: "Compute instance with sensitive information in user data",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckNoSensitiveInfo(t *testing.T) {
 		{
 			name: "Compute instance with no sensitive information in user data",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),

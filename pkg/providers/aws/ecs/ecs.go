@@ -5,7 +5,6 @@ import (
 )
 
 type ECS struct {
-	types.Metadata
 	Clusters        []Cluster
 	TaskDefinitions []TaskDefinition
 }

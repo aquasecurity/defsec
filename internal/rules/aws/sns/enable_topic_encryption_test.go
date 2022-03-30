@@ -22,7 +22,6 @@ func TestCheckEnableTopicEncryption(t *testing.T) {
 		{
 			name: "AWS SNS Topic without encryption",
 			input: sns.SNS{
-				Metadata: types.NewTestMetadata(),
 				Topics: []sns.Topic{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableTopicEncryption(t *testing.T) {
 		{
 			name: "AWS SNS Topic encrypted with default key",
 			input: sns.SNS{
-				Metadata: types.NewTestMetadata(),
 				Topics: []sns.Topic{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -54,7 +52,6 @@ func TestCheckEnableTopicEncryption(t *testing.T) {
 		{
 			name: "AWS SNS Topic properly encrypted",
 			input: sns.SNS{
-				Metadata: types.NewTestMetadata(),
 				Topics: []sns.Topic{
 					{
 						Metadata: types.NewTestMetadata(),

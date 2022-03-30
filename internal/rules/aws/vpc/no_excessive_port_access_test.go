@@ -22,7 +22,6 @@ func TestCheckNoExcessivePortAccess(t *testing.T) {
 		{
 			name: "AWS VPC network ACL rule with protocol set to all",
 			input: vpc.VPC{
-				Metadata: types.NewTestMetadata(),
 				NetworkACLs: []vpc.NetworkACL{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckNoExcessivePortAccess(t *testing.T) {
 		{
 			name: "AWS VPC network ACL rule with protocol set to all",
 			input: vpc.VPC{
-				Metadata: types.NewTestMetadata(),
 				NetworkACLs: []vpc.NetworkACL{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -58,7 +56,6 @@ func TestCheckNoExcessivePortAccess(t *testing.T) {
 		{
 			name: "AWS VPC network ACL rule with tcp protocol",
 			input: vpc.VPC{
-				Metadata: types.NewTestMetadata(),
 				NetworkACLs: []vpc.NetworkACL{
 					{
 						Metadata: types.NewTestMetadata(),

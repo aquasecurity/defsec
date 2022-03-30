@@ -22,7 +22,6 @@ func TestCheckConfiguredNetworkPolicy(t *testing.T) {
 		{
 			name: "Cluster missing network policy configuration",
 			input: container.Container{
-				Metadata: types.NewTestMetadata(),
 				KubernetesClusters: []container.KubernetesCluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckConfiguredNetworkPolicy(t *testing.T) {
 		{
 			name: "Cluster with network policy configured",
 			input: container.Container{
-				Metadata: types.NewTestMetadata(),
 				KubernetesClusters: []container.KubernetesCluster{
 					{
 						Metadata: types.NewTestMetadata(),

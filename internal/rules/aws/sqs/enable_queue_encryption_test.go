@@ -22,7 +22,6 @@ func TestCheckEnableQueueEncryption(t *testing.T) {
 		{
 			name: "SQS Queue unencrypted",
 			input: sqs.SQS{
-				Metadata: types.NewTestMetadata(),
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableQueueEncryption(t *testing.T) {
 		{
 			name: "SQS Queue encrypted with default key",
 			input: sqs.SQS{
-				Metadata: types.NewTestMetadata(),
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -54,7 +52,6 @@ func TestCheckEnableQueueEncryption(t *testing.T) {
 		{
 			name: "SQS Queue encrypted with proper key",
 			input: sqs.SQS{
-				Metadata: types.NewTestMetadata(),
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),

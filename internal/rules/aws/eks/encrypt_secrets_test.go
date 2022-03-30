@@ -22,7 +22,6 @@ func TestCheckEncryptSecrets(t *testing.T) {
 		{
 			name: "EKS Cluster with no secrets in the resources attribute",
 			input: eks.EKS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []eks.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -39,7 +38,6 @@ func TestCheckEncryptSecrets(t *testing.T) {
 		{
 			name: "EKS Cluster with secrets in the resources attribute but no KMS key",
 			input: eks.EKS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []eks.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -56,7 +54,6 @@ func TestCheckEncryptSecrets(t *testing.T) {
 		{
 			name: "EKS Cluster with secrets in the resources attribute and a KMS key",
 			input: eks.EKS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []eks.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

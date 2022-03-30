@@ -6,7 +6,6 @@ import (
 )
 
 type SQS struct {
-	types.Metadata
 	Queues []Queue
 }
 

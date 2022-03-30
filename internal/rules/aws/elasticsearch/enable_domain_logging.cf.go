@@ -12,7 +12,8 @@ Resources:
         Enabled: true
         KmsKeyId: alias/kmskey
       LogPublishingOptions:
-        Enabled: true
+        AUDIT_LOGS:
+          Enabled: true
       ElasticsearchClusterConfig:
         DedicatedMasterEnabled: true
         InstanceCount: '2'

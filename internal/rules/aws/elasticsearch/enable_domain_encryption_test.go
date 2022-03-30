@@ -22,7 +22,6 @@ func TestCheckEnableDomainEncryption(t *testing.T) {
 		{
 			name: "Elasticsearch domain with at-rest encryption disabled",
 			input: elasticsearch.Elasticsearch{
-				Metadata: types.NewTestMetadata(),
 				Domains: []elasticsearch.Domain{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableDomainEncryption(t *testing.T) {
 		{
 			name: "Elasticsearch domain with at-rest encryption enabled",
 			input: elasticsearch.Elasticsearch{
-				Metadata: types.NewTestMetadata(),
 				Domains: []elasticsearch.Domain{
 					{
 						Metadata: types.NewTestMetadata(),

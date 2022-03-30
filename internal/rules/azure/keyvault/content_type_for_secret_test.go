@@ -22,7 +22,6 @@ func TestCheckContentTypeForSecret(t *testing.T) {
 		{
 			name: "Key vault secret content-type not specified",
 			input: keyvault.KeyVault{
-				Metadata: types.NewTestMetadata(),
 				Vaults: []keyvault.Vault{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckContentTypeForSecret(t *testing.T) {
 		{
 			name: "Key vault secret content-type specified",
 			input: keyvault.KeyVault{
-				Metadata: types.NewTestMetadata(),
 				Vaults: []keyvault.Vault{
 					{
 						Metadata: types.NewTestMetadata(),

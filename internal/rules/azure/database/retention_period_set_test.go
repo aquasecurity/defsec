@@ -22,7 +22,6 @@ func TestCheckRetentionPeriodSet(t *testing.T) {
 		{
 			name: "MS SQL server auditing policy with retention period of 30 days",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckRetentionPeriodSet(t *testing.T) {
 		{
 			name: "MS SQL server auditing policy with retention period of 90 days",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),

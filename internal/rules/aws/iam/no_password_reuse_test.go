@@ -22,7 +22,6 @@ func TestCheckNoPasswordReuse(t *testing.T) {
 		{
 			name: "IAM with 1 password that can't be reused (min)",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				PasswordPolicy: iam.PasswordPolicy{
 					Metadata:             types.NewTestMetadata(),
 					ReusePreventionCount: types.Int(1, types.NewTestMetadata()),
@@ -33,7 +32,6 @@ func TestCheckNoPasswordReuse(t *testing.T) {
 		{
 			name: "IAM with 5 passwords that can't be reused",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				PasswordPolicy: iam.PasswordPolicy{
 					Metadata:             types.NewTestMetadata(),
 					ReusePreventionCount: types.Int(5, types.NewTestMetadata()),

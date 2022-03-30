@@ -22,7 +22,6 @@ func TestCheckEnablePerformanceInsights(t *testing.T) {
 		{
 			name: "RDS Instance with performance insights disabled",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Instances: []rds.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckEnablePerformanceInsights(t *testing.T) {
 		{
 			name: "RDS Instance with performance insights enabled and KMS key provided",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Instances: []rds.Instance{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -7,7 +7,7 @@ import (
 )
 
 func getPolicies(ctx parser.FileContext) (policies []iam.Policy) {
-	for _, policyResource := range ctx.GetResourceByType("AWS::IAM::Policy") {
+	for _, policyResource := range ctx.GetResourcesByType("AWS::IAM::Policy") {
 		policyProp := policyResource.GetProperty("PolicyDocument")
 		policyName := policyResource.GetStringProperty("PolicyName")
 
@@ -29,7 +29,7 @@ func getPolicies(ctx parser.FileContext) (policies []iam.Policy) {
 }
 
 func getRoles(ctx parser.FileContext) (roles []iam.Role) {
-	for _, roleResource := range ctx.GetResourceByType("AWS::IAM::Role") {
+	for _, roleResource := range ctx.GetResourcesByType("AWS::IAM::Role") {
 		policyProp := roleResource.GetProperty("Policies")
 		roleName := roleResource.GetStringProperty("RoleName")
 
@@ -43,7 +43,7 @@ func getRoles(ctx parser.FileContext) (roles []iam.Role) {
 }
 
 func getUsers(ctx parser.FileContext) (users []iam.User) {
-	for _, userResource := range ctx.GetResourceByType("AWS::IAM::User") {
+	for _, userResource := range ctx.GetResourcesByType("AWS::IAM::User") {
 		policyProp := userResource.GetProperty("Policies")
 		userName := userResource.GetStringProperty("GroupName")
 
@@ -57,7 +57,7 @@ func getUsers(ctx parser.FileContext) (users []iam.User) {
 }
 
 func getGroups(ctx parser.FileContext) (groups []iam.Group) {
-	for _, groupResource := range ctx.GetResourceByType("AWS::IAM::Group") {
+	for _, groupResource := range ctx.GetResourcesByType("AWS::IAM::Group") {
 		policyProp := groupResource.GetProperty("Policies")
 		groupName := groupResource.GetStringProperty("GroupName")
 

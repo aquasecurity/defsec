@@ -5,7 +5,6 @@ import (
 )
 
 type RDS struct {
-	types.Metadata
 	Instances []Instance
 	Clusters  []Cluster
 	Classic   Classic

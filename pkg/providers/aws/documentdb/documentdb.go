@@ -5,7 +5,6 @@ import (
 )
 
 type DocumentDB struct {
-	types.Metadata
 	Clusters []Cluster
 }
 

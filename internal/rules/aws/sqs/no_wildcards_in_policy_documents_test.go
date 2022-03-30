@@ -25,7 +25,6 @@ func TestCheckNoWildcardsInPolicyDocuments(t *testing.T) {
 		{
 			name: "AWS SQS policy document with wildcard action statement",
 			input: sqs.SQS{
-				Metadata: types.NewTestMetadata(),
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -60,7 +59,6 @@ func TestCheckNoWildcardsInPolicyDocuments(t *testing.T) {
 		{
 			name: "AWS SQS policy document with action statement list",
 			input: sqs.SQS{
-				Metadata: types.NewTestMetadata(),
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),

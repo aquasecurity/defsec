@@ -22,7 +22,6 @@ func TestCheckNoPublicEgress(t *testing.T) {
 		{
 			name: "Firewall outbound rule with multiple public destination addresses",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Firewalls: []compute.Firewall{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -43,7 +42,6 @@ func TestCheckNoPublicEgress(t *testing.T) {
 		{
 			name: "Firewall outbound rule with a private destination address",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Firewalls: []compute.Firewall{
 					{
 						Metadata: types.NewTestMetadata(),

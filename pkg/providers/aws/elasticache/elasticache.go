@@ -5,7 +5,6 @@ import (
 )
 
 type ElastiCache struct {
-	types.Metadata
 	Clusters          []Cluster
 	ReplicationGroups []ReplicationGroup
 	SecurityGroups    []SecurityGroup

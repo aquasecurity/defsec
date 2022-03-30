@@ -22,7 +22,6 @@ func TestCheckMetadataEndpointsDisabled(t *testing.T) {
 		{
 			name: "Cluster legacy metadata endpoints enabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckMetadataEndpointsDisabled(t *testing.T) {
 		{
 			name: "Cluster legacy metadata endpoints disabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

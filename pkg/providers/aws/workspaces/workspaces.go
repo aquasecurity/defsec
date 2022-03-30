@@ -5,7 +5,6 @@ import (
 )
 
 type WorkSpaces struct {
-	types.Metadata
 	WorkSpaces []WorkSpace
 }
 

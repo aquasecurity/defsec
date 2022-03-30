@@ -5,7 +5,6 @@ import (
 )
 
 type MSK struct {
-	types.Metadata
 	Clusters []Cluster
 }
 

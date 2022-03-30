@@ -22,7 +22,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "Elasticsearch domain with TLS v1.0",
 			input: elasticsearch.Elasticsearch{
-				Metadata: types.NewTestMetadata(),
 				Domains: []elasticsearch.Domain{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "Elasticsearch domain with TLS v1.2",
 			input: elasticsearch.Elasticsearch{
-				Metadata: types.NewTestMetadata(),
 				Domains: []elasticsearch.Domain{
 					{
 						Metadata: types.NewTestMetadata(),

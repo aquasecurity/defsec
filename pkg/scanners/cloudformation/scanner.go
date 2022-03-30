@@ -7,6 +7,7 @@ import (
 	"io/fs"
 	"sort"
 	"strings"
+	"sync"
 
 	"github.com/aquasecurity/defsec/internal/types"
 
@@ -29,9 +30,13 @@ type Scanner struct {
 	excludedRuleIDs   []string
 	ignoreCheckErrors bool
 	debugWriter       io.Writer
+	traceWriter       io.Writer
 	policyDirs        []string
+	dataDirs          []string
 	policyNamespaces  []string
 	parser            *parser.Parser
+	regoScanner       *rego.Scanner
+	sync.Mutex
 }
 
 // New creates a new Scanner
@@ -54,11 +59,24 @@ func (s *Scanner) debug(format string, args ...interface{}) {
 	_, _ = s.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
-func (s *Scanner) initRegoScanner() (*rego.Scanner, error) {
-	regoScanner := rego.NewScanner(rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...))
-	if err := regoScanner.LoadPolicies(true, s.policyDirs...); err != nil {
+func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
+	s.Lock()
+	defer s.Unlock()
+	if s.regoScanner != nil {
+		return s.regoScanner, nil
+	}
+	regoOpts := []rego.Option{
+		rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...),
+		rego.OptionWithDataDirs(s.dataDirs...),
+	}
+	if s.traceWriter != nil {
+		regoOpts = append(regoOpts, rego.OptionWithTrace(s.traceWriter))
+	}
+	regoScanner := rego.NewScanner(regoOpts...)
+	if err := regoScanner.LoadPolicies(true, srcFS, s.policyDirs...); err != nil {
 		return nil, err
 	}
+	s.regoScanner = regoScanner
 	return regoScanner, nil
 }
 
@@ -69,7 +87,11 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, dir string) (results sca
 		return nil, err
 	}
 
-	regoScanner, err := s.initRegoScanner()
+	if len(contexts) == 0 {
+		return nil, nil
+	}
+
+	regoScanner, err := s.initRegoScanner(fs)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +119,7 @@ func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (scan.Res
 		return nil, err
 	}
 
-	regoScanner, err := s.initRegoScanner()
+	regoScanner, err := s.initRegoScanner(fs)
 	if err != nil {
 		return nil, err
 	}
@@ -124,7 +146,6 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 			return nil, ctx.Err()
 		default:
 		}
-		s.debug("Executing rule: %s", rule.Rule().AVDID)
 		evalResult := rule.Evaluate(state)
 		if len(evalResult) > 0 {
 			s.debug("Found %d results for %s", len(evalResult), rule.Rule().AVDID)

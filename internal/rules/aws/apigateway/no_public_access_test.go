@@ -22,7 +22,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "API GET method without authorization",
 			input: apigateway.APIGateway{
-				Metadata: types.NewTestMetadata(),
 				APIs: []apigateway.API{
 					{
 						Metadata:     types.NewTestMetadata(),
@@ -43,7 +42,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "API OPTION method without authorization",
 			input: apigateway.APIGateway{
-				Metadata: types.NewTestMetadata(),
 				APIs: []apigateway.API{
 					{
 						Metadata:     types.NewTestMetadata(),
@@ -64,7 +62,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "API GET method with IAM authorization",
 			input: apigateway.APIGateway{
-				Metadata: types.NewTestMetadata(),
 				APIs: []apigateway.API{
 					{
 						Metadata:     types.NewTestMetadata(),

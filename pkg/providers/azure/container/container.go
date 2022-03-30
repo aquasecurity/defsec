@@ -5,7 +5,6 @@ import (
 )
 
 type Container struct {
-	types.Metadata
 	KubernetesClusters []KubernetesCluster
 }
 

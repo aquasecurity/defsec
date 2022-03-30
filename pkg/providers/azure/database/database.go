@@ -5,7 +5,6 @@ import (
 )
 
 type Database struct {
-	types.Metadata
 	MSSQLServers      []MSSQLServer
 	MariaDBServers    []MariaDBServer
 	MySQLServers      []MySQLServer

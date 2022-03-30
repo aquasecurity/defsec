@@ -22,7 +22,6 @@ func TestCheckNoPublicEgressSgr(t *testing.T) {
 		{
 			name: "AWS VPC security group rule with wildcard address",
 			input: vpc.VPC{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []vpc.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -42,7 +41,6 @@ func TestCheckNoPublicEgressSgr(t *testing.T) {
 		{
 			name: "AWS VPC security group rule with private address",
 			input: vpc.VPC{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []vpc.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),

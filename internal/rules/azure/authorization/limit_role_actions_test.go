@@ -22,7 +22,6 @@ func TestCheckLimitRoleActions(t *testing.T) {
 		{
 			name: "Wildcard action with all scopes",
 			input: authorization.Authorization{
-				Metadata: types.NewTestMetadata(),
 				RoleDefinitions: []authorization.RoleDefinition{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -45,7 +44,6 @@ func TestCheckLimitRoleActions(t *testing.T) {
 		{
 			name: "Wildcard action with specific scope",
 			input: authorization.Authorization{
-				Metadata: types.NewTestMetadata(),
 				RoleDefinitions: []authorization.RoleDefinition{
 					{
 						Metadata: types.NewTestMetadata(),

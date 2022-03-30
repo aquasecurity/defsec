@@ -22,7 +22,7 @@ Resources:
   Queue:
     Type: AWS::RDS::DBInstance
     Properties:
-      EnablePerformanceInsights: false
+      EnablePerformanceInsights: true
 
 `,
 }

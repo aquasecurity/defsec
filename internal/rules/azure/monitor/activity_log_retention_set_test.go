@@ -22,7 +22,6 @@ func TestCheckActivityLogRetentionSet(t *testing.T) {
 		{
 			name: "Log retention policy disabled",
 			input: monitor.Monitor{
-				Metadata: types.NewTestMetadata(),
 				LogProfiles: []monitor.LogProfile{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -39,7 +38,6 @@ func TestCheckActivityLogRetentionSet(t *testing.T) {
 		{
 			name: "Log retention policy enabled for 90 days",
 			input: monitor.Monitor{
-				Metadata: types.NewTestMetadata(),
 				LogProfiles: []monitor.LogProfile{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -56,7 +54,6 @@ func TestCheckActivityLogRetentionSet(t *testing.T) {
 		{
 			name: "Log retention policy enabled for 365 days",
 			input: monitor.Monitor{
-				Metadata: types.NewTestMetadata(),
 				LogProfiles: []monitor.LogProfile{
 					{
 						Metadata: types.NewTestMetadata(),

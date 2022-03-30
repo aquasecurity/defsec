@@ -22,7 +22,6 @@ func TestCheckRequireNumbersInPasswords(t *testing.T) {
 		{
 			name: "IAM password policy numbers not required",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				PasswordPolicy: iam.PasswordPolicy{
 					Metadata:       types.NewTestMetadata(),
 					RequireNumbers: types.Bool(false, types.NewTestMetadata()),
@@ -33,7 +32,6 @@ func TestCheckRequireNumbersInPasswords(t *testing.T) {
 		{
 			name: "IAM password policy numbers required",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				PasswordPolicy: iam.PasswordPolicy{
 					Metadata:       types.NewTestMetadata(),
 					RequireNumbers: types.Bool(true, types.NewTestMetadata()),

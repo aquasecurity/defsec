@@ -16,7 +16,7 @@ import (
 
 func Test_RegoScanning_Deny(t *testing.T) {
 
-	_, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `
 package defsec.test
 
@@ -25,12 +25,11 @@ deny {
 }
 `,
 	})
-	defer tidy()
 
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, tmp),
+		scanner.LoadPolicies(false, srcFS, "policies"),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -48,7 +47,7 @@ deny {
 }
 
 func Test_RegoScanning_Allow(t *testing.T) {
-	_, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `
 package defsec.test
 
@@ -57,12 +56,11 @@ deny {
 }
 `,
 	})
-	defer tidy()
 
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, tmp),
+		scanner.LoadPolicies(false, srcFS, "policies"),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -81,7 +79,7 @@ deny {
 
 func Test_RegoScanning_Namespace_Exception(t *testing.T) {
 
-	_, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `
 package defsec.test
 
@@ -100,12 +98,11 @@ exception[ns] {
 }
 `,
 	})
-	defer tidy()
 
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, tmp),
+		scanner.LoadPolicies(false, srcFS, "policies"),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -124,7 +121,7 @@ exception[ns] {
 }
 
 func Test_RegoScanning_Rule_Exception(t *testing.T) {
-	_, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `
 package defsec.test
 deny_evil {
@@ -139,12 +136,11 @@ exception[rules] {
 }
 `,
 	})
-	defer tidy()
 
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, tmp),
+		scanner.LoadPolicies(false, srcFS, "policies"),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -165,7 +161,7 @@ func Test_RegoScanning_WithRuntimeValues(t *testing.T) {
 
 	_ = os.Setenv("DEFSEC_RUNTIME_VAL", "AOK")
 
-	_, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `
 package defsec.test
 
@@ -175,12 +171,11 @@ deny_evil {
 }
 `,
 	})
-	defer tidy()
 
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, tmp),
+		scanner.LoadPolicies(false, srcFS, "policies"),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -198,7 +193,7 @@ deny_evil {
 }
 
 func Test_RegoScanning_WithDenyMessage(t *testing.T) {
-	_, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `
 package defsec.test
 
@@ -208,12 +203,11 @@ deny[msg] {
 }
 `,
 	})
-	defer tidy()
 
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, tmp),
+		scanner.LoadPolicies(false, srcFS, "policies"),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -234,7 +228,7 @@ deny[msg] {
 }
 
 func Test_RegoScanning_WithDenyMetadata_ImpliedPath(t *testing.T) {
-	_, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `
 package defsec.test
 
@@ -248,12 +242,11 @@ deny[res] {
 }
 `,
 	})
-	defer tidy()
 
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, tmp),
+		scanner.LoadPolicies(false, srcFS, "policies"),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -277,7 +270,7 @@ deny[res] {
 }
 
 func Test_RegoScanning_WithDenyMetadata_PersistedPath(t *testing.T) {
-	_, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `
 package defsec.test
 
@@ -292,12 +285,11 @@ deny[res] {
 }
 `,
 	})
-	defer tidy()
 
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, tmp),
+		scanner.LoadPolicies(false, srcFS, "policies"),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -321,7 +313,7 @@ deny[res] {
 }
 
 func Test_RegoScanning_WithStaticMetadata(t *testing.T) {
-	_, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `
 package defsec.test
 
@@ -348,12 +340,11 @@ deny[res] {
 }
 `,
 	})
-	defer tidy()
 
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, tmp),
+		scanner.LoadPolicies(false, srcFS, "policies"),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -385,7 +376,7 @@ deny[res] {
 }
 
 func Test_RegoScanning_WithMatchingInputSelector(t *testing.T) {
-	_, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `
 package defsec.test
 
@@ -399,12 +390,11 @@ deny {
 
 `,
 	})
-	defer tidy()
 
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, tmp),
+		scanner.LoadPolicies(false, srcFS, "policies"),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -422,7 +412,7 @@ deny {
 }
 
 func Test_RegoScanning_WithNonMatchingInputSelector(t *testing.T) {
-	_, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `
 package defsec.test
 
@@ -435,12 +425,11 @@ deny {
 }
 `,
 	})
-	defer tidy()
 
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, tmp),
+		scanner.LoadPolicies(false, srcFS, "policies"),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{

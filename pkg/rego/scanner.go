@@ -25,6 +25,7 @@ type Scanner struct {
 	runtimeValues  *ast.Term
 	compiler       *ast.Compiler
 	debugWriter    io.Writer
+	traceWriter    io.Writer
 	retriever      *MetadataRetriever
 }
 
@@ -54,9 +55,17 @@ func getModuleNamespace(module *ast.Module) string {
 	return strings.TrimPrefix(module.Package.Path.String(), "data.")
 }
 
+func (s *Scanner) debug(format string, args ...interface{}) {
+	if s.debugWriter == nil {
+		return
+	}
+	prefix := "[debug:scan:rego] "
+	_, _ = s.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
+}
+
 func (s *Scanner) runQuery(ctx context.Context, query string, input interface{}, disableTracing bool) (rego.ResultSet, error) {
 
-	trace := s.debugWriter != nil && !disableTracing
+	trace := s.traceWriter != nil && !disableTracing
 
 	options := []func(*rego.Rego){
 		rego.Query(query),
@@ -77,7 +86,7 @@ func (s *Scanner) runQuery(ctx context.Context, query string, input interface{},
 	}
 
 	if trace {
-		rego.PrintTrace(s.debugWriter, instance)
+		rego.PrintTrace(s.traceWriter, instance)
 	}
 	return set, nil
 }
@@ -89,6 +98,8 @@ type Input struct {
 }
 
 func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results, error) {
+
+	s.debug("Scanning %d inputs...", len(inputs))
 
 	var results scan.Results
 	var filteredInputs []Input
@@ -129,6 +140,10 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 		} else {
 			filteredInputs = make([]Input, len(inputs))
 			copy(filteredInputs, inputs)
+		}
+
+		if len(filteredInputs) == 0 {
+			continue
 		}
 
 		// all rules

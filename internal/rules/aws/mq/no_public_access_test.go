@@ -22,7 +22,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "AWS MQ Broker with public access enabled",
 			input: mq.MQ{
-				Metadata: types.NewTestMetadata(),
 				Brokers: []mq.Broker{
 					{
 						Metadata:     types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "AWS MQ Broker with public access disabled",
 			input: mq.MQ{
-				Metadata: types.NewTestMetadata(),
 				Brokers: []mq.Broker{
 					{
 						Metadata:     types.NewTestMetadata(),

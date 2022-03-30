@@ -5,7 +5,6 @@ import (
 )
 
 type SecurityCenter struct {
-	types.Metadata
 	Contacts      []Contact
 	Subscriptions []SubscriptionPricing
 }

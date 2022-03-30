@@ -22,7 +22,6 @@ func TestCheckEnableApiCacheEncryption(t *testing.T) {
 		{
 			name: "API unencrypted cache data",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				APIs: []sam.API{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableApiCacheEncryption(t *testing.T) {
 		{
 			name: "API encrypted cache data",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				APIs: []sam.API{
 					{
 						Metadata: types.NewTestMetadata(),

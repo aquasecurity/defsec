@@ -22,7 +22,6 @@ func TestCheckNoPublicIngress(t *testing.T) {
 		{
 			name: "Security group inbound rule with wildcard source address",
 			input: network.Network{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []network.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -44,7 +43,6 @@ func TestCheckNoPublicIngress(t *testing.T) {
 		{
 			name: "Security group inbound rule with private source address",
 			input: network.Network{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []network.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),

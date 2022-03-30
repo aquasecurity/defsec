@@ -22,7 +22,6 @@ func TestCheckNoPublicIp(t *testing.T) {
 		{
 			name: "Launch configuration with public access",
 			input: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata:          types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckNoPublicIp(t *testing.T) {
 		{
 			name: "Launch configuration without public access",
 			input: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata:          types.NewTestMetadata(),

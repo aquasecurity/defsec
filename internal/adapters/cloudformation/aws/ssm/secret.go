@@ -6,7 +6,7 @@ import (
 )
 
 func getSecrets(ctx parser.FileContext) (secrets []ssm.Secret) {
-	for _, r := range ctx.GetResourceByType("AWS::SecretsManager::Secret") {
+	for _, r := range ctx.GetResourcesByType("AWS::SecretsManager::Secret") {
 		secret := ssm.Secret{
 			Metadata: r.Metadata(),
 			KMSKeyID: r.GetStringProperty("KmsKeyId"),

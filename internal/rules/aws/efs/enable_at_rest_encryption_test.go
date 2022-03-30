@@ -22,7 +22,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "positive result",
 			input: efs.EFS{
-				Metadata: types.NewTestMetadata(),
 				FileSystems: []efs.FileSystem{
 					{
 						Metadata:  types.NewTestMetadata(),
@@ -34,7 +33,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "negative result",
 			input: efs.EFS{
-				Metadata: types.NewTestMetadata(),
 				FileSystems: []efs.FileSystem{
 					{
 						Metadata:  types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckNoClassicResources(t *testing.T) {
 		{
 			name: "Classic resources present",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Classic: rds.Classic{
 					Metadata: types.NewTestMetadata(),
 					DBSecurityGroups: []rds.DBSecurityGroup{
@@ -35,10 +34,8 @@ func TestCheckNoClassicResources(t *testing.T) {
 			expected: true,
 		},
 		{
-			name: "no Classic resources present",
-			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
-			},
+			name:     "no Classic resources present",
+			input:    rds.RDS{},
 			expected: false,
 		},
 	}

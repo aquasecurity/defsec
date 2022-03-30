@@ -22,7 +22,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "ElastiCache replication group with at-rest encryption disabled",
 			input: elasticache.ElastiCache{
-				Metadata: types.NewTestMetadata(),
 				ReplicationGroups: []elasticache.ReplicationGroup{
 					{
 						Metadata:                types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "ElastiCache replication group with at-rest encryption enabled",
 			input: elasticache.ElastiCache{
-				Metadata: types.NewTestMetadata(),
 				ReplicationGroups: []elasticache.ReplicationGroup{
 					{
 						Metadata:                types.NewTestMetadata(),

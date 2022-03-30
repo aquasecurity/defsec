@@ -5,7 +5,6 @@ import (
 )
 
 type SNS struct {
-	types.Metadata
 	Topics []Topic
 }
 

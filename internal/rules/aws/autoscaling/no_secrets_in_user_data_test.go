@@ -23,7 +23,6 @@ func TestCheckNoSecretsInUserData(t *testing.T) {
 		{
 			name: "Launch template with sensitive info in user data",
 			input: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchTemplates: []autoscaling.LaunchTemplate{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -43,7 +42,6 @@ func TestCheckNoSecretsInUserData(t *testing.T) {
 		{
 			name: "Launch template with no sensitive info in user data",
 			input: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchTemplates: []autoscaling.LaunchTemplate{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckEnableAutoRepair(t *testing.T) {
 		{
 			name: "Node pool auto repair disabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -43,7 +42,6 @@ func TestCheckEnableAutoRepair(t *testing.T) {
 		{
 			name: "Node pool auto repair enabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

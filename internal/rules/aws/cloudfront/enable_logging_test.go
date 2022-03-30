@@ -22,7 +22,6 @@ func TestCheckEnableLogging(t *testing.T) {
 		{
 			name: "CloudFront distribution missing logging configuration",
 			input: cloudfront.Cloudfront{
-				Metadata: types.NewTestMetadata(),
 				Distributions: []cloudfront.Distribution{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableLogging(t *testing.T) {
 		{
 			name: "CloudFront distribution with logging configured",
 			input: cloudfront.Cloudfront{
-				Metadata: types.NewTestMetadata(),
 				Distributions: []cloudfront.Distribution{
 					{
 						Metadata: types.NewTestMetadata(),

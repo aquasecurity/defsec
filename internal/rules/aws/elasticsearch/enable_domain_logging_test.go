@@ -22,7 +22,6 @@ func TestCheckEnableDomainLogging(t *testing.T) {
 		{
 			name: "Elasticsearch domain with audit logging disabled",
 			input: elasticsearch.Elasticsearch{
-				Metadata: types.NewTestMetadata(),
 				Domains: []elasticsearch.Domain{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableDomainLogging(t *testing.T) {
 		{
 			name: "Elasticsearch domain with audit logging enabled",
 			input: elasticsearch.Elasticsearch{
-				Metadata: types.NewTestMetadata(),
 				Domains: []elasticsearch.Domain{
 					{
 						Metadata: types.NewTestMetadata(),

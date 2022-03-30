@@ -22,7 +22,6 @@ func TestCheckEnableControlPlaneLogging(t *testing.T) {
 		{
 			name: "EKS cluster with all cluster logging disabled",
 			input: eks.EKS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []eks.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -41,7 +40,6 @@ func TestCheckEnableControlPlaneLogging(t *testing.T) {
 		{
 			name: "EKS cluster with only some cluster logging enabled",
 			input: eks.EKS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []eks.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -60,7 +58,6 @@ func TestCheckEnableControlPlaneLogging(t *testing.T) {
 		{
 			name: "EKS cluster with all cluster logging enabled",
 			input: eks.EKS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []eks.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

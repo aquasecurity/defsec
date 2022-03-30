@@ -22,7 +22,6 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 		{
 			name: "MariaDB server SSL not enforced",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MariaDBServers: []database.MariaDBServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 		{
 			name: "MySQL server SSL not enforced",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MySQLServers: []database.MySQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -54,7 +52,6 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 		{
 			name: "PostgreSQL server SSL not enforced",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -70,7 +67,6 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 		{
 			name: "MariaDB server SSL enforced",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MariaDBServers: []database.MariaDBServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -86,7 +82,6 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 		{
 			name: "MySQL server SSL enforced",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MySQLServers: []database.MySQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -102,7 +97,6 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 		{
 			name: "PostgreSQL server SSL enforced",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),

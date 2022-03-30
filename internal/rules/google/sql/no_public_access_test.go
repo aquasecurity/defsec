@@ -22,7 +22,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "Instance settings set with IPv4 enabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -41,7 +40,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "Instance settings set with IPv4 disabled but public CIDR in authorized networks",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -68,7 +66,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "Instance settings set with IPv4 disabled and private CIDR",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata: types.NewTestMetadata(),

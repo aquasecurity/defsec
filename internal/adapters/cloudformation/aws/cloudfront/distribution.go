@@ -8,7 +8,7 @@ import (
 
 func getDistributions(ctx parser.FileContext) (distributions []cloudfront.Distribution) {
 
-	distributionResources := ctx.GetResourceByType("AWS::CloudFront::Distribution")
+	distributionResources := ctx.GetResourcesByType("AWS::CloudFront::Distribution")
 
 	for _, r := range distributionResources {
 		distribution := cloudfront.Distribution{
@@ -34,17 +34,20 @@ func getDefaultCacheBehaviour(r *parser.Resource) cloudfront.CacheBehaviour {
 	defaultCache := r.GetProperty("DistributionConfig.DefaultCacheBehavior")
 	if defaultCache.IsNil() {
 		return cloudfront.CacheBehaviour{
+			Metadata:             r.Metadata(),
 			ViewerProtocolPolicy: types.StringDefault("allow-all", r.Metadata()),
 		}
 	}
 	protoProp := r.GetProperty("DistributionConfig.DefaultCacheBehavior.ViewerProtocolPolicy")
 	if protoProp.IsNotString() {
 		return cloudfront.CacheBehaviour{
+			Metadata:             r.Metadata(),
 			ViewerProtocolPolicy: types.StringDefault("allow-all", r.Metadata()),
 		}
 	}
 
 	return cloudfront.CacheBehaviour{
+		Metadata:             r.Metadata(),
 		ViewerProtocolPolicy: protoProp.AsStringValue(),
 	}
 }

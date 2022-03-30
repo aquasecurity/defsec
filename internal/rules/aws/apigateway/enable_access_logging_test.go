@@ -22,7 +22,6 @@ func TestCheckEnableAccessLogging(t *testing.T) {
 		{
 			name: "API Gateway stage with no log group ARN",
 			input: apigateway.APIGateway{
-				Metadata: types.NewTestMetadata(),
 				APIs: []apigateway.API{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -43,7 +42,6 @@ func TestCheckEnableAccessLogging(t *testing.T) {
 		{
 			name: "API Gateway stage with log group ARN",
 			input: apigateway.APIGateway{
-				Metadata: types.NewTestMetadata(),
 				APIs: []apigateway.API{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -5,7 +5,6 @@ import (
 )
 
 type Network struct {
-	types.Metadata
 	SecurityGroups         []SecurityGroup
 	NetworkWatcherFlowLogs []NetworkWatcherFlowLog
 }

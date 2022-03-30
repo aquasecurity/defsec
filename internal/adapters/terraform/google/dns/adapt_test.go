@@ -40,7 +40,6 @@ func Test_Adapt(t *testing.T) {
 			}
 `,
 			expected: dns.DNS{
-				Metadata: types.NewTestMetadata(),
 				ManagedZones: []dns.ManagedZone{
 					{
 						Metadata: types.NewTestMetadata(),

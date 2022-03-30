@@ -22,7 +22,6 @@ func TestCheckEnableDiskEncryption(t *testing.T) {
 		{
 			name: "AWS Workspace with unencrypted root volume",
 			input: workspaces.WorkSpaces{
-				Metadata: types.NewTestMetadata(),
 				WorkSpaces: []workspaces.WorkSpace{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -48,7 +47,6 @@ func TestCheckEnableDiskEncryption(t *testing.T) {
 		{
 			name: "AWS Workspace with unencrypted user volume",
 			input: workspaces.WorkSpaces{
-				Metadata: types.NewTestMetadata(),
 				WorkSpaces: []workspaces.WorkSpace{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -75,7 +73,6 @@ func TestCheckEnableDiskEncryption(t *testing.T) {
 		{
 			name: "AWS Workspace with encrypted user and root volumes",
 			input: workspaces.WorkSpaces{
-				Metadata: types.NewTestMetadata(),
 				WorkSpaces: []workspaces.WorkSpace{
 					{
 						Metadata: types.NewTestMetadata(),

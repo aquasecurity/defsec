@@ -22,7 +22,6 @@ func TestCheckNoEncryptionOverride(t *testing.T) {
 		{
 			name: "AWS Athena workgroup doesn't enforce configuration",
 			input: athena.Athena{
-				Metadata: types.NewTestMetadata(),
 				Workgroups: []athena.Workgroup{
 					{
 						Metadata:             types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckNoEncryptionOverride(t *testing.T) {
 		{
 			name: "AWS Athena workgroup enforces configuration",
 			input: athena.Athena{
-				Metadata: types.NewTestMetadata(),
 				Workgroups: []athena.Workgroup{
 					{
 						Metadata:             types.NewTestMetadata(),

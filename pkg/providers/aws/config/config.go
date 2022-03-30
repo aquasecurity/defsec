@@ -5,7 +5,6 @@ import (
 )
 
 type Config struct {
-	types.Metadata
 	ConfigurationAggregrator ConfigurationAggregrator
 }
 

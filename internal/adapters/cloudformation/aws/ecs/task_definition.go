@@ -8,7 +8,7 @@ import (
 
 func getTaskDefinitions(ctx parser.FileContext) (taskDefinitions []ecs.TaskDefinition) {
 
-	taskDefResources := ctx.GetResourceByType("AWS::ECS::TaskDefinition")
+	taskDefResources := ctx.GetResourcesByType("AWS::ECS::TaskDefinition")
 
 	for _, r := range taskDefResources {
 		taskDef := ecs.TaskDefinition{

@@ -22,7 +22,6 @@ func TestCheckEnableWaf(t *testing.T) {
 		{
 			name: "CloudFront distribution missing WAF",
 			input: cloudfront.Cloudfront{
-				Metadata: types.NewTestMetadata(),
 				Distributions: []cloudfront.Distribution{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableWaf(t *testing.T) {
 		{
 			name: "CloudFront distribution with WAF provided",
 			input: cloudfront.Cloudfront{
-				Metadata: types.NewTestMetadata(),
 				Distributions: []cloudfront.Distribution{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckNoCrossDbOwnershipChaining(t *testing.T) {
 		{
 			name: "Instance cross database ownership chaining enabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),
@@ -42,7 +41,6 @@ func TestCheckNoCrossDbOwnershipChaining(t *testing.T) {
 		{
 			name: "Instance cross database ownership chaining disabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),

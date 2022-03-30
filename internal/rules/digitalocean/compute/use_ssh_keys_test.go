@@ -22,7 +22,6 @@ func TestCheckUseSshKeys(t *testing.T) {
 		{
 			name: "Droplet missing SSH keys",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Droplets: []compute.Droplet{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckUseSshKeys(t *testing.T) {
 		{
 			name: "Droplet with an SSH key provided",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Droplets: []compute.Droplet{
 					{
 						Metadata: types.NewTestMetadata(),

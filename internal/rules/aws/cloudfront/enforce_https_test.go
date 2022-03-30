@@ -22,7 +22,6 @@ func TestCheckEnforceHttps(t *testing.T) {
 		{
 			name: "CloudFront distribution default cache behaviour with allow all policy",
 			input: cloudfront.Cloudfront{
-				Metadata: types.NewTestMetadata(),
 				Distributions: []cloudfront.Distribution{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnforceHttps(t *testing.T) {
 		{
 			name: "CloudFront distribution ordered cache behaviour with allow all policy",
 			input: cloudfront.Cloudfront{
-				Metadata: types.NewTestMetadata(),
 				Distributions: []cloudfront.Distribution{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -60,7 +58,6 @@ func TestCheckEnforceHttps(t *testing.T) {
 		{
 			name: "CloudFront distribution cache behaviours allowing HTTPS only",
 			input: cloudfront.Cloudfront{
-				Metadata: types.NewTestMetadata(),
 				Distributions: []cloudfront.Distribution{
 					{
 						Metadata: types.NewTestMetadata(),

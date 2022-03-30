@@ -22,7 +22,6 @@ func TestCheckAddDescriptionToSecurityGroup(t *testing.T) {
 		{
 			name: "Redshift security group without description",
 			input: redshift.Redshift{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []redshift.SecurityGroup{
 					{
 						Metadata:    types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckAddDescriptionToSecurityGroup(t *testing.T) {
 		{
 			name: "Redshift security group with description",
 			input: redshift.Redshift{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []redshift.SecurityGroup{
 					{
 						Metadata:    types.NewTestMetadata(),

@@ -2,7 +2,6 @@ package dockerfile
 
 import (
 	"context"
-	"path/filepath"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -16,7 +15,7 @@ import (
 
 func Test_BasicScan(t *testing.T) {
 
-	fs, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"/code/Dockerfile": `FROM ubuntu
 
 USER root
@@ -52,9 +51,8 @@ deny[res] {
 
 `,
 	})
-	defer tidy()
 
-	scanner := NewScanner(OptionWithPolicyDirs(filepath.Join(tmp, "/rules")))
+	scanner := NewScanner(OptionWithPolicyDirs("rules"))
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
 	require.NoError(t, err)

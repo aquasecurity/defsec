@@ -5,7 +5,6 @@ import (
 )
 
 type ELB struct {
-	types.Metadata
 	LoadBalancers []LoadBalancer
 }
 

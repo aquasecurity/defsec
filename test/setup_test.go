@@ -2,6 +2,7 @@ package test
 
 import (
 	"context"
+	"sync"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
@@ -9,7 +10,8 @@ import (
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 
-	scanner "github.com/aquasecurity/defsec/pkg/scanners/terraform"
+	cfScanner "github.com/aquasecurity/defsec/pkg/scanners/cloudformation"
+	tfScanner "github.com/aquasecurity/defsec/pkg/scanners/terraform"
 
 	"github.com/stretchr/testify/require"
 
@@ -17,10 +19,10 @@ import (
 )
 
 func createModulesFromSource(t *testing.T, source string, ext string) terraform.Modules {
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"source" + ext: source,
 	})
-	defer tidy()
+
 	p := parser.New(parser.OptionStopOnHCLError(true))
 	if err := p.ParseFS(context.TODO(), fs, "."); err != nil {
 		t.Fatal(err)
@@ -33,31 +35,74 @@ func createModulesFromSource(t *testing.T, source string, ext string) terraform.
 }
 
 func scanHCLWithWorkspace(t *testing.T, source string, workspace string) scan.Results {
-	return scanHCL(t, source, scanner.OptionWithWorkspaceName(workspace))
+	return scanHCL(t, source, tfScanner.OptionWithWorkspaceName(workspace))
 }
 
-func scanHCL(t *testing.T, source string, options ...scanner.Option) scan.Results {
+var terraformScanner *tfScanner.Scanner
+var tfLock sync.RWMutex
+var cloudformationScanner *cfScanner.Scanner
+var cfLock sync.RWMutex
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+func scanHCL(t *testing.T, source string, options ...tfScanner.Option) scan.Results {
+
+	fs := testutil.CreateFS(t, map[string]string{
 		"main.tf": source,
 	})
-	defer tidy()
 
-	s := scanner.New(options...)
-	results, err := s.ScanFS(context.TODO(), fs, ".")
+	tfLock.RLock()
+	localScanner := terraformScanner
+	tfLock.RUnlock()
+	if localScanner == nil || len(options) > 0 {
+		tfLock.RLock()
+		localScanner = tfScanner.New(options...)
+		tfLock.RUnlock()
+		if len(options) == 0 {
+			tfLock.Lock()
+			terraformScanner = localScanner
+			tfLock.Unlock()
+		}
+	}
+	tfLock.RLock()
+	results, err := localScanner.ScanFS(context.TODO(), fs, ".")
+	tfLock.RUnlock()
 	require.NoError(t, err)
 	return results
 }
 
 func scanJSON(t *testing.T, source string) scan.Results {
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"main.tf.json": source,
 	})
-	defer tidy()
 
-	s := scanner.New()
+	s := tfScanner.New()
 	results, _, err := s.ScanFSWithMetrics(context.TODO(), fs, ".")
+	require.NoError(t, err)
+	return results
+}
+
+func scanCF(t *testing.T, source string, options ...cfScanner.Option) scan.Results {
+
+	fs := testutil.CreateFS(t, map[string]string{
+		"main.yaml": source,
+	})
+
+	cfLock.RLock()
+	localScanner := cloudformationScanner
+	cfLock.RUnlock()
+	if localScanner == nil || len(options) > 0 {
+		cfLock.RLock()
+		localScanner = cfScanner.New(options...)
+		cfLock.RUnlock()
+		if len(options) == 0 {
+			cfLock.Lock()
+			cloudformationScanner = localScanner
+			cfLock.Unlock()
+		}
+	}
+	cfLock.RLock()
+	results, err := localScanner.ScanFS(context.TODO(), fs, ".")
+	cfLock.RUnlock()
 	require.NoError(t, err)
 	return results
 }

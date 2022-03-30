@@ -22,7 +22,6 @@ func TestCheckAddDescriptionToSecurityGroupRule(t *testing.T) {
 		{
 			name: "AWS VPC security group rule has no description",
 			input: vpc.VPC{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []vpc.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckAddDescriptionToSecurityGroupRule(t *testing.T) {
 		{
 			name: "AWS VPC security group rule has description",
 			input: vpc.VPC{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []vpc.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),

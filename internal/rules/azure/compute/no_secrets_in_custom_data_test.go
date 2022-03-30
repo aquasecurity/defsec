@@ -22,7 +22,6 @@ func TestCheckNoSecretsInCustomData(t *testing.T) {
 		{
 			name: "Secrets in custom data",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				LinuxVirtualMachines: []compute.LinuxVirtualMachine{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckNoSecretsInCustomData(t *testing.T) {
 		{
 			name: "No secrets in custom data",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				LinuxVirtualMachines: []compute.LinuxVirtualMachine{
 					{
 						Metadata: types.NewTestMetadata(),

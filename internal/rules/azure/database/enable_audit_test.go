@@ -22,7 +22,6 @@ func TestCheckEnableAudit(t *testing.T) {
 		{
 			name: "MS SQL server extended audit policy not configured",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata:                 types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableAudit(t *testing.T) {
 		{
 			name: "MS SQL server extended audit policy configured",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),

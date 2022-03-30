@@ -22,7 +22,6 @@ func TestCheckAlbNotPublic(t *testing.T) {
 		{
 			name: "Load balancer publicly accessible",
 			input: elb.ELB{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -36,7 +35,6 @@ func TestCheckAlbNotPublic(t *testing.T) {
 		{
 			name: "Load balancer internally accessible",
 			input: elb.ELB{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata: types.NewTestMetadata(),

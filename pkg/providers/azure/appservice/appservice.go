@@ -5,7 +5,6 @@ import (
 )
 
 type AppService struct {
-	types.Metadata
 	Services     []Service
 	FunctionApps []FunctionApp
 }

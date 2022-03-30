@@ -22,7 +22,6 @@ func TestCheckDisablePasswordAuthentication(t *testing.T) {
 		{
 			name: "Linux VM password authentication enabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				LinuxVirtualMachines: []compute.LinuxVirtualMachine{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckDisablePasswordAuthentication(t *testing.T) {
 		{
 			name: "Linux VM password authentication disabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				LinuxVirtualMachines: []compute.LinuxVirtualMachine{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckSetRequiredContactDetails(t *testing.T) {
 		{
 			name: "Contact's phone number missing",
 			input: securitycenter.SecurityCenter{
-				Metadata: types.NewTestMetadata(),
 				Contacts: []securitycenter.Contact{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckSetRequiredContactDetails(t *testing.T) {
 		{
 			name: "Contact's phone number provided",
 			input: securitycenter.SecurityCenter{
-				Metadata: types.NewTestMetadata(),
 				Contacts: []securitycenter.Contact{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckNoClassicResources(t *testing.T) {
 		{
 			name: "security groups present",
 			input: redshift.Redshift{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []redshift.SecurityGroup{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -32,10 +31,8 @@ func TestCheckNoClassicResources(t *testing.T) {
 			expected: true,
 		},
 		{
-			name: "no security groups",
-			input: redshift.Redshift{
-				Metadata: types.NewTestMetadata(),
-			},
+			name:     "no security groups",
+			input:    redshift.Redshift{},
 			expected: false,
 		},
 	}

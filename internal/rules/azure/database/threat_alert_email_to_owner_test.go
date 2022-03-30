@@ -22,7 +22,6 @@ func TestCheckThreatAlertEmailToOwner(t *testing.T) {
 		{
 			name: "MS SQL Server alert account admins disabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckThreatAlertEmailToOwner(t *testing.T) {
 		{
 			name: "MS SQL Server alert account admins enabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),

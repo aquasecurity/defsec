@@ -36,7 +36,6 @@ func Test_Adapt(t *testing.T) {
 			  }
 `,
 			expected: bigquery.BigQuery{
-				Metadata: types.NewTestMetadata(),
 				Datasets: []bigquery.Dataset{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -67,7 +66,6 @@ func Test_Adapt(t *testing.T) {
 			  }
 `,
 			expected: bigquery.BigQuery{
-				Metadata: types.NewTestMetadata(),
 				Datasets: []bigquery.Dataset{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -85,7 +83,6 @@ func Test_Adapt(t *testing.T) {
 			  }
 `,
 			expected: bigquery.BigQuery{
-				Metadata: types.NewTestMetadata(),
 				Datasets: []bigquery.Dataset{
 					{
 						Metadata: types.NewTestMetadata(),

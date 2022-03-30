@@ -22,7 +22,6 @@ func TestCheckPgLogDisconnections(t *testing.T) {
 		{
 			name: "Instance disconnections logging disabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),
@@ -42,7 +41,6 @@ func TestCheckPgLogDisconnections(t *testing.T) {
 		{
 			name: "Instance disconnections logging enabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),

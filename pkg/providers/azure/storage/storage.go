@@ -5,7 +5,6 @@ import (
 )
 
 type Storage struct {
-	types.Metadata
 	Accounts []Account
 }
 

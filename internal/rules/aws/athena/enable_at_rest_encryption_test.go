@@ -22,7 +22,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "AWS Athena database unencrypted",
 			input: athena.Athena{
-				Metadata: types.NewTestMetadata(),
 				Databases: []athena.Database{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "AWS Athena workgroup unencrypted",
 			input: athena.Athena{
-				Metadata: types.NewTestMetadata(),
 				Workgroups: []athena.Workgroup{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -54,7 +52,6 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 		{
 			name: "AWS Athena database and workgroup encrypted",
 			input: athena.Athena{
-				Metadata: types.NewTestMetadata(),
 				Databases: []athena.Database{
 					{
 						Metadata: types.NewTestMetadata(),

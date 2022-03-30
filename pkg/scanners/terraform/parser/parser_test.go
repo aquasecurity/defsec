@@ -16,7 +16,7 @@ import (
 
 func Test_BasicParsing(t *testing.T) {
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"test.tf": `
 
 locals {
@@ -51,7 +51,6 @@ data "cats_cat" "the-cats-mother" {
 
 `,
 	})
-	defer tidy()
 
 	parser := New(OptionStopOnHCLError(true))
 	if err := parser.ParseFS(context.TODO(), fs, "."); err != nil {
@@ -117,7 +116,7 @@ data "cats_cat" "the-cats-mother" {
 
 func Test_Modules(t *testing.T) {
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"code/test.tf": `
 module "my-mod" {
 	source = "../module"
@@ -138,7 +137,6 @@ output "mod_result" {
 }
 `,
 	})
-	defer tidy()
 
 	parser := New(OptionStopOnHCLError(true))
 	if err := parser.ParseFS(context.TODO(), fs, "code"); err != nil {
@@ -182,7 +180,7 @@ output "mod_result" {
 
 func Test_NestedParentModule(t *testing.T) {
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"code/test.tf": `
 module "my-mod" {
 	source = "../."
@@ -203,7 +201,6 @@ output "mod_result" {
 }
 `,
 	})
-	defer tidy()
 
 	parser := New(OptionStopOnHCLError(true))
 	if err := parser.ParseFS(context.TODO(), fs, "code"); err != nil {

@@ -22,7 +22,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "Minimum TLS version TLS1_0",
 			input: appservice.AppService{
-				Metadata: types.NewTestMetadata(),
 				Services: []appservice.Service{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -41,7 +40,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "Minimum TLS version TLS1_2",
 			input: appservice.AppService{
-				Metadata: types.NewTestMetadata(),
 				Services: []appservice.Service{
 					{
 						Metadata: types.NewTestMetadata(),

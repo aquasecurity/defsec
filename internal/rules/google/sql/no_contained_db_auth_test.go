@@ -22,7 +22,6 @@ func TestCheckNoContainedDbAuth(t *testing.T) {
 		{
 			name: "Instance contained database authentication enabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),
@@ -42,7 +41,6 @@ func TestCheckNoContainedDbAuth(t *testing.T) {
 		{
 			name: "Instance contained database authentication disabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),

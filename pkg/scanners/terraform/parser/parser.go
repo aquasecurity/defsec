@@ -227,7 +227,7 @@ func (p *Parser) EvaluateAll(ctx context.Context, target fs.FS) (terraform.Modul
 		inputVars = p.moduleBlock.Values().AsValueMap()
 		p.debug("Added %d input variables from module definition.", len(inputVars))
 	} else {
-		inputVars, err = loadTFVars(p.tfvarsPaths)
+		inputVars, err = loadTFVars(target, p.tfvarsPaths)
 		if err != nil {
 			return nil, cty.NilVal, err
 		}

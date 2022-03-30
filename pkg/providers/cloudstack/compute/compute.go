@@ -5,7 +5,6 @@ import (
 )
 
 type Compute struct {
-	types.Metadata
 	Instances []Instance
 }
 

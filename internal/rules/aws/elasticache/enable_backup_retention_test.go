@@ -22,7 +22,6 @@ func TestCheckEnableBackupRetention(t *testing.T) {
 		{
 			name: "Cluster snapshot retention days set to 0",
 			input: elasticache.ElastiCache{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []elasticache.Cluster{
 					{
 						Metadata:               types.NewTestMetadata(),
@@ -37,7 +36,6 @@ func TestCheckEnableBackupRetention(t *testing.T) {
 		{
 			name: "Cluster snapshot retention days set to 5",
 			input: elasticache.ElastiCache{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []elasticache.Cluster{
 					{
 						Metadata:               types.NewTestMetadata(),

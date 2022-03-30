@@ -22,7 +22,6 @@ func TestCheckEnableLogExport(t *testing.T) {
 		{
 			name: "Neptune Cluster with audit logging disabled",
 			input: neptune.Neptune{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []neptune.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableLogExport(t *testing.T) {
 		{
 			name: "Neptune Cluster with audit logging enabled",
 			input: neptune.Neptune{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []neptune.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

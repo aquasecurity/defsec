@@ -5,7 +5,6 @@ import (
 )
 
 type CloudWatch struct {
-	types.Metadata
 	LogGroups []LogGroup
 }
 

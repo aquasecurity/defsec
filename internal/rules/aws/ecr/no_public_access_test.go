@@ -25,7 +25,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "ECR repository policy with wildcard principal",
 			input: ecr.ECR{
-				Metadata: types.NewTestMetadata(),
 				Repositories: []ecr.Repository{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -73,7 +72,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "ECR repository policy with specific principal",
 			input: ecr.ECR{
-				Metadata: types.NewTestMetadata(),
 				Repositories: []ecr.Repository{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckNoOsloginOverride(t *testing.T) {
 		{
 			name: "Instance OS login disabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata:       types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckNoOsloginOverride(t *testing.T) {
 		{
 			name: "Instance OS login enabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata:       types.NewTestMetadata(),

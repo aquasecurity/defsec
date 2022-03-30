@@ -23,7 +23,6 @@ func TestCheckIMDSAccessRequiresToken(t *testing.T) {
 		{
 			name: "Launch configuration with optional tokens",
 			input: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckIMDSAccessRequiresToken(t *testing.T) {
 		{
 			name: "Launch template with optional tokens",
 			input: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchTemplates: []autoscaling.LaunchTemplate{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -60,7 +58,6 @@ func TestCheckIMDSAccessRequiresToken(t *testing.T) {
 		{
 			name: "Launch configuration with required tokens",
 			input: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -25,7 +25,6 @@ Resources:
   HttpApi:
     Type: AWS::Serverless::HttpApi
     Properties:
-    Properties:
       Name: Good SAM API example
       StageName: Prod
       Tracing: Passthrough

@@ -22,7 +22,6 @@ func TestCheckIMDSAccessRequiresToken(t *testing.T) {
 		{
 			name: "positive result",
 			input: ec2.EC2{
-				Metadata: types.NewTestMetadata(),
 				Instances: []ec2.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -39,7 +38,6 @@ func TestCheckIMDSAccessRequiresToken(t *testing.T) {
 		{
 			name: "negative result",
 			input: ec2.EC2{
-				Metadata: types.NewTestMetadata(),
 				Instances: []ec2.Instance{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckEnableStandardSubscription(t *testing.T) {
 		{
 			name: "Security center set with free subscription",
 			input: securitycenter.SecurityCenter{
-				Metadata: types.NewTestMetadata(),
 				Subscriptions: []securitycenter.SubscriptionPricing{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableStandardSubscription(t *testing.T) {
 		{
 			name: "Security center set with standard subscription",
 			input: securitycenter.SecurityCenter{
-				Metadata: types.NewTestMetadata(),
 				Subscriptions: []securitycenter.SubscriptionPricing{
 					{
 						Metadata: types.NewTestMetadata(),

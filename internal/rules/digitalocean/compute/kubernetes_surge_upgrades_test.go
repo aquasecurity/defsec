@@ -22,7 +22,6 @@ func TestCheckKubernetesSurgeUpgrades(t *testing.T) {
 		{
 			name: "Kubernetes cluster surge upgrade disabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				KubernetesClusters: []compute.KubernetesCluster{
 					{
 						Metadata:     types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckKubernetesSurgeUpgrades(t *testing.T) {
 		{
 			name: "Kubernetes cluster surge upgrade enabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				KubernetesClusters: []compute.KubernetesCluster{
 					{
 						Metadata:     types.NewTestMetadata(),

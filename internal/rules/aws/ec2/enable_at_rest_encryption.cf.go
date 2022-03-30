@@ -17,7 +17,6 @@ Resources:
             Iops: "200"
             DeleteOnTermination: "false"
             VolumeSize: "20"
-        - DeviceName: "/dev/sdk"
 
 `,
 }
@@ -39,7 +38,6 @@ Resources:
             Iops: "200"
             DeleteOnTermination: "false"
             VolumeSize: "20"
-        - DeviceName: "/dev/sdk"
 
 `,
 }

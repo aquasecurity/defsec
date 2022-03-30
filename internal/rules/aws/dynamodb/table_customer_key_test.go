@@ -22,7 +22,6 @@ func TestCheckTableCustomerKey(t *testing.T) {
 		{
 			name: "Cluster encryption missing KMS key",
 			input: dynamodb.DynamoDB{
-				Metadata: types.NewTestMetadata(),
 				DAXClusters: []dynamodb.DAXCluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckTableCustomerKey(t *testing.T) {
 		{
 			name: "Cluster encryption using default KMS key",
 			input: dynamodb.DynamoDB{
-				Metadata: types.NewTestMetadata(),
 				DAXClusters: []dynamodb.DAXCluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -54,7 +52,6 @@ func TestCheckTableCustomerKey(t *testing.T) {
 		{
 			name: "Cluster encryption using proper KMS key",
 			input: dynamodb.DynamoDB{
-				Metadata: types.NewTestMetadata(),
 				DAXClusters: []dynamodb.DAXCluster{
 					{
 						Metadata: types.NewTestMetadata(),

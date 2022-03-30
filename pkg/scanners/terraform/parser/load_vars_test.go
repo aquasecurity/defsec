@@ -1,8 +1,9 @@
 package parser
 
 import (
-	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/test/testutil"
 
@@ -12,7 +13,7 @@ import (
 
 func Test_JsonVarsFile(t *testing.T) {
 
-	_, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"test.tfvars.json": `
 {
 	"variable": {
@@ -26,9 +27,9 @@ func Test_JsonVarsFile(t *testing.T) {
 }
 `,
 	})
-	defer tidy()
 
-	vars, _ := loadTFVars([]string{filepath.Join(tmp, "test.tfvars.json")})
+	vars, err := loadTFVars(fs, []string{"test.tfvars.json"})
+	require.NoError(t, err)
 	assert.Equal(t, "bar", vars["variable"].GetAttr("foo").GetAttr("default").AsString())
 	assert.Equal(t, "qux", vars["variable"].GetAttr("baz").AsString())
 	assert.Equal(t, true, vars["foo2"].True())

@@ -22,7 +22,6 @@ func TestCheckEnforceHttps(t *testing.T) {
 		{
 			name: "Function app doesn't enforce HTTPS",
 			input: appservice.AppService{
-				Metadata: types.NewTestMetadata(),
 				FunctionApps: []appservice.FunctionApp{
 					{
 						Metadata:  types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnforceHttps(t *testing.T) {
 		{
 			name: "Function app enforces HTTPS",
 			input: appservice.AppService{
-				Metadata: types.NewTestMetadata(),
 				FunctionApps: []appservice.FunctionApp{
 					{
 						Metadata:  types.NewTestMetadata(),

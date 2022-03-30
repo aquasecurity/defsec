@@ -22,7 +22,6 @@ func TestCheckEnableStackdriverLogging(t *testing.T) {
 		{
 			name: "Cluster missing logging service provider",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata:       types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableStackdriverLogging(t *testing.T) {
 		{
 			name: "Cluster with StackDriver logging configured",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata:       types.NewTestMetadata(),

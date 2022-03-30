@@ -22,7 +22,6 @@ func TestCheckEnableLogValidation(t *testing.T) {
 		{
 			name: "AWS CloudTrail without logfile validation",
 			input: cloudtrail.CloudTrail{
-				Metadata: types.NewTestMetadata(),
 				Trails: []cloudtrail.Trail{
 					{
 						Metadata:                types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableLogValidation(t *testing.T) {
 		{
 			name: "AWS CloudTrail with logfile validation enabled",
 			input: cloudtrail.CloudTrail{
-				Metadata: types.NewTestMetadata(),
 				Trails: []cloudtrail.Trail{
 					{
 						Metadata:                types.NewTestMetadata(),

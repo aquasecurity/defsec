@@ -22,7 +22,6 @@ func TestCheckEnableAutoUpgrade(t *testing.T) {
 		{
 			name: "Node pool auto upgrade disabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -43,7 +42,6 @@ func TestCheckEnableAutoUpgrade(t *testing.T) {
 		{
 			name: "Node pool auto upgrade enabled",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

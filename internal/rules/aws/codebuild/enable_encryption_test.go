@@ -22,7 +22,6 @@ func TestCheckEnableEncryption(t *testing.T) {
 		{
 			name: "AWS Codebuild project with unencrypted artifact",
 			input: codebuild.CodeBuild{
-				Metadata: types.NewTestMetadata(),
 				Projects: []codebuild.Project{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableEncryption(t *testing.T) {
 		{
 			name: "AWS Codebuild project with unencrypted secondary artifact",
 			input: codebuild.CodeBuild{
-				Metadata: types.NewTestMetadata(),
 				Projects: []codebuild.Project{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -60,7 +58,6 @@ func TestCheckEnableEncryption(t *testing.T) {
 		{
 			name: "AWS Codebuild with encrypted artifacts",
 			input: codebuild.CodeBuild{
-				Metadata: types.NewTestMetadata(),
 				Projects: []codebuild.Project{
 					{
 						Metadata: types.NewTestMetadata(),

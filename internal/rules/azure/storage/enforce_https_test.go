@@ -22,7 +22,6 @@ func TestCheckEnforceHttps(t *testing.T) {
 		{
 			name: "Storage account HTTPS enforcement disabled",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata:     types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnforceHttps(t *testing.T) {
 		{
 			name: "Storage account HTTPS enforcement enabled",
 			input: storage.Storage{
-				Metadata: types.NewTestMetadata(),
 				Accounts: []storage.Account{
 					{
 						Metadata:     types.NewTestMetadata(),

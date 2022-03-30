@@ -22,7 +22,6 @@ func TestCheckNodeMetadataSecurity(t *testing.T) {
 		{
 			name: "Cluster node pools metadata exposed by default",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -41,7 +40,6 @@ func TestCheckNodeMetadataSecurity(t *testing.T) {
 		{
 			name: "Node pool metadata exposed",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -72,7 +70,6 @@ func TestCheckNodeMetadataSecurity(t *testing.T) {
 		{
 			name: "Cluster node pools metadata secured",
 			input: gke.GKE{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

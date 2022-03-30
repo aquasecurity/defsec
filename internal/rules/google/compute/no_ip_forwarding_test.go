@@ -22,7 +22,6 @@ func TestCheckNoIpForwarding(t *testing.T) {
 		{
 			name: "Instance IP forwarding enabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata:     types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckNoIpForwarding(t *testing.T) {
 		{
 			name: "Instance IP forwarding disabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata:     types.NewTestMetadata(),

@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/aquasecurity/defsec/pkg/rego"
@@ -31,8 +32,13 @@ type Scanner struct {
 	dirs             map[string]struct{}
 	forceAllDirs     bool
 	debugWriter      io.Writer
+	traceWriter      io.Writer
 	policyDirs       []string
+	dataDirs         []string
 	policyNamespaces []string
+	regoScanner      *rego.Scanner
+	execLock         sync.RWMutex
+	sync.Mutex
 }
 
 type Metrics struct {
@@ -51,6 +57,7 @@ func New(options ...Option) *Scanner {
 	for _, opt := range options {
 		opt(s)
 	}
+
 	return s
 }
 
@@ -67,6 +74,27 @@ func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (scan.Re
 	return results, err
 }
 
+func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
+	s.Lock()
+	defer s.Unlock()
+	if s.regoScanner != nil {
+		return s.regoScanner, nil
+	}
+	regoOpts := []rego.Option{
+		rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...),
+		rego.OptionWithDataDirs(s.dataDirs...),
+	}
+	if s.traceWriter != nil {
+		regoOpts = append(regoOpts, rego.OptionWithTrace(s.traceWriter))
+	}
+	regoScanner := rego.NewScanner(regoOpts...)
+	if err := regoScanner.LoadPolicies(true, srcFS, s.policyDirs...); err != nil {
+		return nil, err
+	}
+	s.regoScanner = regoScanner
+	return regoScanner, nil
+}
+
 func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir string) (scan.Results, Metrics, error) {
 
 	var metrics Metrics
@@ -75,13 +103,18 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 	rootDirs := s.findRootModules(target, dir)
 	sort.Strings(rootDirs)
 
-	regoScanner := rego.NewScanner(
-		rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...),
-	)
-	if err := regoScanner.LoadPolicies(true, s.policyDirs...); err != nil {
-		return nil, Metrics{}, err
+	if len(rootDirs) == 0 {
+		return nil, metrics, nil
 	}
+
+	regoScanner, err := s.initRegoScanner(target)
+	if err != nil {
+		return nil, metrics, err
+	}
+
+	s.execLock.Lock()
 	s.executorOpt = append(s.executorOpt, executor.OptionWithRegoScanner(regoScanner))
+	s.execLock.Unlock()
 
 	var allResults scan.Results
 
@@ -91,7 +124,9 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 		s.debug("Scanning root module '%s'...", dir)
 
 		p := parser.New(s.parserOpt...)
+		s.execLock.RLock()
 		e := executor.New(s.executorOpt...)
+		s.execLock.RUnlock()
 
 		if err := p.ParseFS(ctx, target, dir); err != nil {
 			return nil, metrics, err

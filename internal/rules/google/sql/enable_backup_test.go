@@ -22,7 +22,6 @@ func TestCheckEnableBackup(t *testing.T) {
 		{
 			name: "Database instance backups disabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -41,7 +40,6 @@ func TestCheckEnableBackup(t *testing.T) {
 		{
 			name: "Database instance backups enabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckRetentionPolicySet(t *testing.T) {
 		{
 			name: "Network watcher flow log retention policy disabled",
 			input: network.Network{
-				Metadata: types.NewTestMetadata(),
 				NetworkWatcherFlowLogs: []network.NetworkWatcherFlowLog{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -39,7 +38,6 @@ func TestCheckRetentionPolicySet(t *testing.T) {
 		{
 			name: "Network watcher flow log retention policy enabled for 30 days",
 			input: network.Network{
-				Metadata: types.NewTestMetadata(),
 				NetworkWatcherFlowLogs: []network.NetworkWatcherFlowLog{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -56,7 +54,6 @@ func TestCheckRetentionPolicySet(t *testing.T) {
 		{
 			name: "Network watcher flow log retention policy enabled for 100 days",
 			input: network.Network{
-				Metadata: types.NewTestMetadata(),
 				NetworkWatcherFlowLogs: []network.NetworkWatcherFlowLog{
 					{
 						Metadata: types.NewTestMetadata(),

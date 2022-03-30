@@ -22,7 +22,6 @@ func TestCheckDiskEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "Disk missing KMS key link",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Disks: []compute.Disk{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckDiskEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "Disk with KMS key link provided",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Disks: []compute.Disk{
 					{
 						Metadata: types.NewTestMetadata(),

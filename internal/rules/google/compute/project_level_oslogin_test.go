@@ -22,7 +22,6 @@ func TestCheckProjectLevelOslogin(t *testing.T) {
 		{
 			name: "Compute OS login disabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				ProjectMetadata: compute.ProjectMetadata{
 					Metadata:      types.NewTestMetadata(),
 					EnableOSLogin: types.Bool(false, types.NewTestMetadata()),
@@ -33,7 +32,6 @@ func TestCheckProjectLevelOslogin(t *testing.T) {
 		{
 			name: "Compute OS login enabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				ProjectMetadata: compute.ProjectMetadata{
 					Metadata:      types.NewTestMetadata(),
 					EnableOSLogin: types.Bool(true, types.NewTestMetadata()),

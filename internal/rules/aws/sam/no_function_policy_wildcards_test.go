@@ -25,7 +25,6 @@ func TestCheckNoFunctionPolicyWildcards(t *testing.T) {
 		{
 			name: "Wildcard action in function policy",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				Functions: []sam.Function{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -61,7 +60,6 @@ func TestCheckNoFunctionPolicyWildcards(t *testing.T) {
 		{
 			name: "Specific action in function policy",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				Functions: []sam.Function{
 					{
 						Metadata: types.NewTestMetadata(),

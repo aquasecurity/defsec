@@ -25,7 +25,7 @@ Resources:
     Properties:
       GroupDescription: Limits security group egress traffic
       SecurityGroupIngress:
-      - CidrIp: 80.1.2.3/32
+      - CidrIp: 0.0.0.0/0
         IpProtocol: "6"
 `,
 }

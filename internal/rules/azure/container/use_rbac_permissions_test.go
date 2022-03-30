@@ -22,7 +22,6 @@ func TestCheckUseRbacPermissions(t *testing.T) {
 		{
 			name: "Role based access control disabled",
 			input: container.Container{
-				Metadata: types.NewTestMetadata(),
 				KubernetesClusters: []container.KubernetesCluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckUseRbacPermissions(t *testing.T) {
 		{
 			name: "Role based access control enabled",
 			input: container.Container{
-				Metadata: types.NewTestMetadata(),
 				KubernetesClusters: []container.KubernetesCluster{
 					{
 						Metadata: types.NewTestMetadata(),

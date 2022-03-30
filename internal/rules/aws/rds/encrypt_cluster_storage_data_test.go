@@ -22,7 +22,6 @@ func TestCheckEncryptClusterStorageData(t *testing.T) {
 		{
 			name: "RDS Cluster with storage encryption disabled",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []rds.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -39,7 +38,6 @@ func TestCheckEncryptClusterStorageData(t *testing.T) {
 		{
 			name: "RDS Cluster with storage encryption enabled but missing KMS key",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []rds.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -56,7 +54,6 @@ func TestCheckEncryptClusterStorageData(t *testing.T) {
 		{
 			name: "RDS Cluster with storage encryption enabled and KMS key provided",
 			input: rds.RDS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []rds.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

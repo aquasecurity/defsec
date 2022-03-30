@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -15,8 +14,18 @@ import (
 )
 
 func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
+	t.Parallel()
 
 	entries, err := os.ReadDir("./testdata")
+	require.NoError(t, err)
+
+	scanner := dockerfile.NewScanner(
+		dockerfile.OptionWithPolicyDirs("internal/rules"),
+	)
+
+	srcFS := os.DirFS("../")
+
+	results, err := scanner.ScanFS(context.TODO(), srcFS, "test/testdata")
 	require.NoError(t, err)
 
 	for _, entry := range entries {
@@ -24,45 +33,37 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 			continue
 		}
 		t.Run(entry.Name(), func(t *testing.T) {
-			dir := filepath.Join("testdata", entry.Name())
-			files, err := os.ReadDir(dir)
+			dir := filepath.Join("test/testdata", entry.Name())
 			require.NoError(t, err)
-			for _, file := range files {
-				if file.IsDir() {
-					continue
-				}
-				t.Run(file.Name(), func(t *testing.T) {
-					expectPositive := strings.HasSuffix(file.Name(), ".denied")
-					scanner := dockerfile.NewScanner(
-						dockerfile.OptionWithPolicyDirs("../internal/rules/"),
-					)
-					fs := os.DirFS(dir)
-					results, err := scanner.ScanFile(context.TODO(), fs, file.Name())
-					require.NoError(t, err)
-					var matched bool
-					for _, result := range results {
-						if (result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name()) && result.Status() == scan.StatusFailed {
-							if result.Description() != "Specify at least 1 USER command in Dockerfile with non-root user as argument" {
-								assert.Greater(t, result.Range().GetStartLine(), 0)
-								assert.Greater(t, result.Range().GetEndLine(), 0)
-							}
-							assert.Equal(t, file.Name(), result.Range().GetFilename())
-							matched = true
-							break
+			t.Run(entry.Name(), func(t *testing.T) {
+				var matched bool
+				for _, result := range results {
+					if (result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name()) && result.Status() == scan.StatusFailed {
+						if result.Description() != "Specify at least 1 USER command in Dockerfile with non-root user as argument" {
+							assert.Greater(t, result.Range().GetStartLine(), 0)
+							assert.Greater(t, result.Range().GetEndLine(), 0)
 						}
+						assert.Equal(t, filepath.Join(dir, "Dockerfile.denied"), result.Range().GetFilename())
+						matched = true
 					}
-
-					assert.Equal(t, expectPositive, matched)
-				})
-			}
+				}
+				assert.True(t, matched)
+			})
 
 		})
 	}
 }
 
 func Test_Docker_RegoPoliciesEmbedded(t *testing.T) {
+	t.Parallel()
 
 	entries, err := os.ReadDir("./testdata")
+	require.NoError(t, err)
+
+	scanner := dockerfile.NewScanner()
+	srcFS := os.DirFS("../")
+
+	results, err := scanner.ScanFS(context.TODO(), srcFS, "test/testdata")
 	require.NoError(t, err)
 
 	for _, entry := range entries {
@@ -70,35 +71,22 @@ func Test_Docker_RegoPoliciesEmbedded(t *testing.T) {
 			continue
 		}
 		t.Run(entry.Name(), func(t *testing.T) {
-			dir := filepath.Join("testdata", entry.Name())
-			files, err := os.ReadDir(filepath.Join("testdata", entry.Name()))
+			dir := filepath.Join("test/testdata", entry.Name())
 			require.NoError(t, err)
-			for _, file := range files {
-				if file.IsDir() {
-					continue
-				}
-				t.Run(file.Name(), func(t *testing.T) {
-					expectPositive := strings.HasSuffix(file.Name(), ".denied")
-					scanner := dockerfile.NewScanner()
-					fs := os.DirFS(dir)
-					results, err := scanner.ScanFile(context.TODO(), fs, file.Name())
-					require.NoError(t, err)
-					var matched bool
-					for _, result := range results {
-						if (result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name()) && result.Status() == scan.StatusFailed {
-							if result.Description() != "Specify at least 1 USER command in Dockerfile with non-root user as argument" {
-								assert.Greater(t, result.Range().GetStartLine(), 0)
-								assert.Greater(t, result.Range().GetEndLine(), 0)
-							}
-							assert.Equal(t, file.Name(), result.Range().GetFilename())
-							matched = true
-							break
+			t.Run(entry.Name(), func(t *testing.T) {
+				var matched bool
+				for _, result := range results {
+					if (result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name()) && result.Status() == scan.StatusFailed {
+						if result.Description() != "Specify at least 1 USER command in Dockerfile with non-root user as argument" {
+							assert.Greater(t, result.Range().GetStartLine(), 0)
+							assert.Greater(t, result.Range().GetEndLine(), 0)
 						}
+						assert.Equal(t, filepath.Join(dir, "Dockerfile.denied"), result.Range().GetFilename())
+						matched = true
 					}
-
-					assert.Equal(t, expectPositive, matched)
-				})
-			}
+				}
+				assert.True(t, matched)
+			})
 
 		})
 	}

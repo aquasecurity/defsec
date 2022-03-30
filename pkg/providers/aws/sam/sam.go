@@ -1,11 +1,6 @@
 package sam
 
-import (
-	"github.com/aquasecurity/defsec/internal/types"
-)
-
 type SAM struct {
-	types.Metadata
 	APIs          []API
 	Applications  []Application
 	Functions     []Function

@@ -22,7 +22,6 @@ func TestCheckNoPurge(t *testing.T) {
 		{
 			name: "Keyvault purge protection disabled",
 			input: keyvault.KeyVault{
-				Metadata: types.NewTestMetadata(),
 				Vaults: []keyvault.Vault{
 					{
 						Metadata:                types.NewTestMetadata(),
@@ -36,7 +35,6 @@ func TestCheckNoPurge(t *testing.T) {
 		{
 			name: "Keyvault purge protection enabled but soft delete retention period set to 3 days",
 			input: keyvault.KeyVault{
-				Metadata: types.NewTestMetadata(),
 				Vaults: []keyvault.Vault{
 					{
 						Metadata:                types.NewTestMetadata(),
@@ -50,7 +48,6 @@ func TestCheckNoPurge(t *testing.T) {
 		{
 			name: "Keyvault purge protection enabled and soft delete retention period set to 30 days",
 			input: keyvault.KeyVault{
-				Metadata: types.NewTestMetadata(),
 				Vaults: []keyvault.Vault{
 					{
 						Metadata:                types.NewTestMetadata(),

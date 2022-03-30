@@ -1,7 +1,6 @@
 package google
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/google/bigquery"
 	"github.com/aquasecurity/defsec/pkg/providers/google/compute"
 	"github.com/aquasecurity/defsec/pkg/providers/google/dns"
@@ -13,7 +12,6 @@ import (
 )
 
 type Google struct {
-	types.Metadata
 	BigQuery bigquery.BigQuery
 	Compute  compute.Compute
 	DNS      dns.DNS

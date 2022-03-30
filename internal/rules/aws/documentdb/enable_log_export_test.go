@@ -22,7 +22,6 @@ func TestCheckEnableLogExport(t *testing.T) {
 		{
 			name: "DocDB Cluster not exporting logs",
 			input: documentdb.DocumentDB{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []documentdb.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -37,7 +36,6 @@ func TestCheckEnableLogExport(t *testing.T) {
 		{
 			name: "DocDB Cluster exporting audit logs",
 			input: documentdb.DocumentDB{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []documentdb.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -52,7 +50,6 @@ func TestCheckEnableLogExport(t *testing.T) {
 		{
 			name: "DocDB Cluster exporting profiler logs",
 			input: documentdb.DocumentDB{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []documentdb.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

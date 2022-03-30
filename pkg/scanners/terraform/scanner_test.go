@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"path/filepath"
 	"strconv"
 	"testing"
 
@@ -46,10 +45,9 @@ var alwaysFailRule = scan.Rule{
 
 func scanWithOptions(t *testing.T, code string, opt ...Option) scan.Results {
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": code,
 	})
-	defer tidy()
 
 	scanner := New(opt...)
 	results, _, err := scanner.ScanFSWithMetrics(context.TODO(), fs, "project")
@@ -167,7 +165,7 @@ resource "something" "else" {}
 
 func Test_OptionWithPolicyDirs(t *testing.T) {
 
-	fs, tmp, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"/code/main.tf": `
 resource "aws_s3_bucket" "my-bucket" {
 	bucket = "evil"
@@ -200,12 +198,11 @@ deny[cause] {
 }
 `,
 	})
-	defer tidy()
 
 	debugLog := bytes.NewBuffer([]byte{})
 	scanner := New(
 		OptionWithDebug(debugLog),
-		OptionWithPolicyDirs([]string{filepath.Join(tmp, "rules")}),
+		OptionWithPolicyDirs("rules"),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
@@ -284,7 +281,7 @@ func Test_OptionWithPolicyNamespaces(t *testing.T) {
 
 		t.Run(strconv.Itoa(i), func(t *testing.T) {
 
-			fs, tmp, tidy := testutil.CreateFS(t, map[string]string{
+			fs := testutil.CreateFS(t, map[string]string{
 				"/code/main.tf": `
 resource "aws_s3_bucket" "my-bucket" {
 	bucket = "evil"
@@ -301,10 +298,9 @@ resource "aws_s3_bucket" "my-bucket" {
 
 				`, test.policyNamespace),
 			})
-			defer tidy()
 
 			scanner := New(
-				OptionWithPolicyDirs([]string{filepath.Join(tmp, "rules")}),
+				OptionWithPolicyDirs("rules"),
 				OptionWithPolicyNamespaces(test.includedNamespaces...),
 			)
 
@@ -327,14 +323,13 @@ resource "aws_s3_bucket" "my-bucket" {
 
 func Test_OptionWithStateFunc(t *testing.T) {
 
-	fs, _, tidy := testutil.CreateFS(t, map[string]string{
+	fs := testutil.CreateFS(t, map[string]string{
 		"code/main.tf": `
 resource "aws_s3_bucket" "my-bucket" {
 	bucket = "evil"
 }
 `,
 	})
-	defer tidy()
 
 	var actual state.State
 

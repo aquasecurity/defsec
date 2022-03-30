@@ -22,7 +22,6 @@ func TestCheckAddDescriptionForSecurityGroup(t *testing.T) {
 		{
 			name: "ElastiCache security group with no description provided",
 			input: elasticache.ElastiCache{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []elasticache.SecurityGroup{
 					{
 						Metadata:    types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckAddDescriptionForSecurityGroup(t *testing.T) {
 		{
 			name: "ElastiCache security group with description",
 			input: elasticache.ElastiCache{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []elasticache.SecurityGroup{
 					{
 						Metadata:    types.NewTestMetadata(),

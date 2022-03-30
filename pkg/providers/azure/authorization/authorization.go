@@ -5,7 +5,6 @@ import (
 )
 
 type Authorization struct {
-	types.Metadata
 	RoleDefinitions []RoleDefinition
 }
 

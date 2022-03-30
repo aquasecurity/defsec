@@ -45,7 +45,6 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 			}
 `,
 			expected: ec2.EC2{
-				Metadata: types.NewTestMetadata(),
 				Instances: []ec2.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -79,7 +78,6 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 			}
 `,
 			expected: ec2.EC2{
-				Metadata: types.NewTestMetadata(),
 				Instances: []ec2.Instance{
 					{
 						Metadata: types.NewTestMetadata(),

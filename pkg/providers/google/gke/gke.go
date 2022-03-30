@@ -5,7 +5,6 @@ import (
 )
 
 type GKE struct {
-	types.Metadata
 	Clusters []Cluster
 }
 

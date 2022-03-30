@@ -22,7 +22,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "MySQL server public access enabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MySQLServers: []database.MySQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "MariaDB server public access enabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MariaDBServers: []database.MariaDBServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -54,7 +52,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "MS SQL server public access enabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -70,7 +67,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "PostgreSQL server public access enabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -86,7 +82,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "MySQL server public access disabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MySQLServers: []database.MySQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -102,7 +97,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "MariaDB server public access disabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MariaDBServers: []database.MariaDBServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -118,7 +112,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "MS SQL server public access disabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				MSSQLServers: []database.MSSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -134,7 +127,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		{
 			name: "PostgreSQL server public access disabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),

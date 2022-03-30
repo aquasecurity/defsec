@@ -22,7 +22,6 @@ func TestCheckEnforceHttps(t *testing.T) {
 		{
 			name: "Elasticsearch domain with enforce HTTPS disabled",
 			input: elasticsearch.Elasticsearch{
-				Metadata: types.NewTestMetadata(),
 				Domains: []elasticsearch.Domain{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnforceHttps(t *testing.T) {
 		{
 			name: "Elasticsearch domain with enforce HTTPS enabled",
 			input: elasticsearch.Elasticsearch{
-				Metadata: types.NewTestMetadata(),
 				Domains: []elasticsearch.Domain{
 					{
 						Metadata: types.NewTestMetadata(),

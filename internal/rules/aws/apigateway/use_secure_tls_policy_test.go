@@ -22,7 +22,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "API Gateway domain name with TLS version 1.0",
 			input: apigateway.APIGateway{
-				Metadata: types.NewTestMetadata(),
 				DomainNames: []apigateway.DomainName{
 					{
 						Metadata:       types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "API Gateway domain name with TLS version 1.2",
 			input: apigateway.APIGateway{
-				Metadata: types.NewTestMetadata(),
 				DomainNames: []apigateway.DomainName{
 					{
 						Metadata:       types.NewTestMetadata(),

@@ -5,7 +5,6 @@ import (
 )
 
 type Athena struct {
-	types.Metadata
 	Databases  []Database
 	Workgroups []Workgroup
 }

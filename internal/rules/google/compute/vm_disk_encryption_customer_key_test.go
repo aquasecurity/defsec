@@ -22,7 +22,6 @@ func TestCheckVmDiskEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "Instance disk missing encryption key link",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -43,7 +42,6 @@ func TestCheckVmDiskEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "Instance disk encryption key link provided",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Instances: []compute.Instance{
 					{
 						Metadata: types.NewTestMetadata(),

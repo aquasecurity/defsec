@@ -22,7 +22,6 @@ func TestCheckEnableStateMachineTracing(t *testing.T) {
 		{
 			name: "State machine tracing disabled",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				StateMachines: []sam.StateMachine{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableStateMachineTracing(t *testing.T) {
 		{
 			name: "State machine tracing enabled",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				StateMachines: []sam.StateMachine{
 					{
 						Metadata: types.NewTestMetadata(),

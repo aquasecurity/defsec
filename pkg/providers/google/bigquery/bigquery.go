@@ -5,7 +5,6 @@ import (
 )
 
 type BigQuery struct {
-	types.Metadata
 	Datasets []Dataset
 }
 

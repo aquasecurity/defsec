@@ -22,7 +22,6 @@ func TestCheckEnableGeneralLogging(t *testing.T) {
 		{
 			name: "AWS MQ Broker without general logging",
 			input: mq.MQ{
-				Metadata: types.NewTestMetadata(),
 				Brokers: []mq.Broker{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableGeneralLogging(t *testing.T) {
 		{
 			name: "AWS MQ Broker with general logging",
 			input: mq.MQ{
-				Metadata: types.NewTestMetadata(),
 				Brokers: []mq.Broker{
 					{
 						Metadata: types.NewTestMetadata(),

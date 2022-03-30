@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/fs"
 	"io/ioutil"
+	"sync"
 
 	"github.com/aquasecurity/defsec/internal/types"
 
@@ -21,10 +22,13 @@ var _ scanners.Scanner = (*Scanner)(nil)
 
 type Scanner struct {
 	debugWriter      io.Writer
+	traceWriter      io.Writer
 	policyDirs       []string
 	dataDirs         []string
 	policyNamespaces []string
 	parser           *parser.Parser
+	regoScanner      *rego.Scanner
+	sync.Mutex
 }
 
 func NewScanner(options ...Option) *Scanner {
@@ -53,6 +57,10 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 		return nil, err
 	}
 
+	if len(files) == 0 {
+		return nil, nil
+	}
+
 	var inputs []rego.Input
 	for path, dfile := range files {
 		inputs = append(inputs, rego.Input{
@@ -62,7 +70,7 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 		})
 	}
 
-	return s.scanRego(ctx, inputs...)
+	return s.scanRego(ctx, fs, inputs...)
 }
 
 func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (scan.Results, error) {
@@ -71,19 +79,37 @@ func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (scan.Res
 		return nil, err
 	}
 	s.debug("Scanning %s...", path)
-	return s.scanRego(ctx, rego.Input{
+	return s.scanRego(ctx, fs, rego.Input{
 		Path:     path,
 		Contents: dockerfile.ToRego(),
 		Type:     types.SourceDockerfile,
 	})
 }
 
-func (s *Scanner) scanRego(ctx context.Context, inputs ...rego.Input) (scan.Results, error) {
-	regoScanner := rego.NewScanner(
-		rego.OptionWithDebug(s.debugWriter),
+func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
+	s.Lock()
+	defer s.Unlock()
+	if s.regoScanner != nil {
+		return s.regoScanner, nil
+	}
+	regoOpts := []rego.Option{
 		rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...),
-	)
-	if err := regoScanner.LoadPolicies(len(s.policyDirs) == 0, s.policyDirs...); err != nil {
+		rego.OptionWithDataDirs(s.dataDirs...),
+	}
+	if s.traceWriter != nil {
+		regoOpts = append(regoOpts, rego.OptionWithTrace(s.traceWriter))
+	}
+	regoScanner := rego.NewScanner(regoOpts...)
+	if err := regoScanner.LoadPolicies(len(s.policyDirs) == 0, srcFS, s.policyDirs...); err != nil {
+		return nil, err
+	}
+	s.regoScanner = regoScanner
+	return regoScanner, nil
+}
+
+func (s *Scanner) scanRego(ctx context.Context, srcFS fs.FS, inputs ...rego.Input) (scan.Results, error) {
+	regoScanner, err := s.initRegoScanner(srcFS)
+	if err != nil {
 		return nil, err
 	}
 	return regoScanner.ScanInput(ctx, inputs...)

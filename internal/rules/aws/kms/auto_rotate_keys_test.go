@@ -22,7 +22,6 @@ func TestCheckAutoRotateKeys(t *testing.T) {
 		{
 			name: "ENCRYPT_DECRYPT KMS Key with auto-rotation disabled",
 			input: kms.KMS{
-				Metadata: types.NewTestMetadata(),
 				Keys: []kms.Key{
 					{
 						Usage:           types.String("ENCRYPT_DECRYPT", types.NewTestMetadata()),
@@ -35,7 +34,6 @@ func TestCheckAutoRotateKeys(t *testing.T) {
 		{
 			name: "ENCRYPT_DECRYPT KMS Key with auto-rotation enabled",
 			input: kms.KMS{
-				Metadata: types.NewTestMetadata(),
 				Keys: []kms.Key{
 					{
 						Usage:           types.String("ENCRYPT_DECRYPT", types.NewTestMetadata()),
@@ -48,7 +46,6 @@ func TestCheckAutoRotateKeys(t *testing.T) {
 		{
 			name: "SIGN_VERIFY KMS Key with auto-rotation disabled",
 			input: kms.KMS{
-				Metadata: types.NewTestMetadata(),
 				Keys: []kms.Key{
 					{
 						Usage:           types.String(kms.KeyUsageSignAndVerify, types.NewTestMetadata()),

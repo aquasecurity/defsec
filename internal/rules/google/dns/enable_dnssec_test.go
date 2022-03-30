@@ -22,7 +22,6 @@ func TestCheckEnableDnssec(t *testing.T) {
 		{
 			name: "DNSSec disabled",
 			input: dns.DNS{
-				Metadata: types.NewTestMetadata(),
 				ManagedZones: []dns.ManagedZone{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableDnssec(t *testing.T) {
 		{
 			name: "DNSSec enabled",
 			input: dns.DNS{
-				Metadata: types.NewTestMetadata(),
 				ManagedZones: []dns.ManagedZone{
 					{
 						Metadata: types.NewTestMetadata(),

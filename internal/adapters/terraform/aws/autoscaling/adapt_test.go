@@ -40,7 +40,6 @@ func Test_Adapt(t *testing.T) {
 			}
 			`,
 			expected: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata:          types.NewTestMetadata(),
@@ -88,7 +87,6 @@ export AWS_DEFAULT_REGION=us-west-2
 			}
 `,
 			expected: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata:          types.NewTestMetadata(),
@@ -126,7 +124,6 @@ export AWS_DEFAULT_REGION=us-west-2
 			}
 			`,
 			expected: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchTemplates: []autoscaling.LaunchTemplate{
 					{
 						Metadata: types.NewTestMetadata(),

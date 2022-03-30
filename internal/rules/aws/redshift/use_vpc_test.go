@@ -22,7 +22,6 @@ func TestCheckUsesVPC(t *testing.T) {
 		{
 			name: "Redshift Cluster missing subnet name",
 			input: redshift.Redshift{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []redshift.Cluster{
 					{
 						Metadata:        types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckUsesVPC(t *testing.T) {
 		{
 			name: "Redshift Cluster with subnet name",
 			input: redshift.Redshift{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []redshift.Cluster{
 					{
 						Metadata:        types.NewTestMetadata(),

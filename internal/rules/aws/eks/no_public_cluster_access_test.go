@@ -22,7 +22,6 @@ func TestCheckNoPublicClusterAccess(t *testing.T) {
 		{
 			name: "EKS Cluster with public access enabled",
 			input: eks.EKS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []eks.Cluster{
 					{
 						PublicAccessEnabled: types.Bool(true, types.NewTestMetadata()),
@@ -34,7 +33,6 @@ func TestCheckNoPublicClusterAccess(t *testing.T) {
 		{
 			name: "EKS Cluster with public access disabled",
 			input: eks.EKS{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []eks.Cluster{
 					{
 						PublicAccessEnabled: types.Bool(false, types.NewTestMetadata()),

@@ -22,7 +22,6 @@ func TestCheckRestrictSourceArn(t *testing.T) {
 		{
 			name: "Lambda function permission missing source ARN",
 			input: lambda.Lambda{
-				Metadata: types.NewTestMetadata(),
 				Functions: []lambda.Function{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -41,7 +40,6 @@ func TestCheckRestrictSourceArn(t *testing.T) {
 		{
 			name: "Lambda function permission with source ARN",
 			input: lambda.Lambda{
-				Metadata: types.NewTestMetadata(),
 				Functions: []lambda.Function{
 					{
 						Metadata: types.NewTestMetadata(),

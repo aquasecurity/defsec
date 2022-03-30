@@ -7,7 +7,7 @@ import (
 )
 
 func getSecurityGroups(ctx parser.FileContext) (groups []vpc.SecurityGroup) {
-	for _, r := range ctx.GetResourceByType("AWS::EC2::SecurityGroup") {
+	for _, r := range ctx.GetResourcesByType("AWS::EC2::SecurityGroup") {
 		group := vpc.SecurityGroup{
 			Metadata:     r.Metadata(),
 			Description:  r.GetStringProperty("GroupDescription"),
@@ -24,9 +24,10 @@ func getIngressRules(r *parser.Resource) (sgRules []vpc.SecurityGroupRule) {
 	if ingressProp := r.GetProperty("SecurityGroupIngress"); ingressProp.IsList() {
 		for _, ingress := range ingressProp.AsList() {
 			rule := vpc.SecurityGroupRule{
-				Metadata: r.Metadata(),
+				Metadata:    ingress.Metadata(),
+				Description: ingress.GetStringProperty("Description"),
+				CIDRs:       nil,
 			}
-			rule.Description = ingress.GetStringProperty("Description")
 			v4Cidr := ingress.GetProperty("CidrIp")
 			if v4Cidr.IsString() && v4Cidr.AsStringValue().IsNotEmpty() {
 				rule.CIDRs = append(rule.CIDRs, types.StringExplicit(v4Cidr.AsString(), v4Cidr.Metadata()))
@@ -46,9 +47,9 @@ func getEgressRules(r *parser.Resource) (sgRules []vpc.SecurityGroupRule) {
 	if egressProp := r.GetProperty("SecurityGroupEgress"); egressProp.IsList() {
 		for _, egress := range egressProp.AsList() {
 			rule := vpc.SecurityGroupRule{
-				Metadata: r.Metadata(),
+				Metadata:    egress.Metadata(),
+				Description: egress.GetStringProperty("Description"),
 			}
-			rule.Description = egress.GetStringProperty("Description")
 			v4Cidr := egress.GetProperty("CidrIp")
 			if v4Cidr.IsString() && v4Cidr.AsStringValue().IsNotEmpty() {
 				rule.CIDRs = append(rule.CIDRs, types.StringExplicit(v4Cidr.AsString(), v4Cidr.Metadata()))

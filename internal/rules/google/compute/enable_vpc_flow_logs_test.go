@@ -22,7 +22,6 @@ func TestCheckEnableVPCFlowLogs(t *testing.T) {
 		{
 			name: "Subnetwork VPC flow logs disabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Networks: []compute.Network{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckEnableVPCFlowLogs(t *testing.T) {
 		{
 			name: "Subnetwork VPC flow logs enabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Networks: []compute.Network{
 					{
 						Metadata: types.NewTestMetadata(),

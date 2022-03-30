@@ -22,7 +22,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "Load balancer listener using TLS v1.0",
 			input: elb.ELB{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		{
 			name: "Load balancer listener using TLS v1.2",
 			input: elb.ELB{
-				Metadata: types.NewTestMetadata(),
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -22,7 +22,6 @@ func TestCheckEnableFunctionTracing(t *testing.T) {
 		{
 			name: "SAM pass-through tracing mode",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				Functions: []sam.Function{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableFunctionTracing(t *testing.T) {
 		{
 			name: "SAM active tracing mode",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				Functions: []sam.Function{
 					{
 						Metadata: types.NewTestMetadata(),

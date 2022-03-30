@@ -16,7 +16,7 @@ var CheckEnableTracing = rules.Register(
 		Service:     "lambda",
 		ShortCode:   "enable-tracing",
 		Summary:     "Lambda functions should have X-Ray tracing enabled",
-		Impact:      "WIthout full tracing enabled it is difficult to trace the flow of logs",
+		Impact:      "Without full tracing enabled it is difficult to trace the flow of logs",
 		Resolution:  "Enable tracing",
 		Explanation: `X-Ray tracing enables end-to-end debugging and analysis of all function activity. This will allow for identifying bottlenecks, slow downs and timeouts.`,
 		Links: []string{
@@ -41,7 +41,7 @@ var CheckEnableTracing = rules.Register(
 			if function.IsUnmanaged() {
 				continue
 			}
-			if function.Tracing.Mode.NotEqualTo(lambda.TracingModeActive) && function.Tracing.Mode.NotEqualTo(lambda.TracingModePassThrough) {
+			if function.Tracing.Mode.NotEqualTo(lambda.TracingModeActive) {
 				results.Add(
 					"Function does not have tracing enabled.",
 					function.Tracing.Mode,

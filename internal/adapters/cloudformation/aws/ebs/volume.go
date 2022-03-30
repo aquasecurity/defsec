@@ -7,12 +7,13 @@ import (
 
 func getVolumes(ctx parser.FileContext) (volumes []ebs.Volume) {
 
-	volumeResources := ctx.GetResourceByType("AWS::EC2::Volume")
+	volumeResources := ctx.GetResourcesByType("AWS::EC2::Volume")
 	for _, r := range volumeResources {
 
 		volume := ebs.Volume{
 			Metadata: r.Metadata(),
 			Encryption: ebs.Encryption{
+				Metadata: r.Metadata(),
 				Enabled:  r.GetBoolProperty("Encrypted"),
 				KMSKeyID: r.GetStringProperty("KmsKeyId"),
 			},

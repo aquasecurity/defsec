@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/terraform"
-
 	"github.com/stretchr/testify/assert"
 )
 

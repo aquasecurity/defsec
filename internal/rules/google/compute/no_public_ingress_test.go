@@ -22,7 +22,6 @@ func TestCheckNoPublicIngress(t *testing.T) {
 		{
 			name: "Firewall ingress rule with multiple public source addresses",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Networks: []compute.Network{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -51,7 +50,6 @@ func TestCheckNoPublicIngress(t *testing.T) {
 		{
 			name: "Firewall ingress rule with public source address",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				Networks: []compute.Network{
 					{
 						Metadata: types.NewTestMetadata(),

@@ -8,7 +8,7 @@ import (
 
 func getClusters(ctx parser.FileContext) (clusters []ecs.Cluster) {
 
-	clusterResources := ctx.GetResourceByType("AWS::ECS::Cluster")
+	clusterResources := ctx.GetResourcesByType("AWS::ECS::Cluster")
 
 	for _, r := range clusterResources {
 
@@ -24,14 +24,19 @@ func getClusters(ctx parser.FileContext) (clusters []ecs.Cluster) {
 	return clusters
 }
 
-func getClusterSettings(r *parser.Resource) (clusterSettings ecs.ClusterSettings) {
+func getClusterSettings(r *parser.Resource) ecs.ClusterSettings {
 
-	clusterSettings.ContainerInsightsEnabled = types.BoolDefault(false, r.Metadata())
+	clusterSettings := ecs.ClusterSettings{
+		Metadata:                 r.Metadata(),
+		ContainerInsightsEnabled: types.BoolDefault(false, r.Metadata()),
+	}
 
 	clusterSettingMap := r.GetProperty("ClusterSettings")
 	if clusterSettingMap.IsNil() || clusterSettingMap.IsNotList() {
 		return clusterSettings
 	}
+
+	clusterSettings.Metadata = clusterSettingMap.Metadata()
 
 	for _, setting := range clusterSettingMap.AsList() {
 		checkProperty(setting, &clusterSettings)

@@ -22,7 +22,6 @@ func TestCheckPgLogLockWaits(t *testing.T) {
 		{
 			name: "Instance lock waits logging disabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),
@@ -42,7 +41,6 @@ func TestCheckPgLogLockWaits(t *testing.T) {
 		{
 			name: "Instance lock waits logging enabled",
 			input: sql.SQL{
-				Metadata: types.NewTestMetadata(),
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),

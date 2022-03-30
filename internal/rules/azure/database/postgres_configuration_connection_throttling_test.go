@@ -22,7 +22,6 @@ func TestCheckPostgresConfigurationLogConnectionThrottling(t *testing.T) {
 		{
 			name: "PostgreSQL server connection throttling disabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckPostgresConfigurationLogConnectionThrottling(t *testing.T) {
 		{
 			name: "PostgreSQL server connection throttling enabled",
 			input: database.Database{
-				Metadata: types.NewTestMetadata(),
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
 						Metadata: types.NewTestMetadata(),

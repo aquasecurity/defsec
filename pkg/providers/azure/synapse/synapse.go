@@ -5,7 +5,6 @@ import (
 )
 
 type Synapse struct {
-	types.Metadata
 	Workspaces []Workspace
 }
 

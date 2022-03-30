@@ -5,7 +5,6 @@ import (
 )
 
 type CloudTrail struct {
-	types.Metadata
 	Trails []Trail
 }
 

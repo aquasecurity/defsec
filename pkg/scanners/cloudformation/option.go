@@ -34,9 +34,16 @@ func OptionWithExcludedIDs(exludedIDs []string) func(s *Scanner) {
 }
 
 // OptionWithPolicyDirs - location of rego policy directories - policies are loaded recursively
-func OptionWithPolicyDirs(dirs []string) func(s *Scanner) {
+func OptionWithPolicyDirs(dirs ...string) func(s *Scanner) {
 	return func(s *Scanner) {
 		s.policyDirs = dirs
+	}
+}
+
+// OptionWithDataDirs - location of rego data directories
+func OptionWithDataDirs(dirs ...string) func(s *Scanner) {
+	return func(s *Scanner) {
+		s.dataDirs = dirs
 	}
 }
 
@@ -44,5 +51,11 @@ func OptionWithPolicyDirs(dirs []string) func(s *Scanner) {
 func OptionWithPolicyNamespaces(namespaces ...string) func(s *Scanner) {
 	return func(s *Scanner) {
 		s.policyNamespaces = namespaces
+	}
+}
+
+func OptionWithTrace(w io.Writer) Option {
+	return func(s *Scanner) {
+		s.traceWriter = w
 	}
 }

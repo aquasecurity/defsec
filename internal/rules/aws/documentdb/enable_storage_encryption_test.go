@@ -22,7 +22,6 @@ func TestCheckEnableStorageEncryption(t *testing.T) {
 		{
 			name: "DocDB unencrypted storage",
 			input: documentdb.DocumentDB{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []documentdb.Cluster{
 					{
 						Metadata:         types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEnableStorageEncryption(t *testing.T) {
 		{
 			name: "DocDB encrypted storage",
 			input: documentdb.DocumentDB{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []documentdb.Cluster{
 					{
 						Metadata:         types.NewTestMetadata(),

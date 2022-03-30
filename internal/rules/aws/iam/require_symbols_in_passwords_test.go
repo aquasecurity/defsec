@@ -22,7 +22,6 @@ func TestCheckRequireSymbolsInPasswords(t *testing.T) {
 		{
 			name: "IAM password policy symbols not required",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				PasswordPolicy: iam.PasswordPolicy{
 					Metadata:       types.NewTestMetadata(),
 					RequireSymbols: types.Bool(false, types.NewTestMetadata()),
@@ -33,7 +32,6 @@ func TestCheckRequireSymbolsInPasswords(t *testing.T) {
 		{
 			name: "IAM password policy symbols required",
 			input: iam.IAM{
-				Metadata: types.NewTestMetadata(),
 				PasswordPolicy: iam.PasswordPolicy{
 					Metadata:       types.NewTestMetadata(),
 					RequireSymbols: types.Bool(true, types.NewTestMetadata()),

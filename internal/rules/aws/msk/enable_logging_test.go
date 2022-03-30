@@ -22,7 +22,6 @@ func TestCheckEnableLogging(t *testing.T) {
 		{
 			name: "Cluster with logging disabled",
 			input: msk.MSK{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []msk.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -52,7 +51,6 @@ func TestCheckEnableLogging(t *testing.T) {
 		{
 			name: "Cluster logging to S3",
 			input: msk.MSK{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []msk.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

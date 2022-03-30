@@ -22,7 +22,6 @@ func TestCheckEnableDiskEncryption(t *testing.T) {
 		{
 			name: "Managed disk encryption disabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				ManagedDisks: []compute.ManagedDisk{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableDiskEncryption(t *testing.T) {
 		{
 			name: "Managed disk encryption enabled",
 			input: compute.Compute{
-				Metadata: types.NewTestMetadata(),
 				ManagedDisks: []compute.ManagedDisk{
 					{
 						Metadata: types.NewTestMetadata(),

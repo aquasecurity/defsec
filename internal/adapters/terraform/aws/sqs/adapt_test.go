@@ -39,7 +39,6 @@ func Test_Adapt(t *testing.T) {
 				POLICY
 			}`,
 			expected: sqs.SQS{
-				Metadata: types.NewTestMetadata(),
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -77,7 +76,6 @@ func Test_Adapt(t *testing.T) {
 				kms_master_key_id = "/blah"
 			}`,
 			expected: sqs.SQS{
-				Metadata: types.NewTestMetadata(),
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),

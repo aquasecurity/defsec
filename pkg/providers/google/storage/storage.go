@@ -6,7 +6,6 @@ import (
 )
 
 type Storage struct {
-	types.Metadata
 	Buckets []Bucket
 }
 

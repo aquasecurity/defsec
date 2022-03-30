@@ -22,7 +22,6 @@ func TestCheckRotateKmsKeys(t *testing.T) {
 		{
 			name: "KMS key rotation period of 91 days",
 			input: kms.KMS{
-				Metadata: types.NewTestMetadata(),
 				KeyRings: []kms.KeyRing{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckRotateKmsKeys(t *testing.T) {
 		{
 			name: "KMS key rotation period of 30 days",
 			input: kms.KMS{
-				Metadata: types.NewTestMetadata(),
 				KeyRings: []kms.KeyRing{
 					{
 						Metadata: types.NewTestMetadata(),

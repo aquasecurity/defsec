@@ -5,7 +5,6 @@ import (
 )
 
 type DNS struct {
-	types.Metadata
 	ManagedZones []ManagedZone
 }
 

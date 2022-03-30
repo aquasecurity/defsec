@@ -22,7 +22,6 @@ func TestCheckEnableHttpApiAccessLogging(t *testing.T) {
 		{
 			name: "HTTP API logging not configured",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				HttpAPIs: []sam.HttpAPI{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -38,7 +37,6 @@ func TestCheckEnableHttpApiAccessLogging(t *testing.T) {
 		{
 			name: "HTTP API logging configured",
 			input: sam.SAM{
-				Metadata: types.NewTestMetadata(),
 				HttpAPIs: []sam.HttpAPI{
 					{
 						Metadata: types.NewTestMetadata(),

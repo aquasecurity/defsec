@@ -22,7 +22,6 @@ func TestCheckEnableCacheEncryption(t *testing.T) {
 		{
 			name: "API Gateway stage with unencrypted cache",
 			input: apigateway.APIGateway{
-				Metadata: types.NewTestMetadata(),
 				APIs: []apigateway.API{
 					{
 						Metadata:     types.NewTestMetadata(),
@@ -45,7 +44,6 @@ func TestCheckEnableCacheEncryption(t *testing.T) {
 		{
 			name: "API Gateway stage with encrypted cache",
 			input: apigateway.APIGateway{
-				Metadata: types.NewTestMetadata(),
 				APIs: []apigateway.API{
 					{
 						Metadata:     types.NewTestMetadata(),

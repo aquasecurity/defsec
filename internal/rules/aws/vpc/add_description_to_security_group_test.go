@@ -22,7 +22,6 @@ func TestCheckAddDescriptionToSecurityGroup(t *testing.T) {
 		{
 			name: "AWS VPC security group with no description provided",
 			input: vpc.VPC{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []vpc.SecurityGroup{
 					{
 						Metadata:    types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckAddDescriptionToSecurityGroup(t *testing.T) {
 		{
 			name: "AWS VPC security group with default description",
 			input: vpc.VPC{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []vpc.SecurityGroup{
 					{
 						Metadata:    types.NewTestMetadata(),
@@ -48,7 +46,6 @@ func TestCheckAddDescriptionToSecurityGroup(t *testing.T) {
 		{
 			name: "AWS VPC security group with proper description",
 			input: vpc.VPC{
-				Metadata: types.NewTestMetadata(),
 				SecurityGroups: []vpc.SecurityGroup{
 					{
 						Metadata:    types.NewTestMetadata(),

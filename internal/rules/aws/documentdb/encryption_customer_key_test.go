@@ -22,7 +22,6 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "DocDB Cluster encryption missing KMS key",
 			input: documentdb.DocumentDB{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []documentdb.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "DocDB Instance encryption missing KMS key",
 			input: documentdb.DocumentDB{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []documentdb.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -54,7 +52,6 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 		{
 			name: "DocDB Cluster and Instance encrypted with proper KMS keys",
 			input: documentdb.DocumentDB{
-				Metadata: types.NewTestMetadata(),
 				Clusters: []documentdb.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),

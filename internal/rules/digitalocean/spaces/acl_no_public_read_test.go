@@ -22,7 +22,6 @@ func TestCheckAclNoPublicRead(t *testing.T) {
 		{
 			name: "Space bucket with public read ACL",
 			input: spaces.Spaces{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []spaces.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -35,7 +34,6 @@ func TestCheckAclNoPublicRead(t *testing.T) {
 		{
 			name: "Space bucket object with public read ACL",
 			input: spaces.Spaces{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []spaces.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -54,7 +52,6 @@ func TestCheckAclNoPublicRead(t *testing.T) {
 		{
 			name: "Space bucket and bucket object with private ACL",
 			input: spaces.Spaces{
-				Metadata: types.NewTestMetadata(),
 				Buckets: []spaces.Bucket{
 					{
 						Metadata: types.NewTestMetadata(),
