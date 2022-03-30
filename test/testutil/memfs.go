@@ -108,7 +108,7 @@ func (m *memfs) ReadDir(name string) ([]fs.DirEntry, error) {
 	for path := range m.files {
 		if strings.HasPrefix(path, name+"/") {
 			if after := strings.TrimPrefix(path, name+"/"); strings.Contains(after, "/") {
-				dir := after[:strings.Index(after, "/")]
+				dir := after[:strings.Index(after, "/")] // nolint
 				dirs[dir] = struct{}{}
 			} else {
 				entries = append(entries, &memfile{
