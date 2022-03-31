@@ -53,9 +53,9 @@ resource "problem" "this" {
 	})
 
 	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
-	err := p.ParseFS(context.TODO(), fs, "project")
+	err := p.ParseFS(context.TODO(), "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO(), fs)
+	modules, _, err := p.EvaluateAll(context.TODO())
 	require.NoError(t, err)
 	results, _, _ := New().Execute(modules)
 	assert.Equal(t, len(results.GetFailed()), 0)
@@ -75,9 +75,9 @@ resource "problem" "this" {
 	})
 
 	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
-	err := p.ParseFS(context.TODO(), fs, "project")
+	err := p.ParseFS(context.TODO(), "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO(), fs)
+	modules, _, err := p.EvaluateAll(context.TODO())
 	require.NoError(t, err)
 	_, _, err = New(OptionStopOnErrors(false)).Execute(modules)
 	assert.Error(t, err)
@@ -97,9 +97,9 @@ resource "problem" "this" {
 	})
 
 	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
-	err := p.ParseFS(context.TODO(), fs, "project")
+	err := p.ParseFS(context.TODO(), "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO(), fs)
+	modules, _, err := p.EvaluateAll(context.TODO())
 	require.NoError(t, err)
 	results, _, _ := New().Execute(modules)
 	assert.Equal(t, len(results.GetFailed()), 0)
@@ -119,9 +119,9 @@ resource "problem" "this" {
 	})
 
 	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
-	err := p.ParseFS(context.TODO(), fs, "project")
+	err := p.ParseFS(context.TODO(), "project")
 	require.NoError(t, err)
-	modules, _, err := p.EvaluateAll(context.TODO(), fs)
+	modules, _, err := p.EvaluateAll(context.TODO())
 	require.NoError(t, err)
 
 	_, _, err = New(OptionStopOnErrors(false)).Execute(modules)

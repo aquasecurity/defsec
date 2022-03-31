@@ -128,11 +128,11 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 		e := executor.New(s.executorOpt...)
 		s.execLock.RUnlock()
 
-		if err := p.ParseFS(ctx, target, dir); err != nil {
+		if err := p.ParseFS(ctx, dir); err != nil {
 			return nil, metrics, err
 		}
 
-		modules, _, err := p.EvaluateAll(ctx, target)
+		modules, _, err := p.EvaluateAll(ctx)
 		if err != nil {
 			return nil, metrics, err
 		}

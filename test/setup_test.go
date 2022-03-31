@@ -24,10 +24,10 @@ func createModulesFromSource(t *testing.T, source string, ext string) terraform.
 	})
 
 	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
-	if err := p.ParseFS(context.TODO(), fs, "."); err != nil {
+	if err := p.ParseFS(context.TODO(), "."); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := p.EvaluateAll(context.TODO(), fs)
+	modules, _, err := p.EvaluateAll(context.TODO())
 	if err != nil {
 		t.Fatalf("parse error: %s", err)
 	}

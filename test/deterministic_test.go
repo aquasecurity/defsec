@@ -44,9 +44,9 @@ locals {
 
 	for i := 0; i < 100; i++ {
 		p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
-		err := p.ParseFS(context.TODO(), fs, ".")
+		err := p.ParseFS(context.TODO(), ".")
 		require.NoError(t, err)
-		modules, _, err := p.EvaluateAll(context.TODO(), fs)
+		modules, _, err := p.EvaluateAll(context.TODO())
 		require.NoError(t, err)
 		results, _, _ := executor.New().Execute(modules)
 		require.Len(t, results.GetFailed(), 2)

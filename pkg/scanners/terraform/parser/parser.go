@@ -112,10 +112,10 @@ func (p *Parser) Metrics() Metrics {
 	return total
 }
 
-func (p *Parser) ParseFile(_ context.Context, fs fs.FS, fullPath string) error {
+func (p *Parser) ParseFile(_ context.Context, fullPath string) error {
 	diskStart := time.Now()
 
-	f, err := fs.Open(fullPath)
+	f, err := p.moduleFS.Open(fullPath)
 	if err != nil {
 		return err
 	}
@@ -160,7 +160,7 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, fullPath string) error {
 }
 
 // ParseFS parses a root module, where it exists at the root of the provided filesystem
-func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) error {
+func (p *Parser) ParseFS(ctx context.Context, dir string) error {
 
 	dir = filepath.Clean(dir)
 
@@ -169,7 +169,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) error {
 		p.modulePath = dir
 	}
 
-	fileInfos, err := fs.ReadDir(target, dir)
+	fileInfos, err := fs.ReadDir(p.moduleFS, dir)
 	if err != nil {
 		return err
 	}
@@ -178,7 +178,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) error {
 	for _, info := range fileInfos {
 		realPath := filepath.Join(dir, info.Name())
 		if info.Type()&os.ModeSymlink != 0 {
-			extra, ok := target.(extrafs.FS)
+			extra, ok := p.moduleFS.(extrafs.FS)
 			if !ok {
 				// we can't handle symlinks in this fs type for now
 				continue
@@ -201,7 +201,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) error {
 	}
 	sort.Strings(paths)
 	for _, path := range paths {
-		if err := p.ParseFile(ctx, target, path); err != nil {
+		if err := p.ParseFile(ctx, path); err != nil {
 			if p.stopOnHCLError {
 				return err
 			}
@@ -213,7 +213,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) error {
 	return nil
 }
 
-func (p *Parser) EvaluateAll(ctx context.Context, target fs.FS) (terraform.Modules, cty.Value, error) {
+func (p *Parser) EvaluateAll(ctx context.Context) (terraform.Modules, cty.Value, error) {
 
 	if len(p.files) == 0 {
 		p.debug("No files found, nothing to do.")
@@ -233,14 +233,14 @@ func (p *Parser) EvaluateAll(ctx context.Context, target fs.FS) (terraform.Modul
 		inputVars = p.moduleBlock.Values().AsValueMap()
 		p.debug("Added %d input variables from module definition.", len(inputVars))
 	} else {
-		inputVars, err = loadTFVars(target, p.tfvarsPaths)
+		inputVars, err = loadTFVars(p.moduleFS, p.tfvarsPaths)
 		if err != nil {
 			return nil, cty.NilVal, err
 		}
 		p.debug("Added %d variables from tfvars.", len(inputVars))
 	}
 
-	modulesMetadata, err := loadModuleMetadata(target, p.projectRoot)
+	modulesMetadata, err := loadModuleMetadata(p.moduleFS, p.projectRoot)
 	if err != nil {
 		p.debug("Error loading module metadata: %s.", err)
 	} else {
@@ -252,7 +252,7 @@ func (p *Parser) EvaluateAll(ctx context.Context, target fs.FS) (terraform.Modul
 		return nil, cty.NilVal, err
 	}
 	evaluator := newEvaluator(
-		target,
+		p.moduleFS,
 		p,
 		p.projectRoot,
 		p.modulePath,

@@ -54,10 +54,10 @@ data "cats_cat" "the-cats-mother" {
 	})
 
 	parser := New(fs, "", OptionStopOnHCLError(true))
-	if err := parser.ParseFS(context.TODO(), fs, "."); err != nil {
+	if err := parser.ParseFS(context.TODO(), "."); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := parser.EvaluateAll(context.TODO(), fs)
+	modules, _, err := parser.EvaluateAll(context.TODO())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -140,10 +140,10 @@ output "mod_result" {
 	})
 
 	parser := New(fs, "", OptionStopOnHCLError(true), OptionWithDebugWriter(os.Stderr))
-	if err := parser.ParseFS(context.TODO(), fs, "code"); err != nil {
+	if err := parser.ParseFS(context.TODO(), "code"); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := parser.EvaluateAll(context.TODO(), fs)
+	modules, _, err := parser.EvaluateAll(context.TODO())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -204,10 +204,10 @@ output "mod_result" {
 	})
 
 	parser := New(fs, "", OptionStopOnHCLError(true))
-	if err := parser.ParseFS(context.TODO(), fs, "code"); err != nil {
+	if err := parser.ParseFS(context.TODO(), "code"); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := parser.EvaluateAll(context.TODO(), fs)
+	modules, _, err := parser.EvaluateAll(context.TODO())
 	if err != nil {
 		t.Fatal(err)
 	}
