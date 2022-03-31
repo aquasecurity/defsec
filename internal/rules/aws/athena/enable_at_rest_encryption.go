@@ -2,11 +2,11 @@ package athena
 
 import (
 	"github.com/aquasecurity/defsec/internal/rules"
-	"github.com/aquasecurity/defsec/internal/state"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/athena"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
+	"github.com/aquasecurity/defsec/pkg/state"
 )
 
 var CheckEnableAtRestEncryption = rules.Register(

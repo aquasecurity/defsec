@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/internal/types"
 
-	"github.com/aquasecurity/defsec/internal/state"
+	"github.com/aquasecurity/defsec/pkg/state"
 
 	"github.com/aquasecurity/defsec/pkg/providers/cloudstack/compute"
 	"github.com/aquasecurity/defsec/pkg/scan"

@@ -5,7 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/internal/types"
 
-	"github.com/aquasecurity/defsec/internal/state"
+	"github.com/aquasecurity/defsec/pkg/state"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
 	"github.com/aquasecurity/defsec/pkg/scan"

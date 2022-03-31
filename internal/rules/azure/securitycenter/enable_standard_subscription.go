@@ -2,11 +2,11 @@ package securitycenter
 
 import (
 	"github.com/aquasecurity/defsec/internal/rules"
-	"github.com/aquasecurity/defsec/internal/state"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/securitycenter"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
+	"github.com/aquasecurity/defsec/pkg/state"
 )
 
 var CheckEnableStandardSubscription = rules.Register(

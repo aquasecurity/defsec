@@ -3,7 +3,7 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/state"
+	"github.com/aquasecurity/defsec/pkg/state"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/autoscaling"
 	"github.com/aquasecurity/defsec/pkg/scan"

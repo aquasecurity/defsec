@@ -3,7 +3,7 @@ package executor
 import (
 	"io"
 
-	"github.com/aquasecurity/defsec/internal/state"
+	"github.com/aquasecurity/defsec/pkg/state"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 

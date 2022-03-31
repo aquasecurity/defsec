@@ -1,8 +1,8 @@
 package rules
 
 import (
-	"github.com/aquasecurity/defsec/internal/state"
 	"github.com/aquasecurity/defsec/pkg/scan"
+	"github.com/aquasecurity/defsec/pkg/state"
 )
 
 var registeredRules []RegisteredRule

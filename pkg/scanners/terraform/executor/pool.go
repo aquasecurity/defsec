@@ -13,7 +13,7 @@ import (
 
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
-	"github.com/aquasecurity/defsec/internal/state"
+	"github.com/aquasecurity/defsec/pkg/state"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 

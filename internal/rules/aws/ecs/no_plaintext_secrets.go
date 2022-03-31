@@ -8,7 +8,7 @@ import (
 
 	"github.com/aquasecurity/defsec/internal/security"
 
-	"github.com/aquasecurity/defsec/internal/state"
+	"github.com/aquasecurity/defsec/pkg/state"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 

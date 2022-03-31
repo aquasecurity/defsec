@@ -10,7 +10,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/kubernetes"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/openstack"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/oracle"
-	"github.com/aquasecurity/defsec/internal/state"
+	"github.com/aquasecurity/defsec/pkg/state"
 	"github.com/aquasecurity/defsec/pkg/terraform"
 )
 
