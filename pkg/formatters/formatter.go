@@ -37,7 +37,7 @@ type Base struct {
 	includeIgnored bool
 	baseDir        string
 	writer         io.Writer
-	outputOverride func(ConfigurableFormatter, fs.FS, scan.Results) error
+	outputOverride func(ConfigurableFormatter, scan.Results) error
 	linksOverride  func(result scan.Result) []string
 }
 
@@ -86,7 +86,7 @@ func (b *Base) Output(fs fs.FS, results scan.Results) error {
 	if !b.enableColours {
 		tml.DisableFormatting()
 	}
-	return b.outputOverride(b, fs, results)
+	return b.outputOverride(b, results)
 }
 
 func key(result scan.Result) string {

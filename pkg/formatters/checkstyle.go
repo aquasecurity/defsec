@@ -2,7 +2,6 @@ package formatters
 
 import (
 	"encoding/xml"
-	"io/fs"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
 
@@ -29,7 +28,7 @@ type checkstyleOutput struct {
 	Files   []checkstyleFile `xml:"file"`
 }
 
-func outputCheckStyle(b ConfigurableFormatter, _ fs.FS, results scan.Results) error {
+func outputCheckStyle(b ConfigurableFormatter, results scan.Results) error {
 
 	output := checkstyleOutput{
 		Version: "5.0",

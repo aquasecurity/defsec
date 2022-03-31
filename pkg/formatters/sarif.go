@@ -1,7 +1,6 @@
 package formatters
 
 import (
-	"io/fs"
 	"path/filepath"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -11,7 +10,7 @@ import (
 	"github.com/owenrumney/go-sarif/v2/sarif"
 )
 
-func outputSARIF(b ConfigurableFormatter, _ fs.FS, results scan.Results) error {
+func outputSARIF(b ConfigurableFormatter, results scan.Results) error {
 	report, err := sarif.New(sarif.Version210)
 	if err != nil {
 		return err

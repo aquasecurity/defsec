@@ -40,7 +40,7 @@ type jUnitFailure struct {
 	Contents string `xml:",chardata"`
 }
 
-func outputJUnit(b ConfigurableFormatter, srcFS fs.FS, results scan.Results) error {
+func outputJUnit(b ConfigurableFormatter, results scan.Results) error {
 
 	output := jUnitTestSuite{
 		Name:     filepath.Base(os.Args[0]),
@@ -65,7 +65,7 @@ func outputJUnit(b ConfigurableFormatter, srcFS fs.FS, results scan.Results) err
 				Classname: rng.GetFilename(),
 				Name:      fmt.Sprintf("[%s][%s] - %s", res.Rule().LongID(), res.Severity(), res.Description()),
 				Time:      "0",
-				Failure:   buildFailure(b, srcFS, res),
+				Failure:   buildFailure(b, res),
 			},
 		)
 	}
@@ -123,7 +123,7 @@ func highlightCodeJunit(srcFS fs.FS, res scan.Result) string {
 	return output
 }
 
-func buildFailure(b ConfigurableFormatter, srcFS fs.FS, res scan.Result) *jUnitFailure {
+func buildFailure(b ConfigurableFormatter, res scan.Result) *jUnitFailure {
 	if res.Status() == scan.StatusPassed {
 		return nil
 	}
@@ -138,7 +138,7 @@ func buildFailure(b ConfigurableFormatter, srcFS fs.FS, res scan.Result) *jUnitF
 		Message: res.Description(),
 		Contents: fmt.Sprintf("%s\n%s\n%s",
 			res.Range().String(),
-			highlightCodeJunit(srcFS, res),
+			highlightCodeJunit(res.Range().GetFS(), res),
 			link,
 		),
 	}
