@@ -2,6 +2,7 @@ package terraform
 
 import (
 	"fmt"
+	"io/fs"
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/types"
@@ -27,9 +28,10 @@ type Block struct {
 	attributes   []*Attribute
 	metadata     types.Metadata
 	moduleSource string
+	moduleFS     fs.FS
 }
 
-func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, parentBlock *Block, moduleSource string) *Block {
+func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, parentBlock *Block, moduleSource string, moduleFS fs.FS) *Block {
 	if ctx == nil {
 		ctx = context.NewContext(&hcl.EvalContext{}, nil)
 	}
@@ -51,6 +53,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 		r.Start.Line,
 		r.End.Line,
 		moduleSource,
+		moduleFS,
 	)
 
 	var parts []string
@@ -82,6 +85,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 		hclBlock:     hclBlock,
 		moduleBlock:  moduleBlock,
 		moduleSource: moduleSource,
+		moduleFS:     moduleFS,
 		parentBlock:  parentBlock,
 		metadata:     metadata,
 	}
@@ -90,13 +94,13 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 	switch body := hclBlock.Body.(type) {
 	case *hclsyntax.Body:
 		for _, b2 := range body.Blocks {
-			children = append(children, NewBlock(b2.AsHCLBlock(), ctx, moduleBlock, &b, moduleSource))
+			children = append(children, NewBlock(b2.AsHCLBlock(), ctx, moduleBlock, &b, moduleSource, moduleFS))
 		}
 	default:
 		content, _, diag := hclBlock.Body.PartialContent(Schema)
 		if diag == nil {
 			for _, hb := range content.Blocks {
-				children = append(children, NewBlock(hb, ctx, moduleBlock, &b, moduleSource))
+				children = append(children, NewBlock(hb, ctx, moduleBlock, &b, moduleSource, moduleFS))
 			}
 		}
 	}
@@ -104,7 +108,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 	b.childBlocks = children
 
 	for _, attr := range b.createAttributes() {
-		b.attributes = append(b.attributes, NewAttribute(attr, ctx, moduleName, metadata, ref, moduleSource))
+		b.attributes = append(b.attributes, NewAttribute(attr, ctx, moduleName, metadata, ref, moduleSource, moduleFS))
 	}
 
 	return &b
@@ -149,7 +153,7 @@ func (b *Block) Clone(index cty.Value) *Block {
 
 	cloneHCL := *b.hclBlock
 
-	clone := NewBlock(&cloneHCL, childCtx, b.moduleBlock, b.parentBlock, b.moduleSource)
+	clone := NewBlock(&cloneHCL, childCtx, b.moduleBlock, b.parentBlock, b.moduleSource, b.moduleFS)
 	if len(clone.hclBlock.Labels) > 0 {
 		position := len(clone.hclBlock.Labels) - 1
 		labels := make([]string, len(clone.hclBlock.Labels))

@@ -2,25 +2,28 @@ package types
 
 import (
 	"fmt"
+	"io/fs"
 	"path/filepath"
 )
 
 type Range interface {
 	GetFilename() string
+	GetLocalFilename() string
+	GetSourcePrefix() string
+	GetFS() fs.FS
 	GetStartLine() int
 	GetEndLine() int
 	String() string
 	IsMultiLine() bool
 }
 
-func NewRange(filename string, startLine int, endLine int, sourcePrefix ...string) baseRange {
+func NewRange(filename string, startLine int, endLine int, sourcePrefix string, srcFS fs.FS) baseRange {
 	r := baseRange{
-		filename:  filename,
-		startLine: startLine,
-		endLine:   endLine,
-	}
-	if len(sourcePrefix) > 0 {
-		r.sourcePrefix = sourcePrefix[0]
+		filename:     filename,
+		startLine:    startLine,
+		endLine:      endLine,
+		fs:           srcFS,
+		sourcePrefix: sourcePrefix,
 	}
 	return r
 }
@@ -30,6 +33,7 @@ type baseRange struct {
 	startLine    int
 	endLine      int
 	sourcePrefix string
+	fs           fs.FS
 }
 
 func (r baseRange) GetFilename() string {
@@ -37,6 +41,10 @@ func (r baseRange) GetFilename() string {
 		return r.filename
 	}
 	return filepath.Join(r.sourcePrefix, r.filename)
+}
+
+func (r baseRange) GetLocalFilename() string {
+	return r.filename
 }
 
 func (r baseRange) GetStartLine() int {
@@ -56,4 +64,12 @@ func (r baseRange) String() string {
 		return fmt.Sprintf("%s:%d-%d", r.GetFilename(), r.startLine, r.endLine)
 	}
 	return fmt.Sprintf("%s:%d", r.GetFilename(), r.startLine)
+}
+
+func (r baseRange) GetFS() fs.FS {
+	return r.fs
+}
+
+func (r baseRange) GetSourcePrefix() string {
+	return r.sourcePrefix
 }

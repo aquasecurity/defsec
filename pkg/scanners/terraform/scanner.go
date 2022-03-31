@@ -123,7 +123,7 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 
 		s.debug("Scanning root module '%s'...", dir)
 
-		p := parser.New(s.parserOpt...)
+		p := parser.New(target, "", s.parserOpt...)
 		s.execLock.RLock()
 		e := executor.New(s.executorOpt...)
 		s.execLock.RUnlock()

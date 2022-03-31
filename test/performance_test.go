@@ -24,7 +24,7 @@ func BenchmarkCalculate(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		p := parser.New(parser.OptionStopOnHCLError(true))
+		p := parser.New(f, "", parser.OptionStopOnHCLError(true))
 		if err := p.ParseFS(context.TODO(), f, "project"); err != nil {
 			b.Fatal(err)
 		}
@@ -56,6 +56,6 @@ module "something" {
 		}
 	}
 
-	fs := testutil.CreateFS(&testing.T{}, files)
-	return fs, nil
+	f := testutil.CreateFS(&testing.T{}, files)
+	return f, nil
 }

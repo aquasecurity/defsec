@@ -61,6 +61,8 @@ func (d Document) MetadataFromIamGo(r ...iamgo.Range) types.Metadata {
 			newRange.GetFilename(),
 			start+rng.StartLine,
 			start+rng.EndLine,
+			newRange.GetSourcePrefix(),
+			newRange.GetFS(),
 		)
 		m = types.NewMetadata(newRange, m.Reference()).WithParent(m)
 	}

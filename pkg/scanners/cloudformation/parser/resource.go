@@ -37,7 +37,7 @@ func (r *Resource) setId(id string) {
 }
 
 func (r *Resource) setFile(filepath string) {
-	r.rng = types.NewRange(filepath, r.rng.GetStartLine(), r.rng.GetEndLine())
+	r.rng = types.NewRange(filepath, r.rng.GetStartLine(), r.rng.GetEndLine(), r.rng.GetSourcePrefix(), r.rng.GetFS())
 
 	for _, p := range r.Inner.Properties {
 		p.setFileAndParentRange(filepath, r.rng)
@@ -54,13 +54,13 @@ func (r *Resource) setContext(ctx *FileContext) {
 }
 
 func (r *Resource) UnmarshalYAML(value *yaml.Node) error {
-	r.rng = types.NewRange("", value.Line-1, calculateEndLine(value))
+	r.rng = types.NewRange("", value.Line-1, calculateEndLine(value), "", nil)
 	r.comment = value.LineComment
 	return value.Decode(&r.Inner)
 }
 
 func (r *Resource) UnmarshalJSONWithMetadata(node jfather.Node) error {
-	r.rng = types.NewRange("", node.Range().Start.Line, node.Range().End.Line)
+	r.rng = types.NewRange("", node.Range().Start.Line, node.Range().End.Line, "", nil)
 	return node.Decode(&r.Inner)
 }
 

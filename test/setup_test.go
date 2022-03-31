@@ -23,7 +23,7 @@ func createModulesFromSource(t *testing.T, source string, ext string) terraform.
 		"source" + ext: source,
 	})
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	if err := p.ParseFS(context.TODO(), fs, "."); err != nil {
 		t.Fatal(err)
 	}

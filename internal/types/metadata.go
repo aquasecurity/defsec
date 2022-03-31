@@ -65,13 +65,13 @@ func (m Metadata) IsMultiLine() bool {
 }
 
 func NewUnmanagedMetadata() Metadata {
-	m := NewMetadata(NewRange("", 0, 0), &FakeReference{})
+	m := NewMetadata(NewRange("", 0, 0, "", nil), &FakeReference{})
 	m.isManaged = false
 	return m
 }
 
 func NewTestMetadata() Metadata {
-	return NewMetadata(NewRange("test.test", 123, 123), &FakeReference{})
+	return NewMetadata(NewRange("test.test", 123, 123, "", nil), &FakeReference{})
 }
 
 func (m Metadata) IsDefault() bool {
@@ -92,7 +92,7 @@ func (m Metadata) Reference() Reference {
 
 func (m Metadata) Range() Range {
 	if m.rnge == nil {
-		return NewRange("unknown", 0, 0)
+		return NewRange("unknown", 0, 0, "", nil)
 	}
 	return m.rnge
 }

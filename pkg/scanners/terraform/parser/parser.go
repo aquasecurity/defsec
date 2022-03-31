@@ -47,6 +47,7 @@ type Parser struct {
 	moduleName     string
 	modulePath     string
 	moduleSource   string
+	moduleFS       fs.FS
 	moduleBlock    *terraform.Block
 	files          []sourceFile
 	tfvarsPaths    []string
@@ -61,7 +62,7 @@ type Parser struct {
 }
 
 // New creates a new Parser
-func New(options ...Option) *Parser {
+func New(moduleFS fs.FS, moduleSource string, options ...Option) *Parser {
 	p := &Parser{
 		workspaceName:  "default",
 		underlying:     hclparse.NewParser(),
@@ -69,6 +70,8 @@ func New(options ...Option) *Parser {
 		moduleName:     "root",
 		debugWriter:    ioutil.Discard,
 		allowDownloads: true,
+		moduleFS:       moduleFS,
+		moduleSource:   moduleSource,
 	}
 
 	for _, option := range options {
@@ -86,9 +89,8 @@ func (p *Parser) debug(format string, args ...interface{}) {
 	_, _ = p.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
-func (p *Parser) newModuleParser(moduleSource, modulePath, moduleName string, moduleBlock *terraform.Block) *Parser {
-	mp := New(p.options...)
-	mp.moduleSource = moduleSource
+func (p *Parser) newModuleParser(moduleFS fs.FS, moduleSource, modulePath, moduleName string, moduleBlock *terraform.Block) *Parser {
+	mp := New(moduleFS, moduleSource, p.options...)
 	mp.modulePath = modulePath
 	mp.moduleBlock = moduleBlock
 	mp.moduleName = moduleName
@@ -285,7 +287,7 @@ func (p *Parser) readBlocks(files []sourceFile) (terraform.Blocks, terraform.Ign
 			continue
 		}
 		for _, fileBlock := range fileBlocks {
-			blocks = append(blocks, terraform.NewBlock(fileBlock, moduleCtx, p.moduleBlock, nil, p.moduleSource))
+			blocks = append(blocks, terraform.NewBlock(fileBlock, moduleCtx, p.moduleBlock, nil, p.moduleSource, p.moduleFS))
 		}
 		ignores = append(ignores, fileIgnores...)
 	}

@@ -70,7 +70,7 @@ func (p *Property) setContext(ctx *FileContext) {
 }
 
 func (p *Property) setFileAndParentRange(filepath string, parentRange types.Range) {
-	p.rng = types.NewRange(filepath, p.rng.GetStartLine(), p.rng.GetEndLine())
+	p.rng = types.NewRange(filepath, p.rng.GetStartLine(), p.rng.GetEndLine(), p.rng.GetSourcePrefix(), p.rng.GetFS())
 	p.parentRange = parentRange
 
 	switch p.Type() {
@@ -92,14 +92,14 @@ func (p *Property) setFileAndParentRange(filepath string, parentRange types.Rang
 }
 
 func (p *Property) UnmarshalYAML(node *yaml.Node) error {
-	p.rng = types.NewRange("", node.Line, calculateEndLine(node))
+	p.rng = types.NewRange("", node.Line, calculateEndLine(node), "", nil)
 
 	p.comment = node.LineComment
 	return setPropertyValueFromYaml(node, &p.Inner)
 }
 
 func (p *Property) UnmarshalJSONWithMetadata(node jfather.Node) error {
-	p.rng = types.NewRange("", node.Range().Start.Line, node.Range().End.Line)
+	p.rng = types.NewRange("", node.Range().Start.Line, node.Range().End.Line, "", nil)
 	return setPropertyValueFromJson(node, &p.Inner)
 }
 

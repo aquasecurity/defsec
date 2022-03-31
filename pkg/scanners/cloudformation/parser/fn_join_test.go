@@ -16,7 +16,7 @@ func Test_resolve_join_value(t *testing.T) {
 	property := &Property{
 		ctx:  &FileContext{},
 		name: "BucketName",
-		rng:  types.NewRange("testfile", 1, 1),
+		rng:  types.NewRange("testfile", 1, 1, "", nil),
 		Inner: PropertyInner{
 			Type: cftypes.Map,
 			Value: map[string]*Property{
@@ -82,7 +82,7 @@ func Test_resolve_join_value_with_reference(t *testing.T) {
 			},
 		},
 		name: "EnvironmentBucket",
-		rng:  types.NewRange("testfile", 1, 1),
+		rng:  types.NewRange("testfile", 1, 1, "", nil),
 		Inner: PropertyInner{
 			Type: cftypes.Map,
 			Value: map[string]*Property{

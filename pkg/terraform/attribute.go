@@ -2,6 +2,7 @@ package terraform
 
 import (
 	"fmt"
+	"io/fs"
 	"regexp"
 	"strings"
 
@@ -22,12 +23,13 @@ type Attribute struct {
 	metadata     types.Metadata
 }
 
-func NewAttribute(attr *hcl.Attribute, ctx *context.Context, module string, parent types.Metadata, parentRef *Reference, moduleSource string) *Attribute {
+func NewAttribute(attr *hcl.Attribute, ctx *context.Context, module string, parent types.Metadata, parentRef *Reference, moduleSource string, moduleFS fs.FS) *Attribute {
 	rng := types.NewRange(
 		attr.Range.Filename,
 		attr.Range.Start.Line,
 		attr.Range.End.Line,
 		moduleSource,
+		moduleFS,
 	)
 	metadata := types.NewMetadata(rng, extendReference(parentRef, attr.Name))
 	return &Attribute{

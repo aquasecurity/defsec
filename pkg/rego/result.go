@@ -24,7 +24,7 @@ func (r regoResult) GetMetadata() types.Metadata {
 	if !r.Managed {
 		return types.NewUnmanagedMetadata()
 	}
-	rng := types.NewRange(r.Filepath, r.StartLine, r.EndLine)
+	rng := types.NewRange(r.Filepath, r.StartLine, r.EndLine, "", nil)
 	ref := types.NewNamedReference(rng.String())
 	if r.Explicit {
 		return types.NewExplicitMetadata(rng, ref)

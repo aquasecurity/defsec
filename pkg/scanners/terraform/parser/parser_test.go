@@ -53,7 +53,7 @@ data "cats_cat" "the-cats-mother" {
 `,
 	})
 
-	parser := New(OptionStopOnHCLError(true))
+	parser := New(fs, "", OptionStopOnHCLError(true))
 	if err := parser.ParseFS(context.TODO(), fs, "."); err != nil {
 		t.Fatal(err)
 	}
@@ -139,7 +139,7 @@ output "mod_result" {
 `,
 	})
 
-	parser := New(OptionStopOnHCLError(true), OptionWithDebugWriter(os.Stderr))
+	parser := New(fs, "", OptionStopOnHCLError(true), OptionWithDebugWriter(os.Stderr))
 	if err := parser.ParseFS(context.TODO(), fs, "code"); err != nil {
 		t.Fatal(err)
 	}
@@ -203,7 +203,7 @@ output "mod_result" {
 `,
 	})
 
-	parser := New(OptionStopOnHCLError(true))
+	parser := New(fs, "", OptionStopOnHCLError(true))
 	if err := parser.ParseFS(context.TODO(), fs, "code"); err != nil {
 		t.Fatal(err)
 	}

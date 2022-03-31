@@ -18,11 +18,11 @@ func Test_RegoConversion(t *testing.T) {
 				Buckets: []s3.Bucket{
 					{
 						Metadata: types.NewMetadata(
-							types.NewRange("main.tf", 2, 4),
+							types.NewRange("main.tf", 2, 4, "", nil),
 							types.NewNamedReference("aws_s3_bucket.example"),
 						),
 						Name: types.String("my-bucket", types.NewMetadata(
-							types.NewRange("main.tf", 3, 3),
+							types.NewRange("main.tf", 3, 3, "", nil),
 							types.NewNamedReference("aws_s3_bucket.example.bucket"),
 						)),
 					},

@@ -31,7 +31,7 @@ func parseIgnores(data []byte, path string) []terraform.Ignore {
 		line = strings.TrimSpace(line)
 		lineIgnores := parseIgnoresFromLine(line)
 		for _, lineIgnore := range lineIgnores {
-			lineIgnore.Range = types.NewRange(path, i+1, i+1)
+			lineIgnore.Range = types.NewRange(path, i+1, i+1, "", nil)
 			ignores = append(ignores, lineIgnore)
 		}
 	}

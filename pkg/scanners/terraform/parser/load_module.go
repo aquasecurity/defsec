@@ -119,7 +119,7 @@ func (e *evaluator) loadModuleFromTerraformCache(ctx context.Context, b *terrafo
 	if modulePath == "" {
 		return nil, fmt.Errorf("failed to load module from .terraform/modules")
 	}
-	moduleParser := e.parentParser.newModuleParser(source, modulePath, b.Label(), b)
+	moduleParser := e.parentParser.newModuleParser(e.filesystem, source, modulePath, b.Label(), b)
 	if err := moduleParser.ParseFS(ctx, e.filesystem, modulePath); err != nil {
 		return nil, err
 	}
@@ -155,7 +155,7 @@ func (e *evaluator) loadExternalModule(ctx context.Context, b *terraform.Block, 
 	}
 	prefix = filepath.Join(e.parentParser.moduleSource, prefix)
 	e.debug("Module '%s' resolved to path '%s' in filesystem '%s' with prefix '%s'", b.FullName(), path, filesystem, prefix)
-	moduleParser := e.parentParser.newModuleParser(prefix, path, b.Label(), b)
+	moduleParser := e.parentParser.newModuleParser(filesystem, prefix, path, b.Label(), b)
 	if err := moduleParser.ParseFS(ctx, filesystem, path); err != nil {
 		return nil, err
 	}

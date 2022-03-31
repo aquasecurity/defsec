@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var fakeMetadata = NewMetadata(NewRange("main.tf", 123, 123), &FakeReference{})
+var fakeMetadata = NewMetadata(NewRange("main.tf", 123, 123, "", nil), &FakeReference{})
 
 func Test_BoolValueIsTrue(t *testing.T) {
 	testCases := []struct {

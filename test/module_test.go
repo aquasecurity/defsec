@@ -93,7 +93,7 @@ resource "problem" "uhoh" {
 
 	debug := bytes.NewBuffer([]byte{})
 
-	p := parser.New(parser.OptionStopOnHCLError(true), parser.OptionWithDebugWriter(debug))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true), parser.OptionWithDebugWriter(debug))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -124,7 +124,7 @@ resource "problem" "uhoh" {
 `},
 	)
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -153,7 +153,7 @@ resource "problem" "uhoh" {
 `},
 	)
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -180,7 +180,7 @@ resource "problem" "uhoh" {
 }
 `})
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -207,7 +207,7 @@ resource "problem" "uhoh" {
 }
 `})
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -243,7 +243,7 @@ resource "problem" "uhoh" {
 }
 `})
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -281,7 +281,7 @@ resource "problem" "uhoh" {
 `,
 	})
 
-	p := parser.New(parser.OptionStopOnHCLError(true), parser.OptionWithDebugWriter(os.Stderr))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true), parser.OptionWithDebugWriter(os.Stderr))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -336,7 +336,7 @@ resource "problem" "uhoh" {
 `,
 	})
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -385,7 +385,7 @@ resource "problem" "uhoh" {
 `,
 	})
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -423,7 +423,7 @@ resource "problem" "uhoh" {
 `,
 	})
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -478,7 +478,7 @@ resource "problem" "uhoh" {
 `,
 	})
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -528,7 +528,7 @@ resource "bad" "thing" {
 	reg := rules.Register(r1, nil)
 	defer rules.Deregister(reg)
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -577,7 +577,7 @@ resource "bad" "thing" {
 	reg := rules.Register(r1, nil)
 	defer rules.Deregister(reg)
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
@@ -626,7 +626,7 @@ data "aws_iam_policy_document" "policy" {
 }
 `})
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)
