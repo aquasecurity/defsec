@@ -23,7 +23,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := formatters.New().AsSARIF().Build().Output(fsys, results); err != nil {
+	if err := formatters.New().AsSARIF().Build().Output(results); err != nil {
 		panic(err)
 	}
 }

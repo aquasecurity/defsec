@@ -3,7 +3,6 @@ package formatters
 import (
 	"fmt"
 	"io"
-	"io/fs"
 	"os"
 	"sort"
 
@@ -15,7 +14,7 @@ import (
 )
 
 type Formatter interface {
-	Output(fs.FS, scan.Results) error
+	Output(scan.Results) error
 }
 
 type ConfigurableFormatter interface {
@@ -82,7 +81,7 @@ func (b *Base) BaseDir() string {
 	return b.baseDir
 }
 
-func (b *Base) Output(fs fs.FS, results scan.Results) error {
+func (b *Base) Output(results scan.Results) error {
 	if !b.enableColours {
 		tml.DisableFormatting()
 	}

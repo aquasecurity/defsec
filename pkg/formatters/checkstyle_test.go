@@ -31,7 +31,7 @@ func TestOutputCheckStyle(t *testing.T) {
 	var buf bytes.Buffer
 	factory := New().AsCheckStyle().WithWriter(&buf).Build()
 
-	err := factory.Output(nil, results)
+	err := factory.Output(results)
 
 	assert.Equal(t, wantErr, err)
 	assert.Equal(t, want, buf.String())
