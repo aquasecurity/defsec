@@ -2,6 +2,7 @@ package scan
 
 import (
 	"fmt"
+	"io/fs"
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/types"
@@ -170,6 +171,24 @@ func (r *Results) AddIgnored(source MetadataProvider, descriptions ...string) {
 func (r *Results) SetRule(rule Rule) {
 	for i := range *r {
 		(*r)[i].rule = rule
+	}
+}
+
+func (r *Results) SetSourceAndFilesystem(source string, f fs.FS) {
+	for i := range *r {
+		m := (*r)[i].Metadata()
+		if m.IsUnmanaged() || m.Range() == nil {
+			continue
+		}
+		rng := m.Range()
+		newrng := types.NewRange(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(), source, f)
+		switch {
+		case m.IsExplicit():
+			m = types.NewExplicitMetadata(newrng, m.Reference())
+		default:
+			m = types.NewMetadata(newrng, m.Reference())
+		}
+		(*r)[i].OverrideMetadata(m)
 	}
 }
 

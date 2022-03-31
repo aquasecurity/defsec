@@ -128,6 +128,7 @@ func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (scan.Res
 	if err != nil {
 		return nil, err
 	}
+	results.SetSourceAndFilesystem("", fs)
 
 	sort.Slice(results, func(i, j int) bool {
 		return results[i].Rule().AVDID < results[j].Rule().AVDID
