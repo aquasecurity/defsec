@@ -3,10 +3,11 @@ package testutil
 import (
 	"encoding/json"
 	"io/fs"
+	"path/filepath"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
-
+	"github.com/liamg/memoryfs"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -43,7 +44,14 @@ func ruleIDInResults(ruleID string, results scan.Results) bool {
 }
 
 func CreateFS(t *testing.T, files map[string]string) fs.FS {
-	return NewMemFS(files)
+	memfs := memoryfs.New()
+	for name, content := range files {
+		err := memfs.MkdirAll(filepath.Dir(name), 0o700)
+		require.NoError(t, err)
+		err = memfs.WriteFile(name, []byte(content), 0o644)
+		require.NoError(t, err)
+	}
+	return memfs
 }
 
 func AssertDefsecEqual(t *testing.T, expected interface{}, actual interface{}) {
