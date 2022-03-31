@@ -100,7 +100,13 @@ func (p *Parser) Required(fs fs.FS, path string) bool {
 	return ok
 }
 
-func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (*FileContext, error) {
+func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (context *FileContext, err error) {
+
+	defer func() {
+		if e := recover(); e != nil {
+			err = fmt.Errorf("panic during parse: %s", e)
+		}
+	}()
 
 	select {
 	case <-ctx.Done():
@@ -126,7 +132,7 @@ func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (*FileCon
 
 	lines := strings.Split(string(content), "\n")
 
-	context := &FileContext{
+	context = &FileContext{
 		filepath:     path,
 		lines:        lines,
 		SourceFormat: sourceFmt,

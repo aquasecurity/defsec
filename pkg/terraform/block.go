@@ -16,19 +16,20 @@ import (
 )
 
 type Block struct {
-	id          string
-	hclBlock    *hcl.Block
-	context     *context.Context
-	moduleBlock *Block
-	parentBlock *Block
-	expanded    bool
-	cloneIndex  int
-	childBlocks []*Block
-	attributes  []*Attribute
-	metadata    types.Metadata
+	id           string
+	hclBlock     *hcl.Block
+	context      *context.Context
+	moduleBlock  *Block
+	parentBlock  *Block
+	expanded     bool
+	cloneIndex   int
+	childBlocks  []*Block
+	attributes   []*Attribute
+	metadata     types.Metadata
+	moduleSource string
 }
 
-func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, parentBlock *Block) *Block {
+func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, parentBlock *Block, moduleSource string) *Block {
 	if ctx == nil {
 		ctx = context.NewContext(&hcl.EvalContext{}, nil)
 	}
@@ -49,6 +50,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 		r.Filename,
 		r.Start.Line,
 		r.End.Line,
+		moduleSource,
 	)
 
 	var parts []string
@@ -75,25 +77,26 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 	}
 
 	b := Block{
-		id:          uuid.New().String(),
-		context:     ctx,
-		hclBlock:    hclBlock,
-		moduleBlock: moduleBlock,
-		parentBlock: parentBlock,
-		metadata:    metadata,
+		id:           uuid.New().String(),
+		context:      ctx,
+		hclBlock:     hclBlock,
+		moduleBlock:  moduleBlock,
+		moduleSource: moduleSource,
+		parentBlock:  parentBlock,
+		metadata:     metadata,
 	}
 
 	var children Blocks
 	switch body := hclBlock.Body.(type) {
 	case *hclsyntax.Body:
 		for _, b2 := range body.Blocks {
-			children = append(children, NewBlock(b2.AsHCLBlock(), ctx, moduleBlock, &b))
+			children = append(children, NewBlock(b2.AsHCLBlock(), ctx, moduleBlock, &b, moduleSource))
 		}
 	default:
 		content, _, diag := hclBlock.Body.PartialContent(Schema)
 		if diag == nil {
 			for _, hb := range content.Blocks {
-				children = append(children, NewBlock(hb, ctx, moduleBlock, &b))
+				children = append(children, NewBlock(hb, ctx, moduleBlock, &b, moduleSource))
 			}
 		}
 	}
@@ -101,7 +104,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 	b.childBlocks = children
 
 	for _, attr := range b.createAttributes() {
-		b.attributes = append(b.attributes, NewAttribute(attr, ctx, moduleName, metadata, ref))
+		b.attributes = append(b.attributes, NewAttribute(attr, ctx, moduleName, metadata, ref, moduleSource))
 	}
 
 	return &b
@@ -146,7 +149,7 @@ func (b *Block) Clone(index cty.Value) *Block {
 
 	cloneHCL := *b.hclBlock
 
-	clone := NewBlock(&cloneHCL, childCtx, b.moduleBlock, b.parentBlock)
+	clone := NewBlock(&cloneHCL, childCtx, b.moduleBlock, b.parentBlock, b.moduleSource)
 	if len(clone.hclBlock.Labels) > 0 {
 		position := len(clone.hclBlock.Labels) - 1
 		labels := make([]string, len(clone.hclBlock.Labels))

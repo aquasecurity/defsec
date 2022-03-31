@@ -2,6 +2,7 @@ package parser
 
 import (
 	"context"
+	"os"
 	"sort"
 	"testing"
 
@@ -138,7 +139,7 @@ output "mod_result" {
 `,
 	})
 
-	parser := New(OptionStopOnHCLError(true))
+	parser := New(OptionStopOnHCLError(true), OptionWithDebugWriter(os.Stderr))
 	if err := parser.ParseFS(context.TODO(), fs, "code"); err != nil {
 		t.Fatal(err)
 	}
@@ -210,6 +211,7 @@ output "mod_result" {
 	if err != nil {
 		t.Fatal(err)
 	}
+	require.Len(t, modules, 2)
 	rootModule := modules[0]
 	childModule := modules[1]
 

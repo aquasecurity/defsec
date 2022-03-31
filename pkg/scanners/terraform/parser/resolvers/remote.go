@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"sync/atomic"
@@ -28,30 +29,30 @@ func (r *remoteResolver) GetDownloadCount() int {
 	return int(r.count)
 }
 
-func (r *remoteResolver) Resolve(ctx context.Context, opt Options) (downloadPath string, applies bool, err error) {
+func (r *remoteResolver) Resolve(ctx context.Context, _ fs.FS, opt Options) (filesystem fs.FS, prefix string, downloadPath string, applies bool, err error) {
 	if !opt.hasPrefix("github.com/", "bitbucket.org/", "s3:", "git@", "git:", "hg:", "https:", "gcs:") {
-		return "", false, nil
+		return nil, "", "", false, nil
 	}
 
 	if !opt.AllowDownloads {
-		return "", false, nil
+		return nil, "", "", false, nil
 	}
 
-	cacheDir := getCacheDir(opt.WorkingDir, opt.Name)
+	key := cacheKey(opt.OriginalSource, opt.OriginalVersion)
+	opt.Debug("Storing with cache key %s", key)
+	cacheDir := filepath.Join(cacheDir(), key)
 	if err := r.download(ctx, opt, cacheDir); err != nil {
-		return "", true, err
+		return nil, "", "", true, err
 	}
 	r.incrementCount(opt)
 	opt.Debug("Successfully downloaded %s from %s", opt.Name, opt.Source)
-	if err := writeCacheRecord(cacheDir, opt.Source, opt.Version); err != nil {
-		return "", true, err
-	}
-	return cacheDir, true, nil
+	opt.Debug("Module '%s' resolved via remote download.", opt.Name)
+	return os.DirFS(cacheDir), opt.Source, ".", true, nil
 }
 
 func (r *remoteResolver) download(ctx context.Context, opt Options, dst string) error {
 	_ = os.RemoveAll(dst)
-	if err := os.MkdirAll(filepath.Dir(dst), 0o666); err != nil {
+	if err := os.MkdirAll(filepath.Dir(dst), 0o755); err != nil {
 		return err
 	}
 
@@ -59,6 +60,8 @@ func (r *remoteResolver) download(ctx context.Context, opt Options, dst string) 
 
 	// Overwrite the file getter so that a file will be copied
 	getter.Getters["file"] = &getter.FileGetter{Copy: true}
+
+	opt.Debug("Downloading %s...", opt.Source)
 
 	// Build the client
 	client := &getter.Client{
@@ -75,6 +78,9 @@ func (r *remoteResolver) download(ctx context.Context, opt Options, dst string) 
 		return xerrors.Errorf("failed to download: %w", err)
 	}
 
-	opt.Debug("Module '%s' resolving via remote download...", opt.Name)
 	return nil
+}
+
+func (r *remoteResolver) GetSourcePrefix(source string) string {
+	return source
 }

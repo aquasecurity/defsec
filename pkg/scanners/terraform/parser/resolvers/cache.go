@@ -2,61 +2,69 @@ package resolvers
 
 import (
 	"context"
+	"crypto/md5" // nolint
 	"fmt"
-	"io/ioutil"
+	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
-)
 
-const cacheRecordFile = ".tfsec-cache"
+	"golang.org/x/sys/unix"
+)
 
 type cacheResolver struct{}
 
 var Cache = &cacheResolver{}
 
-func (r *cacheResolver) Resolve(_ context.Context, opt Options) (downloadPath string, applies bool, err error) {
-	if !r.isCached(opt) {
-		return "", false, nil
+var cacheFS fs.FS
+
+func init() {
+	dir := cacheDir()
+	if dir == "" {
+		return
 	}
-	opt.Debug("Module '%s' resolving via cache...", opt.Name)
-	return getCacheDir(opt.WorkingDir, opt.Name), true, nil
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return
+	}
+	cacheFS = os.DirFS(dir)
 }
 
-func getCacheDir(cwd string, name string) string {
-	return filepath.Join(cwd, ".tfsec", "downloaded-modules", name)
+func cacheDir() string {
+	for _, attempt := range []string{
+		filepath.Join(".tfsec", "cache"),
+		filepath.Join(os.TempDir(), ".tfsec", "cache"),
+	} {
+		if err := os.MkdirAll(attempt, 0o755); err != nil {
+			continue
+		}
+		if writable(attempt) {
+			return attempt
+		}
+	}
+	return ""
 }
 
-func (r *cacheResolver) isCached(options Options) bool {
-	target := getCacheDir(options.WorkingDir, options.Name)
-	info, err := os.Stat(target)
-	if err != nil {
-		return false
-	}
-	if !info.IsDir() {
-		return false
-	}
-	// check source and version have not changed
-	return verifyCacheRecord(target, options.Source, options.Version)
+func writable(path string) bool {
+	return unix.Access(path, unix.W_OK) == nil
 }
 
-func buildCacheRecord(source, version string) string {
-	if version == "" {
-		return source
+func (r *cacheResolver) Resolve(_ context.Context, _ fs.FS, opt Options) (filesystem fs.FS, prefix string, downloadPath string, applies bool, err error) {
+	if !opt.AllowCache {
+		opt.Debug("Cache is disabled.")
+		return nil, "", "", false, nil
 	}
-	return fmt.Sprintf("%s:%s", source, strings.ReplaceAll(version, " ", "_"))
+	if cacheFS == nil {
+		opt.Debug("No cache filesystem is available on this machine.")
+		return nil, "", "", false, nil
+	}
+	key := cacheKey(opt.Source, opt.Version)
+	opt.Debug("Trying to resolve: %s", key)
+	if info, err := fs.Stat(cacheFS, key); err == nil && info.IsDir() {
+		opt.Debug("Module '%s' resolving via cache...", opt.Name)
+		return os.DirFS(filepath.Join(cacheDir(), key)), filepath.Join(cacheDir(), key), ".", true, nil
+	}
+	return nil, "", "", false, nil
 }
 
-func writeCacheRecord(dir, source, version string) error {
-	record := buildCacheRecord(source, version)
-	return ioutil.WriteFile(filepath.Join(dir, cacheRecordFile), []byte(record), 0600)
-}
-
-func verifyCacheRecord(dir, source, version string) bool {
-	expectedRecord := buildCacheRecord(source, version)
-	data, err := ioutil.ReadFile(filepath.Join(dir, cacheRecordFile))
-	if err != nil {
-		return false
-	}
-	return expectedRecord == string(data)
+func cacheKey(source, version string) string {
+	return fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s", source, version)))) // nolint
 }

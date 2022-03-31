@@ -3,15 +3,13 @@ package parser
 import (
 	"context"
 	"fmt"
-	"os"
-	"path/filepath"
-	"strings"
+	"io/fs"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser/resolvers"
 )
 
 type ModuleResolver interface {
-	Resolve(context.Context, resolvers.Options) (downloadPath string, applies bool, err error)
+	Resolve(context.Context, fs.FS, resolvers.Options) (filesystem fs.FS, prefix string, downloadPath string, applies bool, err error)
 }
 
 var defaultResolvers = []ModuleResolver{
@@ -21,22 +19,15 @@ var defaultResolvers = []ModuleResolver{
 	resolvers.Registry,
 }
 
-func resolveModule(ctx context.Context, opt resolvers.Options) (downloadPath string, err error) {
+func resolveModule(ctx context.Context, current fs.FS, opt resolvers.Options) (filesystem fs.FS, sourcePrefix string, downloadPath string, err error) {
 	opt.Debug("Resolving module '%s' with source: '%s'...", opt.Name, opt.Source)
 	for _, resolver := range defaultResolvers {
-		if path, applies, err := resolver.Resolve(ctx, opt); err != nil {
-			return "", err
+		if filesystem, prefix, path, applies, err := resolver.Resolve(ctx, current, opt); err != nil {
+			return nil, "", "", err
 		} else if applies {
-			return cleanPath(opt.ModulePath, path), nil
+			opt.Debug("Module path is %s", path)
+			return filesystem, prefix, path, nil
 		}
 	}
-	return "", fmt.Errorf("failed to resolve module '%s' with source: %s", opt.Name, opt.Source)
-}
-
-func cleanPath(modulePath, path string) string {
-	if strings.HasPrefix(path, fmt.Sprintf(".%c", os.PathSeparator)) ||
-		strings.HasPrefix(path, fmt.Sprintf("..%c", os.PathSeparator)) {
-		path = filepath.Join(modulePath, path)
-	}
-	return path
+	return nil, "", "", fmt.Errorf("failed to resolve module '%s' with source: %s", opt.Name, opt.Source)
 }

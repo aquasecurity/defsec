@@ -46,6 +46,7 @@ type Parser struct {
 	projectRoot    string
 	moduleName     string
 	modulePath     string
+	moduleSource   string
 	moduleBlock    *terraform.Block
 	files          []sourceFile
 	tfvarsPaths    []string
@@ -85,8 +86,9 @@ func (p *Parser) debug(format string, args ...interface{}) {
 	_, _ = p.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
-func (p *Parser) newModuleParser(modulePath string, moduleName string, moduleBlock *terraform.Block) *Parser {
+func (p *Parser) newModuleParser(moduleSource, modulePath, moduleName string, moduleBlock *terraform.Block) *Parser {
 	mp := New(p.options...)
+	mp.moduleSource = moduleSource
 	mp.modulePath = modulePath
 	mp.moduleBlock = moduleBlock
 	mp.moduleName = moduleName
@@ -157,6 +159,8 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, fullPath string) error {
 
 // ParseFS parses a root module, where it exists at the root of the provided filesystem
 func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) error {
+
+	dir = filepath.Clean(dir)
 
 	if p.projectRoot == "" {
 		p.projectRoot = dir
@@ -281,7 +285,7 @@ func (p *Parser) readBlocks(files []sourceFile) (terraform.Blocks, terraform.Ign
 			continue
 		}
 		for _, fileBlock := range fileBlocks {
-			blocks = append(blocks, terraform.NewBlock(fileBlock, moduleCtx, p.moduleBlock, nil))
+			blocks = append(blocks, terraform.NewBlock(fileBlock, moduleCtx, p.moduleBlock, nil, p.moduleSource))
 		}
 		ignores = append(ignores, fileIgnores...)
 	}

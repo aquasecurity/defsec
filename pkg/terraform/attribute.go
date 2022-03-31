@@ -22,11 +22,12 @@ type Attribute struct {
 	metadata     types.Metadata
 }
 
-func NewAttribute(attr *hcl.Attribute, ctx *context.Context, module string, parent types.Metadata, parentRef *Reference) *Attribute {
+func NewAttribute(attr *hcl.Attribute, ctx *context.Context, module string, parent types.Metadata, parentRef *Reference, moduleSource string) *Attribute {
 	rng := types.NewRange(
 		attr.Range.Filename,
 		attr.Range.Start.Line,
 		attr.Range.End.Line,
+		moduleSource,
 	)
 	metadata := types.NewMetadata(rng, extendReference(parentRef, attr.Name))
 	return &Attribute{

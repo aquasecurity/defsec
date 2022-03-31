@@ -7,9 +7,10 @@ import (
 )
 
 type Options struct {
-	Source, Version, WorkingDir, Name, ModulePath string
-	DebugWriter                                   io.Writer
-	AllowDownloads                                bool
+	Source, OriginalSource, Version, OriginalVersion, WorkingDir, Name, ModulePath string
+	DebugWriter                                                                    io.Writer
+	AllowDownloads                                                                 bool
+	AllowCache                                                                     bool
 }
 
 func (o *Options) hasPrefix(prefixes ...string) bool {

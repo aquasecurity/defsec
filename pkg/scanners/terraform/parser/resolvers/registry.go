@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/fs"
 	"net/http"
 	"sort"
 	"strings"
@@ -31,18 +32,17 @@ type moduleVersions struct {
 	} `json:"modules"`
 }
 
-func (r *registryResolver) Resolve(ctx context.Context, opt Options) (downloadPath string, applies bool, err error) {
+func (r *registryResolver) Resolve(ctx context.Context, target fs.FS, opt Options) (filesystem fs.FS, prefix string, downloadPath string, applies bool, err error) {
 
 	if !opt.AllowDownloads {
-		return "", false, nil
+		return
 	}
 
-	inputSource := opt.Source
 	inputVersion := opt.Version
 
 	parts := strings.Split(opt.Source, "/")
 	if len(parts) != 3 && len(parts) != 4 {
-		return "", false, nil
+		return
 	}
 
 	hostname := "registry.terraform.io"
@@ -58,24 +58,24 @@ func (r *registryResolver) Resolve(ctx context.Context, opt Options) (downloadPa
 		opt.Debug("Requesting module versions from registry using '%s'...", versionUrl)
 		req, err := http.NewRequestWithContext(ctx, http.MethodGet, versionUrl, nil)
 		if err != nil {
-			return "", true, err
+			return nil, "", "", true, err
 		}
-		resp, err := http.DefaultClient.Do(req)
+		resp, err := r.client.Do(req)
 		if err != nil {
-			return "", true, err
+			return nil, "", "", true, err
 		}
 		defer func() { _ = resp.Body.Close() }()
 		if resp.StatusCode != http.StatusOK {
-			return "", true, fmt.Errorf("unexpected status code for versions endpoint: %d", resp.StatusCode)
+			return nil, "", "", true, fmt.Errorf("unexpected status code for versions endpoint: %d", resp.StatusCode)
 		}
 		var availableVersions moduleVersions
 		if err := json.NewDecoder(resp.Body).Decode(&availableVersions); err != nil {
-			return "", true, err
+			return nil, "", "", true, err
 		}
 
 		opt.Version, err = resolveVersion(inputVersion, availableVersions)
 		if err != nil {
-			return "", true, err
+			return nil, "", "", true, err
 		}
 		opt.Debug("Found version '%s' for constraint '%s'", opt.Version, inputVersion)
 	}
@@ -91,7 +91,7 @@ func (r *registryResolver) Resolve(ctx context.Context, opt Options) (downloadPa
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
-		return "", true, err
+		return nil, "", "", true, err
 	}
 	if opt.Version != "" {
 		req.Header.Set("X-Terraform-Version", opt.Version)
@@ -99,23 +99,20 @@ func (r *registryResolver) Resolve(ctx context.Context, opt Options) (downloadPa
 
 	resp, err := r.client.Do(req)
 	if err != nil {
-		return "", true, err
+		return nil, "", "", true, err
 	}
 	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusNoContent {
-		return "", true, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		return nil, "", "", true, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
 	opt.Source = resp.Header.Get("X-Terraform-Get")
 	opt.Debug("Module '%s' resolved via registry to new source: '%s'", opt.Name, opt.Source)
-	downloadPath, _, err = Remote.Resolve(ctx, opt)
+	filesystem, prefix, downloadPath, _, err = Remote.Resolve(ctx, target, opt)
 	if err != nil {
-		return "", true, err
+		return nil, "", "", true, err
 	}
-	if err := writeCacheRecord(downloadPath, inputSource, inputVersion); err != nil {
-		return "", true, err
-	}
-	return downloadPath, true, err
+	return filesystem, prefix, downloadPath, true, nil
 }
 
 func resolveVersion(input string, versions moduleVersions) (string, error) {

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
@@ -280,7 +281,7 @@ resource "problem" "uhoh" {
 `,
 	})
 
-	p := parser.New(parser.OptionStopOnHCLError(true))
+	p := parser.New(parser.OptionStopOnHCLError(true), parser.OptionWithDebugWriter(os.Stderr))
 	err := p.ParseFS(context.TODO(), fs, "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO(), fs)

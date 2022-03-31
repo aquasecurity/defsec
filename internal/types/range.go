@@ -1,6 +1,9 @@
 package types
 
-import "fmt"
+import (
+	"fmt"
+	"path/filepath"
+)
 
 type Range interface {
 	GetFilename() string
@@ -10,22 +13,30 @@ type Range interface {
 	IsMultiLine() bool
 }
 
-func NewRange(filename string, startLine int, endLine int) baseRange {
-	return baseRange{
+func NewRange(filename string, startLine int, endLine int, sourcePrefix ...string) baseRange {
+	r := baseRange{
 		filename:  filename,
 		startLine: startLine,
 		endLine:   endLine,
 	}
+	if len(sourcePrefix) > 0 {
+		r.sourcePrefix = sourcePrefix[0]
+	}
+	return r
 }
 
 type baseRange struct {
-	filename  string
-	startLine int
-	endLine   int
+	filename     string
+	startLine    int
+	endLine      int
+	sourcePrefix string
 }
 
 func (r baseRange) GetFilename() string {
-	return r.filename
+	if r.sourcePrefix == "" {
+		return r.filename
+	}
+	return filepath.Join(r.sourcePrefix, r.filename)
 }
 
 func (r baseRange) GetStartLine() int {
@@ -42,7 +53,7 @@ func (r baseRange) IsMultiLine() bool {
 
 func (r baseRange) String() string {
 	if r.startLine != r.endLine {
-		return fmt.Sprintf("%s:%d-%d", r.filename, r.startLine, r.endLine)
+		return fmt.Sprintf("%s:%d-%d", r.GetFilename(), r.startLine, r.endLine)
 	}
-	return fmt.Sprintf("%s:%d", r.filename, r.startLine)
+	return fmt.Sprintf("%s:%d", r.GetFilename(), r.startLine)
 }
