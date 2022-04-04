@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"context"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -56,7 +55,7 @@ data "cats_cat" "the-cats-mother" {
 	if err := parser.ParseDirectory(filepath.Dir(path)); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := parser.EvaluateAll(context.TODO())
+	modules, _, err := parser.EvaluateAll()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -142,7 +141,7 @@ output "mod_result" {
 	if err := parser.ParseDirectory(path); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := parser.EvaluateAll(context.TODO())
+	modules, _, err := parser.EvaluateAll()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -206,7 +205,7 @@ output "mod_result" {
 	if err := parser.ParseDirectory(path); err != nil {
 		t.Fatal(err)
 	}
-	modules, _, err := parser.EvaluateAll(context.TODO())
+	modules, _, err := parser.EvaluateAll()
 	if err != nil {
 		t.Fatal(err)
 	}

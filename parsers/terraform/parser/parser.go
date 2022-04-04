@@ -28,7 +28,7 @@ type Parser interface {
 	ParseFile(path string) error
 	ParseContent(data []byte, fullPath string) error
 	ParseDirectory(path string) error
-	EvaluateAll(ctx context.Context) (terraform.Modules, cty.Value, error)
+	EvaluateAll() (terraform.Modules, cty.Value, error)
 	Metrics() Metrics
 	NewModuleParser(modulePath string, moduleName string, moduleBlock *terraform.Block) Parser
 }
@@ -193,7 +193,7 @@ func (p *parser) ParseDirectory(fullPath string) error {
 	return nil
 }
 
-func (p *parser) EvaluateAll(ctx context.Context) (terraform.Modules, cty.Value, error) {
+func (p *parser) EvaluateAll() (terraform.Modules, cty.Value, error) {
 
 	if len(p.files) == 0 {
 		p.debug("No files found, nothing to do.")
@@ -245,7 +245,7 @@ func (p *parser) EvaluateAll(ctx context.Context) (terraform.Modules, cty.Value,
 		p.debugWriter,
 		p.allowDownloads,
 	)
-	modules, parseDuration := evaluator.EvaluateAll(ctx)
+	modules, parseDuration := evaluator.EvaluateAll(context.TODO())
 	p.metrics.Counts.Modules = len(modules)
 	p.metrics.Timings.ParseDuration = parseDuration
 	p.debug("Finished parsing module '%s'.", p.moduleName)

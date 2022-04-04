@@ -1,7 +1,6 @@
 package test
 
 import (
-	"context"
 	"testing"
 
 	"github.com/aquasecurity/defsec/scanners/terraform/executor"
@@ -46,7 +45,7 @@ locals {
 		p := parser.New(parser.OptionStopOnHCLError(true))
 		err := p.ParseDirectory(fs.RealPath("/project"))
 		require.NoError(t, err)
-		modules, _, err := p.EvaluateAll(context.TODO())
+		modules, _, err := p.EvaluateAll()
 		require.NoError(t, err)
 		results, _, _ := executor.New().Execute(modules)
 		require.Len(t, results.GetFailed(), 2)

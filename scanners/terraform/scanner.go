@@ -1,7 +1,6 @@
 package terraform
 
 import (
-	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -111,7 +110,7 @@ func (s *Scanner) Scan() (rules.Results, Metrics, error) {
 			return nil, metrics, err
 		}
 
-		modules, _, err := p.EvaluateAll(context.TODO())
+		modules, _, err := p.EvaluateAll()
 		if err != nil {
 			return nil, metrics, err
 		}

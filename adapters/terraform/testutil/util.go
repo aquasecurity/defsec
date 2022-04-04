@@ -1,7 +1,6 @@
 package testutil
 
 import (
-	"context"
 	"encoding/json"
 	"io/ioutil"
 	"os"
@@ -32,7 +31,7 @@ func CreateModulesFromSource(t *testing.T, source string, ext string) terraform.
 	if err := p.ParseDirectory(filepath.Dir(path)); err != nil {
 		t.Errorf("parse error: %s", err)
 	}
-	modules, _, err := p.EvaluateAll(context.TODO())
+	modules, _, err := p.EvaluateAll()
 	if err != nil {
 		t.Error(err)
 	}

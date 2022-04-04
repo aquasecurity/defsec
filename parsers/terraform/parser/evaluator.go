@@ -148,7 +148,7 @@ func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, time.Du
 
 	var modules []*terraform.Module
 	for _, definition := range e.loadModules(ctx) {
-		submodules, outputs, err := definition.Parser.EvaluateAll(ctx)
+		submodules, outputs, err := definition.Parser.EvaluateAll()
 		if err != nil {
 			e.debug("Failed to evaluate submodule '%s': %s.", definition.Name, err)
 			continue
