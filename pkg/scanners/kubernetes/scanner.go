@@ -27,6 +27,7 @@ type Scanner struct {
 	debugWriter      io.Writer
 	traceWriter      io.Writer
 	policyDirs       []string
+	policyReaders    []io.Reader
 	dataDirs         []string
 	policyNamespaces []string
 	regoScanner      *rego.Scanner
@@ -65,7 +66,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 		regoOpts = append(regoOpts, rego.OptionWithTrace(s.traceWriter))
 	}
 	regoScanner := rego.NewScanner(regoOpts...)
-	if err := regoScanner.LoadPolicies(len(s.policyDirs) == 0, srcFS, s.policyDirs...); err != nil {
+	if err := regoScanner.LoadPolicies(len(s.policyDirs)+len(s.policyReaders) == 0, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner

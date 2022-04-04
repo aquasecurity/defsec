@@ -29,7 +29,7 @@ deny {
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, "policies"),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -60,7 +60,7 @@ deny {
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, "policies"),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -102,7 +102,7 @@ exception[ns] {
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, "policies"),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -140,7 +140,7 @@ exception[rules] {
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, "policies"),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -175,7 +175,7 @@ deny_evil {
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, "policies"),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -207,7 +207,7 @@ deny[msg] {
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, "policies"),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -246,7 +246,7 @@ deny[res] {
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, "policies"),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -289,7 +289,7 @@ deny[res] {
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, "policies"),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -344,7 +344,7 @@ deny[res] {
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, "policies"),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -394,7 +394,7 @@ deny {
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, "policies"),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -429,7 +429,7 @@ deny {
 	scanner := NewScanner()
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, "policies"),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
