@@ -74,7 +74,6 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 	if err != nil {
 		return nil, err
 	}
-	results.SetRelativeTo(path)
 	return results, nil
 }
 

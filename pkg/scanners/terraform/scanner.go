@@ -169,7 +169,6 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 	metrics.Timings.Total += metrics.Executor.Timings.Adaptation
 	metrics.Timings.Total += metrics.Executor.Timings.RunningChecks
 
-	allResults.SetRelativeTo(dir)
 	return allResults, metrics, nil
 }
 

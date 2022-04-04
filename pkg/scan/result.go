@@ -182,7 +182,7 @@ func (r *Results) SetRelativeTo(dir string) {
 			continue
 		}
 		rng := m.Range()
-		relative, err := filepath.Rel(dir, rng.GetFilename())
+		relative, err := filepath.Rel(dir, rng.GetLocalFilename())
 		if err != nil || strings.Contains(relative, "..") {
 			continue
 		}
@@ -194,7 +194,7 @@ func (r *Results) SetRelativeTo(dir string) {
 		if !ok {
 			continue
 		}
-		if _, err := statFS.Stat(rng.GetFilename()); err != nil {
+		if _, err := statFS.Stat(rng.GetLocalFilename()); err != nil {
 			continue
 		}
 		newrng := types.NewRange(relative, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())

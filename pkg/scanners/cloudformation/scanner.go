@@ -109,7 +109,6 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, dir string) (results sca
 	sort.Slice(results, func(i, j int) bool {
 		return results[i].Rule().AVDID < results[j].Rule().AVDID
 	})
-	results.SetRelativeTo(dir)
 	return results, nil
 }
 
