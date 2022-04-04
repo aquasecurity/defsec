@@ -9,18 +9,18 @@ def addLine(line):
     lines.append(f'{line}\n')
 
 
-addLine('package loader')
+addLine('package rules')
 addLine('')
 addLine('import (')
 
 
-for f in glob.glob(f'./rules/*/*'):
-    f = f.replace('./rules/', '_ "github.com/aquasecurity/defsec/rules/') + '"'
+for f in glob.glob(f'./internal/rules/*/*'):
+    f = f.replace('./internal/rules/', '_ "github.com/aquasecurity/defsec/internal/rules/') + '"'
     addLine(f)
 
 addLine(')')
 
 
-with open('./loader/rules.go', 'w') as fw:
+with open('./pkg/rules/rules.go', 'w') as fw:
     fw.writelines(lines)
 

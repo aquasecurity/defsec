@@ -1,64 +1,18 @@
 package testutil
 
 import (
-	"context"
+	"encoding/json"
+	"io/fs"
 	"path/filepath"
 	"testing"
 
-	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/parsers/terraform/parser"
-	"github.com/aquasecurity/defsec/rules"
-	"github.com/aquasecurity/defsec/scanners/terraform/executor"
-	"github.com/aquasecurity/defsec/test/testutil/filesystem"
+	"github.com/aquasecurity/defsec/pkg/scan"
+	"github.com/liamg/memoryfs"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
-func ScanHCL(source string, t *testing.T, additionalOptions ...executor.Option) rules.Results {
-	modules := CreateModulesFromSource(source, ".tf", t)
-	s := executor.New()
-	for _, opt := range additionalOptions {
-		opt(s)
-	}
-	executor.OptionStopOnErrors(true)(s)
-	res, _, err := s.Execute(modules)
-	require.NoError(t, err)
-	for _, result := range res {
-		if result.Range() == nil {
-			t.Errorf("result has no range specified: %#v", result)
-		}
-	}
-	return res
-}
-
-func ScanJSON(source string, t *testing.T) rules.Results {
-	modules := CreateModulesFromSource(source, ".tf.json", t)
-	res, _, _ := executor.New().Execute(modules)
-	return res
-}
-
-func CreateModulesFromSource(source string, ext string, t *testing.T) terraform.Modules {
-	fs, err := filesystem.New()
-	if err != nil {
-		t.Fatal(err)
-	}
-	defer func() { _ = fs.Close() }()
-	if err := fs.WriteTextFile("test"+ext, source); err != nil {
-		t.Fatal(err)
-	}
-	path := fs.RealPath("test" + ext)
-	p := parser.New(parser.OptionStopOnHCLError(true))
-	if err := p.ParseDirectory(filepath.Dir(path)); err != nil {
-		t.Fatal(err)
-	}
-	modules, _, err := p.EvaluateAll(context.TODO())
-	if err != nil {
-		t.Fatalf("parse error: %s", err)
-	}
-	return modules
-}
-
-func AssertRuleFound(t *testing.T, ruleID string, results rules.Results, message string, args ...interface{}) {
+func AssertRuleFound(t *testing.T, ruleID string, results scan.Results, message string, args ...interface{}) {
 	found := ruleIDInResults(ruleID, results.GetFailed())
 	assert.True(t, found, append([]interface{}{message}, args...)...)
 	for _, result := range results.GetFailed() {
@@ -75,16 +29,48 @@ func AssertRuleFound(t *testing.T, ruleID string, results rules.Results, message
 	}
 }
 
-func AssertRuleNotFound(t *testing.T, ruleID string, results rules.Results, message string, args ...interface{}) {
+func AssertRuleNotFound(t *testing.T, ruleID string, results scan.Results, message string, args ...interface{}) {
 	found := ruleIDInResults(ruleID, results.GetFailed())
 	assert.False(t, found, append([]interface{}{message}, args...)...)
 }
 
-func ruleIDInResults(ruleID string, results rules.Results) bool {
+func ruleIDInResults(ruleID string, results scan.Results) bool {
 	for _, res := range results {
 		if res.Rule().LongID() == ruleID {
 			return true
 		}
 	}
 	return false
+}
+
+func CreateFS(t *testing.T, files map[string]string) fs.FS {
+	memfs := memoryfs.New()
+	for name, content := range files {
+		err := memfs.MkdirAll(filepath.Dir(name), 0o700)
+		require.NoError(t, err)
+		err = memfs.WriteFile(name, []byte(content), 0o644)
+		require.NoError(t, err)
+	}
+	return memfs
+}
+
+func AssertDefsecEqual(t *testing.T, expected interface{}, actual interface{}) {
+	expectedJson, err := json.MarshalIndent(expected, "", "\t")
+	require.NoError(t, err)
+	actualJson, err := json.MarshalIndent(actual, "", "\t")
+	require.NoError(t, err)
+
+	if expectedJson[0] == '[' {
+		var expectedSlice []map[string]interface{}
+		require.NoError(t, json.Unmarshal(expectedJson, &expectedSlice))
+		var actualSlice []map[string]interface{}
+		require.NoError(t, json.Unmarshal(actualJson, &actualSlice))
+		assert.Equal(t, expectedSlice, actualSlice, "defsec adapted and expected values do not match")
+	} else {
+		var expectedMap map[string]interface{}
+		require.NoError(t, json.Unmarshal(expectedJson, &expectedMap))
+		var actualMap map[string]interface{}
+		require.NoError(t, json.Unmarshal(actualJson, &actualMap))
+		assert.Equal(t, expectedMap, actualMap, "defsec adapted and expected values do not match")
+	}
 }

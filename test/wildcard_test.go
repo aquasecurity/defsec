@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/terraform"
+
+	"github.com/aquasecurity/defsec/pkg/severity"
+
+	"github.com/aquasecurity/defsec/pkg/scan"
+
+	"github.com/aquasecurity/defsec/internal/rules"
+
 	"github.com/aquasecurity/defsec/test/testutil"
-
-	"github.com/aquasecurity/defsec/rules"
-	"github.com/aquasecurity/defsec/severity"
-
-	"github.com/aquasecurity/defsec/parsers/terraform"
 )
 
 func Test_WildcardMatchingOnRequiredLabels(t *testing.T) {
@@ -52,17 +55,17 @@ func Test_WildcardMatchingOnRequiredLabels(t *testing.T) {
 
 		t.Run(code, func(t *testing.T) {
 
-			rule := rules.Rule{
+			rule := scan.Rule{
 				Service:   "service",
 				ShortCode: code,
 				Summary:   "blah",
 				Provider:  "custom",
 				Severity:  severity.High,
-				CustomChecks: rules.CustomChecks{
-					Terraform: &rules.TerraformCustomCheck{
+				CustomChecks: scan.CustomChecks{
+					Terraform: &scan.TerraformCustomCheck{
 						RequiredTypes:  []string{"resource"},
 						RequiredLabels: []string{test.pattern},
-						Check: func(resourceBlock *terraform.Block, _ *terraform.Module) (results rules.Results) {
+						Check: func(resourceBlock *terraform.Block, _ *terraform.Module) (results scan.Results) {
 							results.Add("Custom check failed for resource.", resourceBlock)
 							return
 						},
@@ -72,7 +75,7 @@ func Test_WildcardMatchingOnRequiredLabels(t *testing.T) {
 			reg := rules.Register(rule, nil)
 			defer rules.Deregister(reg)
 
-			results := testutil.ScanHCL(test.input, t)
+			results := scanHCL(t, test.input)
 
 			if test.expectedFailure {
 				testutil.AssertRuleFound(t, fmt.Sprintf("custom-service-%s", code), results, "")

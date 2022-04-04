@@ -3,10 +3,16 @@ package test
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/providers"
-	"github.com/aquasecurity/defsec/rules"
-	"github.com/aquasecurity/defsec/severity"
+	"github.com/aquasecurity/defsec/pkg/terraform"
+
+	"github.com/aquasecurity/defsec/pkg/severity"
+
+	"github.com/aquasecurity/defsec/pkg/scan"
+
+	"github.com/aquasecurity/defsec/internal/rules"
+
+	"github.com/aquasecurity/defsec/pkg/providers"
+
 	"github.com/aquasecurity/defsec/test/testutil"
 	"github.com/stretchr/testify/assert"
 )
@@ -149,15 +155,15 @@ variable "things" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			r1 := rules.Rule{
+			r1 := scan.Rule{
 				Provider:  providers.AWSProvider,
 				Service:   "service",
 				ShortCode: "abc123",
 				Severity:  severity.High,
-				CustomChecks: rules.CustomChecks{
-					Terraform: &rules.TerraformCustomCheck{
+				CustomChecks: scan.CustomChecks{
+					Terraform: &scan.TerraformCustomCheck{
 						RequiredLabels: []string{"bad"},
-						Check: func(resourceBlock *terraform.Block, _ *terraform.Module) (results rules.Results) {
+						Check: func(resourceBlock *terraform.Block, _ *terraform.Module) (results scan.Results) {
 							if resourceBlock.GetAttribute("secure").IsTrue() {
 								return
 							}
@@ -172,7 +178,7 @@ variable "things" {
 			}
 			reg := rules.Register(r1, nil)
 			defer rules.Deregister(reg)
-			results := testutil.ScanHCL(test.source, t)
+			results := scanHCL(t, test.source)
 			var include string
 			var exclude string
 			if test.expectedResults > 0 {

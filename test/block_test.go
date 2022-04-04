@@ -3,7 +3,6 @@ package test
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/test/testutil"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -47,7 +46,7 @@ resource "aws_s3_bucket" "my-bucket" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := createModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, block := range module.GetBlocks() {
 					assert.Equal(t, block.HasChild(test.expectedAttribute), true)
@@ -87,7 +86,7 @@ resource "aws_s3_bucket" "my-bucket" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := createModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, block := range module.GetBlocks() {
 					assert.Equal(t, block.HasChild(test.expectedAttribute), false)
@@ -127,7 +126,7 @@ resource "aws_s3_bucket" "my-bucket" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := createModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, block := range module.GetBlocks() {
 					assert.Equal(t, block.MissingChild(test.expectedAttribute), true)

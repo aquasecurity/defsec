@@ -1,7 +1,7 @@
 .PHONY: test
 test:
 	which gotestsum || go install gotest.tools/gotestsum@latest
-	gotestsum -- -bench=^$$ -race ./...
+	go test -race ./...
 
 .PHONY: typos
 typos:
@@ -21,7 +21,7 @@ quality:
 .PHONY: update-loader
 update-loader:
 	python3 scripts/update_loader_rules.py
-	@goimports -w loader/rules.go
+	@goimports -w pkg/rules/rules.go
 
 .PHONY: metadata_lint
 metadata_lint:
