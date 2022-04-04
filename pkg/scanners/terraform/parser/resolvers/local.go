@@ -17,13 +17,13 @@ func (r *localResolver) Resolve(_ context.Context, target fs.FS, opt Options) (f
 		return nil, "", "", false, nil
 	}
 
-	opt.Debug("Module '%s' resolved locally: %#v", opt.Name, opt)
 	joined := filepath.Clean(filepath.Join(opt.ModulePath, opt.Source))
-	opt.Debug("Trying joined: %s (from %s -> %s)", joined, opt.ModulePath, opt.Source)
 	if _, err := fs.Stat(target, joined); err == nil {
+		opt.Debug("Module '%s' resolved locally to %s", joined)
 		return target, "", joined, true, nil
 	}
 
-	opt.Debug("Nope, trying literal: %s", opt.Source)
-	return target, "", filepath.Clean(opt.Source), true, nil
+	clean := filepath.Clean(opt.Source)
+	opt.Debug("Module '%s' resolved locally to %s", clean)
+	return target, "", clean, true, nil
 }
