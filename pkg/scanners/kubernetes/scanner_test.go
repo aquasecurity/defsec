@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"context"
+	"strings"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -289,4 +290,22 @@ deny[res] {
 		CloudFormation: (*scan.EngineMetadata)(nil),
 		CustomChecks:   scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)},
 		RegoPackage:    "data.appshield.kubernetes.KSV011"}, results.GetFailed()[0].Rule())
+}
+
+func Test_FileScan(t *testing.T) {
+
+	results, err := NewScanner().ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(`
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: hello-cpu-limit
+spec: 
+  containers: 
+  - command: ["sh", "-c", "echo 'Hello' && sleep 1h"]
+    image: busybox
+    name: hello
+`))
+	require.NoError(t, err)
+
+	assert.Greater(t, len(results.GetFailed()), 0)
 }
