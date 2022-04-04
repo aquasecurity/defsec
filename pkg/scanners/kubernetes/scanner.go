@@ -119,5 +119,6 @@ func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (scan.Re
 		return nil, err
 	}
 	results.SetSourceAndFilesystem("", target)
+	results.SetRelativeTo(dir)
 	return results, nil
 }

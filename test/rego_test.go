@@ -33,7 +33,6 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 			continue
 		}
 		t.Run(entry.Name(), func(t *testing.T) {
-			dir := filepath.Join("test/testdata", entry.Name())
 			require.NoError(t, err)
 			t.Run(entry.Name(), func(t *testing.T) {
 				var matched bool
@@ -43,7 +42,7 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 							assert.Greater(t, result.Range().GetStartLine(), 0)
 							assert.Greater(t, result.Range().GetEndLine(), 0)
 						}
-						assert.Equal(t, filepath.Join(dir, "Dockerfile.denied"), result.Range().GetFilename())
+						assert.Equal(t, filepath.Join(entry.Name(), "Dockerfile.denied"), result.Range().GetFilename())
 						matched = true
 					}
 				}
@@ -71,7 +70,6 @@ func Test_Docker_RegoPoliciesEmbedded(t *testing.T) {
 			continue
 		}
 		t.Run(entry.Name(), func(t *testing.T) {
-			dir := filepath.Join("test/testdata", entry.Name())
 			require.NoError(t, err)
 			t.Run(entry.Name(), func(t *testing.T) {
 				var matched bool
@@ -81,7 +79,7 @@ func Test_Docker_RegoPoliciesEmbedded(t *testing.T) {
 							assert.Greater(t, result.Range().GetStartLine(), 0)
 							assert.Greater(t, result.Range().GetEndLine(), 0)
 						}
-						assert.Equal(t, filepath.Join(dir, "Dockerfile.denied"), result.Range().GetFilename())
+						assert.Equal(t, filepath.Join(entry.Name(), "Dockerfile.denied"), result.Range().GetFilename())
 						matched = true
 					}
 				}

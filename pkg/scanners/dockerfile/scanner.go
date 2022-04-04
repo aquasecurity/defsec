@@ -70,7 +70,12 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 		})
 	}
 
-	return s.scanRego(ctx, fs, inputs...)
+	results, err := s.scanRego(ctx, fs, inputs...)
+	if err != nil {
+		return nil, err
+	}
+	results.SetRelativeTo(path)
+	return results, nil
 }
 
 func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (scan.Results, error) {
