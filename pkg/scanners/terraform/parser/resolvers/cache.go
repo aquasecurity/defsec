@@ -29,10 +29,17 @@ func init() {
 }
 
 func cacheDir() string {
-	for _, attempt := range []string{
-		filepath.Join(".tfsec", "cache"),
+
+	locations := []string{
 		filepath.Join(os.TempDir(), ".tfsec", "cache"),
-	} {
+	}
+	// if we're not in docker, we can cache in the local project
+	if _, err := os.Stat("/.dockerenv"); err != nil {
+		locations = append([]string{
+			filepath.Join(".tfsec", "cache"),
+		}, locations...)
+	}
+	for _, attempt := range locations {
 		if err := os.MkdirAll(attempt, 0o755); err != nil {
 			continue
 		}
