@@ -5,6 +5,10 @@ import (
 	"regexp"
 	"strings"
 
+	"golang.org/x/text/language"
+
+	"golang.org/x/text/cases"
+
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -134,5 +138,5 @@ func nicify(input string) string {
 	for _, acronym := range acronyms {
 		input = regexp.MustCompile(fmt.Sprintf("\\b%s\\b", acronym)).ReplaceAllString(input, strings.ToUpper(acronym))
 	}
-	return strings.Title(strings.ReplaceAll(input, "-", " "))
+	return cases.Title(language.English).String(strings.ReplaceAll(input, "-", " "))
 }

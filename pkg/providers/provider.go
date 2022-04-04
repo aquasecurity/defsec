@@ -1,6 +1,11 @@
 package providers
 
-import "strings"
+import (
+	"strings"
+
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+)
 
 // Provider is the provider that the check applies to
 type Provider string
@@ -37,7 +42,7 @@ func (p Provider) DisplayName() string {
 	case "cloudstack":
 		return "Cloudstack"
 	default:
-		return strings.Title(strings.ToLower(string(p)))
+		return cases.Title(language.English).String(strings.ToLower(string(p)))
 	}
 }
 func (p Provider) ConstName() string {
