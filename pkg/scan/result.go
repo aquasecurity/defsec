@@ -3,6 +3,7 @@ package scan
 import (
 	"fmt"
 	"io/fs"
+	"path/filepath"
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/types"
@@ -171,6 +172,39 @@ func (r *Results) AddIgnored(source MetadataProvider, descriptions ...string) {
 func (r *Results) SetRule(rule Rule) {
 	for i := range *r {
 		(*r)[i].rule = rule
+	}
+}
+
+func (r *Results) SetRelativeTo(dir string) {
+	for i := range *r {
+		m := (*r)[i].Metadata()
+		if m.IsUnmanaged() || m.Range() == nil {
+			continue
+		}
+		rng := m.Range()
+		relative, err := filepath.Rel(dir, rng.GetFilename())
+		if err != nil || strings.Contains(relative, "..") {
+			continue
+		}
+		filesystem := rng.GetFS()
+		if filesystem == nil {
+			continue
+		}
+		statFS, ok := filesystem.(fs.StatFS)
+		if !ok {
+			continue
+		}
+		if _, err := statFS.Stat(rng.GetFilename()); err != nil {
+			continue
+		}
+		newrng := types.NewRange(relative, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())
+		switch {
+		case m.IsExplicit():
+			m = types.NewExplicitMetadata(newrng, m.Reference())
+		default:
+			m = types.NewMetadata(newrng, m.Reference())
+		}
+		(*r)[i].OverrideMetadata(m)
 	}
 }
 
