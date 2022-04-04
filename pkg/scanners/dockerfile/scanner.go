@@ -100,7 +100,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 		regoOpts = append(regoOpts, rego.OptionWithTrace(s.traceWriter))
 	}
 	regoScanner := rego.NewScanner(regoOpts...)
-	if err := regoScanner.LoadPolicies(len(s.policyDirs) == 0, srcFS, s.policyDirs...); err != nil {
+	if err := regoScanner.LoadPolicies(len(s.policyDirs) == 0, srcFS, s.policyDirs, nil); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner

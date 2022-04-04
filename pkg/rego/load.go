@@ -2,7 +2,9 @@ package rego
 
 import (
 	"fmt"
+	"io"
 	"io/fs"
+	"io/ioutil"
 	"strings"
 
 	"github.com/open-policy-agent/opa/ast"
@@ -43,7 +45,24 @@ func (s *Scanner) loadPoliciesFromDirs(target fs.FS, paths []string) (map[string
 	return modules, nil
 }
 
-func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths ...string) error {
+func (s *Scanner) loadPoliciesFromReaders(readers []io.Reader) (map[string]*ast.Module, error) {
+	modules := make(map[string]*ast.Module)
+	for i, r := range readers {
+		moduleName := fmt.Sprintf("reader_%d", i)
+		data, err := ioutil.ReadAll(r)
+		if err != nil {
+			return nil, err
+		}
+		module, err := ast.ParseModuleWithOpts(moduleName, string(data), ast.ParserOptions{})
+		if err != nil {
+			return nil, err
+		}
+		modules[moduleName] = module
+	}
+	return modules, nil
+}
+
+func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, readers []io.Reader) error {
 
 	if s.policies == nil {
 		s.policies = make(map[string]*ast.Module)
@@ -70,6 +89,17 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths ...string) 
 			s.policies[name] = policy
 		}
 		s.debug("Loaded %d policies from disk.", len(loaded))
+	}
+
+	if len(readers) > 0 {
+		loaded, err := s.loadPoliciesFromReaders(readers)
+		if err != nil {
+			return fmt.Errorf("failed to load rego policies from reader(s): %w", err)
+		}
+		for name, policy := range loaded {
+			s.policies[name] = policy
+		}
+		s.debug("Loaded %d policies from reader(s).", len(loaded))
 	}
 
 	// gather namespaces

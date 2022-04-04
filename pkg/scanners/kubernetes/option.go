@@ -17,6 +17,12 @@ func OptionWithPolicyDirs(paths ...string) func(s *Scanner) {
 	}
 }
 
+func OptionWithPolicyReaders(readers ...io.Reader) func(s *Scanner) {
+	return func(s *Scanner) {
+		s.policyReaders = readers
+	}
+}
+
 func OptionWithDataDirs(paths ...string) func(s *Scanner) {
 	return func(s *Scanner) {
 		s.dataDirs = paths
