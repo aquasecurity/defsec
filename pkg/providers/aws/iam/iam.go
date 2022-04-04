@@ -58,7 +58,7 @@ func (d Document) MetadataFromIamGo(r ...iamgo.Range) types.Metadata {
 	}
 	for _, rng := range r {
 		newRange := types.NewRange(
-			newRange.GetFilename(),
+			newRange.GetLocalFilename(),
 			start+rng.StartLine,
 			start+rng.EndLine,
 			newRange.GetSourcePrefix(),
