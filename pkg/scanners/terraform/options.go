@@ -1,7 +1,6 @@
 package terraform
 
 import (
-	"fmt"
 	"io"
 	"path/filepath"
 	"strings"
@@ -110,15 +109,12 @@ func OptionSkipDownloaded(skip bool) Option {
 				if result.Range() == nil {
 					continue
 				}
-				search := fmt.Sprintf("%c.terraform%c", filepath.Separator, filepath.Separator)
-				if strings.Contains(result.Range().GetFilename(), search) {
+				prefix := result.Range().GetSourcePrefix()
+				switch {
+				case prefix == "":
+				case strings.HasPrefix(prefix, "."):
+				default:
 					results[i].OverrideStatus(scan.StatusIgnored)
-					continue
-				}
-				search = fmt.Sprintf("%c.tfsec%c", filepath.Separator, filepath.Separator)
-				if strings.Contains(result.Range().GetFilename(), search) {
-					results[i].OverrideStatus(scan.StatusIgnored)
-					continue
 				}
 			}
 			return results
@@ -139,7 +135,7 @@ func OptionWithExcludePaths(paths []string) Option {
 					if err != nil {
 						continue
 					}
-					if str, err := filepath.Rel(abs, result.Range().GetFilename()); err == nil && !strings.HasPrefix(str, "..") {
+					if str, err := filepath.Rel(abs, result.Range().GetLocalFilename()); err == nil && !strings.HasPrefix(str, "..") {
 						good = false
 						break
 					}
