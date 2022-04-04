@@ -5,8 +5,10 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 	"github.com/aquasecurity/defsec/parsers/types"
+
 	"github.com/aquasecurity/defsec/providers/aws/iam"
 	"github.com/aquasecurity/defsec/providers/aws/sqs"
+
 	"github.com/liamg/iamgo"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -35,7 +37,6 @@ func Test_Adapt(t *testing.T) {
 				POLICY
 			}`,
 			expected: sqs.SQS{
-				Metadata: types.NewTestMetadata(),
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -73,7 +74,6 @@ func Test_Adapt(t *testing.T) {
 				kms_master_key_id = "/blah"
 			}`,
 			expected: sqs.SQS{
-				Metadata: types.NewTestMetadata(),
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -89,7 +89,7 @@ func Test_Adapt(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := Adapt(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -113,7 +113,7 @@ func TestLines(t *testing.T) {
 		POLICY
 	}`
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := testutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
 	require.Len(t, adapted.Queues, 1)

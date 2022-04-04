@@ -10,13 +10,25 @@ import (
 
 func getStateMachines(cfFile parser.FileContext) (stateMachines []sam.StateMachine) {
 
-	stateMachineResources := cfFile.GetResourceByType("AWS::Serverless::StateMachine")
+	stateMachineResources := cfFile.GetResourcesByType("AWS::Serverless::StateMachine")
 	for _, r := range stateMachineResources {
 		stateMachine := sam.StateMachine{
-			Metadata:             r.Metadata(),
-			Name:                 r.GetStringProperty("Name"),
-			LoggingConfiguration: sam.LoggingConfiguration{},
-			Tracing:              getTracingConfiguration(r),
+			Metadata: r.Metadata(),
+			Name:     r.GetStringProperty("Name"),
+			LoggingConfiguration: sam.LoggingConfiguration{
+				Metadata:       r.Metadata(),
+				LoggingEnabled: types.BoolDefault(false, r.Metadata()),
+			},
+			ManagedPolicies: nil,
+			Policies:        nil,
+			Tracing:         getTracingConfiguration(r),
+		}
+
+		if logging := r.GetProperty("Logging"); logging.IsNotNil() {
+			stateMachine.LoggingConfiguration.Metadata = logging.Metadata()
+			if level := logging.GetProperty("Level"); level.IsNotNil() {
+				stateMachine.LoggingConfiguration.LoggingEnabled = types.Bool(!level.EqualTo("OFF"), level.Metadata())
+			}
 		}
 
 		setStateMachinePolicies(r, &stateMachine)
@@ -48,14 +60,15 @@ func setStateMachinePolicies(r *parser.Resource, stateMachine *sam.StateMachine)
 			stateMachine.ManagedPolicies = append(stateMachine.ManagedPolicies, policies.AsStringValue())
 		} else if policies.IsList() {
 			for _, property := range policies.AsList() {
-				parsed, err := iamgo.Parse(property.GetJsonBytes())
+				parsed, err := iamgo.Parse(property.GetJsonBytes(true))
 				if err != nil {
 					continue
 				}
 				policy := iam.Policy{
+					Metadata: property.Metadata(),
 					Document: iam.Document{
-						Parsed:   *parsed,
 						Metadata: property.Metadata(),
+						Parsed:   *parsed,
 					},
 				}
 				stateMachine.Policies = append(stateMachine.Policies, policy)

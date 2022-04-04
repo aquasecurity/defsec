@@ -58,7 +58,7 @@ resource "aws_s3_bucket" "my-bucket" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, block := range module.GetBlocks() {
 					if !block.HasChild(test.checkAttribute) {
@@ -120,7 +120,7 @@ resource "aws_s3_bucket" "my-bucket" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, block := range module.GetBlocks() {
 					if !block.HasChild(test.checkAttribute) {
@@ -276,7 +276,7 @@ resource "aws_security_group" "my-security_group" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, b := range module.GetBlocks() {
 					if !b.HasChild(test.checkAttribute) {
@@ -338,7 +338,7 @@ resource "aws_security_group" "my-security_group" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, block := range module.GetBlocks() {
 					if !block.HasChild(test.checkAttribute) {
@@ -396,7 +396,7 @@ resource "aws_security_group" "my-security_group" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, block := range module.GetBlocks() {
 					if !block.HasChild(test.checkAttribute) {
@@ -508,7 +508,7 @@ resource "aws_security_group_rule" "example" {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, block := range module.GetBlocks() {
 					if !block.HasChild(test.checkAttribute) {
@@ -553,7 +553,7 @@ resource "numerical_something" "my-bucket" {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, block := range module.GetBlocks() {
 					if !block.HasChild(test.checkAttribute) {
@@ -598,7 +598,7 @@ resource "numerical_something" "my-bucket" {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, block := range module.GetBlocks() {
 					if !block.HasChild(test.checkAttribute) {
@@ -649,7 +649,7 @@ resource "boolean_something" "my-something" {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, block := range module.GetBlocks() {
 					if !block.HasChild(test.checkAttribute) {
@@ -700,7 +700,7 @@ resource "boolean_something" "my-something" {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.source, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.source, ".tf")
 			for _, module := range modules {
 				for _, block := range module.GetBlocks() {
 					if !block.HasChild(test.checkAttribute) {

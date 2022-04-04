@@ -4,8 +4,9 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
 	"github.com/aquasecurity/defsec/parsers/types"
+
+	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
 	"github.com/aquasecurity/defsec/providers/aws/s3"
 )
 
@@ -13,23 +14,26 @@ var aclConvertRegex = regexp.MustCompile(`[A-Z][^A-Z]*`)
 
 func getBuckets(cfFile parser.FileContext) []s3.Bucket {
 	var buckets []s3.Bucket
-	bucketResources := cfFile.GetResourceByType("AWS::S3::Bucket")
+	bucketResources := cfFile.GetResourcesByType("AWS::S3::Bucket")
 
 	for _, r := range bucketResources {
 		s3b := s3.Bucket{
-			Metadata:   r.Metadata(),
-			Name:       r.GetStringProperty("BucketName"),
-			Encryption: getEncryption(r, cfFile),
-			ACL:        convertAclValue(r.GetStringProperty("AccessControl", "private")),
-			Logging: s3.Logging{
+			Metadata:          r.Metadata(),
+			Name:              r.GetStringProperty("BucketName"),
+			PublicAccessBlock: getPublicAccessBlock(r),
+			BucketPolicy: s3.BucketPolicy{
 				Metadata: r.Metadata(),
-				Enabled:  hasLogging(r),
 			},
+			Encryption: getEncryption(r, cfFile),
 			Versioning: s3.Versioning{
 				Metadata: r.Metadata(),
 				Enabled:  hasVersioning(r),
 			},
-			PublicAccessBlock: getPublicAccessBlock(r),
+			Logging: s3.Logging{
+				Metadata: r.Metadata(),
+				Enabled:  hasLogging(r),
+			},
+			ACL: convertAclValue(r.GetStringProperty("AccessControl", "private")),
 		}
 
 		buckets = append(buckets, s3b)
@@ -86,30 +90,23 @@ func hasVersioning(r *parser.Resource) types.BoolValue {
 
 func getEncryption(r *parser.Resource, _ parser.FileContext) s3.Encryption {
 
-	encryptProps := r.GetProperty("BucketEncryption.ServerSideEncryptionConfiguration")
-
-	if encryptProps.IsNil() {
-		return s3.Encryption{
-			Metadata:  r.Metadata(),
-			Enabled:   types.BoolDefault(false, r.Metadata()),
-			Algorithm: types.StringDefault("", r.Metadata()),
-			KMSKeyId:  types.StringDefault("", r.Metadata()),
-		}
-	}
-
-	enc := s3.Encryption{
+	encryption := s3.Encryption{
 		Metadata:  r.Metadata(),
+		Enabled:   types.BoolDefault(false, r.Metadata()),
 		Algorithm: types.StringDefault("", r.Metadata()),
 		KMSKeyId:  types.StringDefault("", r.Metadata()),
 	}
 
-	list := encryptProps.AsList()
-	if len(list) == 0 {
-		enc.Enabled = types.BoolDefault(false, r.Metadata())
-		return enc
+	if encryptProps := r.GetProperty("BucketEncryption.ServerSideEncryptionConfiguration"); encryptProps.IsNotNil() {
+		for _, rule := range encryptProps.AsList() {
+			if kmsKeyProp := rule.GetProperty("ServerSideEncryptionByDefault.KMSMasterKeyID"); !kmsKeyProp.IsEmpty() && kmsKeyProp.IsString() {
+				encryption.KMSKeyId = kmsKeyProp.AsStringValue()
+			}
+			if encryption.Enabled.IsFalse() {
+				encryption.Enabled = rule.GetBoolProperty("BucketKeyEnabled", false)
+			}
+		}
 	}
 
-	enc.Enabled = list[0].GetBoolProperty("BucketKeyEnabled")
-	return enc
-
+	return encryption
 }

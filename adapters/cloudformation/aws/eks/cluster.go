@@ -8,16 +8,23 @@ import (
 
 func getClusters(ctx parser.FileContext) (clusters []eks.Cluster) {
 
-	clusterResources := ctx.GetResourceByType("AWS::EKS::Cluster")
+	clusterResources := ctx.GetResourcesByType("AWS::EKS::Cluster")
 
 	for _, r := range clusterResources {
 		cluster := eks.Cluster{
 			Metadata: r.Metadata(),
 			// Logging not supported for cloudformation https://github.com/aws/containers-roadmap/issues/242
-			Logging:    eks.Logging{},
+			Logging: eks.Logging{
+				Metadata:          r.Metadata(),
+				API:               types.BoolUnresolvable(r.Metadata()),
+				Audit:             types.BoolUnresolvable(r.Metadata()),
+				Authenticator:     types.BoolUnresolvable(r.Metadata()),
+				ControllerManager: types.BoolUnresolvable(r.Metadata()),
+				Scheduler:         types.BoolUnresolvable(r.Metadata()),
+			},
 			Encryption: getEncryptionConfig(r),
 			// endpoint protection not supported - https://github.com/aws/containers-roadmap/issues/242
-			PublicAccessEnabled: nil,
+			PublicAccessEnabled: types.BoolUnresolvable(r.Metadata()),
 			PublicAccessCIDRs:   nil,
 		}
 
@@ -29,18 +36,21 @@ func getClusters(ctx parser.FileContext) (clusters []eks.Cluster) {
 func getEncryptionConfig(r *parser.Resource) eks.Encryption {
 
 	encryption := eks.Encryption{
+		Metadata: r.Metadata(),
 		Secrets:  types.BoolDefault(false, r.Metadata()),
 		KMSKeyID: types.StringDefault("", r.Metadata()),
 	}
 
-	resourcesProp := r.GetProperty("EncryptionConfig.Resources")
-	if resourcesProp.IsList() {
-		if resourcesProp.Contains("secrets") {
-			encryption.Secrets = types.Bool(true, resourcesProp.Metadata())
+	if encProp := r.GetProperty("EncryptionConfig"); encProp.IsNotNil() {
+		encryption.Metadata = encProp.Metadata()
+		encryption.KMSKeyID = encProp.GetStringProperty("Provider.KeyArn")
+		resourcesProp := encProp.GetProperty("Resources")
+		if resourcesProp.IsList() {
+			if resourcesProp.Contains("secrets") {
+				encryption.Secrets = types.Bool(true, resourcesProp.Metadata())
+			}
 		}
 	}
-
-	encryption.KMSKeyID = r.GetStringProperty("EncryptionConfig.Provider.KeyArn")
 
 	return encryption
 }

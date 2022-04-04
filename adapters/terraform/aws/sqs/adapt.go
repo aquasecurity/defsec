@@ -1,14 +1,13 @@
 package sqs
 
 import (
-	"github.com/liamg/iamgo"
-
 	"github.com/aquasecurity/defsec/adapters/terraform/aws/iam"
-	iamp "github.com/aquasecurity/defsec/providers/aws/iam"
-
 	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
+	iamp "github.com/aquasecurity/defsec/providers/aws/iam"
 	"github.com/aquasecurity/defsec/providers/aws/sqs"
+	"github.com/liamg/iamgo"
+
 	"github.com/google/uuid"
 )
 

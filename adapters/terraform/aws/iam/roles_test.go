@@ -3,10 +3,9 @@ package iam
 import (
 	"testing"
 
+	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 )
 
 func Test_adaptRoles(t *testing.T) {
@@ -45,7 +44,7 @@ func Test_adaptRoles(t *testing.T) {
    }
  }`
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := testutil.CreateModulesFromSource(t, src, ".tf")
 	roles := adaptRoles(modules)
 	require.Len(t, roles, 1)
 	role := roles[0]

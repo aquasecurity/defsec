@@ -2,19 +2,29 @@ package mq
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/providers/aws/mq"
 )
 
 func getBrokers(ctx parser.FileContext) (brokers []mq.Broker) {
-	for _, r := range ctx.GetResourceByType("AWS::AmazonMQ::Broker") {
+	for _, r := range ctx.GetResourcesByType("AWS::AmazonMQ::Broker") {
 
 		broker := mq.Broker{
 			Metadata:     r.Metadata(),
 			PublicAccess: r.GetBoolProperty("PubliclyAccessible"),
 			Logging: mq.Logging{
-				General: r.GetBoolProperty("Logs.General"),
-				Audit:   r.GetBoolProperty("Logs.Audit"),
+				Metadata: r.Metadata(),
+				General:  types.BoolDefault(false, r.Metadata()),
+				Audit:    types.BoolDefault(false, r.Metadata()),
 			},
+		}
+
+		if prop := r.GetProperty("Logs"); prop.IsNotNil() {
+			broker.Logging = mq.Logging{
+				Metadata: prop.Metadata(),
+				General:  prop.GetBoolProperty("General"),
+				Audit:    prop.GetBoolProperty("Audit"),
+			}
 		}
 
 		brokers = append(brokers, broker)

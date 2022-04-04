@@ -102,7 +102,11 @@ func (p *Property) AsString() string {
 		return ""
 	}
 
-	return p.Inner.Value.(string)
+	str, ok := p.Inner.Value.(string)
+	if !ok {
+		return ""
+	}
+	return str
 }
 
 func (p *Property) AsStringValue() types.StringValue {

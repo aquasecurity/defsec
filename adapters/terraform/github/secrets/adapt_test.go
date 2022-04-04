@@ -5,6 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 	"github.com/aquasecurity/defsec/parsers/types"
+
 	"github.com/aquasecurity/defsec/providers/github"
 )
 
@@ -57,7 +58,7 @@ resource "github_actions_environment_secret" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := Adapt(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})

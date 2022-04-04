@@ -9,17 +9,19 @@ func getClustersAndInstances(ctx parser.FileContext) (clusters []rds.Cluster, or
 
 	clusterMap := getClusters(ctx)
 
-	for _, r := range ctx.GetResourceByType("AWS::RDS::DBInstance") {
+	for _, r := range ctx.GetResourcesByType("AWS::RDS::DBInstance") {
 
 		instance := rds.Instance{
 			Metadata:                  r.Metadata(),
 			BackupRetentionPeriodDays: r.GetIntProperty("BackupRetentionPeriod", 1),
 			ReplicationSourceARN:      r.GetStringProperty("SourceDBInstanceIdentifier"),
 			PerformanceInsights: rds.PerformanceInsights{
+				Metadata: r.Metadata(),
 				Enabled:  r.GetBoolProperty("EnablePerformanceInsights"),
 				KMSKeyID: r.GetStringProperty("PerformanceInsightsKMSKeyId"),
 			},
 			Encryption: rds.Encryption{
+				Metadata:       r.Metadata(),
 				EncryptStorage: r.GetBoolProperty("StorageEncrypted"),
 				KMSKeyID:       r.GetStringProperty("KmsKeyId"),
 			},
@@ -31,7 +33,9 @@ func getClustersAndInstances(ctx parser.FileContext) (clusters []rds.Cluster, or
 			for key, cluster := range clusterMap {
 				if key == clusterID.AsString() {
 					cluster.Instances = append(cluster.Instances, rds.ClusterInstance{
-						Instance: instance,
+						Metadata:          r.Metadata(),
+						Instance:          instance,
+						ClusterIdentifier: clusterID.AsStringValue(),
 					})
 					clusterMap[key] = cluster
 					found = true

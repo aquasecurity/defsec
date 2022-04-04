@@ -8,7 +8,7 @@ import (
 
 func getProjects(ctx parser.FileContext) (projects []codebuild.Project) {
 
-	projectResources := ctx.GetResourceByType("AWS::CodeBuild::Project")
+	projectResources := ctx.GetResourcesByType("AWS::CodeBuild::Project")
 
 	for _, r := range projectResources {
 		project := codebuild.Project{

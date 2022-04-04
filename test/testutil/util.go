@@ -15,7 +15,7 @@ import (
 )
 
 func ScanHCL(source string, t *testing.T, additionalOptions ...executor.Option) rules.Results {
-	modules := CreateModulesFromSource(source, ".tf", t)
+	modules := CreateModulesFromSource(t, source, ".tf")
 	s := executor.New()
 	for _, opt := range additionalOptions {
 		opt(s)
@@ -32,12 +32,12 @@ func ScanHCL(source string, t *testing.T, additionalOptions ...executor.Option) 
 }
 
 func ScanJSON(source string, t *testing.T) rules.Results {
-	modules := CreateModulesFromSource(source, ".tf.json", t)
+	modules := CreateModulesFromSource(t, source, ".tf.json")
 	res, _, _ := executor.New().Execute(modules)
 	return res
 }
 
-func CreateModulesFromSource(source string, ext string, t *testing.T) terraform.Modules {
+func CreateModulesFromSource(t *testing.T, source string, ext string) terraform.Modules {
 	fs, err := filesystem.New()
 	if err != nil {
 		t.Fatal(err)

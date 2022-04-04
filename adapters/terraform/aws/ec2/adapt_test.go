@@ -5,10 +5,10 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 	"github.com/aquasecurity/defsec/parsers/types"
+	"github.com/aquasecurity/defsec/providers/aws/ec2"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-
-	"github.com/aquasecurity/defsec/providers/aws/ec2"
 )
 
 func Test_Adapt(t *testing.T) {
@@ -43,7 +43,6 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 			}
 `,
 			expected: ec2.EC2{
-				Metadata: types.NewTestMetadata(),
 				Instances: []ec2.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -77,7 +76,6 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 			}
 `,
 			expected: ec2.EC2{
-				Metadata: types.NewTestMetadata(),
 				Instances: []ec2.Instance{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -99,7 +97,7 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := Adapt(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -130,7 +128,7 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 		EOF
 	}`
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := testutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
 	require.Len(t, adapted.Instances, 1)

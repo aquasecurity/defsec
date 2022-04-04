@@ -3,8 +3,10 @@ package autoscaling
 import (
 	"encoding/base64"
 
-	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
+
+	"github.com/aquasecurity/defsec/parsers/terraform"
+
 	"github.com/aquasecurity/defsec/providers/aws/autoscaling"
 	"github.com/aquasecurity/defsec/providers/aws/ec2"
 )

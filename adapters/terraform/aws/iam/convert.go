@@ -3,10 +3,12 @@ package iam
 import (
 	"strings"
 
-	"github.com/aquasecurity/defsec/providers/aws/iam"
+	"github.com/aquasecurity/defsec/rules"
 
 	"github.com/aquasecurity/defsec/parsers/terraform"
-	"github.com/aquasecurity/defsec/rules"
+
+	"github.com/aquasecurity/defsec/providers/aws/iam"
+
 	"github.com/liamg/iamgo"
 )
 

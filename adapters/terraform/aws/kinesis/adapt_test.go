@@ -5,10 +5,11 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/providers/aws/kinesis"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_adaptStream(t *testing.T) {
@@ -53,7 +54,7 @@ func Test_adaptStream(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptStream(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -67,7 +68,7 @@ func TestLines(t *testing.T) {
 		kms_key_id = "my/special/key"
 	}`
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := testutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
 	require.Len(t, adapted.Streams, 1)

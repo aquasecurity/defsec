@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func CreateModulesFromSource(source string, ext string, t *testing.T) terraform.Modules {
+func CreateModulesFromSource(t *testing.T, source string, ext string) terraform.Modules {
 	dir, err := ioutil.TempDir(os.TempDir(), "tfsec")
 	if err != nil {
 		t.Fatal(err)

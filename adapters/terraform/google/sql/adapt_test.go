@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
-
 	"github.com/aquasecurity/defsec/parsers/types"
+
 	"github.com/aquasecurity/defsec/providers/google/sql"
 )
 
@@ -29,7 +29,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := Adapt(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -88,26 +88,26 @@ resource "google_sql_database_instance" "backup_source_instance" {
 			expected: []sql.DatabaseInstance{
 				{
 					Metadata:        types.NewTestMetadata(),
-					DatabaseVersion: testutil.String("POSTGRES_11"),
+					DatabaseVersion: types.String("POSTGRES_11", types.NewTestMetadata()),
 					Settings: sql.Settings{
 						Backups: sql.Backups{
-							Enabled: testutil.Bool(true),
+							Enabled: types.Bool(true, types.NewTestMetadata()),
 						},
 						Flags: sql.Flags{
-							LogConnections:                  testutil.Bool(true),
-							LogTempFileSize:                 testutil.Int(0),
-							LogCheckpoints:                  testutil.Bool(true),
-							LogDisconnections:               testutil.Bool(true),
-							LogLockWaits:                    testutil.Bool(true),
-							ContainedDatabaseAuthentication: testutil.Bool(true),
-							CrossDBOwnershipChaining:        testutil.Bool(true),
-							LocalInFile:                     testutil.Bool(false),
-							LogMinDurationStatement:         testutil.Int(-1),
-							LogMinMessages:                  testutil.String(""),
+							LogConnections:                  types.Bool(true, types.NewTestMetadata()),
+							LogTempFileSize:                 types.Int(0, types.NewTestMetadata()),
+							LogCheckpoints:                  types.Bool(true, types.NewTestMetadata()),
+							LogDisconnections:               types.Bool(true, types.NewTestMetadata()),
+							LogLockWaits:                    types.Bool(true, types.NewTestMetadata()),
+							ContainedDatabaseAuthentication: types.Bool(true, types.NewTestMetadata()),
+							CrossDBOwnershipChaining:        types.Bool(true, types.NewTestMetadata()),
+							LocalInFile:                     types.Bool(false, types.NewTestMetadata()),
+							LogMinDurationStatement:         types.Int(-1, types.NewTestMetadata()),
+							LogMinMessages:                  types.String("", types.NewTestMetadata()),
 						},
 						IPConfiguration: sql.IPConfiguration{
-							EnableIPv4: testutil.Bool(false),
-							RequireTLS: testutil.Bool(true),
+							EnableIPv4: types.Bool(false, types.NewTestMetadata()),
+							RequireTLS: types.Bool(true, types.NewTestMetadata()),
 						},
 					},
 				},
@@ -117,7 +117,7 @@ resource "google_sql_database_instance" "backup_source_instance" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptInstances(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -144,7 +144,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptInstance(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -171,7 +171,7 @@ resource "" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptIPConfig(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})

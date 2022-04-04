@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
-
 	"github.com/aquasecurity/defsec/providers/aws/apigateway"
 )
 
@@ -30,9 +29,9 @@ resource "aws_api_gateway_method" "example" {
 `,
 			expected: []apigateway.RESTMethod{
 				{
-					HTTPMethod:        testutil.String("GET"),
-					AuthorizationType: testutil.String("NONE"),
-					APIKeyRequired:    testutil.Bool(false),
+					HTTPMethod:        String("GET"),
+					AuthorizationType: String("NONE"),
+					APIKeyRequired:    Bool(false),
 				},
 			},
 		},
@@ -53,9 +52,9 @@ resource "aws_api_gateway_method" "example" {
 `,
 			expected: []apigateway.RESTMethod{
 				{
-					HTTPMethod:        testutil.String("GET"),
-					AuthorizationType: testutil.String("NONE"),
-					APIKeyRequired:    testutil.Bool(true),
+					HTTPMethod:        String("GET"),
+					AuthorizationType: String("NONE"),
+					APIKeyRequired:    Bool(true),
 				},
 			},
 		},
@@ -63,7 +62,7 @@ resource "aws_api_gateway_method" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			restApiBlock := modules.GetBlocks()[1]
 			adapted := adaptAPIMethodsV1(modules, restApiBlock)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
@@ -86,9 +85,9 @@ resource "aws_api_gateway_rest_api" "example" {
 `,
 			expected: []apigateway.API{
 				{
-					Name:         testutil.String(""),
-					Version:      testutil.Int(1),
-					ProtocolType: testutil.String("REST"),
+					Name:         String(""),
+					Version:      Int(1),
+					ProtocolType: String("REST"),
 				},
 			},
 		},
@@ -101,9 +100,9 @@ resource "aws_api_gateway_rest_api" "example" {
 `,
 			expected: []apigateway.API{
 				{
-					Name:         testutil.String("tfsec"),
-					Version:      testutil.Int(1),
-					ProtocolType: testutil.String("REST"),
+					Name:         String("tfsec"),
+					Version:      Int(1),
+					ProtocolType: String("REST"),
 				},
 			},
 		},
@@ -111,7 +110,7 @@ resource "aws_api_gateway_rest_api" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptAPIsV1(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})

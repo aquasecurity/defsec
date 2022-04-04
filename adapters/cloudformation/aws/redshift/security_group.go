@@ -2,18 +2,14 @@ package redshift
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
-	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/providers/aws/redshift"
 )
 
 func getSecurityGroups(ctx parser.FileContext) (groups []redshift.SecurityGroup) {
-	for _, groupResource := range ctx.GetResourceByType("AWS::Redshift::ClusterSecurityGroup") {
-		var group redshift.SecurityGroup
-		group.Metadata = groupResource.Metadata()
-		if descProp := groupResource.GetProperty("Description"); descProp.IsString() {
-			group.Description = descProp.AsStringValue()
-		} else {
-			group.Description = types.StringDefault("", groupResource.Metadata())
+	for _, groupResource := range ctx.GetResourcesByType("AWS::Redshift::ClusterSecurityGroup") {
+		group := redshift.SecurityGroup{
+			Metadata:    groupResource.Metadata(),
+			Description: groupResource.GetProperty("Description").AsStringValue(),
 		}
 		groups = append(groups, group)
 	}

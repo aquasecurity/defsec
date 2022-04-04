@@ -5,7 +5,9 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 	"github.com/aquasecurity/defsec/parsers/types"
+
 	"github.com/aquasecurity/defsec/providers/openstack"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -24,9 +26,7 @@ func TestFields(t *testing.T) {
 
 			}`,
 			expected: openstack.OpenStack{
-				Metadata: types.NewTestMetadata(),
 				Compute: openstack.Compute{
-					Metadata: types.NewTestMetadata(),
 					Instances: []openstack.Instance{
 						{
 							Metadata:      types.NewTestMetadata(),
@@ -42,9 +42,7 @@ func TestFields(t *testing.T) {
 			resource "openstack_compute_instance_v2" "my-instance" {
 			}`,
 			expected: openstack.OpenStack{
-				Metadata: types.NewTestMetadata(),
 				Compute: openstack.Compute{
-					Metadata: types.NewTestMetadata(),
 					Instances: []openstack.Instance{
 						{
 							Metadata:      types.NewTestMetadata(),
@@ -66,9 +64,7 @@ func TestFields(t *testing.T) {
 				enabled                = "true"
 			}`,
 			expected: openstack.OpenStack{
-				Metadata: types.NewTestMetadata(),
 				Compute: openstack.Compute{
-					Metadata: types.NewTestMetadata(),
 					Firewall: openstack.Firewall{
 						Metadata: types.NewTestMetadata(),
 						AllowRules: []openstack.FirewallRule{
@@ -88,7 +84,7 @@ func TestFields(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := Adapt(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -110,7 +106,7 @@ func TestLines(t *testing.T) {
 		enabled                = "true"
 	}`
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := testutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
 	require.Len(t, adapted.Compute.Instances, 1)

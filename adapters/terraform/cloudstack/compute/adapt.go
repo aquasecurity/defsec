@@ -3,8 +3,10 @@ package compute
 import (
 	"encoding/base64"
 
-	"github.com/aquasecurity/defsec/parsers/terraform"
 	"github.com/aquasecurity/defsec/parsers/types"
+
+	"github.com/aquasecurity/defsec/parsers/terraform"
+
 	"github.com/aquasecurity/defsec/providers/cloudstack/compute"
 )
 

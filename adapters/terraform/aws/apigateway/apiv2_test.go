@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
-
 	"github.com/aquasecurity/defsec/providers/aws/apigateway"
 )
 
@@ -23,9 +22,9 @@ resource "aws_apigatewayv2_api" "example" {
 `,
 			expected: []apigateway.API{
 				{
-					Name:         testutil.String(""),
-					Version:      testutil.Int(2),
-					ProtocolType: testutil.String("HTTP"),
+					Name:         String(""),
+					Version:      Int(2),
+					ProtocolType: String("HTTP"),
 				},
 			},
 		},
@@ -39,9 +38,9 @@ resource "aws_apigatewayv2_api" "example" {
 `,
 			expected: []apigateway.API{
 				{
-					Name:         testutil.String("tfsec"),
-					Version:      testutil.Int(2),
-					ProtocolType: testutil.String("HTTP"),
+					Name:         String("tfsec"),
+					Version:      Int(2),
+					ProtocolType: String("HTTP"),
 				},
 			},
 		},
@@ -49,7 +48,7 @@ resource "aws_apigatewayv2_api" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptAPIsV2(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -70,13 +69,13 @@ resource "aws_apigatewayv2_stage" "example" {
 }
 `,
 			expected: apigateway.Stage{
-				Name:    testutil.String(""),
-				Version: testutil.Int(2),
+				Name:    String(""),
+				Version: Int(2),
 				AccessLogging: apigateway.AccessLogging{
-					CloudwatchLogGroupARN: testutil.String(""),
+					CloudwatchLogGroupARN: String(""),
 				},
 				RESTMethodSettings: apigateway.RESTMethodSettings{
-					CacheDataEncrypted: testutil.Bool(true),
+					CacheDataEncrypted: Bool(true),
 				},
 			},
 		},
@@ -91,13 +90,13 @@ resource "aws_apigatewayv2_stage" "example" {
 }
 `,
 			expected: apigateway.Stage{
-				Name:    testutil.String("tfsec"),
-				Version: testutil.Int(2),
+				Name:    String("tfsec"),
+				Version: Int(2),
 				AccessLogging: apigateway.AccessLogging{
-					CloudwatchLogGroupARN: testutil.String("arn:123"),
+					CloudwatchLogGroupARN: String("arn:123"),
 				},
 				RESTMethodSettings: apigateway.RESTMethodSettings{
-					CacheDataEncrypted: testutil.Bool(true),
+					CacheDataEncrypted: Bool(true),
 				},
 			},
 		},
@@ -105,7 +104,7 @@ resource "aws_apigatewayv2_stage" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptStageV2(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})

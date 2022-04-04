@@ -7,7 +7,7 @@ import (
 
 func getClusterGroups(ctx parser.FileContext) (clusters []elasticache.Cluster) {
 
-	clusterResources := ctx.GetResourceByType("AWS::ElastiCache::CacheCluster")
+	clusterResources := ctx.GetResourcesByType("AWS::ElastiCache::CacheCluster")
 
 	for _, r := range clusterResources {
 		cluster := elasticache.Cluster{

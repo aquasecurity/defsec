@@ -9,7 +9,7 @@ func getWorkGroups(cfFile parser.FileContext) []athena.Workgroup {
 
 	var workgroups []athena.Workgroup
 
-	workgroupResources := cfFile.GetResourceByType("AWS::Athena::WorkGroup")
+	workgroupResources := cfFile.GetResourcesByType("AWS::Athena::WorkGroup")
 
 	for _, r := range workgroupResources {
 
@@ -17,7 +17,8 @@ func getWorkGroups(cfFile parser.FileContext) []athena.Workgroup {
 			Metadata: r.Metadata(),
 			Name:     r.GetStringProperty("Name"),
 			Encryption: athena.EncryptionConfiguration{
-				Type: r.GetStringProperty("WorkGroupConfiguration.ResultConfiguration.EncryptionConfiguration.EncryptionOption"),
+				Metadata: r.Metadata(),
+				Type:     r.GetStringProperty("WorkGroupConfiguration.ResultConfiguration.EncryptionConfiguration.EncryptionOption"),
 			},
 			EnforceConfiguration: r.GetBoolProperty("WorkGroupConfiguration.EnforceWorkGroupConfiguration"),
 		}

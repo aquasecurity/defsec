@@ -8,17 +8,20 @@ import (
 
 func getConfiguraionAggregator(ctx parser.FileContext) (aggregator config.ConfigurationAggregrator) {
 
-	aggregatorResources := ctx.GetResourceByType("AWS::Config::ConfigurationAggregator")
+	aggregatorResources := ctx.GetResourcesByType("AWS::Config::ConfigurationAggregator")
 
 	if len(aggregatorResources) == 0 {
 		return config.ConfigurationAggregrator{
+			Metadata:         types.NewUnmanagedMetadata(),
 			SourceAllRegions: types.BoolDefault(false, ctx.Metadata()),
+			IsDefined:        false,
 		}
 	}
 
 	return config.ConfigurationAggregrator{
-		IsDefined:        true,
+		Metadata:         aggregatorResources[0].Metadata(),
 		SourceAllRegions: isSourcingAllRegions(aggregatorResources[0]),
+		IsDefined:        true,
 	}
 }
 

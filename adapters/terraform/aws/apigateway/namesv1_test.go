@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
-
 	"github.com/aquasecurity/defsec/providers/aws/apigateway"
 )
 
@@ -22,9 +21,9 @@ resource "aws_api_gateway_domain_name" "example" {
 `,
 			expected: []apigateway.DomainName{
 				{
-					Name:           testutil.String(""),
-					Version:        testutil.Int(1),
-					SecurityPolicy: testutil.String("TLS_1_0"),
+					Name:           String(""),
+					Version:        Int(1),
+					SecurityPolicy: String("TLS_1_0"),
 				},
 			},
 		},
@@ -38,9 +37,9 @@ resource "aws_api_gateway_domain_name" "example" {
 `,
 			expected: []apigateway.DomainName{
 				{
-					Name:           testutil.String("testing.com"),
-					Version:        testutil.Int(1),
-					SecurityPolicy: testutil.String("TLS_1_2"),
+					Name:           String("testing.com"),
+					Version:        Int(1),
+					SecurityPolicy: String("TLS_1_2"),
 				},
 			},
 		},
@@ -48,7 +47,7 @@ resource "aws_api_gateway_domain_name" "example" {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptDomainNamesV1(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})

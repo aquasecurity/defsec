@@ -2,6 +2,7 @@ package sam
 
 import (
 	"github.com/aquasecurity/defsec/parsers/cloudformation/parser"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/providers/aws/iam"
 	"github.com/aquasecurity/defsec/providers/aws/sam"
 	"github.com/liamg/iamgo"
@@ -9,12 +10,14 @@ import (
 
 func getFunctions(cfFile parser.FileContext) (functions []sam.Function) {
 
-	functionResources := cfFile.GetResourceByType("AWS::Serverless::Function")
+	functionResources := cfFile.GetResourcesByType("AWS::Serverless::Function")
 	for _, r := range functionResources {
 		function := sam.Function{
-			Metadata:     r.Metadata(),
-			FunctionName: r.GetStringProperty("FunctionName"),
-			Tracing:      r.GetStringProperty("Tracing", sam.TracingModePassThrough),
+			Metadata:        r.Metadata(),
+			FunctionName:    r.GetStringProperty("FunctionName"),
+			Tracing:         r.GetStringProperty("Tracing", sam.TracingModePassThrough),
+			ManagedPolicies: nil,
+			Policies:        nil,
 		}
 
 		setFunctionPolicies(r, &function)
@@ -32,21 +35,22 @@ func setFunctionPolicies(r *parser.Resource, function *sam.Function) {
 		} else if policies.IsList() {
 			for _, property := range policies.AsList() {
 				if property.IsMap() {
-					parsed, err := iamgo.Parse(property.GetJsonBytes())
+					parsed, err := iamgo.Parse(property.GetJsonBytes(true))
 					if err != nil {
 						continue
 					}
 					policy := iam.Policy{
+						Metadata: property.Metadata(),
+						Name:     types.StringDefault("", property.Metadata()),
 						Document: iam.Document{
-							Parsed:   *parsed,
 							Metadata: property.Metadata(),
+							Parsed:   *parsed,
 						},
 					}
 					function.Policies = append(function.Policies, policy)
-				} else {
+				} else if property.IsString() {
 					function.ManagedPolicies = append(function.ManagedPolicies, property.AsStringValue())
 				}
-
 			}
 		}
 	}

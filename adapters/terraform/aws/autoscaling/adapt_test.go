@@ -5,11 +5,12 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/providers/aws/autoscaling"
 	"github.com/aquasecurity/defsec/providers/aws/ec2"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_Adapt(t *testing.T) {
@@ -37,7 +38,6 @@ func Test_Adapt(t *testing.T) {
 			}
 			`,
 			expected: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata:          types.NewTestMetadata(),
@@ -85,7 +85,6 @@ export AWS_DEFAULT_REGION=us-west-2
 			}
 `,
 			expected: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata:          types.NewTestMetadata(),
@@ -123,7 +122,6 @@ export AWS_DEFAULT_REGION=us-west-2
 			}
 			`,
 			expected: autoscaling.Autoscaling{
-				Metadata: types.NewTestMetadata(),
 				LaunchTemplates: []autoscaling.LaunchTemplate{
 					{
 						Metadata: types.NewTestMetadata(),
@@ -144,7 +142,7 @@ export AWS_DEFAULT_REGION=us-west-2
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := Adapt(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -176,7 +174,7 @@ export AWS_DEFAULT_REGION=us-west-2
 		}
 	}`
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := testutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
 	require.Len(t, adapted.LaunchConfigurations, 1)

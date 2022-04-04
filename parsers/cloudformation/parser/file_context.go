@@ -32,7 +32,7 @@ func (t *FileContext) GetResourceByLogicalID(name string) *Resource {
 	return nil
 }
 
-func (t *FileContext) GetResourceByType(names ...string) []*Resource {
+func (t *FileContext) GetResourcesByType(names ...string) []*Resource {
 	var resources []*Resource
 	for _, r := range t.Resources {
 		for _, name := range names {

@@ -5,9 +5,10 @@ import (
 
 	"github.com/aquasecurity/defsec/adapters/terraform/testutil"
 	"github.com/aquasecurity/defsec/parsers/types"
-	"github.com/stretchr/testify/assert"
 
 	"github.com/aquasecurity/defsec/providers/aws/config"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_adaptConfigurationAggregrator(t *testing.T) {
@@ -50,7 +51,7 @@ func Test_adaptConfigurationAggregrator(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			modules := testutil.CreateModulesFromSource(test.terraform, ".tf", t)
+			modules := testutil.CreateModulesFromSource(t, test.terraform, ".tf")
 			adapted := adaptConfigurationAggregrator(modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
@@ -68,7 +69,7 @@ func TestLines(t *testing.T) {
 		}
 	}`
 
-	modules := testutil.CreateModulesFromSource(src, ".tf", t)
+	modules := testutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 	aggregator := adapted.ConfigurationAggregrator
 
