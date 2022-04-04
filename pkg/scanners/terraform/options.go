@@ -111,12 +111,12 @@ func OptionSkipDownloaded(skip bool) Option {
 					continue
 				}
 				search := fmt.Sprintf("%c.terraform%c", filepath.Separator, filepath.Separator)
-				if strings.Contains(result.Range().GetFilename(), search) {
+				if strings.Contains(result.Range().GetLocalFilename(), search) {
 					results[i].OverrideStatus(scan.StatusIgnored)
 					continue
 				}
 				search = fmt.Sprintf("%c.tfsec%c", filepath.Separator, filepath.Separator)
-				if strings.Contains(result.Range().GetFilename(), search) {
+				if strings.Contains(result.Range().GetLocalFilename(), search) {
 					results[i].OverrideStatus(scan.StatusIgnored)
 					continue
 				}
@@ -139,7 +139,7 @@ func OptionWithExcludePaths(paths []string) Option {
 					if err != nil {
 						continue
 					}
-					if str, err := filepath.Rel(abs, result.Range().GetFilename()); err == nil && !strings.HasPrefix(str, "..") {
+					if str, err := filepath.Rel(abs, result.Range().GetLocalFilename()); err == nil && !strings.HasPrefix(str, "..") {
 						good = false
 						break
 					}
