@@ -59,8 +59,7 @@ func calculateCidrs(ipaddress string, count int, bit int, original *Property) ([
 		}
 
 		cidrProperties = append(cidrProperties, original.deriveResolved(cftypes.String, next.String()))
-		_ = next
 	}
 
-	return cidrProperties, fmt.Errorf("could not create the ranges")
+	return cidrProperties, nil
 }
