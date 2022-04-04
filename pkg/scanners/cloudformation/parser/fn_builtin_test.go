@@ -51,7 +51,7 @@ func Test_cidr_generator_8_bits(t *testing.T) {
 	}
 
 	ranges, err := calculateCidrs("10.1.0.0/16", 4, 8, original)
-	require.NotNil(t, err)
+	require.Nil(t, err)
 	require.Len(t, ranges, 4)
 
 	results := make(map[int]string)
