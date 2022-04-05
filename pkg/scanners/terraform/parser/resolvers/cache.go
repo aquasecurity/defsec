@@ -7,8 +7,6 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-
-	"golang.org/x/sys/unix"
 )
 
 type cacheResolver struct{}
@@ -43,15 +41,11 @@ func cacheDir() string {
 		if err := os.MkdirAll(attempt, 0o755); err != nil {
 			continue
 		}
-		if writable(attempt) {
+		if isWritable(attempt) {
 			return attempt
 		}
 	}
 	return ""
-}
-
-func writable(path string) bool {
-	return unix.Access(path, unix.W_OK) == nil
 }
 
 func (r *cacheResolver) Resolve(_ context.Context, _ fs.FS, opt Options) (filesystem fs.FS, prefix string, downloadPath string, applies bool, err error) {
