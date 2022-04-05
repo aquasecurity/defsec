@@ -45,7 +45,6 @@ func adaptCluster(resource *terraform.Block) container.KubernetesCluster {
 			},
 		},
 	}
-	cluster.Metadata = resource.GetMetadata()
 
 	networkProfileBlock := resource.GetBlock("network_profile")
 	if networkProfileBlock.IsNotNil() {

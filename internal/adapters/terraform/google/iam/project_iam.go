@@ -23,15 +23,13 @@ func (a *adapter) adaptMember(iamBlock *terraform.Block) iam.Member {
 
 func AdaptMember(iamBlock *terraform.Block, modules terraform.Modules) iam.Member {
 	member := iam.Member{
-		Metadata: iamBlock.GetMetadata(),
+		Metadata:              iamBlock.GetMetadata(),
+		Member:                iamBlock.GetAttribute("member").AsStringValueOrDefault("", iamBlock),
+		Role:                  iamBlock.GetAttribute("role").AsStringValueOrDefault("", iamBlock),
+		DefaultServiceAccount: types.BoolDefault(false, iamBlock.GetMetadata()),
 	}
-	roleAttr := iamBlock.GetAttribute("role")
-	member.Role = roleAttr.AsStringValueOrDefault("", iamBlock)
 
 	memberAttr := iamBlock.GetAttribute("member")
-	member.Member = memberAttr.AsStringValueOrDefault("", iamBlock)
-	member.DefaultServiceAccount = types.BoolDefault(false, iamBlock.GetMetadata())
-
 	if referencedBlock, err := modules.GetReferencedBlock(memberAttr, iamBlock); err == nil {
 		if strings.HasSuffix(referencedBlock.TypeLabel(), "_default_service_account") {
 			member.DefaultServiceAccount = types.Bool(true, memberAttr.GetMetadata())
@@ -100,8 +98,9 @@ func (a *adapter) adaptProjectMembers() {
 			a.projects = append(a.projects, parentedProject{
 				project: iam.Project{
 					Metadata:          types.NewUnmanagedMetadata(),
-					AutoCreateNetwork: nil,
+					AutoCreateNetwork: types.BoolDefault(false, types.NewUnmanagedMetadata()),
 					Members:           []iam.Member{member},
+					Bindings:          nil,
 				},
 			})
 		}
@@ -113,15 +112,16 @@ func (a *adapter) adaptBinding(iamBlock *terraform.Block) iam.Binding {
 }
 
 func AdaptBinding(iamBlock *terraform.Block, modules terraform.Modules) iam.Binding {
-	var binding iam.Binding
-	binding.Metadata = iamBlock.GetMetadata()
-	roleAttr := iamBlock.GetAttribute("role")
+	binding := iam.Binding{
+		Metadata:                      iamBlock.GetMetadata(),
+		Members:                       nil,
+		Role:                          iamBlock.GetAttribute("role").AsStringValueOrDefault("", iamBlock),
+		IncludesDefaultServiceAccount: types.BoolDefault(false, iamBlock.GetMetadata()),
+	}
 	membersAttr := iamBlock.GetAttribute("members")
-	binding.Role = roleAttr.AsStringValueOrDefault("", iamBlock)
 	for _, member := range membersAttr.ValueAsStrings() {
 		binding.Members = append(binding.Members, types.String(member, membersAttr.GetMetadata()))
 	}
-	binding.IncludesDefaultServiceAccount = types.BoolDefault(false, iamBlock.GetMetadata())
 	if referencedBlock, err := modules.GetReferencedBlock(membersAttr, iamBlock); err == nil {
 		if strings.HasSuffix(referencedBlock.TypeLabel(), "_default_service_account") {
 			binding.IncludesDefaultServiceAccount = types.Bool(true, membersAttr.GetMetadata())
@@ -196,7 +196,8 @@ func (a *adapter) adaptProjectDataBindings() {
 		a.projects = append(a.projects, parentedProject{
 			project: iam.Project{
 				Metadata:          types.NewUnmanagedMetadata(),
-				AutoCreateNetwork: nil,
+				AutoCreateNetwork: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				Members:           nil,
 				Bindings:          bindings,
 			},
 		})
@@ -250,7 +251,8 @@ func (a *adapter) adaptProjectBindings() {
 			a.projects = append(a.projects, parentedProject{
 				project: iam.Project{
 					Metadata:          types.NewUnmanagedMetadata(),
-					AutoCreateNetwork: nil,
+					AutoCreateNetwork: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+					Members:           nil,
 					Bindings:          []iam.Binding{binding},
 				},
 			})

@@ -58,6 +58,8 @@ func Test_Adapt(t *testing.T) {
 
 							return []iam.Policy{
 								{
+									Metadata: types.NewTestMetadata(),
+									Name:     types.StringDefault("", types.NewTestMetadata()),
 									Document: iam.Document{
 										Metadata: types.NewTestMetadata(),
 										Parsed:   builder.Build(),

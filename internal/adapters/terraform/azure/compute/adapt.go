@@ -48,21 +48,24 @@ func adaptCompute(modules terraform.Modules) compute.Compute {
 }
 
 func adaptManagedDisk(resource *terraform.Block) compute.ManagedDisk {
-	encryptionBlock := resource.GetBlock("encryption_settings")
-	// encryption is enabled by default - https://github.com/hashicorp/terraform-provider-azurerm/blob/baf55926fe813011003ee4fb0e8e6134fcfcca87/internal/services/compute/managed_disk_resource.go#L288
-	enabledVal := types.BoolDefault(true, resource.GetMetadata())
 
-	if encryptionBlock.IsNotNil() {
-		enabledAttr := encryptionBlock.GetAttribute("enabled")
-		enabledVal = enabledAttr.AsBoolValueOrDefault(true, encryptionBlock)
-	}
-
-	return compute.ManagedDisk{
+	disk := compute.ManagedDisk{
 		Metadata: resource.GetMetadata(),
 		Encryption: compute.Encryption{
-			Enabled: enabledVal,
+			Metadata: resource.GetMetadata(),
+			// encryption is enabled by default - https://github.com/hashicorp/terraform-provider-azurerm/blob/baf55926fe813011003ee4fb0e8e6134fcfcca87/internal/services/compute/managed_disk_resource.go#L288
+			Enabled: types.BoolDefault(true, resource.GetMetadata()),
 		},
 	}
+
+	encryptionBlock := resource.GetBlock("encryption_settings")
+	if encryptionBlock.IsNotNil() {
+		disk.Encryption.Metadata = encryptionBlock.GetMetadata()
+		enabledAttr := encryptionBlock.GetAttribute("enabled")
+		disk.Encryption.Enabled = enabledAttr.AsBoolValueOrDefault(true, encryptionBlock)
+	}
+
+	return disk
 }
 
 func adaptLinuxVM(resource *terraform.Block) compute.LinuxVirtualMachine {
@@ -92,9 +95,11 @@ func adaptLinuxVM(resource *terraform.Block) compute.LinuxVirtualMachine {
 	return compute.LinuxVirtualMachine{
 		Metadata: resource.GetMetadata(),
 		VirtualMachine: compute.VirtualMachine{
+			Metadata:   resource.GetMetadata(),
 			CustomData: customDataVal,
 		},
 		OSProfileLinuxConfig: compute.OSProfileLinuxConfig{
+			Metadata:                      resource.GetMetadata(),
 			DisablePasswordAuthentication: disablePasswordAuthVal,
 		},
 	}
@@ -123,6 +128,7 @@ func adaptWindowsVM(resource *terraform.Block) compute.WindowsVirtualMachine {
 	return compute.WindowsVirtualMachine{
 		Metadata: resource.GetMetadata(),
 		VirtualMachine: compute.VirtualMachine{
+			Metadata:   resource.GetMetadata(),
 			CustomData: customDataVal,
 		},
 	}

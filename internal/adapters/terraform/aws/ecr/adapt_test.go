@@ -91,6 +91,7 @@ func Test_adaptRepository(t *testing.T) {
 				Policies: []iam.Policy{
 					{
 						Metadata: types.NewTestMetadata(),
+						Name:     types.StringDefault("", types.NewTestMetadata()),
 						Document: func() iam.Document {
 
 							builder := iamgo.NewPolicyBuilder()

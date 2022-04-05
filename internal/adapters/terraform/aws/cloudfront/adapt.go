@@ -35,6 +35,7 @@ func adaptDistribution(resource *terraform.Block) cloudfront.Distribution {
 			Metadata:             resource.GetMetadata(),
 			ViewerProtocolPolicy: types.String("allow-all", resource.GetMetadata()),
 		},
+		OrdererCacheBehaviours: nil,
 		ViewerCertificate: cloudfront.ViewerCertificate{
 			Metadata:               resource.GetMetadata(),
 			MinimumProtocolVersion: types.StringDefault("TLSv1", resource.GetMetadata()),
@@ -57,11 +58,11 @@ func adaptDistribution(resource *terraform.Block) cloudfront.Distribution {
 
 	orderedCacheBlocks := resource.GetBlocks("ordered_cache_behavior")
 	for _, orderedCacheBlock := range orderedCacheBlocks {
-		ViewerProtocolPolicyAttr := orderedCacheBlock.GetAttribute("viewer_protocol_policy")
-		ViewerProtocolPolicyVal := ViewerProtocolPolicyAttr.AsStringValueOrDefault("allow-all", orderedCacheBlock)
+		viewerProtocolPolicyAttr := orderedCacheBlock.GetAttribute("viewer_protocol_policy")
+		viewerProtocolPolicyVal := viewerProtocolPolicyAttr.AsStringValueOrDefault("allow-all", orderedCacheBlock)
 		distribution.OrdererCacheBehaviours = append(distribution.OrdererCacheBehaviours, cloudfront.CacheBehaviour{
 			Metadata:             orderedCacheBlock.GetMetadata(),
-			ViewerProtocolPolicy: ViewerProtocolPolicyVal,
+			ViewerProtocolPolicy: viewerProtocolPolicyVal,
 		})
 	}
 

@@ -35,6 +35,11 @@ func (a *adapter) adaptFunctions(modules terraform.Modules) []lambda.Function {
 	if len(orphanResources) > 0 {
 		orphanage := lambda.Function{
 			Metadata: types.NewUnmanagedMetadata(),
+			Tracing: lambda.Tracing{
+				Metadata: types.NewUnmanagedMetadata(),
+				Mode:     types.StringDefault("", types.NewUnmanagedMetadata()),
+			},
+			Permissions: nil,
 		}
 		for _, permission := range orphanResources {
 			orphanage.Permissions = append(orphanage.Permissions, a.adaptPermission(permission))

@@ -33,6 +33,9 @@ func adaptLaunchTemplates(modules terraform.Modules) (templates []autoscaling.La
 				Metadata:        b.GetMetadata(),
 				MetadataOptions: metadataOptions,
 				UserData:        userData,
+				SecurityGroups:  nil,
+				RootBlockDevice: nil,
+				EBSBlockDevices: nil,
 			},
 		})
 	}
@@ -70,6 +73,7 @@ func adaptLaunchConfiguration(resource *terraform.Block) autoscaling.LaunchConfi
 			Metadata:  resource.GetMetadata(),
 			Encrypted: types.BoolDefault(false, resource.GetMetadata()),
 		},
+		EBSBlockDevices: nil,
 		MetadataOptions: getMetadataOptions(resource),
 		UserData:        types.StringDefault("", resource.GetMetadata()),
 	}

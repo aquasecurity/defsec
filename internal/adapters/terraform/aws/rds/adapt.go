@@ -37,7 +37,20 @@ func getClusters(modules terraform.Modules) (clusters []rds.Cluster) {
 
 	if len(orphanResources) > 0 {
 		orphanage := rds.Cluster{
-			Metadata: types.NewUnmanagedMetadata(),
+			Metadata:                  types.NewUnmanagedMetadata(),
+			BackupRetentionPeriodDays: types.IntDefault(0, types.NewUnmanagedMetadata()),
+			ReplicationSourceARN:      types.StringDefault("", types.NewUnmanagedMetadata()),
+			PerformanceInsights: rds.PerformanceInsights{
+				Metadata: types.NewUnmanagedMetadata(),
+				Enabled:  types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				KMSKeyID: types.StringDefault("", types.NewUnmanagedMetadata()),
+			},
+			Instances: nil,
+			Encryption: rds.Encryption{
+				Metadata:       types.NewUnmanagedMetadata(),
+				EncryptStorage: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				KMSKeyID:       types.StringDefault("", types.NewUnmanagedMetadata()),
+			},
 		}
 		for _, orphan := range orphanResources {
 			orphanage.Instances = append(orphanage.Instances, adaptClusterInstance(orphan, modules))
@@ -81,7 +94,6 @@ func adaptInstance(resource *terraform.Block, modules terraform.Modules) rds.Ins
 	if replicaSource.IsNotNil() {
 		if referenced, err := modules.GetReferencedBlock(replicaSource, resource); err == nil {
 			replicaSourceValue = referenced.ID()
-
 		}
 	}
 	return rds.Instance{

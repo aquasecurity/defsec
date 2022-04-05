@@ -22,6 +22,7 @@ func adaptDroplets(module terraform.Modules) []compute.Droplet {
 		for _, block := range module.GetResourcesByType("digitalocean_droplet") {
 			droplet := compute.Droplet{
 				Metadata: block.GetMetadata(),
+				SSHKeys:  nil,
 			}
 			sshKeys := block.GetAttribute("ssh_keys")
 			if sshKeys != nil {

@@ -102,6 +102,9 @@ func (p *Property) AsString() string {
 	if p.IsNil() {
 		return ""
 	}
+	if !p.IsString() {
+		return ""
+	}
 
 	return p.Inner.Value.(string)
 }
@@ -138,6 +141,9 @@ func (p *Property) AsBool() bool {
 		}
 		return false
 	}
+	if !p.IsBool() {
+		return false
+	}
 	return p.Inner.Value.(bool)
 }
 
@@ -146,7 +152,11 @@ func (p *Property) AsBoolValue() types.BoolValue {
 }
 
 func (p *Property) AsMap() map[string]*Property {
-	return p.Inner.Value.(map[string]*Property)
+	val, ok := p.Inner.Value.(map[string]*Property)
+	if !ok {
+		return nil
+	}
+	return val
 }
 
 func (p *Property) AsList() []*Property {
@@ -236,12 +246,18 @@ func (p *Property) Contains(checkVal interface{}) bool {
 			}
 		}
 	case cftypes.Map:
+		if _, ok := checkVal.(string); !ok {
+			return false
+		}
 		for key := range p.AsMap() {
 			if key == checkVal.(string) {
 				return true
 			}
 		}
 	case cftypes.String:
+		if _, ok := checkVal.(string); !ok {
+			return false
+		}
 		return strings.Contains(p.AsString(), checkVal.(string))
 	}
 	return false

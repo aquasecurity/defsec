@@ -28,10 +28,14 @@ func adaptNetworkPolicy(resourceBlock *terraform.Block) kubernetes.NetworkPolicy
 		Spec: kubernetes.Spec{
 			Metadata: resourceBlock.GetMetadata(),
 			Egress: kubernetes.Egress{
-				Metadata: resourceBlock.GetMetadata(),
+				Metadata:         resourceBlock.GetMetadata(),
+				Ports:            nil,
+				DestinationCIDRs: nil,
 			},
 			Ingress: kubernetes.Ingress{
-				Metadata: resourceBlock.GetMetadata(),
+				Metadata:    resourceBlock.GetMetadata(),
+				Ports:       nil,
+				SourceCIDRs: nil,
 			},
 		},
 	}
