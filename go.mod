@@ -13,7 +13,7 @@ require (
 	github.com/hashicorp/hcl/v2 v2.11.1
 	github.com/liamg/iamgo v0.0.6
 	github.com/liamg/jfather v0.0.7
-	github.com/liamg/memoryfs v0.0.3
+	github.com/liamg/memoryfs v1.1.4
 	github.com/liamg/tml v0.6.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/moby/buildkit v0.9.3
