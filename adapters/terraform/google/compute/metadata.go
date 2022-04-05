@@ -7,11 +7,13 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func adaptProjectMetadata(modules terraform.Modules) (metadata compute.ProjectMetadata) {
-	metadata.Metadata = types.NewUnmanagedMetadata()
-	metadata.EnableOSLogin = types.BoolUnresolvable(
-		types.NewUnmanagedMetadata(),
-	)
+func adaptProjectMetadata(modules terraform.Modules) compute.ProjectMetadata {
+	metadata := compute.ProjectMetadata{
+		Metadata: types.NewUnmanagedMetadata(),
+		EnableOSLogin: types.BoolUnresolvable(
+			types.NewUnmanagedMetadata(),
+		),
+	}
 	for _, metadataBlock := range modules.GetResourcesByType("google_compute_project_metadata") {
 		metadata.Metadata = metadataBlock.GetMetadata()
 		if metadataAttr := metadataBlock.GetAttribute("metadata"); metadataAttr.IsNotNil() {

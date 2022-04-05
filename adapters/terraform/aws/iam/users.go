@@ -39,9 +39,12 @@ func mapUsers(modules terraform.Modules) (map[string]iam.User, map[string]struct
 	userMap := make(map[string]iam.User)
 	policyMap := make(map[string]struct{})
 	for _, userBlock := range modules.GetResourcesByType("aws_iam_user") {
-		var user iam.User
-		user.Metadata = userBlock.GetMetadata()
-		user.Name = userBlock.GetAttribute("name").AsStringValueOrDefault("", userBlock)
+		user := iam.User{
+			Metadata: userBlock.GetMetadata(),
+			Name:     userBlock.GetAttribute("name").AsStringValueOrDefault("", userBlock),
+			Groups:   nil,
+			Policies: nil,
+		}
 
 		for _, block := range modules.GetResourcesByType("aws_iam_user_policy") {
 			if !sameProvider(userBlock, block) {

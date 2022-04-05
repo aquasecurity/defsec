@@ -9,8 +9,12 @@ import (
 func ParsePolicyBlock(block *terraform.Block) []iam.Binding {
 	var bindings []iam.Binding
 	for _, bindingBlock := range block.GetBlocks("binding") {
-		var binding iam.Binding
-		binding.Role = bindingBlock.GetAttribute("role").AsStringValueOrDefault("", bindingBlock)
+		binding := iam.Binding{
+			Metadata:                      bindingBlock.GetMetadata(),
+			Members:                       nil,
+			Role:                          bindingBlock.GetAttribute("role").AsStringValueOrDefault("", bindingBlock),
+			IncludesDefaultServiceAccount: types.BoolDefault(false, bindingBlock.GetMetadata()),
+		}
 		membersAttr := bindingBlock.GetAttribute("members")
 		for _, member := range membersAttr.ValueAsStrings() {
 			binding.Members = append(binding.Members, types.String(member, membersAttr.GetMetadata()))

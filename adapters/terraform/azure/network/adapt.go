@@ -90,9 +90,13 @@ func (a *adapter) adaptSecurityGroup(resource *terraform.Block) {
 func (a *adapter) adaptSGRule(ruleBlock *terraform.Block) network.SecurityGroupRule {
 
 	rule := network.SecurityGroupRule{
-		Metadata: ruleBlock.GetMetadata(),
-		Allow:    types.BoolDefault(true, ruleBlock.GetMetadata()),
-		Outbound: types.BoolDefault(false, ruleBlock.GetMetadata()),
+		Metadata:             ruleBlock.GetMetadata(),
+		Outbound:             types.BoolDefault(false, ruleBlock.GetMetadata()),
+		Allow:                types.BoolDefault(true, ruleBlock.GetMetadata()),
+		SourceAddresses:      nil,
+		SourcePorts:          nil,
+		DestinationAddresses: nil,
+		DestinationPorts:     nil,
 	}
 
 	accessAttr := ruleBlock.GetAttribute("access")
@@ -199,8 +203,9 @@ func adaptWatcherLog(resource *terraform.Block) network.NetworkWatcherFlowLog {
 	flowLog := network.NetworkWatcherFlowLog{
 		Metadata: resource.GetMetadata(),
 		RetentionPolicy: network.RetentionPolicy{
-			Enabled: types.BoolDefault(false, resource.GetMetadata()),
-			Days:    types.IntDefault(0, resource.GetMetadata()),
+			Metadata: resource.GetMetadata(),
+			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
+			Days:     types.IntDefault(0, resource.GetMetadata()),
 		},
 	}
 

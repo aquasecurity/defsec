@@ -13,11 +13,14 @@ func adaptAPIsV2(modules terraform.Modules) []apigateway.API {
 
 	for _, module := range modules {
 		for _, apiBlock := range module.GetResourcesByType("aws_apigatewayv2_api") {
-			var api apigateway.API
-			api.Metadata = apiBlock.GetMetadata()
-			api.Version = types.IntExplicit(2, apiBlock.GetMetadata())
-			api.Name = apiBlock.GetAttribute("name").AsStringValueOrDefault("", apiBlock)
-			api.ProtocolType = apiBlock.GetAttribute("protocol_type").AsStringValueOrDefault("", apiBlock)
+			api := apigateway.API{
+				Metadata:     apiBlock.GetMetadata(),
+				Name:         apiBlock.GetAttribute("name").AsStringValueOrDefault("", apiBlock),
+				Version:      types.IntExplicit(2, apiBlock.GetMetadata()),
+				ProtocolType: apiBlock.GetAttribute("protocol_type").AsStringValueOrDefault("", apiBlock),
+				Stages:       nil,
+				RESTMethods:  nil,
+			}
 
 			for _, stageBlock := range module.GetReferencingResources(apiBlock, "aws_apigatewayv2_stage", "api_id") {
 				apiStageIDs.Resolve(stageBlock.ID())
@@ -34,7 +37,12 @@ func adaptAPIsV2(modules terraform.Modules) []apigateway.API {
 	orphanResources := modules.GetResourceByIDs(apiStageIDs.Orphans()...)
 	if len(orphanResources) > 0 {
 		orphanage := apigateway.API{
-			Metadata: types.NewUnmanagedMetadata(),
+			Metadata:     types.NewUnmanagedMetadata(),
+			Name:         types.StringDefault("", types.NewUnmanagedMetadata()),
+			Version:      types.IntExplicit(2, types.NewUnmanagedMetadata()),
+			ProtocolType: types.StringUnresolvable(types.NewUnmanagedMetadata()),
+			Stages:       nil,
+			RESTMethods:  nil,
 		}
 		for _, stage := range orphanResources {
 			orphanage.Stages = append(orphanage.Stages, adaptStageV2(stage))

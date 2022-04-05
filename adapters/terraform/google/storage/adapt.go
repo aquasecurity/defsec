@@ -2,6 +2,7 @@ package storage
 
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/providers/google/storage"
 )
 
@@ -34,7 +35,14 @@ func (a *adapter) adaptBuckets() []storage.Bucket {
 		}
 	}
 
-	var orphanage storage.Bucket
+	orphanage := storage.Bucket{
+		Metadata:                       types.NewUnmanagedMetadata(),
+		Name:                           types.StringDefault("", types.NewUnmanagedMetadata()),
+		Location:                       types.StringDefault("", types.NewUnmanagedMetadata()),
+		EnableUniformBucketLevelAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		Members:                        nil,
+		Bindings:                       nil,
+	}
 	for _, orphanedBindingID := range a.bindingMap.Orphans() {
 		for _, binding := range a.bindings {
 			if binding.blockID == orphanedBindingID {
@@ -75,6 +83,8 @@ func (a *adapter) adaptBucketResource(resourceBlock *terraform.Block) storage.Bu
 		Name:                           nameValue,
 		Location:                       locationValue,
 		EnableUniformBucketLevelAccess: ublaValue,
+		Members:                        nil,
+		Bindings:                       nil,
 	}
 
 	var name string

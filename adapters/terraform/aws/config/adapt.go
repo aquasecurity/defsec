@@ -13,21 +13,23 @@ func Adapt(modules terraform.Modules) config.Config {
 }
 
 func adaptConfigurationAggregrator(modules terraform.Modules) config.ConfigurationAggregrator {
-	var configurationAggregrator config.ConfigurationAggregrator
+	configurationAggregrator := config.ConfigurationAggregrator{
+		Metadata:         types.NewUnmanagedMetadata(),
+		SourceAllRegions: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		IsDefined:        false,
+	}
 
-	for _, module := range modules {
-		for _, resource := range module.GetResourcesByType("aws_config_configuration_aggregator") {
-			configurationAggregrator.Metadata = resource.GetMetadata()
-			configurationAggregrator.IsDefined = true
+	for _, resource := range modules.GetResourcesByType("aws_config_configuration_aggregator") {
+		configurationAggregrator.Metadata = resource.GetMetadata()
+		configurationAggregrator.IsDefined = true
 
-			aggregationBlock := resource.GetFirstMatchingBlock("account_aggregation_source", "organization_aggregation_source")
-			if aggregationBlock.IsNil() {
-				configurationAggregrator.SourceAllRegions = types.Bool(false, resource.GetMetadata())
-			} else {
-				allRegionsAttr := aggregationBlock.GetAttribute("all_regions")
-				allRegionsVal := allRegionsAttr.AsBoolValueOrDefault(false, aggregationBlock)
-				configurationAggregrator.SourceAllRegions = allRegionsVal
-			}
+		aggregationBlock := resource.GetFirstMatchingBlock("account_aggregation_source", "organization_aggregation_source")
+		if aggregationBlock.IsNil() {
+			configurationAggregrator.SourceAllRegions = types.Bool(false, resource.GetMetadata())
+		} else {
+			allRegionsAttr := aggregationBlock.GetAttribute("all_regions")
+			allRegionsVal := allRegionsAttr.AsBoolValueOrDefault(false, aggregationBlock)
+			configurationAggregrator.SourceAllRegions = allRegionsVal
 		}
 	}
 	return configurationAggregrator

@@ -8,11 +8,6 @@ resource "aws_s3_bucket" "good_example" {
 	}
 }
 `, `
-resource "aws_s3_bucket" "log_bucket" {
-  bucket = "example-log-bucket"
-
-  # ... other configuration ...
-}
 
 resource "aws_s3_bucket" "example" {
   bucket = "yournamehere"

@@ -20,12 +20,13 @@ func adaptSecrets(modules terraform.Modules) []github.EnvironmentSecret {
 }
 
 func adaptSecret(resource *terraform.Block) github.EnvironmentSecret {
-	var secret github.EnvironmentSecret
-	secret.Metadata = resource.GetMetadata()
-	secret.SecretName = resource.GetAttribute("secret_name").AsStringValueOrDefault("", resource)
-	secret.PlainTextValue = resource.GetAttribute("plaintext_value").AsStringValueOrDefault("", resource)
-	secret.Environment = resource.GetAttribute("environment").AsStringValueOrDefault("", resource)
-	secret.Repository = resource.GetAttribute("repository").AsStringValueOrDefault("", resource)
-	secret.EncryptedValue = resource.GetAttribute("encrypted_value").AsStringValueOrDefault("", resource)
+	secret := github.EnvironmentSecret{
+		Metadata:       resource.GetMetadata(),
+		Repository:     resource.GetAttribute("repository").AsStringValueOrDefault("", resource),
+		Environment:    resource.GetAttribute("environment").AsStringValueOrDefault("", resource),
+		SecretName:     resource.GetAttribute("secret_name").AsStringValueOrDefault("", resource),
+		PlainTextValue: resource.GetAttribute("plaintext_value").AsStringValueOrDefault("", resource),
+		EncryptedValue: resource.GetAttribute("encrypted_value").AsStringValueOrDefault("", resource),
+	}
 	return secret
 }

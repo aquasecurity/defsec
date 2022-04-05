@@ -32,8 +32,13 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 
 	for _, policyBlock := range a.modules.GetResourcesByType("aws_sqs_queue_policy") {
 
-		var policy iamp.Policy
-		policy.Metadata = policyBlock.GetMetadata()
+		policy := iamp.Policy{
+			Metadata: policyBlock.GetMetadata(),
+			Name:     types.StringDefault("", policyBlock.GetMetadata()),
+			Document: iamp.Document{
+				Metadata: policyBlock.GetMetadata(),
+			},
+		}
 		if attr := policyBlock.GetAttribute("policy"); attr.IsString() {
 			parsed, err := iamgo.ParseString(attr.Value().AsString())
 			if err != nil {
@@ -62,6 +67,10 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 
 		a.queues[uuid.NewString()] = sqs.Queue{
 			Metadata: types.NewUnmanagedMetadata(),
+			Encryption: sqs.Encryption{
+				Metadata: types.NewUnmanagedMetadata(),
+				KMSKeyID: types.StringDefault("", types.NewUnmanagedMetadata()),
+			},
 			Policies: []iamp.Policy{policy},
 		}
 	}
@@ -80,7 +89,13 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 
 	var policies []iamp.Policy
 	if attr := resource.GetAttribute("policy"); attr.IsString() {
-		var policy iamp.Policy
+		policy := iamp.Policy{
+			Metadata: attr.GetMetadata(),
+			Name:     types.StringDefault("", attr.GetMetadata()),
+			Document: iamp.Document{
+				Metadata: attr.GetMetadata(),
+			},
+		}
 		parsed, err := iamgo.ParseString(attr.Value().AsString())
 		if err == nil {
 			policy.Document.Parsed = *parsed

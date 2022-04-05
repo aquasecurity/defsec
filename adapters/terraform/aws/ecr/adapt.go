@@ -64,6 +64,7 @@ func adaptRepository(resource *terraform.Block, module *terraform.Module) ecr.Re
 
 			policy := iamp.Policy{
 				Metadata: policyRes.GetMetadata(),
+				Name:     types.StringDefault("", policyRes.GetMetadata()),
 				Document: iamp.Document{
 					Parsed:   *parsed,
 					Metadata: policyAttr.GetMetadata(),

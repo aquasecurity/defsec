@@ -10,7 +10,19 @@ import (
 	"github.com/aquasecurity/defsec/providers/aws/iam"
 )
 
-func adaptPasswordPolicy(modules terraform.Modules) (policy iam.PasswordPolicy) {
+func adaptPasswordPolicy(modules terraform.Modules) iam.PasswordPolicy {
+
+	policy := iam.PasswordPolicy{
+		Metadata:             types.NewUnmanagedMetadata(),
+		ReusePreventionCount: types.IntDefault(0, types.NewUnmanagedMetadata()),
+		RequireLowercase:     types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		RequireUppercase:     types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		RequireNumbers:       types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		RequireSymbols:       types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		MaxAgeDays:           types.IntDefault(math.MaxInt, types.NewUnmanagedMetadata()),
+		MinimumLength:        types.IntDefault(0, types.NewUnmanagedMetadata()),
+	}
+
 	passwordPolicies := modules.GetResourcesByType("aws_iam_account_password_policy")
 	if len(passwordPolicies) == 0 {
 		return policy

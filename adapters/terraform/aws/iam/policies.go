@@ -3,7 +3,10 @@ package iam
 import (
 	"strings"
 
+	"github.com/liamg/iamgo"
+
 	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
 
 	"github.com/aquasecurity/defsec/providers/aws/iam"
 )
@@ -25,9 +28,16 @@ func sameProvider(b1, b2 *terraform.Block) bool {
 }
 
 func parsePolicy(policyBlock *terraform.Block, modules terraform.Modules) (iam.Policy, error) {
-	var policy iam.Policy
-	policy.Metadata = policyBlock.GetMetadata()
-	policy.Name = policyBlock.GetAttribute("name").AsStringValueOrDefault("", policyBlock)
+	policy := iam.Policy{
+		Metadata: policyBlock.GetMetadata(),
+		Name:     policyBlock.GetAttribute("name").AsStringValueOrDefault("", policyBlock),
+		Document: iam.Document{
+			Metadata: types.NewUnmanagedMetadata(),
+			Parsed:   iamgo.Document{},
+			IsOffset: false,
+			HasRefs:  false,
+		},
+	}
 	var err error
 	doc, err := parsePolicyFromAttr(policyBlock.GetAttribute("policy"), policyBlock, modules)
 	if err != nil {
@@ -35,13 +45,20 @@ func parsePolicy(policyBlock *terraform.Block, modules terraform.Modules) (iam.P
 	}
 	policy.Document = *doc
 	return policy, nil
-
 }
 
 func adaptPolicies(modules terraform.Modules) (policies []iam.Policy) {
 	for _, policyBlock := range modules.GetResourcesByType("aws_iam_policy") {
-		var policy iam.Policy
-		policy.Name = policyBlock.GetAttribute("name").AsStringValueOrDefault("", policyBlock)
+		policy := iam.Policy{
+			Metadata: policyBlock.GetMetadata(),
+			Name:     policyBlock.GetAttribute("name").AsStringValueOrDefault("", policyBlock),
+			Document: iam.Document{
+				Metadata: types.NewUnmanagedMetadata(),
+				Parsed:   iamgo.Document{},
+				IsOffset: false,
+				HasRefs:  false,
+			},
+		}
 		doc, err := parsePolicyFromAttr(policyBlock.GetAttribute("policy"), policyBlock, modules)
 		if err != nil {
 			continue

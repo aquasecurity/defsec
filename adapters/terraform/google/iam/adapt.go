@@ -2,6 +2,7 @@ package iam
 
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/providers/google/iam"
 	"github.com/google/uuid"
 )
@@ -31,7 +32,9 @@ func (a *adapter) Adapt() iam.IAM {
 
 func (a *adapter) addOrg(blockID string) {
 	if _, ok := a.orgs[blockID]; !ok {
-		a.orgs[blockID] = iam.Organization{}
+		a.orgs[blockID] = iam.Organization{
+			Metadata: types.NewUnmanagedMetadata(),
+		}
 	}
 }
 
@@ -56,6 +59,7 @@ PROJECT:
 		}
 
 		var org iam.Organization
+		org.Metadata = types.NewUnmanagedMetadata()
 		org.Projects = append(org.Projects, project.project)
 		a.orgs[uuid.NewString()] = org
 	}
@@ -83,6 +87,7 @@ FOLDER_ORG:
 		} else {
 			// add to placeholder?
 			var org iam.Organization
+			org.Metadata = types.NewUnmanagedMetadata()
 			org.Folders = append(org.Folders, folder.folder)
 			a.orgs[uuid.NewString()] = org
 		}

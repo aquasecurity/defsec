@@ -68,6 +68,15 @@ func (a *mssqlAdapter) adaptMSSQLServers(modules terraform.Modules) []database.M
 	if len(orphanResources) > 0 {
 		orphanage := database.MSSQLServer{
 			Metadata: types.NewUnmanagedMetadata(),
+			Server: database.Server{
+				Metadata:                  types.NewUnmanagedMetadata(),
+				EnableSSLEnforcement:      types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				MinimumTLSVersion:         types.StringDefault("", types.NewUnmanagedMetadata()),
+				EnablePublicNetworkAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				FirewallRules:             nil,
+			},
+			ExtendedAuditingPolicies: nil,
+			SecurityAlertPolicies:    nil,
 		}
 		for _, policy := range orphanResources {
 			orphanage.SecurityAlertPolicies = append(orphanage.SecurityAlertPolicies, adaptMSSQLSecurityAlertPolicy(policy))
@@ -81,6 +90,13 @@ func (a *mssqlAdapter) adaptMSSQLServers(modules terraform.Modules) []database.M
 	if len(orphanResources) > 0 {
 		orphanage := database.MSSQLServer{
 			Metadata: types.NewUnmanagedMetadata(),
+			Server: database.Server{
+				Metadata:                  types.NewUnmanagedMetadata(),
+				EnableSSLEnforcement:      types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				MinimumTLSVersion:         types.StringDefault("", types.NewUnmanagedMetadata()),
+				EnablePublicNetworkAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				FirewallRules:             nil,
+			},
 		}
 		for _, policy := range orphanResources {
 			orphanage.ExtendedAuditingPolicies = append(orphanage.ExtendedAuditingPolicies, adaptMSSQLExtendedAuditingPolicy(policy))
@@ -117,6 +133,13 @@ func (a *mysqlAdapter) adaptMySQLServers(modules terraform.Modules) []database.M
 	if len(orphanResources) > 0 {
 		orphanage := database.MySQLServer{
 			Metadata: types.NewUnmanagedMetadata(),
+			Server: database.Server{
+				Metadata:                  types.NewUnmanagedMetadata(),
+				EnableSSLEnforcement:      types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				MinimumTLSVersion:         types.StringDefault("", types.NewUnmanagedMetadata()),
+				EnablePublicNetworkAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				FirewallRules:             nil,
+			},
 		}
 		for _, policy := range orphanResources {
 			orphanage.FirewallRules = append(orphanage.FirewallRules, adaptFirewallRule(policy))
@@ -141,6 +164,13 @@ func (a *mariaDBAdapter) adaptMariaDBServers(modules terraform.Modules) []databa
 	if len(orphanResources) > 0 {
 		orphanage := database.MariaDBServer{
 			Metadata: types.NewUnmanagedMetadata(),
+			Server: database.Server{
+				Metadata:                  types.NewUnmanagedMetadata(),
+				EnableSSLEnforcement:      types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				MinimumTLSVersion:         types.StringDefault("", types.NewUnmanagedMetadata()),
+				EnablePublicNetworkAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				FirewallRules:             nil,
+			},
 		}
 		for _, policy := range orphanResources {
 			orphanage.FirewallRules = append(orphanage.FirewallRules, adaptFirewallRule(policy))
@@ -165,6 +195,19 @@ func (a *postgresqlAdapter) adaptPostgreSQLServers(modules terraform.Modules) []
 	if len(orphanResources) > 0 {
 		orphanage := database.PostgreSQLServer{
 			Metadata: types.NewUnmanagedMetadata(),
+			Server: database.Server{
+				Metadata:                  types.NewUnmanagedMetadata(),
+				EnableSSLEnforcement:      types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				MinimumTLSVersion:         types.StringDefault("", types.NewUnmanagedMetadata()),
+				EnablePublicNetworkAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				FirewallRules:             nil,
+			},
+			Config: database.PostgresSQLConfig{
+				Metadata:             types.NewUnmanagedMetadata(),
+				LogCheckpoints:       types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				ConnectionThrottling: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				LogConnections:       types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			},
 		}
 		for _, policy := range orphanResources {
 			orphanage.FirewallRules = append(orphanage.FirewallRules, adaptFirewallRule(policy))
@@ -327,6 +370,7 @@ func (a *postgresqlAdapter) adaptPostgreSQLServer(resource *terraform.Block, mod
 
 func adaptPostgreSQLConfig(resource *terraform.Block, configBlocks []*terraform.Block) database.PostgresSQLConfig {
 	config := database.PostgresSQLConfig{
+		Metadata:             resource.GetMetadata(),
 		LogCheckpoints:       types.BoolDefault(false, resource.GetMetadata()),
 		ConnectionThrottling: types.BoolDefault(false, resource.GetMetadata()),
 		LogConnections:       types.BoolDefault(false, resource.GetMetadata()),

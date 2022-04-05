@@ -23,8 +23,10 @@ func adaptRepositories(modules terraform.Modules) []github.Repository {
 func adaptRepository(resource *terraform.Block) github.Repository {
 
 	repo := github.Repository{
-		Metadata: resource.GetMetadata(),
-		Public:   types.Bool(true, resource.GetMetadata()),
+		Metadata:            resource.GetMetadata(),
+		Public:              types.Bool(true, resource.GetMetadata()),
+		VulnerabilityAlerts: resource.GetAttribute("vulnerability_alerts").AsBoolValueOrDefault(false, resource),
+		Archived:            resource.GetAttribute("archived").AsBoolValueOrDefault(false, resource),
 	}
 
 	privateAttr := resource.GetAttribute("private")
@@ -33,9 +35,6 @@ func adaptRepository(resource *terraform.Block) github.Repository {
 	} else if privateAttr.IsFalse() {
 		repo.Public = types.Bool(true, privateAttr.GetMetadata())
 	}
-
-	repo.Archived = resource.GetAttribute("archived").AsBoolValueOrDefault(false, resource)
-	repo.VulnerabilityAlerts = resource.GetAttribute("vulnerability_alerts").AsBoolValueOrDefault(false, resource)
 
 	// visibility overrides private
 	visibilityAttr := resource.GetAttribute("visibility")

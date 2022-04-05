@@ -12,7 +12,13 @@ func Adapt(modules terraform.Modules) storage.Storage {
 	orphanAccount := storage.Account{
 		Metadata:     types.NewUnmanagedMetadata(),
 		NetworkRules: adaptOrphanNetworkRules(modules, networkRules),
+		EnforceHTTPS: types.BoolDefault(false, types.NewUnmanagedMetadata()),
 		Containers:   adaptOrphanContainers(modules, containers),
+		QueueProperties: storage.QueueProperties{
+			Metadata:      types.NewUnmanagedMetadata(),
+			EnableLogging: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		},
+		MinimumTLSVersion: types.StringDefault("", types.NewUnmanagedMetadata()),
 	}
 
 	accounts = append(accounts, orphanAccount)
@@ -87,7 +93,9 @@ func adaptAccounts(modules terraform.Modules) ([]storage.Account, []string, []st
 func adaptAccount(resource *terraform.Block) storage.Account {
 	account := storage.Account{
 		Metadata:     resource.GetMetadata(),
+		NetworkRules: nil,
 		EnforceHTTPS: types.BoolDefault(true, resource.GetMetadata()),
+		Containers:   nil,
 		QueueProperties: storage.QueueProperties{
 			Metadata:      resource.GetMetadata(),
 			EnableLogging: types.BoolDefault(false, resource.GetMetadata()),

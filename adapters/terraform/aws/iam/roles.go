@@ -2,7 +2,9 @@ package iam
 
 import (
 	"github.com/aquasecurity/defsec/parsers/terraform"
+	"github.com/aquasecurity/defsec/parsers/types"
 	"github.com/aquasecurity/defsec/providers/aws/iam"
+	"github.com/liamg/iamgo"
 )
 
 func adaptRoles(modules terraform.Modules) []iam.Role {
@@ -41,13 +43,22 @@ func mapRoles(modules terraform.Modules) (map[string]iam.Role, map[string]struct
 	policyMap := make(map[string]struct{})
 	roleMap := make(map[string]iam.Role)
 	for _, roleBlock := range modules.GetResourcesByType("aws_iam_role") {
-		var role iam.Role
-		role.Metadata = roleBlock.GetMetadata()
-		role.Name = roleBlock.GetAttribute("name").AsStringValueOrDefault("", roleBlock)
+		role := iam.Role{
+			Metadata: roleBlock.GetMetadata(),
+			Name:     roleBlock.GetAttribute("name").AsStringValueOrDefault("", roleBlock),
+			Policies: nil,
+		}
 		if inlineBlock := roleBlock.GetBlock("inline_policy"); inlineBlock.IsNotNil() {
-			var policy iam.Policy
-			policy.Metadata = inlineBlock.GetMetadata()
-			policy.Name = inlineBlock.GetAttribute("name").AsStringValueOrDefault("", inlineBlock)
+			policy := iam.Policy{
+				Metadata: inlineBlock.GetMetadata(),
+				Name:     inlineBlock.GetAttribute("name").AsStringValueOrDefault("", inlineBlock),
+				Document: iam.Document{
+					Metadata: types.NewUnmanagedMetadata(),
+					Parsed:   iamgo.Document{},
+					IsOffset: false,
+					HasRefs:  false,
+				},
+			}
 			doc, err := parsePolicyFromAttr(inlineBlock.GetAttribute("policy"), inlineBlock, modules)
 			if err != nil {
 				continue

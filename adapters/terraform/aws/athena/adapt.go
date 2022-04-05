@@ -36,14 +36,12 @@ func adaptWorkgroups(modules terraform.Modules) []athena.Workgroup {
 func adaptDatabase(resource *terraform.Block) athena.Database {
 	database := athena.Database{
 		Metadata: resource.GetMetadata(),
-		Name:     types.StringDefault("", resource.GetMetadata()),
+		Name:     resource.GetAttribute("name").AsStringValueOrDefault("", resource),
 		Encryption: athena.EncryptionConfiguration{
 			Metadata: resource.GetMetadata(),
 			Type:     types.StringDefault("", resource.GetMetadata()),
 		},
 	}
-	nameAttr := resource.GetAttribute("name")
-	database.Name = nameAttr.AsStringValueOrDefault("", resource)
 	if encryptionConfigBlock := resource.GetBlock("encryption_configuration"); encryptionConfigBlock.IsNotNil() {
 		database.Encryption.Metadata = encryptionConfigBlock.GetMetadata()
 		encryptionOptionAttr := encryptionConfigBlock.GetAttribute("encryption_option")
@@ -56,16 +54,13 @@ func adaptDatabase(resource *terraform.Block) athena.Database {
 func adaptWorkgroup(resource *terraform.Block) athena.Workgroup {
 	workgroup := athena.Workgroup{
 		Metadata: resource.GetMetadata(),
-		Name:     types.StringDefault("", resource.GetMetadata()),
+		Name:     resource.GetAttribute("name").AsStringValueOrDefault("", resource),
 		Encryption: athena.EncryptionConfiguration{
 			Metadata: resource.GetMetadata(),
 			Type:     types.StringDefault("", resource.GetMetadata()),
 		},
 		EnforceConfiguration: types.BoolDefault(false, resource.GetMetadata()),
 	}
-
-	nameAttr := resource.GetAttribute("name")
-	workgroup.Name = nameAttr.AsStringValueOrDefault("", resource)
 
 	if configBlock := resource.GetBlock("configuration"); configBlock.IsNotNil() {
 
