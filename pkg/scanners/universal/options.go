@@ -3,6 +3,11 @@ package universal
 import (
 	"io"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/json"
+	"github.com/aquasecurity/defsec/pkg/scanners/yaml"
+
+	"github.com/aquasecurity/defsec/pkg/scanners/toml"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation"
 	"github.com/aquasecurity/defsec/pkg/scanners/dockerfile"
 	"github.com/aquasecurity/defsec/pkg/scanners/kubernetes"
@@ -19,6 +24,9 @@ func OptionWithDebug(w io.Writer) Option {
 		s.cloudformationOpts = append(s.cloudformationOpts, cloudformation.OptionWithDebug(w))
 		s.dockerfileOpts = append(s.dockerfileOpts, dockerfile.OptionWithDebug(w))
 		s.kubernetesOpts = append(s.kubernetesOpts, kubernetes.OptionWithDebug(w))
+		s.tomlOpts = append(s.tomlOpts, toml.OptionWithDebug(w))
+		s.jsonOpts = append(s.jsonOpts, json.OptionWithDebug(w))
+		s.yamlOpts = append(s.yamlOpts, yaml.OptionWithDebug(w))
 	}
 }
 
@@ -30,6 +38,9 @@ func OptionWithTrace(w io.Writer) Option {
 		s.cloudformationOpts = append(s.cloudformationOpts, cloudformation.OptionWithTrace(w))
 		s.dockerfileOpts = append(s.dockerfileOpts, dockerfile.OptionWithTrace(w))
 		s.kubernetesOpts = append(s.kubernetesOpts, kubernetes.OptionWithTrace(w))
+		s.tomlOpts = append(s.tomlOpts, toml.OptionWithTrace(w))
+		s.jsonOpts = append(s.jsonOpts, json.OptionWithTrace(w))
+		s.yamlOpts = append(s.yamlOpts, yaml.OptionWithTrace(w))
 	}
 }
 
@@ -54,6 +65,9 @@ func OptionWithPolicyDirs(dirs []string) func(s *Scanner) {
 		s.cloudformationOpts = append(s.cloudformationOpts, cloudformation.OptionWithPolicyDirs(dirs...))
 		s.dockerfileOpts = append(s.dockerfileOpts, dockerfile.OptionWithPolicyDirs(dirs...))
 		s.kubernetesOpts = append(s.kubernetesOpts, kubernetes.OptionWithPolicyDirs(dirs...))
+		s.tomlOpts = append(s.tomlOpts, toml.OptionWithPolicyDirs(dirs...))
+		s.jsonOpts = append(s.jsonOpts, json.OptionWithPolicyDirs(dirs...))
+		s.yamlOpts = append(s.yamlOpts, yaml.OptionWithPolicyDirs(dirs...))
 	}
 }
 
@@ -64,6 +78,9 @@ func OptionWithDataDirs(dirs []string) func(s *Scanner) {
 		s.cloudformationOpts = append(s.cloudformationOpts, cloudformation.OptionWithDataDirs(dirs...))
 		s.dockerfileOpts = append(s.dockerfileOpts, dockerfile.OptionWithDataDirs(dirs...))
 		s.kubernetesOpts = append(s.kubernetesOpts, kubernetes.OptionWithDataDirs(dirs...))
+		s.tomlOpts = append(s.tomlOpts, toml.OptionWithDataDirs(dirs...))
+		s.jsonOpts = append(s.jsonOpts, json.OptionWithDataDirs(dirs...))
+		s.yamlOpts = append(s.yamlOpts, yaml.OptionWithDataDirs(dirs...))
 	}
 }
 
@@ -74,5 +91,8 @@ func OptionWithPolicyNamespaces(namespaces ...string) func(s *Scanner) {
 		s.cloudformationOpts = append(s.cloudformationOpts, cloudformation.OptionWithPolicyNamespaces(namespaces...))
 		s.dockerfileOpts = append(s.dockerfileOpts, dockerfile.OptionWithPolicyNamespaces(namespaces...))
 		s.kubernetesOpts = append(s.kubernetesOpts, kubernetes.OptionWithPolicyNamespaces(namespaces...))
+		s.tomlOpts = append(s.tomlOpts, toml.OptionWithPolicyNamespaces(namespaces...))
+		s.jsonOpts = append(s.jsonOpts, json.OptionWithPolicyNamespaces(namespaces...))
+		s.yamlOpts = append(s.yamlOpts, yaml.OptionWithPolicyNamespaces(namespaces...))
 	}
 }

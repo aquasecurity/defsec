@@ -9,7 +9,6 @@ linters:
     - ineffassign
     - staticcheck
     - structcheck
-    - typecheck
     - unused
     - varcheck
     - bodyclose
@@ -32,7 +31,10 @@ linters-settings:
 
 issues:
   exclude-rules:
-    - path: rules/
+    - path: "."
+      linters:
+        - typecheck
+    - path: internal/rules/
       linters:
         - gosec
     - path: pkg/scanners/terraform/parser/funcs/
