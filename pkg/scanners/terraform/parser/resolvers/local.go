@@ -14,7 +14,6 @@ func (r *localResolver) Resolve(_ context.Context, target fs.FS, opt Options) (f
 	if !opt.hasPrefix(".", "..") {
 		return nil, "", "", false, nil
 	}
-	//opt.Source = strings.ReplaceAll(opt.Source, "/", string(filepath.Separator))
 	joined := filepath.Clean(filepath.Join(opt.ModulePath, opt.Source))
 	if _, err := fs.Stat(target, joined); err == nil {
 		opt.Debug("Module '%s' resolved locally to %s", opt.Name, joined)
