@@ -14,7 +14,6 @@ func isWritable(path string) bool {
 		return false
 	}
 
-	err = nil
 	if !info.IsDir() {
 		return false
 	}
@@ -29,7 +28,6 @@ func isWritable(path string) bool {
 		return false
 	}
 
-	err = nil
 	if uint32(os.Geteuid()) != stat.Uid {
 		return false
 	}
