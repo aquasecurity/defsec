@@ -34,6 +34,7 @@ func adaptInstance(resource *terraform.Block) sql.DatabaseInstance {
 		Settings: sql.Settings{
 			Metadata: resource.GetMetadata(),
 			Flags: sql.Flags{
+				Metadata:                        resource.GetMetadata(),
 				LogTempFileSize:                 types.IntDefault(-1, resource.GetMetadata()),
 				LocalInFile:                     types.BoolDefault(false, resource.GetMetadata()),
 				ContainedDatabaseAuthentication: types.BoolDefault(true, resource.GetMetadata()),

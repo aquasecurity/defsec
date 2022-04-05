@@ -36,8 +36,11 @@ func (a *adapter) adaptLoadBalancers(modules terraform.Modules) []elb.LoadBalanc
 	orphanResources := modules.GetResourceByIDs(a.listenerIDs.Orphans()...)
 	if len(orphanResources) > 0 {
 		orphanage := elb.LoadBalancer{
-			Metadata: types.NewUnmanagedMetadata(),
-			Type:     types.StringDefault(elb.TypeApplication, types.NewUnmanagedMetadata()),
+			Metadata:                types.NewUnmanagedMetadata(),
+			Type:                    types.StringDefault(elb.TypeApplication, types.NewUnmanagedMetadata()),
+			DropInvalidHeaderFields: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			Internal:                types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			Listeners:               nil,
 		}
 		for _, listenerResource := range orphanResources {
 			orphanage.Listeners = append(orphanage.Listeners, adaptListener(listenerResource, "application"))
@@ -85,6 +88,7 @@ func (a *adapter) adaptClassicLoadBalancer(resource *terraform.Block, module ter
 		Type:                    types.String("classic", resource.GetMetadata()),
 		DropInvalidHeaderFields: types.BoolDefault(false, resource.GetMetadata()),
 		Internal:                internalVal,
+		Listeners:               nil,
 	}
 }
 

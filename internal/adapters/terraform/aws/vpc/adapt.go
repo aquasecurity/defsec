@@ -47,7 +47,10 @@ func (a *sgAdapter) adaptSecurityGroups(modules terraform.Modules) []vpc.Securit
 	orphanResources := modules.GetResourceByIDs(a.sgRuleIDs.Orphans()...)
 	if len(orphanResources) > 0 {
 		orphanage := vpc.SecurityGroup{
-			Metadata: types.NewUnmanagedMetadata(),
+			Metadata:     types.NewUnmanagedMetadata(),
+			Description:  types.StringDefault("", types.NewUnmanagedMetadata()),
+			IngressRules: nil,
+			EgressRules:  nil,
 		}
 		for _, sgRule := range orphanResources {
 			if sgRule.GetAttribute("type").Equals("ingress") {
@@ -74,6 +77,7 @@ func (a *naclAdapter) adaptNetworkACLs(modules terraform.Modules) []vpc.NetworkA
 	if len(orphanResources) > 0 {
 		orphanage := vpc.NetworkACL{
 			Metadata: types.NewUnmanagedMetadata(),
+			Rules:    nil,
 		}
 		for _, naclRule := range orphanResources {
 			orphanage.Rules = append(orphanage.Rules, adaptNetworkACLRule(naclRule))

@@ -48,7 +48,8 @@ func (a *adapter) adaptClusters() []gke.Cluster {
 func (a *adapter) adaptCluster(resource *terraform.Block, module *terraform.Module) {
 
 	cluster := gke.Cluster{
-		Metadata: resource.GetMetadata(),
+		Metadata:  resource.GetMetadata(),
+		NodePools: nil,
 		IPAllocationPolicy: gke.IPAllocationPolicy{
 			Metadata: resource.GetMetadata(),
 			Enabled:  types.BoolDefault(false, resource.GetMetadata()),

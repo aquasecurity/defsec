@@ -22,8 +22,13 @@ func adaptBuckets(modules terraform.Modules) []spaces.Bucket {
 			bucket := spaces.Bucket{
 				Metadata:     block.GetMetadata(),
 				Name:         block.GetAttribute("name").AsStringValueOrDefault("", block),
+				Objects:      nil,
 				ACL:          block.GetAttribute("acl").AsStringValueOrDefault("", block),
 				ForceDestroy: block.GetAttribute("force_destroy").AsBoolValueOrDefault(false, block),
+				Versioning: spaces.Versioning{
+					Metadata: block.GetMetadata(),
+					Enabled:  types.BoolDefault(false, block.GetMetadata()),
+				},
 			}
 
 			if versioning := block.GetBlock("versioning"); versioning.IsNotNil() {
@@ -31,18 +36,14 @@ func adaptBuckets(modules terraform.Modules) []spaces.Bucket {
 					Metadata: versioning.GetMetadata(),
 					Enabled:  versioning.GetAttribute("enabled").AsBoolValueOrDefault(false, versioning),
 				}
-			} else {
-				bucket.Versioning = spaces.Versioning{
-					Metadata: block.GetMetadata(),
-					Enabled:  types.Bool(false, block.GetMetadata()),
-				}
 			}
 			bucketMap[block.ID()] = bucket
 		}
 		for _, block := range module.GetResourcesByType("digitalocean_spaces_bucket_object") {
-			var object spaces.Object
-			object.Metadata = block.GetMetadata()
-			object.ACL = block.GetAttribute("acl").AsStringValueOrDefault("private", block)
+			object := spaces.Object{
+				Metadata: block.GetMetadata(),
+				ACL:      block.GetAttribute("acl").AsStringValueOrDefault("private", block),
+			}
 			bucketName := block.GetAttribute("bucket")
 			var found bool
 			if bucketName.IsString() {
@@ -68,8 +69,15 @@ func adaptBuckets(modules terraform.Modules) []spaces.Bucket {
 			}
 			bucketMap[uuid.NewString()] = spaces.Bucket{
 				Metadata: types.NewUnmanagedMetadata(),
+				Name:     types.StringDefault("", types.NewUnmanagedMetadata()),
 				Objects: []spaces.Object{
 					object,
+				},
+				ACL:          types.StringDefault("private", types.NewUnmanagedMetadata()),
+				ForceDestroy: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				Versioning: spaces.Versioning{
+					Metadata: block.GetMetadata(),
+					Enabled:  types.BoolDefault(false, block.GetMetadata()),
 				},
 			}
 		}

@@ -26,10 +26,12 @@ func getInstances(modules terraform.Modules) []ec2.Instance {
 			Metadata:        b.GetMetadata(),
 			MetadataOptions: metadataOptions,
 			UserData:        userData,
+			SecurityGroups:  nil,
 			RootBlockDevice: &ec2.BlockDevice{
 				Metadata:  b.GetMetadata(),
 				Encrypted: types.BoolDefault(false, b.GetMetadata()),
 			},
+			EBSBlockDevices: nil,
 		}
 
 		if rootBlockDevice := b.GetBlock("root_block_device"); rootBlockDevice.IsNotNil() {
@@ -64,11 +66,10 @@ func getMetadataOptions(b *terraform.Block) ec2.MetadataOptions {
 
 	if metadataOptions := b.GetBlock("metadata_options"); metadataOptions.IsNotNil() {
 		metaOpts := ec2.MetadataOptions{
-			Metadata: metadataOptions.GetMetadata(),
+			Metadata:     metadataOptions.GetMetadata(),
+			HttpTokens:   metadataOptions.GetAttribute("http_tokens").AsStringValueOrDefault("", metadataOptions),
+			HttpEndpoint: metadataOptions.GetAttribute("http_endpoint").AsStringValueOrDefault("", metadataOptions),
 		}
-
-		metaOpts.HttpTokens = metadataOptions.GetAttribute("http_tokens").AsStringValueOrDefault("", metadataOptions)
-		metaOpts.HttpEndpoint = metadataOptions.GetAttribute("http_endpoint").AsStringValueOrDefault("", metadataOptions)
 		return metaOpts
 	}
 

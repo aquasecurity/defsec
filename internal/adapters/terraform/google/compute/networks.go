@@ -15,21 +15,25 @@ func adaptNetworks(modules terraform.Modules) (networks []compute.Network) {
 	networkMap := make(map[string]compute.Network)
 
 	for _, networkBlock := range modules.GetResourcesByType("google_compute_network") {
-		var network compute.Network
-		network.Metadata = networkBlock.GetMetadata()
+		network := compute.Network{
+			Metadata:    networkBlock.GetMetadata(),
+			Firewall:    nil,
+			Subnetworks: nil,
+		}
 		networkMap[networkBlock.ID()] = network
 	}
 
 	for _, subnetworkBlock := range modules.GetResourcesByType("google_compute_subnetwork") {
 
-		var subnetwork compute.SubNetwork
-		subnetwork.Metadata = subnetworkBlock.GetMetadata()
+		subnetwork := compute.SubNetwork{
+			Metadata:       subnetworkBlock.GetMetadata(),
+			Name:           types.StringDefault("", subnetworkBlock.GetMetadata()),
+			EnableFlowLogs: types.BoolDefault(false, subnetworkBlock.GetMetadata()),
+		}
 
 		// logging
 		if logConfigBlock := subnetworkBlock.GetBlock("log_config"); logConfigBlock.IsNotNil() {
 			subnetwork.EnableFlowLogs = types.BoolExplicit(true, subnetworkBlock.GetBlock("log_config").GetMetadata())
-		} else {
-			subnetwork.EnableFlowLogs = types.BoolDefault(false, subnetworkBlock.GetMetadata())
 		}
 
 		nwAttr := subnetworkBlock.GetAttribute("network")
@@ -43,17 +47,23 @@ func adaptNetworks(modules terraform.Modules) (networks []compute.Network) {
 			}
 		}
 
-		var placeholder compute.Network
-		placeholder.Metadata = types.NewUnmanagedMetadata()
+		placeholder := compute.Network{
+			Metadata:    types.NewUnmanagedMetadata(),
+			Firewall:    nil,
+			Subnetworks: nil,
+		}
 		placeholder.Subnetworks = append(placeholder.Subnetworks, subnetwork)
 		networks = append(networks, placeholder)
 	}
 
 	for _, firewallBlock := range modules.GetResourcesByType("google_compute_firewall") {
 
-		var firewall compute.Firewall
-		firewall.Metadata = firewallBlock.GetMetadata()
-		firewall.Name = firewallBlock.GetAttribute("name").AsStringValueOrDefault("", firewallBlock)
+		firewall := compute.Firewall{
+			Metadata:     firewallBlock.GetMetadata(),
+			Name:         firewallBlock.GetAttribute("name").AsStringValueOrDefault("", firewallBlock),
+			IngressRules: nil,
+			EgressRules:  nil,
+		}
 
 		for _, allowBlock := range firewallBlock.GetBlocks("allow") {
 			adaptFirewallRule(&firewall, firewallBlock, allowBlock, true)
@@ -73,8 +83,11 @@ func adaptNetworks(modules terraform.Modules) (networks []compute.Network) {
 			}
 		}
 
-		var placeholder compute.Network
-		placeholder.Metadata = types.NewUnmanagedMetadata()
+		placeholder := compute.Network{
+			Metadata:    types.NewUnmanagedMetadata(),
+			Firewall:    nil,
+			Subnetworks: nil,
+		}
 		placeholder.Firewall = &firewall
 		networks = append(networks, placeholder)
 	}
@@ -130,9 +143,10 @@ func adaptFirewallRule(firewall *compute.Firewall, firewallBlock, ruleBlock *ter
 
 	rule := compute.FirewallRule{
 		Metadata: firewallBlock.GetMetadata(),
+		Enforced: types.BoolDefault(true, firewallBlock.GetMetadata()),
 		IsAllow:  types.Bool(allow, ruleBlock.GetMetadata()),
-		Ports:    ports,
 		Protocol: protocolAttr.AsStringValueOrDefault("tcp", ruleBlock),
+		Ports:    ports,
 	}
 
 	disabledAttr := firewallBlock.GetAttribute("disabled")

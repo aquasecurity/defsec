@@ -32,6 +32,8 @@ func adaptLogProfile(resource *terraform.Block) monitor.LogProfile {
 			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
 			Days:     types.IntDefault(0, resource.GetMetadata()),
 		},
+		Categories: nil,
+		Locations:  nil,
 	}
 
 	if retentionPolicyBlock := resource.GetBlock("retention_policy"); retentionPolicyBlock.IsNotNil() {

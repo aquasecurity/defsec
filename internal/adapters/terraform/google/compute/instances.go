@@ -33,13 +33,16 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 			BootDisks:                   nil,
 			AttachedDisks:               nil,
 		}
-		instance.Metadata = instanceBlock.GetMetadata()
 
 		// network interfaces
 		for _, networkInterfaceBlock := range instanceBlock.GetBlocks("network_interface") {
-			var ni compute.NetworkInterface
-			ni.Metadata = networkInterfaceBlock.GetMetadata()
-			ni.HasPublicIP = types.BoolDefault(false, networkInterfaceBlock.GetMetadata())
+			ni := compute.NetworkInterface{
+				Metadata:    networkInterfaceBlock.GetMetadata(),
+				Network:     nil,
+				SubNetwork:  nil,
+				HasPublicIP: types.BoolDefault(false, networkInterfaceBlock.GetMetadata()),
+				NATIP:       types.StringDefault("", networkInterfaceBlock.GetMetadata()),
+			}
 			if accessConfigBlock := networkInterfaceBlock.GetBlock("access_config"); accessConfigBlock.IsNotNil() {
 				ni.HasPublicIP = types.Bool(true, accessConfigBlock.GetMetadata())
 			}
