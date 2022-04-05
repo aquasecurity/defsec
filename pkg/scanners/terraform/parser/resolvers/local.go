@@ -2,9 +2,7 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 	"io/fs"
-	"os"
 	"path/filepath"
 )
 
@@ -13,10 +11,10 @@ type localResolver struct{}
 var Local = &localResolver{}
 
 func (r *localResolver) Resolve(_ context.Context, target fs.FS, opt Options) (filesystem fs.FS, prefix string, downloadPath string, applies bool, err error) {
-	if !opt.hasPrefix(fmt.Sprintf(".%c", os.PathSeparator), fmt.Sprintf("..%c", os.PathSeparator)) {
+	if !opt.hasPrefix(".", "..") {
 		return nil, "", "", false, nil
 	}
-
+	//opt.Source = strings.ReplaceAll(opt.Source, "/", string(filepath.Separator))
 	joined := filepath.Clean(filepath.Join(opt.ModulePath, opt.Source))
 	if _, err := fs.Stat(target, joined); err == nil {
 		opt.Debug("Module '%s' resolved locally to %s", opt.Name, joined)
