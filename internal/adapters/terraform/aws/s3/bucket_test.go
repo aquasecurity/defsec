@@ -110,8 +110,14 @@ resource "aws_s3_bucket_logging" "example" {
 	s3 := Adapt(modules)
 
 	assert.Equal(t, 2, len(s3.Buckets))
-	assert.True(t, s3.Buckets[0].Logging.Enabled.Value())
-
+	for _, bucket := range s3.Buckets {
+		switch bucket.Name.Value() {
+		case "yournamehere":
+			assert.True(t, bucket.Logging.Enabled.Value())
+		case "example-log-bucket":
+			assert.False(t, bucket.Logging.Enabled.Value())
+		}
+	}
 }
 
 func Test_BucketGetVersioning(t *testing.T) {

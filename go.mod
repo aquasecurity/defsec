@@ -13,7 +13,7 @@ require (
 	github.com/hashicorp/hcl/v2 v2.11.1
 	github.com/liamg/iamgo v0.0.6
 	github.com/liamg/jfather v0.0.7
-	github.com/liamg/memoryfs v0.0.3
+	github.com/liamg/memoryfs v1.2.0
 	github.com/liamg/tml v0.6.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/moby/buildkit v0.9.3
@@ -25,7 +25,6 @@ require (
 	github.com/zclconf/go-cty v1.10.0
 	github.com/zclconf/go-cty-yaml v1.0.2
 	golang.org/x/crypto v0.0.0-20220208233918-bba287dce954
-	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9
 	golang.org/x/text v0.3.7
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
@@ -79,6 +78,7 @@ require (
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/net v0.0.0-20220114011407-0dd24b26b47d // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
+	golang.org/x/sys v0.0.0-20220114195835-da31bd327af9 // indirect
 	google.golang.org/api v0.62.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa // indirect
