@@ -6,6 +6,10 @@ import (
 	"io"
 	"io/fs"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/json"
+	"github.com/aquasecurity/defsec/pkg/scanners/toml"
+	"github.com/aquasecurity/defsec/pkg/scanners/yaml"
+
 	"github.com/aquasecurity/defsec/pkg/scan"
 
 	"github.com/aquasecurity/defsec/pkg/scanners"
@@ -24,6 +28,9 @@ type Scanner struct {
 	cloudformationOpts []cloudformation.Option
 	dockerfileOpts     []dockerfile.Option
 	kubernetesOpts     []kubernetes.Option
+	tomlOpts           []toml.Option
+	jsonOpts           []json.Option
+	yamlOpts           []yaml.Option
 }
 
 func (s *Scanner) debug(format string, args ...interface{}) {
@@ -44,6 +51,9 @@ func New(opts ...Option) *Scanner {
 		cloudformation.New(s.cloudformationOpts...),
 		dockerfile.NewScanner(s.dockerfileOpts...),
 		kubernetes.NewScanner(s.kubernetesOpts...),
+		json.NewScanner(s.jsonOpts...),
+		yaml.NewScanner(s.yamlOpts...),
+		toml.NewScanner(s.tomlOpts...),
 	}
 	return s
 }

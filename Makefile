@@ -16,7 +16,7 @@ fix-typos:
 .PHONY: quality
 quality:
 	which golangci-lint || go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
-	golangci-lint run
+	golangci-lint run --timeout 3m --verbose
 
 .PHONY: update-loader
 update-loader:
