@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/fs"
 	"path/filepath"
+	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser/resolvers"
 	"github.com/aquasecurity/defsec/pkg/terraform"
@@ -118,6 +119,9 @@ func (e *evaluator) loadModuleFromTerraformCache(ctx context.Context, b *terrafo
 	}
 	if modulePath == "" {
 		return nil, fmt.Errorf("failed to load module from .terraform/modules")
+	}
+	if strings.HasPrefix(source, ".") {
+		source = ""
 	}
 	moduleParser := e.parentParser.newModuleParser(e.filesystem, source, modulePath, b.Label(), b)
 	if err := moduleParser.ParseFS(ctx, modulePath); err != nil {
