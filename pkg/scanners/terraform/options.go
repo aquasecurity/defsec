@@ -2,7 +2,6 @@ package terraform
 
 import (
 	"io"
-	"path/filepath"
 	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
@@ -122,30 +121,9 @@ func OptionSkipDownloaded(skip bool) Option {
 	}
 }
 
-func OptionWithExcludePaths(paths []string) Option {
+func OptionWithResultsFilter(f func(scan.Results) scan.Results) Option {
 	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionWithResultsFilter(func(results scan.Results) scan.Results {
-			for i, result := range results {
-				if result.Range() == nil {
-					continue
-				}
-				good := true
-				for _, exclude := range paths {
-					abs, err := filepath.Abs(exclude)
-					if err != nil {
-						continue
-					}
-					if str, err := filepath.Rel(abs, result.Range().GetLocalFilename()); err == nil && !strings.HasPrefix(str, "..") {
-						good = false
-						break
-					}
-				}
-				if !good {
-					results[i].OverrideStatus(scan.StatusIgnored)
-				}
-			}
-			return results
-		}))
+		s.executorOpt = append(s.executorOpt, executor.OptionWithResultsFilter(f))
 	}
 }
 
