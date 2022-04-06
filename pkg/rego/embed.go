@@ -3,6 +3,7 @@ package rego
 import (
 	"context"
 	"embed"
+	"path/filepath"
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/rules"
@@ -51,7 +52,7 @@ func loadEmbeddedPolicies() (map[string]*ast.Module, error) {
 func recurseEmbeddedModules(fs embed.FS, dir string) (map[string]*ast.Module, error) {
 	dir = strings.TrimPrefix(dir, "./")
 	modules := make(map[string]*ast.Module)
-	entries, err := fs.ReadDir(dir)
+	entries, err := fs.ReadDir(filepath.ToSlash(dir))
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +71,7 @@ func recurseEmbeddedModules(fs embed.FS, dir string) (map[string]*ast.Module, er
 			continue
 		}
 		fullPath := strings.Join([]string{dir, entry.Name()}, "/")
-		data, err := fs.ReadFile(fullPath)
+		data, err := fs.ReadFile(filepath.ToSlash(fullPath))
 		if err != nil {
 			return nil, err
 		}

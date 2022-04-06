@@ -122,7 +122,7 @@ func (p *Parser) ParseFile(_ context.Context, fullPath string) error {
 	}
 
 	p.debug("Parsing '%s'...", fullPath)
-	f, err := p.moduleFS.Open(fullPath)
+	f, err := p.moduleFS.Open(filepath.ToSlash(fullPath))
 	if err != nil {
 		return err
 	}
@@ -170,7 +170,7 @@ func (p *Parser) ParseFS(ctx context.Context, dir string) error {
 		p.modulePath = dir
 	}
 
-	fileInfos, err := fs.ReadDir(p.moduleFS, dir)
+	fileInfos, err := fs.ReadDir(p.moduleFS, filepath.ToSlash(dir))
 	if err != nil {
 		return err
 	}

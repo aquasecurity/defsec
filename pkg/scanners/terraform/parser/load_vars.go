@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/hashicorp/hcl/v2"
@@ -49,7 +50,7 @@ func loadTFVarsFile(srcFS fs.FS, filename string) (map[string]cty.Value, error) 
 		return inputVars, nil
 	}
 
-	src, err := fs.ReadFile(srcFS, filename)
+	src, err := fs.ReadFile(srcFS, filepath.ToSlash(filename))
 	if err != nil {
 		return nil, err
 	}

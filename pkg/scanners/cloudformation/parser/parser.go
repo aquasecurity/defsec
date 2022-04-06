@@ -37,7 +37,7 @@ func (p *Parser) debug(format string, args ...interface{}) {
 
 func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) (FileContexts, error) {
 	var contexts FileContexts
-	if err := fs.WalkDir(target, dir, func(path string, entry fs.DirEntry, err error) error {
+	if err := fs.WalkDir(target, filepath.ToSlash(dir), func(path string, entry fs.DirEntry, err error) error {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
@@ -80,7 +80,7 @@ func (p *Parser) Required(fs fs.FS, path string) bool {
 		return false
 	}
 
-	f, err := fs.Open(path)
+	f, err := fs.Open(filepath.ToSlash(path))
 	if err != nil {
 		return false
 	}
@@ -119,7 +119,7 @@ func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (context 
 		sourceFmt = JsonSourceFormat
 	}
 
-	f, err := fs.Open(path)
+	f, err := fs.Open(filepath.ToSlash(path))
 	if err != nil {
 		return nil, err
 	}

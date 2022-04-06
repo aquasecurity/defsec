@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/fs"
 	"io/ioutil"
+	"path/filepath"
 	"strings"
 
 	"github.com/open-policy-agent/opa/ast"
@@ -18,7 +19,7 @@ func isRegoFile(name string) bool {
 func (s *Scanner) loadPoliciesFromDirs(target fs.FS, paths []string) (map[string]*ast.Module, error) {
 	modules := make(map[string]*ast.Module)
 	for _, path := range paths {
-		if err := fs.WalkDir(target, path, func(path string, info fs.DirEntry, err error) error {
+		if err := fs.WalkDir(target, filepath.ToSlash(path), func(path string, info fs.DirEntry, err error) error {
 			if err != nil {
 				return err
 			}
@@ -28,7 +29,7 @@ func (s *Scanner) loadPoliciesFromDirs(target fs.FS, paths []string) (map[string
 			if !isRegoFile(info.Name()) {
 				return nil
 			}
-			data, err := fs.ReadFile(target, path)
+			data, err := fs.ReadFile(target, filepath.ToSlash(path))
 			if err != nil {
 				return err
 			}

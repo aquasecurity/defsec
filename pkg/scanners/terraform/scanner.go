@@ -212,7 +212,7 @@ func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
 		}
 
 		// if this isn't a root module, look at directories inside it
-		files, err := fs.ReadDir(target, dir)
+		files, err := fs.ReadDir(target, filepath.ToSlash(dir))
 		if err != nil {
 			continue
 		}
@@ -228,7 +228,7 @@ func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
 			if file.IsDir() {
 				others = append(others, realPath)
 			} else if statFS, ok := target.(fs.StatFS); ok {
-				info, err := statFS.Stat(realPath)
+				info, err := statFS.Stat(filepath.ToSlash(realPath))
 				if err != nil {
 					continue
 				}
@@ -247,7 +247,7 @@ func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
 }
 
 func (s *Scanner) isRootModule(target fs.FS, dir string) bool {
-	files, err := fs.ReadDir(target, dir)
+	files, err := fs.ReadDir(target, filepath.ToSlash(dir))
 	if err != nil {
 		s.debug("failed to read dir '%s' from filesystem [%s]: %s", dir, target, err)
 		return false
