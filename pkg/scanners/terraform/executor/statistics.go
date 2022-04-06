@@ -1,7 +1,7 @@
 package executor
 
 import (
-	"os"
+	"io"
 	"sort"
 	"strconv"
 	"strings"
@@ -27,13 +27,13 @@ func SortStatistics(statistics Statistics) Statistics {
 	return statistics
 }
 
-func (statistics Statistics) PrintStatisticsTable() {
-	table := tablewriter.NewWriter(os.Stdout)
-	statistics = SortStatistics(statistics)
+func (statistics Statistics) PrintStatisticsTable(w io.Writer) {
+	table := tablewriter.NewWriter(w)
+	sorted := SortStatistics(statistics)
 	table.SetHeader([]string{"Rule ID", "Description", "Link", "Count"})
 	table.SetRowLine(true)
 
-	for _, item := range statistics {
+	for _, item := range sorted {
 		table.Append([]string{item.RuleID,
 			item.RuleDescription,
 			strings.Join(item.Links, "\n"),
