@@ -32,6 +32,7 @@ type filesystem struct {
 
 func OSDir(path string) FS {
 	return &filesystem{
+		root:       path,
 		underlying: os.DirFS(path).(OSFS),
 	}
 }
