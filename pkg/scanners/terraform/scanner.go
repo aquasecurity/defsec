@@ -99,11 +99,14 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 
 	var metrics Metrics
 
+	s.debug("scanning [%s] at %s", target, dir)
+
 	// find directories which directly contain tf files (and have no parent containing tf files)
 	rootDirs := s.findRootModules(target, dir)
 	sort.Strings(rootDirs)
 
 	if len(rootDirs) == 0 {
+		s.debug("no root modules found")
 		return nil, metrics, nil
 	}
 
@@ -201,7 +204,7 @@ func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
 	var others []string
 
 	for _, dir := range dirs {
-		if isRootModule(target, dir) {
+		if s.isRootModule(target, dir) {
 			roots = append(roots, dir)
 			if !s.forceAllDirs {
 				continue
@@ -209,7 +212,7 @@ func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
 		}
 
 		// if this isn't a root module, look at directories inside it
-		files, err := fs.ReadDir(target, dir)
+		files, err := fs.ReadDir(target, filepath.ToSlash(dir))
 		if err != nil {
 			continue
 		}
@@ -225,7 +228,7 @@ func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
 			if file.IsDir() {
 				others = append(others, realPath)
 			} else if statFS, ok := target.(fs.StatFS); ok {
-				info, err := statFS.Stat(realPath)
+				info, err := statFS.Stat(filepath.ToSlash(realPath))
 				if err != nil {
 					continue
 				}
@@ -243,9 +246,10 @@ func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
 	return s.removeNestedDirs(roots)
 }
 
-func isRootModule(target fs.FS, dir string) bool {
-	files, err := fs.ReadDir(target, dir)
+func (s *Scanner) isRootModule(target fs.FS, dir string) bool {
+	files, err := fs.ReadDir(target, filepath.ToSlash(dir))
 	if err != nil {
+		s.debug("failed to read dir '%s' from filesystem [%s]: %s", dir, target, err)
 		return false
 	}
 	for _, file := range files {

@@ -115,7 +115,14 @@ func (p *Parser) Metrics() Metrics {
 func (p *Parser) ParseFile(_ context.Context, fullPath string) error {
 	diskStart := time.Now()
 
-	f, err := p.moduleFS.Open(fullPath)
+	isJSON := strings.HasSuffix(fullPath, ".tf.json")
+	isHCL := strings.HasSuffix(fullPath, ".tf")
+	if !isJSON && !isHCL {
+		return nil
+	}
+
+	p.debug("Parsing '%s'...", fullPath)
+	f, err := p.moduleFS.Open(filepath.ToSlash(fullPath))
 	if err != nil {
 		return err
 	}
@@ -129,12 +136,6 @@ func (p *Parser) ParseFile(_ context.Context, fullPath string) error {
 	if dir := filepath.Dir(fullPath); p.projectRoot == "" || len(dir) < len(p.projectRoot) {
 		p.projectRoot = dir
 		p.modulePath = dir
-	}
-
-	isJSON := strings.HasSuffix(fullPath, ".tf.json")
-	isHCL := strings.HasSuffix(fullPath, ".tf")
-	if !isJSON && !isHCL {
-		return nil
 	}
 
 	start := time.Now()
@@ -169,7 +170,7 @@ func (p *Parser) ParseFS(ctx context.Context, dir string) error {
 		p.modulePath = dir
 	}
 
-	fileInfos, err := fs.ReadDir(p.moduleFS, dir)
+	fileInfos, err := fs.ReadDir(p.moduleFS, filepath.ToSlash(dir))
 	if err != nil {
 		return err
 	}
@@ -205,6 +206,7 @@ func (p *Parser) ParseFS(ctx context.Context, dir string) error {
 			if p.stopOnHCLError {
 				return err
 			}
+			p.debug("error parsing '%s': %s", path, err)
 			continue
 		}
 	}

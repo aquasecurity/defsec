@@ -21,7 +21,7 @@ func New() *Parser {
 func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[string]interface{}, error) {
 
 	files := make(map[string]interface{})
-	if err := fs.WalkDir(target, path, func(path string, entry fs.DirEntry, err error) error {
+	if err := fs.WalkDir(target, filepath.ToSlash(path), func(path string, entry fs.DirEntry, err error) error {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
@@ -51,7 +51,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[st
 
 // ParseFile parses Dockerfile content from the provided filesystem path.
 func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (interface{}, error) {
-	f, err := fs.Open(path)
+	f, err := fs.Open(filepath.ToSlash(path))
 	if err != nil {
 		return nil, err
 	}
