@@ -10,6 +10,13 @@ var terraformLoggingGoodExamples = []string{
  	}
  }
  `,
+	`
+ resource "azurerm_kubernetes_cluster" "good_example" {
+ 		oms_agent {
+			log_analytics_workspace_id = "whatever"
+ 		}
+ }
+ `,
 }
 
 var terraformLoggingBadExamples = []string{
