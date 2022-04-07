@@ -28,8 +28,13 @@ func TestCheckDisableRdpFromInternet(t *testing.T) {
 						Rules: []network.SecurityGroupRule{
 							{
 								Metadata: types.NewTestMetadata(),
-								Allow:    types.Bool(true, types.NewTestMetadata()),
 								Outbound: types.Bool(false, types.NewTestMetadata()),
+								Allow:    types.Bool(true, types.NewTestMetadata()),
+								SourceAddresses: []types.StringValue{
+									types.String("*", types.NewTestMetadata()),
+								},
+								SourcePorts:          nil,
+								DestinationAddresses: nil,
 								DestinationPorts: []network.PortRange{
 									{
 										Metadata: types.NewTestMetadata(),
@@ -37,9 +42,7 @@ func TestCheckDisableRdpFromInternet(t *testing.T) {
 										End:      3390,
 									},
 								},
-								SourceAddresses: []types.StringValue{
-									types.String("*", types.NewTestMetadata()),
-								},
+								Protocol: types.String("Tcp", types.NewTestMetadata()),
 							},
 						},
 					},
@@ -68,6 +71,38 @@ func TestCheckDisableRdpFromInternet(t *testing.T) {
 								SourceAddresses: []types.StringValue{
 									types.String("4.53.160.75", types.NewTestMetadata()),
 								},
+								Protocol: types.String("Tcp", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "Security group inbound rule allowing only ICMP",
+			input: network.Network{
+				SecurityGroups: []network.SecurityGroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						Rules: []network.SecurityGroupRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Outbound: types.Bool(false, types.NewTestMetadata()),
+								Allow:    types.Bool(true, types.NewTestMetadata()),
+								SourceAddresses: []types.StringValue{
+									types.String("*", types.NewTestMetadata()),
+								},
+								SourcePorts:          nil,
+								DestinationAddresses: nil,
+								DestinationPorts: []network.PortRange{
+									{
+										Metadata: types.NewTestMetadata(),
+										Start:    3310,
+										End:      3390,
+									},
+								},
+								Protocol: types.String("Icmp", types.NewTestMetadata()),
 							},
 						},
 					},

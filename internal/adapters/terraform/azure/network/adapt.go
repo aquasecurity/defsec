@@ -97,6 +97,7 @@ func (a *adapter) adaptSGRule(ruleBlock *terraform.Block) network.SecurityGroupR
 		SourcePorts:          nil,
 		DestinationAddresses: nil,
 		DestinationPorts:     nil,
+		Protocol:             ruleBlock.GetAttribute("protocol").AsStringValueOrDefault("", ruleBlock),
 	}
 
 	accessAttr := ruleBlock.GetAttribute("access")

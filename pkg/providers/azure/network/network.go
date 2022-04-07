@@ -22,6 +22,7 @@ type SecurityGroupRule struct {
 	SourcePorts          []PortRange
 	DestinationAddresses []types.StringValue
 	DestinationPorts     []PortRange
+	Protocol             types.StringValue
 }
 
 type PortRange struct {
