@@ -188,3 +188,9 @@ func OptionWithDownloads(allowed bool) Option {
 		s.parserOpt = append(s.parserOpt, parser.OptionWithDownloads(allowed))
 	}
 }
+
+func OptionWithRegoOnly(regoOnly bool) Option {
+	return func(s *Scanner) {
+		s.executorOpt = append(s.executorOpt, executor.OptionWithRegoOnly(regoOnly))
+	}
+}

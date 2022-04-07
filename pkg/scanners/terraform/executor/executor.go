@@ -36,6 +36,7 @@ type Executor struct {
 	alternativeIDProviderFunc func(string) []string
 	severityOverrides         map[string]string
 	regoScanner               *rego.Scanner
+	regoOnly                  bool
 	stateFuncs                []func(*state.State)
 }
 
@@ -61,6 +62,7 @@ func New(options ...Option) *Executor {
 		ignoreCheckErrors: true,
 		enableIgnores:     true,
 		debugWriter:       ioutil.Discard,
+		regoOnly:          false,
 	}
 	for _, option := range options {
 		option(s)
@@ -116,7 +118,7 @@ func (e *Executor) Execute(modules terraform.Modules) (scan.Results, Metrics, er
 	registeredRules := rules.GetRegistered()
 	e.debug("Initialised %d rule(s).", len(registeredRules))
 
-	pool := NewPool(threads, registeredRules, modules, infra, e.ignoreCheckErrors, e.regoScanner)
+	pool := NewPool(threads, registeredRules, modules, infra, e.ignoreCheckErrors, e.regoScanner, e.regoOnly)
 	e.debug("Created pool with %d worker(s) to apply rules.", threads)
 	results, err := pool.Run()
 	if err != nil {
