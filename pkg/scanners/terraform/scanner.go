@@ -165,7 +165,7 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 				override := scan.Results{
 					result,
 				}
-				override.SetSourceAndFilesystem("", filesystem)
+				override.SetSourceAndFilesystem(result.GetSourcePrefix(), filesystem)
 				results[i] = override[0]
 			}
 		}
