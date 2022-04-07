@@ -40,12 +40,42 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 								SourceAddresses: []types.StringValue{
 									types.String("*", types.NewTestMetadata()),
 								},
+								Protocol: types.String("Tcp", types.NewTestMetadata()),
 							},
 						},
 					},
 				},
 			},
 			expected: true,
+		},
+		{
+			name: "Security group rule allowing SSH only ICMP",
+			input: network.Network{
+				SecurityGroups: []network.SecurityGroup{
+					{
+						Metadata: types.NewTestMetadata(),
+						Rules: []network.SecurityGroupRule{
+							{
+								Metadata: types.NewTestMetadata(),
+								Allow:    types.Bool(true, types.NewTestMetadata()),
+								Outbound: types.Bool(false, types.NewTestMetadata()),
+								DestinationPorts: []network.PortRange{
+									{
+										Metadata: types.NewTestMetadata(),
+										Start:    22,
+										End:      22,
+									},
+								},
+								SourceAddresses: []types.StringValue{
+									types.String("*", types.NewTestMetadata()),
+								},
+								Protocol: types.String("Icmp", types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: false,
 		},
 		{
 			name: "Security group rule allowing SSH access from a specific address",
@@ -68,6 +98,7 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 								SourceAddresses: []types.StringValue{
 									types.String("82.102.23.23", types.NewTestMetadata()),
 								},
+								Protocol: types.String("Tcp", types.NewTestMetadata()),
 							},
 						},
 					},
