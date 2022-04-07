@@ -1,5 +1,5 @@
 
-Queues should be encrypted with customer managed KMS keys and not default AWS managed keys, in order to allow granular control over access to specific queues.
+Queues should be encrypted to protect queue contents.
 
 ### Impact
 The SQS queue messages could be read if compromised
