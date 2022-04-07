@@ -17,6 +17,14 @@ jobs:
       with:
         go-version: '1.17' # The Go version to download (if necessary) and use.
     - run: go version
+    - uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
     - name: Run test
       run: make test
       shell: bash
