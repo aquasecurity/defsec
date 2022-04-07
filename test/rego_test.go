@@ -16,7 +16,7 @@ import (
 func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 	t.Parallel()
 
-	entries, err := os.ReadDir("./testdata")
+	entries, err := os.ReadDir("./testdata/dockerfile")
 	require.NoError(t, err)
 
 	scanner := dockerfile.NewScanner(
@@ -25,9 +25,9 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 
 	srcFS := os.DirFS("../")
 
-	results, err := scanner.ScanFS(context.TODO(), srcFS, "test/testdata")
+	results, err := scanner.ScanFS(context.TODO(), srcFS, "test/testdata/dockerfile")
 	require.NoError(t, err)
-	results.SetRelativeTo("test/testdata")
+	results.SetRelativeTo("test/testdata/dockerfile")
 
 	for _, entry := range entries {
 		if !entry.IsDir() {
@@ -57,15 +57,15 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 func Test_Docker_RegoPoliciesEmbedded(t *testing.T) {
 	t.Parallel()
 
-	entries, err := os.ReadDir("./testdata")
+	entries, err := os.ReadDir("./testdata/dockerfile")
 	require.NoError(t, err)
 
 	scanner := dockerfile.NewScanner()
 	srcFS := os.DirFS("../")
 
-	results, err := scanner.ScanFS(context.TODO(), srcFS, "test/testdata")
+	results, err := scanner.ScanFS(context.TODO(), srcFS, "test/testdata/dockerfile")
 	require.NoError(t, err)
-	results.SetRelativeTo("test/testdata")
+	results.SetRelativeTo("test/testdata/dockerfile")
 
 	for _, entry := range entries {
 		if !entry.IsDir() {

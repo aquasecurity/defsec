@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckEnableQueueEncryption(t *testing.T) {
+func TestCheckQueueEncryptionUsesCMK(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    sqs.SQS
@@ -47,7 +47,7 @@ func TestCheckEnableQueueEncryption(t *testing.T) {
 					},
 				},
 			},
-			expected: false,
+			expected: true,
 		},
 		{
 			name: "SQS Queue encrypted with proper key",
@@ -69,10 +69,10 @@ func TestCheckEnableQueueEncryption(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
 			testState.AWS.SQS = test.input
-			results := CheckEnableQueueEncryption.Evaluate(&testState)
+			results := CheckQueueEncryptionUsesCMK.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() == scan.StatusFailed && result.Rule().LongID() == CheckEnableQueueEncryption.Rule().LongID() {
+				if result.Status() == scan.StatusFailed && result.Rule().LongID() == CheckQueueEncryptionUsesCMK.Rule().LongID() {
 					found = true
 				}
 			}

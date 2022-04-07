@@ -17,7 +17,7 @@ var CheckEnableQueueEncryption = rules.Register(
 		Summary:     "Unencrypted SQS queue.",
 		Impact:      "The SQS queue messages could be read if compromised",
 		Resolution:  "Turn on SQS Queue encryption",
-		Explanation: `Queues should be encrypted with customer managed KMS keys and not default AWS managed keys, in order to allow granular control over access to specific queues.`,
+		Explanation: `Queues should be encrypted to protect queue contents.`,
 		Links: []string{
 			"https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html",
 		},
@@ -40,9 +40,9 @@ var CheckEnableQueueEncryption = rules.Register(
 			if queue.IsUnmanaged() {
 				continue
 			}
-			if queue.Encryption.KMSKeyID.IsEmpty() || queue.Encryption.KMSKeyID.EqualTo("alias/aws/sqs") {
+			if queue.Encryption.KMSKeyID.IsEmpty() {
 				results.Add(
-					"Queue is not encrypted with a customer managed key.",
+					"Queue is not encrypted",
 					queue.Encryption.KMSKeyID,
 				)
 			} else {
