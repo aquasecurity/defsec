@@ -135,6 +135,8 @@ func adaptSecret(resource *terraform.Block) keyvault.Secret {
 		if expiryDate, err := time.Parse(time.RFC3339, expiryDateString); err == nil {
 			expiryDateVal = types.Time(expiryDate, expiryDateAttr.GetMetadata())
 		}
+	} else if expiryDateAttr.IsNotNil() {
+		expiryDateVal = types.TimeUnresolvable(expiryDateAttr.GetMetadata())
 	}
 
 	return keyvault.Secret{
