@@ -99,7 +99,9 @@ func getEncryption(r *parser.Resource, _ parser.FileContext) s3.Encryption {
 
 	if encryptProps := r.GetProperty("BucketEncryption.ServerSideEncryptionConfiguration"); encryptProps.IsNotNil() {
 		for _, rule := range encryptProps.AsList() {
-			if kmsKeyProp := rule.GetProperty("ServerSideEncryptionByDefault.KMSMasterKeyID"); !kmsKeyProp.IsEmpty() && kmsKeyProp.IsString() {
+			if algo := rule.GetProperty("ServerSideEncryptionByDefault.SSEAlgorithm"); algo.EqualTo("AES256") {
+				encryption.Enabled = types.Bool(true, algo.Metadata())
+			} else if kmsKeyProp := rule.GetProperty("ServerSideEncryptionByDefault.KMSMasterKeyID"); !kmsKeyProp.IsEmpty() && kmsKeyProp.IsString() {
 				encryption.KMSKeyId = kmsKeyProp.AsStringValue()
 			}
 			if encryption.Enabled.IsFalse() {
