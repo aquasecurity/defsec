@@ -11,6 +11,7 @@ type Range interface {
 	GetLocalFilename() string
 	GetSourcePrefix() string
 	GetFS() fs.FS
+	GetFSKey() string
 	GetStartLine() int
 	GetEndLine() int
 	String() string
@@ -23,6 +24,19 @@ func NewRange(filename string, startLine int, endLine int, sourcePrefix string, 
 		startLine:    startLine,
 		endLine:      endLine,
 		fs:           srcFS,
+		fsKey:        CreateFSKey(srcFS),
+		sourcePrefix: sourcePrefix,
+	}
+	return r
+}
+
+func NewRangeWithFSKey(filename string, startLine int, endLine int, sourcePrefix string, fsKey string) baseRange {
+	r := baseRange{
+		filename:     filename,
+		startLine:    startLine,
+		endLine:      endLine,
+		fs:           nil,
+		fsKey:        fsKey,
 		sourcePrefix: sourcePrefix,
 	}
 	return r
@@ -34,6 +48,11 @@ type baseRange struct {
 	endLine      int
 	sourcePrefix string
 	fs           fs.FS
+	fsKey        string
+}
+
+func (r baseRange) GetFSKey() string {
+	return r.fsKey
 }
 
 func (r baseRange) GetFilename() string {

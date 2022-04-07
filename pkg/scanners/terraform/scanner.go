@@ -152,6 +152,24 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 			return nil, metrics, err
 		}
 
+		fsMap := p.GetFilesystemMap()
+		for i, result := range results {
+			if result.Metadata().Range().GetFS() != nil {
+				continue
+			}
+			key := result.Metadata().Range().GetFSKey()
+			if key == "" {
+				continue
+			}
+			if filesystem, ok := fsMap[key]; ok {
+				override := scan.Results{
+					result,
+				}
+				override.SetSourceAndFilesystem(result.Range().GetSourcePrefix(), filesystem)
+				results[i] = override[0]
+			}
+		}
+
 		metrics.Executor.Counts.Passed += execMetrics.Counts.Passed
 		metrics.Executor.Counts.Failed += execMetrics.Counts.Failed
 		metrics.Executor.Counts.Ignored += execMetrics.Counts.Ignored

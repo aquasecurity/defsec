@@ -28,6 +28,7 @@ func (m *Metadata) ToRego() interface{} {
 		"endline":   m.Range().GetEndLine(),
 		"managed":   m.isManaged,
 		"explicit":  m.isExplicit,
+		"fskey":     CreateFSKey(m.Range().GetFS()),
 	}
 }
 

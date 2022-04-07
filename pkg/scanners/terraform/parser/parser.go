@@ -59,6 +59,7 @@ type Parser struct {
 	options        []Option
 	debugWriter    io.Writer
 	allowDownloads bool
+	fsMap          map[string]fs.FS
 }
 
 // New creates a new Parser
@@ -268,11 +269,19 @@ func (p *Parser) EvaluateAll(ctx context.Context) (terraform.Modules, cty.Value,
 		p.debugWriter,
 		p.allowDownloads,
 	)
-	modules, parseDuration := evaluator.EvaluateAll(ctx)
+	modules, fsMap, parseDuration := evaluator.EvaluateAll(ctx)
 	p.metrics.Counts.Modules = len(modules)
 	p.metrics.Timings.ParseDuration = parseDuration
 	p.debug("Finished parsing module '%s'.", p.moduleName)
+	p.fsMap = fsMap
 	return modules, evaluator.exportOutputs(), nil
+}
+
+func (p *Parser) GetFilesystemMap() map[string]fs.FS {
+	if p.fsMap == nil {
+		return make(map[string]fs.FS)
+	}
+	return p.fsMap
 }
 
 func (p *Parser) readBlocks(files []sourceFile) (terraform.Blocks, terraform.Ignores, error) {
