@@ -3,6 +3,7 @@ package terraform
 import (
 	"fmt"
 	"io/fs"
+	"reflect"
 	"regexp"
 	"strings"
 
@@ -803,6 +804,12 @@ func (a *Attribute) referencesFromExpression(expression hcl.Expression) []*Refer
 			}
 		default:
 			if ref, err := createDotReferenceFromTraversal(a.module, t.Source.Variables()...); err == nil {
+				refs = append(refs, ref)
+			}
+		}
+	default:
+		if reflect.TypeOf(expression).String() == "*json.expression" {
+			if ref, err := createDotReferenceFromTraversal(a.module, expression.Variables()...); err == nil {
 				refs = append(refs, ref)
 			}
 		}
