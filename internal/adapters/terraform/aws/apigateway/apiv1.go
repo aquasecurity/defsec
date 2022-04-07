@@ -82,6 +82,7 @@ func adaptStageV1(stageBlock *terraform.Block, defaultCacheEncryption types.Bool
 		RESTMethodSettings: apigateway.RESTMethodSettings{
 			Metadata:           stageBlock.GetMetadata(),
 			CacheDataEncrypted: defaultCacheEncryption,
+			CacheEnabled:       types.BoolDefault(false, stageBlock.GetMetadata()),
 		},
 		XRayTracingEnabled: stageBlock.GetAttribute("xray_tracing_enabled").AsBoolValueOrDefault(false, stageBlock),
 	}
@@ -90,6 +91,9 @@ func adaptStageV1(stageBlock *terraform.Block, defaultCacheEncryption types.Bool
 		if settings := methodSettings.GetBlock("settings"); settings.IsNotNil() {
 			if encrypted := settings.GetAttribute("cache_data_encrypted"); encrypted.IsNotNil() {
 				stage.RESTMethodSettings.CacheDataEncrypted = settings.GetAttribute("cache_data_encrypted").AsBoolValueOrDefault(false, settings)
+			}
+			if encrypted := settings.GetAttribute("caching_enabled"); encrypted.IsNotNil() {
+				stage.RESTMethodSettings.CacheEnabled = settings.GetAttribute("caching_enabled").AsBoolValueOrDefault(false, settings)
 			}
 		}
 	}

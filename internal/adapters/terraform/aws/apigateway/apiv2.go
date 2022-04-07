@@ -60,6 +60,7 @@ func adaptStageV2(stageBlock *terraform.Block) apigateway.Stage {
 		RESTMethodSettings: apigateway.RESTMethodSettings{
 			Metadata:           stageBlock.GetMetadata(),
 			CacheDataEncrypted: types.BoolDefault(true, stageBlock.GetMetadata()),
+			CacheEnabled:       types.BoolDefault(false, stageBlock.GetMetadata()),
 		},
 		AccessLogging: apigateway.AccessLogging{
 			Metadata:              stageBlock.GetMetadata(),

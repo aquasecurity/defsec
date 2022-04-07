@@ -18,6 +18,7 @@ var terraformEnableCacheEncryptionGoodExamples = []string{
    settings {
      metrics_enabled = true
      logging_level   = "INFO"
+     caching_enabled = true
      cache_data_encrypted = true
    }
  }
@@ -42,6 +43,7 @@ var terraformEnableCacheEncryptionBadExamples = []string{
    settings {
      metrics_enabled = true
      logging_level   = "INFO"
+     caching_enabled = true
      cache_data_encrypted = false
    }
  }

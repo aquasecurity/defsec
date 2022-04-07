@@ -79,6 +79,7 @@ resource "aws_apigatewayv2_stage" "example" {
 				},
 				RESTMethodSettings: apigateway.RESTMethodSettings{
 					CacheDataEncrypted: Bool(true),
+					CacheEnabled:       Bool(false),
 				},
 			},
 		},
@@ -100,6 +101,7 @@ resource "aws_apigatewayv2_stage" "example" {
 				},
 				RESTMethodSettings: apigateway.RESTMethodSettings{
 					CacheDataEncrypted: Bool(true),
+					CacheEnabled:       Bool(false),
 				},
 			},
 		},

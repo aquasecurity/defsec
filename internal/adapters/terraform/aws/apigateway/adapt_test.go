@@ -83,6 +83,7 @@ resource "aws_apigatewayv2_domain_name" "example" {
 								},
 								RESTMethodSettings: apigateway.RESTMethodSettings{
 									CacheDataEncrypted: Bool(true),
+									CacheEnabled:       Bool(false),
 								},
 							},
 						},

@@ -33,6 +33,7 @@ func TestCheckEnableCacheEncryption(t *testing.T) {
 								RESTMethodSettings: apigateway.RESTMethodSettings{
 									Metadata:           types.NewTestMetadata(),
 									CacheDataEncrypted: types.Bool(false, types.NewTestMetadata()),
+									CacheEnabled:       types.Bool(true, types.NewTestMetadata()),
 								},
 							},
 						},
@@ -55,6 +56,30 @@ func TestCheckEnableCacheEncryption(t *testing.T) {
 								RESTMethodSettings: apigateway.RESTMethodSettings{
 									Metadata:           types.NewTestMetadata(),
 									CacheDataEncrypted: types.Bool(true, types.NewTestMetadata()),
+									CacheEnabled:       types.Bool(true, types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "API Gateway stage with caching disabled",
+			input: apigateway.APIGateway{
+				APIs: []apigateway.API{
+					{
+						Metadata:     types.NewTestMetadata(),
+						ProtocolType: types.String(apigateway.ProtocolTypeREST, types.NewTestMetadata()),
+						Stages: []apigateway.Stage{
+							{
+								Metadata: types.NewTestMetadata(),
+								Version:  types.Int(1, types.NewTestMetadata()),
+								RESTMethodSettings: apigateway.RESTMethodSettings{
+									Metadata:           types.NewTestMetadata(),
+									CacheDataEncrypted: types.Bool(false, types.NewTestMetadata()),
+									CacheEnabled:       types.Bool(false, types.NewTestMetadata()),
 								},
 							},
 						},
