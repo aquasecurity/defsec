@@ -2,7 +2,12 @@ package test
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/internal/rules"
 
@@ -31,6 +36,14 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 		t.Run(testName, func(t *testing.T) {
 			rule := rule
 			t.Parallel()
+
+			t.Run("avd docs", func(t *testing.T) {
+				provider := strings.ToLower(rule.Rule().Provider.ConstName())
+				service := strings.ToLower(strings.ReplaceAll(rule.Rule().Service, "-", ""))
+				_, err := os.Stat(filepath.Join("..", "avd_docs", provider, service, rule.Rule().AVDID, "docs.md"))
+				require.NoError(t, err)
+			})
+
 			if rule.Rule().Terraform != nil {
 				t.Run("terraform: good examples", func(t *testing.T) {
 					for i, example := range rule.Rule().Terraform.GoodExamples {
