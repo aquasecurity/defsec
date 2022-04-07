@@ -352,3 +352,57 @@ resource "aws_s3_bucket" "my-bucket" {
 	}
 
 }
+
+func Test_OptionWithRegoOnly(t *testing.T) {
+
+	fs := testutil.CreateFS(t, map[string]string{
+		"/code/main.tf": `
+resource "aws_s3_bucket" "my-bucket" {
+	bucket = "evil"
+}
+`,
+		"/rules/test.rego": `
+package defsec.abcdefg
+
+__rego_metadata__ := {
+	"id": "TEST123",
+	"avd_id": "AVD-TEST-0123",
+	"title": "Buckets should not be evil",
+	"short_code": "no-evil-buckets",
+	"severity": "CRITICAL",
+	"type": "DefSec Security Check",
+	"description": "You should not allow buckets to be evil",
+	"recommended_actions": "Use a good bucket instead",
+	"url": "https://google.com/search?q=is+my+bucket+evil",
+}
+
+__rego_input__ := {
+	"combine": false,
+	"selector": [{"type": "defsec"}],
+}
+
+deny[cause] {
+	bucket := input.aws.s3.buckets[_]
+	bucket.name.value == "evil"
+	cause := bucket.name
+}
+`,
+	})
+
+	debugLog := bytes.NewBuffer([]byte{})
+	scanner := New(
+		OptionWithDebug(debugLog),
+		OptionWithPolicyDirs("rules"),
+		OptionWithRegoOnly(true),
+	)
+
+	results, err := scanner.ScanFS(context.TODO(), fs, "code")
+	require.NoError(t, err)
+
+	require.Len(t, results, 1)
+	assert.Equal(t, "AVD-TEST-0123", results[0].Rule().AVDID)
+
+	if t.Failed() {
+		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
+	}
+}

@@ -83,3 +83,9 @@ func OptionWithStateFunc(f ...func(*state.State)) Option {
 		e.stateFuncs = f
 	}
 }
+
+func OptionWithRegoOnly(regoOnly bool) Option {
+	return func(e *Executor) {
+		e.regoOnly = regoOnly
+	}
+}
