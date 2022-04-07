@@ -9,6 +9,27 @@ var terraformEnsureSecretExpiryGoodExamples = []string{
    expiration_date = "1982-12-31T00:00:00Z"
  }
  `,
+	`
+resource "azuread_application" "myapp" {
+  display_name = "MyAzureAD App"
+
+  group_membership_claims = ["ApplicationGroup"]
+  prevent_duplicate_names = true
+
+}
+
+resource "azuread_application_password" "myapp" {
+  application_object_id = azuread_application.myapp.object_id
+}
+
+resource "azurerm_key_vault_secret" "myapp_pass" {
+  name            = "myapp-oauth"
+  value           = azuread_application_password.myapp.value
+  key_vault_id    = azurerm_key_vault.cluster_key_vault.id
+  expiration_date = azuread_application_password.myapp.end_date
+  content_type    = "Password"
+}
+`,
 }
 
 var terraformEnsureSecretExpiryBadExamples = []string{

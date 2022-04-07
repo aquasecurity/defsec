@@ -41,6 +41,12 @@ func TimeExplicit(value time.Time, m Metadata) TimeValue {
 	return b
 }
 
+func TimeUnresolvable(m Metadata) TimeValue {
+	b := Time(time.Time{}, m)
+	b.(*timeValue).BaseAttribute.metadata.isUnresolvable = true
+	return b
+}
+
 func (b *timeValue) Value() *time.Time {
 	return b.value
 }
@@ -50,6 +56,9 @@ func (b *timeValue) GetRawValue() interface{} {
 }
 
 func (b *timeValue) IsNever() bool {
+	if b.GetMetadata().isUnresolvable {
+		return false
+	}
 	return b.value.IsZero()
 }
 
