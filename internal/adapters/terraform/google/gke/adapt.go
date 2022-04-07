@@ -133,9 +133,13 @@ func (a *adapter) adaptCluster(resource *terraform.Block, module *terraform.Modu
 		cluster.PodSecurityPolicy.Enabled = enabledAttr.AsBoolValueOrDefault(false, policyBlock)
 	}
 
-	legacyMetadataAttr := resource.GetNestedAttribute("metadata.disable-legacy-endpoints")
-	if legacyMetadataAttr.IsNotNil() && legacyMetadataAttr.IsTrue() {
-		cluster.ClusterMetadata.EnableLegacyEndpoints = types.Bool(false, legacyMetadataAttr.GetMetadata())
+	legacyMetadataAttr := resource.GetNestedAttribute("node_config.metadata.disable-legacy-endpoints")
+	if legacyMetadataAttr.IsNotNil() {
+		if legacyMetadataAttr.IsTrue() {
+			cluster.ClusterMetadata.EnableLegacyEndpoints = types.Bool(false, legacyMetadataAttr.GetMetadata())
+		} else if legacyMetadataAttr.IsFalse() {
+			cluster.ClusterMetadata.EnableLegacyEndpoints = types.Bool(true, legacyMetadataAttr.GetMetadata())
+		}
 	}
 
 	if masterBlock := resource.GetBlock("master_auth"); masterBlock.IsNotNil() {
