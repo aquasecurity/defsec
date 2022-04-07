@@ -42,6 +42,7 @@ func getStages(apiId string, cfFile parser.FileContext) []apigateway.Stage {
 			RESTMethodSettings: apigateway.RESTMethodSettings{
 				Metadata:           r.Metadata(),
 				CacheDataEncrypted: types.BoolUnresolvable(r.Metadata()),
+				CacheEnabled:       types.BoolDefault(false, r.Metadata()),
 			},
 			XRayTracingEnabled: types.BoolUnresolvable(r.Metadata()),
 		}

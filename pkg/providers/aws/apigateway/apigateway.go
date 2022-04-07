@@ -42,6 +42,7 @@ type AccessLogging struct {
 type RESTMethodSettings struct {
 	types.Metadata
 	CacheDataEncrypted types.BoolValue
+	CacheEnabled       types.BoolValue
 }
 
 const (
