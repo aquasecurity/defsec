@@ -32,7 +32,7 @@ func TestCheckQueueEncryptionUsesCMK(t *testing.T) {
 					},
 				},
 			},
-			expected: true,
+			expected: false,
 		},
 		{
 			name: "SQS Queue encrypted with default key",
