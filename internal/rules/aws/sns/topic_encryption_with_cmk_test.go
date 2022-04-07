@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckEnableTopicEncryption(t *testing.T) {
+func TestCheckTopicEncryptionUsesCMK(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    sns.SNS
@@ -32,7 +32,7 @@ func TestCheckEnableTopicEncryption(t *testing.T) {
 					},
 				},
 			},
-			expected: true,
+			expected: false,
 		},
 		{
 			name: "AWS SNS Topic encrypted with default key",
@@ -47,7 +47,7 @@ func TestCheckEnableTopicEncryption(t *testing.T) {
 					},
 				},
 			},
-			expected: false,
+			expected: true,
 		},
 		{
 			name: "AWS SNS Topic properly encrypted",
@@ -69,10 +69,10 @@ func TestCheckEnableTopicEncryption(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
 			testState.AWS.SNS = test.input
-			results := CheckEnableTopicEncryption.Evaluate(&testState)
+			results := CheckTopicEncryptionUsesCMK.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() == scan.StatusFailed && result.Rule().LongID() == CheckEnableTopicEncryption.Rule().LongID() {
+				if result.Status() == scan.StatusFailed && result.Rule().LongID() == CheckTopicEncryptionUsesCMK.Rule().LongID() {
 					found = true
 				}
 			}
