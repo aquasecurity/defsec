@@ -3,6 +3,7 @@ package network
 import (
 	"github.com/aquasecurity/defsec/internal/cidr"
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -35,6 +36,9 @@ SSH access should not be permitted from the internet (*, 0.0.0.0, /0, internet, 
 			var failed bool
 			for _, rule := range group.Rules {
 				if rule.Allow.IsFalse() || rule.Outbound.IsTrue() {
+					continue
+				}
+				if rule.Protocol.EqualTo("Icmp", types.IgnoreCase) {
 					continue
 				}
 				for _, ports := range rule.DestinationPorts {
