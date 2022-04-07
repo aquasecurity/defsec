@@ -73,6 +73,12 @@ func adaptCluster(resource *terraform.Block) container.KubernetesCluster {
 		}
 	}
 
+	// >= azurerm 2.97.0
+	if omsAgentBlock := resource.GetBlock("oms_agent"); omsAgentBlock.IsNotNil() {
+		cluster.AddonProfile.OMSAgent.Metadata = omsAgentBlock.GetMetadata()
+		cluster.AddonProfile.OMSAgent.Enabled = types.Bool(true, omsAgentBlock.GetMetadata())
+	}
+
 	// azurerm < 2.99.0
 	roleBasedAccessControlBlock := resource.GetBlock("role_based_access_control")
 	if roleBasedAccessControlBlock.IsNotNil() {
