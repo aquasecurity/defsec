@@ -8,6 +8,8 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/aquasecurity/defsec/internal/types"
+
 	tfcontext "github.com/aquasecurity/defsec/pkg/scanners/terraform/context"
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
@@ -120,7 +122,10 @@ func (e *evaluator) exportOutputs() cty.Value {
 	return cty.ObjectVal(data)
 }
 
-func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, time.Duration) {
+func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, map[string]fs.FS, time.Duration) {
+
+	fsMap := make(map[string]fs.FS)
+	fsMap[types.CreateFSKey(e.filesystem)] = e.filesystem
 
 	var parseDuration time.Duration
 
@@ -159,6 +164,9 @@ func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, time.Du
 		// export module outputs
 		e.ctx.Set(outputs, "module", definition.Name)
 		modules = append(modules, submodules...)
+		for key, val := range definition.Parser.GetFilesystemMap() {
+			fsMap[key] = val
+		}
 	}
 	e.debug("Finished processing %d submodule(s).", len(modules))
 
@@ -180,7 +188,7 @@ func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, time.Du
 	}
 
 	parseDuration += time.Since(start)
-	return append([]*terraform.Module{terraform.NewModule(e.projectRootPath, e.modulePath, e.blocks, e.ignores)}, modules...), parseDuration
+	return append([]*terraform.Module{terraform.NewModule(e.projectRootPath, e.modulePath, e.blocks, e.ignores)}, modules...), fsMap, parseDuration
 }
 
 func (e *evaluator) expandBlocks(blocks terraform.Blocks) terraform.Blocks {

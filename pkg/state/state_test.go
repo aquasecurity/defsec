@@ -42,6 +42,7 @@ func Test_RegoConversion(t *testing.T) {
 							"endline":   4,
 							"managed":   true,
 							"explicit":  false,
+							"fskey":     "",
 						},
 						"name": map[string]interface{}{
 							"filepath":  "main.tf",
@@ -50,6 +51,7 @@ func Test_RegoConversion(t *testing.T) {
 							"value":     "my-bucket",
 							"managed":   true,
 							"explicit":  false,
+							"fskey":     "",
 						},
 					},
 				},

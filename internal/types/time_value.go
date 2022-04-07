@@ -90,5 +90,6 @@ func (s *timeValue) ToRego() interface{} {
 		"managed":   s.metadata.isManaged,
 		"explicit":  s.metadata.isExplicit,
 		"value":     s.Value().Format(time.RFC3339),
+		"fskey":     CreateFSKey(s.metadata.Range().GetFS()),
 	}
 }
