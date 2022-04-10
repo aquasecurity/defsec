@@ -1,6 +1,10 @@
 package kubernetes
 
-import "io"
+import (
+	"io"
+
+	"github.com/aquasecurity/defsec/pkg/scanners/kubernetes/parser"
+)
 
 type Option func(s *Scanner)
 
@@ -39,5 +43,11 @@ func OptionWithPolicyNamespaces(namespaces ...string) func(s *Scanner) {
 func OptionWithTrace(w io.Writer) Option {
 	return func(s *Scanner) {
 		s.traceWriter = w
+	}
+}
+
+func OptionWithParser(p *parser.Parser) Option {
+	return func(s *Scanner) {
+		s.parser = p
 	}
 }

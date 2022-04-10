@@ -14,13 +14,19 @@ import (
 	"golang.org/x/xerrors"
 )
 
-type Parser struct{}
+type Parser struct {
+	skipRequired bool
+}
 
 const requiredFile = "Dockerfile"
 
 // New creates a new Dockerfile parser
-func New() *Parser {
-	return &Parser{}
+func New(options ...Option) *Parser {
+	p := &Parser{}
+	for _, option := range options {
+		option(p)
+	}
+	return p
 }
 
 func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[string]*dockerfile.Dockerfile, error) {
@@ -65,6 +71,9 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (*dockerfil
 }
 
 func (p *Parser) Required(path string) bool {
+	if p.skipRequired {
+		return true
+	}
 	base := filepath.Base(path)
 	ext := filepath.Ext(base)
 	if strings.EqualFold(base, requiredFile+ext) {

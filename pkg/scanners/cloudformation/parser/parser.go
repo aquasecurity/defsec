@@ -15,8 +15,9 @@ import (
 )
 
 type Parser struct {
-	parameters  map[string]Parameter
-	debugWriter io.Writer
+	parameters   map[string]Parameter
+	debugWriter  io.Writer
+	skipRequired bool
 }
 
 func New(options ...Option) *Parser {
@@ -68,6 +69,9 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) (FileCon
 }
 
 func (p *Parser) Required(fs fs.FS, path string) bool {
+	if p.skipRequired {
+		return true
+	}
 
 	var unmarshalFunc func([]byte, interface{}) error
 

@@ -11,15 +11,20 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Parser struct{}
+type Parser struct {
+	skipRequired bool
+}
 
 // New creates a new K8s parser
-func New() *Parser {
-	return &Parser{}
+func New(options ...Option) *Parser {
+	p := &Parser{}
+	for _, option := range options {
+		option(p)
+	}
+	return p
 }
 
 func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[string]interface{}, error) {
-
 	files := make(map[string]interface{})
 	if err := fs.WalkDir(target, filepath.ToSlash(path), func(path string, entry fs.DirEntry, err error) error {
 		select {
@@ -49,7 +54,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[st
 	return files, nil
 }
 
-// ParseFile parses Dockerfile content from the provided filesystem path.
+// ParseFile parses Kubernetes manifest from the provided filesystem path.
 func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (interface{}, error) {
 	f, err := fs.Open(filepath.ToSlash(path))
 	if err != nil {
@@ -60,6 +65,10 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (interface{
 }
 
 func (p *Parser) required(ctx context.Context, fs fs.FS, path string) bool {
+	if p.skipRequired {
+		return true
+	}
+
 	ext := filepath.Ext(path)
 	if !strings.EqualFold(ext, ".yaml") && !strings.EqualFold(ext, ".yml") {
 		return false
