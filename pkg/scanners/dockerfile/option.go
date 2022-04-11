@@ -2,6 +2,8 @@ package dockerfile
 
 import (
 	"io"
+
+	"github.com/aquasecurity/defsec/pkg/scanners/dockerfile/parser"
 )
 
 type Option func(s *Scanner)
@@ -35,5 +37,11 @@ func OptionWithPolicyNamespaces(namespaces ...string) func(s *Scanner) {
 func OptionWithTrace(w io.Writer) Option {
 	return func(s *Scanner) {
 		s.traceWriter = w
+	}
+}
+
+func OptionWithParser(parser *parser.Parser) Option {
+	return func(s *Scanner) {
+		s.parser = parser
 	}
 }

@@ -31,12 +31,14 @@ type Scanner struct {
 	dataDirs         []string
 	policyNamespaces []string
 	regoScanner      *rego.Scanner
+	parser           *parser.Parser
 	sync.Mutex
 }
 
 func NewScanner(options ...Option) *Scanner {
 	s := &Scanner{
 		debugWriter: ioutil.Discard,
+		parser:      parser.New(),
 	}
 	for _, opt := range options {
 		opt(s)
@@ -90,7 +92,7 @@ func (s *Scanner) ScanReader(ctx context.Context, filename string, reader io.Rea
 
 func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (scan.Results, error) {
 
-	k8sFiles, err := parser.New().ParseFS(ctx, target, dir)
+	k8sFiles, err := s.parser.ParseFS(ctx, target, dir)
 	if err != nil {
 		return nil, err
 	}

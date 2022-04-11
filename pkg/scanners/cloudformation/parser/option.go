@@ -13,6 +13,12 @@ func OptionWithDebugWriter(w io.Writer) Option {
 	}
 }
 
+func OptionWithSkipRequired(skipRequired bool) Option {
+	return func(p *Parser) {
+		p.skipRequired = skipRequired
+	}
+}
+
 func ProvidedParametersOption(parameters string) Option {
 
 	pairs := strings.Split(parameters, ",")
