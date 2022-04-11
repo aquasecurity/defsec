@@ -92,22 +92,24 @@ func (s *Scanner) ScanReader(ctx context.Context, filename string, reader io.Rea
 
 func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (scan.Results, error) {
 
-	k8sFiles, err := s.parser.ParseFS(ctx, target, dir)
+	k8sFilesets, err := s.parser.ParseFS(ctx, target, dir)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(k8sFiles) == 0 {
+	if len(k8sFilesets) == 0 {
 		return nil, nil
 	}
 
 	var inputs []rego.Input
-	for path, content := range k8sFiles {
-		inputs = append(inputs, rego.Input{
-			Path:     path,
-			Contents: content,
-			Type:     types.SourceKubernetes,
-		})
+	for path, k8sFiles := range k8sFilesets {
+		for _, content := range k8sFiles {
+			inputs = append(inputs, rego.Input{
+				Path:     path,
+				Contents: content,
+				Type:     types.SourceKubernetes,
+			})
+		}
 	}
 
 	regoScanner, err := s.initRegoScanner(target)

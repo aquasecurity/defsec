@@ -1,10 +1,12 @@
 package parser
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
 	"io/fs"
+	"io/ioutil"
 	"path/filepath"
 	"strings"
 
@@ -24,8 +26,8 @@ func New(options ...Option) *Parser {
 	return p
 }
 
-func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[string]interface{}, error) {
-	files := make(map[string]interface{})
+func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[string][]interface{}, error) {
+	files := make(map[string][]interface{})
 	if err := fs.WalkDir(target, filepath.ToSlash(path), func(path string, entry fs.DirEntry, err error) error {
 		select {
 		case <-ctx.Done():
@@ -55,7 +57,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[st
 }
 
 // ParseFile parses Kubernetes manifest from the provided filesystem path.
-func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (interface{}, error) {
+func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) ([]interface{}, error) {
 	f, err := fs.Open(filepath.ToSlash(path))
 	if err != nil {
 		return nil, err
@@ -78,23 +80,48 @@ func (p *Parser) required(ctx context.Context, fs fs.FS, path string) bool {
 		// TODO: debug
 		return false
 	}
-	if msi, ok := parsed.(map[string]interface{}); ok {
-		match := true
-		for _, expected := range []string{"apiVersion", "kind", "metadata", "spec"} {
-			if _, ok := msi[expected]; !ok {
-				match = false
-				break
+	if len(parsed) == 0 {
+		return false
+	}
+	for _, partial := range parsed {
+		if msi, ok := partial.(map[string]interface{}); ok {
+			match := true
+			for _, expected := range []string{"apiVersion", "kind", "metadata", "spec"} {
+				if _, ok := msi[expected]; !ok {
+					match = false
+					break
+				}
+			}
+			if match {
+				return true
 			}
 		}
-		return match
 	}
 	return false
 }
 
-func (p *Parser) parse(r io.Reader) (interface{}, error) {
-	var v interface{}
-	if err := yaml.NewDecoder(r).Decode(&v); err != nil {
-		return nil, fmt.Errorf("unmarshal yaml: %w", err)
+func (p *Parser) parse(r io.Reader) ([]interface{}, error) {
+
+	contents, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
 	}
-	return v, nil
+
+	var results []interface{}
+
+	marker := "\n---\n"
+	altMarker := "\r\n---\r\n"
+	if bytes.Contains(contents, []byte(altMarker)) {
+		marker = altMarker
+	}
+
+	for _, partial := range strings.Split(string(contents), marker) {
+		var result interface{}
+		if err := yaml.Unmarshal([]byte(partial), &result); err != nil {
+			return nil, fmt.Errorf("unmarshal yaml: %w", err)
+		}
+		results = append(results, result)
+	}
+
+	return results, nil
 }
