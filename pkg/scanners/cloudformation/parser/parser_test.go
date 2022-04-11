@@ -46,6 +46,12 @@ Resources:
 
 	assert.Len(t, file.Resources, 1)
 	assert.Len(t, file.Parameters, 2)
+
+	bucket, ok := file.Resources["S3Bucket"]
+	require.True(t, ok, "S3Bucket resource should be available")
+	assert.Equal(t, "cf.yaml", bucket.Range().GetFilename())
+	assert.Equal(t, 10, bucket.Range().GetStartLine())
+	assert.Equal(t, 17, bucket.Range().GetEndLine())
 }
 
 func Test_parse_json(t *testing.T) {
