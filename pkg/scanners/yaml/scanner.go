@@ -49,22 +49,24 @@ func (s *Scanner) debug(format string, args ...interface{}) {
 
 func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Results, error) {
 
-	files, err := s.parser.ParseFS(ctx, fs, path)
+	fileset, err := s.parser.ParseFS(ctx, fs, path)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(files) == 0 {
+	if len(fileset) == 0 {
 		return nil, nil
 	}
 
 	var inputs []rego.Input
-	for path, file := range files {
-		inputs = append(inputs, rego.Input{
-			Path:     path,
-			Contents: file,
-			Type:     types.SourceYAML,
-		})
+	for path, files := range fileset {
+		for _, file := range files {
+			inputs = append(inputs, rego.Input{
+				Path:     path,
+				Contents: file,
+				Type:     types.SourceYAML,
+			})
+		}
 	}
 
 	results, err := s.scanRego(ctx, fs, inputs...)

@@ -310,6 +310,26 @@ spec:
 	assert.Greater(t, len(results.GetFailed()), 0)
 }
 
+func Test_FileScan_WithSeparator(t *testing.T) {
+
+	results, err := NewScanner().ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(`
+---
+---
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: hello-cpu-limit
+spec: 
+  containers: 
+  - command: ["sh", "-c", "echo 'Hello' && sleep 1h"]
+    image: busybox
+    name: hello
+`))
+	require.NoError(t, err)
+
+	assert.Greater(t, len(results.GetFailed()), 0)
+}
+
 func Test_FileScanWithPolicyReader(t *testing.T) {
 
 	results, err := NewScanner(OptionWithPolicyReaders(strings.NewReader(`package defsec
