@@ -79,7 +79,7 @@ func Test_Adapt(t *testing.T) {
 				LoadBalancers: []elb.LoadBalancer{
 					{
 						Metadata:                types.NewTestMetadata(),
-						Type:                    types.String("", types.NewTestMetadata()),
+						Type:                    types.String("application", types.NewTestMetadata()),
 						DropInvalidHeaderFields: types.Bool(false, types.NewTestMetadata()),
 						Internal:                types.Bool(false, types.NewTestMetadata()),
 						Listeners:               nil,

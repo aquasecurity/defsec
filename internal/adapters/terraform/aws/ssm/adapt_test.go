@@ -68,7 +68,7 @@ func Test_Adapt(t *testing.T) {
 				Secrets: []ssm.Secret{
 					{
 						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("", types.NewTestMetadata()),
+						KMSKeyID: types.String("alias/aws/secretsmanager", types.NewTestMetadata()),
 					},
 				},
 			},

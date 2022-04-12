@@ -45,7 +45,7 @@ func Test_adaptTopic(t *testing.T) {
 				Metadata: types.NewTestMetadata(),
 				Encryption: sns.Encryption{
 					Metadata: types.NewTestMetadata(),
-					KMSKeyID: types.String("alias/aws/sns", types.NewTestMetadata()),
+					KMSKeyID: types.String("", types.NewTestMetadata()),
 				},
 			},
 		},
