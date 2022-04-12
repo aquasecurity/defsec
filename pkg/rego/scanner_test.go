@@ -44,6 +44,42 @@ deny {
 	assert.Equal(t, 1, len(results.GetFailed()))
 	assert.Equal(t, 0, len(results.GetPassed()))
 	assert.Equal(t, 0, len(results.GetIgnored()))
+
+	assert.False(t, results.GetFailed()[0].IsWarning())
+}
+
+func Test_RegoScanning_Warn(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `
+package defsec.test
+
+warn {
+    input.evil
+}
+`,
+	})
+
+	scanner := NewScanner()
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{
+		Path: "/evil.lol",
+		Contents: map[string]interface{}{
+			"evil": true,
+		},
+		Type: "???",
+	})
+	require.NoError(t, err)
+
+	require.Equal(t, 1, len(results.GetFailed()))
+	require.Equal(t, 0, len(results.GetPassed()))
+	require.Equal(t, 0, len(results.GetIgnored()))
+
+	assert.True(t, results.GetFailed()[0].IsWarning())
 }
 
 func Test_RegoScanning_Allow(t *testing.T) {
@@ -73,7 +109,7 @@ deny {
 	require.NoError(t, err)
 
 	assert.Equal(t, 0, len(results.GetFailed()))
-	assert.Equal(t, 1, len(results.GetPassed()))
+	require.Equal(t, 1, len(results.GetPassed()))
 	assert.Equal(t, 0, len(results.GetIgnored()))
 }
 
