@@ -178,6 +178,7 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 		} else if ignored {
 			var result regoResult
 			result.Filepath = input.Path
+			result.Managed = true
 			results.AddIgnored(result)
 			continue
 		}
@@ -189,6 +190,7 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 		if len(ruleResults) == 0 {
 			var result regoResult
 			result.Filepath = input.Path
+			result.Managed = true
 			results.AddPassed(result)
 			continue
 		}
@@ -207,6 +209,7 @@ func (s *Scanner) applyRuleCombined(ctx context.Context, namespace string, rule 
 		for _, input := range inputs {
 			var result regoResult
 			result.Filepath = input.Path
+			result.Managed = true
 			results.AddIgnored(result)
 		}
 		return results, nil
