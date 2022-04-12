@@ -3,6 +3,8 @@ package s3
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
 
 	"github.com/stretchr/testify/assert"
@@ -210,4 +212,56 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
 
 	assert.Equal(t, 1, len(s3.Buckets))
 	assert.True(t, s3.Buckets[0].Encryption.Enabled.Value())
+}
+
+func Test_BucketWithPolicy(t *testing.T) {
+
+	source := `
+resource "aws_s3_bucket" "bucket1" {
+	bucket = "lol"	
+}
+
+resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
+  bucket = aws_s3_bucket.bucket1.id
+  policy = data.aws_iam_policy_document.allow_access_from_another_account.json
+}
+
+data "aws_iam_policy_document" "allow_access_from_another_account" {
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = ["123456789012"]
+    }
+
+    actions = [
+      "s3:GetObject",
+      "s3:ListBucket",
+    ]
+
+    resources = [
+      aws_s3_bucket.bucket1.arn,
+    ]
+  }
+}
+
+`
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
+
+	s3 := Adapt(modules)
+
+	require.Equal(t, 1, len(s3.Buckets))
+	require.Equal(t, 1, len(s3.Buckets[0].BucketPolicies))
+
+	policy := s3.Buckets[0].BucketPolicies[0]
+
+	statements, _ := policy.Document.Parsed.Statements()
+	require.Equal(t, 1, len(statements))
+
+	principals, _ := statements[0].Principals()
+	actions, _ := statements[0].Actions()
+
+	awsPrincipals, _ := principals.AWS()
+	require.Equal(t, 1, len(awsPrincipals))
+	require.Equal(t, 2, len(actions))
+
 }

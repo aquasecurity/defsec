@@ -39,7 +39,7 @@ func parsePolicy(policyBlock *terraform.Block, modules terraform.Modules) (iam.P
 		},
 	}
 	var err error
-	doc, err := parsePolicyFromAttr(policyBlock.GetAttribute("policy"), policyBlock, modules)
+	doc, err := ParsePolicyFromAttr(policyBlock.GetAttribute("policy"), policyBlock, modules)
 	if err != nil {
 		return policy, err
 	}
@@ -59,7 +59,7 @@ func adaptPolicies(modules terraform.Modules) (policies []iam.Policy) {
 				HasRefs:  false,
 			},
 		}
-		doc, err := parsePolicyFromAttr(policyBlock.GetAttribute("policy"), policyBlock, modules)
+		doc, err := ParsePolicyFromAttr(policyBlock.GetAttribute("policy"), policyBlock, modules)
 		if err != nil {
 			continue
 		}

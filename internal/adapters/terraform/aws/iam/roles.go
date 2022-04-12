@@ -59,7 +59,7 @@ func mapRoles(modules terraform.Modules) (map[string]iam.Role, map[string]struct
 					HasRefs:  false,
 				},
 			}
-			doc, err := parsePolicyFromAttr(inlineBlock.GetAttribute("policy"), inlineBlock, modules)
+			doc, err := ParsePolicyFromAttr(inlineBlock.GetAttribute("policy"), inlineBlock, modules)
 			if err != nil {
 				continue
 			}
