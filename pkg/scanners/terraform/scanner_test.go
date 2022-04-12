@@ -463,3 +463,73 @@ deny[res] {
 		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
 	}
 }
+
+func Test_IAMPolicyRego(t *testing.T) {
+	fs := testutil.CreateFS(t, map[string]string{
+		"/code/main.tf": `
+resource "aws_sqs_queue_policy" "bad_example" {
+   queue_url = aws_sqs_queue.q.id
+
+   policy = <<POLICY
+ {
+   "Statement": [
+     {
+       "Effect": "Allow",
+       "Principal": "*",
+       "Action": "*"
+     }
+   ]
+ }
+ POLICY
+ }`,
+		"/rules/test.rego": `
+package defsec.abcdefg
+
+import data.lib.defsec
+
+__rego_metadata__ := {
+	"id": "TEST123",
+	"avd_id": "AVD-TEST-0123",
+	"title": "Buckets should not be evil",
+	"short_code": "no-evil-buckets",
+	"severity": "CRITICAL",
+	"type": "DefSec Security Check",
+	"description": "You should not allow buckets to be evil",
+	"recommended_actions": "Use a good bucket instead",
+	"url": "https://google.com/search?q=is+my+bucket+evil",
+}
+
+__rego_input__ := {
+	"combine": false,
+	"selector": [{"type": "defsec"}],
+}
+
+deny[res] {
+	queue := input.aws.sqs.queues[_]
+	policy := queue.policies[_]
+	statement := policy.document.value.Statement[_]
+	action := statement.Action[_]
+	action == "*"
+	res := defsec.result("SQS Policy contains wildcard in action", policy.document)
+}
+`,
+	})
+
+	debugLog := bytes.NewBuffer([]byte{})
+	scanner := New(
+		OptionWithDebug(debugLog),
+		OptionWithPolicyDirs("rules"),
+		OptionWithRegoOnly(true),
+	)
+
+	results, err := scanner.ScanFS(context.TODO(), fs, "code")
+	require.NoError(t, err)
+
+	require.Len(t, results, 1)
+	assert.Equal(t, "AVD-TEST-0123", results[0].Rule().AVDID)
+	assert.NotNil(t, results[0].Metadata().Range().GetFS())
+
+	if t.Failed() {
+		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
+	}
+}

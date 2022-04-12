@@ -1,6 +1,8 @@
 package iam
 
 import (
+	"encoding/json"
+
 	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/liamg/iamgo"
 )
@@ -24,6 +26,23 @@ type Document struct {
 	Parsed   iamgo.Document
 	IsOffset bool
 	HasRefs  bool
+}
+
+func (d Document) ToRego() interface{} {
+	m := d.GetMetadata()
+	var value interface{}
+	if doc, err := d.Parsed.MarshalJSON(); err == nil {
+		_ = json.Unmarshal(doc, &value)
+	}
+	return map[string]interface{}{
+		"filepath":  m.Range().GetFilename(),
+		"startline": m.Range().GetStartLine(),
+		"endline":   m.Range().GetEndLine(),
+		"managed":   m.IsManaged(),
+		"explicit":  m.IsExplicit(),
+		"value":     value,
+		"fskey":     types.CreateFSKey(m.Range().GetFS()),
+	}
 }
 
 type Group struct {
