@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/json"
 	"strings"
 )
 
@@ -54,6 +55,10 @@ type stringValue struct {
 }
 
 type stringCheckFunc func(string, string) bool
+
+func (v *stringValue) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
 
 func (s *stringValue) ToRego() interface{} {
 	return map[string]interface{}{

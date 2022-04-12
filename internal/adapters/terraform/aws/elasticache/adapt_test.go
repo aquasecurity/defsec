@@ -147,7 +147,7 @@ func Test_adaptSecurityGroup(t *testing.T) {
 `,
 			expected: elasticache.SecurityGroup{
 				Metadata:    types.NewTestMetadata(),
-				Description: types.String("", types.NewTestMetadata()),
+				Description: types.String("Managed by Terraform", types.NewTestMetadata()),
 			},
 		},
 	}

@@ -88,7 +88,7 @@ func Test_adaptCluster(t *testing.T) {
 				Metadata: types.NewTestMetadata(),
 				EncryptionInTransit: msk.EncryptionInTransit{
 					Metadata:     types.NewTestMetadata(),
-					ClientBroker: types.String("", types.NewTestMetadata()),
+					ClientBroker: types.String("TLS_PLAINTEXT", types.NewTestMetadata()),
 				},
 				Logging: msk.Logging{
 					Metadata: types.NewTestMetadata(),
