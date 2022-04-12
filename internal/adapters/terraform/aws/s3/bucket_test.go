@@ -259,7 +259,6 @@ data "aws_iam_policy_document" "allow_access_from_another_account" {
 
 	principals, _ := statements[0].Principals()
 	actions, _ := statements[0].Actions()
-	resources, _ := statements[0].Resources()
 
 	awsPrincipals, _ := principals.AWS()
 	require.Equal(t, 1, len(awsPrincipals))
