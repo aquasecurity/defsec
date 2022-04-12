@@ -45,6 +45,7 @@ deny {
 	assert.Equal(t, 0, len(results.GetPassed()))
 	assert.Equal(t, 0, len(results.GetIgnored()))
 
+  assert.Equal(t, "/evil.lol", results.GetFailed()[0].Metadata().Range().GetFilename())
 	assert.False(t, results.GetFailed()[0].IsWarning())
 }
 
@@ -111,6 +112,8 @@ deny {
 	assert.Equal(t, 0, len(results.GetFailed()))
 	require.Equal(t, 1, len(results.GetPassed()))
 	assert.Equal(t, 0, len(results.GetIgnored()))
+
+	assert.Equal(t, "/evil.lol", results.GetPassed()[0].Metadata().Range().GetFilename())
 }
 
 func Test_RegoScanning_Namespace_Exception(t *testing.T) {
