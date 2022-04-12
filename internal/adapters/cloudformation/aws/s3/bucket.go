@@ -21,10 +21,7 @@ func getBuckets(cfFile parser.FileContext) []s3.Bucket {
 			Metadata:          r.Metadata(),
 			Name:              r.GetStringProperty("BucketName"),
 			PublicAccessBlock: getPublicAccessBlock(r),
-			BucketPolicy: s3.BucketPolicy{
-				Metadata: r.Metadata(),
-			},
-			Encryption: getEncryption(r, cfFile),
+			Encryption:        getEncryption(r, cfFile),
 			Versioning: s3.Versioning{
 				Metadata: r.Metadata(),
 				Enabled:  hasVersioning(r),
