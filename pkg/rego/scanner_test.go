@@ -45,7 +45,7 @@ deny {
 	assert.Equal(t, 0, len(results.GetPassed()))
 	assert.Equal(t, 0, len(results.GetIgnored()))
 
-  assert.Equal(t, "/evil.lol", results.GetFailed()[0].Metadata().Range().GetFilename())
+	assert.Equal(t, "/evil.lol", results.GetFailed()[0].Metadata().Range().GetFilename())
 	assert.False(t, results.GetFailed()[0].IsWarning())
 }
 
