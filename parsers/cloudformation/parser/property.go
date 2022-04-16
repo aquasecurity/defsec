@@ -365,7 +365,9 @@ func removeLeftMargin(lines []string) []string {
 	prefixSpace := len(lines[0]) - len(strings.TrimLeft(lines[0], " "))
 
 	for i, line := range lines {
-		lines[i] = line[prefixSpace:]
+		if len(line) >= prefixSpace {
+			lines[i] = line[prefixSpace:]
+		}
 	}
 	return lines
 }
