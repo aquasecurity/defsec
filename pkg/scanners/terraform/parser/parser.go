@@ -289,7 +289,7 @@ func (p *Parser) readBlocks(files []sourceFile) (terraform.Blocks, terraform.Ign
 	var ignores terraform.Ignores
 	moduleCtx := tfcontext.NewContext(&hcl.EvalContext{}, nil)
 	for _, file := range files {
-		fileBlocks, fileIgnores, err := loadBlocksFromFile(file)
+		fileBlocks, fileIgnores, err := loadBlocksFromFile(file, p.moduleSource)
 		if err != nil {
 			if p.stopOnHCLError {
 				return nil, nil, err
