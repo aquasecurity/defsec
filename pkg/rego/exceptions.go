@@ -17,7 +17,7 @@ func (s *Scanner) isIgnored(ctx context.Context, namespace string, ruleName stri
 
 func (s *Scanner) isNamespaceIgnored(ctx context.Context, namespace string, input interface{}) (bool, error) {
 	exceptionQuery := fmt.Sprintf("data.namespace.exceptions.exception[_] == %q", namespace)
-	result, err := s.runQuery(ctx, exceptionQuery, input, true)
+	result, _, err := s.runQuery(ctx, exceptionQuery, input, true)
 	if err != nil {
 		return false, fmt.Errorf("query namespace exceptions: %w", err)
 	}
@@ -26,7 +26,7 @@ func (s *Scanner) isNamespaceIgnored(ctx context.Context, namespace string, inpu
 
 func (s *Scanner) isRuleIgnored(ctx context.Context, namespace string, ruleName string, input interface{}) (bool, error) {
 	exceptionQuery := fmt.Sprintf("data.%s.exception[_][_] == %q", namespace, removeRulePrefix(ruleName))
-	result, err := s.runQuery(ctx, exceptionQuery, input, true)
+	result, _, err := s.runQuery(ctx, exceptionQuery, input, true)
 	if err != nil {
 		return false, err
 	}

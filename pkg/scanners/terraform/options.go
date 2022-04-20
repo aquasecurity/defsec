@@ -194,3 +194,9 @@ func OptionWithRegoOnly(regoOnly bool) Option {
 		s.executorOpt = append(s.executorOpt, executor.OptionWithRegoOnly(regoOnly))
 	}
 }
+
+func OptionWithPerResultTracing() Option {
+	return func(s *Scanner) {
+		s.traceWriter = io.Discard
+	}
+}

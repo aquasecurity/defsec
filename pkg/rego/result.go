@@ -99,7 +99,7 @@ func parseLineNumber(raw interface{}) int {
 	return n
 }
 
-func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace string, rule string) scan.Results {
+func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace string, rule string, traces []string) scan.Results {
 	var results scan.Results
 	for _, result := range set {
 		for _, expression := range result.Expressions {
@@ -112,7 +112,7 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace 
 				if regoResult.Message == "" {
 					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
 				}
-				results.AddRego(regoResult.Message, namespace, rule, regoResult)
+				results.AddRego(regoResult.Message, namespace, rule, traces, regoResult)
 				continue
 			}
 
@@ -124,7 +124,7 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace 
 				if regoResult.Message == "" {
 					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
 				}
-				results.AddRego(regoResult.Message, namespace, rule, regoResult)
+				results.AddRego(regoResult.Message, namespace, rule, traces, regoResult)
 			}
 		}
 	}

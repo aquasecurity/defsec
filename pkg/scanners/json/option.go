@@ -37,3 +37,9 @@ func OptionWithTrace(w io.Writer) Option {
 		s.traceWriter = w
 	}
 }
+
+func OptionWithPerResultTracing() Option {
+	return func(s *Scanner) {
+		s.traceWriter = io.Discard
+	}
+}

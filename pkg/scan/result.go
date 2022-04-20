@@ -29,6 +29,7 @@ type Result struct {
 	regoNamespace    string
 	regoRule         string
 	warning          bool
+	traces           []string
 }
 
 func (r Result) RegoNamespace() string {
@@ -98,6 +99,10 @@ func (r Result) Range() types.Range {
 	return r.metadata.Range()
 }
 
+func (r Result) Traces() []string {
+	return r.traces
+}
+
 type Results []Result
 
 type MetadataProvider interface {
@@ -142,12 +147,13 @@ func (r *Results) Add(description string, source MetadataProvider) {
 	*r = append(*r, result)
 }
 
-func (r *Results) AddRego(description string, namespace string, rule string, source MetadataProvider) {
+func (r *Results) AddRego(description string, namespace string, rule string, traces []string, source MetadataProvider) {
 	result := Result{
 		description:   description,
 		regoNamespace: namespace,
 		regoRule:      rule,
 		warning:       rule == "warn" || strings.HasPrefix(rule, "warn_"),
+		traces:        traces,
 	}
 	result.metadata = source.GetMetadata()
 	if result.metadata.IsExplicit() {
