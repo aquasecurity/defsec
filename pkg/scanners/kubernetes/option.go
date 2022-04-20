@@ -51,3 +51,9 @@ func OptionWithParser(p *parser.Parser) Option {
 		s.parser = p
 	}
 }
+
+func OptionWithPerResultTracing() Option {
+	return func(s *Scanner) {
+		s.traceWriter = io.Discard
+	}
+}

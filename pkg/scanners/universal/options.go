@@ -44,6 +44,12 @@ func OptionWithTrace(w io.Writer) Option {
 	}
 }
 
+func OptionWithPerResultTracing() Option {
+	return func(s *Scanner) {
+		OptionWithTrace(io.Discard)(s)
+	}
+}
+
 // OptionWithTerraformWorkspace specify Terraform workspace
 func OptionWithTerraformWorkspace(ws string) Option {
 	return func(s *Scanner) {

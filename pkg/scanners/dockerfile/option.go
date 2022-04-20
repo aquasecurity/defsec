@@ -40,6 +40,12 @@ func OptionWithTrace(w io.Writer) Option {
 	}
 }
 
+func OptionWithPerResultTracing() Option {
+	return func(s *Scanner) {
+		s.traceWriter = io.Discard
+	}
+}
+
 func OptionWithParser(parser *parser.Parser) Option {
 	return func(s *Scanner) {
 		s.parser = parser
