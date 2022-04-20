@@ -1,6 +1,7 @@
 package rego
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -63,7 +64,7 @@ func (s *Scanner) debug(format string, args ...interface{}) {
 	_, _ = s.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
-func (s *Scanner) runQuery(ctx context.Context, query string, input interface{}, disableTracing bool) (rego.ResultSet, error) {
+func (s *Scanner) runQuery(ctx context.Context, query string, input interface{}, disableTracing bool) (rego.ResultSet, []string, error) {
 
 	trace := s.traceWriter != nil && !disableTracing
 
@@ -82,13 +83,19 @@ func (s *Scanner) runQuery(ctx context.Context, query string, input interface{},
 	instance := rego.New(options...)
 	set, err := instance.Eval(ctx)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
+
+	// we also build a slice of trace lines for per-result tracing - primarily for fanal/trivy
+	var traces []string
 
 	if trace {
 		rego.PrintTrace(s.traceWriter, instance)
+		traceBuffer := bytes.NewBuffer([]byte{})
+		rego.PrintTrace(traceBuffer, instance)
+		traces = strings.Split(traceBuffer.String(), "\n")
 	}
-	return set, nil
+	return set, traces, nil
 }
 
 type Input struct {
@@ -182,11 +189,11 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 			results.AddIgnored(result)
 			continue
 		}
-		set, err := s.runQuery(ctx, qualified, input.Contents, false)
+		set, traces, err := s.runQuery(ctx, qualified, input.Contents, false)
 		if err != nil {
 			return nil, err
 		}
-		ruleResults := s.convertResults(set, input.Path, namespace, rule)
+		ruleResults := s.convertResults(set, input.Path, namespace, rule, traces)
 		if len(ruleResults) == 0 {
 			var result regoResult
 			result.Filepath = input.Path
@@ -214,11 +221,11 @@ func (s *Scanner) applyRuleCombined(ctx context.Context, namespace string, rule 
 		}
 		return results, nil
 	}
-	set, err := s.runQuery(ctx, qualified, inputs, false)
+	set, traces, err := s.runQuery(ctx, qualified, inputs, false)
 	if err != nil {
 		return nil, err
 	}
-	return s.convertResults(set, "", namespace, rule), nil
+	return s.convertResults(set, "", namespace, rule, traces), nil
 }
 
 // severity is now set with metadata, so deny/warn/violation now behave the same way

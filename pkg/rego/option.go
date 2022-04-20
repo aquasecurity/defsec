@@ -18,6 +18,13 @@ func OptionWithTrace(w io.Writer) func(s *Scanner) {
 	}
 }
 
+// OptionWithPerResultTracing - sets up tracing on a per-result basis with no main stream
+func OptionWithPerResultTracing() func(s *Scanner) {
+	return func(s *Scanner) {
+		s.traceWriter = io.Discard
+	}
+}
+
 func OptionWithPolicyNamespaces(includeDefaults bool, namespaces ...string) func(s *Scanner) {
 	return func(s *Scanner) {
 		if !includeDefaults {
