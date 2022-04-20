@@ -13,8 +13,8 @@ import (
 	"github.com/hashicorp/hcl/v2"
 )
 
-func loadBlocksFromFile(file sourceFile) (hcl.Blocks, []terraform.Ignore, error) {
-	ignores := parseIgnores(file.file.Bytes, file.path)
+func loadBlocksFromFile(file sourceFile, moduleSource string) (hcl.Blocks, []terraform.Ignore, error) {
+	ignores := parseIgnores(file.file.Bytes, file.path, moduleSource)
 	contents, diagnostics := file.file.Body.Content(terraform.Schema)
 	if diagnostics != nil && diagnostics.HasErrors() {
 		return nil, nil, diagnostics
@@ -25,13 +25,13 @@ func loadBlocksFromFile(file sourceFile) (hcl.Blocks, []terraform.Ignore, error)
 	return contents.Blocks, ignores, nil
 }
 
-func parseIgnores(data []byte, path string) []terraform.Ignore {
+func parseIgnores(data []byte, path string, moduleSource string) []terraform.Ignore {
 	var ignores []terraform.Ignore
 	for i, line := range strings.Split(string(data), "\n") {
 		line = strings.TrimSpace(line)
 		lineIgnores := parseIgnoresFromLine(line)
 		for _, lineIgnore := range lineIgnores {
-			lineIgnore.Range = types.NewRange(path, i+1, i+1, "", nil)
+			lineIgnore.Range = types.NewRange(path, i+1, i+1, moduleSource, nil)
 			ignores = append(ignores, lineIgnore)
 		}
 	}
