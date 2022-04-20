@@ -12,6 +12,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	tfcontext "github.com/aquasecurity/defsec/pkg/scanners/terraform/context"
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
@@ -41,6 +43,8 @@ type Metrics struct {
 	}
 }
 
+var _ ConfigurableTerraformParser = (*Parser)(nil)
+
 // Parser is a tool for parsing terraform templates at a given file system location
 type Parser struct {
 	projectRoot    string
@@ -56,18 +60,43 @@ type Parser struct {
 	underlying     *hclparse.Parser
 	children       []*Parser
 	metrics        Metrics
-	options        []Option
+	options        []options.ParserOption
 	debugWriter    io.Writer
 	allowDownloads bool
 	fsMap          map[string]fs.FS
+	skipRequired   bool
+}
+
+func (p *Parser) SetDebugWriter(writer io.Writer) {
+	p.debugWriter = writer
+}
+
+func (p *Parser) SetTFVarsPaths(s ...string) {
+	p.tfvarsPaths = s
+}
+
+func (p *Parser) SetStopOnHCLError(b bool) {
+	p.stopOnHCLError = b
+}
+
+func (p *Parser) SetWorkspaceName(s string) {
+	p.workspaceName = s
+}
+
+func (p *Parser) SetAllowDownloads(b bool) {
+	p.allowDownloads = b
+}
+
+func (p *Parser) SetSkipRequiredCheck(b bool) {
+	p.skipRequired = b
 }
 
 // New creates a new Parser
-func New(moduleFS fs.FS, moduleSource string, options ...Option) *Parser {
+func New(moduleFS fs.FS, moduleSource string, opts ...options.ParserOption) *Parser {
 	p := &Parser{
 		workspaceName:  "default",
 		underlying:     hclparse.NewParser(),
-		options:        options,
+		options:        opts,
 		moduleName:     "root",
 		debugWriter:    ioutil.Discard,
 		allowDownloads: true,
@@ -75,7 +104,7 @@ func New(moduleFS fs.FS, moduleSource string, options ...Option) *Parser {
 		moduleSource:   moduleSource,
 	}
 
-	for _, option := range options {
+	for _, option := range opts {
 		option(p)
 	}
 

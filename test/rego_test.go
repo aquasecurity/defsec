@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/scanners/dockerfile"
 
@@ -20,7 +22,7 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 	require.NoError(t, err)
 
 	scanner := dockerfile.NewScanner(
-		dockerfile.OptionWithPolicyDirs("internal/rules"),
+		options.ScannerWithPolicyDirs("internal/rules"),
 	)
 
 	srcFS := os.DirFS("../")

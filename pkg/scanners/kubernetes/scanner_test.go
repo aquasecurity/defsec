@@ -5,6 +5,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"github.com/aquasecurity/defsec/pkg/scan"
 
 	"github.com/aquasecurity/defsec/test/testutil"
@@ -267,7 +269,7 @@ deny[res] {
 `,
 	})
 
-	scanner := NewScanner(OptionWithPolicyDirs("rules"))
+	scanner := NewScanner(options.ScannerWithPolicyDirs("rules"))
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
 	require.NoError(t, err)
@@ -332,7 +334,7 @@ spec:
 
 func Test_FileScanWithPolicyReader(t *testing.T) {
 
-	results, err := NewScanner(OptionWithPolicyReaders(strings.NewReader(`package defsec
+	results, err := NewScanner(options.OptionWithPolicyReaders(strings.NewReader(`package defsec
 
 deny[msg] {
   msg = "fail"
