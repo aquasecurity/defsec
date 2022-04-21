@@ -2,19 +2,19 @@ package terraformplan
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"os"
 
+	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	terraformScanner "github.com/aquasecurity/defsec/pkg/scanners/terraform"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraformplan/parser"
 )
 
 type Scanner struct {
-	debugWriter io.Writer
-	parser      parser.Parser
-	parserOpt   []parser.Option
+	parser    parser.Parser
+	parserOpt []parser.Option
+	debug     debug.Logger
 }
 
 func New(options ...Option) *Scanner {
@@ -27,17 +27,13 @@ func New(options ...Option) *Scanner {
 	return scanner
 }
 
-func (s *Scanner) debug(format string, args ...interface{}) {
-	if s.debugWriter == nil {
-		return
-	}
-	prefix := "[debug:scan:toml] "
-	_, _ = s.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
+func (s *Scanner) SetDebugWriter(writer io.Writer) {
+	s.debug = debug.New(writer, "scan:terraform-plan")
 }
 
 func (s *Scanner) ScanFile(filepath string) (scan.Results, error) {
 
-	s.debug("Scanning file %s", filepath)
+	s.debug.Log("Scanning file %s", filepath)
 	file, err := os.Open(filepath)
 	if err != nil {
 		return nil, err

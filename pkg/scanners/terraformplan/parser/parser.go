@@ -24,6 +24,14 @@ func New(options ...Option) *Parser {
 	return parser
 }
 
+func (p *Parser) SetDebugWriter(writer io.Writer) {
+	p.debugWriter = writer
+}
+
+func (p *Parser) SetStopOnHCLError(b bool) {
+	p.stopOnHCLError = b
+}
+
 func (p *Parser) ParseFile(filepath string) (*PlanFile, error) {
 
 	if _, err := os.Stat(filepath); err != nil {
@@ -65,7 +73,9 @@ func (p *PlanFile) ToFS() (*memoryfs.FS, error) {
 	}
 
 	fileContent := strings.Join(fileResources, "\n\n")
-	rootFS.WriteFile("main.tf", []byte(fileContent), os.ModePerm)
+	if err := rootFS.WriteFile("main.tf", []byte(fileContent), os.ModePerm); err != nil {
+		return nil, err
+	}
 
 	return rootFS, nil
 
