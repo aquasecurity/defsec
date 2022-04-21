@@ -5,6 +5,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -13,7 +15,7 @@ import (
 
 func Test_OS_FS(t *testing.T) {
 	s := terraform.New(
-		terraform.OptionWithDebug(os.Stderr),
+		options.ScannerWithDebug(os.Stderr),
 	)
 	results, err := s.ScanFS(context.TODO(), os.DirFS("tf"), "fail")
 	require.NoError(t, err)

@@ -8,20 +8,33 @@ import (
 	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/detection"
-
+	"github.com/aquasecurity/defsec/internal/debug"
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"github.com/aquasecurity/defsec/pkg/providers/dockerfile"
-
 	"github.com/moby/buildkit/frontend/dockerfile/instructions"
 	"github.com/moby/buildkit/frontend/dockerfile/parser"
 	"golang.org/x/xerrors"
 )
 
+var _ options.ConfigurableParser = (*Parser)(nil)
+
 type Parser struct {
+	debug        debug.Logger
 	skipRequired bool
 }
 
+func (p *Parser) SetDebugWriter(writer io.Writer) {
+	p.debug = debug.New(writer, "parse:dockerfile")
+}
+
+func (p *Parser) SetSkipRequiredCheck(b bool) {
+	p.skipRequired = b
+}
+
+const requiredFile = "Dockerfile"
+
 // New creates a new Dockerfile parser
-func New(options ...Option) *Parser {
+func New(options ...options.ParserOption) *Parser {
 	p := &Parser{}
 	for _, option := range options {
 		option(p)

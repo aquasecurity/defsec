@@ -7,16 +7,16 @@ import (
 	"io"
 	"strings"
 
+	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/pkg/scan"
-
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"github.com/open-policy-agent/opa/ast"
-
-	"github.com/open-policy-agent/opa/storage"
-
 	"github.com/open-policy-agent/opa/rego"
+	"github.com/open-policy-agent/opa/storage"
 )
+
+var _ options.ConfigurableScanner = (*Scanner)(nil)
 
 type Scanner struct {
 	ruleNamespaces map[string]struct{}
@@ -25,9 +25,44 @@ type Scanner struct {
 	dataDirs       []string
 	runtimeValues  *ast.Term
 	compiler       *ast.Compiler
-	debugWriter    io.Writer
+	debug          debug.Logger
 	traceWriter    io.Writer
+	tracePerResult bool
 	retriever      *MetadataRetriever
+}
+
+func (s *Scanner) SetPolicyReaders(_ []io.Reader) {
+	// NOTE: Policy readers option not applicable for rego, policies are loaded on-demand by other scanners.
+}
+
+func (s *Scanner) SetDebugWriter(writer io.Writer) {
+	s.debug = debug.New(writer, "rego")
+}
+
+func (s *Scanner) SetTraceWriter(writer io.Writer) {
+	s.traceWriter = writer
+}
+
+func (s *Scanner) SetPerResultTracingEnabled(b bool) {
+	s.tracePerResult = b
+}
+
+func (s *Scanner) SetPolicyDirs(_ ...string) {
+	// NOTE: Policy dirs option not applicable for rego, policies are loaded on-demand by other scanners.
+}
+
+func (s *Scanner) SetDataDirs(dirs ...string) {
+	s.dataDirs = dirs
+}
+
+func (s *Scanner) SetPolicyNamespaces(namespaces ...string) {
+	for _, namespace := range namespaces {
+		s.ruleNamespaces[namespace] = struct{}{}
+	}
+}
+
+func (s *Scanner) SetSkipRequiredCheck(_ bool) {
+	// NOTE: Skip required option not applicable for rego.
 }
 
 type DynamicMetadata struct {
@@ -38,7 +73,7 @@ type DynamicMetadata struct {
 	EndLine   int
 }
 
-func NewScanner(options ...Option) *Scanner {
+func NewScanner(options ...options.ScannerOption) *Scanner {
 	s := &Scanner{
 		ruleNamespaces: map[string]struct{}{
 			"appshield": {},
@@ -56,19 +91,11 @@ func getModuleNamespace(module *ast.Module) string {
 	return strings.TrimPrefix(module.Package.Path.String(), "data.")
 }
 
-func (s *Scanner) debug(format string, args ...interface{}) {
-	if s.debugWriter == nil {
-		return
-	}
-	prefix := "[debug:scan:rego] "
-	_, _ = s.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
-}
-
 func (s *Scanner) runQuery(ctx context.Context, query string, input interface{}, disableTracing bool) (rego.ResultSet, []string, error) {
 
-	trace := s.traceWriter != nil && !disableTracing
+	trace := (s.traceWriter != nil || s.tracePerResult) && !disableTracing
 
-	options := []func(*rego.Rego){
+	regoOptions := []func(*rego.Rego){
 		rego.Query(query),
 		rego.Compiler(s.compiler),
 		rego.Store(s.store),
@@ -77,10 +104,10 @@ func (s *Scanner) runQuery(ctx context.Context, query string, input interface{},
 	}
 
 	if input != nil {
-		options = append(options, rego.Input(input))
+		regoOptions = append(regoOptions, rego.Input(input))
 	}
 
-	instance := rego.New(options...)
+	instance := rego.New(regoOptions...)
 	set, err := instance.Eval(ctx)
 	if err != nil {
 		return nil, nil, err
@@ -90,10 +117,14 @@ func (s *Scanner) runQuery(ctx context.Context, query string, input interface{},
 	var traces []string
 
 	if trace {
-		rego.PrintTrace(s.traceWriter, instance)
-		traceBuffer := bytes.NewBuffer([]byte{})
-		rego.PrintTrace(traceBuffer, instance)
-		traces = strings.Split(traceBuffer.String(), "\n")
+		if s.traceWriter != nil {
+			rego.PrintTrace(s.traceWriter, instance)
+		}
+		if s.tracePerResult {
+			traceBuffer := bytes.NewBuffer([]byte{})
+			rego.PrintTrace(traceBuffer, instance)
+			traces = strings.Split(traceBuffer.String(), "\n")
+		}
 	}
 	return set, traces, nil
 }
@@ -106,7 +137,7 @@ type Input struct {
 
 func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results, error) {
 
-	s.debug("Scanning %d inputs...", len(inputs))
+	s.debug.Log("Scanning %d inputs...", len(inputs))
 
 	var results scan.Results
 	var filteredInputs []Input

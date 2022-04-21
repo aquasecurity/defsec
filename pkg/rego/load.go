@@ -77,7 +77,7 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 		for name, policy := range loaded {
 			s.policies[name] = policy
 		}
-		s.debug("Loaded %d embedded policies.", len(loaded))
+		s.debug.Log("Loaded %d embedded policies.", len(loaded))
 	}
 
 	var err error
@@ -89,7 +89,7 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 		for name, policy := range loaded {
 			s.policies[name] = policy
 		}
-		s.debug("Loaded %d policies from disk.", len(loaded))
+		s.debug.Log("Loaded %d policies from disk.", len(loaded))
 	}
 
 	if len(readers) > 0 {
@@ -100,7 +100,7 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 		for name, policy := range loaded {
 			s.policies[name] = policy
 		}
-		s.debug("Loaded %d policies from reader(s).", len(loaded))
+		s.debug.Log("Loaded %d policies from reader(s).", len(loaded))
 	}
 
 	// gather namespaces

@@ -7,6 +7,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
@@ -93,7 +95,7 @@ resource "problem" "uhoh" {
 
 	debug := bytes.NewBuffer([]byte{})
 
-	p := parser.New(fs, "", parser.OptionStopOnHCLError(true), parser.OptionWithDebugWriter(debug))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true), options.ParserWithDebug(debug))
 	err := p.ParseFS(context.TODO(), "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO())
@@ -281,7 +283,7 @@ resource "problem" "uhoh" {
 `,
 	})
 
-	p := parser.New(fs, "", parser.OptionStopOnHCLError(true), parser.OptionWithDebugWriter(os.Stderr))
+	p := parser.New(fs, "", parser.OptionStopOnHCLError(true), options.ParserWithDebug(os.Stderr))
 	err := p.ParseFS(context.TODO(), "project")
 	require.NoError(t, err)
 	modules, _, err := p.EvaluateAll(context.TODO())

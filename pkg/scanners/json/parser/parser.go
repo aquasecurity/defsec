@@ -3,17 +3,38 @@ package parser
 import (
 	"context"
 	"encoding/json"
+	"io"
 	"io/fs"
 	"path/filepath"
+  "strings"
 
 	"github.com/aquasecurity/defsec/pkg/detection"
+	"github.com/aquasecurity/defsec/internal/debug"
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 )
 
-type Parser struct{}
+var _ options.ConfigurableParser = (*Parser)(nil)
+
+type Parser struct {
+	debug        debug.Logger
+	skipRequired bool
+}
+
+func (p *Parser) SetDebugWriter(writer io.Writer) {
+	p.debug = debug.New(writer, "parse:json")
+}
+
+func (p *Parser) SetSkipRequiredCheck(b bool) {
+	p.skipRequired = b
+}
 
 // New creates a new parser
-func New() *Parser {
-	return &Parser{}
+func New(opts ...options.ParserOption) *Parser {
+	p := &Parser{}
+	for _, opt := range opts {
+		opt(p)
+	}
+	return p
 }
 
 func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[string]interface{}, error) {
@@ -36,7 +57,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[st
 		}
 		df, err := p.ParseFile(ctx, target, path)
 		if err != nil {
-			// TODO add debug for parse errors
+			p.debug.Log("Parse error in '%s': %s", path, err)
 			return nil
 		}
 		files[path] = df
@@ -62,5 +83,8 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (interface{
 }
 
 func (p *Parser) Required(path string) bool {
+	if p.skipRequired {
+		return true
+	}
 	return detection.IsType(path, nil, detection.FileTypeJSON)
 }

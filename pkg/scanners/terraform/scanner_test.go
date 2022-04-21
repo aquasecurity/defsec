@@ -7,22 +7,15 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/terraform"
-
-	"github.com/aquasecurity/defsec/pkg/severity"
-
-	"github.com/aquasecurity/defsec/pkg/state"
-
-	"github.com/aquasecurity/defsec/pkg/scan"
-
 	"github.com/aquasecurity/defsec/internal/rules"
-
 	"github.com/aquasecurity/defsec/pkg/providers"
-
+	"github.com/aquasecurity/defsec/pkg/scan"
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+	"github.com/aquasecurity/defsec/pkg/severity"
+	"github.com/aquasecurity/defsec/pkg/state"
+	"github.com/aquasecurity/defsec/pkg/terraform"
 	"github.com/aquasecurity/defsec/test/testutil"
-
 	"github.com/stretchr/testify/assert"
-
 	"github.com/stretchr/testify/require"
 )
 
@@ -43,7 +36,7 @@ var alwaysFailRule = scan.Rule{
 	},
 }
 
-func scanWithOptions(t *testing.T, code string, opt ...Option) scan.Results {
+func scanWithOptions(t *testing.T, code string, opt ...options.ScannerOption) scan.Results {
 
 	fs := testutil.CreateFS(t, map[string]string{
 		"project/main.tf": code,
@@ -59,8 +52,8 @@ func Test_OptionWithAlternativeIDProvider(t *testing.T) {
 	reg := rules.Register(alwaysFailRule, nil)
 	defer rules.Deregister(reg)
 
-	options := []Option{
-		OptionWithAlternativeIDProvider(func(s string) []string {
+	options := []options.ScannerOption{
+		ScannerWithAlternativeIDProvider(func(s string) []string {
 			return []string{"something", "altid", "blah"}
 		}),
 	}
@@ -77,8 +70,8 @@ func Test_OptionWithSeverityOverrides(t *testing.T) {
 	reg := rules.Register(alwaysFailRule, nil)
 	defer rules.Deregister(reg)
 
-	options := []Option{
-		OptionWithSeverityOverrides(map[string]string{"aws-service-abc": "LOW"}),
+	options := []options.ScannerOption{
+		ScannerWithSeverityOverrides(map[string]string{"aws-service-abc": "LOW"}),
 	}
 	results := scanWithOptions(t, `
 resource "something" "else" {}
@@ -93,12 +86,12 @@ func Test_OptionWithDebugWriter(t *testing.T) {
 
 	buffer := bytes.NewBuffer([]byte{})
 
-	options := []Option{
-		OptionWithDebug(buffer),
+	scannerOpts := []options.ScannerOption{
+		options.ScannerWithDebug(buffer),
 	}
 	_ = scanWithOptions(t, `
 resource "something" "else" {}
-`, options...)
+`, scannerOpts...)
 	require.Greater(t, buffer.Len(), 0)
 }
 
@@ -106,13 +99,13 @@ func Test_OptionNoIgnores(t *testing.T) {
 	reg := rules.Register(alwaysFailRule, nil)
 	defer rules.Deregister(reg)
 
-	options := []Option{
-		OptionNoIgnores(),
+	scannerOpts := []options.ScannerOption{
+		ScannerWithNoIgnores(),
 	}
 	results := scanWithOptions(t, `
 //tfsec:ignore:aws-service-abc
 resource "something" "else" {}
-`, options...)
+`, scannerOpts...)
 	require.Len(t, results.GetFailed(), 1)
 	require.Len(t, results.GetIgnored(), 0)
 
@@ -122,8 +115,8 @@ func Test_OptionExcludeRules(t *testing.T) {
 	reg := rules.Register(alwaysFailRule, nil)
 	defer rules.Deregister(reg)
 
-	options := []Option{
-		OptionExcludeRules([]string{"aws-service-abc"}),
+	options := []options.ScannerOption{
+		ScannerWithExcludedRules([]string{"aws-service-abc"}),
 	}
 	results := scanWithOptions(t, `
 resource "something" "else" {}
@@ -137,12 +130,12 @@ func Test_OptionIncludeRules(t *testing.T) {
 	reg := rules.Register(alwaysFailRule, nil)
 	defer rules.Deregister(reg)
 
-	options := []Option{
-		OptionIncludeRules([]string{"this-only"}),
+	scannerOpts := []options.ScannerOption{
+		ScannerWithIncludedRules([]string{"this-only"}),
 	}
 	results := scanWithOptions(t, `
 resource "something" "else" {}
-`, options...)
+`, scannerOpts...)
 	require.Len(t, results.GetFailed(), 0)
 	require.Len(t, results.GetIgnored(), 1)
 
@@ -152,12 +145,12 @@ func Test_OptionWithMinimumSeverity(t *testing.T) {
 	reg := rules.Register(alwaysFailRule, nil)
 	defer rules.Deregister(reg)
 
-	options := []Option{
-		OptionWithMinimumSeverity(severity.Critical),
+	scannerOpts := []options.ScannerOption{
+		ScannerWithMinimumSeverity(severity.Critical),
 	}
 	results := scanWithOptions(t, `
 resource "something" "else" {}
-`, options...)
+`, scannerOpts...)
 	require.Len(t, results.GetFailed(), 0)
 	require.Len(t, results.GetIgnored(), 1)
 
@@ -201,8 +194,8 @@ deny[cause] {
 
 	debugLog := bytes.NewBuffer([]byte{})
 	scanner := New(
-		OptionWithDebug(debugLog),
-		OptionWithPolicyDirs("rules"),
+		options.ScannerWithDebug(debugLog),
+		options.ScannerWithPolicyDirs("rules"),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
@@ -300,8 +293,8 @@ resource "aws_s3_bucket" "my-bucket" {
 			})
 
 			scanner := New(
-				OptionWithPolicyDirs("rules"),
-				OptionWithPolicyNamespaces(test.includedNamespaces...),
+				options.ScannerWithPolicyDirs("rules"),
+				options.ScannerWithPolicyNamespaces(test.includedNamespaces...),
 			)
 
 			results, _, err := scanner.ScanFSWithMetrics(context.TODO(), fs, "code")
@@ -335,8 +328,8 @@ resource "aws_s3_bucket" "my-bucket" {
 
 	debugLog := bytes.NewBuffer([]byte{})
 	scanner := New(
-		OptionWithDebug(debugLog),
-		OptionWithStateFunc(func(s *state.State) {
+		options.ScannerWithDebug(debugLog),
+		ScannerWithStateFunc(func(s *state.State) {
 			require.NotNil(t, s)
 			actual = *s
 		}),
@@ -391,9 +384,9 @@ deny[cause] {
 
 	debugLog := bytes.NewBuffer([]byte{})
 	scanner := New(
-		OptionWithDebug(debugLog),
-		OptionWithPolicyDirs("rules"),
-		OptionWithRegoOnly(true),
+		options.ScannerWithDebug(debugLog),
+		options.ScannerWithPolicyDirs("rules"),
+		ScannerWithRegoOnly(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
@@ -447,9 +440,9 @@ deny[res] {
 
 	debugLog := bytes.NewBuffer([]byte{})
 	scanner := New(
-		OptionWithDebug(debugLog),
-		OptionWithPolicyDirs("rules"),
-		OptionWithRegoOnly(true),
+		options.ScannerWithDebug(debugLog),
+		options.ScannerWithPolicyDirs("rules"),
+		ScannerWithRegoOnly(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
@@ -517,9 +510,9 @@ deny[res] {
 
 	debugLog := bytes.NewBuffer([]byte{})
 	scanner := New(
-		OptionWithDebug(debugLog),
-		OptionWithPolicyDirs("rules"),
-		OptionWithRegoOnly(true),
+		options.ScannerWithDebug(debugLog),
+		options.ScannerWithPolicyDirs("rules"),
+		ScannerWithRegoOnly(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
