@@ -1,164 +1,158 @@
 package terraform
 
 import (
-	"io"
 	"strings"
 
-	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
-
-	"github.com/aquasecurity/defsec/pkg/severity"
-
-	"github.com/aquasecurity/defsec/pkg/state"
-
 	"github.com/aquasecurity/defsec/pkg/scan"
-
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/executor"
+	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
+	"github.com/aquasecurity/defsec/pkg/severity"
+	"github.com/aquasecurity/defsec/pkg/state"
 )
 
-type Option func(s *Scanner)
+type ConfigurableTerraformScanner interface {
+	options.ConfigurableScanner
+	SetForceAllDirs(bool)
+	AddExecutorOptions(options ...executor.Option)
+	AddParserOptions(options ...options.ParserOption)
+}
 
-func OptionWithAlternativeIDProvider(f func(string) []string) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionWithAlternativeIDProvider(f))
+func ScannerWithTFVarsPaths(paths ...string) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddParserOptions(parser.OptionWithTFVarsPaths(paths...))
+		}
 	}
 }
 
-func OptionWithSeverityOverrides(overrides map[string]string) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionWithSeverityOverrides(overrides))
+func ScannerWithAlternativeIDProvider(f func(string) []string) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionWithAlternativeIDProvider(f))
+		}
 	}
 }
 
-func OptionWithDebug(w io.Writer) Option {
-	return func(s *Scanner) {
-		s.debugWriter = w
-		s.executorOpt = append(s.executorOpt, executor.OptionWithDebugWriter(w))
-		s.parserOpt = append(s.parserOpt, parser.OptionWithDebugWriter(w))
+func ScannerWithSeverityOverrides(overrides map[string]string) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionWithSeverityOverrides(overrides))
+		}
 	}
 }
 
-func OptionWithTrace(w io.Writer) Option {
-	return func(s *Scanner) {
-		s.traceWriter = w
+func ScannerWithNoIgnores() options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionNoIgnores())
+		}
 	}
 }
 
-func OptionNoIgnores() Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionNoIgnores())
+func ScannerWithExcludedRules(ruleIDs []string) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionExcludeRules(ruleIDs))
+		}
 	}
 }
 
-func OptionExcludeRules(ruleIDs []string) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionExcludeRules(ruleIDs))
+func ScannerWithIncludedRules(ruleIDs []string) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionIncludeRules(ruleIDs))
+		}
 	}
 }
 
-func OptionIncludeRules(ruleIDs []string) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionIncludeRules(ruleIDs))
+func ScannerWithStopOnRuleErrors(stop bool) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionStopOnErrors(stop))
+		}
 	}
 }
 
-func OptionStopOnRuleErrors(stop bool) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionStopOnErrors(stop))
+func ScannerWithWorkspaceName(name string) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddParserOptions(parser.OptionWithWorkspaceName(name))
+			tf.AddExecutorOptions(executor.OptionWithWorkspaceName(name))
+		}
 	}
 }
 
-func OptionWithWorkspaceName(name string) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionWithWorkspaceName(name))
-		s.parserOpt = append(s.parserOpt, parser.OptionWithWorkspaceName(name))
+func ScannerWithSingleThread(single bool) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionWithSingleThread(single))
+		}
 	}
 }
 
-func OptionWithSingleThread(single bool) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionWithSingleThread(single))
+func ScannerWithAllDirectories(all bool) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.SetForceAllDirs(all)
+		}
 	}
 }
 
-func OptionScanAllDirectories(all bool) Option {
-	return func(s *Scanner) {
-		s.forceAllDirs = all
+func ScannerWithStopOnHCLError(stop bool) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddParserOptions(parser.OptionStopOnHCLError(stop))
+		}
 	}
 }
 
-func OptionWithTFVarsPaths(paths []string) Option {
-	return func(s *Scanner) {
-		s.parserOpt = append(s.parserOpt, parser.OptionWithTFVarsPaths(paths))
-	}
-}
-
-func OptionStopOnHCLError(stop bool) Option {
-	return func(s *Scanner) {
-		s.parserOpt = append(s.parserOpt, parser.OptionStopOnHCLError(stop))
-	}
-}
-
-func OptionSkipDownloaded(skip bool) Option {
-	return func(s *Scanner) {
+func ScannerWithSkipDownloaded(skip bool) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
 		if !skip {
 			return
 		}
-		s.executorOpt = append(s.executorOpt, executor.OptionWithResultsFilter(func(results scan.Results) scan.Results {
-			for i, result := range results {
-				if result.Range() == nil {
-					continue
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionWithResultsFilter(func(results scan.Results) scan.Results {
+				for i, result := range results {
+					if result.Range() == nil {
+						continue
+					}
+					prefix := result.Range().GetSourcePrefix()
+					switch {
+					case prefix == "":
+					case strings.HasPrefix(prefix, "."):
+					default:
+						results[i].OverrideStatus(scan.StatusIgnored)
+					}
 				}
-				prefix := result.Range().GetSourcePrefix()
-				switch {
-				case prefix == "":
-				case strings.HasPrefix(prefix, "."):
-				default:
-					results[i].OverrideStatus(scan.StatusIgnored)
-				}
-			}
-			return results
-		}))
+				return results
+			}))
+		}
 	}
 }
 
-func OptionWithResultsFilter(f func(scan.Results) scan.Results) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionWithResultsFilter(f))
+func ScannerWithResultsFilter(f func(scan.Results) scan.Results) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionWithResultsFilter(f))
+		}
 	}
 }
 
-func OptionWithMinimumSeverity(minimum severity.Severity) Option {
+func ScannerWithMinimumSeverity(minimum severity.Severity) options.ScannerOption {
 	min := severityAsOrdinal(minimum)
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionWithResultsFilter(func(results scan.Results) scan.Results {
-			for i, result := range results {
-				if severityAsOrdinal(result.Severity()) < min {
-					results[i].OverrideStatus(scan.StatusIgnored)
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionWithResultsFilter(func(results scan.Results) scan.Results {
+				for i, result := range results {
+					if severityAsOrdinal(result.Severity()) < min {
+						results[i].OverrideStatus(scan.StatusIgnored)
+					}
 				}
-			}
-			return results
-		}))
-	}
-}
-
-// OptionWithPolicyDirs - location of rego policy directories - policies are loaded recursively
-func OptionWithPolicyDirs(dirs ...string) func(s *Scanner) {
-	return func(s *Scanner) {
-		s.policyDirs = dirs
-	}
-}
-
-// OptionWithDataDirs - location of rego data directories
-func OptionWithDataDirs(dirs ...string) func(s *Scanner) {
-	return func(s *Scanner) {
-		s.dataDirs = dirs
-	}
-}
-
-// OptionWithPolicyNamespaces - namespaces which indicate rego policies containing enforced rules
-func OptionWithPolicyNamespaces(namespaces ...string) func(s *Scanner) {
-	return func(s *Scanner) {
-		s.policyNamespaces = namespaces
+				return results
+			}))
+		}
 	}
 }
 
@@ -177,26 +171,26 @@ func severityAsOrdinal(sev severity.Severity) int {
 	}
 }
 
-func OptionWithStateFunc(f ...func(*state.State)) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionWithStateFunc(f...))
+func ScannerWithStateFunc(f ...func(*state.State)) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionWithStateFunc(f...))
+		}
 	}
 }
 
-func OptionWithDownloads(allowed bool) Option {
-	return func(s *Scanner) {
-		s.parserOpt = append(s.parserOpt, parser.OptionWithDownloads(allowed))
+func ScannerWithDownloadsAllowed(allowed bool) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddParserOptions(parser.OptionWithDownloads(allowed))
+		}
 	}
 }
 
-func OptionWithRegoOnly(regoOnly bool) Option {
-	return func(s *Scanner) {
-		s.executorOpt = append(s.executorOpt, executor.OptionWithRegoOnly(regoOnly))
-	}
-}
-
-func OptionWithPerResultTracing() Option {
-	return func(s *Scanner) {
-		s.traceWriter = io.Discard
+func ScannerWithRegoOnly(regoOnly bool) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionWithRegoOnly(regoOnly))
+		}
 	}
 }

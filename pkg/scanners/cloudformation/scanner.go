@@ -6,8 +6,11 @@ import (
 	"io"
 	"io/fs"
 	"sort"
-	"strings"
 	"sync"
+
+	"github.com/aquasecurity/defsec/internal/debug"
+
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/internal/types"
 
@@ -25,38 +28,47 @@ import (
 var _ scanners.Scanner = (*Scanner)(nil)
 
 type Scanner struct {
-	includePassed     bool
-	includeIgnored    bool
-	excludedRuleIDs   []string
-	ignoreCheckErrors bool
-	debugWriter       io.Writer
-	traceWriter       io.Writer
-	policyDirs        []string
-	dataDirs          []string
-	policyNamespaces  []string
-	parser            *parser.Parser
-	regoScanner       *rego.Scanner
+	debug         debug.Logger
+	policyDirs    []string
+	policyReaders []io.Reader
+	parser        *parser.Parser
+	regoScanner   *rego.Scanner
+	skipRequired  bool
+	options       []options.ScannerOption
 	sync.Mutex
 }
 
-// New creates a new Scanner
-func New(options ...Option) *Scanner {
-	s := &Scanner{
-		ignoreCheckErrors: true,
-		parser:            parser.New(),
-	}
-	for _, option := range options {
-		option(s)
-	}
-	return s
+func (s *Scanner) SetPolicyReaders(readers []io.Reader) {
+	s.policyReaders = readers
 }
 
-func (s *Scanner) debug(format string, args ...interface{}) {
-	if s.debugWriter == nil {
-		return
+func (s *Scanner) SetSkipRequiredCheck(skip bool) {
+	s.skipRequired = skip
+}
+
+func (s *Scanner) SetDebugWriter(writer io.Writer) {
+	s.debug = debug.New(writer, "scan:cloudformation")
+}
+
+func (s *Scanner) SetPolicyDirs(dirs ...string) {
+	s.policyDirs = dirs
+}
+
+func (s *Scanner) SetTraceWriter(_ io.Writer)        {}
+func (s *Scanner) SetPerResultTracingEnabled(_ bool) {}
+func (s *Scanner) SetDataDirs(_ ...string)           {}
+func (s *Scanner) SetPolicyNamespaces(_ ...string)   {}
+
+// New creates a new Scanner
+func New(opts ...options.ScannerOption) *Scanner {
+	s := &Scanner{
+		options: opts,
 	}
-	prefix := "[debug:scan:cloudformation] "
-	_, _ = s.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
+	for _, opt := range opts {
+		opt(s)
+	}
+	s.parser = parser.New(options.ParserWithSkipRequiredCheck(s.skipRequired))
+	return s
 }
 
 func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
@@ -65,15 +77,8 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	if s.regoScanner != nil {
 		return s.regoScanner, nil
 	}
-	regoOpts := []rego.Option{
-		rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...),
-		rego.OptionWithDataDirs(s.dataDirs...),
-	}
-	if s.traceWriter != nil {
-		regoOpts = append(regoOpts, rego.OptionWithTrace(s.traceWriter))
-	}
-	regoScanner := rego.NewScanner(regoOpts...)
-	if err := regoScanner.LoadPolicies(true, srcFS, s.policyDirs, nil); err != nil {
+	regoScanner := rego.NewScanner(s.options...)
+	if err := regoScanner.LoadPolicies(true, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner
@@ -149,9 +154,9 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 		}
 		evalResult := rule.Evaluate(state)
 		if len(evalResult) > 0 {
-			s.debug("Found %d results for %s", len(evalResult), rule.Rule().AVDID)
+			s.debug.Log("Found %d results for %s", len(evalResult), rule.Rule().AVDID)
 			for _, scanResult := range evalResult {
-				if s.isExcluded(scanResult) || isIgnored(scanResult) {
+				if isIgnored(scanResult) {
 					scanResult.OverrideStatus(scan.StatusIgnored)
 				}
 
@@ -164,10 +169,6 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 				reference := ref.(*parser.CFReference)
 				description := getDescription(scanResult, reference)
 				scanResult.OverrideDescription(description)
-				if scanResult.Status() == scan.StatusPassed && !s.includePassed {
-					continue
-				}
-
 				results = append(results, scanResult)
 			}
 		}
@@ -181,15 +182,6 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 		return nil, fmt.Errorf("rego scan error: %w", err)
 	}
 	return append(results, regoResults...), nil
-}
-
-func (s *Scanner) isExcluded(result scan.Result) bool {
-	for _, excluded := range s.excludedRuleIDs {
-		if strings.EqualFold(excluded, result.Flatten().RuleID) {
-			return true
-		}
-	}
-	return false
 }
 
 func getDescription(scanResult scan.Result, location *parser.CFReference) string {
