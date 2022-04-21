@@ -1,11 +1,11 @@
 package terraformplan
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraformplan"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -21,11 +21,7 @@ func Test_Scanning_Plan(t *testing.T) {
 			failedResults = append(failedResults, r)
 		}
 	}
-	require.Len(t, results, 13)
-	require.Len(t, failedResults, 9)
-
-	for _, r := range failedResults {
-		fmt.Printf("%s\n", r.Flatten().LongID)
-	}
+	assert.Len(t, results, 13)
+	assert.Len(t, failedResults, 9)
 
 }

@@ -2,6 +2,7 @@ package parser
 
 type Resource struct {
 	Address       string `json:"address"`
+	ModuleAddress string `json:"module_address"`
 	Mode          string `json:"mode"`
 	Type          string `json:"type"`
 	Name          string `json:"name"`
@@ -35,8 +36,13 @@ type ChildModule struct {
 }
 
 type ConfigurationModule struct {
-	Resources    []ConfigurationResource    `json:"resources"`
-	ChildModules []ConfigurationChildModule `json:"child_modules"`
+	Resources   []ConfigurationResource `json:"resources"`
+	ModuleCalls map[string]CallModule   `json:"module_calls"`
+}
+
+type CallModule struct {
+	Source string              `json:"source"`
+	Module ConfigurationModule `json:"module"`
 }
 
 type ConfigurationChildModule struct {

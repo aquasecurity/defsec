@@ -2,6 +2,7 @@ package terraformplan
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"os"
 
@@ -54,6 +55,12 @@ func (s *Scanner) Scan(reader io.Reader) (scan.Results, error) {
 		return nil, err
 	}
 
-	scanner := terraformScanner.New()
+	content, err := planFS.ReadFile("main.tf")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("Content: %s\n", string(content))
+
+	scanner := terraformScanner.New(terraformScanner.ScannerWithStopOnHCLError(true))
 	return scanner.ScanFS(context.TODO(), planFS, ".")
 }
