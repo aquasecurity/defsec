@@ -6,10 +6,9 @@ import (
 	"io"
 	"io/fs"
 	"path/filepath"
-	"strings"
 
 	"github.com/aquasecurity/defsec/internal/debug"
-
+	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 )
 
@@ -86,6 +85,5 @@ func (p *Parser) Required(path string) bool {
 	if p.skipRequired {
 		return true
 	}
-	ext := filepath.Ext(filepath.Base(path))
-	return strings.EqualFold(ext, ".json")
+	return detection.IsType(path, nil, detection.FileTypeJSON)
 }

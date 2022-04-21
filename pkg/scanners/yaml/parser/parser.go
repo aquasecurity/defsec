@@ -10,9 +10,8 @@ import (
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/debug"
-
+	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
-
 	"gopkg.in/yaml.v3"
 )
 
@@ -107,6 +106,5 @@ func (p *Parser) Required(path string) bool {
 	if p.skipRequired {
 		return true
 	}
-	ext := filepath.Ext(filepath.Base(path))
-	return strings.EqualFold(ext, ".yaml") || strings.EqualFold(ext, ".yml")
+	return detection.IsType(path, nil, detection.FileTypeYAML)
 }
