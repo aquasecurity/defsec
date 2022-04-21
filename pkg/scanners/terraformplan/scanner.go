@@ -57,7 +57,7 @@ func (s *Scanner) Scan(reader io.Reader) (scan.Results, error) {
 
 	content, err := planFS.ReadFile("main.tf")
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	fmt.Printf("Content: %s\n", string(content))
 
