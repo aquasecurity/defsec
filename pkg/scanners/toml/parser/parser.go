@@ -4,9 +4,9 @@ import (
 	"context"
 	"io/fs"
 	"path/filepath"
-	"strings"
 
 	"github.com/BurntSushi/toml"
+	"github.com/aquasecurity/defsec/pkg/detection"
 )
 
 type Parser struct{}
@@ -62,6 +62,5 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (interface{
 }
 
 func (p *Parser) Required(path string) bool {
-	ext := filepath.Ext(filepath.Base(path))
-	return strings.EqualFold(ext, ".toml")
+	return detection.IsType(path, nil, detection.FileTypeTOML)
 }

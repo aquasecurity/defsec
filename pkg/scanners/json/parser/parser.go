@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 	"io/fs"
 	"path/filepath"
-	"strings"
+
+	"github.com/aquasecurity/defsec/pkg/detection"
 )
 
 type Parser struct{}
@@ -61,6 +62,5 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (interface{
 }
 
 func (p *Parser) Required(path string) bool {
-	ext := filepath.Ext(filepath.Base(path))
-	return strings.EqualFold(ext, ".json")
+	return detection.IsType(path, nil, detection.FileTypeJSON)
 }

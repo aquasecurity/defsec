@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/detection"
+
 	"gopkg.in/yaml.v3"
 )
 
@@ -40,7 +42,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[st
 		if entry.IsDir() {
 			return nil
 		}
-		if !p.required(ctx, target, path) {
+		if !p.required(target, path) {
 			return nil
 		}
 		parsed, err := p.ParseFile(ctx, target, path)
@@ -66,38 +68,16 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) ([]interfac
 	return p.parse(f)
 }
 
-func (p *Parser) required(ctx context.Context, fs fs.FS, path string) bool {
+func (p *Parser) required(fs fs.FS, path string) bool {
 	if p.skipRequired {
 		return true
 	}
-
-	ext := filepath.Ext(path)
-	if !strings.EqualFold(ext, ".yaml") && !strings.EqualFold(ext, ".yml") {
-		return false
-	}
-	parsed, err := p.ParseFile(ctx, fs, path)
+	f, err := fs.Open(filepath.ToSlash(path))
 	if err != nil {
-		// TODO: debug
 		return false
 	}
-	if len(parsed) == 0 {
-		return false
-	}
-	for _, partial := range parsed {
-		if msi, ok := partial.(map[string]interface{}); ok {
-			match := true
-			for _, expected := range []string{"apiVersion", "kind", "metadata", "spec"} {
-				if _, ok := msi[expected]; !ok {
-					match = false
-					break
-				}
-			}
-			if match {
-				return true
-			}
-		}
-	}
-	return false
+	defer func() { _ = f.Close() }()
+	return detection.IsType(path, f, detection.FileTypeKubernetes)
 }
 
 func (p *Parser) parse(r io.Reader) ([]interface{}, error) {

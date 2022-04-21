@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/detection"
+
 	"github.com/aquasecurity/defsec/pkg/providers/dockerfile"
 
 	"github.com/moby/buildkit/frontend/dockerfile/instructions"
@@ -74,15 +76,7 @@ func (p *Parser) Required(path string) bool {
 	if p.skipRequired {
 		return true
 	}
-	base := filepath.Base(path)
-	ext := filepath.Ext(base)
-	if strings.EqualFold(base, requiredFile+ext) {
-		return true
-	}
-	if strings.EqualFold(ext, "."+requiredFile) {
-		return true
-	}
-	return false
+	return detection.IsType(path, nil, detection.FileTypeDockerfile)
 }
 
 func (p *Parser) parse(path string, r io.Reader) (*dockerfile.Dockerfile, error) {
