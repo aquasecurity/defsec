@@ -5,13 +5,13 @@ import (
 	"io"
 	"io/fs"
 	"path/filepath"
-	"strings"
 
 	"github.com/aquasecurity/defsec/internal/debug"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/BurntSushi/toml"
+	"github.com/aquasecurity/defsec/pkg/detection"
 )
 
 var _ options.ConfigurableParser = (*Parser)(nil)
@@ -87,6 +87,5 @@ func (p *Parser) Required(path string) bool {
 	if p.skipRequired {
 		return true
 	}
-	ext := filepath.Ext(filepath.Base(path))
-	return strings.EqualFold(ext, ".toml")
+	return detection.IsType(path, nil, detection.FileTypeTOML)
 }

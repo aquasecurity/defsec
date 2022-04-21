@@ -8,11 +8,9 @@ import (
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/debug"
-
-	"github.com/aquasecurity/defsec/pkg/scanners/options"
-
+	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/pkg/providers/dockerfile"
-
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"github.com/moby/buildkit/frontend/dockerfile/instructions"
 	"github.com/moby/buildkit/frontend/dockerfile/parser"
 	"golang.org/x/xerrors"
@@ -32,8 +30,6 @@ func (p *Parser) SetDebugWriter(writer io.Writer) {
 func (p *Parser) SetSkipRequiredCheck(b bool) {
 	p.skipRequired = b
 }
-
-const requiredFile = "Dockerfile"
 
 // New creates a new Dockerfile parser
 func New(options ...options.ParserOption) *Parser {
@@ -89,15 +85,7 @@ func (p *Parser) Required(path string) bool {
 	if p.skipRequired {
 		return true
 	}
-	base := filepath.Base(path)
-	ext := filepath.Ext(base)
-	if strings.EqualFold(base, requiredFile+ext) {
-		return true
-	}
-	if strings.EqualFold(ext, "."+requiredFile) {
-		return true
-	}
-	return false
+	return detection.IsType(path, nil, detection.FileTypeDockerfile)
 }
 
 func (p *Parser) parse(path string, r io.Reader) (*dockerfile.Dockerfile, error) {

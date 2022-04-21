@@ -2,7 +2,6 @@ package parser
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"io/fs"
@@ -11,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/debug"
-
+	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/liamg/jfather"
@@ -78,35 +77,13 @@ func (p *Parser) Required(fs fs.FS, path string) bool {
 		return true
 	}
 
-	var unmarshalFunc func([]byte, interface{}) error
-
-	switch strings.ToLower(filepath.Ext(path)) {
-	case ".yaml", ".yml":
-		unmarshalFunc = yaml.Unmarshal
-	case ".json":
-		unmarshalFunc = json.Unmarshal
-	default:
-		return false
-	}
-
 	f, err := fs.Open(filepath.ToSlash(path))
 	if err != nil {
 		return false
 	}
 	defer func() { _ = f.Close() }()
 
-	data, err := ioutil.ReadAll(f)
-	if err != nil {
-		return false
-	}
-
-	contents := make(map[string]interface{})
-	if err := unmarshalFunc(data, &contents); err != nil {
-		p.debug.Log("file '%s' is not valid: %s", path, err)
-		return false
-	}
-	_, ok := contents["Resources"]
-	return ok
+	return detection.IsType(path, f, detection.FileTypeCloudFormation)
 }
 
 func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (context *FileContext, err error) {
