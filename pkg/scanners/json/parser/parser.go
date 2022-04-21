@@ -6,10 +6,9 @@ import (
 	"io"
 	"io/fs"
 	"path/filepath"
-  "strings"
 
-	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/internal/debug"
+	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 )
 
