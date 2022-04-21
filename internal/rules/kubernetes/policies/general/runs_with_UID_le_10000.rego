@@ -11,7 +11,7 @@ __rego_metadata__ := {
 	"title": "Runs with low user ID",
 	"short_code": "use-high-uid",
 	"version": "v1.0.0",
-	"severity": "MEDIUM",
+	"severity": "LOW",
 	"type": "Kubernetes Security Check",
 	"description": "Force the container to run with user ID > 10000 to avoid conflicts with the host’s user table.",
 	"recommended_actions": "Set 'containers[].securityContext.runAsUser' to an integer > 10000.",
