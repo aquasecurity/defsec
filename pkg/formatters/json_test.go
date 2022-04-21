@@ -33,6 +33,7 @@ func Test_JSON(t *testing.T) {
 			],
 			"description": "Cluster encryption is not enabled.",
 			"severity": "HIGH",
+			"warning": false,
 			"status": 0,
 			"resource": "",
 			"location": {
