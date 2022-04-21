@@ -11,7 +11,7 @@ __rego_metadata__ := {
 	"title": "Runs with low group ID",
 	"short_code": "use-high-gid",
 	"version": "v1.0.0",
-	"severity": "MEDIUM",
+	"severity": "LOW",
 	"type": "Kubernetes Security Check",
 	"description": "Force the container to run with group ID > 10000 to avoid conflicts with the host’s user table.",
 	"recommended_actions": "Set 'containers[].securityContext.runAsGroup' to an integer > 10000.",
