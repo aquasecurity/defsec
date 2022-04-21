@@ -10,15 +10,30 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/internal/debug"
+
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"gopkg.in/yaml.v3"
 )
 
+var _ options.ConfigurableParser = (*Parser)(nil)
+
 type Parser struct {
+	debug        debug.Logger
 	skipRequired bool
 }
 
+func (p *Parser) SetDebugWriter(writer io.Writer) {
+	p.debug = debug.New(writer, "parse:kubernetes")
+}
+
+func (p *Parser) SetSkipRequiredCheck(b bool) {
+	p.skipRequired = b
+}
+
 // New creates a new K8s parser
-func New(options ...Option) *Parser {
+func New(options ...options.ParserOption) *Parser {
 	p := &Parser{}
 	for _, option := range options {
 		option(p)
@@ -45,7 +60,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[st
 		}
 		parsed, err := p.ParseFile(ctx, target, path)
 		if err != nil {
-			// TODO add debug for parse errors
+			p.debug.Log("Parse error in '%s': %s", path, err)
 			return nil
 		}
 		files[path] = parsed

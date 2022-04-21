@@ -6,6 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"github.com/aquasecurity/defsec/pkg/severity"
 
 	"github.com/aquasecurity/defsec/test/testutil"
@@ -534,7 +536,7 @@ deny {
 
 	traceBuffer := bytes.NewBuffer([]byte{})
 
-	scanner := NewScanner(OptionWithTrace(traceBuffer))
+	scanner := NewScanner(options.ScannerWithTrace(traceBuffer))
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -553,7 +555,7 @@ deny {
 	assert.Equal(t, 0, len(results.GetPassed()))
 	assert.Equal(t, 0, len(results.GetIgnored()))
 
-	assert.Greater(t, len(results.GetFailed()[0].Traces()), 0)
+	assert.Len(t, results.GetFailed()[0].Traces(), 0)
 	assert.Greater(t, len(traceBuffer.Bytes()), 0)
 }
 
@@ -569,7 +571,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner(OptionWithPerResultTracing())
+	scanner := NewScanner(options.ScannerWithPerResultTracing(true))
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),

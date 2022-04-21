@@ -6,6 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation"
 
 	"github.com/stretchr/testify/assert"
@@ -34,48 +36,16 @@ func Test_cloudformation_scanning_with_debug(t *testing.T) {
 
 	debugWriter := bytes.NewBufferString("")
 
-	options := []cloudformation.Option{
-		cloudformation.OptionWithDebug(debugWriter),
+	scannerOptions := []options.ScannerOption{
+		options.ScannerWithDebug(debugWriter),
 	}
-
-	cfScanner := cloudformation.New(options...)
+	cfScanner := cloudformation.New(scannerOptions...)
 
 	_, err := cfScanner.ScanFS(context.TODO(), os.DirFS("./examples/bucket"), ".")
 	require.NoError(t, err)
 
 	// check debug is as expected
 	assert.Greater(t, len(debugWriter.String()), 0)
-}
-
-func Test_cloudformation_scanning_with_exclusions_has_expected_errors(t *testing.T) {
-
-	options := []cloudformation.Option{
-		cloudformation.OptionWithExcludedIDs([]string{"AVD-AWS-0087"}),
-	}
-
-	cfScanner := cloudformation.New(options...)
-
-	results, err := cfScanner.ScanFS(context.TODO(), os.DirFS("./examples/bucket"), ".")
-	require.NoError(t, err)
-
-	// check the number of expected results
-	assert.Greater(t, len(results.GetFailed()), 0)
-	assert.Greater(t, len(results.GetIgnored()), 0)
-}
-
-func Test_cloudformation_scanning_with_include_passed(t *testing.T) {
-	options := []cloudformation.Option{
-		cloudformation.OptionIncludePassed(),
-	}
-
-	cfScanner := cloudformation.New(options...)
-
-	results, err := cfScanner.ScanFS(context.TODO(), os.DirFS("./examples/bucket"), ".")
-	require.NoError(t, err)
-
-	// check the number of expected results
-	assert.Greater(t, len(results.GetPassed()), 0)
-
 }
 
 func Test_cloudformation_scanning_with_ignores_has_expected_errors(t *testing.T) {

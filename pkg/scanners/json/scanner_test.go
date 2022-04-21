@@ -4,6 +4,8 @@ import (
 	"context"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"github.com/aquasecurity/defsec/pkg/scan"
 
 	"github.com/aquasecurity/defsec/test/testutil"
@@ -48,7 +50,7 @@ deny[res] {
 `,
 	})
 
-	scanner := NewScanner(OptionWithPolicyDirs("rules"))
+	scanner := NewScanner(options.ScannerWithPolicyDirs("rules"))
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
 	require.NoError(t, err)

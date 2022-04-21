@@ -2,11 +2,13 @@ package dockerfile
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"sync"
+
+	"github.com/aquasecurity/defsec/internal/debug"
+
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/internal/types"
 
@@ -19,35 +21,60 @@ import (
 )
 
 var _ scanners.Scanner = (*Scanner)(nil)
+var _ options.ConfigurableScanner = (*Scanner)(nil)
 
 type Scanner struct {
-	debugWriter      io.Writer
-	traceWriter      io.Writer
-	policyDirs       []string
-	dataDirs         []string
-	policyNamespaces []string
-	parser           *parser.Parser
-	regoScanner      *rego.Scanner
+	debug         debug.Logger
+	policyDirs    []string
+	policyReaders []io.Reader
+	parser        *parser.Parser
+	regoScanner   *rego.Scanner
+	skipRequired  bool
+	options       []options.ScannerOption
 	sync.Mutex
 }
 
-func NewScanner(options ...Option) *Scanner {
-	s := &Scanner{
-		debugWriter: ioutil.Discard,
-		parser:      parser.New(),
-	}
-	for _, opt := range options {
-		opt(s)
-	}
-	return s
+func (s *Scanner) SetPolicyReaders(readers []io.Reader) {
+	s.policyReaders = readers
 }
 
-func (s *Scanner) debug(format string, args ...interface{}) {
-	if s.debugWriter == nil {
-		return
+func (s *Scanner) SetSkipRequiredCheck(skip bool) {
+	s.skipRequired = skip
+}
+
+func (s *Scanner) SetDebugWriter(writer io.Writer) {
+	s.debug = debug.New(writer, "scan:dockerfile")
+}
+
+func (s *Scanner) SetTraceWriter(_ io.Writer) {
+	// handled by rego later - nothing to do for now...
+}
+
+func (s *Scanner) SetPerResultTracingEnabled(_ bool) {
+	// handled by rego later - nothing to do for now...
+}
+
+func (s *Scanner) SetPolicyDirs(dirs ...string) {
+	s.policyDirs = dirs
+}
+
+func (s *Scanner) SetDataDirs(_ ...string) {
+	// handled by rego later - nothing to do for now...
+}
+
+func (s *Scanner) SetPolicyNamespaces(_ ...string) {
+	// handled by rego later - nothing to do for now...
+}
+
+func NewScanner(opts ...options.ScannerOption) *Scanner {
+	s := &Scanner{
+		options: opts,
 	}
-	prefix := "[debug:scan:dockerfile] "
-	_, _ = s.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
+	for _, opt := range opts {
+		opt(s)
+	}
+	s.parser = parser.New(options.ParserWithSkipRequiredCheck(s.skipRequired))
+	return s
 }
 
 func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Results, error) {
@@ -82,7 +109,7 @@ func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (scan.Res
 	if err != nil {
 		return nil, err
 	}
-	s.debug("Scanning %s...", path)
+	s.debug.Log("Scanning %s...", path)
 	return s.scanRego(ctx, fs, rego.Input{
 		Path:     path,
 		Contents: dockerfile.ToRego(),
@@ -96,15 +123,8 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	if s.regoScanner != nil {
 		return s.regoScanner, nil
 	}
-	regoOpts := []rego.Option{
-		rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...),
-		rego.OptionWithDataDirs(s.dataDirs...),
-	}
-	if s.traceWriter != nil {
-		regoOpts = append(regoOpts, rego.OptionWithTrace(s.traceWriter))
-	}
-	regoScanner := rego.NewScanner(regoOpts...)
-	if err := regoScanner.LoadPolicies(len(s.policyDirs) == 0, srcFS, s.policyDirs, nil); err != nil {
+	regoScanner := rego.NewScanner(s.options...)
+	if err := regoScanner.LoadPolicies(len(s.policyDirs) == 0, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner

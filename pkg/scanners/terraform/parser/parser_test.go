@@ -6,6 +6,8 @@ import (
 	"sort"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"github.com/aquasecurity/defsec/test/testutil"
 
 	"github.com/zclconf/go-cty/cty"
@@ -139,7 +141,7 @@ output "mod_result" {
 `,
 	})
 
-	parser := New(fs, "", OptionStopOnHCLError(true), OptionWithDebugWriter(os.Stderr))
+	parser := New(fs, "", OptionStopOnHCLError(true), options.ParserWithDebug(os.Stderr))
 	if err := parser.ParseFS(context.TODO(), "code"); err != nil {
 		t.Fatal(err)
 	}
