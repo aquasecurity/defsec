@@ -25,6 +25,7 @@ const (
 
 var matchers = map[FileType]func(name string, r io.Reader) bool{}
 
+// nolint
 func init() {
 
 	matchers[FileTypeJSON] = func(name string, r io.Reader) bool {
@@ -50,7 +51,7 @@ func init() {
 	matchers[FileTypeCloudFormation] = func(name string, r io.Reader) bool {
 		var unmarshalFunc func([]byte, interface{}) error
 
-		switch true {
+		switch {
 		case IsType(name, r, FileTypeYAML):
 			unmarshalFunc = yaml.Unmarshal
 		case IsType(name, r, FileTypeJSON):

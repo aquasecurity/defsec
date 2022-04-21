@@ -20,8 +20,6 @@ type Parser struct {
 	skipRequired bool
 }
 
-const requiredFile = "Dockerfile"
-
 // New creates a new Dockerfile parser
 func New(options ...Option) *Parser {
 	p := &Parser{}
