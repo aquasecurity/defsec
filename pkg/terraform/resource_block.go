@@ -3,6 +3,7 @@ package terraform
 import (
 	"bytes"
 	"fmt"
+	"strings"
 	"text/template"
 )
 
@@ -18,11 +19,15 @@ type PlanBlock struct {
 	Attributes map[string]interface{}
 }
 
-func NewResourceBlock(resourceType, resourceName string) *PlanBlock {
+func NewPlanBlock(blockType, resourceType, resourceName string) *PlanBlock {
+	if blockType == "managed" {
+		blockType = "resource"
+	}
+
 	return &PlanBlock{
 		Type:       resourceType,
 		Name:       resourceName,
-		BlockType:  "resource",
+		BlockType:  blockType,
 		Blocks:     make(map[string]map[string]interface{}),
 		Attributes: make(map[string]interface{}),
 	}
@@ -49,6 +54,7 @@ func (rb *PlanBlock) ToHCL() string {
 
 	var res bytes.Buffer
 	if err := resourceTmpl.Execute(&res, map[string]interface{}{
+		"BlockType":  rb.BlockType,
 		"Type":       rb.Type,
 		"Name":       rb.Name,
 		"Attributes": rb.Attributes,
@@ -59,21 +65,19 @@ func (rb *PlanBlock) ToHCL() string {
 	return res.String()
 }
 
-var resourceTemplate = `resource "{{ .Type }}" "{{ .Name }}" {
+var resourceTemplate = `{{ .BlockType }} "{{ .Type }}" "{{ .Name }}" {
 	{{ range $name, $value := .Attributes }}{{ if $value }}{{ $name }} {{ RenderValue $value }}
-	{{end}}{{ end }}
-	{{  range $name, $block := .Blocks }}{{ $name }} {
+	{{end}}{{ end }}{{  range $name, $block := .Blocks }}{{ $name }} {
 	{{ range $name, $value := $block }}{{ if $value }}{{ $name }} {{ RenderValue $value }}
 	{{end}}{{ end }}}
-	{{end}} 
-}`
+{{end}}}`
 
 func renderTemplateValue(val interface{}) string {
 	switch t := val.(type) {
 	case map[string]interface{}:
 		return fmt.Sprintf("= %s", renderMap(t))
 	case []interface{}:
-		return fmt.Sprintf("%s", renderSlice(t))
+		return renderSlice(t)
 	default:
 		return fmt.Sprintf("= %s", renderPrimitive(val))
 	}
@@ -84,7 +88,13 @@ func renderPrimitive(val interface{}) string {
 	case PlanReference:
 		return fmt.Sprintf("%v", t.Value)
 	case string:
-		return fmt.Sprintf(`"%s"`, t)
+		if strings.Contains(t, "\n") {
+			return fmt.Sprintf(`<<EOF
+%s
+EOF
+`, t)
+		}
+		return fmt.Sprintf("%q", t)
 	case []interface{}:
 		return renderSlice(t)
 	default:
@@ -108,7 +118,7 @@ func renderSlice(vals []interface{}) string {
 	default:
 		result := " = [\n"
 		for _, v := range vals {
-			result = fmt.Sprintf("%s\t%v\n", result, renderPrimitive(v))
+			result = fmt.Sprintf("%s\t%v,\n", result, renderPrimitive(v))
 		}
 		result = fmt.Sprintf("%s]", result)
 		return result

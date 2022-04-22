@@ -1,7 +1,9 @@
 package parser
 
 import (
+	"crypto/md5" //#nosec
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -68,6 +70,7 @@ func (p *PlanFile) ToFS() (*memoryfs.FS, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	for _, r := range resources {
 		fileResources = append(fileResources, r.ToHCL())
 	}
@@ -76,7 +79,6 @@ func (p *PlanFile) ToFS() (*memoryfs.FS, error) {
 	if err := rootFS.WriteFile("main.tf", []byte(fileContent), os.ModePerm); err != nil {
 		return nil, err
 	}
-
 	return rootFS, nil
 
 }
@@ -84,7 +86,15 @@ func (p *PlanFile) ToFS() (*memoryfs.FS, error) {
 func getResources(module Module, resourceChanges []ResourceChange, configuration Configuration) ([]terraform.PlanBlock, error) {
 	var resources []terraform.PlanBlock
 	for _, r := range module.Resources {
-		res := terraform.NewResourceBlock(r.Type, r.Name)
+		resourceName := r.Name
+		if strings.HasPrefix(r.Address, "module.") {
+			hashable := strings.TrimSuffix(strings.Split(r.Address, fmt.Sprintf(".%s.", r.Type))[0], ".data")
+			/* #nosec */
+			hash := fmt.Sprintf("%x", md5.Sum([]byte(hashable)))
+			resourceName = fmt.Sprintf("%s_%s", r.Name, hash)
+		}
+
+		res := terraform.NewPlanBlock(r.Mode, r.Type, resourceName)
 
 		changes := getValues(r.Address, resourceChanges)
 		// process the changes to get the after state
@@ -112,11 +122,10 @@ func getResources(module Module, resourceChanges []ResourceChange, configuration
 		if resourceConfig != nil {
 
 			for attr, val := range resourceConfig.Expressions {
-				if !res.HasAttribute(attr) {
-					res.Attributes[attr] = unpackConfigurationValue(val)
+				if value, shouldReplace := unpackConfigurationValue(val, r); shouldReplace || !res.HasAttribute(attr) {
+					res.Attributes[attr] = value
 				}
 			}
-
 		}
 		resources = append(resources, *res)
 	}
@@ -132,33 +141,69 @@ func getResources(module Module, resourceChanges []ResourceChange, configuration
 	return resources, nil
 }
 
-func unpackConfigurationValue(val interface{}) interface{} {
-
+func unpackConfigurationValue(val interface{}, r Resource) (interface{}, bool) {
 	switch t := val.(type) {
 	case map[string]interface{}:
 		for k, v := range t {
 			switch k {
 			case "references":
-				return terraform.PlanReference{Value: v.([]interface{})[0]}
+				reference := v.([]interface{})[0].(string)
+				if strings.HasPrefix(r.Address, "module.") {
+					hashable := strings.TrimSuffix(strings.Split(r.Address, fmt.Sprintf(".%s.", r.Type))[0], ".data")
+					/* #nosec */
+					hash := fmt.Sprintf("%x", md5.Sum([]byte(hashable)))
+
+					parts := strings.Split(reference, ".")
+					var rejoin []string
+
+					name := parts[1]
+					remainder := parts[2:]
+					if parts[0] == "data" {
+						rejoin = append(rejoin, parts[:2]...)
+						name = parts[2]
+						remainder = parts[3:]
+					} else {
+						rejoin = append(rejoin, parts[:1]...)
+					}
+
+					rejoin = append(rejoin, fmt.Sprintf("%s_%s", name, hash))
+					rejoin = append(rejoin, remainder...)
+
+					reference = strings.Join(rejoin, ".")
+				}
+
+				shouldReplace := false
+				return terraform.PlanReference{Value: reference}, shouldReplace
 			case "constant_value":
-				return v
+				return v, false
 			}
 		}
 	}
 
-	return nil
+	return nil, false
 }
 
 func getConfiguration(address string, configuration ConfigurationModule) *ConfigurationResource {
 
-	for _, resource := range configuration.Resources {
-		if resource.Address == address {
-			return &resource
+	workingAddress := address
+	var moduleParts []string
+	for strings.HasPrefix(workingAddress, "module.") {
+		workingAddressParts := strings.Split(workingAddress, ".")
+		moduleParts = append(moduleParts, workingAddressParts[1])
+		workingAddress = strings.Join(workingAddressParts[2:], ".")
+	}
+
+	workingModule := configuration
+	for _, moduleName := range moduleParts {
+		if module, ok := workingModule.ModuleCalls[moduleName]; ok {
+			workingModule = module.Module
 		}
 	}
 
-	for _, childModule := range configuration.ChildModules {
-		return getConfiguration(address, childModule.ConfigurationModule)
+	for _, resource := range workingModule.Resources {
+		if resource.Address == workingAddress {
+			return &resource
+		}
 	}
 
 	return nil

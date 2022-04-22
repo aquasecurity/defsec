@@ -54,6 +54,6 @@ func (s *Scanner) Scan(reader io.Reader) (scan.Results, error) {
 		return nil, err
 	}
 
-	scanner := terraformScanner.New()
+	scanner := terraformScanner.New(terraformScanner.ScannerWithStopOnHCLError(true))
 	return scanner.ScanFS(context.TODO(), planFS, ".")
 }
