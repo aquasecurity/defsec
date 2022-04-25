@@ -72,6 +72,10 @@ func NewScanner(opts ...options.ScannerOption) *Scanner {
 	return s
 }
 
+func (s *Scanner) Name() string {
+	return "JSON"
+}
+
 func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Results, error) {
 
 	files, err := s.parser.ParseFS(ctx, fs, path)
