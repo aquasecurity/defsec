@@ -187,17 +187,17 @@ func (r *Results) SetRule(rule Rule) {
 	}
 }
 
-func (r *Results) SetRelativeTo(dir string) {
+func (r *Results) Absolute(fsRoot string) Results {
+
+	var filtered Results
+
 	for i := range *r {
 		m := (*r)[i].Metadata()
 		if m.IsUnmanaged() || m.Range() == nil {
 			continue
 		}
 		rng := m.Range()
-		relative, err := filepath.Rel(dir, rng.GetLocalFilename())
-		if err != nil || strings.Contains(relative, "..") {
-			continue
-		}
+		absolute := filepath.Join(fsRoot, rng.GetLocalFilename())
 		filesystem := rng.GetFS()
 		if filesystem == nil {
 			continue
@@ -209,15 +209,18 @@ func (r *Results) SetRelativeTo(dir string) {
 		if _, err := statFS.Stat(rng.GetLocalFilename()); err != nil {
 			continue
 		}
-		newrng := types.NewRange(relative, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())
+		newRange := types.NewRange(absolute, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())
 		switch {
 		case m.IsExplicit():
-			m = types.NewExplicitMetadata(newrng, m.Reference())
+			m = types.NewExplicitMetadata(newRange, m.Reference())
 		default:
-			m = types.NewMetadata(newrng, m.Reference())
+			m = types.NewMetadata(newRange, m.Reference())
 		}
-		(*r)[i].OverrideMetadata(m)
+		result := (*r)[i]
+		result.OverrideMetadata(m)
+		filtered = append(filtered, result)
 	}
+	return filtered
 }
 
 func (r *Results) SetSourceAndFilesystem(source string, f fs.FS) {
