@@ -2,8 +2,8 @@ package test
 
 import (
 	"context"
+	"fmt"
 	"os"
-	"path/filepath"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
@@ -29,7 +29,6 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 
 	results, err := scanner.ScanFS(context.TODO(), srcFS, "test/testdata/dockerfile")
 	require.NoError(t, err)
-	results.SetRelativeTo("test/testdata/dockerfile")
 
 	for _, entry := range entries {
 		if !entry.IsDir() {
@@ -45,7 +44,7 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 							assert.Greater(t, result.Range().GetStartLine(), 0)
 							assert.Greater(t, result.Range().GetEndLine(), 0)
 						}
-						assert.Equal(t, filepath.Join(entry.Name(), "Dockerfile.denied"), result.Range().GetFilename())
+						assert.Equal(t, fmt.Sprintf("test/testdata/dockerfile/%s/Dockerfile.denied", entry.Name()), result.Range().GetFilename())
 						matched = true
 					}
 				}
@@ -67,7 +66,6 @@ func Test_Docker_RegoPoliciesEmbedded(t *testing.T) {
 
 	results, err := scanner.ScanFS(context.TODO(), srcFS, "test/testdata/dockerfile")
 	require.NoError(t, err)
-	results.SetRelativeTo("test/testdata/dockerfile")
 
 	for _, entry := range entries {
 		if !entry.IsDir() {
@@ -83,7 +81,7 @@ func Test_Docker_RegoPoliciesEmbedded(t *testing.T) {
 							assert.Greater(t, result.Range().GetStartLine(), 0)
 							assert.Greater(t, result.Range().GetEndLine(), 0)
 						}
-						assert.Equal(t, filepath.Join(entry.Name(), "Dockerfile.denied"), result.Range().GetFilename())
+						assert.Equal(t, fmt.Sprintf("test/testdata/dockerfile/%s/Dockerfile.denied", entry.Name()), result.Range().GetFilename())
 						matched = true
 					}
 				}

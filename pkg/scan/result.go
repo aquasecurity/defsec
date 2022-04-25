@@ -187,37 +187,80 @@ func (r *Results) SetRule(rule Rule) {
 	}
 }
 
-func (r *Results) SetRelativeTo(dir string) {
+func (r *Results) Absolute(fsRoot string) Results {
+
+	var filtered Results
+
 	for i := range *r {
 		m := (*r)[i].Metadata()
 		if m.IsUnmanaged() || m.Range() == nil {
+			filtered = append(filtered, (*r)[i])
 			continue
 		}
 		rng := m.Range()
-		relative, err := filepath.Rel(dir, rng.GetLocalFilename())
-		if err != nil || strings.Contains(relative, "..") {
-			continue
-		}
+		absolute := filepath.Join(fsRoot, rng.GetLocalFilename())
 		filesystem := rng.GetFS()
 		if filesystem == nil {
+			filtered = append(filtered, (*r)[i])
 			continue
 		}
 		statFS, ok := filesystem.(fs.StatFS)
 		if !ok {
+			filtered = append(filtered, (*r)[i])
 			continue
 		}
 		if _, err := statFS.Stat(rng.GetLocalFilename()); err != nil {
+			filtered = append(filtered, (*r)[i])
 			continue
 		}
-		newrng := types.NewRange(relative, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())
+		newRange := types.NewRange(absolute, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())
 		switch {
 		case m.IsExplicit():
-			m = types.NewExplicitMetadata(newrng, m.Reference())
+			m = types.NewExplicitMetadata(newRange, m.Reference())
 		default:
-			m = types.NewMetadata(newrng, m.Reference())
+			m = types.NewMetadata(newRange, m.Reference())
 		}
-		(*r)[i].OverrideMetadata(m)
+		result := (*r)[i]
+		result.OverrideMetadata(m)
+		filtered = append(filtered, result)
 	}
+	return filtered
+}
+
+func (r *Results) RelativeTo(fsRoot string, to string) Results {
+
+	absolute := r.Absolute(fsRoot)
+
+	var filtered Results
+	for i := range absolute {
+		m := (absolute)[i].Metadata()
+		if m.IsUnmanaged() || m.Range() == nil {
+			filtered = append(filtered, absolute[i])
+			continue
+		}
+		rng := m.Range()
+		filesystem := rng.GetFS()
+		if filesystem == nil || !strings.HasPrefix(rng.GetLocalFilename(), fsRoot) {
+			filtered = append(filtered, absolute[i])
+			continue
+		}
+		relative, err := filepath.Rel(to, rng.GetLocalFilename())
+		if err != nil {
+			filtered = append(filtered, absolute[i])
+			continue
+		}
+		newRange := types.NewRange(relative, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())
+		switch {
+		case m.IsExplicit():
+			m = types.NewExplicitMetadata(newRange, m.Reference())
+		default:
+			m = types.NewMetadata(newRange, m.Reference())
+		}
+		result := absolute[i]
+		result.OverrideMetadata(m)
+		filtered = append(filtered, result)
+	}
+	return filtered
 }
 
 func (r *Results) SetSourceAndFilesystem(source string, f fs.FS) {
