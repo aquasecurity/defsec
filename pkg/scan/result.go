@@ -240,7 +240,7 @@ func (r *Results) RelativeTo(fsRoot string, to string) Results {
 			filtered = append(filtered, (*r)[i])
 			continue
 		}
-		if !strings.HasPrefix(rng.GetLocalFilename(), fsRoot) {
+		if !strings.HasPrefix(rng.GetLocalFilename(), strings.TrimSuffix(fsRoot, "/")) {
 			filtered = append(filtered, absolute[i])
 			continue
 		}
