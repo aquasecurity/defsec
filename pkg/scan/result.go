@@ -189,8 +189,11 @@ func (r *Results) SetRule(rule Rule) {
 
 func (r *Results) Absolute(fsRoot string) Results {
 
-	var filtered Results
+	if strings.HasSuffix(fsRoot, ":") {
+		fsRoot += "/"
+	}
 
+	var filtered Results
 	for i := range *r {
 		m := (*r)[i].Metadata()
 		if m.IsUnmanaged() || m.Range() == nil {
@@ -198,21 +201,11 @@ func (r *Results) Absolute(fsRoot string) Results {
 			continue
 		}
 		rng := m.Range()
+		if rng.GetSourcePrefix() != "" && !strings.HasPrefix(rng.GetSourcePrefix(), ".") {
+			filtered = append(filtered, (*r)[i])
+			continue
+		}
 		absolute := filepath.Join(fsRoot, rng.GetLocalFilename())
-		filesystem := rng.GetFS()
-		if filesystem == nil {
-			filtered = append(filtered, (*r)[i])
-			continue
-		}
-		statFS, ok := filesystem.(fs.StatFS)
-		if !ok {
-			filtered = append(filtered, (*r)[i])
-			continue
-		}
-		if _, err := statFS.Stat(rng.GetLocalFilename()); err != nil {
-			filtered = append(filtered, (*r)[i])
-			continue
-		}
 		newRange := types.NewRange(absolute, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())
 		switch {
 		case m.IsExplicit():
@@ -231,6 +224,10 @@ func (r *Results) RelativeTo(fsRoot string, to string) Results {
 
 	absolute := r.Absolute(fsRoot)
 
+	if strings.HasSuffix(fsRoot, ":") {
+		fsRoot += "/"
+	}
+
 	var filtered Results
 	for i := range absolute {
 		m := (absolute)[i].Metadata()
@@ -239,8 +236,11 @@ func (r *Results) RelativeTo(fsRoot string, to string) Results {
 			continue
 		}
 		rng := m.Range()
-		filesystem := rng.GetFS()
-		if filesystem == nil || !strings.HasPrefix(rng.GetLocalFilename(), fsRoot) {
+		if rng.GetSourcePrefix() != "" && !strings.HasPrefix(rng.GetSourcePrefix(), ".") {
+			filtered = append(filtered, (*r)[i])
+			continue
+		}
+		if !strings.HasPrefix(rng.GetLocalFilename(), fsRoot) {
 			filtered = append(filtered, absolute[i])
 			continue
 		}
