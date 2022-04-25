@@ -38,6 +38,10 @@ type Scanner struct {
 	sync.Mutex
 }
 
+func (s *Scanner) Name() string {
+	return "CloudFormation"
+}
+
 func (s *Scanner) SetPolicyReaders(readers []io.Reader) {
 	s.policyReaders = readers
 }

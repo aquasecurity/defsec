@@ -44,6 +44,10 @@ type Scanner struct {
 	sync.Mutex
 }
 
+func (s *Scanner) Name() string {
+	return "Terraform"
+}
+
 func (s *Scanner) SetForceAllDirs(b bool) {
 	s.forceAllDirs = b
 }

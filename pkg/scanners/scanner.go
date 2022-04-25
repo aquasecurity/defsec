@@ -13,5 +13,9 @@ type WriteFileFS interface {
 }
 
 type Scanner interface {
+	// Name provides the human-readable name of the scanner e.g. "CloudFormation"
+	Name() string
+	// ScanFS scans the given filesystem for issues, starting at the provided directory.
+	// Use '.' to scan an entire filesystem.
 	ScanFS(ctx context.Context, fs fs.FS, dir string) (scan.Results, error)
 }
