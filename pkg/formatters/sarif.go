@@ -1,8 +1,6 @@
 package formatters
 
 import (
-	"path/filepath"
-
 	"github.com/aquasecurity/defsec/pkg/severity"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -18,8 +16,6 @@ func outputSARIF(b ConfigurableFormatter, results scan.Results) error {
 
 	run := sarif.NewRunWithInformationURI("tfsec", "https://tfsec.dev")
 	report.AddRun(run)
-
-	baseDir := b.BaseDir()
 
 	for _, res := range results {
 
@@ -43,14 +39,6 @@ func outputSARIF(b ConfigurableFormatter, results scan.Results) error {
 		}
 
 		rng := res.Range()
-		relativePath, err := filepath.Rel(baseDir, rng.GetFilename())
-		if err != nil {
-			return err
-		}
-		if baseDir == rng.GetFilename() {
-			relativePath = filepath.Base(baseDir)
-		}
-
 		message := sarif.NewTextMessage(res.Description())
 		region := sarif.NewSimpleRegion(rng.GetStartLine(), rng.GetEndLine())
 		var level string
@@ -66,7 +54,7 @@ func outputSARIF(b ConfigurableFormatter, results scan.Results) error {
 		}
 
 		location := sarif.NewPhysicalLocation().
-			WithArtifactLocation(sarif.NewSimpleArtifactLocation(relativePath)).
+			WithArtifactLocation(sarif.NewSimpleArtifactLocation(rng.GetFilename())).
 			WithRegion(region)
 
 		ruleResult := run.CreateResultForRule(rule.ID)
