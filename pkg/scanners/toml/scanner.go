@@ -29,6 +29,10 @@ type Scanner struct {
 	sync.Mutex
 }
 
+func (s *Scanner) Name() string {
+	return "TOML"
+}
+
 func (s *Scanner) SetPolicyReaders(readers []io.Reader) {
 	s.policyReaders = readers
 }

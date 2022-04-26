@@ -92,7 +92,7 @@ func init() {
 
 	matchers[FileTypeKubernetes] = func(name string, r io.Reader) bool {
 
-		if !IsType(name, r, FileTypeYAML) {
+		if !IsType(name, r, FileTypeYAML) && !IsType(name, r, FileTypeJSON) {
 			return false
 		}
 
@@ -103,6 +103,21 @@ func init() {
 		contents, err := ioutil.ReadAll(r)
 		if err != nil {
 			return false
+		}
+
+		expectedProperties := []string{"apiVersion", "kind", "metadata", "spec"}
+
+		if IsType(name, r, FileTypeJSON) {
+			var result map[string]interface{}
+			if err := json.Unmarshal(contents, &result); err != nil {
+				return false
+			}
+			for _, expected := range expectedProperties {
+				if _, ok := result[expected]; !ok {
+					return false
+				}
+			}
+			return true
 		}
 
 		marker := "\n---\n"
@@ -117,7 +132,7 @@ func init() {
 				continue
 			}
 			match := true
-			for _, expected := range []string{"apiVersion", "kind", "metadata", "spec"} {
+			for _, expected := range expectedProperties {
 				if _, ok := result[expected]; !ok {
 					match = false
 					break

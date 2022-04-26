@@ -45,6 +45,10 @@ func New(opts ...options.ScannerOption) *Scanner {
 	return s
 }
 
+func (s *Scanner) Name() string {
+	return "Universal"
+}
+
 func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, dir string) (scan.Results, error) {
 	var results scan.Results
 	for _, inner := range s.scanners {

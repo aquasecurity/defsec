@@ -354,3 +354,58 @@ spec:
 
 	assert.Equal(t, 1, len(results.GetFailed()))
 }
+
+func Test_FileScanJSON(t *testing.T) {
+
+	results, err := NewScanner(options.OptionWithPolicyReaders(strings.NewReader(`package defsec
+
+deny[msg] {
+  input.kind == "Pod"
+  msg = "fail"
+}
+`))).ScanReader(context.TODO(), "k8s.json", strings.NewReader(`
+{
+  "kind": "Pod",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "mongo",
+    "labels": {
+      "name": "mongo",
+      "role": "mongo"
+    }
+  },
+  "spec": {
+    "volumes": [
+      {
+        "name": "mongo-disk",
+        "gcePersistentDisk": {
+          "pdName": "mongo-disk",
+          "fsType": "ext4"
+        }
+      }
+    ],
+    "containers": [
+      {
+        "name": "mongo",
+        "image": "mongo:latest",
+        "ports": [
+          {
+            "name": "mongo",
+            "containerPort": 27017
+          }
+        ],
+        "volumeMounts": [
+          {
+            "name": "mongo-disk",
+            "mountPath": "/data/db"
+          }
+        ]
+      }
+    ]
+  }
+}
+`))
+	require.NoError(t, err)
+
+	assert.Equal(t, 1, len(results.GetFailed()))
+}

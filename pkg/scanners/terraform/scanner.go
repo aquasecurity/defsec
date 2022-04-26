@@ -40,9 +40,12 @@ type Scanner struct {
 	policyReaders []io.Reader
 	regoScanner   *rego.Scanner
 	execLock      sync.RWMutex
-	skipRequired  bool
 	debug         debug.Logger
 	sync.Mutex
+}
+
+func (s *Scanner) Name() string {
+	return "Terraform"
 }
 
 func (s *Scanner) SetForceAllDirs(b bool) {
@@ -62,7 +65,7 @@ func (s *Scanner) SetPolicyReaders(readers []io.Reader) {
 }
 
 func (s *Scanner) SetSkipRequiredCheck(skip bool) {
-	s.skipRequired = skip
+	s.parserOpt = append(s.parserOpt, options.ParserWithSkipRequiredCheck(skip))
 }
 
 func (s *Scanner) SetDebugWriter(writer io.Writer) {

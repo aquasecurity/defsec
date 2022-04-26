@@ -25,7 +25,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := formatters.New().AsSARIF().Build().Output(results); err != nil {
+	if err := formatters.New().WithBaseDir(abs).AsSARIF().Build().Output(results.Absolute(abs)); err != nil {
 		panic(err)
 	}
 }
