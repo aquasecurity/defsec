@@ -16,6 +16,7 @@ type ConfigurableTerraformScanner interface {
 	SetForceAllDirs(bool)
 	AddExecutorOptions(options ...executor.Option)
 	AddParserOptions(options ...options.ParserOption)
+	SetEmbeddedLibrariesEnabled(enabled bool)
 }
 
 func ScannerWithTFVarsPaths(paths ...string) options.ScannerOption {
@@ -191,6 +192,14 @@ func ScannerWithRegoOnly(regoOnly bool) options.ScannerOption {
 	return func(s options.ConfigurableScanner) {
 		if tf, ok := s.(ConfigurableTerraformScanner); ok {
 			tf.AddExecutorOptions(executor.OptionWithRegoOnly(regoOnly))
+		}
+	}
+}
+
+func ScannerWithEmbeddedLibraries(embedded bool) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.SetEmbeddedLibrariesEnabled(embedded)
 		}
 	}
 }
