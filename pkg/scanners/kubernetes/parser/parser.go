@@ -3,6 +3,7 @@ package parser
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/fs"
@@ -97,6 +98,18 @@ func (p *Parser) parse(r io.Reader) ([]interface{}, error) {
 	contents, err := ioutil.ReadAll(r)
 	if err != nil {
 		return nil, err
+	}
+
+	if len(contents) == 0 {
+		return nil, nil
+	}
+
+	if strings.TrimSpace(string(contents))[0] == '{' {
+		var target interface{}
+		if err := json.Unmarshal(contents, &target); err != nil {
+			return nil, err
+		}
+		return []interface{}{target}, nil
 	}
 
 	var results []interface{}
