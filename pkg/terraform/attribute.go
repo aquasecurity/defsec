@@ -763,6 +763,7 @@ func (a *Attribute) AllReferences(blocks ...*Block) []*Reference {
 	return refs
 }
 
+// nolint
 func (a *Attribute) referencesFromExpression(expression hcl.Expression) []*Reference {
 	var refs []*Reference
 	switch t := expression.(type) {
