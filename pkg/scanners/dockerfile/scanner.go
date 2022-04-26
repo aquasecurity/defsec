@@ -34,6 +34,10 @@ type Scanner struct {
 	sync.Mutex
 }
 
+func (s *Scanner) Name() string {
+	return "Dockerfile"
+}
+
 func (s *Scanner) SetPolicyReaders(readers []io.Reader) {
 	s.policyReaders = readers
 }

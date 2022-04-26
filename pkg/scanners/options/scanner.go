@@ -61,3 +61,9 @@ func ScannerWithPolicyNamespaces(namespaces ...string) ScannerOption {
 		s.SetPolicyNamespaces(namespaces...)
 	}
 }
+
+func ScannerWithSkipRequiredCheck(skip bool) ScannerOption {
+	return func(s ConfigurableScanner) {
+		s.SetSkipRequiredCheck(skip)
+	}
+}
