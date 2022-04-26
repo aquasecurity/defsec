@@ -26,7 +26,7 @@ func (a *adapter) adaptFunctions(modules terraform.Modules) []lambda.Function {
 	var functions []lambda.Function
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("aws_lambda_function") {
-			functions = append(functions, a.adaptFunction(resource, modules))
+			functions = append(functions, a.adaptFunction(resource, modules, a.permissionIDs))
 		}
 	}
 
@@ -50,11 +50,21 @@ func (a *adapter) adaptFunctions(modules terraform.Modules) []lambda.Function {
 	return functions
 }
 
-func (a *adapter) adaptFunction(function *terraform.Block, modules terraform.Modules) lambda.Function {
+func (a *adapter) adaptFunction(function *terraform.Block, modules terraform.Modules, orphans terraform.ResourceIDResolutions) lambda.Function {
+	var permissions []lambda.Permission
+	for _, module := range modules {
+		for _, p := range module.GetResourcesByType("aws_lambda_permission") {
+			if referencedBlock, err := module.GetReferencedBlock(p.GetAttribute("function_name"), p); err == nil && referencedBlock == function {
+				permissions = append(permissions, a.adaptPermission(p))
+				delete(orphans, p.ID())
+			}
+		}
+	}
+
 	return lambda.Function{
 		Metadata:    function.GetMetadata(),
 		Tracing:     a.adaptTracing(function),
-		Permissions: a.adaptPermissions(modules),
+		Permissions: permissions,
 	}
 }
 
@@ -72,20 +82,17 @@ func (a *adapter) adaptTracing(function *terraform.Block) lambda.Tracing {
 	}
 }
 
-func (a *adapter) adaptPermissions(modules terraform.Modules) []lambda.Permission {
-	var permissions []lambda.Permission
-	for _, module := range modules {
-		for _, p := range module.GetResourcesByType("aws_lambda_permission") {
-			permissions = append(permissions, a.adaptPermission(p))
-		}
-	}
-	return permissions
-}
-
 func (a *adapter) adaptPermission(permission *terraform.Block) lambda.Permission {
+	sourceARNAttr := permission.GetAttribute("source_arn")
+	sourceARN := sourceARNAttr.AsStringValueOrDefault("", permission)
+
+	if len(sourceARNAttr.AllReferences()) > 0 {
+		sourceARN = types.String(sourceARNAttr.AllReferences()[0].NameLabel(), sourceARNAttr.GetMetadata())
+	}
+
 	return lambda.Permission{
 		Metadata:  permission.GetMetadata(),
 		Principal: permission.GetAttribute("principal").AsStringValueOrDefault("", permission),
-		SourceARN: permission.GetAttribute("source_arn").AsStringValueOrDefault("", permission),
+		SourceARN: sourceARN,
 	}
 }
