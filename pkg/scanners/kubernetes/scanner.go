@@ -78,6 +78,10 @@ func NewScanner(opts ...options.ScannerOption) *Scanner {
 	return s
 }
 
+func (s *Scanner) Name() string {
+	return "Kubernetes"
+}
+
 func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	s.Lock()
 	defer s.Unlock()

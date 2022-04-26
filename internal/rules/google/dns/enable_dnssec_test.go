@@ -20,11 +20,12 @@ func TestCheckEnableDnssec(t *testing.T) {
 		expected bool
 	}{
 		{
-			name: "DNSSec disabled",
+			name: "DNSSec disabled and required when visibility explicitly public",
 			input: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata:   types.NewTestMetadata(),
+						Visibility: types.String("public", types.NewTestMetadata()),
 						DNSSec: dns.DNSSec{
 							Metadata: types.NewTestMetadata(),
 							Enabled:  types.Bool(false, types.NewTestMetadata()),
@@ -39,7 +40,24 @@ func TestCheckEnableDnssec(t *testing.T) {
 			input: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata:   types.NewTestMetadata(),
+						Visibility: types.String("public", types.NewTestMetadata()),
+						DNSSec: dns.DNSSec{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "DNSSec not required when private",
+			input: dns.DNS{
+				ManagedZones: []dns.ManagedZone{
+					{
+						Metadata:   types.NewTestMetadata(),
+						Visibility: types.String("private", types.NewTestMetadata()),
 						DNSSec: dns.DNSSec{
 							Metadata: types.NewTestMetadata(),
 							Enabled:  types.Bool(true, types.NewTestMetadata()),
