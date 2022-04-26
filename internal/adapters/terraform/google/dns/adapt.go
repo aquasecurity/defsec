@@ -29,7 +29,8 @@ func adaptManagedZones(modules terraform.Modules) []dns.ManagedZone {
 func adaptManagedZone(resource *terraform.Block) dns.ManagedZone {
 
 	zone := dns.ManagedZone{
-		Metadata: resource.GetMetadata(),
+		Metadata:   resource.GetMetadata(),
+		Visibility: types.StringDefault("public", resource.GetMetadata()),
 		DNSSec: dns.DNSSec{
 			Metadata: resource.GetMetadata(),
 			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
@@ -45,6 +46,10 @@ func adaptManagedZone(resource *terraform.Block) dns.ManagedZone {
 				},
 			},
 		},
+	}
+
+	if resource.HasChild("visibility") {
+		zone.Visibility = resource.GetAttribute("visibility").AsStringValueOrDefault("public", resource)
 	}
 
 	if resource.HasChild("dnssec_config") {
