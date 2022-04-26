@@ -24,6 +24,11 @@ func anonymousToRego(inputValue reflect.Value) interface{} {
 		inputValue = inputValue.Elem()
 	}
 
+	if inputValue.Type().Implements(converterInterface) {
+		returns := inputValue.MethodByName("ToRego").Call(nil)
+		return returns[0].Interface()
+	}
+
 	switch kind := inputValue.Type().Kind(); kind {
 	case reflect.Struct:
 		return StructToRego(inputValue)

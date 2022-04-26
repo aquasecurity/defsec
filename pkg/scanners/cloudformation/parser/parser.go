@@ -2,7 +2,6 @@ package parser
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"io/fs"
@@ -10,29 +9,35 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/internal/debug"
+	"github.com/aquasecurity/defsec/pkg/detection"
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"github.com/liamg/jfather"
 	"gopkg.in/yaml.v3"
 )
 
+var _ options.ConfigurableParser = (*Parser)(nil)
+
 type Parser struct {
-	parameters  map[string]Parameter
-	debugWriter io.Writer
+	debug        debug.Logger
+	skipRequired bool
 }
 
-func New(options ...Option) *Parser {
+func (p *Parser) SetDebugWriter(writer io.Writer) {
+	p.debug = debug.New(writer, "parse:cloudformation")
+}
+
+func (p *Parser) SetSkipRequiredCheck(b bool) {
+	p.skipRequired = b
+}
+
+func New(options ...options.ParserOption) *Parser {
 	p := &Parser{}
 	for _, option := range options {
 		option(p)
 	}
 	return p
-}
-
-func (p *Parser) debug(format string, args ...interface{}) {
-	if p.debugWriter == nil {
-		return
-	}
-	prefix := "[debug:parse] "
-	_, _ = p.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
 func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) (FileContexts, error) {
@@ -51,7 +56,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) (FileCon
 		}
 
 		if !p.Required(target, path) {
-			p.debug("not a CloudFormation file, skipping %s", path)
+			p.debug.Log("not a CloudFormation file, skipping %s", path)
 			return nil
 		}
 
@@ -68,16 +73,8 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) (FileCon
 }
 
 func (p *Parser) Required(fs fs.FS, path string) bool {
-
-	var unmarshalFunc func([]byte, interface{}) error
-
-	switch strings.ToLower(filepath.Ext(path)) {
-	case ".yaml", ".yml":
-		unmarshalFunc = yaml.Unmarshal
-	case ".json":
-		unmarshalFunc = json.Unmarshal
-	default:
-		return false
+	if p.skipRequired {
+		return true
 	}
 
 	f, err := fs.Open(filepath.ToSlash(path))
@@ -86,18 +83,7 @@ func (p *Parser) Required(fs fs.FS, path string) bool {
 	}
 	defer func() { _ = f.Close() }()
 
-	data, err := ioutil.ReadAll(f)
-	if err != nil {
-		return false
-	}
-
-	contents := make(map[string]interface{})
-	if err := unmarshalFunc(data, &contents); err != nil {
-		p.debug("file '%s' is not valid: %s", path, err)
-		return false
-	}
-	_, ok := contents["Resources"]
-	return ok
+	return detection.IsType(path, f, detection.FileTypeCloudFormation)
 }
 
 func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (context *FileContext, err error) {
@@ -152,16 +138,10 @@ func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (context 
 	context.SourceFormat = sourceFmt
 	context.filepath = path
 
-	p.debug("Context loaded from source %s", path)
+	p.debug.Log("Context loaded from source %s", path)
 
 	for name, r := range context.Resources {
 		r.ConfigureResource(name, path, context)
-	}
-
-	if p.parameters != nil {
-		for name, passedParameter := range p.parameters {
-			context.Parameters[name].UpdateDefault(passedParameter.Default())
-		}
 	}
 
 	return context, nil

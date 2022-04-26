@@ -1,26 +1,47 @@
 package parser
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
 	"io/fs"
+	"io/ioutil"
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/internal/debug"
+	"github.com/aquasecurity/defsec/pkg/detection"
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"gopkg.in/yaml.v3"
 )
 
-type Parser struct{}
+var _ options.ConfigurableParser = (*Parser)(nil)
 
-// New creates a new K8s parser
-func New() *Parser {
-	return &Parser{}
+type Parser struct {
+	debug        debug.Logger
+	skipRequired bool
 }
 
-func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[string]interface{}, error) {
+func (p *Parser) SetDebugWriter(writer io.Writer) {
+	p.debug = debug.New(writer, "parse:kubernetes")
+}
 
-	files := make(map[string]interface{})
+func (p *Parser) SetSkipRequiredCheck(b bool) {
+	p.skipRequired = b
+}
+
+// New creates a new K8s parser
+func New(options ...options.ParserOption) *Parser {
+	p := &Parser{}
+	for _, option := range options {
+		option(p)
+	}
+	return p
+}
+
+func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[string][]interface{}, error) {
+	files := make(map[string][]interface{})
 	if err := fs.WalkDir(target, filepath.ToSlash(path), func(path string, entry fs.DirEntry, err error) error {
 		select {
 		case <-ctx.Done():
@@ -33,12 +54,12 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[st
 		if entry.IsDir() {
 			return nil
 		}
-		if !p.required(ctx, target, path) {
+		if !p.required(target, path) {
 			return nil
 		}
 		parsed, err := p.ParseFile(ctx, target, path)
 		if err != nil {
-			// TODO add debug for parse errors
+			p.debug.Log("Parse error in '%s': %s", path, err)
 			return nil
 		}
 		files[path] = parsed
@@ -49,8 +70,8 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[st
 	return files, nil
 }
 
-// ParseFile parses Dockerfile content from the provided filesystem path.
-func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (interface{}, error) {
+// ParseFile parses Kubernetes manifest from the provided filesystem path.
+func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) ([]interface{}, error) {
 	f, err := fs.Open(filepath.ToSlash(path))
 	if err != nil {
 		return nil, err
@@ -59,33 +80,40 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (interface{
 	return p.parse(f)
 }
 
-func (p *Parser) required(ctx context.Context, fs fs.FS, path string) bool {
-	ext := filepath.Ext(path)
-	if !strings.EqualFold(ext, ".yaml") && !strings.EqualFold(ext, ".yml") {
-		return false
+func (p *Parser) required(fs fs.FS, path string) bool {
+	if p.skipRequired {
+		return true
 	}
-	parsed, err := p.ParseFile(ctx, fs, path)
+	f, err := fs.Open(filepath.ToSlash(path))
 	if err != nil {
-		// TODO: debug
 		return false
 	}
-	if msi, ok := parsed.(map[string]interface{}); ok {
-		match := true
-		for _, expected := range []string{"apiVersion", "kind", "metadata", "spec"} {
-			if _, ok := msi[expected]; !ok {
-				match = false
-				break
-			}
-		}
-		return match
-	}
-	return false
+	defer func() { _ = f.Close() }()
+	return detection.IsType(path, f, detection.FileTypeKubernetes)
 }
 
-func (p *Parser) parse(r io.Reader) (interface{}, error) {
-	var v interface{}
-	if err := yaml.NewDecoder(r).Decode(&v); err != nil {
-		return nil, fmt.Errorf("unmarshal yaml: %w", err)
+func (p *Parser) parse(r io.Reader) ([]interface{}, error) {
+
+	contents, err := ioutil.ReadAll(r)
+	if err != nil {
+		return nil, err
 	}
-	return v, nil
+
+	var results []interface{}
+
+	marker := "\n---\n"
+	altMarker := "\r\n---\r\n"
+	if bytes.Contains(contents, []byte(altMarker)) {
+		marker = altMarker
+	}
+
+	for _, partial := range strings.Split(string(contents), marker) {
+		var result interface{}
+		if err := yaml.Unmarshal([]byte(partial), &result); err != nil {
+			return nil, fmt.Errorf("unmarshal yaml: %w", err)
+		}
+		results = append(results, result)
+	}
+
+	return results, nil
 }

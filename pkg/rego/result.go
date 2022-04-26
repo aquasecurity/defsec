@@ -18,13 +18,14 @@ type regoResult struct {
 	Message   string
 	Explicit  bool
 	Managed   bool
+	FSKey     string
 }
 
 func (r regoResult) GetMetadata() types.Metadata {
 	if !r.Managed {
 		return types.NewUnmanagedMetadata()
 	}
-	rng := types.NewRange(r.Filepath, r.StartLine, r.EndLine, "", nil)
+	rng := types.NewRangeWithFSKey(r.Filepath, r.StartLine, r.EndLine, "", r.FSKey)
 	ref := types.NewNamedReference(rng.String())
 	if r.Explicit {
 		return types.NewExplicitMetadata(rng, ref)
@@ -70,6 +71,9 @@ func parseCause(cause map[string]interface{}) regoResult {
 	if filepath, ok := cause["filepath"]; ok {
 		result.Filepath = fmt.Sprintf("%s", filepath)
 	}
+	if msg, ok := cause["fskey"]; ok {
+		result.FSKey = fmt.Sprintf("%s", msg)
+	}
 	if start, ok := cause["startline"]; ok {
 		result.StartLine = parseLineNumber(start)
 	}
@@ -95,7 +99,7 @@ func parseLineNumber(raw interface{}) int {
 	return n
 }
 
-func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace string, rule string) scan.Results {
+func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace string, rule string, traces []string) scan.Results {
 	var results scan.Results
 	for _, result := range set {
 		for _, expression := range result.Expressions {
@@ -108,7 +112,7 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace 
 				if regoResult.Message == "" {
 					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
 				}
-				results.AddRego(regoResult.Message, namespace, rule, regoResult)
+				results.AddRego(regoResult.Message, namespace, rule, traces, regoResult)
 				continue
 			}
 
@@ -120,7 +124,7 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace 
 				if regoResult.Message == "" {
 					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
 				}
-				results.AddRego(regoResult.Message, namespace, rule, regoResult)
+				results.AddRego(regoResult.Message, namespace, rule, traces, regoResult)
 			}
 		}
 	}

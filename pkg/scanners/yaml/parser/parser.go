@@ -1,24 +1,47 @@
 package parser
 
 import (
+	"bytes"
 	"context"
+	"io"
 	"io/fs"
+	"io/ioutil"
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/internal/debug"
+	"github.com/aquasecurity/defsec/pkg/detection"
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"gopkg.in/yaml.v3"
 )
 
-type Parser struct{}
+var _ options.ConfigurableParser = (*Parser)(nil)
 
-// New creates a new parser
-func New() *Parser {
-	return &Parser{}
+type Parser struct {
+	debug        debug.Logger
+	skipRequired bool
 }
 
-func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[string]interface{}, error) {
+func (p *Parser) SetDebugWriter(writer io.Writer) {
+	p.debug = debug.New(writer, "parse:yaml")
+}
 
-	files := make(map[string]interface{})
+func (p *Parser) SetSkipRequiredCheck(b bool) {
+	p.skipRequired = b
+}
+
+// New creates a new parser
+func New(opts ...options.ParserOption) *Parser {
+	p := &Parser{}
+	for _, opt := range opts {
+		opt(p)
+	}
+	return p
+}
+
+func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[string][]interface{}, error) {
+
+	files := make(map[string][]interface{})
 	if err := fs.WalkDir(target, filepath.ToSlash(path), func(path string, entry fs.DirEntry, err error) error {
 		select {
 		case <-ctx.Done():
@@ -36,7 +59,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[st
 		}
 		df, err := p.ParseFile(ctx, target, path)
 		if err != nil {
-			// TODO add debug for parse errors
+			p.debug.Log("Parse error in '%s': %s", path, err)
 			return nil
 		}
 		files[path] = df
@@ -47,21 +70,41 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[st
 	return files, nil
 }
 
-// ParseFile parses Dockerfile content from the provided filesystem path.
-func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (interface{}, error) {
+// ParseFile parses yaml content from the provided filesystem path.
+func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) ([]interface{}, error) {
 	f, err := fs.Open(filepath.ToSlash(path))
 	if err != nil {
 		return nil, err
 	}
 	defer func() { _ = f.Close() }()
-	var target interface{}
-	if err := yaml.NewDecoder(f).Decode(&target); err != nil {
+
+	contents, err := ioutil.ReadAll(f)
+	if err != nil {
 		return nil, err
 	}
-	return target, nil
+
+	var results []interface{}
+
+	marker := "\n---\n"
+	altMarker := "\r\n---\r\n"
+	if bytes.Contains(contents, []byte(altMarker)) {
+		marker = altMarker
+	}
+
+	for _, partial := range strings.Split(string(contents), marker) {
+		var target interface{}
+		if err := yaml.Unmarshal([]byte(partial), &target); err != nil {
+			return nil, err
+		}
+		results = append(results, target)
+	}
+
+	return results, nil
 }
 
 func (p *Parser) Required(path string) bool {
-	ext := filepath.Ext(filepath.Base(path))
-	return strings.EqualFold(ext, ".yaml") || strings.EqualFold(ext, ".yml")
+	if p.skipRequired {
+		return true
+	}
+	return detection.IsType(path, nil, detection.FileTypeYAML)
 }

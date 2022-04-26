@@ -7,20 +7,37 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/internal/debug"
+	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/pkg/providers/dockerfile"
-
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"github.com/moby/buildkit/frontend/dockerfile/instructions"
 	"github.com/moby/buildkit/frontend/dockerfile/parser"
 	"golang.org/x/xerrors"
 )
 
-type Parser struct{}
+var _ options.ConfigurableParser = (*Parser)(nil)
 
-const requiredFile = "Dockerfile"
+type Parser struct {
+	debug        debug.Logger
+	skipRequired bool
+}
+
+func (p *Parser) SetDebugWriter(writer io.Writer) {
+	p.debug = debug.New(writer, "parse:dockerfile")
+}
+
+func (p *Parser) SetSkipRequiredCheck(b bool) {
+	p.skipRequired = b
+}
 
 // New creates a new Dockerfile parser
-func New() *Parser {
-	return &Parser{}
+func New(options ...options.ParserOption) *Parser {
+	p := &Parser{}
+	for _, option := range options {
+		option(p)
+	}
+	return p
 }
 
 func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) (map[string]*dockerfile.Dockerfile, error) {
@@ -65,15 +82,10 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) (*dockerfil
 }
 
 func (p *Parser) Required(path string) bool {
-	base := filepath.Base(path)
-	ext := filepath.Ext(base)
-	if strings.EqualFold(base, requiredFile+ext) {
+	if p.skipRequired {
 		return true
 	}
-	if strings.EqualFold(ext, "."+requiredFile) {
-		return true
-	}
-	return false
+	return detection.IsType(path, nil, detection.FileTypeDockerfile)
 }
 
 func (p *Parser) parse(path string, r io.Reader) (*dockerfile.Dockerfile, error) {

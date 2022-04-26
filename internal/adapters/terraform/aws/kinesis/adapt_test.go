@@ -47,7 +47,7 @@ func Test_adaptStream(t *testing.T) {
 				Metadata: types.NewTestMetadata(),
 				Encryption: kinesis.Encryption{
 					Metadata: types.NewTestMetadata(),
-					Type:     types.String("", types.NewTestMetadata()),
+					Type:     types.String("NONE", types.NewTestMetadata()),
 					KMSKeyID: types.String("", types.NewTestMetadata()),
 				},
 			},

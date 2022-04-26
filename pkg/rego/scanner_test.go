@@ -1,9 +1,12 @@
 package rego
 
 import (
+	"bytes"
 	"context"
 	"os"
 	"testing"
+
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
 
@@ -44,6 +47,43 @@ deny {
 	assert.Equal(t, 1, len(results.GetFailed()))
 	assert.Equal(t, 0, len(results.GetPassed()))
 	assert.Equal(t, 0, len(results.GetIgnored()))
+
+	assert.Equal(t, "/evil.lol", results.GetFailed()[0].Metadata().Range().GetFilename())
+	assert.False(t, results.GetFailed()[0].IsWarning())
+}
+
+func Test_RegoScanning_Warn(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `
+package defsec.test
+
+warn {
+    input.evil
+}
+`,
+	})
+
+	scanner := NewScanner()
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{
+		Path: "/evil.lol",
+		Contents: map[string]interface{}{
+			"evil": true,
+		},
+		Type: "???",
+	})
+	require.NoError(t, err)
+
+	require.Equal(t, 1, len(results.GetFailed()))
+	require.Equal(t, 0, len(results.GetPassed()))
+	require.Equal(t, 0, len(results.GetIgnored()))
+
+	assert.True(t, results.GetFailed()[0].IsWarning())
 }
 
 func Test_RegoScanning_Allow(t *testing.T) {
@@ -73,8 +113,10 @@ deny {
 	require.NoError(t, err)
 
 	assert.Equal(t, 0, len(results.GetFailed()))
-	assert.Equal(t, 1, len(results.GetPassed()))
+	require.Equal(t, 1, len(results.GetPassed()))
 	assert.Equal(t, 0, len(results.GetIgnored()))
+
+	assert.Equal(t, "/evil.lol", results.GetPassed()[0].Metadata().Range().GetFilename())
 }
 
 func Test_RegoScanning_Namespace_Exception(t *testing.T) {
@@ -444,4 +486,109 @@ deny {
 	assert.Equal(t, 0, len(results.GetFailed()))
 	assert.Equal(t, 0, len(results.GetPassed()))
 	assert.Equal(t, 0, len(results.GetIgnored()))
+}
+
+func Test_RegoScanning_NoTracingByDefault(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `
+package defsec.test
+
+deny {
+    input.evil
+}
+`,
+	})
+
+	scanner := NewScanner()
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{
+		Path: "/evil.lol",
+		Contents: map[string]interface{}{
+			"evil": true,
+		},
+		Type: "???",
+	})
+	require.NoError(t, err)
+
+	assert.Equal(t, 1, len(results.GetFailed()))
+	assert.Equal(t, 0, len(results.GetPassed()))
+	assert.Equal(t, 0, len(results.GetIgnored()))
+
+	assert.Len(t, results.GetFailed()[0].Traces(), 0)
+}
+
+func Test_RegoScanning_GlobalTracingEnabled(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `
+package defsec.test
+
+deny {
+    input.evil
+}
+`,
+	})
+
+	traceBuffer := bytes.NewBuffer([]byte{})
+
+	scanner := NewScanner(options.ScannerWithTrace(traceBuffer))
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{
+		Path: "/evil.lol",
+		Contents: map[string]interface{}{
+			"evil": true,
+		},
+		Type: "???",
+	})
+	require.NoError(t, err)
+
+	assert.Equal(t, 1, len(results.GetFailed()))
+	assert.Equal(t, 0, len(results.GetPassed()))
+	assert.Equal(t, 0, len(results.GetIgnored()))
+
+	assert.Len(t, results.GetFailed()[0].Traces(), 0)
+	assert.Greater(t, len(traceBuffer.Bytes()), 0)
+}
+
+func Test_RegoScanning_PerResultTracingEnabled(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `
+package defsec.test
+
+deny {
+    input.evil
+}
+`,
+	})
+
+	scanner := NewScanner(options.ScannerWithPerResultTracing(true))
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{
+		Path: "/evil.lol",
+		Contents: map[string]interface{}{
+			"evil": true,
+		},
+		Type: "???",
+	})
+	require.NoError(t, err)
+
+	assert.Equal(t, 1, len(results.GetFailed()))
+	assert.Equal(t, 0, len(results.GetPassed()))
+	assert.Equal(t, 0, len(results.GetIgnored()))
+
+	assert.Greater(t, len(results.GetFailed()[0].Traces()), 0)
 }

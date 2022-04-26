@@ -17,7 +17,7 @@ type wrappedDocument struct {
 	Document iamgo.Document
 }
 
-func parsePolicyFromAttr(attr *terraform.Attribute, owner *terraform.Block, modules terraform.Modules) (*iam.Document, error) {
+func ParsePolicyFromAttr(attr *terraform.Attribute, owner *terraform.Block, modules terraform.Modules) (*iam.Document, error) {
 
 	documents := findAllPolicies(modules, owner, attr)
 	if len(documents) > 0 {

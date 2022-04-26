@@ -17,17 +17,16 @@ func (a *adapter) adaptBuckets() []s3.Bucket {
 			Metadata:          block.GetMetadata(),
 			Name:              block.GetAttribute("bucket").AsStringValueOrDefault("", block),
 			PublicAccessBlock: nil,
-			BucketPolicy: s3.BucketPolicy{
-				Metadata: block.GetMetadata(),
-			},
-			Encryption: getEncryption(block, a),
-			Versioning: getVersioning(block, a),
-			Logging:    getLogging(block, a),
-			ACL:        getBucketAcl(block, a),
+			BucketPolicies:    nil,
+			Encryption:        getEncryption(block, a),
+			Versioning:        getVersioning(block, a),
+			Logging:           getLogging(block, a),
+			ACL:               getBucketAcl(block, a),
 		}
 		a.bucketMap[block.ID()] = bucket
 	}
 
+	a.adaptBucketPolicies()
 	a.adaptPublicAccessBlocks()
 
 	var buckets []s3.Bucket

@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"github.com/aquasecurity/defsec/pkg/formatters"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/universal"
@@ -19,11 +21,11 @@ func main() {
 		panic(err)
 	}
 	fsys := extrafs.OSDir(abs)
-	results, err := universal.New(universal.OptionWithDebug(os.Stderr)).ScanFS(context.TODO(), fsys, ".")
+	results, err := universal.New(options.ScannerWithDebug(os.Stderr)).ScanFS(context.TODO(), fsys, ".")
 	if err != nil {
 		panic(err)
 	}
-	if err := formatters.New().AsSARIF().Build().Output(results); err != nil {
+	if err := formatters.New().WithBaseDir(abs).AsSARIF().Build().Output(results.Absolute(abs)); err != nil {
 		panic(err)
 	}
 }

@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/json"
 	"strings"
 )
 
@@ -55,6 +56,10 @@ type stringValue struct {
 
 type stringCheckFunc func(string, string) bool
 
+func (v *stringValue) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.value)
+}
+
 func (s *stringValue) ToRego() interface{} {
 	return map[string]interface{}{
 		"filepath":  s.metadata.Range().GetFilename(),
@@ -63,6 +68,7 @@ func (s *stringValue) ToRego() interface{} {
 		"managed":   s.metadata.isManaged,
 		"explicit":  s.metadata.isExplicit,
 		"value":     s.Value(),
+		"fskey":     CreateFSKey(s.metadata.Range().GetFS()),
 	}
 }
 

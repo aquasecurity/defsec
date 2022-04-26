@@ -2,15 +2,17 @@ package terraform
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"path/filepath"
 	"sort"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
+	"github.com/aquasecurity/defsec/internal/debug"
 
 	"github.com/aquasecurity/defsec/pkg/rego"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/executor"
@@ -25,20 +27,65 @@ import (
 )
 
 var _ scanners.Scanner = (*Scanner)(nil)
+var _ options.ConfigurableScanner = (*Scanner)(nil)
+var _ ConfigurableTerraformScanner = (*Scanner)(nil)
 
 type Scanner struct {
-	parserOpt        []parser.Option
-	executorOpt      []executor.Option
-	dirs             map[string]struct{}
-	forceAllDirs     bool
-	debugWriter      io.Writer
-	traceWriter      io.Writer
-	policyDirs       []string
-	dataDirs         []string
-	policyNamespaces []string
-	regoScanner      *rego.Scanner
-	execLock         sync.RWMutex
+	options       []options.ScannerOption
+	parserOpt     []options.ParserOption
+	executorOpt   []executor.Option
+	dirs          map[string]struct{}
+	forceAllDirs  bool
+	policyDirs    []string
+	policyReaders []io.Reader
+	regoScanner   *rego.Scanner
+	execLock      sync.RWMutex
+	debug         debug.Logger
 	sync.Mutex
+}
+
+func (s *Scanner) Name() string {
+	return "Terraform"
+}
+
+func (s *Scanner) SetForceAllDirs(b bool) {
+	s.forceAllDirs = b
+}
+
+func (s *Scanner) AddParserOptions(options ...options.ParserOption) {
+	s.parserOpt = append(s.parserOpt, options...)
+}
+
+func (s *Scanner) AddExecutorOptions(options ...executor.Option) {
+	s.executorOpt = append(s.executorOpt, options...)
+}
+
+func (s *Scanner) SetPolicyReaders(readers []io.Reader) {
+	s.policyReaders = readers
+}
+
+func (s *Scanner) SetSkipRequiredCheck(skip bool) {
+	s.parserOpt = append(s.parserOpt, options.ParserWithSkipRequiredCheck(skip))
+}
+
+func (s *Scanner) SetDebugWriter(writer io.Writer) {
+	s.debug = debug.New(writer, "scan:terraform")
+}
+
+func (s *Scanner) SetTraceWriter(_ io.Writer) {
+}
+
+func (s *Scanner) SetPerResultTracingEnabled(_ bool) {
+}
+
+func (s *Scanner) SetPolicyDirs(dirs ...string) {
+	s.policyDirs = dirs
+}
+
+func (s *Scanner) SetDataDirs(_ ...string) {
+}
+
+func (s *Scanner) SetPolicyNamespaces(_ ...string) {
 }
 
 type Metrics struct {
@@ -49,24 +96,15 @@ type Metrics struct {
 	}
 }
 
-func New(options ...Option) *Scanner {
+func New(options ...options.ScannerOption) *Scanner {
 	s := &Scanner{
-		dirs:        make(map[string]struct{}),
-		debugWriter: ioutil.Discard,
+		dirs:    make(map[string]struct{}),
+		options: options,
 	}
 	for _, opt := range options {
 		opt(s)
 	}
-
 	return s
-}
-
-func (s *Scanner) debug(format string, args ...interface{}) {
-	if s.debugWriter == nil {
-		return
-	}
-	prefix := "[debug:scan:terraform] "
-	_, _ = s.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
 func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (scan.Results, error) {
@@ -80,15 +118,8 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	if s.regoScanner != nil {
 		return s.regoScanner, nil
 	}
-	regoOpts := []rego.Option{
-		rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...),
-		rego.OptionWithDataDirs(s.dataDirs...),
-	}
-	if s.traceWriter != nil {
-		regoOpts = append(regoOpts, rego.OptionWithTrace(s.traceWriter))
-	}
-	regoScanner := rego.NewScanner(regoOpts...)
-	if err := regoScanner.LoadPolicies(true, srcFS, s.policyDirs, nil); err != nil {
+	regoScanner := rego.NewScanner(s.options...)
+	if err := regoScanner.LoadPolicies(true, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner
@@ -99,14 +130,14 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 
 	var metrics Metrics
 
-	s.debug("scanning [%s] at %s", target, dir)
+	s.debug.Log("scanning [%s] at %s", target, dir)
 
 	// find directories which directly contain tf files (and have no parent containing tf files)
 	rootDirs := s.findRootModules(target, dir)
 	sort.Strings(rootDirs)
 
 	if len(rootDirs) == 0 {
-		s.debug("no root modules found")
+		s.debug.Log("no root modules found")
 		return nil, metrics, nil
 	}
 
@@ -124,7 +155,7 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 	// parse all root module directories
 	for _, dir := range rootDirs {
 
-		s.debug("Scanning root module '%s'...", dir)
+		s.debug.Log("Scanning root module '%s'...", dir)
 
 		p := parser.New(target, "", s.parserOpt...)
 		s.execLock.RLock()
@@ -150,6 +181,24 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 		results, execMetrics, err := e.Execute(modules)
 		if err != nil {
 			return nil, metrics, err
+		}
+
+		fsMap := p.GetFilesystemMap()
+		for i, result := range results {
+			if result.Metadata().Range().GetFS() != nil {
+				continue
+			}
+			key := result.Metadata().Range().GetFSKey()
+			if key == "" {
+				continue
+			}
+			if filesystem, ok := fsMap[key]; ok {
+				override := scan.Results{
+					result,
+				}
+				override.SetSourceAndFilesystem(result.Range().GetSourcePrefix(), filesystem)
+				results[i] = override[0]
+			}
 		}
 
 		metrics.Executor.Counts.Passed += execMetrics.Counts.Passed
@@ -221,7 +270,7 @@ func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
 			if symFS, ok := target.(extrafs.ReadLinkFS); ok {
 				realPath, err = symFS.ResolveSymlink(realPath)
 				if err != nil {
-					s.debug("failed to resolve symlink '%s': %s", file.Name(), err)
+					s.debug.Log("failed to resolve symlink '%s': %s", file.Name(), err)
 					continue
 				}
 			}
@@ -249,7 +298,7 @@ func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
 func (s *Scanner) isRootModule(target fs.FS, dir string) bool {
 	files, err := fs.ReadDir(target, filepath.ToSlash(dir))
 	if err != nil {
-		s.debug("failed to read dir '%s' from filesystem [%s]: %s", dir, target, err)
+		s.debug.Log("failed to read dir '%s' from filesystem [%s]: %s", dir, target, err)
 		return false
 	}
 	for _, file := range files {

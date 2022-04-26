@@ -5,6 +5,8 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
@@ -35,7 +37,7 @@ func createModulesFromSource(t *testing.T, source string, ext string) terraform.
 }
 
 func scanHCLWithWorkspace(t *testing.T, source string, workspace string) scan.Results {
-	return scanHCL(t, source, tfScanner.OptionWithWorkspaceName(workspace))
+	return scanHCL(t, source, tfScanner.ScannerWithWorkspaceName(workspace))
 }
 
 var terraformScanner *tfScanner.Scanner
@@ -43,7 +45,7 @@ var tfLock sync.RWMutex
 var cloudformationScanner *cfScanner.Scanner
 var cfLock sync.RWMutex
 
-func scanHCL(t *testing.T, source string, options ...tfScanner.Option) scan.Results {
+func scanHCL(t *testing.T, source string, options ...options.ScannerOption) scan.Results {
 
 	fs := testutil.CreateFS(t, map[string]string{
 		"main.tf": source,
@@ -81,7 +83,7 @@ func scanJSON(t *testing.T, source string) scan.Results {
 	return results
 }
 
-func scanCF(t *testing.T, source string, options ...cfScanner.Option) scan.Results {
+func scanCF(t *testing.T, source string, options ...options.ScannerOption) scan.Results {
 
 	fs := testutil.CreateFS(t, map[string]string{
 		"main.yaml": source,

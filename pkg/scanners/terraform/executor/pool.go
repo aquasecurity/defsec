@@ -29,9 +29,10 @@ type Pool struct {
 	rules        []rules3.RegisteredRule
 	ignoreErrors bool
 	rs           *rego.Scanner
+	regoOnly     bool
 }
 
-func NewPool(size int, rules []rules3.RegisteredRule, modules terraform.Modules, state *state.State, ignoreErrors bool, regoScanner *rego.Scanner) *Pool {
+func NewPool(size int, rules []rules3.RegisteredRule, modules terraform.Modules, state *state.State, ignoreErrors bool, regoScanner *rego.Scanner, regoOnly bool) *Pool {
 	return &Pool{
 		size:         size,
 		rules:        rules,
@@ -39,6 +40,7 @@ func NewPool(size int, rules []rules3.RegisteredRule, modules terraform.Modules,
 		modules:      modules,
 		ignoreErrors: ignoreErrors,
 		rs:           regoScanner,
+		regoOnly:     regoOnly,
 	}
 }
 
@@ -61,23 +63,25 @@ func (p *Pool) Run() (scan.Results, error) {
 		}
 	}
 
-	for _, r := range p.rules {
-		if r.Rule().CustomChecks.Terraform != nil && r.Rule().CustomChecks.Terraform.Check != nil {
-			// run local hcl rule
-			for _, module := range p.modules {
-				mod := *module
-				outgoing <- &hclModuleRuleJob{
-					module:       &mod,
+	if !p.regoOnly {
+		for _, r := range p.rules {
+			if r.Rule().CustomChecks.Terraform != nil && r.Rule().CustomChecks.Terraform.Check != nil {
+				// run local hcl rule
+				for _, module := range p.modules {
+					mod := *module
+					outgoing <- &hclModuleRuleJob{
+						module:       &mod,
+						rule:         r,
+						ignoreErrors: p.ignoreErrors,
+					}
+				}
+			} else {
+				// run defsec rule
+				outgoing <- &infraRuleJob{
+					state:        p.state,
 					rule:         r,
 					ignoreErrors: p.ignoreErrors,
 				}
-			}
-		} else {
-			// run defsec rule
-			outgoing <- &infraRuleJob{
-				state:        p.state,
-				rule:         r,
-				ignoreErrors: p.ignoreErrors,
 			}
 		}
 	}

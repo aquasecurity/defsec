@@ -17,6 +17,7 @@ type FlatResult struct {
 	Description     string             `json:"description"`
 	RangeAnnotation string             `json:"-"`
 	Severity        severity.Severity  `json:"severity"`
+	Warning         bool               `json:"warning"`
 	Status          Status             `json:"status"`
 	Resource        string             `json:"resource"`
 	Location        FlatRange          `json:"location"`
@@ -64,6 +65,7 @@ func (r *Result) Flatten() FlatResult {
 		Severity:        r.rule.Severity,
 		Status:          r.status,
 		Resource:        resource,
+		Warning:         r.IsWarning(),
 		Location: FlatRange{
 			Filename:  rng.GetFilename(),
 			StartLine: rng.GetStartLine(),

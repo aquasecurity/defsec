@@ -28,6 +28,8 @@ type Result struct {
 	severityOverride *severity.Severity
 	regoNamespace    string
 	regoRule         string
+	warning          bool
+	traces           []string
 }
 
 func (r Result) RegoNamespace() string {
@@ -43,6 +45,10 @@ func (r Result) Severity() severity.Severity {
 		return *r.severityOverride
 	}
 	return r.Rule().Severity
+}
+
+func (r *Result) IsWarning() bool {
+	return r.warning
 }
 
 func (r *Result) OverrideSeverity(s severity.Severity) {
@@ -93,6 +99,10 @@ func (r Result) Range() types.Range {
 	return r.metadata.Range()
 }
 
+func (r Result) Traces() []string {
+	return r.traces
+}
+
 type Results []Result
 
 type MetadataProvider interface {
@@ -137,11 +147,13 @@ func (r *Results) Add(description string, source MetadataProvider) {
 	*r = append(*r, result)
 }
 
-func (r *Results) AddRego(description string, namespace string, rule string, source MetadataProvider) {
+func (r *Results) AddRego(description string, namespace string, rule string, traces []string, source MetadataProvider) {
 	result := Result{
 		description:   description,
 		regoNamespace: namespace,
 		regoRule:      rule,
+		warning:       rule == "warn" || strings.HasPrefix(rule, "warn_"),
+		traces:        traces,
 	}
 	result.metadata = source.GetMetadata()
 	if result.metadata.IsExplicit() {
@@ -175,37 +187,80 @@ func (r *Results) SetRule(rule Rule) {
 	}
 }
 
-func (r *Results) SetRelativeTo(dir string) {
+func (r *Results) Absolute(fsRoot string) Results {
+
+	if strings.HasSuffix(fsRoot, ":") {
+		fsRoot += "/"
+	}
+
+	var filtered Results
 	for i := range *r {
 		m := (*r)[i].Metadata()
 		if m.IsUnmanaged() || m.Range() == nil {
+			filtered = append(filtered, (*r)[i])
 			continue
 		}
 		rng := m.Range()
-		relative, err := filepath.Rel(dir, rng.GetLocalFilename())
-		if err != nil || strings.Contains(relative, "..") {
+		if rng.GetSourcePrefix() != "" && !strings.HasPrefix(rng.GetSourcePrefix(), ".") {
+			filtered = append(filtered, (*r)[i])
 			continue
 		}
-		filesystem := rng.GetFS()
-		if filesystem == nil {
-			continue
-		}
-		statFS, ok := filesystem.(fs.StatFS)
-		if !ok {
-			continue
-		}
-		if _, err := statFS.Stat(rng.GetLocalFilename()); err != nil {
-			continue
-		}
-		newrng := types.NewRange(relative, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())
+		absolute := filepath.Join(fsRoot, rng.GetLocalFilename())
+		newRange := types.NewRange(absolute, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())
 		switch {
 		case m.IsExplicit():
-			m = types.NewExplicitMetadata(newrng, m.Reference())
+			m = types.NewExplicitMetadata(newRange, m.Reference())
 		default:
-			m = types.NewMetadata(newrng, m.Reference())
+			m = types.NewMetadata(newRange, m.Reference())
 		}
-		(*r)[i].OverrideMetadata(m)
+		result := (*r)[i]
+		result.OverrideMetadata(m)
+		filtered = append(filtered, result)
 	}
+	return filtered
+}
+
+func (r *Results) RelativeTo(fsRoot string, to string) Results {
+
+	absolute := r.Absolute(fsRoot)
+
+	if strings.HasSuffix(fsRoot, ":") {
+		fsRoot += "/"
+	}
+
+	var filtered Results
+	for i := range absolute {
+		m := (absolute)[i].Metadata()
+		if m.IsUnmanaged() || m.Range() == nil {
+			filtered = append(filtered, absolute[i])
+			continue
+		}
+		rng := m.Range()
+		if rng.GetSourcePrefix() != "" && !strings.HasPrefix(rng.GetSourcePrefix(), ".") {
+			filtered = append(filtered, (*r)[i])
+			continue
+		}
+		if !strings.HasPrefix(rng.GetLocalFilename(), strings.TrimSuffix(fsRoot, "/")) {
+			filtered = append(filtered, absolute[i])
+			continue
+		}
+		relative, err := filepath.Rel(to, rng.GetLocalFilename())
+		if err != nil {
+			filtered = append(filtered, absolute[i])
+			continue
+		}
+		newRange := types.NewRange(relative, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())
+		switch {
+		case m.IsExplicit():
+			m = types.NewExplicitMetadata(newRange, m.Reference())
+		default:
+			m = types.NewMetadata(newRange, m.Reference())
+		}
+		result := absolute[i]
+		result.OverrideMetadata(m)
+		filtered = append(filtered, result)
+	}
+	return filtered
 }
 
 func (r *Results) SetSourceAndFilesystem(source string, f fs.FS) {

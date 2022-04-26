@@ -25,7 +25,7 @@ func Test_adaptKey(t *testing.T) {
 			terraform: `
 			resource "aws_kms_key" "example" {
 				enable_key_rotation = true
-				key_usage = SIGN_VERIFY
+				key_usage = "SIGN_VERIFY"
 			}
 `,
 			expected: kms.Key{

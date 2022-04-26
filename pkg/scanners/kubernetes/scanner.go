@@ -2,12 +2,15 @@ package kubernetes
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"io/fs"
 	"io/ioutil"
 	"path/filepath"
 	"sync"
+
+	"github.com/aquasecurity/defsec/internal/debug"
+
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/liamg/memoryfs"
 
@@ -22,34 +25,61 @@ import (
 )
 
 var _ scanners.Scanner = (*Scanner)(nil)
+var _ options.ConfigurableScanner = (*Scanner)(nil)
 
 type Scanner struct {
-	debugWriter      io.Writer
-	traceWriter      io.Writer
-	policyDirs       []string
-	policyReaders    []io.Reader
-	dataDirs         []string
-	policyNamespaces []string
-	regoScanner      *rego.Scanner
+	debug         debug.Logger
+	options       []options.ScannerOption
+	policyDirs    []string
+	policyReaders []io.Reader
+	regoScanner   *rego.Scanner
+	parser        *parser.Parser
+	skipRequired  bool
 	sync.Mutex
 }
 
-func NewScanner(options ...Option) *Scanner {
+func (s *Scanner) SetPolicyReaders(readers []io.Reader) {
+	s.policyReaders = readers
+}
+
+func (s *Scanner) SetSkipRequiredCheck(skip bool) {
+	s.skipRequired = skip
+}
+
+func (s *Scanner) SetDebugWriter(writer io.Writer) {
+	s.debug = debug.New(writer, "scan:kubernetes")
+}
+
+func (s *Scanner) SetTraceWriter(_ io.Writer) {
+}
+
+func (s *Scanner) SetPerResultTracingEnabled(_ bool) {
+}
+
+func (s *Scanner) SetPolicyDirs(dirs ...string) {
+	s.policyDirs = dirs
+}
+
+func (s *Scanner) SetDataDirs(_ ...string) {
+}
+
+func (s *Scanner) SetPolicyNamespaces(_ ...string) {
+
+}
+
+func NewScanner(opts ...options.ScannerOption) *Scanner {
 	s := &Scanner{
-		debugWriter: ioutil.Discard,
+		options: opts,
 	}
-	for _, opt := range options {
+	for _, opt := range opts {
 		opt(s)
 	}
+	s.parser = parser.New(options.ParserWithSkipRequiredCheck(s.skipRequired))
 	return s
 }
 
-func (s *Scanner) debug(format string, args ...interface{}) {
-	if s.debugWriter == nil {
-		return
-	}
-	prefix := "[debug:scan:kubernetes] "
-	_, _ = s.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
+func (s *Scanner) Name() string {
+	return "Kubernetes"
 }
 
 func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
@@ -58,14 +88,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	if s.regoScanner != nil {
 		return s.regoScanner, nil
 	}
-	regoOpts := []rego.Option{
-		rego.OptionWithPolicyNamespaces(true, s.policyNamespaces...),
-		rego.OptionWithDataDirs(s.dataDirs...),
-	}
-	if s.traceWriter != nil {
-		regoOpts = append(regoOpts, rego.OptionWithTrace(s.traceWriter))
-	}
-	regoScanner := rego.NewScanner(regoOpts...)
+	regoScanner := rego.NewScanner(s.options...)
 	if err := regoScanner.LoadPolicies(len(s.policyDirs)+len(s.policyReaders) == 0, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
@@ -90,22 +113,24 @@ func (s *Scanner) ScanReader(ctx context.Context, filename string, reader io.Rea
 
 func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (scan.Results, error) {
 
-	k8sFiles, err := parser.New().ParseFS(ctx, target, dir)
+	k8sFilesets, err := s.parser.ParseFS(ctx, target, dir)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(k8sFiles) == 0 {
+	if len(k8sFilesets) == 0 {
 		return nil, nil
 	}
 
 	var inputs []rego.Input
-	for path, content := range k8sFiles {
-		inputs = append(inputs, rego.Input{
-			Path:     path,
-			Contents: content,
-			Type:     types.SourceKubernetes,
-		})
+	for path, k8sFiles := range k8sFilesets {
+		for _, content := range k8sFiles {
+			inputs = append(inputs, rego.Input{
+				Path:     path,
+				Contents: content,
+				Type:     types.SourceKubernetes,
+			})
+		}
 	}
 
 	regoScanner, err := s.initRegoScanner(target)
@@ -113,7 +138,7 @@ func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (scan.Re
 		return nil, err
 	}
 
-	s.debug("Scanning %d files...", len(inputs))
+	s.debug.Log("Scanning %d files...", len(inputs))
 	results, err := regoScanner.ScanInput(ctx, inputs...)
 	if err != nil {
 		return nil, err

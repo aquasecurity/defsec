@@ -9,5 +9,6 @@ result(msg, cause) = result {
 		"filepath": object.get(metadata, "filepath", ""),
 		"explicit": object.get(metadata, "explicit", false),
 		"managed": object.get(metadata, "managed", true),
+		"fskey": object.get(metadata, "fskey", ""),
 	}
 }
