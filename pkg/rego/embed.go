@@ -19,6 +19,13 @@ func init() {
 		// we should panic as the policies were not embedded properly
 		panic(err)
 	}
+	loadedLibs, err := loadEmbeddedLibraries()
+	if err != nil {
+		panic(err)
+	}
+	for name, policy := range loadedLibs {
+		modules[name] = policy
+	}
 
 	ctx := context.TODO()
 
@@ -47,6 +54,10 @@ func init() {
 
 func loadEmbeddedPolicies() (map[string]*ast.Module, error) {
 	return recurseEmbeddedModules(rules.EmbeddedPolicyFileSystem, ".")
+}
+
+func loadEmbeddedLibraries() (map[string]*ast.Module, error) {
+	return recurseEmbeddedModules(rules.EmbeddedLibraryFileSystem, ".")
 }
 
 func recurseEmbeddedModules(fs embed.FS, dir string) (map[string]*ast.Module, error) {

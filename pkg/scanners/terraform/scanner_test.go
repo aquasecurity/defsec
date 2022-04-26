@@ -443,6 +443,7 @@ deny[res] {
 		options.ScannerWithDebug(debugLog),
 		options.ScannerWithPolicyDirs("rules"),
 		ScannerWithRegoOnly(true),
+		ScannerWithEmbeddedLibraries(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
@@ -513,6 +514,7 @@ deny[res] {
 		options.ScannerWithDebug(debugLog),
 		options.ScannerWithPolicyDirs("rules"),
 		ScannerWithRegoOnly(true),
+		ScannerWithEmbeddedLibraries(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
