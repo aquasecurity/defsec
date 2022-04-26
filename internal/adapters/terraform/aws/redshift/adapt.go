@@ -17,7 +17,7 @@ func adaptClusters(modules terraform.Modules) []redshift.Cluster {
 	var clusters []redshift.Cluster
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("aws_redshift_cluster") {
-			clusters = append(clusters, adaptCluster(resource))
+			clusters = append(clusters, adaptCluster(resource, module))
 		}
 	}
 	return clusters
@@ -33,7 +33,7 @@ func adaptSecurityGroups(modules terraform.Modules) []redshift.SecurityGroup {
 	return securityGroups
 }
 
-func adaptCluster(resource *terraform.Block) redshift.Cluster {
+func adaptCluster(resource *terraform.Block, module *terraform.Module) redshift.Cluster {
 	cluster := redshift.Cluster{
 		Metadata: resource.GetMetadata(),
 		Encryption: redshift.Encryption{
@@ -49,6 +49,11 @@ func adaptCluster(resource *terraform.Block) redshift.Cluster {
 
 	KMSKeyIDAttr := resource.GetAttribute("kms_key_id")
 	cluster.Encryption.KMSKeyID = KMSKeyIDAttr.AsStringValueOrDefault("", resource)
+	if KMSKeyIDAttr.IsResourceBlockReference("aws_kms_key") {
+		if kmsKeyBlock, err := module.GetReferencedBlock(KMSKeyIDAttr, resource); err == nil {
+			cluster.Encryption.KMSKeyID = types.String(kmsKeyBlock.FullName(), kmsKeyBlock.GetMetadata())
+		}
+	}
 
 	subnetGroupNameAttr := resource.GetAttribute("cluster_subnet_group_name")
 	cluster.SubnetGroupName = subnetGroupNameAttr.AsStringValueOrDefault("", resource)
