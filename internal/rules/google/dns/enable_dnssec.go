@@ -29,7 +29,7 @@ var CheckEnableDnssec = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, zone := range s.Google.DNS.ManagedZones {
-			if zone.IsUnmanaged() {
+			if zone.IsUnmanaged() || zone.IsPrivate() {
 				continue
 			}
 			if zone.DNSSec.Enabled.IsFalse() {

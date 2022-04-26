@@ -10,7 +10,12 @@ type DNS struct {
 
 type ManagedZone struct {
 	types.Metadata
-	DNSSec DNSSec
+	DNSSec     DNSSec
+	Visibility types.StringValue
+}
+
+func (m ManagedZone) IsPrivate() bool {
+	return m.Visibility.EqualTo("private", types.IgnoreCase)
 }
 
 type DNSSec struct {
