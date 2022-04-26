@@ -42,7 +42,8 @@ func Test_Adapt(t *testing.T) {
 			expected: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata:   types.NewTestMetadata(),
+						Visibility: types.String("public", types.NewTestMetadata()),
 						DNSSec: dns.DNSSec{
 							Enabled: types.Bool(true, types.NewTestMetadata()),
 							DefaultKeySpecs: dns.KeySpecs{
