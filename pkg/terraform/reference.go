@@ -2,8 +2,6 @@ package terraform
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
 
 	"github.com/aquasecurity/defsec/internal/types"
 
@@ -58,21 +56,6 @@ func newReference(parts []string, parentKey string) (*Reference, error) {
 			ref.typeLabel = ""
 		}
 	}
-
-	if strings.Contains(ref.nameLabel, "[") {
-		bits := strings.Split(ref.nameLabel, "[")
-		ref.nameLabel = bits[0]
-		index := strings.Index(bits[1], "]")
-		if index > -1 {
-			keyRaw := strings.ReplaceAll(bits[1][:index], "\"", "")
-			if i, err := strconv.Atoi(keyRaw); err == nil {
-				ref.key = cty.NumberIntVal(int64(i))
-			} else {
-				ref.key = cty.StringVal(keyRaw)
-			}
-		}
-	}
-
 	if len(parts) > 3 {
 		ref.remainder = parts[3:]
 	}
