@@ -75,6 +75,7 @@ func (s *Scanner) SetSkipRequiredCheck(skip bool) {
 }
 
 func (s *Scanner) SetDebugWriter(writer io.Writer) {
+	s.parserOpt = append(s.parserOpt, options.ParserWithDebug(writer))
 	s.debug = debug.New(writer, "scan:terraform")
 }
 
