@@ -84,6 +84,11 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 		s.policies = make(map[string]*ast.Module)
 	}
 
+	if s.policyFS != nil {
+		s.debug.Log("Overriding filesystem for policies!")
+		srcFS = s.policyFS
+	}
+
 	if loadEmbedded {
 		loadedLibs, err := loadEmbeddedLibraries()
 		if err != nil {
