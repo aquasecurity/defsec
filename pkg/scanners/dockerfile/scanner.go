@@ -70,6 +70,10 @@ func (s *Scanner) SetPolicyNamespaces(_ ...string) {
 	// handled by rego later - nothing to do for now...
 }
 
+func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
+	// handled by rego when option is passed on
+}
+
 func NewScanner(opts ...options.ScannerOption) *Scanner {
 	s := &Scanner{
 		options: opts,

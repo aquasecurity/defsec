@@ -61,6 +61,10 @@ func (s *Scanner) SetSkipRequiredCheck(skip bool) {
 	s.skipRequired = skip
 }
 
+func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
+	// handled by rego when option is passed on
+}
+
 func NewScanner(opts ...options.ScannerOption) *Scanner {
 	s := &Scanner{
 		options: opts,
