@@ -172,6 +172,17 @@ func (r *Results) AddPassed(source MetadataProvider, descriptions ...string) {
 	*r = append(*r, res)
 }
 
+func (r *Results) AddPassedRego(namespace string, rule string, traces []string, source MetadataProvider) {
+	res := Result{
+		status:        StatusPassed,
+		regoNamespace: namespace,
+		regoRule:      rule,
+		traces:        traces,
+	}
+	res.metadata = source.GetMetadata()
+	*r = append(*r, res)
+}
+
 func (r *Results) AddIgnored(source MetadataProvider, descriptions ...string) {
 	res := Result{
 		description: strings.Join(descriptions, " "),

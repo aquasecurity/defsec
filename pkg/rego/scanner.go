@@ -235,7 +235,7 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 			var result regoResult
 			result.Filepath = input.Path
 			result.Managed = true
-			results.AddPassed(result)
+			results.AddPassedRego(namespace, rule, traces, result)
 			continue
 		}
 		results = append(results, ruleResults...)
