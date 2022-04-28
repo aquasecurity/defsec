@@ -443,6 +443,7 @@ deny[res] {
 		options.ScannerWithDebug(debugLog),
 		options.ScannerWithPolicyDirs("rules"),
 		ScannerWithRegoOnly(true),
+		ScannerWithEmbeddedLibraries(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
@@ -513,6 +514,100 @@ deny[res] {
 		options.ScannerWithDebug(debugLog),
 		options.ScannerWithPolicyDirs("rules"),
 		ScannerWithRegoOnly(true),
+		ScannerWithEmbeddedLibraries(true),
+	)
+
+	results, err := scanner.ScanFS(context.TODO(), fs, "code")
+	require.NoError(t, err)
+
+	require.Len(t, results, 1)
+	assert.Equal(t, "AVD-TEST-0123", results[0].Rule().AVDID)
+	assert.NotNil(t, results[0].Metadata().Range().GetFS())
+
+	if t.Failed() {
+		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
+	}
+}
+
+func Test_ContainerDefinitionRego(t *testing.T) {
+	fs := testutil.CreateFS(t, map[string]string{
+		"/code/main.tf": `
+resource "aws_ecs_task_definition" "test" {
+  family                = "test"
+  container_definitions = <<TASK_DEFINITION
+[
+  {
+	"privileged": true,
+    "cpu": 10,
+    "command": ["sleep", "10"],
+    "entryPoint": ["/"],
+    "environment": [
+      {"name": "VARNAME", "value": "VARVAL"}
+    ],
+    "essential": true,
+    "image": "jenkins",
+    "memory": 128,
+    "name": "jenkins",
+    "portMappings": [
+      {
+        "containerPort": 80,
+        "hostPort": 8080
+      }
+    ],
+        "resourceRequirements":[
+            {
+                "type":"InferenceAccelerator",
+                "value":"device_1"
+            }
+        ]
+  }
+]
+TASK_DEFINITION
+
+  inference_accelerator {
+    device_name = "device_1"
+    device_type = "eia1.medium"
+  }
+}`,
+		"/rules/test.rego": `
+package defsec.abcdefg
+
+import data.lib.defsec
+
+__rego_metadata__ := {
+	"id": "TEST123",
+	"avd_id": "AVD-TEST-0123",
+	"title": "Buckets should not be evil",
+	"short_code": "no-evil-buckets",
+	"severity": "CRITICAL",
+	"type": "DefSec Security Check",
+	"description": "You should not allow buckets to be evil",
+	"recommended_actions": "Use a good bucket instead",
+	"url": "https://google.com/search?q=is+my+bucket+evil",
+}
+
+__rego_input__ := {
+	"combine": false,
+	"selector": [{"type": "defsec"}],
+}
+
+deny[res] {
+	definitionsAttr := input.aws.ecs.taskdefinitions[_].containerdefinitions
+	definitionsJSON := definitionsAttr.value
+	taskDefinitions := json.unmarshal(definitionsJSON)
+	taskDefinition := taskDefinitions[_]
+	taskDefinition.privileged == true
+	res := defsec.result("Privileged container detected", definitionsAttr)
+}
+`,
+	})
+
+	debugLog := bytes.NewBuffer([]byte{})
+	scanner := New(
+		options.ScannerWithDebug(debugLog),
+		options.ScannerWithPolicyDirs("rules"),
+		ScannerWithRegoOnly(true),
+		ScannerWithEmbeddedLibraries(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")

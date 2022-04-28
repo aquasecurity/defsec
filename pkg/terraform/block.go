@@ -31,7 +31,8 @@ type Block struct {
 	moduleFS     fs.FS
 }
 
-func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, parentBlock *Block, moduleSource string, moduleFS fs.FS) *Block {
+func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, parentBlock *Block, moduleSource string,
+	moduleFS fs.FS, index ...cty.Value) *Block {
 	if ctx == nil {
 		ctx = context.NewContext(&hcl.EvalContext{}, nil)
 	}
@@ -70,6 +71,12 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 		parent = moduleBlock.FullName()
 	}
 	ref, _ := newReference(parts, parent)
+	if len(index) > 0 {
+		key := index[0]
+		if !key.IsNull() {
+			ref.SetKey(key)
+		}
+	}
 
 	metadata := types.NewMetadata(rng, ref)
 
@@ -153,7 +160,7 @@ func (b *Block) Clone(index cty.Value) *Block {
 
 	cloneHCL := *b.hclBlock
 
-	clone := NewBlock(&cloneHCL, childCtx, b.moduleBlock, b.parentBlock, b.moduleSource, b.moduleFS)
+	clone := NewBlock(&cloneHCL, childCtx, b.moduleBlock, b.parentBlock, b.moduleSource, b.moduleFS, index)
 	if len(clone.hclBlock.Labels) > 0 {
 		position := len(clone.hclBlock.Labels) - 1
 		labels := make([]string, len(clone.hclBlock.Labels))

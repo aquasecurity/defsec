@@ -2,6 +2,7 @@ package options
 
 import (
 	"io"
+	"io/fs"
 )
 
 type ConfigurableScanner interface {
@@ -13,6 +14,7 @@ type ConfigurableScanner interface {
 	SetPolicyNamespaces(...string)
 	SetSkipRequiredCheck(bool)
 	SetPolicyReaders([]io.Reader)
+	SetPolicyFilesystem(fs.FS)
 }
 
 type ScannerOption func(s ConfigurableScanner)
@@ -65,5 +67,11 @@ func ScannerWithPolicyNamespaces(namespaces ...string) ScannerOption {
 func ScannerWithSkipRequiredCheck(skip bool) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetSkipRequiredCheck(skip)
+	}
+}
+
+func ScannerWithPolicyFilesystem(f fs.FS) ScannerOption {
+	return func(s ConfigurableScanner) {
+		s.SetPolicyFilesystem(f)
 	}
 }

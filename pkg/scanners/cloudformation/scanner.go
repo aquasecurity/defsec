@@ -58,6 +58,10 @@ func (s *Scanner) SetPolicyDirs(dirs ...string) {
 	s.policyDirs = dirs
 }
 
+func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
+	// handled by rego when option is passed on
+}
+
 func (s *Scanner) SetTraceWriter(_ io.Writer)        {}
 func (s *Scanner) SetPerResultTracingEnabled(_ bool) {}
 func (s *Scanner) SetDataDirs(_ ...string)           {}
@@ -82,7 +86,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 		return s.regoScanner, nil
 	}
 	regoScanner := rego.NewScanner(s.options...)
-	if err := regoScanner.LoadPolicies(true, srcFS, s.policyDirs, s.policyReaders); err != nil {
+	if err := regoScanner.LoadPolicies(len(s.policyDirs)+len(s.policyReaders) == 0, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner

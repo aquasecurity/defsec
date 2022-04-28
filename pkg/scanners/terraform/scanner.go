@@ -2,6 +2,7 @@ package terraform
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"io/fs"
 	"path/filepath"
@@ -31,17 +32,22 @@ var _ options.ConfigurableScanner = (*Scanner)(nil)
 var _ ConfigurableTerraformScanner = (*Scanner)(nil)
 
 type Scanner struct {
-	options       []options.ScannerOption
-	parserOpt     []options.ParserOption
-	executorOpt   []executor.Option
-	dirs          map[string]struct{}
-	forceAllDirs  bool
-	policyDirs    []string
-	policyReaders []io.Reader
-	regoScanner   *rego.Scanner
-	execLock      sync.RWMutex
-	debug         debug.Logger
+	options                 []options.ScannerOption
+	parserOpt               []options.ParserOption
+	executorOpt             []executor.Option
+	dirs                    map[string]struct{}
+	forceAllDirs            bool
+	policyDirs              []string
+	policyReaders           []io.Reader
+	regoScanner             *rego.Scanner
+	execLock                sync.RWMutex
+	debug                   debug.Logger
+	enableEmbeddedLibraries bool
 	sync.Mutex
+}
+
+func (s *Scanner) SetEmbeddedLibrariesEnabled(enabled bool) {
+	s.enableEmbeddedLibraries = enabled
 }
 
 func (s *Scanner) Name() string {
@@ -69,6 +75,7 @@ func (s *Scanner) SetSkipRequiredCheck(skip bool) {
 }
 
 func (s *Scanner) SetDebugWriter(writer io.Writer) {
+	s.parserOpt = append(s.parserOpt, options.ParserWithDebug(writer))
 	s.debug = debug.New(writer, "scan:terraform")
 }
 
@@ -86,6 +93,10 @@ func (s *Scanner) SetDataDirs(_ ...string) {
 }
 
 func (s *Scanner) SetPolicyNamespaces(_ ...string) {
+}
+
+func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
+	// handled by rego when option is passed on
 }
 
 type Metrics struct {
@@ -119,7 +130,12 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 		return s.regoScanner, nil
 	}
 	regoScanner := rego.NewScanner(s.options...)
-	if err := regoScanner.LoadPolicies(true, srcFS, s.policyDirs, s.policyReaders); err != nil {
+	if s.enableEmbeddedLibraries {
+		if err := regoScanner.LoadEmbeddedLibraries(); err != nil {
+			return nil, fmt.Errorf("failed to load embedded libraries: %w", err)
+		}
+	}
+	if err := regoScanner.LoadPolicies(len(s.policyDirs)+len(s.policyReaders) == 0, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner

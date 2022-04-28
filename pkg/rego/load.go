@@ -63,13 +63,41 @@ func (s *Scanner) loadPoliciesFromReaders(readers []io.Reader) (map[string]*ast.
 	return modules, nil
 }
 
+func (s *Scanner) LoadEmbeddedLibraries() error {
+	if s.policies == nil {
+		s.policies = make(map[string]*ast.Module)
+	}
+	loadedLibs, err := loadEmbeddedLibraries()
+	if err != nil {
+		return fmt.Errorf("failed to load embedded rego libraries: %w", err)
+	}
+	for name, policy := range loadedLibs {
+		s.policies[name] = policy
+	}
+	s.debug.Log("Loaded %d embedded libraries (without embedded policies).", len(loadedLibs))
+	return nil
+}
+
 func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, readers []io.Reader) error {
 
 	if s.policies == nil {
 		s.policies = make(map[string]*ast.Module)
 	}
 
+	if s.policyFS != nil {
+		s.debug.Log("Overriding filesystem for policies!")
+		srcFS = s.policyFS
+	}
+
 	if loadEmbedded {
+		loadedLibs, err := loadEmbeddedLibraries()
+		if err != nil {
+			return fmt.Errorf("failed to load embedded rego libraries: %w", err)
+		}
+		for name, policy := range loadedLibs {
+			s.policies[name] = policy
+		}
+		s.debug.Log("Loaded %d embedded libraries.", len(loadedLibs))
 		loaded, err := loadEmbeddedPolicies()
 		if err != nil {
 			return fmt.Errorf("failed to load embedded rego policies: %w", err)

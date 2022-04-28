@@ -65,6 +65,10 @@ func (s *Scanner) SetPolicyNamespaces(_ ...string) {
 
 }
 
+func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
+	// handled by rego when option is passed on
+}
+
 func NewScanner(opts ...options.ScannerOption) *Scanner {
 	s := &Scanner{
 		options: opts,
@@ -123,7 +127,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 		return s.regoScanner, nil
 	}
 	regoScanner := rego.NewScanner(s.options...)
-	if err := regoScanner.LoadPolicies(len(s.policyDirs) == 0, srcFS, s.policyDirs, s.policyReaders); err != nil {
+	if err := regoScanner.LoadPolicies(len(s.policyDirs)+len(s.policyReaders) == 0, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner

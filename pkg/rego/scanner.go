@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"io/fs"
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/debug"
@@ -29,6 +30,11 @@ type Scanner struct {
 	traceWriter    io.Writer
 	tracePerResult bool
 	retriever      *MetadataRetriever
+	policyFS       fs.FS
+}
+
+func (s *Scanner) SetPolicyFilesystem(fs fs.FS) {
+	s.policyFS = fs
 }
 
 func (s *Scanner) SetPolicyReaders(_ []io.Reader) {
