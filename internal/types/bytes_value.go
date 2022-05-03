@@ -2,6 +2,7 @@ package types
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 type BytesValue interface {
@@ -69,5 +70,6 @@ func (s *bytesValue) ToRego() interface{} {
 		"explicit":  s.metadata.isExplicit,
 		"value":     string(s.Value()),
 		"fskey":     CreateFSKey(s.metadata.Range().GetFS()),
+		"resource":  fmt.Sprintf("%s", s.metadata.Reference()),
 	}
 }
