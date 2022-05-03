@@ -26,6 +26,7 @@ import (
 )
 
 var _ scanners.Scanner = (*Scanner)(nil)
+var _ ConfigurableCloudFormationScanner = (*Scanner)(nil)
 
 type Scanner struct {
 	debug         debug.Logger
@@ -34,8 +35,13 @@ type Scanner struct {
 	parser        *parser.Parser
 	regoScanner   *rego.Scanner
 	skipRequired  bool
+	regoOnly      bool
 	options       []options.ScannerOption
 	sync.Mutex
+}
+
+func (s *Scanner) SetRegoOnly(regoOnly bool) {
+	s.regoOnly = regoOnly
 }
 
 func (s *Scanner) Name() string {
@@ -159,6 +165,9 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 		case <-ctx.Done():
 			return nil, ctx.Err()
 		default:
+		}
+		if s.regoOnly && rule.Rule().RegoPackage == "" {
+			continue
 		}
 		evalResult := rule.Evaluate(state)
 		if len(evalResult) > 0 {
