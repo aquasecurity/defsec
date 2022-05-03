@@ -32,6 +32,10 @@ func NewModule(rootPath string, modulePath string, blocks Blocks, ignores Ignore
 	}
 }
 
+func (c *Module) RootPath() string {
+	return c.rootPath
+}
+
 func (c *Module) Ignores() Ignores {
 	return c.ignores
 }

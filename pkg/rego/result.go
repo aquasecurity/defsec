@@ -13,6 +13,7 @@ import (
 
 type regoResult struct {
 	Filepath  string
+	Resource  string
 	StartLine int
 	EndLine   int
 	Message   string
@@ -26,7 +27,7 @@ func (r regoResult) GetMetadata() types.Metadata {
 		return types.NewUnmanagedMetadata()
 	}
 	rng := types.NewRangeWithFSKey(r.Filepath, r.StartLine, r.EndLine, "", r.FSKey)
-	ref := types.NewNamedReference(rng.String())
+	ref := types.NewNamedReference(r.Resource)
 	if r.Explicit {
 		return types.NewExplicitMetadata(rng, ref)
 	}
@@ -73,6 +74,9 @@ func parseCause(cause map[string]interface{}) regoResult {
 	}
 	if msg, ok := cause["fskey"]; ok {
 		result.FSKey = fmt.Sprintf("%s", msg)
+	}
+	if msg, ok := cause["resource"]; ok {
+		result.Resource = fmt.Sprintf("%s", msg)
 	}
 	if start, ok := cause["startline"]; ok {
 		result.StartLine = parseLineNumber(start)
