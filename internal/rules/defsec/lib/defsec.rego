@@ -10,5 +10,6 @@ result(msg, cause) = result {
 		"explicit": object.get(metadata, "explicit", false),
 		"managed": object.get(metadata, "managed", true),
 		"fskey": object.get(metadata, "fskey", ""),
+		"resource": object.get(metadata, "resource", ""),
 	}
 }

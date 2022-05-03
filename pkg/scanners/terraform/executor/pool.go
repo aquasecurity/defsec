@@ -57,9 +57,14 @@ func (p *Pool) Run() (scan.Results, error) {
 	}
 
 	if p.rs != nil {
+		var basePath string
+		if len(p.modules) > 0 {
+			basePath = p.modules[0].RootPath()
+		}
 		outgoing <- &regoJob{
-			state:   p.state,
-			scanner: p.rs,
+			state:    p.state,
+			scanner:  p.rs,
+			basePath: basePath,
 		}
 	}
 
@@ -117,8 +122,9 @@ type hclModuleRuleJob struct {
 }
 
 type regoJob struct {
-	state   *state.State
-	scanner *rego.Scanner
+	state    *state.State
+	scanner  *rego.Scanner
+	basePath string
 }
 
 func (h *infraRuleJob) Run() (_ scan.Results, err error) {
@@ -155,6 +161,7 @@ func (h *regoJob) Run() (results scan.Results, err error) {
 	regoResults, err := h.scanner.ScanInput(context.TODO(), rego.Input{
 		Contents: h.state.ToRego(),
 		Type:     types.SourceDefsec,
+		Path:     h.basePath,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("rego scan error: %w", err)
