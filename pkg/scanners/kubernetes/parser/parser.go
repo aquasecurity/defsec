@@ -78,7 +78,7 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) ([]interfac
 		return nil, err
 	}
 	defer func() { _ = f.Close() }()
-	return p.parse(f)
+	return p.Parse(f)
 }
 
 func (p *Parser) required(fs fs.FS, path string) bool {
@@ -93,7 +93,7 @@ func (p *Parser) required(fs fs.FS, path string) bool {
 	return detection.IsType(path, f, detection.FileTypeKubernetes)
 }
 
-func (p *Parser) parse(r io.Reader) ([]interface{}, error) {
+func (p *Parser) Parse(r io.Reader) ([]interface{}, error) {
 
 	contents, err := ioutil.ReadAll(r)
 	if err != nil {
@@ -121,11 +121,11 @@ func (p *Parser) parse(r io.Reader) ([]interface{}, error) {
 	}
 
 	for _, partial := range strings.Split(string(contents), marker) {
-		var result interface{}
+		var result Manifest
 		if err := yaml.Unmarshal([]byte(partial), &result); err != nil {
 			return nil, fmt.Errorf("unmarshal yaml: %w", err)
 		}
-		results = append(results, result)
+		results = append(results, result.Content)
 	}
 
 	return results, nil
