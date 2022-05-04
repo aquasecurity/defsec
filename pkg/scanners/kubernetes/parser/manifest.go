@@ -1,6 +1,10 @@
 package parser
 
-import "gopkg.in/yaml.v3"
+import (
+	"fmt"
+
+	"gopkg.in/yaml.v3"
+)
 
 type Manifest struct {
 	Path    string
@@ -17,7 +21,7 @@ func (m *Manifest) UnmarshalYAML(value *yaml.Node) error {
 		}
 		m.Content = node
 	default:
-		panic(value.Tag)
+		return fmt.Errorf("failed to handle tag: %s", value.Tag)
 	}
 
 	return nil
