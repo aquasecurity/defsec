@@ -160,39 +160,41 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 	if state == nil {
 		return nil, nil
 	}
-	for _, rule := range rules.GetRegistered() {
-		select {
-		case <-ctx.Done():
-			return nil, ctx.Err()
-		default:
-		}
-		if s.regoOnly && rule.Rule().RegoPackage == "" {
-			continue
-		}
-		evalResult := rule.Evaluate(state)
-		if len(evalResult) > 0 {
-			s.debug.Log("Found %d results for %s", len(evalResult), rule.Rule().AVDID)
-			for _, scanResult := range evalResult {
-				if isIgnored(scanResult) {
-					scanResult.OverrideStatus(scan.StatusIgnored)
+	if !s.regoOnly {
+		for _, rule := range rules.GetRegistered() {
+			select {
+			case <-ctx.Done():
+				return nil, ctx.Err()
+			default:
+			}
+			if rule.Rule().RegoPackage != "" {
+				continue
+			}
+			evalResult := rule.Evaluate(state)
+			if len(evalResult) > 0 {
+				s.debug.Log("Found %d results for %s", len(evalResult), rule.Rule().AVDID)
+				for _, scanResult := range evalResult {
+					if isIgnored(scanResult) {
+						scanResult.OverrideStatus(scan.StatusIgnored)
+					}
+
+					ref := scanResult.Metadata().Reference()
+
+					if ref == nil && scanResult.Metadata().Parent() != nil {
+						ref = scanResult.Metadata().Parent().Reference()
+					}
+
+					reference := ref.(*parser.CFReference)
+					description := getDescription(scanResult, reference)
+					scanResult.OverrideDescription(description)
+					results = append(results, scanResult)
 				}
-
-				ref := scanResult.Metadata().Reference()
-
-				if ref == nil && scanResult.Metadata().Parent() != nil {
-					ref = scanResult.Metadata().Parent().Reference()
-				}
-
-				reference := ref.(*parser.CFReference)
-				description := getDescription(scanResult, reference)
-				scanResult.OverrideDescription(description)
-				results = append(results, scanResult)
 			}
 		}
 	}
 	regoResults, err := regoScanner.ScanInput(ctx, rego.Input{
 		Path:     cfCtx.Metadata().Range().GetFilename(),
-		Contents: state,
+		Contents: state.ToRego(),
 		Type:     types.SourceDefsec,
 	})
 	if err != nil {
