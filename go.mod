@@ -10,7 +10,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-getter v1.5.11
 	github.com/hashicorp/go-uuid v1.0.3
-	github.com/hashicorp/hcl/v2 v2.11.1
+	github.com/hashicorp/hcl/v2 v2.12.0
 	github.com/liamg/iamgo v0.0.6
 	github.com/liamg/jfather v0.0.7
 	github.com/liamg/memoryfs v1.4.1
