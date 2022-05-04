@@ -53,6 +53,27 @@ func Test_Detection(t *testing.T) {
 			},
 		},
 		{
+			name: "terraform plan, with reader",
+			path: "plan.json",
+			r: strings.NewReader(`{
+				"format_version": "0.2",
+				"terraform_version": "1.0.3",
+				"variables": {
+					"bucket_name": {
+						"value": "tfsec-plan-testing"
+					}
+				},
+				"planned_values": {},
+				"resource_changes": [],
+				"prior_state": {},
+				"configuration": {}
+			}`),
+			expected: []FileType{
+				FileTypeTerraformPlan,
+				FileTypeJSON,
+			},
+		},
+		{
 			name: "cloudformation, with reader",
 			path: "main.yaml",
 			r: strings.NewReader(`---
