@@ -45,7 +45,7 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 		require.NotNil(t, results)
 
 		failed := results.GetFailed()
-		assert.Equal(t, 12, len(failed))
+		assert.Equal(t, 32, len(failed))
 
 		visited := make(map[string]bool)
 		var errorCodes []string
@@ -56,11 +56,16 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 				errorCodes = append(errorCodes, id)
 			}
 		}
-		assert.Len(t, errorCodes, 2)
+		assert.Len(t, errorCodes, 19)
 
 		sort.Strings(errorCodes)
 
-		assert.Equal(t, []string{"AVD-KSV-0039",
+		assert.Equal(t, []string{"AVD-KSV-0001", "AVD-KSV-0003", "AVD-KSV-0004",
+			"AVD-KSV-0011", "AVD-KSV-0012", "AVD-KSV-0014",
+			"AVD-KSV-0015", "AVD-KSV-0016", "AVD-KSV-0018",
+			"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0029",
+			"AVD-KSV-0032", "AVD-KSV-0033", "AVD-KSV-0034",
+			"AVD-KSV-0035", "AVD-KSV-0038", "AVD-KSV-0039",
 			"AVD-KSV-0040"}, errorCodes)
 	}
 }
@@ -89,7 +94,7 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 		require.NotNil(t, results)
 
 		failed := results.GetFailed()
-		assert.Equal(t, 6, len(failed))
+		assert.Equal(t, 22, len(failed))
 
 		visited := make(map[string]bool)
 		var errorCodes []string
@@ -103,7 +108,12 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 
 		sort.Strings(errorCodes)
 
-		assert.Equal(t, []string{"AVD-KSV-0039", "AVD-KSV-0040"}, errorCodes)
+		assert.Equal(t, []string{"AVD-KSV-0001", "AVD-KSV-0003", "AVD-KSV-0004",
+			"AVD-KSV-0011", "AVD-KSV-0012", "AVD-KSV-0014",
+			"AVD-KSV-0015", "AVD-KSV-0016", "AVD-KSV-0018",
+			"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0032",
+			"AVD-KSV-0033", "AVD-KSV-0035", "AVD-KSV-0038",
+			"AVD-KSV-0039", "AVD-KSV-0040"}, errorCodes)
 	}
 }
 

@@ -125,7 +125,7 @@ func (p *Parser) Parse(r io.Reader) ([]interface{}, error) {
 		if err := yaml.Unmarshal([]byte(partial), &result); err != nil {
 			return nil, fmt.Errorf("unmarshal yaml: %w", err)
 		}
-		results = append(results, result.Content)
+		results = append(results, result.ToRegoMap())
 	}
 
 	return results, nil
