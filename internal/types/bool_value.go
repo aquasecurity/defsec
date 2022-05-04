@@ -1,6 +1,9 @@
 package types
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type BoolValue interface {
 	metadataProvider
@@ -74,5 +77,6 @@ func (s *boolValue) ToRego() interface{} {
 		"explicit":  s.metadata.isExplicit,
 		"value":     s.Value(),
 		"fskey":     CreateFSKey(s.metadata.Range().GetFS()),
+		"resource":  fmt.Sprintf("%s", s.metadata.Reference()),
 	}
 }

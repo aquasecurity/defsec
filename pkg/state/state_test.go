@@ -37,6 +37,7 @@ func Test_RegoConversion(t *testing.T) {
 				"buckets": []interface{}{
 					map[string]interface{}{
 						"__defsec_metadata": map[string]interface{}{
+							"resource":  "aws_s3_bucket.example",
 							"filepath":  "main.tf",
 							"startline": 2,
 							"endline":   4,
@@ -45,6 +46,7 @@ func Test_RegoConversion(t *testing.T) {
 							"fskey":     "",
 						},
 						"name": map[string]interface{}{
+							"resource":  "aws_s3_bucket.example.bucket",
 							"filepath":  "main.tf",
 							"startline": 3,
 							"endline":   3,

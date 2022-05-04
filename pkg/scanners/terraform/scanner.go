@@ -11,18 +11,16 @@ import (
 	"sync"
 	"time"
 
+	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
-	"github.com/aquasecurity/defsec/internal/debug"
-
 	"github.com/aquasecurity/defsec/pkg/rego"
+	"github.com/aquasecurity/defsec/pkg/scanners"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/executor"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser/resolvers"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
-
-	"github.com/aquasecurity/defsec/pkg/scanners"
 
 	"github.com/aquasecurity/defsec/pkg/extrafs"
 )

@@ -61,6 +61,12 @@ deny[res] {
 
 	require.Len(t, results.GetFailed(), 1)
 
+	failure := results.GetFailed()[0]
+	metadata := failure.Metadata()
+	assert.Equal(t, 1, metadata.Range().GetStartLine())
+	assert.Equal(t, 2, metadata.Range().GetEndLine())
+	assert.Equal(t, "Dockerfile", metadata.Range().GetFilename())
+
 	assert.Equal(t, scan.Rule{
 		AVDID:       "AVD-DS-0006",
 		LegacyID:    "DS006",
