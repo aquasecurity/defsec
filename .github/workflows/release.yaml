@@ -18,7 +18,7 @@ jobs:
       - name: Get the major version
         run: echo "MAJOR_VERSION=$(echo ${RELEASE_VERSION} | cut -d. -f1)" >> $GITHUB_ENV
       - name: Copy Rego files
-        run: rsync -avr --exclude=README.md --exclude="*_test.rego" --exclude="*.go" --exclude=test --exclude=advanced internal/rules/docker internal/rules/kubernetes bundle/
+        run: rsync -avr --exclude=README.md --exclude="*_test.rego" --exclude="*.go" --exclude=test --exclude=advanced internal/rules/defsec internal/rules/docker internal/rules/kubernetes bundle/
       - name: Copy manifest
         run: |
           cp internal/rules/.manifest bundle/
@@ -35,9 +35,6 @@ jobs:
         run: |
           tags=(latest ${{ env.RELEASE_VERSION}} ${{env.MINOR_VERSION }} ${{ env.MAJOR_VERSION }})
           for tag in ${tags[@]}; do
-              oras push ghcr.io/aquasecurity/appshield:${tag} \
-              --manifest-config /dev/null:application/vnd.cncf.openpolicyagent.config.v1+json \
-              bundle.tar.gz:application/vnd.cncf.openpolicyagent.layer.v1.tar+gzip
               oras push ghcr.io/${{ github.repository }}:${tag} \
               --manifest-config /dev/null:application/vnd.cncf.openpolicyagent.config.v1+json \
               bundle.tar.gz:application/vnd.cncf.openpolicyagent.layer.v1.tar+gzip

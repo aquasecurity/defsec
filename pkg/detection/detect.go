@@ -16,6 +16,7 @@ type FileType string
 const (
 	FileTypeCloudFormation FileType = "cloudformation"
 	FileTypeTerraform      FileType = "terraform"
+	FileTypeTerraformPlan  FileType = "terraformplan"
 	FileTypeDockerfile     FileType = "dockerfile"
 	FileTypeKubernetes     FileType = "kubernetes"
 	FileTypeYAML           FileType = "yaml"
@@ -46,6 +47,28 @@ func init() {
 	matchers[FileTypeTerraform] = func(name string, _ io.Reader) bool {
 		ext := filepath.Ext(filepath.Base(name))
 		return strings.EqualFold(ext, ".tf") || strings.EqualFold(ext, ".tf.json")
+	}
+
+	matchers[FileTypeTerraformPlan] = func(name string, r io.Reader) bool {
+		if IsType(name, r, FileTypeJSON) {
+			if r == nil {
+				return false
+			}
+
+			data, err := ioutil.ReadAll(r)
+			if err != nil {
+				return false
+			}
+
+			contents := make(map[string]interface{})
+			if err := json.Unmarshal(data, &contents); err == nil {
+				if _, ok := contents["terraform_version"]; ok {
+					_, stillOk := contents["format_version"]
+					return stillOk
+				}
+			}
+		}
+		return false
 	}
 
 	matchers[FileTypeCloudFormation] = func(name string, r io.Reader) bool {

@@ -33,9 +33,13 @@ func cacheDir() string {
 	}
 	// if we're not in docker, we can cache in the local project
 	if _, err := os.Stat("/.dockerenv"); err != nil {
-		locations = append([]string{
-			filepath.Join(".tfsec", "cache"),
-		}, locations...)
+		tfsecDir := ".tfsec"
+		if stat, err := os.Stat(tfsecDir); err == nil && stat.IsDir() && isWritable(tfsecDir) {
+			projectCache := filepath.Join(tfsecDir, "cache")
+			locations = append([]string{
+				projectCache,
+			}, locations...)
+		}
 	}
 	for _, attempt := range locations {
 		if err := os.MkdirAll(attempt, 0o755); err != nil {

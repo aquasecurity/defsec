@@ -22,6 +22,10 @@ func (m *Metadata) ToRego() interface{} {
 			"explicit": m.isExplicit,
 		}
 	}
+	refStr := ""
+	if ref := m.Reference(); ref != nil {
+		refStr = ref.String()
+	}
 	return map[string]interface{}{
 		"filepath":  m.Range().GetFilename(),
 		"startline": m.Range().GetStartLine(),
@@ -29,6 +33,7 @@ func (m *Metadata) ToRego() interface{} {
 		"managed":   m.isManaged,
 		"explicit":  m.isExplicit,
 		"fskey":     CreateFSKey(m.Range().GetFS()),
+		"resource":  refStr,
 	}
 }
 

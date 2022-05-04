@@ -38,7 +38,7 @@ func getClusters(modules terraform.Modules) (clusters []rds.Cluster) {
 	if len(orphanResources) > 0 {
 		orphanage := rds.Cluster{
 			Metadata:                  types.NewUnmanagedMetadata(),
-			BackupRetentionPeriodDays: types.IntDefault(0, types.NewUnmanagedMetadata()),
+			BackupRetentionPeriodDays: types.IntDefault(1, types.NewUnmanagedMetadata()),
 			ReplicationSourceARN:      types.StringDefault("", types.NewUnmanagedMetadata()),
 			PerformanceInsights: rds.PerformanceInsights{
 				Metadata: types.NewUnmanagedMetadata(),
@@ -74,10 +74,18 @@ func getClassic(modules terraform.Modules) (classic rds.Classic) {
 }
 
 func adaptClusterInstance(resource *terraform.Block, modules terraform.Modules) rds.ClusterInstance {
+	clusterIdAttr := resource.GetAttribute("cluster_identifier")
+	clusterId := clusterIdAttr.AsStringValueOrDefault("", resource)
+
+	if clusterIdAttr.IsResourceBlockReference("aws_rds_cluster") {
+		if referenced, err := modules.GetReferencedBlock(clusterIdAttr, resource); err == nil {
+			clusterId = types.String(referenced.FullName(), referenced.GetMetadata())
+		}
+	}
 
 	return rds.ClusterInstance{
 		Metadata:          resource.GetMetadata(),
-		ClusterIdentifier: resource.GetAttribute("cluster_identfier").AsStringValueOrDefault("", resource),
+		ClusterIdentifier: clusterId,
 		Instance:          adaptInstance(resource, modules),
 	}
 }
@@ -112,8 +120,8 @@ func adaptCluster(resource *terraform.Block, modules terraform.Modules) (rds.Clu
 
 	return rds.Cluster{
 		Metadata:                  resource.GetMetadata(),
-		BackupRetentionPeriodDays: resource.GetAttribute("backup_retention_period").AsIntValueOrDefault(0, resource),
-		ReplicationSourceARN:      resource.GetAttribute("replicate_source_db").AsStringValueOrDefault("", resource),
+		BackupRetentionPeriodDays: resource.GetAttribute("backup_retention_period").AsIntValueOrDefault(1, resource),
+		ReplicationSourceARN:      resource.GetAttribute("replication_source_identifier").AsStringValueOrDefault("", resource),
 		PerformanceInsights:       adaptPerformanceInsights(resource),
 		Instances:                 clusterInstances,
 		Encryption:                adaptEncryption(resource),
