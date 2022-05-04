@@ -18,7 +18,7 @@ jobs:
       - name: Get the major version
         run: echo "MAJOR_VERSION=$(echo ${RELEASE_VERSION} | cut -d. -f1)" >> $GITHUB_ENV
       - name: Copy Rego files
-        run: rsync -avr --exclude=README.md --exclude="*_test.rego" --exclude="*.go" --exclude=test --exclude=advanced internal/rules/docker internal/rules/kubernetes bundle/
+        run: rsync -avr --exclude=README.md --exclude="*_test.rego" --exclude="*.go" --exclude=test --exclude=advanced internal/rules/defsec internal/rules/docker internal/rules/kubernetes bundle/
       - name: Copy manifest
         run: |
           cp internal/rules/.manifest bundle/
