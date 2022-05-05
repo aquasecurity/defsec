@@ -3,6 +3,7 @@ package rego
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/fs"
@@ -207,16 +208,29 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 	return results, nil
 }
 
+func (s *Scanner) traceInput(input interface{}) {
+	if s.traceWriter == nil {
+		return
+	}
+	data, err := json.MarshalIndent(input, "", "  ")
+	if err != nil {
+		return
+	}
+	_, _ = fmt.Fprintf(s.traceWriter, "REGO INPUT:\n%s\nEND REGO INPUT\n\n", string(data))
+}
+
 func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, inputs []Input, combined bool) (scan.Results, error) {
 
 	// handle combined evaluations if possible
 	if combined {
+		s.traceInput(inputs)
 		return s.applyRuleCombined(ctx, namespace, rule, inputs)
 	}
 
 	var results scan.Results
 	qualified := fmt.Sprintf("data.%s.%s", namespace, rule)
 	for _, input := range inputs {
+		s.traceInput(input)
 		if ignored, err := s.isIgnored(ctx, namespace, rule, input); err != nil {
 			return nil, err
 		} else if ignored {
@@ -236,8 +250,10 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 			result.Filepath = input.Path
 			result.Managed = true
 			results.AddPassedRego(namespace, rule, traces, result)
+			s.debug.Log("PASS: %s.%s (%s)", namespace, rule, input.Path)
 			continue
 		}
+		s.debug.Log("FAIL: %s.%s (%s)", namespace, rule, input.Path)
 		results = append(results, ruleResults...)
 	}
 
