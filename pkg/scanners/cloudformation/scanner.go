@@ -119,7 +119,7 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, dir string) (results sca
 		if cfCtx == nil {
 			continue
 		}
-		fileResults, err := s.scanFileContext(ctx, regoScanner, cfCtx)
+		fileResults, err := s.scanFileContext(ctx, regoScanner, cfCtx, fs)
 		if err != nil {
 			return nil, err
 		}
@@ -143,7 +143,7 @@ func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (scan.Res
 		return nil, err
 	}
 
-	results, err := s.scanFileContext(ctx, regoScanner, cfCtx)
+	results, err := s.scanFileContext(ctx, regoScanner, cfCtx, fs)
 	if err != nil {
 		return nil, err
 	}
@@ -155,7 +155,7 @@ func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (scan.Res
 	return results, nil
 }
 
-func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner, cfCtx *parser.FileContext) (results scan.Results, err error) {
+func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner, cfCtx *parser.FileContext, fs fs.FS) (results scan.Results, err error) {
 	state := adapter.Adapt(*cfCtx)
 	if state == nil {
 		return nil, nil
@@ -194,6 +194,7 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 	}
 	regoResults, err := regoScanner.ScanInput(ctx, rego.Input{
 		Path:     cfCtx.Metadata().Range().GetFilename(),
+		FS:       fs,
 		Contents: state.ToRego(),
 		Type:     types.SourceDefsec,
 	})

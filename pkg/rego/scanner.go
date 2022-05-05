@@ -138,6 +138,7 @@ func (s *Scanner) runQuery(ctx context.Context, query string, input interface{},
 
 type Input struct {
 	Path     string       `json:"path"`
+	FS       fs.FS        `json:"-"`
 	Contents interface{}  `json:"contents"`
 	Type     types.Source `json:"type"`
 }
@@ -235,6 +236,7 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 			return nil, err
 		} else if ignored {
 			var result regoResult
+			result.FS = input.FS
 			result.Filepath = input.Path
 			result.Managed = true
 			results.AddIgnored(result)
@@ -244,9 +246,10 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 		if err != nil {
 			return nil, err
 		}
-		ruleResults := s.convertResults(set, input.Path, namespace, rule, traces)
+		ruleResults := s.convertResults(set, input, namespace, rule, traces)
 		if len(ruleResults) == 0 {
 			var result regoResult
+			result.FS = input.FS
 			result.Filepath = input.Path
 			result.Managed = true
 			results.AddPassedRego(namespace, rule, traces, result)
@@ -261,6 +264,9 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 }
 
 func (s *Scanner) applyRuleCombined(ctx context.Context, namespace string, rule string, inputs []Input) (scan.Results, error) {
+	if len(inputs) == 0 {
+		return nil, nil
+	}
 	var results scan.Results
 	qualified := fmt.Sprintf("data.%s.%s", namespace, rule)
 	if ignored, err := s.isIgnored(ctx, namespace, rule, inputs); err != nil {
@@ -268,6 +274,7 @@ func (s *Scanner) applyRuleCombined(ctx context.Context, namespace string, rule 
 	} else if ignored {
 		for _, input := range inputs {
 			var result regoResult
+			result.FS = input.FS
 			result.Filepath = input.Path
 			result.Managed = true
 			results.AddIgnored(result)
@@ -278,7 +285,7 @@ func (s *Scanner) applyRuleCombined(ctx context.Context, namespace string, rule 
 	if err != nil {
 		return nil, err
 	}
-	return s.convertResults(set, "", namespace, rule, traces), nil
+	return s.convertResults(set, inputs[0], namespace, rule, traces), nil
 }
 
 // severity is now set with metadata, so deny/warn/violation now behave the same way

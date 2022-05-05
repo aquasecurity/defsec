@@ -141,7 +141,7 @@ func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (context 
 	p.debug.Log("Context loaded from source %s", path)
 
 	for name, r := range context.Resources {
-		r.ConfigureResource(name, path, context)
+		r.ConfigureResource(name, fs, path, context)
 	}
 
 	return context, nil

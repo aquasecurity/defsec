@@ -30,6 +30,7 @@ type Result struct {
 	regoRule         string
 	warning          bool
 	traces           []string
+	fsPath           string
 }
 
 func (r Result) RegoNamespace() string {
@@ -144,6 +145,8 @@ func (r *Results) Add(description string, source MetadataProvider) {
 		annotationStr := rawToString(source.GetRawValue())
 		result.annotation = annotationStr
 	}
+	rnge := result.metadata.Range()
+	result.fsPath = rnge.GetLocalFilename()
 	*r = append(*r, result)
 }
 
@@ -160,6 +163,8 @@ func (r *Results) AddRego(description string, namespace string, rule string, tra
 		annotationStr := rawToString(source.GetRawValue())
 		result.annotation = annotationStr
 	}
+	rnge := result.metadata.Range()
+	result.fsPath = rnge.GetLocalFilename()
 	*r = append(*r, result)
 }
 
@@ -169,6 +174,8 @@ func (r *Results) AddPassed(source MetadataProvider, descriptions ...string) {
 		status:      StatusPassed,
 	}
 	res.metadata = source.GetMetadata()
+	rnge := res.metadata.Range()
+	res.fsPath = rnge.GetLocalFilename()
 	*r = append(*r, res)
 }
 
@@ -180,6 +187,8 @@ func (r *Results) AddPassedRego(namespace string, rule string, traces []string, 
 		traces:        traces,
 	}
 	res.metadata = source.GetMetadata()
+	rnge := res.metadata.Range()
+	res.fsPath = rnge.GetLocalFilename()
 	*r = append(*r, res)
 }
 
@@ -189,6 +198,8 @@ func (r *Results) AddIgnored(source MetadataProvider, descriptions ...string) {
 		status:      StatusIgnored,
 	}
 	res.metadata = source.GetMetadata()
+	rnge := res.metadata.Range()
+	res.fsPath = rnge.GetLocalFilename()
 	*r = append(*r, res)
 }
 

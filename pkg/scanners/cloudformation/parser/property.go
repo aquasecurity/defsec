@@ -2,6 +2,7 @@ package parser
 
 import (
 	"encoding/json"
+	"io/fs"
 	"strconv"
 	"strings"
 
@@ -69,8 +70,8 @@ func (p *Property) setContext(ctx *FileContext) {
 	}
 }
 
-func (p *Property) setFileAndParentRange(filepath string, parentRange types.Range) {
-	p.rng = types.NewRange(filepath, p.rng.GetStartLine(), p.rng.GetEndLine(), p.rng.GetSourcePrefix(), p.rng.GetFS())
+func (p *Property) setFileAndParentRange(target fs.FS, filepath string, parentRange types.Range) {
+	p.rng = types.NewRange(filepath, p.rng.GetStartLine(), p.rng.GetEndLine(), p.rng.GetSourcePrefix(), target)
 	p.parentRange = parentRange
 
 	switch p.Type() {
@@ -79,14 +80,14 @@ func (p *Property) setFileAndParentRange(filepath string, parentRange types.Rang
 			if subProp == nil {
 				continue
 			}
-			subProp.setFileAndParentRange(filepath, parentRange)
+			subProp.setFileAndParentRange(target, filepath, parentRange)
 		}
 	case cftypes.List:
 		for _, subProp := range p.AsList() {
 			if subProp == nil {
 				continue
 			}
-			subProp.setFileAndParentRange(filepath, parentRange)
+			subProp.setFileAndParentRange(target, filepath, parentRange)
 		}
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/fs"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -46,6 +47,7 @@ func ruleIDInResults(ruleID string, results scan.Results) bool {
 func CreateFS(t *testing.T, files map[string]string) fs.FS {
 	memfs := memoryfs.New()
 	for name, content := range files {
+		name := strings.TrimPrefix(name, "/")
 		err := memfs.MkdirAll(filepath.Dir(name), 0o700)
 		require.NoError(t, err)
 		err = memfs.WriteFile(name, []byte(content), 0o644)

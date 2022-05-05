@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"io/fs"
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/types"
@@ -22,9 +23,9 @@ type ResourceInner struct {
 	Properties map[string]*Property `json:"Properties" yaml:"Properties"`
 }
 
-func (r *Resource) ConfigureResource(id, filepath string, ctx *FileContext) {
+func (r *Resource) ConfigureResource(id string, target fs.FS, filepath string, ctx *FileContext) {
 	r.setId(id)
-	r.setFile(filepath)
+	r.setFile(target, filepath)
 	r.setContext(ctx)
 }
 
@@ -36,11 +37,11 @@ func (r *Resource) setId(id string) {
 	}
 }
 
-func (r *Resource) setFile(filepath string) {
-	r.rng = types.NewRange(filepath, r.rng.GetStartLine(), r.rng.GetEndLine(), r.rng.GetSourcePrefix(), r.rng.GetFS())
+func (r *Resource) setFile(target fs.FS, filepath string) {
+	r.rng = types.NewRange(filepath, r.rng.GetStartLine(), r.rng.GetEndLine(), r.rng.GetSourcePrefix(), target)
 
 	for _, p := range r.Inner.Properties {
-		p.setFileAndParentRange(filepath, r.rng)
+		p.setFileAndParentRange(target, filepath, r.rng)
 	}
 }
 

@@ -30,12 +30,12 @@ func NewRange(filename string, startLine int, endLine int, sourcePrefix string, 
 	return r
 }
 
-func NewRangeWithFSKey(filename string, startLine int, endLine int, sourcePrefix string, fsKey string) baseRange {
+func NewRangeWithFSKey(filename string, startLine int, endLine int, sourcePrefix string, fsKey string, fs fs.FS) baseRange {
 	r := baseRange{
 		filename:     filename,
 		startLine:    startLine,
 		endLine:      endLine,
-		fs:           nil,
+		fs:           fs,
 		fsKey:        fsKey,
 		sourcePrefix: sourcePrefix,
 	}

@@ -45,9 +45,9 @@ __rego_input__ := {
 deny[res] {
 	res := {
 		"msg": "oh no",
-		"filepath": "Dockerfile",
+		"filepath": "code/Dockerfile",
 		"startline": 1,
-		"endline": 2,
+		"endline": 1,
 	}
 }
 
@@ -64,20 +64,40 @@ deny[res] {
 	failure := results.GetFailed()[0]
 	metadata := failure.Metadata()
 	assert.Equal(t, 1, metadata.Range().GetStartLine())
-	assert.Equal(t, 2, metadata.Range().GetEndLine())
-	assert.Equal(t, "Dockerfile", metadata.Range().GetFilename())
+	assert.Equal(t, 1, metadata.Range().GetEndLine())
+	assert.Equal(t, "code/Dockerfile", metadata.Range().GetFilename())
 
-	assert.Equal(t, scan.Rule{
-		AVDID:       "AVD-DS-0006",
-		LegacyID:    "DS006",
-		ShortCode:   "no-self-referencing-copy-from",
-		Summary:     "COPY '--from' referring to the current image",
-		Explanation: "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself.",
-		Impact:      "",
-		Resolution:  "Change the '--from' so that it will not refer to itself",
-		Provider:    "dockerfile",
-		Service:     "general",
-		Links:       []string{"https://docs.docker.com/develop/develop-images/multistage-build/"},
-		Severity:    "CRITICAL",
-		Terraform:   (*scan.EngineMetadata)(nil), CloudFormation: (*scan.EngineMetadata)(nil), CustomChecks: scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)}, RegoPackage: "data.appshield.dockerfile.DS006"}, results.GetFailed()[0].Rule())
+	assert.Equal(
+		t,
+		scan.Rule{
+			AVDID:          "AVD-DS-0006",
+			LegacyID:       "DS006",
+			ShortCode:      "no-self-referencing-copy-from",
+			Summary:        "COPY '--from' referring to the current image",
+			Explanation:    "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself.",
+			Impact:         "",
+			Resolution:     "Change the '--from' so that it will not refer to itself",
+			Provider:       "dockerfile",
+			Service:        "general",
+			Links:          []string{"https://docs.docker.com/develop/develop-images/multistage-build/"},
+			Severity:       "CRITICAL",
+			Terraform:      (*scan.EngineMetadata)(nil),
+			CloudFormation: (*scan.EngineMetadata)(nil),
+			CustomChecks: scan.CustomChecks{
+				Terraform: (*scan.TerraformCustomCheck)(nil)},
+			RegoPackage: "data.appshield.dockerfile.DS006",
+		},
+		results.GetFailed()[0].Rule(),
+	)
+
+	actualCode, err := results.GetFailed()[0].GetCode()
+	require.NoError(t, err)
+	assert.Equal(t, []scan.Line{
+		{
+			Number:     1,
+			Content:    "FROM ubuntu",
+			IsCause:    true,
+			Annotation: "",
+		},
+	}, actualCode.Lines())
 }

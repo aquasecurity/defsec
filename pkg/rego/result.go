@@ -2,6 +2,7 @@ package rego
 
 import (
 	"fmt"
+	"io/fs"
 	"strconv"
 
 	"github.com/aquasecurity/defsec/internal/types"
@@ -20,13 +21,14 @@ type regoResult struct {
 	Explicit  bool
 	Managed   bool
 	FSKey     string
+	FS        fs.FS
 }
 
 func (r regoResult) GetMetadata() types.Metadata {
 	if !r.Managed {
 		return types.NewUnmanagedMetadata()
 	}
-	rng := types.NewRangeWithFSKey(r.Filepath, r.StartLine, r.EndLine, "", r.FSKey)
+	rng := types.NewRangeWithFSKey(r.Filepath, r.StartLine, r.EndLine, "", r.FSKey, r.FS)
 	ref := types.NewNamedReference(r.Resource)
 	if r.Explicit {
 		return types.NewExplicitMetadata(rng, ref)
@@ -103,15 +105,16 @@ func parseLineNumber(raw interface{}) int {
 	return n
 }
 
-func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace string, rule string, traces []string) scan.Results {
+func (s *Scanner) convertResults(set rego.ResultSet, input Input, namespace string, rule string, traces []string) scan.Results {
 	var results scan.Results
 	for _, result := range set {
 		for _, expression := range result.Expressions {
 			values, ok := expression.Value.([]interface{})
 			if !ok {
 				regoResult := parseResult(expression.Value)
-				if regoResult.Filepath == "" && filepath != "" {
-					regoResult.Filepath = filepath
+				regoResult.FS = input.FS
+				if regoResult.Filepath == "" && input.Path != "" {
+					regoResult.Filepath = input.Path
 				}
 				if regoResult.Message == "" {
 					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
@@ -122,8 +125,9 @@ func (s *Scanner) convertResults(set rego.ResultSet, filepath string, namespace 
 
 			for _, value := range values {
 				regoResult := parseResult(value)
-				if regoResult.Filepath == "" && filepath != "" {
-					regoResult.Filepath = filepath
+				regoResult.FS = input.FS
+				if regoResult.Filepath == "" && input.Path != "" {
+					regoResult.Filepath = input.Path
 				}
 				if regoResult.Message == "" {
 					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
