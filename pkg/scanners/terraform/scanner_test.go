@@ -195,20 +195,30 @@ deny[cause] {
 	debugLog := bytes.NewBuffer([]byte{})
 	scanner := New(
 		options.ScannerWithDebug(debugLog),
+		options.ScannerWithPolicyFilesystem(fs),
 		options.ScannerWithPolicyDirs("rules"),
+		ScannerWithRegoOnly(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
 	require.NoError(t, err)
 
-	var found bool
-	for _, result := range results.GetFailed() {
-		if result.Rule().AVDID == "AVD-TEST-0123" {
-			found = true
-			break
-		}
-	}
-	assert.True(t, found)
+	require.Len(t, results.GetFailed(), 1)
+
+	failure := results.GetFailed()[0]
+
+	assert.Equal(t, "AVD-TEST-0123", failure.Rule().AVDID)
+
+	actualCode, err := failure.GetCode()
+	require.NoError(t, err)
+	assert.Equal(t, []scan.Line{
+		{
+			Number:     3,
+			Content:    "\tbucket = \"evil\"",
+			IsCause:    true,
+			Annotation: "",
+		},
+	}, actualCode.Lines())
 
 	if t.Failed() {
 		fmt.Printf("Debug logs:\n%s\n", debugLog.String())

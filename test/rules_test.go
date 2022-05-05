@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/internal/rules"
@@ -58,7 +60,11 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 						t.Run(fmt.Sprintf("example %d", i), func(t *testing.T) {
 							results := scanHCL(t, example)
 							testutil.AssertRuleFound(t, rule.Rule().LongID(), results, "Rule %s was not detected in bad example #%d:\n%s", rule.Rule().LongID(), i, example)
-
+							for _, result := range results.GetFailed() {
+								code, err := result.GetCode()
+								require.NoError(t, err)
+								assert.Greater(t, len(code.Lines()), 0)
+							}
 						})
 					}
 				})
@@ -77,7 +83,11 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 						t.Run(fmt.Sprintf("example %d", i), func(t *testing.T) {
 							results := scanCF(t, example)
 							testutil.AssertRuleFound(t, rule.Rule().LongID(), results, "Rule %s was not detected in bad example #%d:\n%s", rule.Rule().LongID(), i, example)
-
+							for _, result := range results.GetFailed() {
+								code, err := result.GetCode()
+								require.NoError(t, err)
+								assert.Greater(t, len(code.Lines()), 0)
+							}
 						})
 					}
 				})

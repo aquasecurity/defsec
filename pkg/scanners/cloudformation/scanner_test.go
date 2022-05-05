@@ -49,9 +49,9 @@ __rego_input__ := {
 deny[res] {
 	res := {
 		"msg": "oh no",
-		"filepath": "main.yaml",
-		"startline": 1,
-		"endline": 2,
+		"filepath": "code/main.yaml",
+		"startline": 6,
+		"endline": 6,
 	}
 }
 
@@ -78,4 +78,16 @@ deny[res] {
 		Links:       []string{"https://docs.docker.com/develop/develop-images/multistage-build/"},
 		Severity:    "CRITICAL",
 		Terraform:   (*scan.EngineMetadata)(nil), CloudFormation: (*scan.EngineMetadata)(nil), CustomChecks: scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)}, RegoPackage: "data.appshield.dockerfile.DS006"}, results.GetFailed()[0].Rule())
+
+	failure := results.GetFailed()[0]
+	actualCode, err := failure.GetCode()
+	require.NoError(t, err)
+	assert.Equal(t, []scan.Line{
+		{
+			Number:     6,
+			Content:    "      BucketName: public-bucket",
+			IsCause:    true,
+			Annotation: "",
+		},
+	}, actualCode.Lines())
 }

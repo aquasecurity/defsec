@@ -264,6 +264,8 @@ deny[res] {
 		"title": __rego_metadata__.title,
 		"severity": __rego_metadata__.severity,
 		"type": __rego_metadata__.type,
+        "startline": 6,
+        "endline": 10,
 	}
 }
 `,
@@ -292,6 +294,42 @@ deny[res] {
 		CloudFormation: (*scan.EngineMetadata)(nil),
 		CustomChecks:   scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)},
 		RegoPackage:    "data.appshield.kubernetes.KSV011"}, results.GetFailed()[0].Rule())
+
+	failure := results.GetFailed()[0]
+	actualCode, err := failure.GetCode()
+	require.NoError(t, err)
+	assert.Equal(t, []scan.Line{
+		{
+			Number:     6,
+			Content:    "spec: ",
+			IsCause:    true,
+			Annotation: "",
+		},
+		{
+			Number:     7,
+			Content:    "  containers: ",
+			IsCause:    true,
+			Annotation: "",
+		},
+		{
+			Number:     8,
+			Content:    "  - command: [\"sh\", \"-c\", \"echo 'Hello' && sleep 1h\"]",
+			IsCause:    true,
+			Annotation: "",
+		},
+		{
+			Number:     9,
+			Content:    "    image: busybox",
+			IsCause:    true,
+			Annotation: "",
+		},
+		{
+			Number:     10,
+			Content:    "    name: hello",
+			IsCause:    true,
+			Annotation: "",
+		},
+	}, actualCode.Lines())
 }
 
 func Test_FileScan(t *testing.T) {
