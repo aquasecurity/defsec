@@ -2,6 +2,7 @@ package appshield.kubernetes.KSV030
 
 import data.lib.kubernetes
 import data.lib.utils
+import data.lib.defsec
 
 default failSeccompProfileType = false
 
@@ -24,11 +25,10 @@ __rego_input__ := {
 }
 
 # containers
-getContainersWithDisallowedSeccompProfileType[name] {
+getContainersWithDisallowedSeccompProfileType[container] {
 	container := kubernetes.containers[_]
 	type := container.securityContext.seccompProfile.type
 	not type == "RuntimeDefault"
-	name := container.name
 }
 
 # pods
@@ -77,15 +77,9 @@ deny[res] {
 
 # containers
 deny[res] {
-	count(getContainersWithDisallowedSeccompProfileType) > 0
+	output := getContainersWithDisallowedSeccompProfileType[_]
 
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'spec.containers[*].securityContext.seccompProfile.type' to 'RuntimeDefault'", [getContainersWithDisallowedSeccompProfileType[_], kubernetes.kind, kubernetes.name]))
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'spec.containers[*].securityContext.seccompProfile.type' to 'RuntimeDefault'", [output.name, kubernetes.kind, kubernetes.name]))
 
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res = defsec.result(msg, output)
 }

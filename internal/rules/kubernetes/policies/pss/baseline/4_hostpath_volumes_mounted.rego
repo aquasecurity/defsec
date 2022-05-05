@@ -2,6 +2,7 @@ package appshield.kubernetes.KSV023
 
 import data.lib.kubernetes
 import data.lib.utils
+import data.lib.defsec
 
 default failHostPathVolume = false
 
@@ -33,11 +34,5 @@ deny[res] {
 
 	msg := kubernetes.format(sprintf("%s '%s' should not set 'spec.template.volumes.hostPath'", [kubernetes.kind, kubernetes.name]))
 
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res := defsec.result(msg, input.spec)
 }

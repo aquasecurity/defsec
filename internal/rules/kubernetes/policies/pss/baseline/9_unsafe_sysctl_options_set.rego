@@ -2,6 +2,7 @@ package appshield.kubernetes.KSV026
 
 import data.lib.kubernetes
 import data.lib.utils
+import data.lib.defsec
 
 default failSysctls = false
 
@@ -44,11 +45,5 @@ deny[res] {
 
 	msg := kubernetes.format(sprintf("%s '%s' should set 'securityContext.sysctl' to the allowed values", [kubernetes.kind, kubernetes.name]))
 
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res := defsec.result(msg, input.spec)
 }

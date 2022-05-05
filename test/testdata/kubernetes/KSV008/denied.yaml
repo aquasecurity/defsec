@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: "p-test-pep"
+spec:
+  template:
+    metadata:
+      labels:
+        app: pep
+    spec:
+      serviceAccountName: p-serviceaccount
+      hostIPC: true
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+      containers:
+        - image: registry.domain.com:5000/someuser/wolffpepimage
+          name: pepserver
+          volumeMounts:
+            - mountPath: /scratch
+              name: dshm
+  replicas: 1---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello-host-network
+spec:
+  hostPID: false
+  containers:
+    - command:
+        - sh
+        - "-c"
+        - echo 'Hello' && sleep 1h
+      image: busybox
+      name: hello
