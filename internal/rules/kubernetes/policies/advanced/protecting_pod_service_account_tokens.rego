@@ -29,18 +29,14 @@ deny[res] {
     res := defsec.result(msg, input.spec)
 }
 
-isAutomountEnabled(spec) {
-	has_key(spec, "automountServiceAccountToken")
-	spec.automountServiceAccountToken == true
-}
-
 mountServiceAccountToken(spec) {
-	isAutomountEnabled(spec)
+	has_key(spec, "automountServiceAccountToken")
+    spec.automountServiceAccountToken == true
 }
 
 # if there is no automountServiceAccountToken spec, check on volumeMount in containers. Service Account token is mounted on /var/run/secrets/kubernetes.io/serviceaccount
 mountServiceAccountToken(spec) {
-    not isAutomountEnabled(spec)
+    not has_key(spec, "automountServiceAccountToken")
 	"/var/run/secrets/kubernetes.io/serviceaccount" == kubernetes.containers[_].volumeMounts[_].mountPath
 }
 
