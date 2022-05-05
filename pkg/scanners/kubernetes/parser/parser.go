@@ -11,10 +11,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	"gopkg.in/yaml.v3"
+
 	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
-	"gopkg.in/yaml.v3"
 )
 
 var _ options.ConfigurableParser = (*Parser)(nil)

@@ -31,18 +31,13 @@ getCapsDropAllContainers[container] {
 
 # Get all containers which don't include 'ALL' in security.capabilities.drop
 getCapsNoDropAllContainers[container] {
-	container := kubernetes.containers[_].name
-	not getCapsDropAllContainers[container]
+	containerName := kubernetes.containers[_].name
+	not getCapsDropAllContainers[containerName]
 }
 
-# checkCapsDropAll is true if capabilities drop does not include 'ALL',
-# or if capabilities drop is not specified at all.
-checkCapsDropAll {
-	count(getCapsNoDropAllContainers) > 0
-}
 
 deny[res] {
-	checkCapsDropAll
+	output := getCapsNoDropAllContainers[_]
 
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should add 'ALL' to 'securityContext.capabilities.drop'", [getCapsNoDropAllContainers[_], kubernetes.kind, kubernetes.name]))
 

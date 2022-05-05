@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"context"
+	"os"
 	"strings"
 	"testing"
 
@@ -446,4 +447,44 @@ deny[msg] {
 	require.NoError(t, err)
 
 	assert.Equal(t, 1, len(results.GetFailed()))
+}
+
+func Test_FileScanWithMetadata(t *testing.T) {
+
+	results, err := NewScanner(
+		options.ScannerWithDebug(os.Stdout),
+		options.ScannerWithTrace(os.Stdout),
+		options.OptionWithPolicyReaders(strings.NewReader(`package defsec
+
+deny[msg] {
+  input.kind == "Pod"
+  msg := {
+          "msg": "fail",
+          "startline": 2,
+		  "endline": 2,
+          "filepath": "chartname/template/serviceAccount.yaml"
+        }
+}
+`))).ScanReader(
+		context.TODO(),
+		"k8s.yaml",
+		strings.NewReader(`
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: hello-cpu-limit
+spec: 
+  containers: 
+  - command: ["sh", "-c", "echo 'Hello' && sleep 1h"]
+    image: busybox
+    name: hello
+`))
+	require.NoError(t, err)
+
+	assert.Greater(t, len(results.GetFailed()), 0)
+
+	firstResult := results.GetFailed()[0]
+	assert.Equal(t, 2, firstResult.Metadata().Range().GetStartLine())
+	assert.Equal(t, 2, firstResult.Metadata().Range().GetEndLine())
+	assert.Equal(t, "chartname/template/serviceAccount.yaml", firstResult.Metadata().Range().GetFilename())
 }

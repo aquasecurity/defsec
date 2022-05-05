@@ -95,7 +95,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) error {
 			return nil
 		}
 
-		return p.addPaths(ctx, path)
+		return p.addPaths(path)
 	}); err != nil {
 		return err
 	}
@@ -103,7 +103,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) error {
 	return nil
 }
 
-func (p *Parser) addPaths(ctx context.Context, paths ...string) error {
+func (p *Parser) addPaths(paths ...string) error {
 	for _, path := range paths {
 		if _, err := fs.Stat(p.workingFS, path); err != nil {
 			return err
