@@ -119,7 +119,7 @@ func (p *Parser) addPaths(paths ...string) error {
 
 func (p *Parser) RenderedChartFiles() ([]ChartFile, error) {
 
-	tempDir, err := ioutil.TempDir(os.TempDir(), p.chartName)
+	tempDir, err := ioutil.TempDir(os.TempDir(), "defsec")
 	if err != nil {
 		return nil, err
 	}
@@ -198,7 +198,11 @@ func getManifestPath(manifest string) string {
 	if len(lines) == 0 {
 		return "unknown.yaml"
 	}
-	return strings.TrimPrefix(lines[0], "# Source: ")
+	manifestFilePathParts := strings.SplitN(strings.TrimPrefix(lines[0], "# Source: "), "/", 2)
+	if len(manifestFilePathParts) > 1 {
+		return manifestFilePathParts[1]
+	}
+	return manifestFilePathParts[0]
 }
 
 func (p *Parser) writeBuildFiles(tempFs string) error {
@@ -207,6 +211,7 @@ func (p *Parser) writeBuildFiles(tempFs string) error {
 		if err != nil {
 			return err
 		}
+		fmt.Printf("path: %s, rootPath: %s\n", path, p.rootPath)
 		workingPath := strings.TrimPrefix(path, p.rootPath)
 		workingPath = filepath.Join(tempFs, workingPath)
 		if err := os.MkdirAll(filepath.Dir(workingPath), os.ModePerm); err != nil {

@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV202
+package appshield.kubernetes.KSV102
 
 import data.lib.kubernetes
+import data.lib.defsec
 
 __rego_metadata__ := {
 	"id": "KSV102",
@@ -21,35 +22,38 @@ __rego_input__ := {
 
 # Get all containers and check kubernetes metadata for tiller
 tillerDeployed[container] {
-	currentContainer := kubernetes.containers[_]
+	container := kubernetes.containers[_]
 	checkMetadata(input.metadata)
-	container := currentContainer.name
 }
 
 # Get all containers and check each image for tiller
 tillerDeployed[container] {
-	currentContainer := kubernetes.containers[_]
-	contains(currentContainer.image, "tiller")
-	container := currentContainer.name
+	container := kubernetes.containers[_]
+	contains(container.image, "tiller")
 }
 
 # Get all pods and check each metadata for tiller
 tillerDeployed[pod] {
-	currentPod := kubernetes.pods[_]
-	checkMetadata(currentPod.metadata)
-	pod := currentPod.metadata.name
+	pod := kubernetes.pods[_]
+	checkMetadata(pod.metadata)
 }
 
-deny[res] {
-	msg := kubernetes.format(sprintf("container '%s' of %s '%s' in '%s' namespace shouldn't have tiller deployed", [tillerDeployed[_], lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
+getName(output):= name{
+    name := output.metadata.name
+}
 
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+getName(output):= name{
+    name := output.name
+}
+
+
+deny[res] {
+
+    output := tillerDeployed[_]
+
+	msg := kubernetes.format(sprintf("container '%s' of %s '%s' in '%s' namespace shouldn't have tiller deployed", [getName(output), lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
+
+	res := defsec.result(msg, output)
 }
 
 # Check for tiller by resource name

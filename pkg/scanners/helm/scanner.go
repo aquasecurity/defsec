@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"path/filepath"
 	"strings"
+
+	"github.com/liamg/memoryfs"
 
 	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/aquasecurity/defsec/internal/types"
@@ -89,11 +92,11 @@ func (s *Scanner) SetPolicyFilesystem(policyFS fs.FS) {
 	s.policyFS = policyFS
 }
 
-func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Results, error) {
+func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, path string) (scan.Results, error) {
 
 	helmParser := parser.New(s.chartName)
 
-	if err := helmParser.ParseFS(ctx, fs, path); err != nil {
+	if err := helmParser.ParseFS(ctx, target, path); err != nil {
 		return nil, err
 	}
 
@@ -104,7 +107,8 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 
 	var results []scan.Result
 	regoScanner := rego.NewScanner(s.options...)
-	policyFS := fs
+	s.loadEmbedded = len(s.policyDirs)+len(s.policyReaders) == 0
+	policyFS := target
 	if s.policyFS != nil {
 		policyFS = s.policyFS
 	}
@@ -114,7 +118,7 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 	for _, file := range chartFiles {
 		s.debug.Log("Processing rendered chart file: %s", file.TemplateFilePath)
 
-		manifests, err := kparser.New().Parse(strings.NewReader(file.ManifestContent))
+		manifests, err := kparser.New().Parse(strings.NewReader(file.ManifestContent), file.TemplateFilePath)
 		if err != nil {
 			return nil, fmt.Errorf("unmarshal yaml: %w", err)
 		}
@@ -127,6 +131,20 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 			if err != nil {
 				return nil, fmt.Errorf("scanning error: %w", err)
 			}
+
+			if len(fileResults) > 0 {
+				renderedFS := memoryfs.New()
+				if err := renderedFS.MkdirAll(filepath.Dir(file.TemplateFilePath), fs.ModePerm); err != nil {
+					return nil, err
+				}
+				if err := renderedFS.WriteLazyFile(file.TemplateFilePath, func() (io.Reader, error) {
+					return strings.NewReader(file.ManifestContent), nil
+				}, fs.ModePerm); err != nil {
+					return nil, err
+				}
+				fileResults.SetSourceAndFilesystem("", renderedFS)
+			}
+
 			results = append(results, fileResults...)
 		}
 	}

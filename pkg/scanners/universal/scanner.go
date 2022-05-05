@@ -4,6 +4,7 @@ import (
 	"context"
 	"io/fs"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/helm"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/json"
@@ -40,6 +41,7 @@ func New(opts ...options.ScannerOption) *Scanner {
 			json.NewScanner(opts...),
 			yaml.NewScanner(opts...),
 			toml.NewScanner(opts...),
+			helm.New("mysql", opts...),
 		},
 	}
 	return s

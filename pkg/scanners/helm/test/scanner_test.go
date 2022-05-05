@@ -47,7 +47,7 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 		require.NotNil(t, results)
 
 		failed := results.GetFailed()
-		assert.Equal(t, 32, len(failed))
+		assert.Equal(t, 26, len(failed))
 
 		visited := make(map[string]bool)
 		var errorCodes []string
@@ -96,7 +96,7 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 		require.NotNil(t, results)
 
 		failed := results.GetFailed()
-		assert.Equal(t, 22, len(failed))
+		assert.Equal(t, 20, len(failed))
 
 		visited := make(map[string]bool)
 		var errorCodes []string

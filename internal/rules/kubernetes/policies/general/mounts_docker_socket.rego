@@ -1,6 +1,7 @@
 package appshield.kubernetes.KSV006
 
 import data.lib.kubernetes
+import data.lib.defsec
 
 name = input.metadata.name
 
@@ -36,11 +37,5 @@ deny[res] {
 
 	msg := kubernetes.format(sprintf("%s '%s' should not specify '/var/run/docker.socker' in 'spec.template.volumes.hostPath.path'", [kubernetes.kind, kubernetes.name]))
 
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res := defsec.result(msg, input.spec)
 }

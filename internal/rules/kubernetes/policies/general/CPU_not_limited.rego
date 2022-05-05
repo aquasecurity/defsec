@@ -2,6 +2,7 @@ package appshield.kubernetes.KSV011
 
 import data.lib.kubernetes
 import data.lib.utils
+import data.lib.defsec
 
 default failLimitsCPU = false
 
@@ -25,34 +26,23 @@ __rego_input__ := {
 
 # getLimitsCPUContainers returns all containers which have set resources.limits.cpu
 getLimitsCPUContainers[container] {
-	allContainers := kubernetes.containers[_]
-	utils.has_key(allContainers.resources.limits, "cpu")
-	container := allContainers.name
+	container := kubernetes.containers[_]
+	utils.has_key(container.resources.limits, "cpu")
 }
 
 # getNoLimitsCPUContainers returns all containers which have not set
 # resources.limits.cpu
 getNoLimitsCPUContainers[container] {
-	container := kubernetes.containers[_].name
+	container := kubernetes.containers[_]
 	not getLimitsCPUContainers[container]
 }
 
-# failLimitsCPU is true if containers[].resources.limits.cpu is not set
-# for ANY container
-failLimitsCPU {
-	count(getNoLimitsCPUContainers) > 0
-}
+
 
 deny[res] {
-	failLimitsCPU
+	output := getNoLimitsCPUContainers[_]
 
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'resources.limits.cpu'", [getNoLimitsCPUContainers[_], kubernetes.kind, kubernetes.name]))
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'resources.limits.cpu'", [output.name, kubernetes.kind, kubernetes.name]))
 
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res := defsec.result(msg, output)
 }

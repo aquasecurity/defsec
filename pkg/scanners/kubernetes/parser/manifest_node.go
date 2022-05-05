@@ -26,6 +26,9 @@ type ManifestNode struct {
 }
 
 func (r *ManifestNode) ToRego() interface{} {
+	if r == nil {
+		return nil
+	}
 	switch r.Type {
 	case TagBool, TagInt, TagString:
 		return r.Value
