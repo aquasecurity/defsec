@@ -38,9 +38,9 @@ getCapsNoDropAllContainers[container] {
 
 
 deny[res] {
-	output := getCapsNoDropAllContainers[_]
+	container := getCapsNoDropAllContainers[_]
 
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should add 'ALL' to 'securityContext.capabilities.drop'", [getCapsNoDropAllContainers[_], kubernetes.kind, kubernetes.name]))
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should add 'ALL' to 'securityContext.capabilities.drop'", [container.name, kubernetes.kind, kubernetes.name]))
 
-    res := defsec.result(msg, output)
+    res := defsec.result(msg, container)
 }
