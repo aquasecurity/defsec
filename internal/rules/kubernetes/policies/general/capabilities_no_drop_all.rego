@@ -1,6 +1,7 @@
 package appshield.kubernetes.KSV003
 
 import data.lib.kubernetes
+import data.lib.defsec
 
 default checkCapsDropAll = false
 
@@ -25,14 +26,14 @@ __rego_input__ := {
 # Get all containers which include 'ALL' in security.capabilities.drop
 getCapsDropAllContainers[container] {
 	allContainers := kubernetes.containers[_]
-	allContainers.securityContext.capabilities.drop[_] == "ALL"
+	lower(allContainers.securityContext.capabilities.drop[_]) == "all"
 	container := allContainers.name
 }
 
 # Get all containers which don't include 'ALL' in security.capabilities.drop
 getCapsNoDropAllContainers[container] {
-	containerName := kubernetes.containers[_].name
-	not getCapsDropAllContainers[containerName]
+	container := kubernetes.containers[_]
+	not getCapsDropAllContainers[container.name]
 }
 
 
@@ -41,11 +42,5 @@ deny[res] {
 
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should add 'ALL' to 'securityContext.capabilities.drop'", [getCapsNoDropAllContainers[_], kubernetes.kind, kubernetes.name]))
 
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+    res := defsec.result(msg, output)
 }

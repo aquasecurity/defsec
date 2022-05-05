@@ -488,3 +488,84 @@ spec:
 	assert.Equal(t, 2, firstResult.Metadata().Range().GetEndLine())
 	assert.Equal(t, "chartname/template/serviceAccount.yaml", firstResult.Metadata().Range().GetFilename())
 }
+
+func Test_FileScanExampleWithResultFunction(t *testing.T) {
+
+	results, err := NewScanner(
+		options.ScannerWithDebug(os.Stdout),
+		options.ScannerWithTrace(os.Stdout),
+		options.ScannerWithPolicyFilesystem(os.DirFS("../../../internal/rules")),
+		options.ScannerWithPolicyDirs("defsec/lib", "kubernetes/lib"),
+		options.OptionWithPolicyReaders(strings.NewReader(`package defsec
+
+import data.lib.kubernetes
+import data.lib.defsec
+
+default checkCapsDropAll = false
+
+__rego_metadata__ := {
+"id": "KSV003",
+"avd_id": "AVD-KSV-0003",
+"title": "Default capabilities not dropped",
+"short_code": "drop-default-capabilities",
+"version": "v1.0.0",
+"severity": "LOW",
+"type": "Kubernetes Security Check",
+"description": "The container should drop all default capabilities and add only those that are needed for its execution.",
+"recommended_actions": "Add 'ALL' to containers[].securityContext.capabilities.drop.",
+"url": "https://kubesec.io/basics/containers-securitycontext-capabilities-drop-index-all/",
+}
+
+__rego_input__ := {
+"combine": false,
+"selector": [{"type": "kubernetes"}],
+}
+
+# Get all containers which include 'ALL' in security.capabilities.drop
+getCapsDropAllContainers[container] {
+allContainers := kubernetes.containers[_]
+lower(allContainers.securityContext.capabilities.drop[_]) == "all"
+container := allContainers.name
+}
+
+# Get all containers which don't include 'ALL' in security.capabilities.drop
+getCapsNoDropAllContainers[container] {
+container := kubernetes.containers[_]
+not getCapsDropAllContainers[container.name]
+}
+
+deny[res] {
+output := getCapsNoDropAllContainers[_]
+
+msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should add 'ALL' to 'securityContext.capabilities.drop'", [output.name, kubernetes.kind, kubernetes.name]))
+
+res := defsec.result(msg, output)
+}
+
+`))).ScanReader(
+		context.TODO(),
+		"k8s.yaml",
+		strings.NewReader(`
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: hello-cpu-limit
+spec: 
+  containers: 
+  - command: ["sh", "-c", "echo 'Hello' && sleep 1h"]
+    image: busybox
+    name: hello
+    securityContext:
+      capabilities:
+        drop:
+        - nothing
+`))
+	require.NoError(t, err)
+
+	require.Greater(t, len(results.GetFailed()), 0)
+
+	firstResult := results.GetFailed()[0]
+	assert.Equal(t, 8, firstResult.Metadata().Range().GetStartLine())
+	assert.Equal(t, 14, firstResult.Metadata().Range().GetEndLine())
+	assert.Equal(t, "k8s.yaml", firstResult.Metadata().Range().GetFilename())
+}

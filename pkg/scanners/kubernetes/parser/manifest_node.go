@@ -7,135 +7,109 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const (
-	StartLine = "startline"
-	EndLine   = "endline"
-	Value     = "value"
-)
+type TagType string
 
 const (
-	TagBool   = "!!bool"
-	TagInt    = "!!int"
-	TagString = "!!str"
-	TagSlice  = "!!seq"
-	TagMap    = "!!map"
+	TagBool   TagType = "!!bool"
+	TagInt    TagType = "!!int"
+	TagString TagType = "!!str"
+	TagSlice  TagType = "!!seq"
+	TagMap    TagType = "!!map"
 )
 
-type ManifestNode map[string]interface{}
-
-func (r ManifestNode) Value() interface{} {
-	if val, ok := r[Value]; ok {
-		return val
-	}
-	return r
+type ManifestNode struct {
+	StartLine int
+	EndLine   int
+	Value     interface{}
+	Type      TagType
+	Path      string
 }
 
-func (r ManifestNode) StartLine() int {
-	if val, ok := r[StartLine]; ok {
-		return val.(int)
-	}
-	return 0
-}
-
-func (r ManifestNode) EndLine() int {
-	if val, ok := r[EndLine]; ok {
-		return val.(int)
-	}
-	return 0
-}
-
-func (r ManifestNode) UnmarshalYAML(node *yaml.Node) error {
-
-	switch node.Tag {
-	case TagString:
-		if err := r.decodeString(node); err != nil {
-			return err
-		}
-	case TagInt:
-		if err := r.decodeInt(node); err != nil {
-			return err
-		}
-	case TagBool:
-		if err := r.decodeBool(node); err != nil {
-			return err
-		}
-	case TagMap:
-		if err := r.decodeMap(node); err != nil {
-			return err
-		}
+func (r *ManifestNode) ToRego() interface{} {
+	switch r.Type {
+	case TagBool, TagInt, TagString:
+		return r.Value
 	case TagSlice:
-		if err := r.decodeSlice(node); err != nil {
+		var output []interface{}
+		for _, node := range r.Value.([]ManifestNode) {
+			output = append(output, node.ToRego())
+		}
+		return output
+	case TagMap:
+		output := make(map[string]interface{})
+		output["__defsec_metadata"] = map[string]interface{}{
+			"startline": r.StartLine,
+			"endline":   r.EndLine,
+			"filepath":  r.Path,
+		}
+		for key, node := range r.Value.(map[string]ManifestNode) {
+			output[key] = node.ToRego()
+		}
+		return output
+	}
+	return nil
+}
+
+func (r *ManifestNode) UnmarshalYAML(node *yaml.Node) error {
+
+	r.StartLine = node.Line
+	r.EndLine = node.Line
+	r.Type = TagType(node.Tag)
+
+	switch TagType(node.Tag) {
+	case TagString:
+		r.Value = node.Value
+	case TagInt:
+		val, err := strconv.Atoi(node.Value)
+		if err != nil {
 			return err
 		}
-	default:
-		return fmt.Errorf("node tag is not supported %s", node.Tag)
-	}
-
-	return nil
-}
-
-func (r ManifestNode) decodeString(node *yaml.Node) error {
-	r[StartLine] = node.Line
-	r[EndLine] = node.Line
-	r[Value] = node.Value
-	return nil
-}
-
-func (r ManifestNode) decodeInt(node *yaml.Node) error {
-	r[StartLine] = node.Line
-	r[EndLine] = node.Line
-	if val, err := strconv.Atoi(node.Value); err != nil {
-		return err
-	} else {
-		r[Value] = val
-	}
-	return nil
-}
-
-func (r ManifestNode) decodeBool(node *yaml.Node) error {
-	r[StartLine] = node.Line
-	r[EndLine] = node.Line
-	if val, err := strconv.ParseBool(node.Value); err != nil {
-		return err
-	} else {
-		r[Value] = val
-	}
-	return nil
-}
-
-func (r ManifestNode) decodeSlice(node *yaml.Node) error {
-	var nodes []ManifestNode
-	for _, contentNode := range node.Content {
-		newNode := make(ManifestNode)
-		if err := contentNode.Decode(&newNode); err != nil {
+		r.Value = val
+	case TagBool:
+		val, err := strconv.ParseBool(node.Value)
+		if err != nil {
 			return err
 		}
-		nodes = append(nodes, newNode)
-	}
-	r[StartLine] = node.Line - 1
-	r[EndLine] = node.Line
-	r[Value] = nodes
-	return nil
-}
-
-func (r ManifestNode) decodeMap(node *yaml.Node) error {
-	var key string
-	for i, contentNode := range node.Content {
-		if i == 0 || i%2 == 0 {
-
-			key = contentNode.Value
-		} else {
-			newNode := make(ManifestNode)
-			if err := contentNode.Decode(&newNode); err != nil {
+		r.Value = val
+	case TagMap:
+		output := make(map[string]ManifestNode)
+		var key string
+		max := node.Line
+		for i, contentNode := range node.Content {
+			if i == 0 || i%2 == 0 {
+				key = contentNode.Value
+			} else {
+				newNode := new(ManifestNode)
+				newNode.Path = r.Path
+				if err := contentNode.Decode(newNode); err != nil {
+					return err
+				}
+				output[key] = *newNode
+				if newNode.EndLine > max {
+					max = newNode.EndLine
+				}
+			}
+		}
+		r.EndLine = max
+		r.Value = output
+	case TagSlice:
+		var nodes []ManifestNode
+		max := node.Line
+		for _, contentNode := range node.Content {
+			newNode := new(ManifestNode)
+			newNode.Path = r.Path
+			if err := contentNode.Decode(newNode); err != nil {
 				return err
 			}
-			r[key] = newNode.Value()
-			r[StartLine] = node.Line - 1
-			r[EndLine] = newNode.EndLine()
-
-			r[fmt.Sprintf("%s__%s", key, StartLine)] = newNode.StartLine()
-			r[fmt.Sprintf("%s__%s", key, EndLine)] = newNode.EndLine()
+			if newNode.EndLine > max {
+				max = newNode.EndLine
+			}
+			nodes = append(nodes, *newNode)
 		}
+		r.EndLine = max
+		r.Value = nodes
+	default:
+		return fmt.Errorf("node tag is not supported %s", node.Tag)
 	}
 	return nil
 }
