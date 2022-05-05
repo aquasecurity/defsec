@@ -1,8 +1,8 @@
 package appshield.kubernetes.KSV029
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
-import data.lib.defsec
 
 default failRootGroupId = false
 
@@ -69,5 +69,5 @@ deny[res] {
 
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'spec.securityContext.runAsGroup' to integer greater than  0", [output.name, kubernetes.kind, kubernetes.name]))
 
-    res := defsec.result(msg, output)
+	res := defsec.result(msg, output)
 }

@@ -1,8 +1,8 @@
 package appshield.kubernetes.KSV038
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
-import data.lib.defsec
 
 __rego_metadata__ := {
 	"id": "KSV038",

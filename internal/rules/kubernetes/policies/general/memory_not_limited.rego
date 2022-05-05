@@ -1,8 +1,8 @@
 package appshield.kubernetes.KSV018
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
-import data.lib.defsec
 
 default failLimitsMemory = false
 
@@ -28,7 +28,6 @@ __rego_input__ := {
 getLimitsMemoryContainers[container] {
 	container := kubernetes.containers[_]
 	utils.has_key(container.resources.limits, "memory")
-
 }
 
 # getNoLimitsMemoryContainers returns all containers which have not set

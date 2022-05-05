@@ -1,8 +1,8 @@
 package appshield.kubernetes.KSV016
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
-import data.lib.defsec
 
 default failRequestsMemory = false
 

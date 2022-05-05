@@ -1,7 +1,7 @@
 package appshield.kubernetes.KSV006
 
-import data.lib.kubernetes
 import data.lib.defsec
+import data.lib.kubernetes
 
 name = input.metadata.name
 

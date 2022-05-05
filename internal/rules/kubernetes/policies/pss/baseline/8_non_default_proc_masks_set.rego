@@ -1,8 +1,8 @@
 package appshield.kubernetes.KSV027
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
-import data.lib.defsec
 
 default failProcMount = false
 
@@ -31,7 +31,7 @@ failProcMountOpts[container] {
 }
 
 deny[res] {
-	output:= failProcMountOpts[_]
+	output := failProcMountOpts[_]
 
 	msg := kubernetes.format(sprintf("%s '%s' should not set 'spec.containers[*].securityContext.procMount' or 'spec.initContainers[*].securityContext.procMount'", [kubernetes.kind, kubernetes.name]))
 

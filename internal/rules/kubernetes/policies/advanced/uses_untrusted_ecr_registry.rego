@@ -1,8 +1,8 @@
 package appshield.kubernetes.KSV035
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
-import data.lib.defsec
 
 default failTrustedECRRegistry = false
 

@@ -1,8 +1,8 @@
 package appshield.kubernetes.KSV036
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
-import data.lib.defsec
 
 __rego_metadata__ := {
 	"id": "KSV036",
@@ -26,17 +26,17 @@ deny[res] {
 	mountServiceAccountToken(input.spec)
 	msg := kubernetes.format(sprintf("Container of %s '%s' should set 'spec.automountServiceAccountToken' to false", [kubernetes.kind, kubernetes.name]))
 
-    res := defsec.result(msg, input.spec)
+	res := defsec.result(msg, input.spec)
 }
 
 mountServiceAccountToken(spec) {
 	has_key(spec, "automountServiceAccountToken")
-    spec.automountServiceAccountToken == true
+	spec.automountServiceAccountToken == true
 }
 
 # if there is no automountServiceAccountToken spec, check on volumeMount in containers. Service Account token is mounted on /var/run/secrets/kubernetes.io/serviceaccount
 mountServiceAccountToken(spec) {
-    not has_key(spec, "automountServiceAccountToken")
+	not has_key(spec, "automountServiceAccountToken")
 	"/var/run/secrets/kubernetes.io/serviceaccount" == kubernetes.containers[_].volumeMounts[_].mountPath
 }
 

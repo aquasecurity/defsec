@@ -1,8 +1,8 @@
 package appshield.kubernetes.KSV001
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
-import data.lib.defsec
 
 default checkAllowPrivilegeEscalation = false
 
@@ -39,8 +39,6 @@ getPrivilegeEscalationContainers[container] {
 	not getNoPrivilegeEscalationContainers[containerName]
 	container := kubernetes.containers[_]
 }
-
-
 
 deny[res] {
 	output := getPrivilegeEscalationContainers[_]

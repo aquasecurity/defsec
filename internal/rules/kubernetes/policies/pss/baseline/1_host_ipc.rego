@@ -1,7 +1,7 @@
 package appshield.kubernetes.KSV008
 
-import data.lib.kubernetes
 import data.lib.defsec
+import data.lib.kubernetes
 
 default failHostIPC = false
 

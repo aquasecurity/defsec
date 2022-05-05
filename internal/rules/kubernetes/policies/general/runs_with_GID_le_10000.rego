@@ -1,8 +1,8 @@
 package appshield.kubernetes.KSV021
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
-import data.lib.defsec
 
 default failRunAsGroup = false
 
@@ -29,7 +29,6 @@ __rego_input__ := {
 getGroupIdContainers[container] {
 	container := kubernetes.containers[_]
 	container.securityContext.runAsGroup <= 10000
-
 }
 
 # getGroupIdContainers returns the names of all containers which do
@@ -37,7 +36,6 @@ getGroupIdContainers[container] {
 getGroupIdContainers[container] {
 	container := kubernetes.containers[_]
 	not utils.has_key(container.securityContext, "runAsGroup")
-
 }
 
 # getGroupIdContainers returns the names of all containers which do
@@ -46,8 +44,6 @@ getGroupIdContainers[container] {
 	container := kubernetes.containers[_]
 	not utils.has_key(container, "securityContext")
 }
-
-
 
 deny[res] {
 	output := getGroupIdContainers[_]

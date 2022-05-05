@@ -1,8 +1,8 @@
 package appshield.kubernetes.KSV011
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
-import data.lib.defsec
 
 default failLimitsCPU = false
 
@@ -36,8 +36,6 @@ getNoLimitsCPUContainers[container] {
 	container := kubernetes.containers[_]
 	not getLimitsCPUContainers[container]
 }
-
-
 
 deny[res] {
 	output := getNoLimitsCPUContainers[_]

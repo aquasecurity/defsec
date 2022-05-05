@@ -1,7 +1,7 @@
 package appshield.kubernetes.KSV102
 
-import data.lib.kubernetes
 import data.lib.defsec
+import data.lib.kubernetes
 
 __rego_metadata__ := {
 	"id": "KSV102",
@@ -38,18 +38,16 @@ tillerDeployed[pod] {
 	checkMetadata(pod.metadata)
 }
 
-getName(output):= name{
-    name := output.metadata.name
+getName(output) = name {
+	name := output.metadata.name
 }
 
-getName(output):= name{
-    name := output.name
+getName(output) = name {
+	name := output.name
 }
-
 
 deny[res] {
-
-    output := tillerDeployed[_]
+	output := tillerDeployed[_]
 
 	msg := kubernetes.format(sprintf("container '%s' of %s '%s' in '%s' namespace shouldn't have tiller deployed", [getName(output), lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
 

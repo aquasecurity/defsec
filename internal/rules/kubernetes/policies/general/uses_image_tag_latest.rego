@@ -1,7 +1,7 @@
 package appshield.kubernetes.KSV013
 
-import data.lib.kubernetes
 import data.lib.defsec
+import data.lib.kubernetes
 
 default checkUsingLatestTag = false
 

@@ -1,7 +1,7 @@
 package appshield.kubernetes.KSV022
 
-import data.lib.kubernetes
 import data.lib.defsec
+import data.lib.kubernetes
 
 default failAdditionalCaps = false
 

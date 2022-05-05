@@ -1,7 +1,7 @@
 package appshield.kubernetes.KSV005
 
-import data.lib.kubernetes
 import data.lib.defsec
+import data.lib.kubernetes
 
 default failCapsSysAdmin = false
 
