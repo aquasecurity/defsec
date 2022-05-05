@@ -2,6 +2,7 @@ package appshield.kubernetes.KSV040
 
 import data.lib.kubernetes
 import data.lib.utils
+import data.lib.defsec
 
 __rego_metadata__ := {
 	"id": "KSV040",
@@ -23,13 +24,7 @@ __rego_input__ := {
 deny[res] {
 	not resourceQuotaConfigure
 	msg := "resource quota policy with hard memory and cpu quota per namespace should be configure"
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+    res := defsec.result(msg, object.get(input.spec, "hard", input.spec))
 }
 
 resourceQuotaConfigure {

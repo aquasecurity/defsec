@@ -2,6 +2,7 @@ package appshield.kubernetes.KSV004
 
 import data.lib.kubernetes
 import data.lib.utils
+import data.lib.defsec
 
 default failCapsDropAny = false
 
@@ -34,26 +35,14 @@ getCapsDropAnyContainers[container] {
 # getNoCapsDropContainers returns names of all containers which
 # do not set securityContext.capabilities.drop
 getNoCapsDropContainers[container] {
-	container := kubernetes.containers[_].name
-	not getCapsDropAnyContainers[container]
-}
-
-# failCapsDropAny is true if ANY container does not
-# set securityContext.capabilities.drop
-failCapsDropAny {
-	count(getNoCapsDropContainers) > 0
+	container := kubernetes.containers[_]
+	not getCapsDropAnyContainers[container.name]
 }
 
 deny[res] {
-	failCapsDropAny
+	container := getNoCapsDropContainers[_]
 
-	msg := kubernetes.format(sprintf("Container '%s' of '%s' '%s' in '%s' namespace should set securityContext.capabilities.drop", [getNoCapsDropContainers[_], lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
+	msg := kubernetes.format(sprintf("Container '%s' of '%s' '%s' in '%s' namespace should set securityContext.capabilities.drop", [container.name, lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
 
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res := defsec.result(msg, container)
 }

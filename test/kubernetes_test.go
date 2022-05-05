@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/kubernetes"
@@ -54,6 +55,9 @@ func Test_Kubernetes_RegoPoliciesFromDisk(t *testing.T) {
 						assert.Equal(t, scan.StatusPassed, result.Status(), "Rule should have passed, but didn't.")
 						matched = true
 					default:
+						if strings.Contains(result.Range().GetFilename(), entry.Name()) {
+							t.Fatal(result.Range().GetFilename())
+						}
 						continue
 					}
 

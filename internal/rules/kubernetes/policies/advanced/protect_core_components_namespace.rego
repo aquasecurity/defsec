@@ -2,6 +2,7 @@ package appshield.kubernetes.KSV037
 
 import data.lib.kubernetes
 import data.lib.utils
+import data.lib.defsec
 
 __rego_metadata__ := {
 	"id": "KSV037",
@@ -24,13 +25,7 @@ __rego_input__ := {
 deny[res] {
 	systemNamespaceInUse(input.metadata, input.spec)
 	msg := sprintf("%s '%s' should not be set with 'kube-system' namespace", [kubernetes.kind, kubernetes.name])
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+    res := defsec.result(msg, input.spec)
 }
 
 systemNamespaceInUse(metadata, spec) {

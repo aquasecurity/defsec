@@ -2,6 +2,7 @@ package appshield.kubernetes.KSV032
 
 import data.lib.kubernetes
 import data.lib.utils
+import data.lib.defsec
 
 default failTrustedAzureRegistry = false
 
@@ -40,27 +41,15 @@ getContainersWithTrustedAzureRegistry[name] {
 
 # getContainersWithUntrustedAzureRegistry returns a list of containers
 # with image from an untrusted Azure registry
-getContainersWithUntrustedAzureRegistry[name] {
-	name := kubernetes.containers[_].name
-	not getContainersWithTrustedAzureRegistry[name]
-}
-
-# failTrustedAzureRegistry is true if a container uses an image from an
-# untrusted Azure registry
-failTrustedAzureRegistry {
-	count(getContainersWithUntrustedAzureRegistry) > 0
+getContainersWithUntrustedAzureRegistry[container] {
+	container := kubernetes.containers[_]
+	not getContainersWithTrustedAzureRegistry[container.name]
 }
 
 deny[res] {
-	failTrustedAzureRegistry
+	container := getContainersWithUntrustedAzureRegistry[_]
 
-	msg := kubernetes.format(sprintf("container %s of %s %s in %s namespace should restrict container image to your specific registry domain. For Azure any domain ending in 'azurecr.io'", [getContainersWithUntrustedAzureRegistry[_], lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
+	msg := kubernetes.format(sprintf("container %s of %s %s in %s namespace should restrict container image to your specific registry domain. For Azure any domain ending in 'azurecr.io'", [container.name, lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
 
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+    res := defsec.result(msg, container)
 }
