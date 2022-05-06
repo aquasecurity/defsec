@@ -3,10 +3,8 @@ package formatters
 import (
 	"encoding/xml"
 	"fmt"
-	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 )
@@ -59,10 +57,10 @@ func outputJUnit(b ConfigurableFormatter, results scan.Results) error {
 				continue
 			}
 		}
-		rng := res.Range()
+		path := b.Path(res)
 		output.TestCases = append(output.TestCases,
 			jUnitTestCase{
-				Classname: rng.GetFilename(),
+				Classname: path,
 				Name:      fmt.Sprintf("[%s][%s] - %s", res.Rule().LongID(), res.Severity(), res.Description()),
 				Time:      "0",
 				Failure:   buildFailure(b, res),
@@ -81,45 +79,15 @@ func outputJUnit(b ConfigurableFormatter, results scan.Results) error {
 }
 
 // highlight the lines of code which caused a problem, if available
-func highlightCodeJunit(srcFS fs.FS, res scan.Result) string {
-
-	if srcFS == nil {
-		return ""
-	}
-
-	data, err := fs.ReadFile(srcFS, res.Range().GetFilename())
+func highlightCodeJunit(res scan.Result) string {
+	code, err := res.GetCode()
 	if err != nil {
 		return ""
 	}
-
-	lines := append([]string{""}, strings.Split(string(data), "\n")...)
-
-	rng := res.Range()
-
-	start := rng.GetStartLine() - 3
-	if start <= 0 {
-		start = 1
+	var output string
+	for _, line := range code.Lines() {
+		output += fmt.Sprintf("%s\n", line.Content)
 	}
-	end := rng.GetEndLine() + 3
-	if end >= len(lines) {
-		end = len(lines) - 1
-	}
-
-	output := ""
-
-	for lineNo := start; lineNo <= end; lineNo++ {
-		output += fmt.Sprintf("  % 6d | ", lineNo)
-		if lineNo >= rng.GetStartLine() && lineNo <= rng.GetEndLine() {
-			if lineNo == rng.GetStartLine() && res.Annotation() != "" {
-				output += fmt.Sprintf("%s    %s\n", lines[lineNo], res.Annotation())
-			} else {
-				output += fmt.Sprintf("%s\n", lines[lineNo])
-			}
-		} else {
-			output += fmt.Sprintf("%s\n", lines[lineNo])
-		}
-	}
-
 	return output
 }
 
@@ -138,7 +106,7 @@ func buildFailure(b ConfigurableFormatter, res scan.Result) *jUnitFailure {
 		Message: res.Description(),
 		Contents: fmt.Sprintf("%s\n%s\n%s",
 			res.Range().String(),
-			highlightCodeJunit(res.Range().GetFS(), res),
+			highlightCodeJunit(res),
 			link,
 		),
 	}

@@ -50,6 +50,16 @@ func (f *factory) WithGroupingEnabled(enabled bool) *factory {
 	return f
 }
 
+func (f *factory) WithFSRoot(root string) *factory {
+	f.base.fsRoot = root
+	return f
+}
+
+func (f *factory) WithRelativePaths(relative bool) *factory {
+	f.base.relative = relative
+	return f
+}
+
 func (f *factory) WithBaseDir(dir string) *factory {
 	f.base.baseDir = dir
 	return f
