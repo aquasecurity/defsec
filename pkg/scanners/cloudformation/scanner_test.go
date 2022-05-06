@@ -80,7 +80,7 @@ deny[res] {
 		Terraform:   (*scan.EngineMetadata)(nil), CloudFormation: (*scan.EngineMetadata)(nil), CustomChecks: scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)}, RegoPackage: "data.appshield.dockerfile.DS006"}, results.GetFailed()[0].Rule())
 
 	failure := results.GetFailed()[0]
-	actualCode, err := failure.GetCode()
+	actualCode, err := failure.GetCode(false)
 	require.NoError(t, err)
 	assert.Equal(t, []scan.Line{
 		{

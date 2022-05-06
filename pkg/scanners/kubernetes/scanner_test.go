@@ -296,7 +296,7 @@ deny[res] {
 		RegoPackage:    "data.appshield.kubernetes.KSV011"}, results.GetFailed()[0].Rule())
 
 	failure := results.GetFailed()[0]
-	actualCode, err := failure.GetCode()
+	actualCode, err := failure.GetCode(false)
 	require.NoError(t, err)
 	assert.Equal(t, []scan.Line{
 		{

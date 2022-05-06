@@ -39,7 +39,7 @@ func (c *Code) IsCauseMultiline() bool {
 }
 
 // nolint
-func (r *Result) GetCode() (*Code, error) {
+func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 
 	srcFS := r.Metadata().Range().GetFS()
 	if srcFS == nil {
@@ -150,6 +150,8 @@ func (r *Result) GetCode() (*Code, error) {
 		}
 	}
 
-	code.lines = highlight(innerRange.GetLocalFilename(), code.lines)
+	if enableHighlighting {
+		code.lines = highlight(innerRange.GetLocalFilename(), code.lines)
+	}
 	return &code, nil
 }
