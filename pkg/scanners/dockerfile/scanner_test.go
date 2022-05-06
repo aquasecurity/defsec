@@ -90,7 +90,7 @@ deny[res] {
 		results.GetFailed()[0].Rule(),
 	)
 
-	actualCode, err := results.GetFailed()[0].GetCode()
+	actualCode, err := results.GetFailed()[0].GetCode(false)
 	require.NoError(t, err)
 	assert.Equal(t, []scan.Line{
 		{

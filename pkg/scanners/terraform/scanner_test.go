@@ -209,7 +209,7 @@ deny[cause] {
 
 	assert.Equal(t, "AVD-TEST-0123", failure.Rule().AVDID)
 
-	actualCode, err := failure.GetCode()
+	actualCode, err := failure.GetCode(false)
 	require.NoError(t, err)
 	assert.Equal(t, []scan.Line{
 		{

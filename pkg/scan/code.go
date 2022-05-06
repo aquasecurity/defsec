@@ -11,10 +11,14 @@ type Code struct {
 }
 
 type Line struct {
-	Number     int
-	Content    string
-	IsCause    bool
-	Annotation string
+	Number      int
+	Content     string
+	IsCause     bool
+	Annotation  string
+	Truncated   bool
+	Highlighted string
+	FirstCause  bool
+	LastCause   bool
 }
 
 func (c *Code) Lines() []Line {
@@ -34,7 +38,8 @@ func (c *Code) IsCauseMultiline() bool {
 	return false
 }
 
-func (r *Result) GetCode() (*Code, error) {
+// nolint
+func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 
 	srcFS := r.Metadata().Range().GetFS()
 	if srcFS == nil {
@@ -43,11 +48,14 @@ func (r *Result) GetCode() (*Code, error) {
 
 	innerRange := r.Range()
 	outerRange := innerRange
-	if !innerRange.IsMultiLine() {
-		metadata := r.Metadata()
-		if parent := metadata.Parent(); parent != nil {
+	metadata := r.Metadata()
+	for {
+		if parent := metadata.Parent(); parent != nil && parent.Range().GetFilename() == metadata.Range().GetFilename() {
 			outerRange = parent.Range()
+			metadata = *parent
+			continue
 		}
+		break
 	}
 
 	content, err := fs.ReadFile(srcFS, r.fsPath)
@@ -67,20 +75,83 @@ func (r *Result) GetCode() (*Code, error) {
 		return nil, fmt.Errorf("invalid line number")
 	}
 
-	for lineNo := outerRange.GetStartLine(); lineNo <= outerRange.GetEndLine(); lineNo++ {
+	shrink := outerRange.LineCount() > (innerRange.LineCount() + 10)
 
-		line := Line{
-			Number:  lineNo,
-			Content: strings.TrimSuffix(rawLines[lineNo-1], "\r"),
-			IsCause: lineNo >= innerRange.GetStartLine() && lineNo <= innerRange.GetEndLine(),
+	if shrink {
+
+		if outerRange.GetStartLine() < innerRange.GetStartLine() {
+			code.lines = append(
+				code.lines,
+				Line{
+					Content: rawLines[outerRange.GetStartLine()-1],
+					Number:  outerRange.GetStartLine(),
+				},
+			)
+			if outerRange.GetStartLine()+1 < innerRange.GetStartLine() {
+				code.lines = append(
+					code.lines,
+					Line{
+						Truncated: true,
+						Number:    outerRange.GetStartLine() + 1,
+					},
+				)
+			}
 		}
 
-		if hasAnnotation && lineNo == innerRange.GetStartLine() {
-			line.Annotation = r.Annotation()
+		for lineNo := innerRange.GetStartLine(); lineNo <= innerRange.GetEndLine(); lineNo++ {
+
+			line := Line{
+				Number:  lineNo,
+				Content: strings.TrimSuffix(rawLines[lineNo-1], "\r"),
+				IsCause: true,
+			}
+
+			if hasAnnotation && lineNo == innerRange.GetStartLine() {
+				line.Annotation = r.Annotation()
+			}
+
+			code.lines = append(code.lines, line)
 		}
 
-		code.lines = append(code.lines, line)
+		if outerRange.GetEndLine() > innerRange.GetEndLine() {
+			if outerRange.GetEndLine() > innerRange.GetEndLine()+1 {
+				code.lines = append(
+					code.lines,
+					Line{
+						Truncated: true,
+						Number:    outerRange.GetEndLine() - 1,
+					},
+				)
+			}
+			code.lines = append(
+				code.lines,
+				Line{
+					Content: rawLines[outerRange.GetEndLine()-1],
+					Number:  outerRange.GetEndLine(),
+				},
+			)
+
+		}
+
+	} else {
+		for lineNo := outerRange.GetStartLine(); lineNo <= outerRange.GetEndLine(); lineNo++ {
+
+			line := Line{
+				Number:  lineNo,
+				Content: strings.TrimSuffix(rawLines[lineNo-1], "\r"),
+				IsCause: lineNo >= innerRange.GetStartLine() && lineNo <= innerRange.GetEndLine(),
+			}
+
+			if hasAnnotation && lineNo == innerRange.GetStartLine() {
+				line.Annotation = r.Annotation()
+			}
+
+			code.lines = append(code.lines, line)
+		}
 	}
 
+	if enableHighlighting {
+		code.lines = highlight(innerRange.GetLocalFilename(), code.lines)
+	}
 	return &code, nil
 }
