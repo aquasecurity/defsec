@@ -104,6 +104,48 @@ func (r Result) Traces() []string {
 	return r.traces
 }
 
+func (r *Result) AbsolutePath(fsRoot string) string {
+	if strings.HasSuffix(fsRoot, ":") {
+		fsRoot += "/"
+	}
+
+	m := r.Metadata()
+	if m.IsUnmanaged() || m.Range() == nil {
+		return ""
+	}
+	rng := m.Range()
+	if rng.GetSourcePrefix() != "" && !strings.HasPrefix(rng.GetSourcePrefix(), ".") {
+		return rng.GetFilename()
+	}
+	return filepath.Join(fsRoot, rng.GetLocalFilename())
+}
+
+func (r *Result) RelativePathTo(fsRoot string, to string) string {
+
+	absolute := r.AbsolutePath(fsRoot)
+
+	if strings.HasSuffix(fsRoot, ":") {
+		fsRoot += "/"
+	}
+
+	m := r.Metadata()
+	if m.IsUnmanaged() || m.Range() == nil {
+		return absolute
+	}
+	rng := m.Range()
+	if rng.GetSourcePrefix() != "" && !strings.HasPrefix(rng.GetSourcePrefix(), ".") {
+		return absolute
+	}
+	if !strings.HasPrefix(rng.GetLocalFilename(), strings.TrimSuffix(fsRoot, "/")) {
+		return absolute
+	}
+	relative, err := filepath.Rel(to, rng.GetLocalFilename())
+	if err != nil {
+		return absolute
+	}
+	return relative
+}
+
 type Results []Result
 
 type MetadataProvider interface {
@@ -207,82 +249,6 @@ func (r *Results) SetRule(rule Rule) {
 	for i := range *r {
 		(*r)[i].rule = rule
 	}
-}
-
-func (r *Results) Absolute(fsRoot string) Results {
-
-	if strings.HasSuffix(fsRoot, ":") {
-		fsRoot += "/"
-	}
-
-	var filtered Results
-	for i := range *r {
-		m := (*r)[i].Metadata()
-		if m.IsUnmanaged() || m.Range() == nil {
-			filtered = append(filtered, (*r)[i])
-			continue
-		}
-		rng := m.Range()
-		if rng.GetSourcePrefix() != "" && !strings.HasPrefix(rng.GetSourcePrefix(), ".") {
-			filtered = append(filtered, (*r)[i])
-			continue
-		}
-		absolute := filepath.Join(fsRoot, rng.GetLocalFilename())
-		newRange := types.NewRange(absolute, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())
-		switch {
-		case m.IsExplicit():
-			m = types.NewExplicitMetadata(newRange, m.Reference())
-		default:
-			m = types.NewMetadata(newRange, m.Reference())
-		}
-		result := (*r)[i]
-		result.OverrideMetadata(m)
-		filtered = append(filtered, result)
-	}
-	return filtered
-}
-
-func (r *Results) RelativeTo(fsRoot string, to string) Results {
-
-	absolute := r.Absolute(fsRoot)
-
-	if strings.HasSuffix(fsRoot, ":") {
-		fsRoot += "/"
-	}
-
-	var filtered Results
-	for i := range absolute {
-		m := (absolute)[i].Metadata()
-		if m.IsUnmanaged() || m.Range() == nil {
-			filtered = append(filtered, absolute[i])
-			continue
-		}
-		rng := m.Range()
-		if rng.GetSourcePrefix() != "" && !strings.HasPrefix(rng.GetSourcePrefix(), ".") {
-			filtered = append(filtered, (*r)[i])
-			continue
-		}
-		if !strings.HasPrefix(rng.GetLocalFilename(), strings.TrimSuffix(fsRoot, "/")) {
-			filtered = append(filtered, absolute[i])
-			continue
-		}
-		relative, err := filepath.Rel(to, rng.GetLocalFilename())
-		if err != nil {
-			filtered = append(filtered, absolute[i])
-			continue
-		}
-		newRange := types.NewRange(relative, rng.GetStartLine(), rng.GetEndLine(), rng.GetSourcePrefix(), rng.GetFS())
-		switch {
-		case m.IsExplicit():
-			m = types.NewExplicitMetadata(newRange, m.Reference())
-		default:
-			m = types.NewMetadata(newRange, m.Reference())
-		}
-		result := absolute[i]
-		result.OverrideMetadata(m)
-		filtered = append(filtered, result)
-	}
-	return filtered
 }
 
 func (r *Results) SetSourceAndFilesystem(source string, f fs.FS) {
