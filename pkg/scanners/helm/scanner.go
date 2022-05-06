@@ -27,6 +27,7 @@ type Scanner struct {
 	policyReaders []io.Reader
 	regoScanner   *rego.Scanner
 	parser        *parser.Parser
+	loadEmbedded  bool
 	policyFS      fs.FS
 	skipRequired  bool
 }
@@ -42,6 +43,10 @@ func New(chartName string, options ...options.ScannerOption) *Scanner {
 		option(s)
 	}
 	return s
+}
+
+func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
+	s.loadEmbedded = b
 }
 
 func (s *Scanner) Name() string {
@@ -99,12 +104,11 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 
 	var results []scan.Result
 	regoScanner := rego.NewScanner(s.options...)
-	loadEmbedded := len(s.policyDirs)+len(s.policyReaders) == 0
 	policyFS := fs
 	if s.policyFS != nil {
 		policyFS = s.policyFS
 	}
-	if err := regoScanner.LoadPolicies(loadEmbedded, policyFS, s.policyDirs, s.policyReaders); err != nil {
+	if err := regoScanner.LoadPolicies(s.loadEmbedded, policyFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, fmt.Errorf("policies load: %w", err)
 	}
 	for _, file := range chartFiles {

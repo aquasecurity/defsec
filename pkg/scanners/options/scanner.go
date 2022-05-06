@@ -15,6 +15,7 @@ type ConfigurableScanner interface {
 	SetSkipRequiredCheck(bool)
 	SetPolicyReaders([]io.Reader)
 	SetPolicyFilesystem(fs.FS)
+	SetUseEmbeddedPolicies(bool)
 }
 
 type ScannerOption func(s ConfigurableScanner)
@@ -29,6 +30,12 @@ func OptionWithPolicyReaders(readers ...io.Reader) ScannerOption {
 func ScannerWithDebug(w io.Writer) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetDebugWriter(w)
+	}
+}
+
+func ScannerWithEmbeddedPolicies(embedded bool) ScannerOption {
+	return func(s ConfigurableScanner) {
+		s.SetUseEmbeddedPolicies(embedded)
 	}
 }
 

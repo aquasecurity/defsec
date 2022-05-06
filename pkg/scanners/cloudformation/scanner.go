@@ -36,8 +36,13 @@ type Scanner struct {
 	regoScanner   *rego.Scanner
 	skipRequired  bool
 	regoOnly      bool
+	loadEmbedded  bool
 	options       []options.ScannerOption
 	sync.Mutex
+}
+
+func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
+	s.loadEmbedded = b
 }
 
 func (s *Scanner) SetRegoOnly(regoOnly bool) {
@@ -92,7 +97,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 		return s.regoScanner, nil
 	}
 	regoScanner := rego.NewScanner(s.options...)
-	if err := regoScanner.LoadPolicies(len(s.policyDirs)+len(s.policyReaders) == 0, srcFS, s.policyDirs, s.policyReaders); err != nil {
+	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner

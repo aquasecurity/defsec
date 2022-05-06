@@ -34,6 +34,10 @@ type Scanner struct {
 	policyFS       fs.FS
 }
 
+func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
+	// handled externally
+}
+
 func (s *Scanner) SetPolicyFilesystem(fs fs.FS) {
 	s.policyFS = fs
 }
