@@ -334,7 +334,7 @@ deny[res] {
 
 func Test_FileScan(t *testing.T) {
 
-	results, err := NewScanner().ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(`
+	results, err := NewScanner(options.ScannerWithEmbeddedPolicies(true)).ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(`
 apiVersion: v1
 kind: Pod
 metadata: 
@@ -352,7 +352,7 @@ spec:
 
 func Test_FileScan_WithSeparator(t *testing.T) {
 
-	results, err := NewScanner().ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(`
+	results, err := NewScanner(options.ScannerWithEmbeddedPolicies(true)).ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(`
 ---
 ---
 apiVersion: v1

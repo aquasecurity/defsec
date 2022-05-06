@@ -42,6 +42,11 @@ type Scanner struct {
 	debug                   debug.Logger
 	enableEmbeddedLibraries bool
 	sync.Mutex
+	loadEmbedded bool
+}
+
+func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
+	s.loadEmbedded = b
 }
 
 func (s *Scanner) SetEmbeddedLibrariesEnabled(enabled bool) {
@@ -133,7 +138,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 			return nil, fmt.Errorf("failed to load embedded libraries: %w", err)
 		}
 	}
-	if err := regoScanner.LoadPolicies(len(s.policyDirs)+len(s.policyReaders) == 0, srcFS, s.policyDirs, s.policyReaders); err != nil {
+	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner
