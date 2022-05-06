@@ -59,7 +59,10 @@ func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 		break
 	}
 
-	content, err := fs.ReadFile(srcFS, filepath.ToSlash(r.fsPath))
+	slashed := filepath.ToSlash(r.fsPath)
+	slashed = strings.TrimPrefix(slashed, "/")
+
+	content, err := fs.ReadFile(srcFS, slashed)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read file from result filesystem (%#v): %w", srcFS, err)
 	}
