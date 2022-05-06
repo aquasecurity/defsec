@@ -20,6 +20,7 @@ import (
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/elasticache"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/elasticsearch"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/elb"
+	_ "github.com/aquasecurity/defsec/internal/rules/aws/emr"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/iam"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/kinesis"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/kms"
