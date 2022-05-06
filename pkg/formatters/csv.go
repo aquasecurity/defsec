@@ -32,9 +32,10 @@ func outputCSV(b ConfigurableFormatter, results scan.Results) error {
 		}
 
 		rng := res.Range()
+		path := b.Path(res)
 
 		records = append(records, []string{
-			rng.GetFilename(),
+			path,
 			strconv.Itoa(rng.GetStartLine()),
 			strconv.Itoa(rng.GetEndLine()),
 			res.Rule().LongID(),

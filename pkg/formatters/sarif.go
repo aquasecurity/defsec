@@ -53,8 +53,10 @@ func outputSARIF(b ConfigurableFormatter, results scan.Results) error {
 			level = "error"
 		}
 
+		path := b.Path(res)
+
 		location := sarif.NewPhysicalLocation().
-			WithArtifactLocation(sarif.NewSimpleArtifactLocation(rng.GetFilename())).
+			WithArtifactLocation(sarif.NewSimpleArtifactLocation(path)).
 			WithRegion(region)
 
 		ruleResult := run.CreateResultForRule(rule.ID)

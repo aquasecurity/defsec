@@ -57,8 +57,10 @@ func outputCheckStyle(b ConfigurableFormatter, results scan.Results) error {
 
 		rng := res.Range()
 
-		files[rng.GetFilename()] = append(
-			files[rng.GetFilename()],
+		path := b.Path(res)
+
+		files[path] = append(
+			files[path],
 			checkstyleResult{
 				Source:   res.Rule().LongID(),
 				Line:     rng.GetStartLine(),

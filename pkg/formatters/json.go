@@ -23,6 +23,7 @@ func outputJSON(b ConfigurableFormatter, results scan.Results) error {
 		}
 		flat := result.Flatten()
 		flat.Links = b.GetLinks(result)
+		flat.Location.Filename = b.Path(result)
 		flatResults = append(flatResults, flat)
 	}
 	return jsonWriter.Encode(struct {

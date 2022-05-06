@@ -25,6 +25,7 @@ type ConfigurableFormatter interface {
 	GroupResults([]scan.Result) ([]GroupedResult, error)
 	IncludePassed() bool
 	IncludeIgnored() bool
+	Path(result scan.Result) string
 }
 
 type Base struct {
@@ -34,8 +35,10 @@ type Base struct {
 	enableDebug    bool
 	includePassed  bool
 	includeIgnored bool
+	fsRoot         string
 	baseDir        string
 	writer         io.Writer
+	relative       bool
 	outputOverride func(ConfigurableFormatter, scan.Results) error
 	linksOverride  func(result scan.Result) []string
 }
@@ -48,13 +51,22 @@ func NewBase() *Base {
 		enableDebug:    false,
 		includePassed:  false,
 		includeIgnored: false,
+		fsRoot:         "",
 		baseDir:        ".",
+		relative:       true,
 		writer:         os.Stdout,
 		outputOverride: outputSARIF,
 		linksOverride: func(result scan.Result) []string {
 			return result.Rule().Links
 		},
 	}
+}
+
+func (b *Base) Path(result scan.Result) string {
+	if b.relative {
+		return result.RelativePathTo(b.fsRoot, b.baseDir)
+	}
+	return result.AbsolutePath(b.fsRoot)
 }
 
 func (b *Base) IncludePassed() bool {
