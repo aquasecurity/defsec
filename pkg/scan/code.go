@@ -3,6 +3,7 @@ package scan
 import (
 	"fmt"
 	"io/fs"
+	"path/filepath"
 	"strings"
 )
 
@@ -58,7 +59,7 @@ func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 		break
 	}
 
-	content, err := fs.ReadFile(srcFS, r.fsPath)
+	content, err := fs.ReadFile(srcFS, filepath.ToSlash(r.fsPath))
 	if err != nil {
 		return nil, fmt.Errorf("failed to read file from result filesystem (%#v): %w", srcFS, err)
 	}
