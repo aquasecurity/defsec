@@ -86,7 +86,9 @@ func highlightCodeJunit(res scan.Result) string {
 	}
 	var output string
 	for _, line := range code.Lines() {
-		output += fmt.Sprintf("%s\n", line.Content)
+		if line.IsCause {
+			output += fmt.Sprintf("%s\n", line.Content)
+		}
 	}
 	return output
 }
