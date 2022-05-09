@@ -23,12 +23,9 @@ import (
 type Scanner struct {
 	policyDirs    []string
 	dataDirs      []string
-	paths         []string
 	debug         debug.Logger
 	options       []options.ScannerOption
 	policyReaders []io.Reader
-	regoScanner   *rego.Scanner
-	parser        *parser.Parser
 	loadEmbedded  bool
 	policyFS      fs.FS
 	skipRequired  bool
