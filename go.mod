@@ -16,7 +16,7 @@ require (
 	github.com/liamg/memoryfs v1.4.1
 	github.com/liamg/tml v0.6.0
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/moby/buildkit v0.10.2
+	github.com/moby/buildkit v0.10.3
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/open-policy-agent/opa v0.40.0
 	github.com/owenrumney/go-sarif/v2 v2.1.1
