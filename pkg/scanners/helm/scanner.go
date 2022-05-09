@@ -21,7 +21,6 @@ import (
 )
 
 type Scanner struct {
-	chartName     string
 	policyDirs    []string
 	dataDirs      []string
 	paths         []string
@@ -36,10 +35,9 @@ type Scanner struct {
 }
 
 // New creates a new Scanner
-func New(chartName string, options ...options.ScannerOption) *Scanner {
+func New(options ...options.ScannerOption) *Scanner {
 	s := &Scanner{
-		chartName: chartName,
-		options:   options,
+		options: options,
 	}
 
 	for _, option := range options {
@@ -94,7 +92,7 @@ func (s *Scanner) SetPolicyFilesystem(policyFS fs.FS) {
 
 func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, path string) (scan.Results, error) {
 
-	helmParser := parser.New(s.chartName)
+	helmParser := parser.New()
 
 	if err := helmParser.ParseFS(ctx, target, path); err != nil {
 		return nil, err

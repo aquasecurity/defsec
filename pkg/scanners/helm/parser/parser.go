@@ -13,6 +13,7 @@ import (
 	"sort"
 	"strings"
 
+	"gopkg.in/yaml.v3"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/chart/loader"
@@ -27,7 +28,6 @@ import (
 var manifestNameRegex = regexp.MustCompile("# Source: [^/]+/(.+)")
 
 type Parser struct {
-	chartName    string
 	helmClient   *action.Install
 	rootPath     string
 	filepaths    []string
@@ -49,16 +49,14 @@ func (p *Parser) SetSkipRequiredCheck(b bool) {
 	p.skipRequired = b
 }
 
-func New(chartName string, options ...options.ParserOption) *Parser {
+func New(options ...options.ParserOption) *Parser {
 
 	client := action.NewInstall(&action.Configuration{})
-	client.DryRun = true  // don't do anything
-	client.Replace = true // skip name check
-	client.ReleaseName = chartName
+	client.DryRun = true     // don't do anything
+	client.Replace = true    // skip name check
 	client.ClientOnly = true // don't try to talk to a cluster
 
 	p := &Parser{
-		chartName:  chartName,
 		helmClient: client,
 	}
 
@@ -110,9 +108,32 @@ func (p *Parser) addPaths(paths ...string) error {
 		}
 
 		if strings.HasSuffix(path, "Chart.yaml") && p.rootPath == "" {
+			if err := p.extractChartName(path); err != nil {
+				return err
+			}
 			p.rootPath = filepath.Dir(path)
 		}
 		p.filepaths = append(p.filepaths, path)
+	}
+	return nil
+}
+
+func (p *Parser) extractChartName(chartPath string) error {
+
+	chart, err := p.workingFS.Open(chartPath)
+	if err != nil {
+		return err
+	}
+
+	var chartContent map[string]interface{}
+	if err := yaml.NewDecoder(chart).Decode(&chartContent); err != nil {
+		return err
+	}
+
+	if name, ok := chartContent["name"]; !ok {
+		return fmt.Errorf("could not extract the chart name from %s", chartPath)
+	} else {
+		p.helmClient.ReleaseName = name.(string)
 	}
 	return nil
 }

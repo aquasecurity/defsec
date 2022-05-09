@@ -41,7 +41,7 @@ func New(opts ...options.ScannerOption) *Scanner {
 			json.NewScanner(opts...),
 			yaml.NewScanner(opts...),
 			toml.NewScanner(opts...),
-			helm.New("mysql", opts...),
+			helm.New(opts...),
 		},
 	}
 	return s
