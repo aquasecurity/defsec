@@ -27,6 +27,7 @@ get_duplicate_alias[output] {
 	[_, alias1] := regex.split(`\s+as\s+`, output1.arg)
 	[_, alias2] := regex.split(`\s+as\s+`, output2.arg)
 	alias1 == alias2
+	output1.cmd.StartLine < output2.cmd.StartLine # avoid duplicates
 	output := {
 		"alias": alias1,
 		"cmd": output1.cmd,

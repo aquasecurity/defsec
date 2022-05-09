@@ -37,7 +37,7 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 		t.Run(entry.Name(), func(t *testing.T) {
 			require.NoError(t, err)
 			t.Run(entry.Name(), func(t *testing.T) {
-				var matched bool
+				var matched int
 				for _, result := range results {
 					if (result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name()) && result.Status() == scan.StatusFailed {
 						if result.Description() != "Specify at least 1 USER command in Dockerfile with non-root user as argument" {
@@ -45,10 +45,10 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 							assert.Greater(t, result.Range().GetEndLine(), 0)
 						}
 						assert.Equal(t, fmt.Sprintf("test/testdata/dockerfile/%s/Dockerfile.denied", entry.Name()), result.Range().GetFilename())
-						matched = true
+						matched++
 					}
 				}
-				assert.True(t, matched)
+				assert.Equal(t, 1, matched, "Rule should be matched once")
 			})
 
 		})
