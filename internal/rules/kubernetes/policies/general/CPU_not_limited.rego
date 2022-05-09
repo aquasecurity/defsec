@@ -39,8 +39,6 @@ getNoLimitsCPUContainers[container] {
 
 deny[res] {
 	output := getNoLimitsCPUContainers[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'resources.limits.cpu'", [output.name, kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, output)
 }

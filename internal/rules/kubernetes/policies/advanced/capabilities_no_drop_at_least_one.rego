@@ -41,8 +41,6 @@ getNoCapsDropContainers[container] {
 
 deny[res] {
 	container := getNoCapsDropContainers[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of '%s' '%s' in '%s' namespace should set securityContext.capabilities.drop", [container.name, lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
-
 	res := defsec.result(msg, container)
 }

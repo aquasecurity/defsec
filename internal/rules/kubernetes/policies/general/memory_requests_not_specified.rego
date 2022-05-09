@@ -39,8 +39,6 @@ getNoRequestsMemoryContainers[container] {
 
 deny[res] {
 	output := getNoRequestsMemoryContainers[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'resources.requests.memory'", [output.name, kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, output)
 }

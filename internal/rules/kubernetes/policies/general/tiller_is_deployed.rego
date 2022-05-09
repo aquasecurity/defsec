@@ -46,14 +46,6 @@ getName(output) = name {
 	name := output.name
 }
 
-deny[res] {
-	output := tillerDeployed[_]
-
-	msg := kubernetes.format(sprintf("container '%s' of %s '%s' in '%s' namespace shouldn't have tiller deployed", [getName(output), lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
-
-	res := defsec.result(msg, output)
-}
-
 # Check for tiller by resource name
 checkMetadata(metadata) {
 	contains(metadata.name, "tiller")
@@ -67,4 +59,10 @@ checkMetadata(metadata) {
 # Check for tiller by name label
 checkMetadata(metadata) {
 	metadata.labels.name == "tiller"
+}
+
+deny[res] {
+	output := tillerDeployed[_]
+	msg := kubernetes.format(sprintf("container '%s' of %s '%s' in '%s' namespace shouldn't have tiller deployed", [getName(output), lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
+	res := defsec.result(msg, output)
 }

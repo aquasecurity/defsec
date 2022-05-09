@@ -22,12 +22,6 @@ __rego_input__ := {
 	"selector": [{"type": "kubernetes"}],
 }
 
-deny[res] {
-	not hasSelector(input.spec)
-	msg := "Network policy should uses podSelector and/or the namespaceSelector to restrict ingress and egress traffic within the Pod network"
-	res := defsec.result(msg, input.spec)
-}
-
 hasSelector(spec) {
 	lower(kubernetes.kind) == "networkpolicy"
 	kubernetes.has_field(spec, "podSelector")
@@ -86,4 +80,10 @@ hasSelector(spec) {
 
 contains(arr, elem) {
 	arr[_] = elem
+}
+
+deny[res] {
+	not hasSelector(input.spec)
+	msg := "Network policy should uses podSelector and/or the namespaceSelector to restrict ingress and egress traffic within the Pod network"
+	res := defsec.result(msg, input.spec)
 }

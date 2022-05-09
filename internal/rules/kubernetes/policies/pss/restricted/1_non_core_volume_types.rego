@@ -64,8 +64,6 @@ failVolumeTypes {
 
 deny[res] {
 	failVolumeTypes
-
 	msg := kubernetes.format(sprintf("%s '%s' should set 'spec.volumes[*]' to type 'PersistentVolumeClaim'", [kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, input.spec)
 }

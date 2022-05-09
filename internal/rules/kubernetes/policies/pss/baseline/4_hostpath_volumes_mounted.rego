@@ -31,8 +31,6 @@ failHostPathVolume {
 
 deny[res] {
 	failHostPathVolume
-
 	msg := kubernetes.format(sprintf("%s '%s' should not set 'spec.template.volumes.hostPath'", [kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, input.spec)
 }

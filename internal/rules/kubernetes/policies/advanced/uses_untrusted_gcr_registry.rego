@@ -57,8 +57,6 @@ getContainersWithUntrustedGCRRegistry[container] {
 
 deny[res] {
 	container := getContainersWithUntrustedGCRRegistry[_]
-
 	msg := kubernetes.format(sprintf("container %s of %s %s in %s namespace should restrict container image to your specific registry domain. See the full GCR list here: https://cloud.google.com/container-registry/docs/overview#registries", [container.name, lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
-
 	res := defsec.result(msg, container)
 }

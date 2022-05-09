@@ -42,8 +42,6 @@ failSysctls {
 
 deny[res] {
 	failSysctls
-
 	msg := kubernetes.format(sprintf("%s '%s' should set 'securityContext.sysctl' to the allowed values", [kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, input.spec)
 }

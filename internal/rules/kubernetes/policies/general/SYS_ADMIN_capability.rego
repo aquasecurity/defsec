@@ -32,8 +32,6 @@ getCapsSysAdmin[container] {
 
 deny[res] {
 	output := getCapsSysAdmin[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should not include 'SYS_ADMIN' in 'securityContext.capabilities.add'", [output.name, kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, output)
 }

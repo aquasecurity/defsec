@@ -77,7 +77,6 @@ getContainersWithUntrustedECRRegistry[container] {
 
 deny[res] {
 	container := getContainersWithUntrustedECRRegistry[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should restrict images to own ECR repository. See the full ECR list here: https://docs.aws.amazon.com/general/latest/gr/ecr.html", [container.name, kubernetes.kind, kubernetes.name]))
 	res := defsec.result(msg, container)
 }

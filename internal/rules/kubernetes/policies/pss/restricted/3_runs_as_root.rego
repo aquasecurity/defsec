@@ -52,10 +52,7 @@ checkRunAsNonRootPod {
 
 deny[res] {
 	checkRunAsNonRootPod
-
 	output := getRootContainers[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.runAsNonRoot' to true", [output.name, kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, output)
 }

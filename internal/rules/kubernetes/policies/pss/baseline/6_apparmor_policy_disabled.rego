@@ -37,8 +37,6 @@ custom_apparmor_containers[container] {
 
 deny[res] {
 	output := custom_apparmor_containers[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should specify an AppArmor profile", [output.name, kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, output)
 }

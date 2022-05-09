@@ -70,18 +70,13 @@ hasAllowedType(options) {
 
 deny[res] {
 	type := failSELinuxType[_]
-
 	msg := kubernetes.format(sprintf("%s '%s' uses invalid seLinux type '%s'", [kubernetes.kind, kubernetes.name, type]))
-
 	res := defsec.result(msg, input.spec)
 }
 
 deny[res] {
 	keys := failForbiddenSELinuxProperties
-
 	count(keys) > 0
-
 	msg := kubernetes.format(sprintf("%s '%s' uses restricted properties in seLinuxOptions: (%s)", [kubernetes.kind, kubernetes.name, concat(", ", keys)]))
-
 	res := defsec.result(msg, input.spec)
 }

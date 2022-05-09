@@ -48,8 +48,6 @@ getContainersWithUntrustedAzureRegistry[container] {
 
 deny[res] {
 	container := getContainersWithUntrustedAzureRegistry[_]
-
 	msg := kubernetes.format(sprintf("container %s of %s %s in %s namespace should restrict container image to your specific registry domain. For Azure any domain ending in 'azurecr.io'", [container.name, lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
-
 	res := defsec.result(msg, container)
 }

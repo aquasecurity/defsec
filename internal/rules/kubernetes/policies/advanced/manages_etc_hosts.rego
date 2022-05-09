@@ -29,8 +29,6 @@ failHostAliases[spec] {
 
 deny[res] {
 	spec := failHostAliases[_]
-
 	msg := kubernetes.format(sprintf("'%s' '%s' in '%s' namespace should not set spec.template.spec.hostAliases", [lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
-
 	res := defsec.result(msg, spec)
 }

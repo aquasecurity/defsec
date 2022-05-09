@@ -30,8 +30,6 @@ failHostIPC {
 
 deny[res] {
 	failHostIPC
-
 	msg := kubernetes.format(sprintf("%s '%s' should not set 'spec.template.spec.hostIPC' to true", [kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, input.spec)
 }

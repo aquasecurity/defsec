@@ -21,12 +21,6 @@ __rego_input__ := {
 	"selector": [{"type": "kubernetes"}],
 }
 
-deny[res] {
-	not resourceQuotaConfigure
-	msg := "resource quota policy with hard memory and cpu quota per namespace should be configure"
-	res := defsec.result(msg, object.get(input.spec, "hard", input.spec))
-}
-
 resourceQuotaConfigure {
 	lower(input.kind) == "resourcequota"
 	input.spec[hard]
@@ -34,4 +28,10 @@ resourceQuotaConfigure {
 	kubernetes.has_field(input.spec.hard, "requests.memory")
 	kubernetes.has_field(input.spec.hard, "limits.cpu")
 	kubernetes.has_field(input.spec.hard, "limits.memory")
+}
+
+deny[res] {
+	not resourceQuotaConfigure
+	msg := "resource quota policy with hard memory and cpu quota per namespace should be configure"
+	res := defsec.result(msg, object.get(input.spec, "hard", input.spec))
 }

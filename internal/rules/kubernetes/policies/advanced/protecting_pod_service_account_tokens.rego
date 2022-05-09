@@ -22,13 +22,6 @@ __rego_input__ := {
 	"selector": [{"type": "kubernetes"}],
 }
 
-deny[res] {
-	mountServiceAccountToken(input.spec)
-	msg := kubernetes.format(sprintf("Container of %s '%s' should set 'spec.automountServiceAccountToken' to false", [kubernetes.kind, kubernetes.name]))
-
-	res := defsec.result(msg, input.spec)
-}
-
 mountServiceAccountToken(spec) {
 	has_key(spec, "automountServiceAccountToken")
 	spec.automountServiceAccountToken == true
@@ -42,4 +35,10 @@ mountServiceAccountToken(spec) {
 
 has_key(x, k) {
 	_ = x[k]
+}
+
+deny[res] {
+	mountServiceAccountToken(input.spec)
+	msg := kubernetes.format(sprintf("Container of %s '%s' should set 'spec.automountServiceAccountToken' to false", [kubernetes.kind, kubernetes.name]))
+	res := defsec.result(msg, input.spec)
 }

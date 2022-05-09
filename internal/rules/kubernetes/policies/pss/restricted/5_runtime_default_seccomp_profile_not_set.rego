@@ -78,8 +78,6 @@ deny[res] {
 # containers
 deny[res] {
 	output := getContainersWithDisallowedSeccompProfileType[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'spec.containers[*].securityContext.seccompProfile.type' to 'RuntimeDefault'", [output.name, kubernetes.kind, kubernetes.name]))
-
 	res = defsec.result(msg, output)
 }

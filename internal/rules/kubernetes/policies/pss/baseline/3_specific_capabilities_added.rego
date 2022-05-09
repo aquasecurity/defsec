@@ -44,7 +44,6 @@ caps_msg = "" {
 
 deny[res] {
 	output := getContainersWithDisallowedCaps[_]
-
 	msg := sprintf("Container '%s' of %s '%s' should not set 'securityContext.capabilities.add'%s", [output.name, kubernetes.kind, kubernetes.name, caps_msg])
 	res := defsec.result(msg, output)
 }

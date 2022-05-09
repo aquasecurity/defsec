@@ -47,7 +47,6 @@ getGroupIdContainers[container] {
 
 deny[res] {
 	output := getGroupIdContainers[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.runAsGroup' > 10000", [output.name, kubernetes.kind, kubernetes.name]))
 	res := defsec.result(msg, output)
 }

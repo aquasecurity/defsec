@@ -42,8 +42,6 @@ getPrivilegeEscalationContainers[container] {
 
 deny[res] {
 	output := getPrivilegeEscalationContainers[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.allowPrivilegeEscalation' to false", [output.name, kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, output)
 }

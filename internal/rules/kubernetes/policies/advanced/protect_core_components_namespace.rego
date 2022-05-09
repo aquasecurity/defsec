@@ -22,12 +22,6 @@ __rego_input__ := {
 	"selector": [{"type": "kubernetes"}],
 }
 
-deny[res] {
-	systemNamespaceInUse(input.metadata, input.spec)
-	msg := sprintf("%s '%s' should not be set with 'kube-system' namespace", [kubernetes.kind, kubernetes.name])
-	res := defsec.result(msg, input.spec)
-}
-
 systemNamespaceInUse(metadata, spec) {
 	kubernetes.namespace == "kube-system"
 	not core_component(metadata, spec)
@@ -41,4 +35,10 @@ core_component(metadata, spec) {
 	kubernetes.has_field(metadata.labels, "component")
 	coreComponentLabels := ["kube-apiserver", "etcd", "kube-controller-manager", "kube-scheduler"]
 	metadata.labels.component = coreComponentLabels[_]
+}
+
+deny[res] {
+	systemNamespaceInUse(input.metadata, input.spec)
+	msg := sprintf("%s '%s' should not be set with 'kube-system' namespace", [kubernetes.kind, kubernetes.name])
+	res := defsec.result(msg, input.spec)
 }

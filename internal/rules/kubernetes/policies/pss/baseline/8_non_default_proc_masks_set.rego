@@ -32,8 +32,6 @@ failProcMountOpts[container] {
 
 deny[res] {
 	output := failProcMountOpts[_]
-
 	msg := kubernetes.format(sprintf("%s '%s' should not set 'spec.containers[*].securityContext.procMount' or 'spec.initContainers[*].securityContext.procMount'", [kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, output)
 }

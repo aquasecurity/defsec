@@ -39,7 +39,6 @@ getNoLimitsMemoryContainers[container] {
 
 deny[res] {
 	output := getNoLimitsMemoryContainers[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'resources.limits.memory'", [output.name, kubernetes.kind, kubernetes.name]))
 	res := defsec.result(msg, output)
 }

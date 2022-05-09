@@ -66,8 +66,6 @@ deny[res] {
 
 deny[res] {
 	output := getContainersWithRootGroupId[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'spec.securityContext.runAsGroup' to integer greater than  0", [output.name, kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, output)
 }

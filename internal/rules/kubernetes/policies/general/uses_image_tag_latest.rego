@@ -47,8 +47,6 @@ getUntaggedContainers[container] {
 
 deny[res] {
 	output := getUntaggedContainers[_]
-
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should specify an image tag", [output.name, kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, output)
 }

@@ -34,8 +34,6 @@ checkDockerSocket {
 
 deny[res] {
 	checkDockerSocket
-
 	msg := kubernetes.format(sprintf("%s '%s' should not specify '/var/run/docker.socker' in 'spec.template.volumes.hostPath.path'", [kubernetes.kind, kubernetes.name]))
-
 	res := defsec.result(msg, input.spec)
 }

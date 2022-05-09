@@ -21,12 +21,6 @@ __rego_input__ := {
 	"selector": [{"type": "kubernetes"}],
 }
 
-deny[res] {
-	not limitRangeConfigure
-	msg := "limit range policy with a default request and limit, min and max request, for each container should be configure"
-	res := defsec.result(msg, input.spec)
-}
-
 limitRangeConfigure {
 	lower(input.kind) == "limitrange"
 	kubernetes.has_field(input.spec, "limits")
@@ -36,4 +30,10 @@ limitRangeConfigure {
 	kubernetes.has_field(limit, "min")
 	kubernetes.has_field(limit, "default")
 	kubernetes.has_field(limit, "defaultRequest")
+}
+
+deny[res] {
+	not limitRangeConfigure
+	msg := "limit range policy with a default request and limit, min and max request, for each container should be configure"
+	res := defsec.result(msg, input.spec)
 }
