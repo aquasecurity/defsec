@@ -214,7 +214,7 @@ func (p *Parser) ParseFS(ctx context.Context, dir string) error {
 				// we can't handle symlinks in this fs type for now
 				continue
 			}
-			realPath, err = extra.ResolveSymlink(info.Name())
+			realPath, err = extra.ResolveSymlink(info.Name(), dir)
 			if err != nil {
 				continue
 			}
