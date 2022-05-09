@@ -152,7 +152,7 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 	s.debug.Log("scanning [%s] at %s", target, dir)
 
 	// find directories which directly contain tf files (and have no parent containing tf files)
-	rootDirs := s.findRootModules(target, dir)
+	rootDirs := s.findRootModules(target, dir, dir)
 	sort.Strings(rootDirs)
 
 	if len(rootDirs) == 0 {
@@ -266,7 +266,7 @@ func (s *Scanner) removeNestedDirs(dirs []string) []string {
 	return clean
 }
 
-func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
+func (s *Scanner) findRootModules(target fs.FS, scanDir string, dirs ...string) []string {
 
 	var roots []string
 	var others []string
@@ -287,7 +287,7 @@ func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
 		for _, file := range files {
 			realPath := filepath.Join(dir, file.Name())
 			if symFS, ok := target.(extrafs.ReadLinkFS); ok {
-				realPath, err = symFS.ResolveSymlink(realPath)
+				realPath, err = symFS.ResolveSymlink(realPath, scanDir)
 				if err != nil {
 					s.debug.Log("failed to resolve symlink '%s': %s", file.Name(), err)
 					continue
@@ -308,7 +308,7 @@ func (s *Scanner) findRootModules(target fs.FS, dirs ...string) []string {
 	}
 
 	if (len(roots) == 0 || s.forceAllDirs) && len(others) > 0 {
-		roots = append(roots, s.findRootModules(target, others...)...)
+		roots = append(roots, s.findRootModules(target, scanDir, others...)...)
 	}
 
 	return s.removeNestedDirs(roots)

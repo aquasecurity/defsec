@@ -17,7 +17,7 @@ type OSFS interface {
 }
 
 type ReadLinkFS interface {
-	ResolveSymlink(name string) (string, error)
+	ResolveSymlink(name, dir string) (string, error)
 }
 
 type FS interface {
@@ -45,13 +45,10 @@ func (f *filesystem) Stat(name string) (fs.FileInfo, error) {
 	return f.underlying.Stat(name)
 }
 
-func (f *filesystem) ResolveSymlink(name string) (string, error) {
-	if link, err := os.Readlink(filepath.Join(f.root, name)); err == nil {
-		rel, err := filepath.Rel(f.root, link)
-		if err != nil {
-			return "", err
-		}
-		return rel, nil
+func (f *filesystem) ResolveSymlink(name, dir string) (string, error) {
+	link, err := os.Readlink(filepath.Join(f.root, dir, name))
+	if err == nil {
+		return filepath.Join(dir, link), nil
 	}
 	return name, nil
 }
