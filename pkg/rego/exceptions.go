@@ -3,7 +3,6 @@ package rego
 import (
 	"context"
 	"fmt"
-	"regexp"
 )
 
 func (s *Scanner) isIgnored(ctx context.Context, namespace string, ruleName string, input interface{}) (bool, error) {
@@ -25,16 +24,10 @@ func (s *Scanner) isNamespaceIgnored(ctx context.Context, namespace string, inpu
 }
 
 func (s *Scanner) isRuleIgnored(ctx context.Context, namespace string, ruleName string, input interface{}) (bool, error) {
-	exceptionQuery := fmt.Sprintf("data.%s.exception[_][_] == %q", namespace, removeRulePrefix(ruleName))
+	exceptionQuery := fmt.Sprintf("endswith(%q, data.%s.exception[_][_])", ruleName, namespace)
 	result, _, err := s.runQuery(ctx, exceptionQuery, input, true)
 	if err != nil {
 		return false, err
 	}
 	return result.Allowed(), nil
-}
-
-var rulePrefixRegex = regexp.MustCompile(`^(deny|warn|violation)_`)
-
-func removeRulePrefix(rule string) string {
-	return rulePrefixRegex.ReplaceAllString(rule, "")
 }

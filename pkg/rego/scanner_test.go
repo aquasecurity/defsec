@@ -162,6 +162,55 @@ exception[ns] {
 
 }
 
+func Test_RegoScanning_Namespace_Exception_WithoutMatch(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `
+package defsec.test
+
+deny {
+    input.evil
+}
+`, "policies/something.rego": `
+package appshield.test
+
+deny_something {
+    input.something
+}
+`,
+		"policies/exceptions.rego": `
+package namespace.exceptions
+
+import data.namespaces
+
+exception[ns] {
+    ns := data.namespaces[_]
+    startswith(ns, "appshield")
+}
+`,
+	})
+
+	scanner := NewScanner()
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{
+		Path: "/evil.lol",
+		Contents: map[string]interface{}{
+			"evil": true,
+		},
+		Type: "???",
+	})
+	require.NoError(t, err)
+
+	assert.Equal(t, 1, len(results.GetFailed()))
+	assert.Equal(t, 0, len(results.GetPassed()))
+	assert.Equal(t, 1, len(results.GetIgnored()))
+
+}
+
 func Test_RegoScanning_Rule_Exception(t *testing.T) {
 	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `
@@ -197,6 +246,43 @@ exception[rules] {
 	assert.Equal(t, 0, len(results.GetFailed()))
 	assert.Equal(t, 0, len(results.GetPassed()))
 	assert.Equal(t, 1, len(results.GetIgnored()))
+}
+
+func Test_RegoScanning_Rule_Exception_WithoutMatch(t *testing.T) {
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `
+package defsec.test
+deny_evil {
+    input.evil
+}
+`,
+		"policies/exceptions.rego": `
+package defsec.test
+
+exception[rules] {
+    rules := ["good"]
+}
+`,
+	})
+
+	scanner := NewScanner()
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{
+		Path: "/evil.lol",
+		Contents: map[string]interface{}{
+			"evil": true,
+		},
+		Type: "???",
+	})
+	require.NoError(t, err)
+
+	assert.Equal(t, 1, len(results.GetFailed()))
+	assert.Equal(t, 0, len(results.GetPassed()))
+	assert.Equal(t, 0, len(results.GetIgnored()))
 }
 
 func Test_RegoScanning_WithRuntimeValues(t *testing.T) {
