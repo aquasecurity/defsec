@@ -3,6 +3,7 @@ package rego
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
 
@@ -127,7 +128,7 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		metadata.ShortCode = fmt.Sprintf("%s", raw)
 	}
 	if raw, ok := meta["severity"]; ok {
-		metadata.Severity = fmt.Sprintf("%s", raw)
+		metadata.Severity = strings.ToUpper(fmt.Sprintf("%s", raw))
 	}
 	if raw, ok := meta["type"]; ok {
 		metadata.Type = fmt.Sprintf("%s", raw)

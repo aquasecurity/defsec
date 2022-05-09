@@ -9,7 +9,7 @@ __rego_metadata__ := {
 	"title": "Tiller Is Deployed",
 	"short_code": "no-tiller",
 	"version": "v1.0.0",
-	"severity": "Critical",
+	"severity": "CRITICAL",
 	"type": "Kubernetes Security Check",
 	"description": "Check if Helm Tiller component is deployed.",
 	"recommended_actions": "Migrate to Helm v3 which no longer has Tiller component",
