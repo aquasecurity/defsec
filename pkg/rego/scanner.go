@@ -242,7 +242,7 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 	qualified := fmt.Sprintf("data.%s.%s", namespace, rule)
 	for _, input := range inputs {
 		s.trace("INPUT", input)
-		if ignored, err := s.isIgnored(ctx, namespace, rule, input); err != nil {
+		if ignored, err := s.isIgnored(ctx, namespace, rule, input.Contents); err != nil {
 			return nil, err
 		} else if ignored {
 			var result regoResult
