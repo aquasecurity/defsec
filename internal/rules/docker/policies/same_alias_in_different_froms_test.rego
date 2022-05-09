@@ -6,10 +6,12 @@ test_basic_denied {
 			{
 				"Cmd": "from",
 				"Value": ["baseImage"],
+				"StartLine": 1,
 			},
 			{
 				"Cmd": "run",
 				"Value": ["Test"],
+				"StartLine": 2,
 			},
 		],
 		"debian:jesse2 as build": [
@@ -20,10 +22,12 @@ test_basic_denied {
 					"as",
 					"build",
 				],
+				"StartLine": 3,
 			},
 			{
 				"Cmd": "run",
 				"Value": ["stuff"],
+				"StartLine": 4,
 			},
 		],
 		"debian:jesse1 as build": [
@@ -34,10 +38,12 @@ test_basic_denied {
 					"as",
 					"build",
 				],
+				"StartLine": 5,
 			},
 			{
 				"Cmd": "run",
 				"Value": ["more_stuff"],
+				"StartLine": 6,
 			},
 		],
 	}}
@@ -52,10 +58,12 @@ test_missed_alias_denied {
 			{
 				"Cmd": "from",
 				"Value": ["baseImage"],
+				"StartLine": 1,
 			},
 			{
 				"Cmd": "run",
 				"Value": ["Test"],
+				"StartLine": 2,
 			},
 		],
 		"debian:jesse2 as build": [
@@ -66,10 +74,12 @@ test_missed_alias_denied {
 					"as",
 					"build",
 				],
+				"StartLine": 3,
 			},
 			{
 				"Cmd": "run",
 				"Value": ["stuff"],
+				"StartLine": 4,
 			},
 		],
 		"debian:jesse1 as build": [
@@ -80,10 +90,12 @@ test_missed_alias_denied {
 					"as",
 					"build",
 				],
+				"StartLine": 5,
 			},
 			{
 				"Cmd": "run",
 				"Value": ["more_stuff"],
+				"StartLine": 6,
 			},
 		],
 	}}
@@ -129,10 +141,12 @@ test_extra_spaces_denied {
 			{
 				"Cmd": "from",
 				"Value": ["baseImage"],
+				"StartLine": 1,
 			},
 			{
 				"Cmd": "run",
 				"Value": ["Test"],
+				"StartLine": 2,
 			},
 		],
 		"debian:jesse2 as build": [
@@ -143,10 +157,12 @@ test_extra_spaces_denied {
 					"as",
 					"build",
 				],
+				"StartLine": 3,
 			},
 			{
 				"Cmd": "run",
 				"Value": ["stuff"],
+				"StartLine": 4,
 			},
 		],
 		"debian:jesse1 as    build": [
@@ -157,10 +173,12 @@ test_extra_spaces_denied {
 					"as",
 					"build",
 				],
+				"StartLine": 5,
 			},
 			{
 				"Cmd": "run",
 				"Value": ["more_stuff"],
+				"StartLine": 6,
 			},
 		],
 	}}

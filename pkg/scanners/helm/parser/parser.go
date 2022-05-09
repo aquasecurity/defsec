@@ -232,7 +232,6 @@ func (p *Parser) writeBuildFiles(tempFs string) error {
 		if err != nil {
 			return err
 		}
-		fmt.Printf("path: %s, rootPath: %s\n", path, p.rootPath)
 		workingPath := strings.TrimPrefix(path, p.rootPath)
 		workingPath = filepath.Join(tempFs, workingPath)
 		if err := os.MkdirAll(filepath.Dir(workingPath), os.ModePerm); err != nil {

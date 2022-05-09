@@ -207,9 +207,15 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 			continue
 		}
 
+		usedRules := make(map[string]struct{})
+
 		// all rules
 		for _, rule := range module.Rules {
 			ruleName := rule.Head.Name.String()
+			if _, ok := usedRules[ruleName]; ok {
+				continue
+			}
+			usedRules[ruleName] = struct{}{}
 			if isEnforcedRule(ruleName) {
 				ruleResults, err := s.applyRule(ctx, namespace, ruleName, filteredInputs, staticMeta.InputOptions.Combined)
 				if err != nil {
