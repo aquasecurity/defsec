@@ -5,7 +5,7 @@ import data.lib.docker
 __rego_metadata__ := {
 	"id": "DS002",
 	"avd_id": "AVD-DS-0002",
-	"title": "root user",
+	"title": "Image user should not be 'root'",
 	"short_code": "least-privilege-user",
 	"severity": "HIGH",
 	"type": "Dockerfile Security Check",
