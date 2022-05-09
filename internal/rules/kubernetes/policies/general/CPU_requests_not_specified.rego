@@ -1,5 +1,6 @@
 package appshield.kubernetes.KSV015
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -25,34 +26,19 @@ __rego_input__ := {
 
 # getRequestsCPUContainers returns all containers which have set resources.requests.cpu
 getRequestsCPUContainers[container] {
-	allContainers := kubernetes.containers[_]
-	utils.has_key(allContainers.resources.requests, "cpu")
-	container := allContainers.name
+	container := kubernetes.containers[_]
+	utils.has_key(container.resources.requests, "cpu")
 }
 
 # getNoRequestsCPUContainers returns all containers which have not set
 # resources.requests.cpu
 getNoRequestsCPUContainers[container] {
-	container := kubernetes.containers[_].name
+	container := kubernetes.containers[_]
 	not getRequestsCPUContainers[container]
 }
 
-# failRequestsCPU is true if containers[].resources.requests.cpu is not set
-# for ANY container
-failRequestsCPU {
-	count(getNoRequestsCPUContainers) > 0
-}
-
 deny[res] {
-	failRequestsCPU
-
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'resources.requests.cpu'", [getNoRequestsCPUContainers[_], kubernetes.kind, kubernetes.name]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	output := getNoRequestsCPUContainers[_]
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'resources.requests.cpu'", [output.name, kubernetes.kind, kubernetes.name]))
+	res := defsec.result(msg, output)
 }

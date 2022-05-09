@@ -1,5 +1,6 @@
 package appshield.kubernetes.KSV014
 
+import data.lib.defsec
 import data.lib.kubernetes
 
 default failReadOnlyRootFilesystem = false
@@ -25,34 +26,19 @@ __rego_input__ := {
 # getReadOnlyRootFilesystemContainers returns all containers that have
 # securityContext.readOnlyFilesystem set to true.
 getReadOnlyRootFilesystemContainers[container] {
-	allContainers := kubernetes.containers[_]
-	allContainers.securityContext.readOnlyRootFilesystem == true
-	container := allContainers.name
+	container := kubernetes.containers[_]
+	container.securityContext.readOnlyRootFilesystem == true
 }
 
 # getNotReadOnlyRootFilesystemContainers returns all containers that have
 # securityContext.readOnlyRootFilesystem set to false or not set at all.
 getNotReadOnlyRootFilesystemContainers[container] {
-	container := kubernetes.containers[_].name
+	container := kubernetes.containers[_]
 	not getReadOnlyRootFilesystemContainers[container]
 }
 
-# failReadOnlyRootFilesystem is true if ANY container sets
-# securityContext.readOnlyRootFilesystem set to false or not set at all.
-failReadOnlyRootFilesystem {
-	count(getNotReadOnlyRootFilesystemContainers) > 0
-}
-
 deny[res] {
-	failReadOnlyRootFilesystem
-
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.readOnlyRootFilesystem' to true", [getNotReadOnlyRootFilesystemContainers[_], kubernetes.kind, kubernetes.name]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	output := getNotReadOnlyRootFilesystemContainers[_]
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.readOnlyRootFilesystem' to true", [output.name, kubernetes.kind, kubernetes.name]))
+	res := defsec.result(msg, output)
 }

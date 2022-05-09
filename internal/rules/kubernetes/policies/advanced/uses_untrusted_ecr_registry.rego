@@ -1,5 +1,6 @@
 package appshield.kubernetes.KSV035
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -69,26 +70,13 @@ getContainersWithTrustedECRRegistry[name] {
 
 # getContainersWithUntrustedECRRegistry returns a list of containers
 # with image from an untrusted ECR registry
-getContainersWithUntrustedECRRegistry[name] {
-	name := kubernetes.containers[_].name
-	not getContainersWithTrustedECRRegistry[name]
-}
-
-# failTrustedECRRegistry is true if a container uses an image from an
-# untrusted ECR registry
-failTrustedECRRegistry {
-	count(getContainersWithUntrustedECRRegistry) > 0
+getContainersWithUntrustedECRRegistry[container] {
+	container := kubernetes.containers[_]
+	not getContainersWithTrustedECRRegistry[container.name]
 }
 
 deny[res] {
-	failTrustedECRRegistry
-
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should restrict images to own ECR repository. See the full ECR list here: https://docs.aws.amazon.com/general/latest/gr/ecr.html", [getContainersWithUntrustedECRRegistry[_], kubernetes.kind, kubernetes.name]))
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	container := getContainersWithUntrustedECRRegistry[_]
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should restrict images to own ECR repository. See the full ECR list here: https://docs.aws.amazon.com/general/latest/gr/ecr.html", [container.name, kubernetes.kind, kubernetes.name]))
+	res := defsec.result(msg, container)
 }

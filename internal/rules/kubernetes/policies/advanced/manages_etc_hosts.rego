@@ -1,9 +1,8 @@
 package appshield.kubernetes.KSV007
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
-
-default failHostAliases = false
 
 __rego_metadata__ := {
 	"id": "KSV007",
@@ -23,20 +22,13 @@ __rego_input__ := {
 }
 
 # failHostAliases is true if spec.hostAliases is set (on all controllers)
-failHostAliases {
-	utils.has_key(kubernetes.host_aliases[_], "hostAliases")
+failHostAliases[spec] {
+	spec := kubernetes.host_aliases[_]
+	utils.has_key(spec, "hostAliases")
 }
 
 deny[res] {
-	failHostAliases
-
+	spec := failHostAliases[_]
 	msg := kubernetes.format(sprintf("'%s' '%s' in '%s' namespace should not set spec.template.spec.hostAliases", [lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res := defsec.result(msg, spec)
 }

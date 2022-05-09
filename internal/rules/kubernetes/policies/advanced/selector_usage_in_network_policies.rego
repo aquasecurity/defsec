@@ -1,5 +1,6 @@
 package appshield.kubernetes.KSV038
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -19,18 +20,6 @@ __rego_metadata__ := {
 __rego_input__ := {
 	"combine": false,
 	"selector": [{"type": "kubernetes"}],
-}
-
-deny[res] {
-	not hasSelector(input.spec)
-	msg := "Network policy should uses podSelector and/or the namespaceSelector to restrict ingress and egress traffic within the Pod network"
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
 }
 
 hasSelector(spec) {
@@ -91,4 +80,10 @@ hasSelector(spec) {
 
 contains(arr, elem) {
 	arr[_] = elem
+}
+
+deny[res] {
+	not hasSelector(input.spec)
+	msg := "Network policy should uses podSelector and/or the namespaceSelector to restrict ingress and egress traffic within the Pod network"
+	res := defsec.result(msg, input.spec)
 }

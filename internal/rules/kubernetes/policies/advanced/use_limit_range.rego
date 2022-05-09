@@ -1,5 +1,6 @@
 package appshield.kubernetes.KSV039
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -20,24 +21,19 @@ __rego_input__ := {
 	"selector": [{"type": "kubernetes"}],
 }
 
+limitRangeConfigure {
+	lower(input.kind) == "limitrange"
+	kubernetes.has_field(input.spec, "limits")
+	limit := input.spec.limits[_]
+	kubernetes.has_field(limit, "type")
+	kubernetes.has_field(limit, "max")
+	kubernetes.has_field(limit, "min")
+	kubernetes.has_field(limit, "default")
+	kubernetes.has_field(limit, "defaultRequest")
+}
+
 deny[res] {
 	not limitRangeConfigure
 	msg := "limit range policy with a default request and limit, min and max request, for each container should be configure"
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
-}
-
-limitRangeConfigure {
-	lower(input.kind) == "limitrange"
-	input.spec[limits]
-	kubernetes.has_field(input.spec.limits[_], "type")
-	kubernetes.has_field(input.spec.limits[_], "max")
-	kubernetes.has_field(input.spec.limits[_], "min")
-	kubernetes.has_field(input.spec.limits[_], "default")
-	kubernetes.has_field(input.spec.limits[_], "defaultRequest")
+	res := defsec.result(msg, input.spec)
 }

@@ -1,5 +1,6 @@
 package appshield.kubernetes.KSV029
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -28,7 +29,7 @@ __rego_input__ := {
 getContainersWithRootGroupId[name] {
 	container := kubernetes.containers[_]
 	container.securityContext.runAsGroup == 0
-	name := container.name
+	name := container
 }
 
 # failRootGroupId is true if root group id is set on pod
@@ -64,15 +65,7 @@ deny[res] {
 }
 
 deny[res] {
-	count(getContainersWithRootGroupId) > 0
-
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'spec.securityContext.runAsGroup' to integer greater than  0", [getContainersWithRootGroupId[_], kubernetes.kind, kubernetes.name]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	output := getContainersWithRootGroupId[_]
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'spec.securityContext.runAsGroup' to integer greater than  0", [output.name, kubernetes.kind, kubernetes.name]))
+	res := defsec.result(msg, output)
 }

@@ -1,5 +1,6 @@
 package appshield.kubernetes.KSV033
 
+import data.lib.defsec
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -49,27 +50,13 @@ getContainersWithTrustedGCRRegistry[name] {
 
 # getContainersWithUntrustedGCRRegistry returns a list of containers
 # with image from an untrusted gcr registry
-getContainersWithUntrustedGCRRegistry[name] {
-	name := kubernetes.containers[_].name
-	not getContainersWithTrustedGCRRegistry[name]
-}
-
-# failTrustedGCRRegistry is true if a container uses an image from an
-# untrusted gcr registry
-failTrustedGCRRegistry {
-	count(getContainersWithUntrustedGCRRegistry) > 0
+getContainersWithUntrustedGCRRegistry[container] {
+	container := kubernetes.containers[_]
+	not getContainersWithTrustedGCRRegistry[container.name]
 }
 
 deny[res] {
-	failTrustedGCRRegistry
-
-	msg := kubernetes.format(sprintf("container %s of %s %s in %s namespace should restrict container image to your specific registry domain. See the full GCR list here: https://cloud.google.com/container-registry/docs/overview#registries", [getContainersWithUntrustedGCRRegistry[_], lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	container := getContainersWithUntrustedGCRRegistry[_]
+	msg := kubernetes.format(sprintf("container %s of %s %s in %s namespace should restrict container image to your specific registry domain. See the full GCR list here: https://cloud.google.com/container-registry/docs/overview#registries", [container.name, lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
+	res := defsec.result(msg, container)
 }

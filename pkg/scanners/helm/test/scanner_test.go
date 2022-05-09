@@ -35,7 +35,7 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 	for _, test := range tests {
 		t.Logf("Running test: %s", test.testName)
 
-		helmScanner := helm.New(test.chartName, options.ScannerWithEmbeddedPolicies(true))
+		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true))
 
 		testTemp := t.TempDir()
 		testFileName := filepath.Join(testTemp, test.archiveName)
@@ -47,7 +47,7 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 		require.NotNil(t, results)
 
 		failed := results.GetFailed()
-		assert.Equal(t, 32, len(failed))
+		assert.Equal(t, 26, len(failed))
 
 		visited := make(map[string]bool)
 		var errorCodes []string
@@ -88,7 +88,7 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 
 		t.Logf("Running test: %s", test.testName)
 
-		helmScanner := helm.New(test.chartName, options.ScannerWithEmbeddedPolicies(true))
+		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true))
 
 		testFs := os.DirFS(filepath.Join("testdata", test.chartName))
 		results, err := helmScanner.ScanFS(context.TODO(), testFs, ".")
@@ -96,7 +96,7 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 		require.NotNil(t, results)
 
 		failed := results.GetFailed()
-		assert.Equal(t, 22, len(failed))
+		assert.Equal(t, 20, len(failed))
 
 		visited := make(map[string]bool)
 		var errorCodes []string

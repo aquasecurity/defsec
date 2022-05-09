@@ -30,7 +30,7 @@ func Test_helm_parser(t *testing.T) {
 
 		t.Logf("Running test: %s", test.testName)
 
-		helmParser := parser.New(chartName)
+		helmParser := parser.New()
 		err := helmParser.ParseFS(context.TODO(), os.DirFS(filepath.Join("testdata", chartName)), ".")
 		require.NoError(t, err)
 		manifests, err := helmParser.RenderedChartFiles()
@@ -39,7 +39,7 @@ func Test_helm_parser(t *testing.T) {
 		assert.Len(t, manifests, 3)
 
 		for _, manifest := range manifests {
-			expectedPath := filepath.Join("testdata", "expected", manifest.TemplateFilePath)
+			expectedPath := filepath.Join("testdata", "expected", chartName, manifest.TemplateFilePath)
 
 			expectedContent, err := os.ReadFile(expectedPath)
 			require.NoError(t, err)
@@ -85,7 +85,7 @@ func Test_helm_tarball_parser(t *testing.T) {
 
 		testFs := os.DirFS(testTemp)
 
-		helmParser := parser.New(test.chartName)
+		helmParser := parser.New()
 		err := helmParser.ParseFS(context.TODO(), testFs, ".")
 		require.NoError(t, err)
 
@@ -110,7 +110,7 @@ func Test_helm_tarball_parser(t *testing.T) {
 			if strings.HasSuffix(manifest.TemplateFilePath, "secrets.yaml") {
 				continue
 			}
-			expectedPath := filepath.Join("testdata", "expected", manifest.TemplateFilePath)
+			expectedPath := filepath.Join("testdata", "expected", test.chartName, manifest.TemplateFilePath)
 
 			expectedContent, err := os.ReadFile(expectedPath)
 			require.NoError(t, err)

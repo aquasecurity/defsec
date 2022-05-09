@@ -1,5 +1,6 @@
 package appshield.kubernetes.KSV009
 
+import data.lib.defsec
 import data.lib.kubernetes
 
 default failHostNetwork = false
@@ -29,14 +30,6 @@ failHostNetwork {
 
 deny[res] {
 	failHostNetwork
-
 	msg := kubernetes.format(sprintf("%s '%s' should not set 'spec.template.spec.hostNetwork' to true", [kubernetes.kind, kubernetes.name]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res := defsec.result(msg, input.spec)
 }

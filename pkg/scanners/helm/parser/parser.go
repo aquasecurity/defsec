@@ -13,6 +13,7 @@ import (
 	"sort"
 	"strings"
 
+	"gopkg.in/yaml.v3"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/chart/loader"
@@ -27,7 +28,6 @@ import (
 var manifestNameRegex = regexp.MustCompile("# Source: [^/]+/(.+)")
 
 type Parser struct {
-	chartName    string
 	helmClient   *action.Install
 	rootPath     string
 	filepaths    []string
@@ -49,16 +49,14 @@ func (p *Parser) SetSkipRequiredCheck(b bool) {
 	p.skipRequired = b
 }
 
-func New(chartName string, options ...options.ParserOption) *Parser {
+func New(options ...options.ParserOption) *Parser {
 
 	client := action.NewInstall(&action.Configuration{})
-	client.DryRun = true  // don't do anything
-	client.Replace = true // skip name check
-	client.ReleaseName = chartName
+	client.DryRun = true     // don't do anything
+	client.Replace = true    // skip name check
 	client.ClientOnly = true // don't try to talk to a cluster
 
 	p := &Parser{
-		chartName:  chartName,
 		helmClient: client,
 	}
 
@@ -95,7 +93,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) error {
 			return nil
 		}
 
-		return p.addPaths(ctx, path)
+		return p.addPaths(path)
 	}); err != nil {
 		return err
 	}
@@ -103,13 +101,16 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) error {
 	return nil
 }
 
-func (p *Parser) addPaths(ctx context.Context, paths ...string) error {
+func (p *Parser) addPaths(paths ...string) error {
 	for _, path := range paths {
 		if _, err := fs.Stat(p.workingFS, path); err != nil {
 			return err
 		}
 
 		if strings.HasSuffix(path, "Chart.yaml") && p.rootPath == "" {
+			if err := p.extractChartName(path); err != nil {
+				return err
+			}
 			p.rootPath = filepath.Dir(path)
 		}
 		p.filepaths = append(p.filepaths, path)
@@ -117,9 +118,29 @@ func (p *Parser) addPaths(ctx context.Context, paths ...string) error {
 	return nil
 }
 
+func (p *Parser) extractChartName(chartPath string) error {
+
+	chart, err := p.workingFS.Open(chartPath)
+	if err != nil {
+		return err
+	}
+
+	var chartContent map[string]interface{}
+	if err := yaml.NewDecoder(chart).Decode(&chartContent); err != nil {
+		return err
+	}
+
+	if name, ok := chartContent["name"]; !ok {
+		return fmt.Errorf("could not extract the chart name from %s", chartPath)
+	} else {
+		p.helmClient.ReleaseName = name.(string)
+	}
+	return nil
+}
+
 func (p *Parser) RenderedChartFiles() ([]ChartFile, error) {
 
-	tempDir, err := ioutil.TempDir(os.TempDir(), p.chartName)
+	tempDir, err := ioutil.TempDir(os.TempDir(), "defsec")
 	if err != nil {
 		return nil, err
 	}
@@ -198,7 +219,11 @@ func getManifestPath(manifest string) string {
 	if len(lines) == 0 {
 		return "unknown.yaml"
 	}
-	return strings.TrimPrefix(lines[0], "# Source: ")
+	manifestFilePathParts := strings.SplitN(strings.TrimPrefix(lines[0], "# Source: "), "/", 2)
+	if len(manifestFilePathParts) > 1 {
+		return manifestFilePathParts[1]
+	}
+	return manifestFilePathParts[0]
 }
 
 func (p *Parser) writeBuildFiles(tempFs string) error {
@@ -207,6 +232,7 @@ func (p *Parser) writeBuildFiles(tempFs string) error {
 		if err != nil {
 			return err
 		}
+		fmt.Printf("path: %s, rootPath: %s\n", path, p.rootPath)
 		workingPath := strings.TrimPrefix(path, p.rootPath)
 		workingPath = filepath.Join(tempFs, workingPath)
 		if err := os.MkdirAll(filepath.Dir(workingPath), os.ModePerm); err != nil {
