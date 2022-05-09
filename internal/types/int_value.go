@@ -96,6 +96,6 @@ func (s *intValue) ToRego() interface{} {
 		"explicit":  s.metadata.isExplicit,
 		"value":     s.Value(),
 		"fskey":     CreateFSKey(s.metadata.Range().GetFS()),
-		"resource":  s.metadata.Reference(),
+		"resource":  s.metadata.Reference().String(),
 	}
 }

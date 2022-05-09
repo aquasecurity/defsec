@@ -69,6 +69,6 @@ func (s *bytesValue) ToRego() interface{} {
 		"explicit":  s.metadata.isExplicit,
 		"value":     string(s.Value()),
 		"fskey":     CreateFSKey(s.metadata.Range().GetFS()),
-		"resource":  s.metadata.Reference(),
+		"resource":  s.metadata.Reference().String(),
 	}
 }
