@@ -307,6 +307,7 @@ deny[res] {
 			Number:     6,
 			Content:    "spec: ",
 			IsCause:    true,
+			FirstCause: true,
 			Annotation: "",
 		},
 		{
@@ -331,6 +332,7 @@ deny[res] {
 			Number:     10,
 			Content:    "    name: hello",
 			IsCause:    true,
+			LastCause:  true,
 			Annotation: "",
 		},
 	}, actualCode.Lines)

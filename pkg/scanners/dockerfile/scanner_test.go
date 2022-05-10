@@ -100,6 +100,8 @@ deny[res] {
 			Number:     1,
 			Content:    "FROM ubuntu",
 			IsCause:    true,
+			FirstCause: true,
+			LastCause:  true,
 			Annotation: "",
 		},
 	}, actualCode.Lines)

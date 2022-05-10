@@ -219,6 +219,8 @@ deny[cause] {
 			Number:     3,
 			Content:    "\tbucket = \"evil\"",
 			IsCause:    true,
+			FirstCause: true,
+			LastCause:  true,
 			Annotation: "",
 		},
 	}, actualCode.Lines)
