@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV022
+package builtin.kubernetes.KSV022
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 
 default failAdditionalCaps = false
 
@@ -45,5 +45,5 @@ caps_msg = "" {
 deny[res] {
 	output := getContainersWithDisallowedCaps[_]
 	msg := sprintf("Container '%s' of %s '%s' should not set 'securityContext.capabilities.add'%s", [output.name, kubernetes.kind, kubernetes.name, caps_msg])
-	res := defsec.result(msg, output)
+	res := result.new(msg, output)
 }

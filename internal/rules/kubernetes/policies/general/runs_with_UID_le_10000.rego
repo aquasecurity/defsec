@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV020
+package builtin.kubernetes.KSV020
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default failRunAsUser = false
@@ -48,5 +48,5 @@ getUserIdContainers[container] {
 deny[res] {
 	output := getUserIdContainers[_]
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.runAsUser' > 10000", [output.name, kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, output)
+	res := result.new(msg, output)
 }

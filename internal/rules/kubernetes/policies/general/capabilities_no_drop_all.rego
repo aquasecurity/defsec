@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV003
+package builtin.kubernetes.KSV003
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 
 default checkCapsDropAll = false
 
@@ -39,5 +39,5 @@ getCapsNoDropAllContainers[container] {
 deny[res] {
 	container := getCapsNoDropAllContainers[_]
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should add 'ALL' to 'securityContext.capabilities.drop'", [container.name, kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, container)
+	res := result.new(msg, container)
 }

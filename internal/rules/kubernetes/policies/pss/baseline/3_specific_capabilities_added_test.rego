@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV022
+package builtin.kubernetes.KSV022
 
 test_capabilities_add_denied {
 	r := deny with input as {

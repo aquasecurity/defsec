@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV007
+package builtin.kubernetes.KSV007
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 __rego_metadata__ := {
@@ -30,5 +30,5 @@ failHostAliases[spec] {
 deny[res] {
 	spec := failHostAliases[_]
 	msg := kubernetes.format(sprintf("'%s' '%s' in '%s' namespace should not set spec.template.spec.hostAliases", [lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
-	res := defsec.result(msg, spec)
+	res := result.new(msg, spec)
 }

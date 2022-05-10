@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV039
+package builtin.kubernetes.KSV039
 
 test_use_limit_range_configure {
 	r := deny with input as {

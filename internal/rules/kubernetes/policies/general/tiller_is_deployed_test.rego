@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV102
+package builtin.kubernetes.KSV102
 
 test_tiller_deployed_by_image {
 	res := deny with input as {

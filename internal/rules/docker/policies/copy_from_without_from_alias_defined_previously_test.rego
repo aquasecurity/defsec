@@ -1,4 +1,4 @@
-package appshield.dockerfile.DS018
+package builtin.dockerfile.DS018
 
 test_denied {
 	r := deny with input as {"stages": {

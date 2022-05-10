@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV034
+package builtin.kubernetes.KSV034
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default failPublicRegistry = false
@@ -51,5 +51,5 @@ getContainersWithPublicRegistries[container] {
 deny[res] {
 	container := getContainersWithPublicRegistries[_]
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should restrict container image to use private registries", [container.name, kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, container)
+	res := result.new(msg, container)
 }

@@ -25,7 +25,7 @@ func main() {
 
 func writeDocsFile(meta rules.RegisteredRule) {
 
-	tmpl, err := template.New("appshield").Parse(docsMarkdownTemplate)
+	tmpl, err := template.New("defsec").Parse(docsMarkdownTemplate)
 	if err != nil {
 		fail("error occurred creating the template %v\n", err)
 	}

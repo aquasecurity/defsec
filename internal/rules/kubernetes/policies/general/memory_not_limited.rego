@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV018
+package builtin.kubernetes.KSV018
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default failLimitsMemory = false
@@ -40,5 +40,5 @@ getNoLimitsMemoryContainers[container] {
 deny[res] {
 	output := getNoLimitsMemoryContainers[_]
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'resources.limits.memory'", [output.name, kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, output)
+	res := result.new(msg, output)
 }

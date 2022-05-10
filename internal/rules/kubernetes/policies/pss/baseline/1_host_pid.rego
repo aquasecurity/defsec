@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV010
+package builtin.kubernetes.KSV010
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 
 default failHostPID = false
 
@@ -31,5 +31,5 @@ failHostPID {
 deny[res] {
 	failHostPID
 	msg := kubernetes.format(sprintf("%s '%s' should not set 'spec.template.spec.hostPID' to true", [kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, input.spec)
+	res := result.new(msg, input.spec)
 }

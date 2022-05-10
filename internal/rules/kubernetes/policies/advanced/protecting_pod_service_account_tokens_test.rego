@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV036
+package builtin.kubernetes.KSV036
 
 test_protect_service_account_token_denied_with_automountServiceAccountToken {
 	r := deny with input as {

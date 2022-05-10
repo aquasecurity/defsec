@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV012
+package builtin.kubernetes.KSV012
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default checkRunAsNonRoot = false
@@ -54,5 +54,5 @@ deny[res] {
 	checkRunAsNonRootPod
 	output := getRootContainers[_]
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.runAsNonRoot' to true", [output.name, kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, output)
+	res := result.new(msg, output)
 }

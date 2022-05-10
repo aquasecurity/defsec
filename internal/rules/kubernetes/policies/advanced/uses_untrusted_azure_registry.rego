@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV032
+package builtin.kubernetes.KSV032
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default failTrustedAzureRegistry = false
@@ -49,5 +49,5 @@ getContainersWithUntrustedAzureRegistry[container] {
 deny[res] {
 	container := getContainersWithUntrustedAzureRegistry[_]
 	msg := kubernetes.format(sprintf("container %s of %s %s in %s namespace should restrict container image to your specific registry domain. For Azure any domain ending in 'azurecr.io'", [container.name, lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
-	res := defsec.result(msg, container)
+	res := result.new(msg, container)
 }

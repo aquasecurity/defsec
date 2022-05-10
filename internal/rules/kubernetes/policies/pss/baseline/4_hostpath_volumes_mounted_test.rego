@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV023
+package builtin.kubernetes.KSV023
 
 test_host_path_specified_denied {
 	r := deny with input as {

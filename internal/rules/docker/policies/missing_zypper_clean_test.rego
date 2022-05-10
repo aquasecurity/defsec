@@ -1,4 +1,4 @@
-package appshield.dockerfile.DS020
+package builtin.dockerfile.DS020
 
 test_denied {
 	r := deny with input as {"stages": {"busybox:1.0": [

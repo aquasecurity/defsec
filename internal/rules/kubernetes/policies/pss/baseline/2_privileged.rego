@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV017
+package builtin.kubernetes.KSV017
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 
 default failPrivileged = false
 
@@ -33,5 +33,5 @@ getPrivilegedContainers[container] {
 deny[res] {
 	output := getPrivilegedContainers[_]
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.privileged' to false", [output.name, kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, output)
+	res := result.new(msg, output)
 }

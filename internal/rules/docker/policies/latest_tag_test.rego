@@ -1,4 +1,4 @@
-package appshield.dockerfile.DS001
+package builtin.dockerfile.DS001
 
 test_allowed {
 	r := deny with input as {"stages": {"openjdk:8u292-oracle": [{

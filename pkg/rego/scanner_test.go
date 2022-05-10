@@ -172,7 +172,7 @@ deny {
     input.evil
 }
 `, "policies/something.rego": `
-package appshield.test
+package builtin.test
 
 deny_something {
     input.something
@@ -185,7 +185,7 @@ import data.namespaces
 
 exception[ns] {
     ns := data.namespaces[_]
-    startswith(ns, "appshield")
+    startswith(ns, "builtin")
 }
 `,
 	})

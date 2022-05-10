@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV005
+package builtin.kubernetes.KSV005
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 
 default failCapsSysAdmin = false
 
@@ -33,5 +33,5 @@ getCapsSysAdmin[container] {
 deny[res] {
 	output := getCapsSysAdmin[_]
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should not include 'SYS_ADMIN' in 'securityContext.capabilities.add'", [output.name, kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, output)
+	res := result.new(msg, output)
 }

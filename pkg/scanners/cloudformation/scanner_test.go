@@ -26,7 +26,7 @@ Resources:
       BucketName: public-bucket
 
 `,
-		"/rules/rule.rego": `package appshield.dockerfile.DS006
+		"/rules/rule.rego": `package builtin.dockerfile.DS006
 
 __rego_metadata__ := {
 	"id": "DS006",
@@ -77,7 +77,7 @@ deny[res] {
 		Service:     "general",
 		Links:       []string{"https://docs.docker.com/develop/develop-images/multistage-build/"},
 		Severity:    "CRITICAL",
-		Terraform:   (*scan.EngineMetadata)(nil), CloudFormation: (*scan.EngineMetadata)(nil), CustomChecks: scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)}, RegoPackage: "data.appshield.dockerfile.DS006"}, results.GetFailed()[0].Rule())
+		Terraform:   (*scan.EngineMetadata)(nil), CloudFormation: (*scan.EngineMetadata)(nil), CustomChecks: scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)}, RegoPackage: "data.builtin.dockerfile.DS006"}, results.GetFailed()[0].Rule())
 
 	failure := results.GetFailed()[0]
 	actualCode, err := failure.GetCode(false)

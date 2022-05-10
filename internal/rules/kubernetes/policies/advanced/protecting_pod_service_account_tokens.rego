@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV036
+package builtin.kubernetes.KSV036
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 __rego_metadata__ := {
@@ -40,5 +40,5 @@ has_key(x, k) {
 deny[res] {
 	mountServiceAccountToken(input.spec)
 	msg := kubernetes.format(sprintf("Container of %s '%s' should set 'spec.automountServiceAccountToken' to false", [kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, input.spec)
+	res := result.new(msg, input.spec)
 }

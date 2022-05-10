@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV012
+package builtin.kubernetes.KSV012
 
 test_run_as_non_root_not_set_to_true_denied {
 	r := deny with input as {

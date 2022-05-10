@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV014
+package builtin.kubernetes.KSV014
 
 test_read_only_root_file_system_not_set_denied {
 	r := deny with input as {

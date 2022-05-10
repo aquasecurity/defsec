@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV037
+package builtin.kubernetes.KSV037
 
 test_pod_with_default_namespace {
 	r := deny with input as {

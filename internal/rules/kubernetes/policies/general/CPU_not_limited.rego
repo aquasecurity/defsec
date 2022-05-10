@@ -1,7 +1,7 @@
-package appshield.kubernetes.KSV011
+package builtin.kubernetes.KSV011
 
-import data.lib.defsec
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default failLimitsCPU = false
@@ -40,5 +40,5 @@ getNoLimitsCPUContainers[container] {
 deny[res] {
 	output := getNoLimitsCPUContainers[_]
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'resources.limits.cpu'", [output.name, kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, output)
+	res := result.new(msg, output)
 }

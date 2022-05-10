@@ -421,7 +421,7 @@ resource "aws_s3_bucket" "my-bucket" {
 		"/rules/test.rego": `
 package defsec.abcdefg
 
-import data.lib.defsec
+import data.lib.result
 
 __rego_metadata__ := {
 	"id": "TEST123",
@@ -443,7 +443,7 @@ __rego_input__ := {
 deny[res] {
 	bucket := input.aws.s3.buckets[_]
 	bucket.name.value == "evil"
-	res := defsec.result("oh no", bucket.name)
+	res := result.new("oh no", bucket.name)
 }
 `,
 	})
@@ -489,7 +489,7 @@ resource "aws_sqs_queue_policy" "bad_example" {
 		"/rules/test.rego": `
 package defsec.abcdefg
 
-import data.lib.defsec
+import data.lib.result
 
 __rego_metadata__ := {
 	"id": "TEST123",
@@ -514,7 +514,7 @@ deny[res] {
 	statement := policy.document.value.Statement[_]
 	action := statement.Action[_]
 	action == "*"
-	res := defsec.result("SQS Policy contains wildcard in action", policy.document)
+	res := result.new("SQS Policy contains wildcard in action", policy.document)
 }
 `,
 	})
@@ -582,7 +582,7 @@ TASK_DEFINITION
 		"/rules/test.rego": `
 package defsec.abcdefg
 
-import data.lib.defsec
+import data.lib.result
 
 __rego_metadata__ := {
 	"id": "TEST123",
@@ -607,7 +607,7 @@ deny[res] {
 	taskDefinitions := json.unmarshal(definitionsJSON)
 	taskDefinition := taskDefinitions[_]
 	taskDefinition.privileged == true
-	res := defsec.result("Privileged container detected", definitionsAttr)
+	res := result.new("Privileged container detected", definitionsAttr)
 }
 `,
 	})
