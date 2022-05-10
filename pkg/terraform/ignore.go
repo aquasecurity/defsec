@@ -57,7 +57,7 @@ func (ignore Ignore) Covering(modules Modules, m types.Metadata, workspace strin
 			continue
 		}
 		if metaHierarchy.Range().GetStartLine() == ignore.Range.GetStartLine()+1 || metaHierarchy.Range().GetStartLine() == ignore.Range.GetStartLine() {
-			return ignore.MatchParams(modules)
+			return ignore.MatchParams(modules, metaHierarchy)
 		}
 		metaHierarchy = metaHierarchy.Parent()
 	}
@@ -65,11 +65,11 @@ func (ignore Ignore) Covering(modules Modules, m types.Metadata, workspace strin
 
 }
 
-func (ignore Ignore) MatchParams(modules Modules) bool {
+func (ignore Ignore) MatchParams(modules Modules, blockMetadata *types.Metadata) bool {
 	if len(ignore.Params) == 0 {
 		return true
 	}
-	block := modules.GetBlockByIgnoreRange(ignore.Range)
+	block := modules.GetBlockByIgnoreRange(blockMetadata)
 	if block == nil {
 		return true
 	}

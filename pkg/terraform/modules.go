@@ -85,14 +85,15 @@ func (m Modules) GetResourceByIDs(id ...string) Blocks {
 	return blocks
 }
 
-func (m Modules) GetBlockByIgnoreRange(r types.Range) *Block {
+func (m Modules) GetBlockByIgnoreRange(blockMetadata *types.Metadata) *Block {
 	for _, module := range m {
 		for _, block := range module.GetBlocks() {
 			metadata := block.GetMetadata()
-			if br := metadata.Range(); br != nil && br.GetFilename() == r.GetFilename() && br.GetStartLine() == r.GetStartLine()+1 {
+			if blockMetadata.Reference().RefersTo(metadata.Reference()) {
 				return block
 			}
 		}
 	}
+
 	return nil
 }
