@@ -160,5 +160,18 @@ func (r *Result) GetCode() (*Code, error) {
 		}
 	}
 
+	var first bool
+	for i, line := range code.Lines {
+		if line.IsCause && !first {
+			code.Lines[i].FirstCause = true
+			first = true
+			continue
+		}
+		if first && !line.IsCause && i > 0 {
+			code.Lines[i-1].LastCause = true
+			break
+		}
+	}
+
 	return &code, nil
 }
