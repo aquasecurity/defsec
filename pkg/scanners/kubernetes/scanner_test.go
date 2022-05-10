@@ -330,7 +330,7 @@ deny[res] {
 			IsCause:    true,
 			Annotation: "",
 		},
-	}, actualCode.Lines())
+	}, actualCode.Lines)
 }
 
 func Test_FileScan(t *testing.T) {

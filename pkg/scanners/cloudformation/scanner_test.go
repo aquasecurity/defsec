@@ -89,5 +89,5 @@ deny[res] {
 			IsCause:    true,
 			Annotation: "",
 		},
-	}, actualCode.Lines())
+	}, actualCode.Lines)
 }
