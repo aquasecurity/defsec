@@ -80,8 +80,11 @@ deny[res] {
 		Terraform:   (*scan.EngineMetadata)(nil), CloudFormation: (*scan.EngineMetadata)(nil), CustomChecks: scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)}, RegoPackage: "data.builtin.dockerfile.DS006"}, results.GetFailed()[0].Rule())
 
 	failure := results.GetFailed()[0]
-	actualCode, err := failure.GetCode(false)
+	actualCode, err := failure.GetCode()
 	require.NoError(t, err)
+	for i := range actualCode.Lines {
+		actualCode.Lines[i].Highlighted = ""
+	}
 	assert.Equal(t, []scan.Line{
 		{
 			Number:     6,
