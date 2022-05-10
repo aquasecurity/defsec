@@ -1,7 +1,7 @@
 package builtin.kubernetes.KSV017
 
-import data.lib.result
 import data.lib.kubernetes
+import data.lib.result
 
 default failPrivileged = false
 

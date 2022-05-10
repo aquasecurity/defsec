@@ -1,7 +1,7 @@
 package builtin.kubernetes.KSV036
 
-import data.lib.result
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 __rego_metadata__ := {

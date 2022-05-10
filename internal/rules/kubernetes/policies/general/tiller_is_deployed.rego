@@ -1,7 +1,7 @@
 package builtin.kubernetes.KSV102
 
-import data.lib.result
 import data.lib.kubernetes
+import data.lib.result
 
 __rego_metadata__ := {
 	"id": "KSV102",

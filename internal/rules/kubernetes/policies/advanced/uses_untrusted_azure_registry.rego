@@ -1,7 +1,7 @@
 package builtin.kubernetes.KSV032
 
-import data.lib.result
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default failTrustedAzureRegistry = false

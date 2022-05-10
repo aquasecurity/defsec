@@ -1,7 +1,7 @@
 package builtin.kubernetes.KSV034
 
-import data.lib.result
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default failPublicRegistry = false

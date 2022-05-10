@@ -1,7 +1,7 @@
 package builtin.kubernetes.KSV012
 
-import data.lib.result
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default checkRunAsNonRoot = false
