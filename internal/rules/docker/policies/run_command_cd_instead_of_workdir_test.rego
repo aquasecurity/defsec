@@ -1,4 +1,4 @@
-package appshield.dockerfile.DS013
+package builtin.dockerfile.DS013
 
 test_basic_denied {
 	r := deny with input as {"stages": {"nginx": [

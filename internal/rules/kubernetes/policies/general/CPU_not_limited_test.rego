@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV011
+package builtin.kubernetes.KSV011
 
 test_CPU_not_limited_denied {
 	r := deny with input as {

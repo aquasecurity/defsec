@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV039
+package builtin.kubernetes.KSV039
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -35,5 +35,5 @@ limitRangeConfigure {
 deny[res] {
 	not limitRangeConfigure
 	msg := "limit range policy with a default request and limit, min and max request, for each container should be configure"
-	res := defsec.result(msg, input.spec)
+	res := result.new(msg, input.spec)
 }

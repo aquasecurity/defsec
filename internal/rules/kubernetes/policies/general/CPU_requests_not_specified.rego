@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV015
+package builtin.kubernetes.KSV015
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -40,5 +40,5 @@ getNoRequestsCPUContainers[container] {
 deny[res] {
 	output := getNoRequestsCPUContainers[_]
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'resources.requests.cpu'", [output.name, kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, output)
+	res := result.new(msg, output)
 }

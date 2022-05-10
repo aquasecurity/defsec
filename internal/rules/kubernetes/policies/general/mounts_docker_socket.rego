@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV006
+package builtin.kubernetes.KSV006
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 
 name = input.metadata.name
@@ -35,5 +35,5 @@ checkDockerSocket {
 deny[res] {
 	checkDockerSocket
 	msg := kubernetes.format(sprintf("%s '%s' should not specify '/var/run/docker.socker' in 'spec.template.volumes.hostPath.path'", [kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, input.spec)
+	res := result.new(msg, input.spec)
 }

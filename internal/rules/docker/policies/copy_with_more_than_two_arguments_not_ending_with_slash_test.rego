@@ -1,4 +1,4 @@
-package appshield.dockerfile.DS011
+package builtin.dockerfile.DS011
 
 test_basic_denied {
 	r := deny with input as {"stages": {"alpine:3.3": [

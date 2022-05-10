@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV027
+package builtin.kubernetes.KSV027
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -33,5 +33,5 @@ failProcMountOpts[container] {
 deny[res] {
 	output := failProcMountOpts[_]
 	msg := kubernetes.format(sprintf("%s '%s' should not set 'spec.containers[*].securityContext.procMount' or 'spec.initContainers[*].securityContext.procMount'", [kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, output)
+	res := result.new(msg, output)
 }

@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV038
+package builtin.kubernetes.KSV038
 
 test_networkpolicy_with_spec_pod_selector {
 	r := deny with input as {

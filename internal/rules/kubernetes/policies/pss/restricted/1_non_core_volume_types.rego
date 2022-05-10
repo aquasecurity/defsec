@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV028
+package builtin.kubernetes.KSV028
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -65,5 +65,5 @@ failVolumeTypes {
 deny[res] {
 	failVolumeTypes
 	msg := kubernetes.format(sprintf("%s '%s' should set 'spec.volumes[*]' to type 'PersistentVolumeClaim'", [kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, input.spec)
+	res := result.new(msg, input.spec)
 }

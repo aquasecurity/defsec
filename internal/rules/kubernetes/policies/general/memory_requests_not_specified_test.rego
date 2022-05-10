@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV016
+package builtin.kubernetes.KSV016
 
 test_memory_requests_not_specified_denied {
 	r := deny with input as {

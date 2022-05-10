@@ -98,6 +98,7 @@ type DynamicMetadata struct {
 func NewScanner(options ...options.ScannerOption) *Scanner {
 	s := &Scanner{
 		ruleNamespaces: map[string]struct{}{
+			"builtin":   {},
 			"appshield": {},
 			"defsec":    {},
 		},

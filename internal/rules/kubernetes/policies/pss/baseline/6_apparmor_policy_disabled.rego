@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV002
+package builtin.kubernetes.KSV002
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 
 default failAppArmor = false
@@ -38,5 +38,5 @@ custom_apparmor_containers[container] {
 deny[res] {
 	output := custom_apparmor_containers[_]
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should specify an AppArmor profile", [output.name, kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, output)
+	res := result.new(msg, output)
 }

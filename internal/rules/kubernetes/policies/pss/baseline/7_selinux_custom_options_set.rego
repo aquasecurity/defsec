@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV025
+package builtin.kubernetes.KSV025
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -71,12 +71,12 @@ hasAllowedType(options) {
 deny[res] {
 	type := failSELinuxType[_]
 	msg := kubernetes.format(sprintf("%s '%s' uses invalid seLinux type '%s'", [kubernetes.kind, kubernetes.name, type]))
-	res := defsec.result(msg, input.spec)
+	res := result.new(msg, input.spec)
 }
 
 deny[res] {
 	keys := failForbiddenSELinuxProperties
 	count(keys) > 0
 	msg := kubernetes.format(sprintf("%s '%s' uses restricted properties in seLinuxOptions: (%s)", [kubernetes.kind, kubernetes.name, concat(", ", keys)]))
-	res := defsec.result(msg, input.spec)
+	res := result.new(msg, input.spec)
 }

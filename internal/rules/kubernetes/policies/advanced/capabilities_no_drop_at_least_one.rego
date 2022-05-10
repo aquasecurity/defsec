@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV004
+package builtin.kubernetes.KSV004
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -42,5 +42,5 @@ getNoCapsDropContainers[container] {
 deny[res] {
 	container := getNoCapsDropContainers[_]
 	msg := kubernetes.format(sprintf("Container '%s' of '%s' '%s' in '%s' namespace should set securityContext.capabilities.drop", [container.name, lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
-	res := defsec.result(msg, container)
+	res := result.new(msg, container)
 }

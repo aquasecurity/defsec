@@ -1,4 +1,4 @@
-package appshield.dockerfile.DS024
+package builtin.dockerfile.DS024
 
 test_denied {
 	r := deny with input as {"stages": {"debian": [

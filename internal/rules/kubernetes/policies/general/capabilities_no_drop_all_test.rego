@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV003
+package builtin.kubernetes.KSV003
 
 test_cap_no_drop_all_denied {
 	r := deny with input as {

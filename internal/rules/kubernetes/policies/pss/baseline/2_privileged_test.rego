@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV017
+package builtin.kubernetes.KSV017
 
 test_privileged_is_true_denied {
 	r := deny with input as {

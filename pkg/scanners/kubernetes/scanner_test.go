@@ -209,7 +209,7 @@ has_key(x, k) {
 }
 `,
 		"/rules/rule.rego": `
-package appshield.kubernetes.KSV011
+package builtin.kubernetes.KSV011
 
 import data.lib.kubernetes
 import data.lib.utils
@@ -294,7 +294,7 @@ deny[res] {
 		Terraform:      (*scan.EngineMetadata)(nil),
 		CloudFormation: (*scan.EngineMetadata)(nil),
 		CustomChecks:   scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)},
-		RegoPackage:    "data.appshield.kubernetes.KSV011"}, results.GetFailed()[0].Rule())
+		RegoPackage:    "data.builtin.kubernetes.KSV011"}, results.GetFailed()[0].Rule())
 
 	failure := results.GetFailed()[0]
 	actualCode, err := failure.GetCode(false)
@@ -499,7 +499,7 @@ func Test_FileScanExampleWithResultFunction(t *testing.T) {
 		options.OptionWithPolicyReaders(strings.NewReader(`package defsec
 
 import data.lib.kubernetes
-import data.lib.defsec
+import data.lib.result
 
 default checkCapsDropAll = false
 
@@ -539,7 +539,7 @@ output := getCapsNoDropAllContainers[_]
 
 msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should add 'ALL' to 'securityContext.capabilities.drop'", [output.name, kubernetes.kind, kubernetes.name]))
 
-res := defsec.result(msg, output)
+res := result.new(msg, output)
 }
 
 `))).ScanReader(

@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV015
+package builtin.kubernetes.KSV015
 
 test_CPU_requests_not_specified_denied {
 	r := deny with input as {

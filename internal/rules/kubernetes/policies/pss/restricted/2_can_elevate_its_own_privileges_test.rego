@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV001
+package builtin.kubernetes.KSV001
 
 test_allow_privilege_escalation_set_to_false_allowed {
 	r := deny with input as {

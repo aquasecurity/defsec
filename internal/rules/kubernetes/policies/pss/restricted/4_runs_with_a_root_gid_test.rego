@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV029
+package builtin.kubernetes.KSV029
 
 test_run_as_group_not_defined_allowed {
 	r := deny with input as {

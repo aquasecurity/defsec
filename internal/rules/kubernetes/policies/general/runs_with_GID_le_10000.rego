@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV021
+package builtin.kubernetes.KSV021
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -48,5 +48,5 @@ getGroupIdContainers[container] {
 deny[res] {
 	output := getGroupIdContainers[_]
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.runAsGroup' > 10000", [output.name, kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, output)
+	res := result.new(msg, output)
 }

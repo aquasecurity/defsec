@@ -26,7 +26,7 @@ x:
   - b
   - c
 `,
-		"/rules/rule.rego": `package appshield.yaml.lol
+		"/rules/rule.rego": `package builtin.yaml.lol
 
 __rego_metadata__ := {
 	"id": "ABC123",
@@ -80,7 +80,7 @@ deny[res] {
 		CloudFormation: (*scan.EngineMetadata)(nil),
 		CustomChecks: scan.CustomChecks{
 			Terraform: (*scan.TerraformCustomCheck)(nil)},
-		RegoPackage: "data.appshield.yaml.lol",
+		RegoPackage: "data.builtin.yaml.lol",
 	},
 		results.GetFailed()[0].Rule(),
 	)

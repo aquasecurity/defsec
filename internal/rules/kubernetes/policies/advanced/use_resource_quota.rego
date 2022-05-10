@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV040
+package builtin.kubernetes.KSV040
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -33,5 +33,5 @@ resourceQuotaConfigure {
 deny[res] {
 	not resourceQuotaConfigure
 	msg := "resource quota policy with hard memory and cpu quota per namespace should be configure"
-	res := defsec.result(msg, object.get(input.spec, "hard", input.spec))
+	res := result.new(msg, object.get(input.spec, "hard", input.spec))
 }

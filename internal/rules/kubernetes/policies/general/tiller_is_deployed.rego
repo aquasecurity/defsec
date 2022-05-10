@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV102
+package builtin.kubernetes.KSV102
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 
 __rego_metadata__ := {
@@ -64,5 +64,5 @@ checkMetadata(metadata) {
 deny[res] {
 	output := tillerDeployed[_]
 	msg := kubernetes.format(sprintf("container '%s' of %s '%s' in '%s' namespace shouldn't have tiller deployed", [getName(output), lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
-	res := defsec.result(msg, output)
+	res := result.new(msg, output)
 }

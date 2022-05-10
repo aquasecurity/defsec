@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV030
+package builtin.kubernetes.KSV030
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -79,5 +79,5 @@ deny[res] {
 deny[res] {
 	output := getContainersWithDisallowedSeccompProfileType[_]
 	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'spec.containers[*].securityContext.seccompProfile.type' to 'RuntimeDefault'", [output.name, kubernetes.kind, kubernetes.name]))
-	res = defsec.result(msg, output)
+	res = result.new(msg, output)
 }

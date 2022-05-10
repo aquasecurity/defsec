@@ -19,7 +19,7 @@ func Test_BasicScan(t *testing.T) {
 
 	fs := testutil.CreateFS(t, map[string]string{
 		"/code/data.json": `{ "x": { "y": 123, "z": ["a", "b", "c"]}}`,
-		"/rules/rule.rego": `package appshield.json.lol
+		"/rules/rule.rego": `package builtin.json.lol
 
 __rego_metadata__ := {
 	"id": "ABC123",
@@ -69,5 +69,5 @@ deny[res] {
 		Service:     "general",
 		Links:       []string{"https://example.com"},
 		Severity:    "CRITICAL",
-		Terraform:   (*scan.EngineMetadata)(nil), CloudFormation: (*scan.EngineMetadata)(nil), CustomChecks: scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)}, RegoPackage: "data.appshield.json.lol"}, results.GetFailed()[0].Rule())
+		Terraform:   (*scan.EngineMetadata)(nil), CloudFormation: (*scan.EngineMetadata)(nil), CustomChecks: scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)}, RegoPackage: "data.builtin.json.lol"}, results.GetFailed()[0].Rule())
 }

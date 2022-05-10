@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV038
+package builtin.kubernetes.KSV038
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -85,5 +85,5 @@ contains(arr, elem) {
 deny[res] {
 	not hasSelector(input.spec)
 	msg := "Network policy should uses podSelector and/or the namespaceSelector to restrict ingress and egress traffic within the Pod network"
-	res := defsec.result(msg, input.spec)
+	res := result.new(msg, input.spec)
 }

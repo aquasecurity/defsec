@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV008
+package builtin.kubernetes.KSV008
 
 test_host_ipc_set_to_true_denied {
 	r := deny with input as {

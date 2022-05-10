@@ -1,4 +1,4 @@
-package appshield.dockerfile.DS004
+package builtin.dockerfile.DS004
 
 # Test EXPOSE with PORT 22
 test_denied {

@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV033
+package builtin.kubernetes.KSV033
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -58,5 +58,5 @@ getContainersWithUntrustedGCRRegistry[container] {
 deny[res] {
 	container := getContainersWithUntrustedGCRRegistry[_]
 	msg := kubernetes.format(sprintf("container %s of %s %s in %s namespace should restrict container image to your specific registry domain. See the full GCR list here: https://cloud.google.com/container-registry/docs/overview#registries", [container.name, lower(kubernetes.kind), kubernetes.name, kubernetes.namespace]))
-	res := defsec.result(msg, container)
+	res := result.new(msg, container)
 }

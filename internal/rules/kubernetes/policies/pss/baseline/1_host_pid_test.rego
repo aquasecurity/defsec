@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV010
+package builtin.kubernetes.KSV010
 
 test_host_pid_set_to_true_denied {
 	r := deny with input as {

@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV008
+package builtin.kubernetes.KSV008
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 
 default failHostIPC = false
@@ -31,5 +31,5 @@ failHostIPC {
 deny[res] {
 	failHostIPC
 	msg := kubernetes.format(sprintf("%s '%s' should not set 'spec.template.spec.hostIPC' to true", [kubernetes.kind, kubernetes.name]))
-	res := defsec.result(msg, input.spec)
+	res := result.new(msg, input.spec)
 }

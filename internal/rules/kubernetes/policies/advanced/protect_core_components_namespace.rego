@@ -1,6 +1,6 @@
-package appshield.kubernetes.KSV037
+package builtin.kubernetes.KSV037
 
-import data.lib.defsec
+import data.lib.result
 import data.lib.kubernetes
 import data.lib.utils
 
@@ -40,5 +40,5 @@ core_component(metadata, spec) {
 deny[res] {
 	systemNamespaceInUse(input.metadata, input.spec)
 	msg := sprintf("%s '%s' should not be set with 'kube-system' namespace", [kubernetes.kind, kubernetes.name])
-	res := defsec.result(msg, input.spec)
+	res := result.new(msg, input.spec)
 }

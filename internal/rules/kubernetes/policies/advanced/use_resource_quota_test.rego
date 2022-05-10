@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV040
+package builtin.kubernetes.KSV040
 
 test_use_resource_quota_configure {
 	r := deny with input as {

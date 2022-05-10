@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV005
+package builtin.kubernetes.KSV005
 
 test_cap_without_sys_admin_allowed {
 	r := deny with input as {
