@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/BurntSushi/toml v1.1.0
 	github.com/Masterminds/semver v1.5.0
+	github.com/alecthomas/chroma v0.10.0
 	github.com/apparentlymart/go-cidr v1.1.0
 	github.com/bmatcuk/doublestar v1.3.4
 	github.com/google/uuid v1.3.0
@@ -58,6 +59,7 @@ require (
 	github.com/containerd/typeurl v1.0.2 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/dlclark/regexp2 v1.4.0 // indirect
 	github.com/docker/cli v20.10.13+incompatible // indirect
 	github.com/docker/distribution v2.8.0+incompatible // indirect
 	github.com/docker/docker v20.10.12+incompatible // indirect

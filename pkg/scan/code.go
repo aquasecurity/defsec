@@ -36,7 +36,7 @@ func (c *Code) IsCauseMultiline() bool {
 }
 
 // nolint
-func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
+func (r *Result) GetCode() (*Code, error) {
 
 	srcFS := r.Metadata().Range().GetFS()
 	if srcFS == nil {
@@ -71,6 +71,12 @@ func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 
 	rawLines := strings.Split(string(content), "\n")
 
+	highlighted := highlight(innerRange.GetLocalFilename(), content)
+	highlightedLines := strings.Split(string(highlighted), "\n")
+	if len(highlightedLines) < len(rawLines) {
+		highlightedLines = rawLines
+	}
+
 	if outerRange.GetEndLine()-1 >= len(rawLines) || innerRange.GetStartLine() == 0 {
 		return nil, fmt.Errorf("invalid line number")
 	}
@@ -83,8 +89,9 @@ func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 			code.Lines = append(
 				code.Lines,
 				Line{
-					Content: rawLines[outerRange.GetStartLine()-1],
-					Number:  outerRange.GetStartLine(),
+					Content:     rawLines[outerRange.GetStartLine()-1],
+					Highlighted: highlightedLines[outerRange.GetStartLine()-1],
+					Number:      outerRange.GetStartLine(),
 				},
 			)
 			if outerRange.GetStartLine()+1 < innerRange.GetStartLine() {
@@ -101,9 +108,10 @@ func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 		for lineNo := innerRange.GetStartLine(); lineNo <= innerRange.GetEndLine(); lineNo++ {
 
 			line := Line{
-				Number:  lineNo,
-				Content: strings.TrimSuffix(rawLines[lineNo-1], "\r"),
-				IsCause: true,
+				Number:      lineNo,
+				Content:     strings.TrimSuffix(rawLines[lineNo-1], "\r"),
+				Highlighted: strings.TrimSuffix(highlightedLines[lineNo-1], "\r"),
+				IsCause:     true,
 			}
 
 			if hasAnnotation && lineNo == innerRange.GetStartLine() {
@@ -126,8 +134,9 @@ func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 			code.Lines = append(
 				code.Lines,
 				Line{
-					Content: rawLines[outerRange.GetEndLine()-1],
-					Number:  outerRange.GetEndLine(),
+					Content:     rawLines[outerRange.GetEndLine()-1],
+					Highlighted: highlightedLines[outerRange.GetEndLine()-1],
+					Number:      outerRange.GetEndLine(),
 				},
 			)
 
@@ -137,9 +146,10 @@ func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 		for lineNo := outerRange.GetStartLine(); lineNo <= outerRange.GetEndLine(); lineNo++ {
 
 			line := Line{
-				Number:  lineNo,
-				Content: strings.TrimSuffix(rawLines[lineNo-1], "\r"),
-				IsCause: lineNo >= innerRange.GetStartLine() && lineNo <= innerRange.GetEndLine(),
+				Number:      lineNo,
+				Content:     strings.TrimSuffix(rawLines[lineNo-1], "\r"),
+				Highlighted: strings.TrimSuffix(highlightedLines[lineNo-1], "\r"),
+				IsCause:     lineNo >= innerRange.GetStartLine() && lineNo <= innerRange.GetEndLine(),
 			}
 
 			if hasAnnotation && lineNo == innerRange.GetStartLine() {
@@ -150,8 +160,5 @@ func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 		}
 	}
 
-	if enableHighlighting {
-		code.Lines = highlight(innerRange.GetLocalFilename(), code.Lines)
-	}
 	return &code, nil
 }

@@ -90,8 +90,11 @@ deny[res] {
 		results.GetFailed()[0].Rule(),
 	)
 
-	actualCode, err := results.GetFailed()[0].GetCode(false)
+	actualCode, err := results.GetFailed()[0].GetCode()
 	require.NoError(t, err)
+	for i := range actualCode.Lines {
+		actualCode.Lines[i].Highlighted = ""
+	}
 	assert.Equal(t, []scan.Line{
 		{
 			Number:     1,

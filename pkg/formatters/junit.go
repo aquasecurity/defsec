@@ -80,7 +80,7 @@ func outputJUnit(b ConfigurableFormatter, results scan.Results) error {
 
 // highlight the lines of code which caused a problem, if available
 func highlightCodeJunit(res scan.Result) string {
-	code, err := res.GetCode(false)
+	code, err := res.GetCode()
 	if err != nil {
 		return ""
 	}

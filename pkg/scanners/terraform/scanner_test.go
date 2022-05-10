@@ -209,8 +209,11 @@ deny[cause] {
 
 	assert.Equal(t, "AVD-TEST-0123", failure.Rule().AVDID)
 
-	actualCode, err := failure.GetCode(false)
+	actualCode, err := failure.GetCode()
 	require.NoError(t, err)
+	for i := range actualCode.Lines {
+		actualCode.Lines[i].Highlighted = ""
+	}
 	assert.Equal(t, []scan.Line{
 		{
 			Number:     3,
