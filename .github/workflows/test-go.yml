@@ -1,4 +1,4 @@
-name: defsec build
+name: test go
 on:
   pull_request:
   schedule:
