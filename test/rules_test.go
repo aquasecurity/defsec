@@ -63,7 +63,7 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 							for _, result := range results.GetFailed() {
 								code, err := result.GetCode(false)
 								require.NoError(t, err)
-								assert.Greater(t, len(code.Lines()), 0)
+								assert.Greater(t, len(code.Lines), 0)
 							}
 						})
 					}
@@ -86,7 +86,7 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 							for _, result := range results.GetFailed() {
 								code, err := result.GetCode(false)
 								require.NoError(t, err)
-								assert.Greater(t, len(code.Lines()), 0)
+								assert.Greater(t, len(code.Lines), 0)
 							}
 						})
 					}

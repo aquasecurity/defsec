@@ -8,7 +8,7 @@ import (
 )
 
 type Code struct {
-	lines []Line
+	Lines []Line
 }
 
 type Line struct {
@@ -22,13 +22,9 @@ type Line struct {
 	LastCause   bool
 }
 
-func (c *Code) Lines() []Line {
-	return c.lines
-}
-
 func (c *Code) IsCauseMultiline() bool {
 	var count int
-	for _, line := range c.lines {
+	for _, line := range c.Lines {
 		if line.IsCause {
 			count++
 			if count > 1 {
@@ -70,7 +66,7 @@ func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 	hasAnnotation := r.Annotation() != ""
 
 	code := Code{
-		lines: nil,
+		Lines: nil,
 	}
 
 	rawLines := strings.Split(string(content), "\n")
@@ -84,16 +80,16 @@ func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 	if shrink {
 
 		if outerRange.GetStartLine() < innerRange.GetStartLine() {
-			code.lines = append(
-				code.lines,
+			code.Lines = append(
+				code.Lines,
 				Line{
 					Content: rawLines[outerRange.GetStartLine()-1],
 					Number:  outerRange.GetStartLine(),
 				},
 			)
 			if outerRange.GetStartLine()+1 < innerRange.GetStartLine() {
-				code.lines = append(
-					code.lines,
+				code.Lines = append(
+					code.Lines,
 					Line{
 						Truncated: true,
 						Number:    outerRange.GetStartLine() + 1,
@@ -114,21 +110,21 @@ func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 				line.Annotation = r.Annotation()
 			}
 
-			code.lines = append(code.lines, line)
+			code.Lines = append(code.Lines, line)
 		}
 
 		if outerRange.GetEndLine() > innerRange.GetEndLine() {
 			if outerRange.GetEndLine() > innerRange.GetEndLine()+1 {
-				code.lines = append(
-					code.lines,
+				code.Lines = append(
+					code.Lines,
 					Line{
 						Truncated: true,
 						Number:    outerRange.GetEndLine() - 1,
 					},
 				)
 			}
-			code.lines = append(
-				code.lines,
+			code.Lines = append(
+				code.Lines,
 				Line{
 					Content: rawLines[outerRange.GetEndLine()-1],
 					Number:  outerRange.GetEndLine(),
@@ -150,12 +146,12 @@ func (r *Result) GetCode(enableHighlighting bool) (*Code, error) {
 				line.Annotation = r.Annotation()
 			}
 
-			code.lines = append(code.lines, line)
+			code.Lines = append(code.Lines, line)
 		}
 	}
 
 	if enableHighlighting {
-		code.lines = highlight(innerRange.GetLocalFilename(), code.lines)
+		code.Lines = highlight(innerRange.GetLocalFilename(), code.Lines)
 	}
 	return &code, nil
 }

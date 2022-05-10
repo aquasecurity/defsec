@@ -218,7 +218,7 @@ deny[cause] {
 			IsCause:    true,
 			Annotation: "",
 		},
-	}, actualCode.Lines())
+	}, actualCode.Lines)
 
 	if t.Failed() {
 		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
