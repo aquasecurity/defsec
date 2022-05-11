@@ -18,23 +18,24 @@ import (
 
 func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 
+	var file io.ReadCloser
+	var err error
+
 	tarFS := memoryfs.CloneFS(p.workingFS)
-	file, err := tarFS.Open(path)
+	file, err = tarFS.Open(path)
 	if err != nil {
 		return nil, err
 	}
 
-	var fr io.ReadCloser = file
-
 	if detection.IsZip(path) {
-		if fr, err = gzip.NewReader(file); err != nil {
+		if file, err = gzip.NewReader(file); err != nil {
 			return nil, err
 		}
 	}
 
-	defer func() { _ = fr.Close() }()
+	defer func() { _ = file.Close() }()
 
-	tr := tar.NewReader(fr)
+	tr := tar.NewReader(file)
 
 	for {
 		header, err := tr.Next()
