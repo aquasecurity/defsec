@@ -91,7 +91,10 @@ func (p *Parser) required(fs fs.FS, path string) bool {
 		return false
 	}
 	defer func() { _ = f.Close() }()
-	return detection.IsType(path, f, detection.FileTypeKubernetes)
+	if data, err := ioutil.ReadAll(f); err == nil {
+		return detection.IsType(path, bytes.NewReader(data), detection.FileTypeKubernetes)
+	}
+	return false
 }
 
 func (p *Parser) Parse(r io.Reader, path string) ([]interface{}, error) {
