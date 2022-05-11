@@ -9,7 +9,7 @@ import (
 	"github.com/alecthomas/chroma/styles"
 )
 
-func highlight(filename string, input []byte) []byte {
+func highlight(filename string, input []byte, theme string) []byte {
 
 	lexer := lexers.Match(filename)
 	if lexer == nil {
@@ -17,7 +17,7 @@ func highlight(filename string, input []byte) []byte {
 	}
 	lexer = chroma.Coalesce(lexer)
 
-	style := styles.Get("github")
+	style := styles.Get(theme)
 	if style == nil {
 		style = styles.Fallback
 	}
@@ -26,6 +26,8 @@ func highlight(filename string, input []byte) []byte {
 		formatter = formatters.Fallback
 	}
 
+	// replace windows line endings
+	input = bytes.ReplaceAll(input, []byte{0x0d}, []byte{})
 	iterator, err := lexer.Tokenise(nil, string(input))
 	if err != nil {
 		return input
@@ -36,5 +38,53 @@ func highlight(filename string, input []byte) []byte {
 		return input
 	}
 
-	return buffer.Bytes()
+	return shiftANSIOverLineEndings(buffer.Bytes())
+}
+
+func shiftANSIOverLineEndings(input []byte) []byte {
+	output := bytes.NewBuffer([]byte{})
+	prev := byte(0)
+	inCSI := false
+	csiShouldCarry := false
+	var csi []byte
+	var skipOutput bool
+	for _, r := range input {
+		skipOutput = false
+		if !inCSI {
+			switch {
+			case r == '\n':
+				if csiShouldCarry && len(csi) > 0 {
+					skipOutput = true
+					output.Write([]byte{'\n'})
+					output.Write(csi)
+					csi = nil
+					csiShouldCarry = false
+				}
+			case r == '[' && prev == 0x1b:
+				inCSI = true
+				csi = append(csi, 0x1b, '[')
+				skipOutput = true
+			default:
+				csiShouldCarry = false
+				if len(csi) > 0 {
+					output.Write(csi)
+					csi = nil
+				}
+			}
+		} else {
+			csi = append(csi, r)
+			skipOutput = true
+			switch {
+			case r >= 0x40 && r <= 0x7E:
+				csiShouldCarry = true
+				inCSI = false
+			}
+		}
+		if !skipOutput {
+			output.Write([]byte{r})
+		}
+		prev = r
+	}
+
+	return append(output.Bytes(), csi...)
 }

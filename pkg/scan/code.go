@@ -35,8 +35,54 @@ func (c *Code) IsCauseMultiline() bool {
 	return false
 }
 
+const (
+	darkTheme  = "solarized-dark256"
+	lightTheme = "github"
+)
+
+type codeSettings struct {
+	theme           string
+	allowTruncation bool
+}
+
+var defaultCodeSettings = codeSettings{
+	theme:           darkTheme,
+	allowTruncation: true,
+}
+
+type CodeOption func(*codeSettings)
+
+func OptionCodeWithTheme(theme string) CodeOption {
+	return func(s *codeSettings) {
+		s.theme = theme
+	}
+}
+
+func OptionCodeWithDarkTheme() CodeOption {
+	return func(s *codeSettings) {
+		s.theme = darkTheme
+	}
+}
+
+func OptionCodeWithLightTheme() CodeOption {
+	return func(s *codeSettings) {
+		s.theme = lightTheme
+	}
+}
+
+func OptionCodeWithTruncation(truncate bool) CodeOption {
+	return func(s *codeSettings) {
+		s.allowTruncation = truncate
+	}
+}
+
 // nolint
-func (r *Result) GetCode() (*Code, error) {
+func (r *Result) GetCode(opts ...CodeOption) (*Code, error) {
+
+	settings := defaultCodeSettings
+	for _, opt := range opts {
+		opt(&settings)
+	}
 
 	srcFS := r.Metadata().Range().GetFS()
 	if srcFS == nil {
@@ -71,7 +117,7 @@ func (r *Result) GetCode() (*Code, error) {
 
 	rawLines := strings.Split(string(content), "\n")
 
-	highlighted := highlight(innerRange.GetLocalFilename(), content)
+	highlighted := highlight(innerRange.GetLocalFilename(), content, settings.theme)
 	highlightedLines := strings.Split(string(highlighted), "\n")
 	if len(highlightedLines) < len(rawLines) {
 		highlightedLines = rawLines
@@ -81,7 +127,7 @@ func (r *Result) GetCode() (*Code, error) {
 		return nil, fmt.Errorf("invalid line number")
 	}
 
-	shrink := outerRange.LineCount() > (innerRange.LineCount() + 10)
+	shrink := settings.allowTruncation && outerRange.LineCount() > (innerRange.LineCount()+10)
 
 	if shrink {
 
