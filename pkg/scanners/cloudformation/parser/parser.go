@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -82,8 +83,11 @@ func (p *Parser) Required(fs fs.FS, path string) bool {
 		return false
 	}
 	defer func() { _ = f.Close() }()
+	if data, err := ioutil.ReadAll(f); err == nil {
+		return detection.IsType(path, bytes.NewReader(data), detection.FileTypeCloudFormation)
+	}
+	return false
 
-	return detection.IsType(path, f, detection.FileTypeCloudFormation)
 }
 
 func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (context *FileContext, err error) {

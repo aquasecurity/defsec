@@ -13,7 +13,7 @@ func Test_Detection(t *testing.T) {
 	tests := []struct {
 		name     string
 		path     string
-		r        io.Reader
+		r        io.ReadSeeker
 		expected []FileType
 	}{
 		{
@@ -50,6 +50,7 @@ func Test_Detection(t *testing.T) {
 			r:    nil,
 			expected: []FileType{
 				FileTypeYAML,
+				FileTypeHelm,
 			},
 		},
 		{
@@ -101,6 +102,7 @@ Resources:
 			expected: []FileType{
 				FileTypeCloudFormation,
 				FileTypeYAML,
+				FileTypeHelm,
 			},
 		},
 		{
@@ -128,7 +130,7 @@ Resources:
 			},
 		},
 		{
-			name: "Kubernetes, no reader",
+			name: "kubernetes, no reader",
 			path: "k8s.yml",
 			r:    nil,
 			expected: []FileType{
@@ -136,7 +138,7 @@ Resources:
 			},
 		},
 		{
-			name: "Kubernetes, reader",
+			name: "kubernetes, reader",
 			path: "k8s.yml",
 			r: strings.NewReader(`apiVersion: apps/v1
 kind: Deployment
@@ -170,6 +172,7 @@ spec:
 			r:    nil,
 			expected: []FileType{
 				FileTypeYAML,
+				FileTypeHelm,
 			},
 		},
 		{
@@ -212,6 +215,7 @@ spec:
 				actualDetections := GetTypes(test.path, test.r)
 				assert.Equal(t, len(test.expected), len(actualDetections))
 				for _, expected := range test.expected {
+					resetReader(test.r)
 					var found bool
 					for _, actual := range actualDetections {
 						if actual == expected {
@@ -223,11 +227,13 @@ spec:
 				}
 			})
 			for _, expected := range test.expected {
+				resetReader(test.r)
 				t.Run(fmt.Sprintf("IsType_%s", expected), func(t *testing.T) {
 					assert.True(t, IsType(test.path, test.r, expected))
 				})
 			}
 			t.Run("IsType_invalid", func(t *testing.T) {
+				resetReader(test.r)
 				assert.False(t, IsType(test.path, test.r, "invalid"))
 			})
 		})

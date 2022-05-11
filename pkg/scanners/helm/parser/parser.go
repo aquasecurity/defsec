@@ -82,7 +82,11 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) error {
 			return nil
 		}
 
-		if isArchive(path) {
+		if !p.required(path, p.workingFS) {
+			return nil
+		}
+
+		if detection.IsArchive(path) {
 			tarFS, err := p.addTarToFS(path)
 			if err != nil {
 				return err
@@ -244,9 +248,14 @@ func (p *Parser) writeBuildFiles(tempFs string) error {
 	return nil
 }
 
-func (p *Parser) Required(path string) bool {
+func (p *Parser) required(path string, workingFS fs.FS) bool {
 	if p.skipRequired {
 		return true
 	}
-	return detection.IsType(path, nil, detection.FileTypeYAML)
+	content, err := fs.ReadFile(workingFS, path)
+	if err != nil {
+		return false
+	}
+
+	return detection.IsType(path, bytes.NewReader(content), detection.FileTypeHelm)
 }

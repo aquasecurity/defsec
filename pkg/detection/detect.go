@@ -22,36 +22,61 @@ const (
 	FileTypeYAML           FileType = "yaml"
 	FileTypeTOML           FileType = "toml"
 	FileTypeJSON           FileType = "json"
+	FileTypeHelm           FileType = "helm"
 )
 
-var matchers = map[FileType]func(name string, r io.Reader) bool{}
+var matchers = map[FileType]func(name string, r io.ReadSeeker) bool{}
 
 // nolint
 func init() {
 
-	matchers[FileTypeJSON] = func(name string, r io.Reader) bool {
+	matchers[FileTypeJSON] = func(name string, r io.ReadSeeker) bool {
 		ext := filepath.Ext(filepath.Base(name))
-		return strings.EqualFold(ext, ".json")
+		if !strings.EqualFold(ext, ".json") {
+			return false
+		}
+		if resetReader(r) == nil {
+			return true
+		}
+
+		var content interface{}
+		return json.NewDecoder(r).Decode(&content) == nil
 	}
 
-	matchers[FileTypeYAML] = func(name string, r io.Reader) bool {
+	matchers[FileTypeYAML] = func(name string, r io.ReadSeeker) bool {
 		ext := filepath.Ext(filepath.Base(name))
-		return strings.EqualFold(ext, ".yaml") || strings.EqualFold(ext, ".yml")
+		if !strings.EqualFold(ext, ".yaml") && !strings.EqualFold(ext, ".yml") {
+			return false
+		}
+		if resetReader(r) == nil {
+			return true
+		}
+
+		var content interface{}
+		return yaml.NewDecoder(r).Decode(&content) == nil
 	}
 
-	matchers[FileTypeTOML] = func(name string, r io.Reader) bool {
+	matchers[FileTypeHelm] = func(name string, r io.ReadSeeker) bool {
+		if IsHelmChartArchive(name, r) {
+			return true
+		}
+
+		return strings.HasSuffix(name, "hart.yaml")
+	}
+
+	matchers[FileTypeTOML] = func(name string, r io.ReadSeeker) bool {
 		ext := filepath.Ext(filepath.Base(name))
 		return strings.EqualFold(ext, ".toml")
 	}
 
-	matchers[FileTypeTerraform] = func(name string, _ io.Reader) bool {
+	matchers[FileTypeTerraform] = func(name string, _ io.ReadSeeker) bool {
 		ext := filepath.Ext(filepath.Base(name))
 		return strings.EqualFold(ext, ".tf") || strings.EqualFold(ext, ".tf.json")
 	}
 
-	matchers[FileTypeTerraformPlan] = func(name string, r io.Reader) bool {
+	matchers[FileTypeTerraformPlan] = func(name string, r io.ReadSeeker) bool {
 		if IsType(name, r, FileTypeJSON) {
-			if r == nil {
+			if resetReader(r) == nil {
 				return false
 			}
 
@@ -61,7 +86,8 @@ func init() {
 			}
 
 			contents := make(map[string]interface{})
-			if err := json.Unmarshal(data, &contents); err == nil {
+			err = json.Unmarshal(data, &contents)
+			if err == nil {
 				if _, ok := contents["terraform_version"]; ok {
 					_, stillOk := contents["format_version"]
 					return stillOk
@@ -71,7 +97,7 @@ func init() {
 		return false
 	}
 
-	matchers[FileTypeCloudFormation] = func(name string, r io.Reader) bool {
+	matchers[FileTypeCloudFormation] = func(name string, r io.ReadSeeker) bool {
 		var unmarshalFunc func([]byte, interface{}) error
 
 		switch {
@@ -83,7 +109,7 @@ func init() {
 			return false
 		}
 
-		if r == nil {
+		if resetReader(r) == nil {
 			return false
 		}
 
@@ -100,7 +126,7 @@ func init() {
 		return ok
 	}
 
-	matchers[FileTypeDockerfile] = func(name string, _ io.Reader) bool {
+	matchers[FileTypeDockerfile] = func(name string, _ io.ReadSeeker) bool {
 		const requiredFile = "Dockerfile"
 		base := filepath.Base(name)
 		ext := filepath.Ext(base)
@@ -113,13 +139,29 @@ func init() {
 		return false
 	}
 
-	matchers[FileTypeKubernetes] = func(name string, r io.Reader) bool {
+	matchers[FileTypeHelm] = func(name string, r io.ReadSeeker) bool {
+		helmFiles := []string{"Chart.yaml", ".helmignore", "values.schema.json", "NOTES.txt"}
+		for _, expected := range helmFiles {
+			if strings.HasSuffix(name, expected) {
+				return true
+			}
+		}
+		helmFileExtensions := []string{".yaml", ".tpl"}
+		ext := filepath.Ext(filepath.Base(name))
+		for _, expected := range helmFileExtensions {
+			if strings.EqualFold(ext, expected) {
+				return true
+			}
+		}
+		return IsHelmChartArchive(name, r)
+	}
+
+	matchers[FileTypeKubernetes] = func(name string, r io.ReadSeeker) bool {
 
 		if !IsType(name, r, FileTypeYAML) && !IsType(name, r, FileTypeJSON) {
 			return false
 		}
-
-		if r == nil {
+		if resetReader(r) == nil {
 			return false
 		}
 
@@ -170,7 +212,8 @@ func init() {
 	}
 }
 
-func IsType(name string, r io.Reader, t FileType) bool {
+func IsType(name string, r io.ReadSeeker, t FileType) bool {
+	r = ensureSeeker(r)
 	f, ok := matchers[t]
 	if !ok {
 		return false
@@ -178,20 +221,38 @@ func IsType(name string, r io.Reader, t FileType) bool {
 	return f(name, r)
 }
 
-func GetTypes(name string, r io.Reader) []FileType {
+func GetTypes(name string, r io.ReadSeeker) []FileType {
 	var matched []FileType
-	if _, ok := r.(io.Seeker); !ok && r != nil {
-		if data, err := ioutil.ReadAll(r); err == nil {
-			r = bytes.NewReader(data)
-		}
-	}
+	r = ensureSeeker(r)
 	for check, f := range matchers {
 		if f(name, r) {
 			matched = append(matched, check)
 		}
-		if seeker, ok := r.(io.Seeker); ok {
-			_, _ = seeker.Seek(0, 0)
-		}
+		resetReader(r)
 	}
 	return matched
+}
+
+func ensureSeeker(r io.Reader) io.ReadSeeker {
+	if r == nil {
+		return nil
+	}
+	if seeker, ok := r.(io.ReadSeeker); ok {
+		return seeker
+	}
+	if data, err := ioutil.ReadAll(r); err == nil {
+		return bytes.NewReader(data)
+	}
+	return nil
+}
+
+func resetReader(r io.Reader) io.ReadSeeker {
+	if r == nil {
+		return nil
+	}
+	if seeker, ok := r.(io.ReadSeeker); ok {
+		_, _ = seeker.Seek(0, 0)
+		return seeker
+	}
+	return ensureSeeker(r)
 }

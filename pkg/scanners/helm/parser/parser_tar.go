@@ -10,9 +10,10 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/liamg/memoryfs"
+
+	"github.com/aquasecurity/defsec/pkg/detection"
 )
 
 func (p *Parser) addTarToFS(path string) (fs.FS, error) {
@@ -25,7 +26,7 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 
 	var fr io.ReadCloser = file
 
-	if isZipped(path) {
+	if detection.IsZip(path) {
 		if fr, err = gzip.NewReader(file); err != nil {
 			return nil, err
 		}
@@ -85,21 +86,4 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 	}
 
 	return tarFS, nil
-}
-
-func isArchive(path string) bool {
-	if strings.HasSuffix(path, ".tar") ||
-		strings.HasSuffix(path, ".tgz") ||
-		strings.HasSuffix(path, ".tar.gz") {
-		return true
-	}
-	return false
-}
-
-func isZipped(path string) bool {
-	if strings.HasSuffix(path, ".tgz") ||
-		strings.HasSuffix(path, ".tar.gz") {
-		return true
-	}
-	return false
 }
