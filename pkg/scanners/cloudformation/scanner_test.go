@@ -90,6 +90,8 @@ deny[res] {
 			Number:     6,
 			Content:    "      BucketName: public-bucket",
 			IsCause:    true,
+			FirstCause: true,
+			LastCause:  true,
 			Annotation: "",
 		},
 	}, actualCode.Lines)
