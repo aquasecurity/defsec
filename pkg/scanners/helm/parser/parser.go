@@ -22,7 +22,6 @@ import (
 
 	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/aquasecurity/defsec/pkg/detection"
-	"github.com/aquasecurity/defsec/pkg/scanners/helm/peek"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 )
 
@@ -87,7 +86,7 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) error {
 			return nil
 		}
 
-		if peek.IsArchive(path) {
+		if detection.IsArchive(path) {
 			tarFS, err := p.addTarToFS(path)
 			if err != nil {
 				return err

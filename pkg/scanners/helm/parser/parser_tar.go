@@ -13,7 +13,7 @@ import (
 
 	"github.com/liamg/memoryfs"
 
-	"github.com/aquasecurity/defsec/pkg/scanners/helm/peek"
+	"github.com/aquasecurity/defsec/pkg/detection"
 )
 
 func (p *Parser) addTarToFS(path string) (fs.FS, error) {
@@ -26,7 +26,7 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 
 	var fr io.ReadCloser = file
 
-	if peek.IsZip(path) {
+	if detection.IsZip(path) {
 		if fr, err = gzip.NewReader(file); err != nil {
 			return nil, err
 		}

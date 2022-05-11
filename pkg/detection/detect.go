@@ -9,8 +9,6 @@ import (
 	"strings"
 
 	"gopkg.in/yaml.v3"
-
-	"github.com/aquasecurity/defsec/pkg/scanners/helm/peek"
 )
 
 type FileType string
@@ -59,7 +57,7 @@ func init() {
 	}
 
 	matchers[FileTypeHelm] = func(name string, r io.ReadSeeker) bool {
-		if peek.IsHelmChartArchive(name, r) {
+		if IsHelmChartArchive(name, r) {
 			return true
 		}
 
@@ -156,7 +154,7 @@ func init() {
 				return true
 			}
 		}
-		return peek.IsHelmChartArchive(name, r)
+		return IsHelmChartArchive(name, r)
 	}
 
 	matchers[FileTypeKubernetes] = func(name string, r io.ReadSeeker) bool {

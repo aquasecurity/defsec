@@ -1,4 +1,4 @@
-package peek
+package detection
 
 import (
 	"archive/tar"

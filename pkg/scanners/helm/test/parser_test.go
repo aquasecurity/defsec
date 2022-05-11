@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/pkg/scanners/helm/parser"
-	"github.com/aquasecurity/defsec/pkg/scanners/helm/peek"
 )
 
 func Test_helm_parser(t *testing.T) {
@@ -86,7 +86,7 @@ func Test_tar_is_chart(t *testing.T) {
 		file, err := os.Open(testPath)
 		require.NoError(t, err)
 
-		assert.Equal(t, test.isHelmChart, peek.IsHelmChartArchive(test.archiveFile, file))
+		assert.Equal(t, test.isHelmChart, detection.IsHelmChartArchive(test.archiveFile, file))
 
 	}
 }
