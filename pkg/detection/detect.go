@@ -93,7 +93,6 @@ func init() {
 					return stillOk
 				}
 			}
-			_ = err
 		}
 		return false
 	}
