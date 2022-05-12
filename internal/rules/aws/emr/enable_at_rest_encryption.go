@@ -10,16 +10,16 @@ import (
 
 var CheckEnableAtRestEncryption = rules.Register(
 	scan.Rule{
-		AVDID:       "AVD-AWS-0131",
+		AVDID:       "AVD-AWS-TODO-001",
 		Provider:    providers.AWSProvider,
-		Service:     "ec2",
+		Service:     "emr",
 		ShortCode:   "enable-at-rest-encryption",
-		Summary:     "Instance with unencrypted block device.",
-		Impact:      "The block device could be compromised and read from",
-		Resolution:  "Turn on encryption for all block devices",
-		Explanation: `Block devices should be encrypted to ensure sensitive data is held securely at rest.`,
+		Summary:     "Enable at-rest encryption for EMR clusters.",
+		Impact:      "At-rest data in the EMR cluster could be compromised if accessed.",
+		Resolution:  "Enable at-rest encryption for EMR cluster",
+		Explanation: `Data stored within an EMR cluster should be encrypted to ensure sensitive data is kept private.`,
 		Links: []string{
-			"https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/RootDeviceStorage.html",
+			"https://docs.aws.amazon.com/config/latest/developerguide/operational-best-practices-for-nist_800-171.html",
 		},
 		Terraform: &scan.EngineMetadata{
 			GoodExamples:        terraformEnableAtRestEncryptionGoodExamples,
@@ -30,26 +30,43 @@ var CheckEnableAtRestEncryption = rules.Register(
 		Severity: severity.High,
 	},
 	func(s *state.State) (results scan.Results) {
-		for _, instance := range s.AWS.EC2.Instances {
-			if instance.RootBlockDevice != nil && instance.RootBlockDevice.Encrypted.IsFalse() {
+		for _, emrSecurity := range s.AWS.EMR.SecurityConfiguration {
+			// var foo = json.Unmarshal(emrSecurity.configuration, &foo)
+			// fmt.Print(foo)
+			if emrSecurity.EnableInTransitEncryption.IsFalse() && emrSecurity.EncryptionAtRestEnabled.IsFalse() {
 				results.Add(
-					"Root block device is not encrypted.",
-					instance.RootBlockDevice.Encrypted,
+					"EMR cluster does not have at-rest encryption enabled.",
+					emrSecurity.EncryptionAtRestEnabled,
 				)
 			} else {
-				results.AddPassed(&instance)
-			}
-			for _, device := range instance.EBSBlockDevices {
-				if device.Encrypted.IsFalse() {
-					results.Add(
-						"EBS block device is not encrypted.",
-						device.Encrypted,
-					)
-				} else {
-					results.AddPassed(&device)
-				}
+				results.AddPassed(&emrSecurity)
 			}
 		}
 		return
 	},
 )
+
+// 	func(s *state.State) (results scan.Result) {
+// 		for _, instance := range s.AWS.EMR.SecurityConfiguration {
+// 			_foo = json.Unmarshal(instance.JSON, &_bar)
+// 			if instance.EncryptionAtRestEnabled.IsFalse() {
+// 				results.Add(
+// 					"Security configuration does not have at-rest encryption enabled.",
+// 					instance.AtRestEncryptionEnabled,
+// 				)
+// 			} else {
+// 				results.AddPassed(&instance)
+// 			}
+// 			// if instance.EncryptionStatus == "UNENCRYPTED" {
+// 			// 	results.Add(scan.Result{
+// 			// 		Rule:     CheckEnableAtRestEncryption,
+// 			// 		Severity: severity.High,
+// 			// 		Message:  "Instance with unencrypted block device.",
+// 			// 		Details:  "Instance with unencrypted block device.",
+// 			// 	})
+// 			// }
+// 		}
+// 		return
+// 	},
+
+// )

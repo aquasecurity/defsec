@@ -14,17 +14,8 @@ type Cluster struct {
 	Settings ClusterSettings
 }
 
-// type SecurityConfiguration struct {
-// 	types.Metadata
-// 	Settings SecurityConfigurationSettings
-// }
-
-type SecurityConfiguration struct {
-	types.Metadata
-	configuration types.StringValue
-}
-
 type ClusterSettings struct {
+	types.Metadata
 	InstanceType        types.StringValue
 	InstanceCount       types.IntValue
 	MasterInstanceType  types.StringValue
@@ -48,3 +39,23 @@ type ClusterSettings struct {
 	CustomAmiDescription     types.StringValue
 	CustomAmiExecutableUsers types.StringValue
 }
+
+type SecurityConfiguration struct {
+	types.Metadata
+	Name                      types.StringValue
+	configuration             types.StringValue
+	EncryptionAtRestEnabled   types.BoolValue
+	EnableInTransitEncryption types.BoolValue
+}
+
+// type SecurityConfigurationSettings struct {
+// 	types.Metadata
+// 	EncryptionAtRestEnabled types.BoolValue
+// 	EnableInTransitEncryption types.BoolValue
+
+// }
+
+// type SecurityConfiguration struct {
+// 	types.Metadata
+// 	configuration types.StringValue
+// }
