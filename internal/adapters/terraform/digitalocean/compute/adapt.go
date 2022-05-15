@@ -47,11 +47,13 @@ func adaptFirewalls(module terraform.Modules) []compute.Firewall {
 
 		inboundFirewallRules := []compute.InboundFirewallRule{}
 		for _, inBoundRule := range inboundRules {
-			inboundFirewallRule := compute.InboundFirewallRule{}
+			inboundFirewallRule := compute.InboundFirewallRule{
+				Metadata: inBoundRule.GetMetadata(),
+			}
 			if ibSourceAddresses := inBoundRule.GetAttribute("source_addresses"); ibSourceAddresses != nil {
 				inboundFirewallRule.SourceAddresses = []types.StringValue{}
 				for _, value := range ibSourceAddresses.ValueAsStrings() {
-					inboundFirewallRule.SourceAddresses = append(inboundFirewallRule.SourceAddresses, types.String(value, inBoundRule.GetMetadata()))
+					inboundFirewallRule.SourceAddresses = append(inboundFirewallRule.SourceAddresses, types.String(value, ibSourceAddresses.GetMetadata()))
 				}
 			}
 			inboundFirewallRules = append(inboundFirewallRules, inboundFirewallRule)
@@ -59,11 +61,13 @@ func adaptFirewalls(module terraform.Modules) []compute.Firewall {
 
 		outboundFirewallRules := []compute.OutboundFirewallRule{}
 		for _, outBoundRule := range outboundRules {
-			outboundFirewallRule := compute.OutboundFirewallRule{}
+			outboundFirewallRule := compute.OutboundFirewallRule{
+				Metadata: outBoundRule.GetMetadata(),
+			}
 			if obDestinationAddresses := outBoundRule.GetAttribute("destination_addresses"); obDestinationAddresses != nil {
 				outboundFirewallRule.DestinationAddresses = []types.StringValue{}
 				for _, value := range obDestinationAddresses.ValueAsStrings() {
-					outboundFirewallRule.DestinationAddresses = append(outboundFirewallRule.DestinationAddresses, types.String(value, outBoundRule.GetMetadata()))
+					outboundFirewallRule.DestinationAddresses = append(outboundFirewallRule.DestinationAddresses, types.String(value, obDestinationAddresses.GetMetadata()))
 				}
 			}
 			outboundFirewallRules = append(outboundFirewallRules, outboundFirewallRule)
