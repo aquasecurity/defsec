@@ -12,14 +12,14 @@ type Code struct {
 }
 
 type Line struct {
-	Number      int
-	Content     string
-	IsCause     bool
-	Annotation  string
-	Truncated   bool
-	Highlighted string
-	FirstCause  bool
-	LastCause   bool
+	Number      int    `json:"Number"`
+	Content     string `json:"Content"`
+	IsCause     bool   `json:"IsCause"`
+	Annotation  string `json:"Annotation"`
+	Truncated   bool   `json:"Truncated"`
+	Highlighted string `json:"-"` // Dont include in json
+	FirstCause  bool   `json:"FirstCause"`
+	LastCause   bool   `json:"LastCause"`
 }
 
 func (c *Code) IsCauseMultiline() bool {
