@@ -17,7 +17,7 @@ type Line struct {
 	IsCause     bool
 	Annotation  string
 	Truncated   bool
-	Highlighted string
+	Highlighted string `json:-`
 	FirstCause  bool
 	LastCause   bool
 }
