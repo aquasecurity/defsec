@@ -42,7 +42,7 @@ func highlight(filename string, input []byte, theme string) []byte {
 }
 
 func shiftANSIOverLineEndings(input []byte) []byte {
-	output := bytes.NewBuffer([]byte{})
+	var output []byte
 	prev := byte(0)
 	inCSI := false
 	csiShouldCarry := false
@@ -55,19 +55,20 @@ func shiftANSIOverLineEndings(input []byte) []byte {
 			case r == '\n':
 				if csiShouldCarry && len(csi) > 0 {
 					skipOutput = true
-					output.Write([]byte{'\n'})
-					output.Write(csi)
+					output = append(output, '\n')
+					output = append(output, csi...)
 					csi = nil
 					csiShouldCarry = false
 				}
 			case r == '[' && prev == 0x1b:
 				inCSI = true
 				csi = append(csi, 0x1b, '[')
+				output = output[:len(output)-1]
 				skipOutput = true
 			default:
 				csiShouldCarry = false
 				if len(csi) > 0 {
-					output.Write(csi)
+					output = append(output, csi...)
 					csi = nil
 				}
 			}
@@ -81,10 +82,10 @@ func shiftANSIOverLineEndings(input []byte) []byte {
 			}
 		}
 		if !skipOutput {
-			output.Write([]byte{r})
+			output = append(output, r)
 		}
 		prev = r
 	}
 
-	return append(output.Bytes(), csi...)
+	return append(output, csi...)
 }
