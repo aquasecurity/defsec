@@ -17,7 +17,7 @@ type Line struct {
 	IsCause     bool   `json:"IsCause"`
 	Annotation  string `json:"Annotation"`
 	Truncated   bool   `json:"Truncated"`
-	Highlighted string `json:"Highlighted,omitempty"`
+	Highlighted string `json:"-"`
 	FirstCause  bool   `json:"FirstCause"`
 	LastCause   bool   `json:"LastCause"`
 }
