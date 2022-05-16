@@ -47,9 +47,17 @@ func adaptSecurityConfiguration(resource *terraform.Block) emr.SecurityConfigura
 	encryptionAtRestEnabledAttr := resource.GetAttribute("EnableAtRestEncryption")
 	encryptionAtRestEnabledVal := encryptionAtRestEnabledAttr.AsBoolValueOrDefault(false, resource)
 
-	return emr.SecurityConfiguration{
-		Metadata:                  resource.GetMetadata(),
-		EnableInTransitEncryption: enableInTransitEncryptionVal,
-		EncryptionAtRestEnabled:   encryptionAtRestEnabledVal,
-	}
+	configurationAttr := resource.GetAttribute("configuration")
+	configurationVal := configurationAttr.AsStringValueOrDefault("", resource)
+
+	// Configuration := resource.GetAttribute("configuration").AsStringValueOrDefault("", resource)
+
 }
+
+// func adaptTaskDefinitionResource(resourceBlock *terraform.Block) ecs.TaskDefinition {
+// 	return ecs.TaskDefinition{
+// 		Metadata:             resourceBlock.GetMetadata(),
+// 		Volumes:              adaptVolumes(resourceBlock),
+// 		ContainerDefinitions: resourceBlock.GetAttribute("container_definitions").AsStringValueOrDefault("", resourceBlock),
+// 	}
+// }

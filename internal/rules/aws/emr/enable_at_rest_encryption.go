@@ -1,11 +1,16 @@
 package emr
 
 import (
+	"encoding/json"
+	"fmt"
+
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/internal/security"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
 	"github.com/aquasecurity/defsec/pkg/state"
+	"github.com/owenrumney/squealer/pkg/squealer"
 )
 
 var CheckEnableAtRestEncryption = rules.Register(
@@ -30,21 +35,108 @@ var CheckEnableAtRestEncryption = rules.Register(
 		Severity: severity.High,
 	},
 	func(s *state.State) (results scan.Results) {
-		for _, emrSecurity := range s.AWS.EMR.SecurityConfiguration {
-			// var foo = json.Unmarshal(emrSecurity.configuration, &foo)
-			// fmt.Print(foo)
-			if emrSecurity.EnableInTransitEncryption.IsFalse() && emrSecurity.EncryptionAtRestEnabled.IsFalse() {
-				results.Add(
-					"EMR cluster does not have at-rest encryption enabled.",
-					emrSecurity.EncryptionAtRestEnabled,
-				)
-			} else {
-				results.AddPassed(&emrSecurity)
+
+		scanner := squealer.NewStringScanner()
+
+		for _, conf := range s.AWS.EMR.SecurityConfiguration {
+			vars, err := readVarsFromConfiguration(conf.Configuration.Value())
+			if err != nil {
+				continue
+			}
+
+			for key, val := range vars {
+				if result := scanner.Scan(val); result.TransgressionFound || security.IsSensitiveAttribute(key) {
+					results.Add(
+						fmt.Sprintf("Container definition contains a potentially sensitive environment variable '%s': %s", key, result.Description),
+						conf.Configuration,
+					)
+				} else {
+					results.AddPassed(&conf)
+				}
 			}
 		}
 		return
 	},
 )
+
+// AWS.EMR.SecurityConfiguration.Configuration json model
+//
+// {
+// 	"EncryptionConfiguration": {
+// 	  "AtRestEncryptionConfiguration": {
+// 		"S3EncryptionConfiguration": {
+// 		  "EncryptionMode": "SSE-S3"
+// 		},
+// 		"LocalDiskEncryptionConfiguration": {
+// 		  "EncryptionKeyProviderType": "AwsKms",
+// 		  "AwsKmsKey": "arn:aws:kms:us-west-2:187416307283:alias/tf_emr_test_key"
+// 		}
+// 	  },
+// 	  "EnableInTransitEncryption": false,
+// 	  "EnableAtRestEncryption": true
+// 	}
+//   }
+//
+
+type conf struct {
+	EncryptionConfiguration struct {
+		AtRestEncryptionConfiguration struct {
+			S3EncryptionConfiguration struct {
+				EncryptionMode string `json:"EncryptionMode"`
+			} `json:"S3EncryptionConfiguration"`
+			LocalDiskEncryptionConfiguration struct {
+				EncryptionKeyProviderType string `json:"EncryptionKeyProviderType"`
+				AwsKmsKey                 string `json:"AwsKmsKey"`
+			} `json:"LocalDiskEncryptionConfiguration"`
+		} `json:"AtRestEncryptionConfiguration"`
+		EnableInTransitEncryption bool `json:"EnableInTransitEncryption"`
+		EnableAtRestEncryption    bool `json:"EnableAtRestEncryption"`
+	} `json:"EncryptionConfiguration"`
+}
+
+func readVarsFromConfiguration(raw string) (map[string]conf, error) {
+	//map string to conf struct
+	var confs map[string]conf
+	err := json.Unmarshal([]byte(raw), &confs)
+	if err != nil {
+		return nil, err
+	}
+
+	// //map string to string
+	// vars := make(map[string]string)
+	// for key, conf := range confs {
+	// 	if conf.EncryptionConfiguration.EnableAtRestEncryption {
+	// 		return
+
+	// 	// if conf.EncryptionConfiguration.EnableAtRestEncryption {
+	// 	// 	if conf.EncryptionConfiguration.AtRestEncryptionConfiguration.S3EncryptionConfiguration.EncryptionMode == "SSE-S3" {
+	// 	// 		vars[key] = "SSE-S3"
+	// 	// 	} else if conf.EncryptionConfiguration.AtRestEncryptionConfiguration.LocalDiskEncryptionConfiguration.EncryptionKeyProviderType == "AwsKms" {
+	// 	// 		vars[key] = conf.EncryptionConfiguration.AtRestEncryptionConfiguration.LocalDiskEncryptionConfiguration.AwsKmsKey
+	// 	// 	}
+	// 	// }
+	// }
+	// return vars, nil
+
+	return confs, nil
+}
+
+// 	func(s *state.State) (results scan.Results) {
+// 		for _, emrSecurity := range s.AWS.EMR.SecurityConfiguration {
+// 			// var foo = json.Unmarshal(emrSecurity.configuration, &foo)
+// 			// fmt.Print(foo)
+// 			if emrSecurity.EnableInTransitEncryption.IsFalse() && emrSecurity.EncryptionAtRestEnabled.IsFalse() {
+// 				results.Add(
+// 					"EMR cluster does not have at-rest encryption enabled.",
+// 					emrSecurity.EncryptionAtRestEnabled,
+// 				)
+// 			} else {
+// 				results.AddPassed(&emrSecurity)
+// 			}
+// 		}
+// 		return
+// 	},
+// )
 
 // 	func(s *state.State) (results scan.Result) {
 // 		for _, instance := range s.AWS.EMR.SecurityConfiguration {
