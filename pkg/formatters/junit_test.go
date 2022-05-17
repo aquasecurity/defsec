@@ -24,7 +24,7 @@ func Test_JUnit(t *testing.T) {
 	want := fmt.Sprintf(`<?xml version="1.0" encoding="UTF-8"?>
 <testsuite name="%s" failures="1" tests="1">
 	<testcase classname="test.test" name="[aws-dynamodb-enable-at-rest-encryption][HIGH] - Cluster encryption is not enabled." time="0">
-		<failure message="Cluster encryption is not enabled." type="">test.test:123&#xA;&#xA;https://google.com</failure>
+		<failure message="Cluster encryption is not enabled." type="">test.test:123&#xA;&#xA;&#xA;&#xA;See https://google.com</failure>
 	</testcase>
 </testsuite>`, filepath.Base(os.Args[0]))
 	buffer := bytes.NewBuffer([]byte{})
