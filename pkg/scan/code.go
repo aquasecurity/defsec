@@ -5,6 +5,8 @@ import (
 	"io/fs"
 	"path/filepath"
 	"strings"
+
+	"github.com/aquasecurity/defsec/internal/types"
 )
 
 type Code struct {
@@ -41,13 +43,17 @@ const (
 )
 
 type codeSettings struct {
-	theme           string
-	allowTruncation bool
+	theme              string
+	allowTruncation    bool
+	maxLines           int
+	includeHighlighted bool
 }
 
 var defaultCodeSettings = codeSettings{
-	theme:           darkTheme,
-	allowTruncation: true,
+	theme:              darkTheme,
+	allowTruncation:    true,
+	maxLines:           10,
+	includeHighlighted: true,
 }
 
 type CodeOption func(*codeSettings)
@@ -76,6 +82,25 @@ func OptionCodeWithTruncation(truncate bool) CodeOption {
 	}
 }
 
+func OptionCodeWithMaxLines(lines int) CodeOption {
+	return func(s *codeSettings) {
+		s.maxLines = lines
+	}
+}
+
+func OptionCodeWithHighlighted(include bool) CodeOption {
+	return func(s *codeSettings) {
+		s.includeHighlighted = include
+	}
+}
+
+func validateRange(r types.Range) error {
+	if r.GetStartLine() < 0 || r.GetStartLine() > r.GetEndLine() || r.GetEndLine() < 0 {
+		return fmt.Errorf("invalid range: %s", r.String())
+	}
+	return nil
+}
+
 // nolint
 func (r *Result) GetCode(opts ...CodeOption) (*Code, error) {
 
@@ -101,6 +126,13 @@ func (r *Result) GetCode(opts ...CodeOption) (*Code, error) {
 		break
 	}
 
+	if err := validateRange(innerRange); err != nil {
+		return nil, err
+	}
+	if err := validateRange(outerRange); err != nil {
+		return nil, err
+	}
+
 	slashed := filepath.ToSlash(r.fsPath)
 	slashed = strings.TrimPrefix(slashed, "/")
 
@@ -117,10 +149,15 @@ func (r *Result) GetCode(opts ...CodeOption) (*Code, error) {
 
 	rawLines := strings.Split(string(content), "\n")
 
-	highlighted := highlight(innerRange.GetLocalFilename(), content, settings.theme)
-	highlightedLines := strings.Split(string(highlighted), "\n")
-	if len(highlightedLines) < len(rawLines) {
-		highlightedLines = rawLines
+	var highlightedLines []string
+	if settings.includeHighlighted {
+		highlighted := highlight(innerRange.GetLocalFilename(), content, settings.theme)
+		highlightedLines = strings.Split(string(highlighted), "\n")
+		if len(highlightedLines) < len(rawLines) {
+			highlightedLines = rawLines
+		}
+	} else {
+		highlightedLines = make([]string, len(rawLines))
 	}
 
 	if outerRange.GetEndLine()-1 >= len(rawLines) || innerRange.GetStartLine() == 0 {
@@ -203,6 +240,22 @@ func (r *Result) GetCode(opts ...CodeOption) (*Code, error) {
 			}
 
 			code.Lines = append(code.Lines, line)
+		}
+	}
+
+	if settings.allowTruncation && len(code.Lines) > settings.maxLines && settings.maxLines > 0 {
+		previouslyTruncated := settings.maxLines-1 > 0 && code.Lines[settings.maxLines-2].Truncated
+		if settings.maxLines-1 > 0 && code.Lines[settings.maxLines-1].LastCause {
+			code.Lines[settings.maxLines-2].LastCause = true
+		}
+		code.Lines[settings.maxLines-1] = Line{
+			Truncated: true,
+			Number:    code.Lines[settings.maxLines-1].Number,
+		}
+		if previouslyTruncated {
+			code.Lines = code.Lines[:settings.maxLines-1]
+		} else {
+			code.Lines = code.Lines[:settings.maxLines]
 		}
 	}
 
