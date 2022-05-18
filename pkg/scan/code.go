@@ -151,8 +151,7 @@ func (r *Result) GetCode(opts ...CodeOption) (*Code, error) {
 
 	var highlightedLines []string
 	if settings.includeHighlighted {
-		highlighted := highlight(innerRange.GetLocalFilename(), content, settings.theme)
-		highlightedLines = strings.Split(string(highlighted), "\n")
+		highlightedLines = highlight(types.CreateFSKey(innerRange.GetFS()), innerRange.GetLocalFilename(), content, settings.theme)
 		if len(highlightedLines) < len(rawLines) {
 			highlightedLines = rawLines
 		}
