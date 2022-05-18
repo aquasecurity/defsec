@@ -96,8 +96,8 @@ func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, path string) (scan.R
 	}
 
 	chartFiles, err := helmParser.RenderedChartFiles()
-	if err != nil {
-		return nil, err
+	if err != nil { // not valid helm, maybe some other yaml etc., abort
+		return nil, nil
 	}
 
 	var results []scan.Result
