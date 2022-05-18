@@ -61,7 +61,7 @@ func loadEmbeddedLibraries() (map[string]*ast.Module, error) {
 }
 
 func recurseEmbeddedModules(fs embed.FS, dir string) (map[string]*ast.Module, error) {
-	if strings.HasSuffix(dir, "policies/advanced/commercial") {
+	if strings.HasSuffix(dir, "policies/advanced/optional") {
 		return nil, nil
 	}
 	dir = strings.TrimPrefix(dir, "./")

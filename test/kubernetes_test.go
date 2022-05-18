@@ -37,7 +37,7 @@ func Test_Kubernetes_RegoPoliciesFromDisk(t *testing.T) {
 		if !entry.IsDir() {
 			continue
 		}
-		if entry.Name() == "commercial" {
+		if entry.Name() == "optional" {
 			continue
 		}
 		t.Run(entry.Name(), func(t *testing.T) {
@@ -94,7 +94,7 @@ func Test_Kubernetes_RegoPoliciesEmbedded(t *testing.T) {
 		if !entry.IsDir() {
 			continue
 		}
-		if entry.Name() == "commercial" {
+		if entry.Name() == "optional" {
 			continue
 		}
 		t.Run(entry.Name(), func(t *testing.T) {
