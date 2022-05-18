@@ -2,6 +2,9 @@ package scan
 
 import (
 	"bytes"
+	"fmt"
+	"strings"
+	"sync"
 
 	"github.com/alecthomas/chroma"
 	"github.com/alecthomas/chroma/formatters"
@@ -9,7 +12,34 @@ import (
 	"github.com/alecthomas/chroma/styles"
 )
 
-func highlight(filename string, input []byte, theme string) []byte {
+type cache struct {
+	sync.RWMutex
+	data map[string][]string
+}
+
+func (c *cache) Get(key string) ([]string, bool) {
+	c.RLock()
+	defer c.RUnlock()
+	data, ok := c.data[key]
+	return data, ok
+}
+
+func (c *cache) Set(key string, data []string) {
+	c.Lock()
+	defer c.Unlock()
+	c.data[key] = data
+}
+
+var globalCache = &cache{
+	data: make(map[string][]string),
+}
+
+func highlight(fsKey string, filename string, input []byte, theme string) []string {
+
+	key := fmt.Sprintf("%s|%s", fsKey, filename)
+	if lines, ok := globalCache.Get(key); ok {
+		return lines
+	}
 
 	lexer := lexers.Match(filename)
 	if lexer == nil {
@@ -30,15 +60,18 @@ func highlight(filename string, input []byte, theme string) []byte {
 	input = bytes.ReplaceAll(input, []byte{0x0d}, []byte{})
 	iterator, err := lexer.Tokenise(nil, string(input))
 	if err != nil {
-		return input
+		return nil
 	}
 
 	buffer := bytes.NewBuffer([]byte{})
 	if err := formatter.Format(buffer, style, iterator); err != nil {
-		return input
+		return nil
 	}
 
-	return shiftANSIOverLineEndings(buffer.Bytes())
+	raw := shiftANSIOverLineEndings(buffer.Bytes())
+	lines := strings.Split(string(raw), "\n")
+	globalCache.Set(key, lines)
+	return lines
 }
 
 func shiftANSIOverLineEndings(input []byte) []byte {
