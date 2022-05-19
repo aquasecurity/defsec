@@ -110,3 +110,20 @@ test_networkpolicy_with_deny_all_ingress_pod_selector {
 
 	count(r) == 0
 }
+
+test_service {
+	r := deny with input as {
+		"apiVersion": "v1",
+		"kind": "Service",
+		"spec": {
+			"clusterIP": "None",
+			"internalTrafficPolicy": "Cluster",
+			"ipFamilyPolicy": "SingleStack",
+			"selector": {"app": "x"},
+			"sessionAffinity": "None",
+			"type": "ClusterIP",
+		},
+	}
+
+	count(r) == 0
+}
