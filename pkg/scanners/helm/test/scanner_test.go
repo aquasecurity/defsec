@@ -65,8 +65,7 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 		assert.Equal(t, []string{"AVD-KSV-0001", "AVD-KSV-0003",
 			"AVD-KSV-0011", "AVD-KSV-0012", "AVD-KSV-0014",
 			"AVD-KSV-0015", "AVD-KSV-0016", "AVD-KSV-0018",
-			"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0029",
-			"AVD-KSV-0038"}, errorCodes)
+			"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0029"}, errorCodes)
 	}
 }
 
@@ -111,7 +110,7 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 		assert.Equal(t, []string{"AVD-KSV-0001", "AVD-KSV-0003",
 			"AVD-KSV-0011", "AVD-KSV-0012", "AVD-KSV-0014",
 			"AVD-KSV-0015", "AVD-KSV-0016", "AVD-KSV-0018",
-			"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0038"}, errorCodes)
+			"AVD-KSV-0020", "AVD-KSV-0021"}, errorCodes)
 	}
 }
 
