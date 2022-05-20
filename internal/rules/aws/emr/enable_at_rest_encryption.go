@@ -5,12 +5,10 @@ import (
 	"fmt"
 
 	"github.com/aquasecurity/defsec/internal/rules"
-	"github.com/aquasecurity/defsec/internal/security"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
 	"github.com/aquasecurity/defsec/pkg/state"
-	"github.com/owenrumney/squealer/pkg/squealer"
 )
 
 var CheckEnableAtRestEncryption = rules.Register(
@@ -36,32 +34,40 @@ var CheckEnableAtRestEncryption = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 
-		scanner := squealer.NewStringScanner()
+		// scanner := squealer.NewStringScanner()
 
 		for _, conf := range s.AWS.EMR.SecurityConfiguration {
 			vars, err := readVarsFromConfiguration(conf.Configuration.Value())
 			if err != nil {
 				continue
 			}
+			// print vars
+			fmt.Printf("Vars %s\n", vars)
+			// fmt.Printf("Vars", vars)
 
-			for key, val := range vars {
-				if result := scanner.Scan(val); result.TransgressionFound || security.IsSensitiveAttribute(key) {
-					results.Add(
-						fmt.Sprintf("Container definition contains a potentially sensitive environment variable '%s': %s", key, result.Description),
-						conf.Configuration,
-					)
-				} else {
-					results.AddPassed(&conf)
-				}
-			}
+			// fmt.Printf(vars)
+
+			// for key, val := range vars {
+
+			// if result := scanner.Scan(val); result.TransgressionFound || security.IsSensitiveAttribute(key) {
+			// 	results.Add(
+			// 		fmt.Sprintf("Container definition contains a potentially sensitive environment variable '%s': %s", key, result.Description),
+			// 		conf.Configuration,
+			// 	)
+			// } else {
+			// 	results.AddPassed(&conf)
+			// }
+			// }
 		}
 		return
 	},
 )
 
-// AWS.EMR.SecurityConfiguration.Configuration json model
-//
-// {
+// resource "aws_emr_security_configuration" "foo" {
+// 	name = "emrsc_other"
+
+// 	configuration = <<EOF
+//   {
 // 	"EncryptionConfiguration": {
 // 	  "AtRestEncryptionConfiguration": {
 // 		"S3EncryptionConfiguration": {
@@ -76,7 +82,8 @@ var CheckEnableAtRestEncryption = rules.Register(
 // 	  "EnableAtRestEncryption": true
 // 	}
 //   }
-//
+//   EOF
+//   }
 
 type conf struct {
 	EncryptionConfiguration struct {
@@ -94,11 +101,29 @@ type conf struct {
 	} `json:"EncryptionConfiguration"`
 }
 
-func readVarsFromConfiguration(raw string) (map[string]conf, error) {
+// func readEnvVarsFromContainerDefinitions(raw string) (map[string]string, error) {
+
+// 	var definitions []definition
+// 	if err := json.Unmarshal([]byte(raw), &definitions); err != nil {
+// 		return nil, err
+// 	}
+
+// 	envVars := make(map[string]string)
+// 	for _, definition := range definitions {
+// 		for _, env := range definition.EnvVars {
+// 			envVars[env.Name] = env.Value
+// 		}
+// 	}
+
+// 	return envVars, nil
+// }
+
+func readVarsFromConfiguration(raw string) (map[string]string, error) {
 	//map string to conf struct
-	var confs map[string]conf
+	var confs []conf
 	err := json.Unmarshal([]byte(raw), &confs)
 	if err != nil {
+		fmt.Printf("here")
 		return nil, err
 	}
 
@@ -117,8 +142,11 @@ func readVarsFromConfiguration(raw string) (map[string]conf, error) {
 	// 	// }
 	// }
 	// return vars, nil
-
-	return confs, nil
+	// print confs
+	// fmt.Printf(confs["EncryptionConfiguration"])
+	// fmt.Printf("Confs %s\n", confs)
+	return nil, nil
+	// return confs, nil
 }
 
 // 	func(s *state.State) (results scan.Results) {

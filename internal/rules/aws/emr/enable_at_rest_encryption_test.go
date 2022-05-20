@@ -4,12 +4,9 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/internal/types"
-	"github.com/aquasecurity/defsec/pkg/state"
-
 	"github.com/aquasecurity/defsec/pkg/providers/aws/emr"
-
 	"github.com/aquasecurity/defsec/pkg/scan"
-
+	"github.com/aquasecurity/defsec/pkg/state"
 	"github.com/stretchr/testify/assert"
 )
 
