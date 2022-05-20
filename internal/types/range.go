@@ -31,6 +31,20 @@ func NewRange(filename string, startLine int, endLine int, sourcePrefix string, 
 	return r
 }
 
+func NewRangeWithLogicalSource(filename string, startLine int, endLine int, sourcePrefix string,
+	srcFS fs.FS) baseRange {
+	r := baseRange{
+		filename:        filename,
+		startLine:       startLine,
+		endLine:         endLine,
+		fs:              srcFS,
+		fsKey:           CreateFSKey(srcFS),
+		sourcePrefix:    sourcePrefix,
+		isLogicalSource: true,
+	}
+	return r
+}
+
 func NewRangeWithFSKey(filename string, startLine int, endLine int, sourcePrefix string, fsKey string, fs fs.FS) baseRange {
 	r := baseRange{
 		filename:     filename,
@@ -44,12 +58,13 @@ func NewRangeWithFSKey(filename string, startLine int, endLine int, sourcePrefix
 }
 
 type baseRange struct {
-	filename     string
-	startLine    int
-	endLine      int
-	sourcePrefix string
-	fs           fs.FS
-	fsKey        string
+	filename        string
+	startLine       int
+	endLine         int
+	sourcePrefix    string
+	isLogicalSource bool
+	fs              fs.FS
+	fsKey           string
 }
 
 func (r baseRange) GetFSKey() string {
@@ -66,6 +81,9 @@ func (r baseRange) LineCount() int {
 func (r baseRange) GetFilename() string {
 	if r.sourcePrefix == "" {
 		return r.filename
+	}
+	if r.isLogicalSource {
+		return fmt.Sprintf("%s:%s", r.sourcePrefix, r.filename)
 	}
 	return filepath.Join(r.sourcePrefix, r.filename)
 }

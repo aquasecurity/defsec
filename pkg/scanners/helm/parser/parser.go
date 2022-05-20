@@ -30,6 +30,7 @@ var manifestNameRegex = regexp.MustCompile("# Source: [^/]+/(.+)")
 type Parser struct {
 	helmClient   *action.Install
 	rootPath     string
+	ChartSource  string
 	filepaths    []string
 	debug        debug.Logger
 	skipRequired bool
@@ -49,7 +50,7 @@ func (p *Parser) SetSkipRequiredCheck(b bool) {
 	p.skipRequired = b
 }
 
-func New(options ...options.ParserOption) *Parser {
+func New(path string, options ...options.ParserOption) *Parser {
 
 	client := action.NewInstall(&action.Configuration{})
 	client.DryRun = true     // don't do anything
@@ -57,7 +58,8 @@ func New(options ...options.ParserOption) *Parser {
 	client.ClientOnly = true // don't try to talk to a cluster
 
 	p := &Parser{
-		helmClient: client,
+		helmClient:  client,
+		ChartSource: path,
 	}
 
 	for _, option := range options {

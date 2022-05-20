@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/liamg/memoryfs"
 
 	"github.com/aquasecurity/defsec/internal/debug"
@@ -89,7 +90,49 @@ func (s *Scanner) SetPolicyFilesystem(policyFS fs.FS) {
 
 func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, path string) (scan.Results, error) {
 
-	helmParser := parser.New()
+	var results []scan.Result
+	if err := fs.WalkDir(target, path, func(path string, d fs.DirEntry, err error) error {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		default:
+		}
+
+		if err != nil {
+			return err
+		}
+
+		if d.IsDir() {
+			return nil
+		}
+
+		if detection.IsArchive(path) {
+			if scanResults, err := s.getScanResults(path, ctx, target); err != nil {
+				return err
+			} else {
+				results = append(results, scanResults...)
+			}
+		}
+
+		if strings.HasSuffix(path, "Chart.yaml") {
+			if scanResults, err := s.getScanResults(filepath.Dir(path), ctx, target); err != nil {
+				return err
+			} else {
+				results = append(results, scanResults...)
+			}
+		}
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+
+}
+
+func (s *Scanner) getScanResults(path string, ctx context.Context, target fs.FS) (results []scan.Result, err error) {
+	helmParser := parser.New(path)
 
 	if err := helmParser.ParseFS(ctx, target, path); err != nil {
 		return nil, err
@@ -100,7 +143,6 @@ func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, path string) (scan.R
 		return nil, nil
 	}
 
-	var results []scan.Result
 	regoScanner := rego.NewScanner(s.options...)
 	s.loadEmbedded = len(s.policyDirs)+len(s.policyReaders) == 0
 	policyFS := target
@@ -137,13 +179,12 @@ func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, path string) (scan.R
 				}, fs.ModePerm); err != nil {
 					return nil, err
 				}
-				fileResults.SetSourceAndFilesystem("", renderedFS)
+				fileResults.SetSourceAndFilesystem(helmParser.ChartSource, renderedFS, detection.IsArchive(helmParser.ChartSource))
 			}
 
 			results = append(results, fileResults...)
 		}
+
 	}
-
 	return results, nil
-
 }
