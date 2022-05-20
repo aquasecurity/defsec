@@ -251,14 +251,19 @@ func (r *Results) SetRule(rule Rule) {
 	}
 }
 
-func (r *Results) SetSourceAndFilesystem(source string, f fs.FS) {
+func (r *Results) SetSourceAndFilesystem(source string, f fs.FS, logicalSource bool) {
 	for i := range *r {
 		m := (*r)[i].Metadata()
 		if m.IsUnmanaged() || m.Range() == nil {
 			continue
 		}
 		rng := m.Range()
+
 		newrng := types.NewRange(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(), source, f)
+		if logicalSource {
+			newrng = types.NewRangeWithLogicalSource(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(),
+				source, f)
+		}
 		switch {
 		case m.IsExplicit():
 			m = types.NewExplicitMetadata(newrng, m.Reference())
