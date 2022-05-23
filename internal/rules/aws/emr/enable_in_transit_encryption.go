@@ -52,22 +52,6 @@ var CheckEnableInTransitEncryption = rules.Register(
 	},
 )
 
-type conf struct {
-	EncryptionConfiguration struct {
-		AtRestEncryptionConfiguration struct {
-			S3EncryptionConfiguration struct {
-				EncryptionMode string `json:"EncryptionMode"`
-			} `json:"S3EncryptionConfiguration"`
-			LocalDiskEncryptionConfiguration struct {
-				EncryptionKeyProviderType string `json:"EncryptionKeyProviderType"`
-				AwsKmsKey                 string `json:"AwsKmsKey"`
-			} `json:"LocalDiskEncryptionConfiguration"`
-		} `json:"AtRestEncryptionConfiguration"`
-		EnableInTransitEncryption bool `json:"EnableInTransitEncryption"`
-		EnableAtRestEncryption    bool `json:"EnableAtRestEncryption"`
-	} `json:"EncryptionConfiguration"`
-}
-
 func readVarsFromConfigurationInTransit(raw string) (*conf, error) {
 	var testConf conf
 	if err := json.Unmarshal([]byte(raw), &testConf); err != nil {
