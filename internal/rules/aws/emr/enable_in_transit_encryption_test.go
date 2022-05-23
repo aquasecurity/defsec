@@ -10,14 +10,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestEnableAtRestEncryption(t *testing.T) {
+func TestEnableInTransitEncryption(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    emr.EMR
 		expected bool
 	}{
 		{
-			name: "EMR cluster with at-rest encryption enabled",
+			name: "EMR cluster with in-transit encryption enabled",
 			input: emr.EMR{
 				SecurityConfiguration: []emr.SecurityConfiguration{
 					{
@@ -43,7 +43,7 @@ func TestEnableAtRestEncryption(t *testing.T) {
 			expected: false,
 		},
 		{
-			name: "EMR cluster with at-rest encryption disabled",
+			name: "EMR cluster with in-transit encryption disabled",
 			input: emr.EMR{
 				SecurityConfiguration: []emr.SecurityConfiguration{
 					{
@@ -73,10 +73,10 @@ func TestEnableAtRestEncryption(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
 			testState.AWS.EMR = test.input
-			results := CheckEnableAtRestEncryption.Evaluate(&testState)
+			results := CheckEnableInTransitEncryption.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() == scan.StatusFailed && result.Rule().LongID() == CheckEnableAtRestEncryption.Rule().LongID() {
+				if result.Status() == scan.StatusFailed && result.Rule().LongID() == CheckEnableInTransitEncryption.Rule().LongID() {
 					found = true
 				}
 			}

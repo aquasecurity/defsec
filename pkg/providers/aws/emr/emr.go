@@ -26,22 +26,6 @@ import (
 //   EOF
 //   }
 
-// type conf struct {
-// 	EncryptionConfiguration struct {
-// 		AtRestEncryptionConfiguration struct {
-// 			S3EncryptionConfiguration struct {
-// 				EncryptionMode string `json:"EncryptionMode"`
-// 			} `json:"S3EncryptionConfiguration"`
-// 			LocalDiskEncryptionConfiguration struct {
-// 				EncryptionKeyProviderType string `json:"EncryptionKeyProviderType"`
-// 				AwsKmsKey                 string `json:"AwsKmsKey"`
-// 			} `json:"LocalDiskEncryptionConfiguration"`
-// 		} `json:"AtRestEncryptionConfiguration"`
-// 		EnableInTransitEncryption bool `json:"EnableInTransitEncryption"`
-// 		EnableAtRestEncryption    bool `json:"EnableAtRestEncryption"`
-// 	} `json:"EncryptionConfiguration"`
-// }
-
 type EMR struct {
 	Clusters              []Cluster
 	SecurityConfiguration []SecurityConfiguration
@@ -61,7 +45,6 @@ type ClusterSettings struct {
 
 type SecurityConfiguration struct {
 	types.Metadata
-	Name types.StringValue
-	// TODO: unmarshal the value?
+	Name          types.StringValue
 	Configuration types.StringValue
 }
