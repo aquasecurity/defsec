@@ -12,7 +12,7 @@ import (
 
 var CheckEnableAtRestEncryption = rules.Register(
 	scan.Rule{
-		AVDID:       "AVD-AWS-TODO-001",
+		AVDID:       "AVD-AWS-0137",
 		Provider:    providers.AWSProvider,
 		Service:     "emr",
 		ShortCode:   "enable-at-rest-encryption",

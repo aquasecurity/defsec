@@ -12,7 +12,7 @@ import (
 
 var CheckEnableInTransitEncryption = rules.Register(
 	scan.Rule{
-		AVDID:       "AVD-AWS-TODO-001",
+		AVDID:       "AVD-AWS-0138",
 		Provider:    providers.AWSProvider,
 		Service:     "emr",
 		ShortCode:   "enable-in-transit-encryption",

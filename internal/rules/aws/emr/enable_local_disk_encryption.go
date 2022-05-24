@@ -12,7 +12,7 @@ import (
 
 var CheckEnableLocalDiskEncryption = rules.Register(
 	scan.Rule{
-		AVDID:       "AVD-AWS-TODO-001",
+		AVDID:       "AVD-AWS-0139",
 		Provider:    providers.AWSProvider,
 		Service:     "emr",
 		ShortCode:   "enable-local-disk-encryption",

@@ -3,231 +3,170 @@ package emr
 import (
 	"testing"
 
-	// "github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/pkg/providers/aws/emr"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
+	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aquasecurity/defsec/test/testutil"
-	// "github.com/stretchr/testify/assert"
-	// "github.com/stretchr/testify/require"
 )
 
-func Test_adaptCluster(t *testing.T) {
+func Test_adaptSecurityConfiguration(t *testing.T) {
 	tests := []struct {
 		name      string
 		terraform string
-		expected  emr.Cluster
+		expected  emr.SecurityConfiguration
 	}{
 		{
 			name: "configured",
 			terraform: `
-			resource "aws_elasticache_cluster" "example" {
-				cluster_id           = "cluster-example"
-				engine               = "redis"
-				node_type            = "cache.m4.large"
-				num_cache_nodes      = 1
-				parameter_group_name = "default.redis3.2"
-				engine_version       = "3.2.10"
-				port                 = 6379
+			resource "aws_emr_security_configuration" "foo" {
+				name = "emrsc_other"
 			
-				snapshot_retention_limit = 5
+				configuration = <<EOF
+			  {
+				"EncryptionConfiguration": {
+				  "AtRestEncryptionConfiguration": {
+					"S3EncryptionConfiguration": {
+					  "EncryptionMode": "SSE-S3"
+					},
+					"LocalDiskEncryptionConfiguration": {
+					  "EncryptionKeyProviderType": "AwsKms",
+					  "AwsKmsKey": "arn:aws:kms:us-west-2:187416307283:alias/tf_emr_test_key"
+					}
+				  },
+				  "EnableInTransitEncryption": false,
+				  "EnableAtRestEncryption": true
+				}
+			  }
+			  EOF
 			}
-`,
-			// 	expected: emr.Cluster{
-			// 		Metadata:               types.NewTestMetadata(),
-			// 		Engine:                 types.String("redis", types.NewTestMetadata()),
-			// 		NodeType:               types.String("cache.m4.large", types.NewTestMetadata()),
-			// 		SnapshotRetentionLimit: types.Int(5, types.NewTestMetadata()),
-			// 	},
-			// },
-			// {
-			// 	name: "defaults",
-			// 	terraform: `
-			// 	resource "aws_elasticache_cluster" "example" {
-			// 	}`,
-			// 	expected: emr.Cluster{
-			// 		Metadata:               types.NewTestMetadata(),
-			// 		Engine:                 types.String("", types.NewTestMetadata()),
-			// 		NodeType:               types.String("", types.NewTestMetadata()),
-			// 		SnapshotRetentionLimit: types.Int(0, types.NewTestMetadata()),
-			// 	},
+			`,
+			expected: emr.SecurityConfiguration{
+				Metadata: types.NewTestMetadata(),
+
+				Configuration: types.String(
+					`{
+					"EncryptionConfiguration": {
+					"AtRestEncryptionConfiguration": {
+						"S3EncryptionConfiguration": {
+						"EncryptionMode": "SSE-S3"
+						},
+						"LocalDiskEncryptionConfiguration": {
+						"EncryptionKeyProviderType": "AwsKms",
+						"AwsKmsKey": "arn:aws:kms:us-west-2:187416307283:alias/tf_emr_test_key"
+						}
+					},
+					"EnableInTransitEncryption": false,
+					"EnableAtRestEncryption": true
+					}
+  				}`,
+					types.NewTestMetadata()),
+			},
 		},
+		// 		{
+		// 			name: "defaults",
+		// 			terraform: `
+		// 			resource "aws_ecs_task_definition" "example" {
+		// 				volume {
+		// 					name = "service-storage"
+
+		// 					efs_volume_configuration {
+		// 					}
+		// 				  }
+		// 			  }
+		// `,
+		// 			expected: ecs.TaskDefinition{
+		// 				Metadata: types.NewTestMetadata(),
+		// 				Volumes: []ecs.Volume{
+		// 					{
+		// 						Metadata: types.NewTestMetadata(),
+		// 						EFSVolumeConfiguration: ecs.EFSVolumeConfiguration{
+
+		// 							Metadata:                 types.NewTestMetadata(),
+		// 							TransitEncryptionEnabled: types.Bool(false, types.NewTestMetadata()),
+		// 						},
+		// 					},
+		// 				},
+		// 				ContainerDefinitions: types.String("", types.NewTestMetadata()),
+		// 			},
+		// 		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
-			adapted := adaptCluster(modules.GetBlocks()[0])
+			adapted := adaptSecurityConfiguration(modules.GetBlocks()[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
 	}
 }
 
-// func Test_adaptReplicationGroup(t *testing.T) {
-// 	tests := []struct {
-// 		name      string
-// 		terraform string
-// 		expected  elasticache.ReplicationGroup
-// 	}{
-// 		{
-// 			name: "configured",
-// 			terraform: `
-// 			resource "aws_elasticache_replication_group" "example" {
-// 				replication_group_id = "foo"
-// 				replication_group_description = "my foo cluster"
-// 				transit_encryption_enabled = true
-// 				at_rest_encryption_enabled = true
-// 		}
-// `,
-// 			expected: elasticache.ReplicationGroup{
-// 				Metadata:                 types.NewTestMetadata(),
-// 				TransitEncryptionEnabled: types.Bool(true, types.NewTestMetadata()),
-// 				AtRestEncryptionEnabled:  types.Bool(true, types.NewTestMetadata()),
-// 			},
-// 		},
-// 		{
-// 			name: "defaults",
-// 			terraform: `
-// 			resource "aws_elasticache_replication_group" "example" {
-// 		}
-// `,
-// 			expected: elasticache.ReplicationGroup{
-// 				Metadata:                 types.NewTestMetadata(),
-// 				TransitEncryptionEnabled: types.Bool(false, types.NewTestMetadata()),
-// 				AtRestEncryptionEnabled:  types.Bool(false, types.NewTestMetadata()),
-// 			},
-// 		},
-// 	}
-
-// 	for _, test := range tests {
-// 		t.Run(test.name, func(t *testing.T) {
-// 			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
-// 			adapted := adaptReplicationGroup(modules.GetBlocks()[0])
-// 			testutil.AssertDefsecEqual(t, test.expected, adapted)
-// 		})
-// 	}
-// }
-
-// func Test_adaptSecurityGroup(t *testing.T) {
-// 	tests := []struct {
-// 		name      string
-// 		terraform string
-// 		expected  elasticache.SecurityGroup
-// 	}{
-// 		{
-// 			name: "description provided",
-// 			terraform: `
-// 			resource "aws_security_group" "bar" {
-// 				name = "security-group"
-// 			}
-
-// 			resource "aws_elasticache_security_group" "example" {
-// 				name = "elasticache-security-group"
-// 				security_group_names = [aws_security_group.bar.name]
-// 				description = "something"
-// 			}
-// `,
-// 			expected: elasticache.SecurityGroup{
-// 				Metadata:    types.NewTestMetadata(),
-// 				Description: types.String("something", types.NewTestMetadata()),
-// 			},
-// 		},
-// 		{
-// 			name: "missing description",
-// 			terraform: `
-// 			resource "aws_security_group" "bar" {
-// 				name = "security-group"
-// 			}
-
-// 			resource "aws_elasticache_security_group" "example" {
-// 				security_group_names = [aws_security_group.bar.name]
-// 			}
-// `,
-// 			expected: elasticache.SecurityGroup{
-// 				Metadata:    types.NewTestMetadata(),
-// 				Description: types.String("Managed by Terraform", types.NewTestMetadata()),
-// 			},
-// 		},
-// 	}
-
-// 	for _, test := range tests {
-// 		t.Run(test.name, func(t *testing.T) {
-// 			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
-// 			adapted := adaptSecurityGroup(modules.GetBlocks()[0])
-// 			testutil.AssertDefsecEqual(t, test.expected, adapted)
-// 		})
-// 	}
-// }
-
 // func TestLines(t *testing.T) {
 // 	src := `
-// 	resource "aws_elasticache_cluster" "example" {
-// 		cluster_id           = "cluster-example"
-// 		engine               = "redis"
-// 		node_type            = "cache.m4.large"
-// 		num_cache_nodes      = 1
-// 		parameter_group_name = "default.redis3.2"
-// 		engine_version       = "3.2.10"
-// 		port                 = 6379
+// 	resource "aws_ecs_cluster" "example" {
+// 		name = "services-cluster"
 
-// 		snapshot_retention_limit = 5
+// 		setting {
+// 		  name  = "containerInsights"
+// 		  value = "enabled"
+// 		}
 // 	}
 
-// 	resource "aws_elasticache_replication_group" "example" {
-// 		replication_group_id = "foo"
-// 		replication_group_description = "my foo cluster"
-// 		transit_encryption_enabled = true
-// 		at_rest_encryption_enabled = true
-// 	}
+// 	resource "aws_ecs_task_definition" "example" {
+// 		family                = "service"
+// 		container_definitions = <<EOF
+// 	[
+// 		{
+// 			"name": "my_service",
+// 			"essential": true,
+// 			"memory": 256,
+// 			"environment": [
+// 				{ "name": "ENVIRONMENT", "value": "development" }
+// 			]
+// 		}
+// 	]
+// 		EOF
 
-// 	resource "aws_security_group" "bar" {
-// 		name = "security-group"
-// 	}
+// 		volume {
+// 		  name = "service-storage"
 
-// 	resource "aws_elasticache_security_group" "example" {
-// 		name = "elasticache-security-group"
-// 		security_group_names = [aws_security_group.bar.name]
-// 		description = "something"
-// 	}`
+// 		  efs_volume_configuration {
+// 			transit_encryption      = "ENABLED"
+// 		  }
+// 		}
+// 	  }`
 
 // 	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 // 	adapted := Adapt(modules)
 
 // 	require.Len(t, adapted.Clusters, 1)
-// 	require.Len(t, adapted.ReplicationGroups, 1)
-// 	require.Len(t, adapted.SecurityGroups, 1)
+// 	require.Len(t, adapted.TaskDefinitions, 1)
 
 // 	cluster := adapted.Clusters[0]
-// 	replicationGroup := adapted.ReplicationGroups[0]
-// 	securityGroup := adapted.SecurityGroups[0]
+// 	taskDefinition := adapted.TaskDefinitions[0]
 
 // 	assert.Equal(t, 2, cluster.GetMetadata().Range().GetStartLine())
-// 	assert.Equal(t, 12, cluster.GetMetadata().Range().GetEndLine())
+// 	assert.Equal(t, 9, cluster.GetMetadata().Range().GetEndLine())
 
-// 	assert.Equal(t, 4, cluster.Engine.GetMetadata().Range().GetStartLine())
-// 	assert.Equal(t, 4, cluster.Engine.GetMetadata().Range().GetEndLine())
+// 	assert.Equal(t, 5, cluster.Settings.GetMetadata().Range().GetStartLine())
+// 	assert.Equal(t, 8, cluster.Settings.GetMetadata().Range().GetEndLine())
 
-// 	assert.Equal(t, 5, cluster.NodeType.GetMetadata().Range().GetStartLine())
-// 	assert.Equal(t, 5, cluster.NodeType.GetMetadata().Range().GetEndLine())
+// 	assert.Equal(t, 7, cluster.Settings.ContainerInsightsEnabled.GetMetadata().Range().GetStartLine())
+// 	assert.Equal(t, 7, cluster.Settings.ContainerInsightsEnabled.GetMetadata().Range().GetEndLine())
 
-// 	assert.Equal(t, 11, cluster.SnapshotRetentionLimit.GetMetadata().Range().GetStartLine())
-// 	assert.Equal(t, 11, cluster.SnapshotRetentionLimit.GetMetadata().Range().GetEndLine())
+// 	assert.Equal(t, 11, taskDefinition.GetMetadata().Range().GetStartLine())
+// 	assert.Equal(t, 33, taskDefinition.GetMetadata().Range().GetEndLine())
 
-// 	assert.Equal(t, 14, replicationGroup.GetMetadata().Range().GetStartLine())
-// 	assert.Equal(t, 19, replicationGroup.GetMetadata().Range().GetEndLine())
+// 	assert.Equal(t, 13, taskDefinition.ContainerDefinitions.GetMetadata().Range().GetStartLine())
+// 	assert.Equal(t, 24, taskDefinition.ContainerDefinitions.GetMetadata().Range().GetEndLine())
 
-// 	assert.Equal(t, 17, replicationGroup.TransitEncryptionEnabled.GetMetadata().Range().GetStartLine())
-// 	assert.Equal(t, 17, replicationGroup.TransitEncryptionEnabled.GetMetadata().Range().GetEndLine())
+// 	assert.Equal(t, 26, taskDefinition.Volumes[0].GetMetadata().Range().GetStartLine())
+// 	assert.Equal(t, 32, taskDefinition.Volumes[0].GetMetadata().Range().GetEndLine())
 
-// 	assert.Equal(t, 18, replicationGroup.AtRestEncryptionEnabled.GetMetadata().Range().GetStartLine())
-// 	assert.Equal(t, 18, replicationGroup.AtRestEncryptionEnabled.GetMetadata().Range().GetEndLine())
+// 	assert.Equal(t, 29, taskDefinition.Volumes[0].EFSVolumeConfiguration.GetMetadata().Range().GetStartLine())
+// 	assert.Equal(t, 31, taskDefinition.Volumes[0].EFSVolumeConfiguration.GetMetadata().Range().GetEndLine())
 
-// 	assert.Equal(t, 25, securityGroup.GetMetadata().Range().GetStartLine())
-// 	assert.Equal(t, 29, securityGroup.GetMetadata().Range().GetEndLine())
-
-// 	assert.Equal(t, 28, securityGroup.Description.GetMetadata().Range().GetStartLine())
-// 	assert.Equal(t, 28, securityGroup.Description.GetMetadata().Range().GetEndLine())
-
+// 	assert.Equal(t, 30, taskDefinition.Volumes[0].EFSVolumeConfiguration.TransitEncryptionEnabled.GetMetadata().Range().GetStartLine())
+// 	assert.Equal(t, 30, taskDefinition.Volumes[0].EFSVolumeConfiguration.TransitEncryptionEnabled.GetMetadata().Range().GetEndLine())
 // }
