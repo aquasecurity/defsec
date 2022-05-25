@@ -38,8 +38,8 @@ var terraformEnableLocalDiskEncryptionBadExamples = []string{
           "EncryptionMode": "SSE-S3"
         },
         "LocalDiskEncryptionConfiguration": {
-          "EncryptionKeyProviderType": "AwsKms",
-          "AwsKmsKey": "arn:aws:kms:us-west-2:187416307283:alias/tf_emr_test_key"
+          "EncryptionKeyProviderType": "",
+          "AwsKmsKey": ""
         }
       },
       "EnableInTransitEncryption": false,

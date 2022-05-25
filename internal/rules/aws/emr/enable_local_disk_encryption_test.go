@@ -59,8 +59,8 @@ func TestEnableLocalDiskEncryption(t *testing.T) {
 								  "AwsKmsKey": ""
 								}
 							  },
-							  "EnableInTransitEncryption": false,
-							  "EnableAtRestEncryption": false
+							  "EnableInTransitEncryption": true,
+							  "EnableAtRestEncryption": true
 							}
 						  }`, types.NewTestMetadata()),
 					},

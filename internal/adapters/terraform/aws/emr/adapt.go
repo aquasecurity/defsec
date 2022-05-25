@@ -23,10 +23,8 @@ func adaptClusters(modules terraform.Modules) []emr.Cluster {
 
 func adaptSecurityConfigurations(modules terraform.Modules) []emr.SecurityConfiguration {
 	var securityConfiguration []emr.SecurityConfiguration
-	// fmt.Print(securityConfiguration)
-	// return securityConfiguration
 	for _, module := range modules {
-		for _, resource := range module.GetResourcesByType("aws_elasticache_replication_group") {
+		for _, resource := range module.GetResourcesByType("aws_emr_security_configuration") {
 			securityConfiguration = append(securityConfiguration, adaptSecurityConfiguration(resource))
 		}
 	}

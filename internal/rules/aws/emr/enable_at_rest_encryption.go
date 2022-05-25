@@ -38,7 +38,7 @@ var CheckEnableAtRestEncryption = rules.Register(
 				continue
 			}
 
-			if vars.EncryptionConfiguration.EnableAtRestEncryption == false {
+			if !vars.EncryptionConfiguration.EnableAtRestEncryption {
 				results.Add(
 					"EMR cluster does not have at-rest encryption enabled.",
 					conf.Configuration,

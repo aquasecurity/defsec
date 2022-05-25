@@ -38,9 +38,7 @@ var CheckEnableLocalDiskEncryption = rules.Register(
 				continue
 			}
 
-			// if vars.EncryptionConfiguration.LocalDiskEncryptionConfiguration != nil {
-
-			if vars.EncryptionConfiguration.AtRestEncryptionConfiguration.LocalDiskEncryptionConfiguration.AwsKmsKey == "" {
+			if vars.EncryptionConfiguration.AtRestEncryptionConfiguration.LocalDiskEncryptionConfiguration.EncryptionKeyProviderType == "" {
 				results.Add(
 					"EMR cluster does not have local-disk encryption enabled.",
 					conf.Configuration,

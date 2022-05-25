@@ -38,7 +38,7 @@ var CheckEnableInTransitEncryption = rules.Register(
 				continue
 			}
 
-			if vars.EncryptionConfiguration.EnableInTransitEncryption == false {
+			if !vars.EncryptionConfiguration.EnableInTransitEncryption {
 				results.Add(
 					"EMR cluster does not have in-transit encryption enabled.",
 					conf.Configuration,
