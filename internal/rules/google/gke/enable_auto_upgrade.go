@@ -32,7 +32,7 @@ var CheckEnableAutoUpgrade = rules.Register(
 			for _, nodePool := range cluster.NodePools {
 				if nodePool.Management.EnableAutoUpgrade.IsFalse() {
 					results.Add(
-						"Node pool does not have auto-upgraade enabled.",
+						"Node pool does not have auto-upgrade enabled.",
 						nodePool.Management.EnableAutoUpgrade,
 					)
 				} else {
