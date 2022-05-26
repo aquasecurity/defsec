@@ -21,6 +21,13 @@ func adaptClusters(modules terraform.Modules) []emr.Cluster {
 	return clusters
 }
 
+func adaptCluster(resource *terraform.Block) emr.Cluster {
+
+	return emr.Cluster{
+		Metadata: resource.GetMetadata(),
+	}
+}
+
 func adaptSecurityConfigurations(modules terraform.Modules) []emr.SecurityConfiguration {
 	var securityConfiguration []emr.SecurityConfiguration
 	for _, module := range modules {
@@ -31,19 +38,11 @@ func adaptSecurityConfigurations(modules terraform.Modules) []emr.SecurityConfig
 	return securityConfiguration
 }
 
-func adaptCluster(resource *terraform.Block) emr.Cluster {
-
-	return emr.Cluster{
-		Metadata: resource.GetMetadata(),
-	}
-}
-
 func adaptSecurityConfiguration(resource *terraform.Block) emr.SecurityConfiguration {
-	configurationAttr := resource.GetAttribute("configuration")
-	configurationVal := configurationAttr.AsStringValueOrDefault("", resource)
 
 	return emr.SecurityConfiguration{
-		Configuration: configurationVal,
+		Metadata:      resource.GetMetadata(),
+		Configuration: resource.GetAttribute("configuration").AsStringValueOrDefault("", resource),
 	}
 
 }

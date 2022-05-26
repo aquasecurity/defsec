@@ -17,32 +17,6 @@ func TestEnableAtRestEncryption(t *testing.T) {
 		expected bool
 	}{
 		{
-			name: "EMR cluster with at-rest encryption enabled",
-			input: emr.EMR{
-				SecurityConfiguration: []emr.SecurityConfiguration{
-					{
-						Name: types.String("test", types.NewTestMetadata()),
-						Configuration: types.String(`{
-							"EncryptionConfiguration": {
-							  "AtRestEncryptionConfiguration": {
-								"S3EncryptionConfiguration": {
-								  "EncryptionMode": "SSE-S3"
-								},
-								"LocalDiskEncryptionConfiguration": {
-								  "EncryptionKeyProviderType": "AwsKms",
-								  "AwsKmsKey": "arn:aws:kms:us-west-2:187416307283:alias/tf_emr_test_key"
-								}
-							  },
-							  "EnableInTransitEncryption": true,
-							  "EnableAtRestEncryption": true
-							}
-						  }`, types.NewTestMetadata()),
-					},
-				},
-			},
-			expected: false,
-		},
-		{
 			name: "EMR cluster with at-rest encryption disabled",
 			input: emr.EMR{
 				SecurityConfiguration: []emr.SecurityConfiguration{
@@ -59,7 +33,6 @@ func TestEnableAtRestEncryption(t *testing.T) {
 								  "AwsKmsKey": "arn:aws:kms:us-west-2:187416307283:alias/tf_emr_test_key"
 								}
 							  },
-							  "EnableInTransitEncryption": false,
 							  "EnableAtRestEncryption": false
 							}
 						  }`, types.NewTestMetadata()),
@@ -67,6 +40,31 @@ func TestEnableAtRestEncryption(t *testing.T) {
 				},
 			},
 			expected: true,
+		},
+		{
+			name: "EMR cluster with at-rest encryption enabled",
+			input: emr.EMR{
+				SecurityConfiguration: []emr.SecurityConfiguration{
+					{
+						Name: types.String("test", types.NewTestMetadata()),
+						Configuration: types.String(`{
+							"EncryptionConfiguration": {
+							  "AtRestEncryptionConfiguration": {
+								"S3EncryptionConfiguration": {
+								  "EncryptionMode": "SSE-S3"
+								},
+								"LocalDiskEncryptionConfiguration": {
+								  "EncryptionKeyProviderType": "AwsKms",
+								  "AwsKmsKey": "arn:aws:kms:us-west-2:187416307283:alias/tf_emr_test_key"
+								}
+							  },
+							  "EnableAtRestEncryption": true
+							}
+						  }`, types.NewTestMetadata()),
+					},
+				},
+			},
+			expected: false,
 		},
 	}
 	for _, test := range tests {
