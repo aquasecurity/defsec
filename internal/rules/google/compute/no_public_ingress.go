@@ -37,6 +37,11 @@ Where possible, segments should be broken into smaller subnets and avoid using t
 			if network.Firewall == nil {
 				continue
 			}
+
+			if len(network.Firewall.SourceTags) > 0 && len(network.Firewall.TargetTags) > 0 {
+				continue
+			}
+
 			for _, rule := range network.Firewall.IngressRules {
 				if !rule.IsAllow.IsTrue() {
 					continue

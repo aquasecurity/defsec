@@ -9,6 +9,8 @@ type Firewall struct {
 	Name         types.StringValue
 	IngressRules []IngressRule
 	EgressRules  []EgressRule
+	SourceTags   []types.StringValue
+	TargetTags   []types.StringValue
 }
 
 type FirewallRule struct {

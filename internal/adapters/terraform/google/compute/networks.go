@@ -63,6 +63,8 @@ func adaptNetworks(modules terraform.Modules) (networks []compute.Network) {
 			Name:         firewallBlock.GetAttribute("name").AsStringValueOrDefault("", firewallBlock),
 			IngressRules: nil,
 			EgressRules:  nil,
+			SourceTags:   firewallBlock.GetAttribute("source_tags").AsStringValueSliceOrEmpty(firewallBlock),
+			TargetTags:   firewallBlock.GetAttribute("target_tags").AsStringValueSliceOrEmpty(firewallBlock),
 		}
 
 		for _, allowBlock := range firewallBlock.GetBlocks("allow") {
