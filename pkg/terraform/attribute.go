@@ -114,6 +114,18 @@ func (a *Attribute) AsStringValueOrDefault(defaultValue string, parent *Block) t
 	)
 }
 
+func (a *Attribute) AsStringValueSliceOrEmpty(parent *Block) (stringValues []types.StringValue) {
+	if a.IsNil() {
+		return stringValues
+	}
+
+	for _, v := range a.ValueAsStrings() {
+		stringValues = append(stringValues, types.String(v, parent.GetMetadata()))
+	}
+
+	return stringValues
+}
+
 func (a *Attribute) AsBoolValueOrDefault(defaultValue bool, parent *Block) types.BoolValue {
 	if a.IsNil() {
 		return types.BoolDefault(defaultValue, parent.GetMetadata())
@@ -251,7 +263,7 @@ func (a *Attribute) ValueAsStrings() []string {
 	return getStrings(a.hclAttribute.Expr, a.ctx.Inner())
 }
 
-//nolint
+// nolint
 func getStrings(expr hcl.Expression, ctx *hcl.EvalContext) []string {
 
 	defer func() {
