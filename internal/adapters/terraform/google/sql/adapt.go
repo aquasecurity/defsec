@@ -60,10 +60,12 @@ func adaptInstance(resource *terraform.Block) sql.DatabaseInstance {
 	}
 
 	if settingsBlock := resource.GetBlock("settings"); settingsBlock.IsNotNil() {
+		instance.Settings.Metadata = settingsBlock.GetMetadata()
 		if blocks := settingsBlock.GetBlocks("database_flags"); len(blocks) > 0 {
 			adaptFlags(blocks, &instance.Settings.Flags)
 		}
 		if backupBlock := settingsBlock.GetBlock("backup_configuration"); backupBlock.IsNotNil() {
+			instance.Settings.Backups.Metadata = backupBlock.GetMetadata()
 			backupConfigEnabledAttr := backupBlock.GetAttribute("enabled")
 			instance.Settings.Backups.Enabled = backupConfigEnabledAttr.AsBoolValueOrDefault(false, backupBlock)
 		}
