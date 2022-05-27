@@ -27,7 +27,7 @@ func adaptNetworks(modules terraform.Modules) (networks []compute.Network) {
 
 		subnetwork := compute.SubNetwork{
 			Metadata:       subnetworkBlock.GetMetadata(),
-			Name:           types.StringDefault("", subnetworkBlock.GetMetadata()),
+			Name:           subnetworkBlock.GetAttribute("name").AsStringValueOrDefault("", subnetworkBlock),
 			EnableFlowLogs: types.BoolDefault(false, subnetworkBlock.GetMetadata()),
 		}
 
