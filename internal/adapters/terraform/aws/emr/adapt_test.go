@@ -23,7 +23,6 @@ func Test_adaptSecurityConfiguration(t *testing.T) {
 			name: "configured",
 			terraform: `
 			resource "aws_emr_security_configuration" "foo" {
-				name = "emrsc_other"
 			
 				configuration = <<EOF
 				{
@@ -111,8 +110,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 2, securityConfiguration.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 22, securityConfiguration.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 2, securityConfiguration.Configuration.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 22, securityConfiguration.Configuration.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 5, securityConfiguration.Configuration.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 21, securityConfiguration.Configuration.GetMetadata().Range().GetEndLine())
 
 	// assert.Equal(t, 2, securityConfiguration.Configuration.Contains("EncryptionConfiguration"))
 }
