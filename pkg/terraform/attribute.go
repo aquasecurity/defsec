@@ -120,7 +120,7 @@ func (a *Attribute) AsStringValueSliceOrEmpty(parent *Block) (stringValues []typ
 	}
 
 	for _, v := range a.ValueAsStrings() {
-		stringValues = append(stringValues, types.String(v, parent.GetMetadata()))
+		stringValues = append(stringValues, types.String(v, a.GetMetadata()))
 	}
 
 	return stringValues
