@@ -42,6 +42,7 @@ func adaptSecurityConfiguration(resource *terraform.Block) emr.SecurityConfigura
 
 	return emr.SecurityConfiguration{
 		Metadata:      resource.GetMetadata(),
+		Name:          resource.GetAttribute("name").AsStringValueOrDefault("", resource),
 		Configuration: resource.GetAttribute("configuration").AsStringValueOrDefault("", resource),
 	}
 

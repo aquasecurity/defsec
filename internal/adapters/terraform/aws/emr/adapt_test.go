@@ -20,10 +20,10 @@ func Test_adaptSecurityConfiguration(t *testing.T) {
 		expected  emr.SecurityConfiguration
 	}{
 		{
-			name: "configured",
+			name: "test",
 			terraform: `
 			resource "aws_emr_security_configuration" "foo" {
-			
+				name = "emrsc_test"
 				configuration = <<EOF
 				{
 					"EncryptionConfiguration": {
@@ -41,11 +41,10 @@ func Test_adaptSecurityConfiguration(t *testing.T) {
 					}
 			  	}
 			 	EOF
-			}
-			`,
+			}`,
 			expected: emr.SecurityConfiguration{
 				Metadata: types.NewTestMetadata(),
-
+				Name:     types.StringExplicit("emrsc_test", types.NewTestMetadata()),
 				Configuration: types.String(
 					`{
 					"EncryptionConfiguration": {
@@ -61,8 +60,7 @@ func Test_adaptSecurityConfiguration(t *testing.T) {
 					"EnableInTransitEncryption": false,
 					"EnableAtRestEncryption": true
 					}
-			  	}`,
-					types.NewTestMetadata()),
+			  	}`, types.NewTestMetadata()),
 			},
 		},
 	}
