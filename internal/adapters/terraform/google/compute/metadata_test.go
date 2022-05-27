@@ -6,25 +6,43 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/google/compute"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
+	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
 func Test_adaptProjectMetadata(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name      string
 		terraform string
 		expected  compute.ProjectMetadata
 	}{
 		{
-			name: "basic",
+			name: "defined",
 			terraform: `
-resource "" "example" {
-    
-}
+			resource "google_compute_project_metadata" "example" {
+				metadata = {
+				  enable-oslogin = true
+				}
+			  }
 `,
-			expected: compute.ProjectMetadata{},
+			expected: compute.ProjectMetadata{
+				Metadata:      types.NewTestMetadata(),
+				EnableOSLogin: types.Bool(true, types.NewTestMetadata()),
+			},
+		},
+		{
+			name: "defaults",
+			terraform: `
+			resource "google_compute_project_metadata" "example" {
+				metadata = {
+				}
+			  }
+`,
+			expected: compute.ProjectMetadata{
+				Metadata:      types.NewTestMetadata(),
+				EnableOSLogin: types.Bool(false, types.NewTestMetadata()),
+			},
 		},
 	}
 
