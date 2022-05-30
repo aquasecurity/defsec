@@ -45,6 +45,7 @@ is_valid_update(command) {
 
 update_followed_by_install(command) {
 	command_list = [
+		"upgrade",
 		"install",
 		"source-install",
 		"reinstall",
