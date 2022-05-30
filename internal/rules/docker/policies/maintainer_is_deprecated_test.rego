@@ -9,7 +9,8 @@ test_denied {
 		{
 			"Cmd": "maintainer",
 			"Value": ["admin@example.com"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "MAINTAINER should not be used: 'MAINTAINER admin@example.com'"

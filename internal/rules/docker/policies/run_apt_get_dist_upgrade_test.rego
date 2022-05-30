@@ -16,7 +16,8 @@ test_denied {
 				"python",
 				"/usr/src/app/app.py",
 			],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "'apt-get dist-upgrade' should not be used in Dockerfile"
@@ -38,7 +39,8 @@ test_shortflag_denied {
 				"python",
 				"/usr/src/app/app.py",
 			],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "'apt-get dist-upgrade' should not be used in Dockerfile"
@@ -60,7 +62,8 @@ test_longflag_denied {
 				"python",
 				"/usr/src/app/app.py",
 			],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "'apt-get dist-upgrade' should not be used in Dockerfile"
@@ -82,7 +85,8 @@ test_allowed {
 				"python",
 				"/usr/src/app/app.py",
 			],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 0
 }

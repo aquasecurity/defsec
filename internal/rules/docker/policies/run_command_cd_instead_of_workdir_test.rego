@@ -13,7 +13,8 @@ test_basic_denied {
 		{
 			"Cmd": "cmd",
 			"Value": ["cd /usr/share/nginx/html && sed -e s/Docker/\"$AUTHOR\"/ Hello_docker.html > index.html ; nginx -g 'daemon off;'"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "RUN should not be used to change directory: 'cd /usr/share/nginx/html'. Use 'WORKDIR' statement instead."
@@ -39,7 +40,8 @@ test_chaining_denied {
 		{
 			"Cmd": "cmd",
 			"Value": ["cd /usr/share/nginx/html && sed -e s/Docker/\"$AUTHOR\"/ Hello_docker.html > index.html ; nginx -g 'daemon off;'"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "RUN should not be used to change directory: 'apt-get install vim && cd /usr/share/nginx/html'. Use 'WORKDIR' statement instead."
@@ -65,7 +67,8 @@ test_basic_allowed {
 		{
 			"Cmd": "cmd",
 			"Value": ["cd /usr/share/nginx/html && sed -e s/Docker/\"$AUTHOR\"/ Hello_docker.html > index.html ; nginx -g 'daemon off;'"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 0
 }

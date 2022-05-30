@@ -26,7 +26,8 @@ test_denied {
 				"-g",
 				"daemon off;",
 			],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "'EXPOSE' contains port which is out of range [0, 65535]: 65536"
@@ -58,7 +59,8 @@ test_allowed {
 				"-g",
 				"daemon off;",
 			],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 0
 }

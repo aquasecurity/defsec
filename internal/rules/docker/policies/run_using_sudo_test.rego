@@ -20,7 +20,8 @@ test_basic_denied {
 				"python",
 				"/usr/src/app/app.py",
 			],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "Using 'sudo' in Dockerfile should be avoided"
@@ -35,7 +36,8 @@ test_chaining_denied {
 		{
 			"Cmd": "run",
 			"Value": ["RUN apk add bash && sudo pip install --upgrade pip"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "Using 'sudo' in Dockerfile should be avoided"
@@ -54,7 +56,8 @@ test_multi_vuls_denied {
 		{
 			"Cmd": "run",
 			"Value": ["RUN apk add bash && sudo pip install --upgrade pip"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "Using 'sudo' in Dockerfile should be avoided"
@@ -77,7 +80,8 @@ test_basic_allowed {
 		{
 			"Cmd": "cmd",
 			"Value": ["python", "/usr/src/app/app.py"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 0
 }

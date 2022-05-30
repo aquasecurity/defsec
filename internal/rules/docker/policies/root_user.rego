@@ -34,8 +34,8 @@ fail_user_count {
 # fail_last_user_root is true if the last USER command
 # value is "root"
 fail_last_user_root[lastUser] {
-    users := [ user | user := docker.user[_]; true ]
-    lastUser := users[count(users) - 1]
+	users := [user | user := docker.user[_]; true]
+	lastUser := users[count(users) - 1]
 	lastUser.Value[0] == "root"
 }
 

@@ -2,7 +2,7 @@ package builtin.dockerfile.DS023
 
 test_denied {
 	r := deny with input as {"Stages": [
-		{ "Name": "golang:1.7.3", "Commands": [
+		{"Name": "golang:1.7.3", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["busybox"],
@@ -21,9 +21,8 @@ test_denied {
 					"/bin/healthcheck",
 				],
 			},
-		],
-		},
-		{ "Name": "alpine:latest", "Commands": [
+		]},
+		{"Name": "alpine:latest", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:latest"],
@@ -39,8 +38,8 @@ test_denied {
 				"Cmd": "cmd",
 				"Value": ["./app"],
 			},
-		],
-	}]}
+		]},
+	]}
 
 	count(r) == 1
 	r[_].msg == "There are 2 duplicate HEALTHCHECK instructions in the stage 'golang:1.7.3'"
@@ -48,7 +47,7 @@ test_denied {
 
 test_allowed {
 	r := deny with input as {"Stages": [
-		{ "Name": "golang:1.7.3", "Commands": [
+		{"Name": "golang:1.7.3", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["golang:1.7.3"],
@@ -64,9 +63,8 @@ test_allowed {
 				"Cmd": "cmd",
 				"Value": ["./app"],
 			},
-		],
-		},
-		{ "Name": "alpine:latest", "Commands": [
+		]},
+		{"Name": "alpine:latest", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:latest"],
@@ -75,15 +73,15 @@ test_allowed {
 				"Cmd": "cmd",
 				"Value": ["./app"],
 			},
-		],
-	}]}
+		]},
+	]}
 
 	count(r) == 0
 }
 
 test_healthcheck_none_allowed {
 	r := deny with input as {"Stages": [
-		{ "Name": "golang:1.7.3", "Commands": [
+		{"Name": "golang:1.7.3", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["golang:1.7.3"],
@@ -96,9 +94,8 @@ test_healthcheck_none_allowed {
 				"Cmd": "cmd",
 				"Value": ["./app"],
 			},
-		],
-		},
-		{ "Name": "alpine:latest", "Commands": [
+		]},
+		{"Name": "alpine:latest", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:latest"],
@@ -107,8 +104,8 @@ test_healthcheck_none_allowed {
 				"Cmd": "cmd",
 				"Value": ["./app"],
 			},
-		],
-	}]}
+		]},
+	]}
 
 	count(r) == 0
 }

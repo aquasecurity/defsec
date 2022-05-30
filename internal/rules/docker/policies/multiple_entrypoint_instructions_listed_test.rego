@@ -2,7 +2,7 @@ package builtin.dockerfile.DS007
 
 test_denied {
 	r := deny with input as {"Stages": [
-		{ "Name": "golang", "Commands": [
+		{"Name": "golang", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["golang:1.7.3"],
@@ -23,9 +23,8 @@ test_denied {
 					"8000",
 				],
 			},
-		],
-		},
-		{ "Name": "alpine", "Commands": [
+		]},
+		{"Name": "alpine", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:latest"],
@@ -38,8 +37,8 @@ test_denied {
 					"8080",
 				],
 			},
-		],
-	}]}
+		]},
+	]}
 
 	count(r) == 1
 	r[_].msg == "There are 2 duplicate ENTRYPOINT instructions for stage 'golang'"
@@ -47,7 +46,7 @@ test_denied {
 
 test_allowed {
 	r := deny with input as {"Stages": [
-		{ "Name": "golang", "Commands": [
+		{"Name": "golang", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["golang:1.7.3"],
@@ -60,9 +59,8 @@ test_allowed {
 					"8080",
 				],
 			},
-		],
-		},
-		{ "Name": "alpine", "Commands": [
+		]},
+		{"Name": "alpine", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:latest"],
@@ -75,8 +73,8 @@ test_allowed {
 					"8080",
 				],
 			},
-		],
-	}]}
+		]},
+	]}
 
 	count(r) == 0
 }

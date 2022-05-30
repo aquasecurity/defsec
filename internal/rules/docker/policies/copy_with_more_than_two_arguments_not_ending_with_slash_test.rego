@@ -9,7 +9,8 @@ test_basic_denied {
 		{
 			"Cmd": "copy",
 			"Value": ["package.json", "yarn.lock", "my_app"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "Slash is expected at the end of COPY command argument 'my_app'"
@@ -24,7 +25,8 @@ test_two_args_allowed {
 		{
 			"Cmd": "copy",
 			"Value": ["package.json", "yarn.lock"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 0
 }
@@ -38,7 +40,8 @@ test_three_arg_allowed {
 		{
 			"Cmd": "copy",
 			"Value": ["package.json", "yarn.lock", "myapp/"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 0
 }

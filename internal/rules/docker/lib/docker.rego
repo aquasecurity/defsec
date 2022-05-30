@@ -45,13 +45,13 @@ stage_cmd[stage_name] = cmds {
 
 stage_healthcheck[stage_name] = hlthchecks {
 	stage := input.Stages[_]
-    stage_name := stage.Name
+	stage_name := stage.Name
 	hlthchecks := [hlthcheck | hlthcheck := stage.Commands[_]; hlthcheck.Cmd == "healthcheck"]
 }
 
 stage_user[stage_name] = users {
 	stage := input.Stages[_]
-    stage_name := stage.Name
+	stage_name := stage.Name
 	users := [cmd | cmd := stage.Commands[_]; cmd.Cmd == "user"]
 }
 

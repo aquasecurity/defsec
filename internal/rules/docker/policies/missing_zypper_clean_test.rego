@@ -16,7 +16,8 @@ test_denied {
 				"CMD",
 				"curl --fail http://localhost:3000 || exit 1",
 			],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "'zypper clean' is missed: 'zypper install'"
@@ -38,7 +39,8 @@ test_patch_denied {
 				"CMD",
 				"curl --fail http://localhost:3000 || exit 1",
 			],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "'zypper clean' is missed: 'zypper patch bash'"
@@ -53,7 +55,8 @@ test_wrong_order_of_commands_denied {
 		{
 			"Cmd": "run",
 			"Value": ["zypper cc && zypper remove bash"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "'zypper clean' is missed: 'zypper cc && zypper remove bash'"
@@ -68,7 +71,8 @@ test_multiple_install_denied {
 		{
 			"Cmd": "run",
 			"Value": ["zypper install bash && zypper clean && zypper remove bash"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "'zypper clean' is missed: 'zypper install bash && zypper clean && zypper remove bash'"
@@ -83,7 +87,8 @@ test_multiple_install_allowed {
 		{
 			"Cmd": "run",
 			"Value": ["zypper install bash && zypper clean && zypper remove bash&& zypper cc"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 0
 }
@@ -108,7 +113,8 @@ test_basic_allowed {
 				"python",
 				"/usr/src/app/app.py",
 			],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 0
 }

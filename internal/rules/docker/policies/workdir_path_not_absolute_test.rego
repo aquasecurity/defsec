@@ -14,7 +14,8 @@ test_basic_denied {
 		{
 			"Cmd": "workdir",
 			"Value": ["workdir"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "WORKDIR path 'workdir' should be absolute"
@@ -29,7 +30,8 @@ test_no_work_dir_allowed {
 		{
 			"Cmd": "run",
 			"Value": ["apk --no-cache add nginx"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 0
 }
@@ -47,7 +49,8 @@ test_absolute_work_dir_allowed {
 		{
 			"Cmd": "workdir",
 			"Value": ["/path/to/workdir"],
-		}]}]}
+		},
+	]}]}
 
 	count(r) == 0
 }
