@@ -4,8 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/providers/dockerfile"
-
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -21,11 +19,11 @@ CMD python /app/app.py
 	require.NoError(t, err)
 
 	assert.Equal(t, 1, len(df.Stages))
-	var commands []dockerfile.Command
-	for key, contents := range df.Stages {
-		assert.Equal(t, "ubuntu:18.04", key)
-		commands = contents
-	}
+
+	require.Len(t, df.Stages, 1)
+
+	assert.Equal(t, "ubuntu:18.04", df.Stages[0].Name)
+	commands := df.Stages[0].Commands
 	assert.Equal(t, 4, len(commands))
 
 	// FROM ubuntu:18.04

@@ -1,20 +1,20 @@
 package builtin.dockerfile.DS001
 
 test_allowed {
-	r := deny with input as {"stages": {"openjdk:8u292-oracle": [{
+	r := deny with input as {"Stages": [{"Name": "openjdk:8u292-oracle", "Commands": [{
 		"Cmd": "from",
 		"Value": ["openjdk:8u292-oracle"],
-	}]}}
+	}]}]}
 
 	count(r) == 0
 }
 
 # Test FROM image with latest tag
 test_latest_tag_denied {
-	r := deny with input as {"stages": {"openjdk": [{
+	r := deny with input as {"Stages": [{"Name": "openjdk", "Commands": [{
 		"Cmd": "from",
 		"Value": ["openjdk:latest"],
-	}]}}
+	}]}]}
 
 	count(r) == 1
 	r[_].msg == "Specify a tag in the 'FROM' statement for image 'openjdk'"
@@ -22,10 +22,10 @@ test_latest_tag_denied {
 
 # Test FROM image with no tag
 test_no_tag_denied {
-	r := deny with input as {"stages": {"openjdk": [{
+	r := deny with input as {"Stages": [{"Name": "openjdk", "Commands": [{
 		"Cmd": "from",
 		"Value": ["openjdk"],
-	}]}}
+	}]}]}
 
 	count(r) == 1
 	r[_].msg == "Specify a tag in the 'FROM' statement for image 'openjdk'"
@@ -33,17 +33,17 @@ test_no_tag_denied {
 
 # Test FROM with scratch
 test_scratch_allowed {
-	r := deny with input as {"stages": {"scratch": [{
+	r := deny with input as {"Stages": [{"Name": "scratch", "Commands": [{
 		"Cmd": "from",
 		"Value": ["scratch"],
-	}]}}
+	}]}]}
 
 	count(r) == 0
 }
 
 test_with_variables_allowed {
-	r := deny with input as {"stages": {
-		"alpine:3.5": [
+	r := deny with input as {"Stages": [
+		{"Name": "alpine:3.5", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:3.5"],
@@ -52,8 +52,8 @@ test_with_variables_allowed {
 				"Cmd": "arg",
 				"Value": ["IMAGE=alpine:3.12"],
 			},
-		],
-		"image": [
+		]},
+		{"Name": "image", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["$IMAGE"],
@@ -65,15 +65,15 @@ test_with_variables_allowed {
 					"/usr/src/app/app.py",
 				],
 			},
-		],
-	}}
+		]},
+	]}
 
 	count(r) == 0
 }
 
 test_with_variables_denied {
-	r := deny with input as {"stages": {
-		"alpine:3.5": [
+	r := deny with input as {"Stages": [
+		{"Name": "alpine:3.5", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:3.5"],
@@ -82,8 +82,8 @@ test_with_variables_denied {
 				"Cmd": "arg",
 				"Value": ["IMAGE=all-in-one"],
 			},
-		],
-		"image": [
+		]},
+		{"Name": "image", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["$IMAGE"],
@@ -95,16 +95,16 @@ test_with_variables_denied {
 					"/usr/src/app/app.py",
 				],
 			},
-		],
-	}}
+		]},
+	]}
 
 	count(r) == 1
 	r[_].msg == "Specify a tag in the 'FROM' statement for image 'all-in-one'"
 }
 
 test_multi_stage_allowed {
-	r := deny with input as {"stages": {
-		"golang:1.15 as builder": [
+	r := deny with input as {"Stages": [
+		{"Name": "golang:1.15 as builder", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["golang:1.15", "as", "builder"],
@@ -113,19 +113,19 @@ test_multi_stage_allowed {
 				"Cmd": "run",
 				"Value": ["apt-get update"],
 			},
-		],
-		"alpine:3.13": [{
+		]},
+		{"Name": "alpine:3.13", "Commands": [{
 			"Cmd": "from",
 			"Value": ["alpine:3.13"],
-		}],
-	}}
+		}]},
+	]}
 
 	count(r) == 0
 }
 
 test_multi_stage_base_alias_allowed {
-	r := deny with input as {"stages": {
-		"node:14.18.1-bullseye as dependencies": [
+	r := deny with input as {"Stages": [
+		{"Name": "node:14.18.1-bullseye as dependencies", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["node:14.18.1-bullseye", "as", "dependencies"],
@@ -134,19 +134,19 @@ test_multi_stage_base_alias_allowed {
 				"Cmd": "run",
 				"Value": ["apt-get update"],
 			},
-		],
-		"build": [{
+		]},
+		{"Name": "build", "Commands": [{
 			"Cmd": "from",
 			"Value": ["dependencies", "as", "build"],
-		}],
-	}}
+		}]},
+	]}
 
 	count(r) == 0
 }
 
 test_multi_stage_denied {
-	r := deny with input as {"stages": {
-		"node:14.18.1-bullseye as dependencies": [
+	r := deny with input as {"Stages": [
+		{"Name": "node:14.18.1-bullseye as dependencies", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["node:14.18.1-bullseye", "as", "dependencies"],
@@ -155,20 +155,20 @@ test_multi_stage_denied {
 				"Cmd": "run",
 				"Value": ["apt-get update"],
 			},
-		],
-		"alpine:latest": [{
+		]},
+		{"Name": "alpine:latest", "Commands": [{
 			"Cmd": "from",
 			"Value": ["alpine:latest"],
-		}],
-	}}
+		}]},
+	]}
 
 	count(r) == 1
 	r[_].msg == "Specify a tag in the 'FROM' statement for image 'alpine'"
 }
 
 test_multi_stage_no_tag_denied {
-	r := deny with input as {"stages": {
-		"node:14.18.1-bullseye as dependencies": [
+	r := deny with input as {"Stages": [
+		{"Name": "node:14.18.1-bullseye as dependencies", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["node:14.18.1-bullseye", "as", "dependencies"],
@@ -177,12 +177,12 @@ test_multi_stage_no_tag_denied {
 				"Cmd": "run",
 				"Value": ["apt-get update"],
 			},
-		],
-		"alpine:latest": [{
+		]},
+		{"Name": "alpine:latest", "Commands": [{
 			"Cmd": "from",
 			"Value": ["alpine"],
-		}],
-	}}
+		}]},
+	]}
 
 	count(r) == 1
 	r[_].msg == "Specify a tag in the 'FROM' statement for image 'alpine'"

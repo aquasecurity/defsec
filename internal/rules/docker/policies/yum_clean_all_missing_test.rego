@@ -1,8 +1,8 @@
 package builtin.dockerfile.DS015
 
 test_basic_denied {
-	r := deny with input as {"stages": {
-		"alpine:3.5": [
+	r := deny with input as {"Stages": [
+		{"Name": "alpine:3.5", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:3.5"],
@@ -22,8 +22,8 @@ test_basic_denied {
 					"/usr/src/app/app.py",
 				],
 			},
-		],
-		"alpine:3.4": [
+		]},
+		{"Name": "alpine:3.4", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:3.4"],
@@ -32,15 +32,15 @@ test_basic_denied {
 				"Cmd": "run",
 				"Value": ["yum -y install vim && yum clean all"],
 			},
-		],
-	}}
+		]},
+	]}
 
 	count(r) == 1
 	r[_].msg == "'yum clean all' is missed: yum install vim"
 }
 
 test_wrong_order_of_commands_denied {
-	r := deny with input as {"stages": {"alpine:3.5": [
+	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
 		{
 			"Cmd": "from",
 			"Value": ["alpine:3.5"],
@@ -49,14 +49,14 @@ test_wrong_order_of_commands_denied {
 			"Cmd": "run",
 			"Value": ["yum clean all && yum -y install"],
 		},
-	]}}
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "'yum clean all' is missed: yum clean all && yum -y install"
 }
 
 test_multiple_install_denied {
-	r := deny with input as {"stages": {"alpine:3.5": [
+	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
 		{
 			"Cmd": "from",
 			"Value": ["alpine:3.5"],
@@ -65,14 +65,14 @@ test_multiple_install_denied {
 			"Cmd": "run",
 			"Value": ["yum -y install bash && yum clean all && yum -y install zsh"],
 		},
-	]}}
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "'yum clean all' is missed: yum -y install bash && yum clean all && yum -y install zsh"
 }
 
 test_multiple_install_allowed {
-	r := deny with input as {"stages": {"alpine:3.5": [
+	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
 		{
 			"Cmd": "from",
 			"Value": ["alpine:3.5"],
@@ -81,14 +81,14 @@ test_multiple_install_allowed {
 			"Cmd": "run",
 			"Value": ["yum -y install bash && yum clean all && yum -y install zsh && yum clean all"],
 		},
-	]}}
+	]}]}
 
 	count(r) == 0
 }
 
 test_basic_allowed {
-	r := deny with input as {"stages": {
-		"alpine:3.5": [
+	r := deny with input as {"Stages": [
+		{"Name": "alpine:3.5", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:3.5"],
@@ -108,8 +108,8 @@ test_basic_allowed {
 					"/usr/src/app/app.py",
 				],
 			},
-		],
-		"alpine:3.4": [
+		]},
+		{"Name": "alpine:3.4", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:3.4"],
@@ -118,8 +118,8 @@ test_basic_allowed {
 				"Cmd": "run",
 				"Value": ["yum -y install && yum clean all"],
 			},
-		],
-	}}
+		]},
+	]}
 
 	count(r) == 0
 }

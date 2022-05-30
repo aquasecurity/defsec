@@ -1,7 +1,7 @@
 package builtin.dockerfile.DS008
 
 test_denied {
-	r := deny with input as {"stages": {"alpine:3.3": [
+	r := deny with input as {"Stages": [{"Name": "alpine:3.3", "Commands": [
 		{
 			"Cmd": "from",
 			"Value": ["alpine:3.3"],
@@ -27,14 +27,14 @@ test_denied {
 				"daemon off;",
 			],
 		},
-	]}}
+	]}]}
 
 	count(r) == 1
 	r[_].msg == "'EXPOSE' contains port which is out of range [0, 65535]: 65536"
 }
 
 test_allowed {
-	r := deny with input as {"stages": {"alpine:3.3": [
+	r := deny with input as {"Stages": [{"Name": "alpine:3.3", "Commands": [
 		{
 			"Cmd": "from",
 			"Value": ["alpine:3.3"],
@@ -60,7 +60,7 @@ test_allowed {
 				"daemon off;",
 			],
 		},
-	]}}
+	]}]}
 
 	count(r) == 0
 }

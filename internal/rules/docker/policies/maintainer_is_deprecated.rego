@@ -20,7 +20,7 @@ __rego_input__ := {
 }
 
 get_maintainer[mntnr] {
-	mntnr := input.stages[_][_]
+	mntnr := input.Stages[_].Commands[_]
 	mntnr.Cmd == "maintainer"
 }
 

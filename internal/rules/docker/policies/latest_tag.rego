@@ -69,7 +69,7 @@ image_tags[output] {
 	from := docker.from[i]
 	name := from.Value[0]
 
-	cmd_obj := input.stages[j][k]
+	cmd_obj := input.Stages[j].Commands[k]
 
 	possibilities := {"arg", "env"}
 	cmd_obj.Cmd == possibilities[l]
