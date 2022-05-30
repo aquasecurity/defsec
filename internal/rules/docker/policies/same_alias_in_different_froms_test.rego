@@ -1,8 +1,8 @@
 package builtin.dockerfile.DS012
 
 test_basic_denied {
-	r := deny with input as {"stages": {
-		"baseImage as bi": [
+	r := deny with input as {"Stages": [
+		{ "Name": "baseImage as bi", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["baseImage"],
@@ -14,7 +14,8 @@ test_basic_denied {
 				"StartLine": 2,
 			},
 		],
-		"debian:jesse2 as build": [
+		},
+		{ "Name": "debian:jesse2 as build", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": [
@@ -30,7 +31,8 @@ test_basic_denied {
 				"StartLine": 4,
 			},
 		],
-		"debian:jesse1 as build": [
+		},
+		{ "Name": "debian:jesse1 as build", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": [
@@ -46,15 +48,15 @@ test_basic_denied {
 				"StartLine": 6,
 			},
 		],
-	}}
+	}]}
 
 	count(r) == 1
 	r[_].msg == "Duplicate aliases 'build' are found in different FROMs"
 }
 
 test_missed_alias_denied {
-	r := deny with input as {"stages": {
-		"baseImage": [
+	r := deny with input as {"Stages": [
+		{ "Name": "baseImage", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["baseImage"],
@@ -66,7 +68,8 @@ test_missed_alias_denied {
 				"StartLine": 2,
 			},
 		],
-		"debian:jesse2 as build": [
+		},
+		{ "Name": "debian:jesse2 as build", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": [
@@ -82,7 +85,8 @@ test_missed_alias_denied {
 				"StartLine": 4,
 			},
 		],
-		"debian:jesse1 as build": [
+		},
+		{ "Name": "debian:jesse1 as build", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": [
@@ -98,15 +102,15 @@ test_missed_alias_denied {
 				"StartLine": 6,
 			},
 		],
-	}}
+	}]}
 
 	count(r) == 1
 	r[_].msg == "Duplicate aliases 'build' are found in different FROMs"
 }
 
 test_no_alias_allowed {
-	r := deny with input as {"stages": {
-		"baseImage": [
+	r := deny with input as {"Stages": [
+		{ "Name": "baseImage", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["baseImage"],
@@ -116,7 +120,8 @@ test_no_alias_allowed {
 				"Value": ["Test"],
 			},
 		],
-		"debian:jesse2": [
+		},
+		{ "Name": "debian:jesse2", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": [
@@ -130,14 +135,15 @@ test_no_alias_allowed {
 				"Value": ["stuff"],
 			},
 		],
-	}}
+		}]
+	}
 
 	count(r) == 0
 }
 
 test_extra_spaces_denied {
-	r := deny with input as {"stages": {
-		"baseImage": [
+	r := deny with input as {"Stages": [
+		{ "Name": "baseImage", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["baseImage"],
@@ -149,7 +155,8 @@ test_extra_spaces_denied {
 				"StartLine": 2,
 			},
 		],
-		"debian:jesse2 as build": [
+		},
+		{ "Name": "debian:jesse2 as build", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": [
@@ -165,7 +172,8 @@ test_extra_spaces_denied {
 				"StartLine": 4,
 			},
 		],
-		"debian:jesse1 as    build": [
+		},
+		{ "Name": "debian:jesse1 as    build", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": [
@@ -181,15 +189,15 @@ test_extra_spaces_denied {
 				"StartLine": 6,
 			},
 		],
-	}}
+	}]}
 
 	count(r) == 1
 	r[_].msg == "Duplicate aliases 'build' are found in different FROMs"
 }
 
 test_basic_allowed {
-	r := deny with input as {"stages": {
-		"baseImage": [
+	r := deny with input as {"Stages": [
+		{ "Name": "baseImage", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["baseImage"],
@@ -199,7 +207,8 @@ test_basic_allowed {
 				"Value": ["Test"],
 			},
 		],
-		"debian:jesse2 as build2": [
+		},
+		{ "Name": "debian:jesse2 as build2", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": [
@@ -213,7 +222,8 @@ test_basic_allowed {
 				"Value": ["stuff"],
 			},
 		],
-		"debian:jesse1 as build1": [
+		},
+		{ "Name": "debian:jesse1 as build1", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": [
@@ -227,7 +237,7 @@ test_basic_allowed {
 				"Value": ["more_stuff"],
 			},
 		],
-	}}
+	}]}
 
 	count(r) == 0
 }

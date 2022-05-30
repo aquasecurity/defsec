@@ -35,10 +35,10 @@ get_duplicate_alias[output] {
 }
 
 get_aliased_name[output] {
-	some name
-	stage := input.stages[name]
+	stage := input.Stages[_]
+	name := stage.Name
 
-	cmd := stage[0]
+	cmd := stage.Commands[0]
 
 	arg = lower(name)
 	contains(arg, " as ")

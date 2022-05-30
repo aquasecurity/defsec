@@ -1,7 +1,7 @@
 package builtin.dockerfile.DS009
 
 test_basic_denied {
-	r := deny with input as {"stages": {"alpine:3.5": [
+	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
 		{"Cmd": "from", "Value": ["alpine:3.5"]},
 		{
 			"Cmd": "run",
@@ -14,15 +14,14 @@ test_basic_denied {
 		{
 			"Cmd": "workdir",
 			"Value": ["workdir"],
-		},
-	]}}
+		}]}]}
 
 	count(r) == 1
 	r[_].msg == "WORKDIR path 'workdir' should be absolute"
 }
 
 test_no_work_dir_allowed {
-	r := deny with input as {"stages": {"alpine:3.3": [
+	r := deny with input as {"Stages": [{"Name": "alpine:3.3", "Commands": [
 		{
 			"Cmd": "from",
 			"Value": ["alpine:3.3"],
@@ -30,14 +29,13 @@ test_no_work_dir_allowed {
 		{
 			"Cmd": "run",
 			"Value": ["apk --no-cache add nginx"],
-		},
-	]}}
+		}]}]}
 
 	count(r) == 0
 }
 
 test_absolute_work_dir_allowed {
-	r := deny with input as {"stages": {"alpine:3.3": [
+	r := deny with input as {"Stages": [{"Name": "alpine:3.3", "Commands": [
 		{
 			"Cmd": "from",
 			"Value": ["alpine:3.3"],
@@ -49,8 +47,7 @@ test_absolute_work_dir_allowed {
 		{
 			"Cmd": "workdir",
 			"Value": ["/path/to/workdir"],
-		},
-	]}}
+		}]}]}
 
 	count(r) == 0
 }

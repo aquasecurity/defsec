@@ -1,8 +1,9 @@
 package builtin.dockerfile.DS006
 
 test_basic_denied {
-	r := deny with input as {"stages": {
-		"golang:1.7.3 as dep": [
+	r := deny with input as {"Stages": [{
+		"Name": "golang:1.7.3 as dep",
+		 "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["golang:1.7.3", "as", "dep"],
@@ -16,7 +17,10 @@ test_basic_denied {
 				],
 			},
 		],
-		"alpine": [
+		},
+		{
+		    "Name": "alpine",
+		    "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:latest"],
@@ -30,15 +34,17 @@ test_basic_denied {
 				],
 			},
 		],
-	}}
+		},
+	]}
 
 	count(r) == 1
 	r[_].msg == "'COPY --from' should not mention current alias 'dep' since it is impossible to copy from itself"
 }
 
 test_extra_spaces_denied {
-	r := deny with input as {"stages": {
-		"golang:1.7.3 as   dep": [
+	r := deny with input as {"Stages": [{
+		"Name": "golang:1.7.3 as   dep",
+		 "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["golang:1.7.3"],
@@ -52,7 +58,10 @@ test_extra_spaces_denied {
 				],
 			},
 		],
-		"alpine": [
+		},
+		{
+		"Name":"alpine",
+		"Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:latest"],
@@ -66,15 +75,19 @@ test_extra_spaces_denied {
 				],
 			},
 		],
-	}}
+		},
+		]
+	}
 
 	count(r) == 1
 	r[_].msg == "'COPY --from' should not mention current alias 'dep' since it is impossible to copy from itself"
 }
 
 test_basic_allowed {
-	r := deny with input as {"stages": {
-		"golang:1.7.3 AS builder": [
+	r := deny with input as {"Stages": [
+	{
+		"Name": "golang:1.7.3 AS builder",
+		"Commands": [
 			{
 				"Cmd": "from",
 				"Value": [
@@ -107,7 +120,9 @@ test_basic_allowed {
 				"Value": ["another dockerfile"],
 			},
 		],
-		"alpine:latest": [
+		},
+		{ "Name": "alpine:latest",
+		"Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["alpine:latest"],
@@ -133,7 +148,9 @@ test_basic_allowed {
 				"Value": ["./app"],
 			},
 		],
-	}}
+		},
+		]
+	}
 
 	count(r) == 0
 }

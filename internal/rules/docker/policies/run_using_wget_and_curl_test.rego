@@ -1,7 +1,7 @@
 package builtin.dockerfile.DS014
 
 test_basic_denied {
-	r := deny with input as {"stages": {"alpine:3.5": [
+	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
 		{
 			"Cmd": "from",
 			"Value": ["debian"],
@@ -13,15 +13,14 @@ test_basic_denied {
 		{
 			"Cmd": "run",
 			"Value": ["curl http://bing.com"],
-		},
-	]}}
+		}]}]}
 
 	count(r) == 1
 	r[_].msg == "Shouldn't use both curl and wget"
 }
 
 test_json_array_denied {
-	r := deny with input as {"stages": {"alpine:3.5": [
+	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
 		{
 			"Cmd": "from",
 			"Value": ["baseImage"],
@@ -36,16 +35,15 @@ test_json_array_denied {
 				"curl",
 				"http://bing.com",
 			],
-		},
-	]}}
+		}]}]}
 
 	count(r) == 1
 	r[_].msg == "Shouldn't use both curl and wget"
 }
 
 test_basic_allowed {
-	r := deny with input as {"stages": {
-		"alpine:3.5": [
+	r := deny with input as {"Stages": [
+		{ "Name": "alpine:3.5", "Commands": [
 			{
 				"Cmd": "from",
 				"Value": ["debian"],
@@ -72,13 +70,13 @@ test_basic_allowed {
 				],
 			},
 		],
-	}}
+	}]}
 
 	count(r) == 0
 }
 
 test_json_array_allowed {
-	r := deny with input as {"stages": {"alpine:3.5": [
+	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
 		{
 			"Cmd": "from",
 			"Value": ["debian"],
@@ -93,14 +91,13 @@ test_json_array_allowed {
 				"curl",
 				"http://google.com",
 			],
-		},
-	]}}
+		}]}]}
 
 	count(r) == 0
 }
 
 test_install_allowed {
-	r := deny with input as {"stages": {"alpine:3.5": [
+	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
 		{
 			"Cmd": "from",
 			"Value": ["debian"],
@@ -112,8 +109,7 @@ test_install_allowed {
 		{
 			"Cmd": "run",
 			"Value": ["apt-get update && apt-get install wget"],
-		},
-	]}}
+		}]}]}
 
 	count(r) == 0
 }
