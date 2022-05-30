@@ -28,6 +28,7 @@ type Property struct {
 	parentRange types.Range
 	Inner       PropertyInner
 	logicalId   string
+	unresolved  bool
 }
 
 type PropertyInner struct {
@@ -113,8 +114,13 @@ func (p *Property) Range() types.Range {
 }
 
 func (p *Property) Metadata() types.Metadata {
-	resolved, _ := p.resolveValue()
-	ref := NewCFReferenceWithValue(p.parentRange, *resolved, p.logicalId)
+	base := p
+	if p.isFunction() {
+		if resolved, ok := p.resolveValue(); ok {
+			base = resolved
+		}
+	}
+	ref := NewCFReferenceWithValue(p.parentRange, *base, p.logicalId)
 	return types.NewMetadata(p.Range(), ref)
 }
 
@@ -147,7 +153,7 @@ func (p *Property) AsRawStrings() ([]string, error) {
 }
 
 func (p *Property) resolveValue() (*Property, bool) {
-	if !p.isFunction() {
+	if !p.isFunction() || p.IsUnresolved() {
 		return p, true
 	}
 
@@ -158,6 +164,10 @@ func (p *Property) GetStringProperty(path string, defaultValue ...string) types.
 	defVal := ""
 	if len(defaultValue) > 0 {
 		defVal = defaultValue[0]
+	}
+
+	if p.IsUnresolved() {
+		return types.StringUnresolvable(p.Metadata())
 	}
 
 	prop := p.GetProperty(path)
@@ -177,6 +187,10 @@ func (p *Property) GetBoolProperty(path string, defaultValue ...bool) types.Bool
 		defVal = defaultValue[0]
 	}
 
+	if p.IsUnresolved() {
+		return types.BoolUnresolvable(p.Metadata())
+	}
+
 	prop := p.GetProperty(path)
 
 	if prop.isFunction() {
@@ -193,6 +207,10 @@ func (p *Property) GetIntProperty(path string, defaultValue ...int) types.IntVal
 	defVal := 0
 	if len(defaultValue) > 0 {
 		defVal = defaultValue[0]
+	}
+
+	if p.IsUnresolved() {
+		return types.IntUnresolvable(p.Metadata())
 	}
 
 	prop := p.GetProperty(path)
@@ -234,8 +252,12 @@ func (p *Property) GetProperty(path string) *Property {
 	}
 
 	if nestedProperty := property.GetProperty(strings.Join(pathParts[1:], ".")); nestedProperty != nil {
-		resolved, _ := nestedProperty.resolveValue()
-		return resolved
+		if nestedProperty.isFunction() {
+			resolved, _ := nestedProperty.resolveValue()
+			return resolved
+		} else {
+			return nestedProperty
+		}
 	}
 
 	return nil
