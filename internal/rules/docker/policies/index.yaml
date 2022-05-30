@@ -30,8 +30,6 @@
   file: multiple_cmd_instructions_listed.rego
 - id: DS017
   file: update_instruction_alone.rego
-- id: DS018
-  file: copy_from_without_from_alias_defined_previously.rego
 - id: DS019
   file: missing_dnf_clean_all.rego
 - id: DS020
