@@ -40,7 +40,8 @@ Where possible, segments should be broken into smaller subnets.`,
 					continue
 				}
 				for _, ip := range rule.SourceAddresses {
-					if cidr.IsPublic(ip.Value()) {
+					// single public IPs acceptable to allow for well known IP addresses to be used
+					if cidr.IsPublic(ip.Value()) && cidr.CountAddresses(ip.Value()) > 1 {
 						failed = true
 						results.Add(
 							"Security group rule allows ingress from public internet.",
