@@ -24,7 +24,8 @@ func TestCheckEnableBackup(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata:  types.NewTestMetadata(),
+						IsReplica: types.Bool(false, types.NewTestMetadata()),
 						Settings: sql.Settings{
 							Metadata: types.NewTestMetadata(),
 							Backups: sql.Backups{
@@ -42,12 +43,32 @@ func TestCheckEnableBackup(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata:  types.NewTestMetadata(),
+						IsReplica: types.Bool(false, types.NewTestMetadata()),
 						Settings: sql.Settings{
 							Metadata: types.NewTestMetadata(),
 							Backups: sql.Backups{
 								Metadata: types.NewTestMetadata(),
 								Enabled:  types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "Read replica does not require backups",
+			input: sql.SQL{
+				Instances: []sql.DatabaseInstance{
+					{
+						Metadata:  types.NewTestMetadata(),
+						IsReplica: types.Bool(true, types.NewTestMetadata()),
+						Settings: sql.Settings{
+							Metadata: types.NewTestMetadata(),
+							Backups: sql.Backups{
+								Metadata: types.NewTestMetadata(),
+								Enabled:  types.Bool(false, types.NewTestMetadata()),
 							},
 						},
 					},

@@ -35,6 +35,7 @@ type DatabaseInstance struct {
 	types.Metadata
 	DatabaseVersion types.StringValue
 	Settings        Settings
+	IsReplica       types.BoolValue
 }
 
 type Settings struct {
