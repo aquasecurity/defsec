@@ -95,3 +95,18 @@ test_allowed {
 
 	count(r) == 0
 }
+
+test_allow_upgrade {
+	r := deny with input as {"stages": {"ubuntu:18.04": [
+		{
+			"Cmd": "from",
+			"Value": ["ubuntu:18.04"],
+		},
+		{
+			"Cmd": "run",
+			"Value": ["apt-get update && apt upgrade --yes"],
+		},
+	]}}
+
+	count(r) == 0
+}
