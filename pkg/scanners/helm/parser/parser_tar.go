@@ -81,6 +81,9 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 		}
 	}
 
+	// force close the file for Windows so we can remove it from FS
+	_ = file.Close()
+
 	// remove the tarball from the fs
 	if err := tarFS.Remove(path); err != nil {
 		return nil, err
