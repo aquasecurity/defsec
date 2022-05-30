@@ -108,8 +108,11 @@ func (r *Resource) GetProperty(path string) *Property {
 	}
 
 	if len(pathParts) == 1 || property.IsNil() {
-		resolved, _ := property.resolveValue()
-		return resolved
+		if property.isFunction() {
+			resolved, _ := property.resolveValue()
+			return resolved
+		}
+		return property
 	}
 
 	if nestedProperty := property.GetProperty(strings.Join(pathParts[1:], ".")); nestedProperty != nil {

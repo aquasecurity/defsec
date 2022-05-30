@@ -51,6 +51,12 @@ func NewMetadata(r Range, ref Reference) Metadata {
 	}
 }
 
+func NewUnresolvableMetadata(r Range, ref Reference) Metadata {
+	unres := NewMetadata(r, ref)
+	unres.isUnresolvable = true
+	return unres
+}
+
 func NewExplicitMetadata(r Range, ref Reference) Metadata {
 	m := NewMetadata(r, ref)
 	m.isExplicit = true
