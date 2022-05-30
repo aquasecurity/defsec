@@ -31,6 +31,7 @@ func adaptInstance(resource *terraform.Block) sql.DatabaseInstance {
 	instance := sql.DatabaseInstance{
 		Metadata:        resource.GetMetadata(),
 		DatabaseVersion: resource.GetAttribute("database_version").AsStringValueOrDefault("", resource),
+		IsReplica:       types.BoolDefault(false, resource.GetMetadata()),
 		Settings: sql.Settings{
 			Metadata: resource.GetMetadata(),
 			Flags: sql.Flags{
@@ -57,6 +58,10 @@ func adaptInstance(resource *terraform.Block) sql.DatabaseInstance {
 				AuthorizedNetworks: nil,
 			},
 		},
+	}
+
+	if attr := resource.GetAttribute("master_instance_name"); attr.IsNotNil() {
+		instance.IsReplica = types.Bool(true, attr.GetMetadata())
 	}
 
 	if settingsBlock := resource.GetBlock("settings"); settingsBlock.IsNotNil() {

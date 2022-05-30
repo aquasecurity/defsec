@@ -31,7 +31,7 @@ var CheckEnableBackup = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, instance := range s.Google.SQL.Instances {
-			if instance.IsUnmanaged() {
+			if instance.IsUnmanaged() || instance.IsReplica.IsTrue() {
 				continue
 			}
 			if instance.Settings.Backups.Enabled.IsFalse() {

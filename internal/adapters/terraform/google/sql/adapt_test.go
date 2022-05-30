@@ -43,6 +43,7 @@ func Test_Adapt(t *testing.T) {
 				Instances: []sql.DatabaseInstance{
 					{
 						Metadata:        types.NewTestMetadata(),
+						IsReplica:       types.Bool(false, types.NewTestMetadata()),
 						DatabaseVersion: types.String("POSTGRES_12", types.NewTestMetadata()),
 						Settings: sql.Settings{
 							Metadata: types.NewTestMetadata(),
@@ -146,6 +147,7 @@ resource "google_sql_database_instance" "backup_source_instance" {
 				{
 					Metadata:        types.NewTestMetadata(),
 					DatabaseVersion: types.String("POSTGRES_11", types.NewTestMetadata()),
+					IsReplica:       types.Bool(false, types.NewTestMetadata()),
 					Settings: sql.Settings{
 						Backups: sql.Backups{
 							Enabled: types.Bool(true, types.NewTestMetadata()),
