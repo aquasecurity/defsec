@@ -169,6 +169,7 @@ func (h *regoJob) Run() (results scan.Results, err error) {
 	return regoResults, nil
 }
 
+// nolint
 func isCustomCheckRequiredForBlock(custom *scan.TerraformCustomCheck, b *terraform.Block) bool {
 
 	var found bool
