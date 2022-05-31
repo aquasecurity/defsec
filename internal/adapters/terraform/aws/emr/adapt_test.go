@@ -39,14 +39,14 @@ func Test_adaptSecurityConfiguration(t *testing.T) {
 					"EnableInTransitEncryption": false,
 					"EnableAtRestEncryption": true
 					}
-			  	}
-			 	EOF
+				}
+				EOF
 			}`,
 			expected: emr.SecurityConfiguration{
 				Metadata: types.NewTestMetadata(),
 				Name:     types.StringExplicit("emrsc_test", types.NewTestMetadata()),
 				Configuration: types.String(
-					`{
+					`				{
 					"EncryptionConfiguration": {
 					"AtRestEncryptionConfiguration": {
 						"S3EncryptionConfiguration": {
@@ -60,7 +60,8 @@ func Test_adaptSecurityConfiguration(t *testing.T) {
 					"EnableInTransitEncryption": false,
 					"EnableAtRestEncryption": true
 					}
-			  	}`, types.NewTestMetadata()),
+				}
+`, types.NewTestMetadata()),
 			},
 		},
 	}
