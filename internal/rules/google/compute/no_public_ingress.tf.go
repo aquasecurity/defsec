@@ -21,6 +21,20 @@ resource "google_compute_firewall" "allow-vms-to-some-machine" {
   source_tags = ["vms"]
   target_tags = ["some-machine"]
 }`,
+	`
+resource "google_compute_firewall" "test" {
+  name    = "gmp-validating-webhook-fw"
+  network = google_compute_network.my_vpc_name.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8443"]
+  }
+
+  target_tags   = [ "k8s-node-pool" ]
+  source_ranges = [google_container_cluster.my_cluster_name.private_cluster_config[0].master_ipv4_cidr_block]
+}
+`,
 }
 
 var terraformNoPublicIngressBadExamples = []string{

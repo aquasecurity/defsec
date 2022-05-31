@@ -196,7 +196,11 @@ func isCustomCheckRequiredForBlock(custom *scan.TerraformCustomCheck, b *terrafo
 	found = false
 	if len(custom.RequiredSources) > 0 && b.Type() == terraform.TypeModule.Name() {
 		if sourceAttr := b.GetAttribute("source"); sourceAttr.IsNotNil() {
-			sourcePath := sourceAttr.ValueAsStrings()[0]
+			values := sourceAttr.AsStringValues().AsStrings()
+			if len(values) == 0 {
+				return false
+			}
+			sourcePath := values[0]
 
 			// resolve module source path to path relative to cwd
 			if strings.HasPrefix(sourcePath, ".") {

@@ -1,7 +1,6 @@
 package authorization
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/authorization"
 	"github.com/aquasecurity/defsec/pkg/terraform"
 )
@@ -28,27 +27,16 @@ func adaptRoleDefinition(resource *terraform.Block) authorization.RoleDefinition
 
 	for _, permissionsBlock := range permissionsBlocks {
 		actionsAttr := permissionsBlock.GetAttribute("actions")
-		var actionsVal []types.StringValue
-		actions := actionsAttr.ValueAsStrings()
-		for _, action := range actions {
-			actionsVal = append(actionsVal, types.String(action, actionsAttr.GetMetadata()))
-		}
 		permissionsVal = append(permissionsVal, authorization.Permission{
 			Metadata: permissionsBlock.GetMetadata(),
-			Actions:  actionsVal,
+			Actions:  actionsAttr.AsStringValues(),
 		})
 	}
 
 	assignableScopesAttr := resource.GetAttribute("assignable_scopes")
-	var assignableScopesVal []types.StringValue
-	assignableScopes := assignableScopesAttr.ValueAsStrings()
-	for _, scope := range assignableScopes {
-		assignableScopesVal = append(assignableScopesVal, types.String(scope, assignableScopesAttr.GetMetadata()))
-	}
-
 	return authorization.RoleDefinition{
 		Metadata:         resource.GetMetadata(),
 		Permissions:      permissionsVal,
-		AssignableScopes: assignableScopesVal,
+		AssignableScopes: assignableScopesAttr.AsStringValues(),
 	}
 }

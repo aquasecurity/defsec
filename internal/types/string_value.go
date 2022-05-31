@@ -36,6 +36,8 @@ func StringExplicit(value string, m Metadata) StringValue {
 	return b
 }
 
+type StringValueList []StringValue
+
 type StringValue interface {
 	metadataProvider
 	Value() string
@@ -52,6 +54,13 @@ type StringValue interface {
 type stringValue struct {
 	BaseAttribute
 	value string
+}
+
+func (l StringValueList) AsStrings() (output []string) {
+	for _, item := range l {
+		output = append(output, item.Value())
+	}
+	return output
 }
 
 type stringCheckFunc func(string, string) bool

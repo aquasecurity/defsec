@@ -21,12 +21,12 @@ var Remote = &remoteResolver{
 
 func (r *remoteResolver) incrementCount(o Options) {
 	o.Debug("Incrementing the download counter")
-	atomic.CompareAndSwapInt32(&r.count, int32(r.count), int32(r.count+1))
+	atomic.CompareAndSwapInt32(&r.count, r.count, r.count+1)
 	o.Debug("Download counter is now %d", r.count)
 }
 
 func (r *remoteResolver) GetDownloadCount() int {
-	return int(r.count)
+	return int(atomic.LoadInt32(&r.count))
 }
 
 func (r *remoteResolver) Resolve(ctx context.Context, _ fs.FS, opt Options) (filesystem fs.FS, prefix string, downloadPath string, applies bool, err error) {

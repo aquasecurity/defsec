@@ -153,10 +153,7 @@ func adaptNetworkRule(resource *terraform.Block) storage.NetworkRule {
 
 	if resource.HasChild("bypass") {
 		bypassAttr := resource.GetAttribute("bypass")
-		bypassList := bypassAttr.ValueAsStrings()
-		for _, bypassVal := range bypassList {
-			bypass = append(bypass, types.String(bypassVal, bypassAttr.GetMetadata()))
-		}
+		bypass = bypassAttr.AsStringValues()
 	}
 
 	return storage.NetworkRule{

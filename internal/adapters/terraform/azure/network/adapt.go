@@ -124,14 +124,13 @@ func (a *adapter) adaptSource(ruleBlock *terraform.Block, rule *network.Security
 	if sourceAddressAttr := ruleBlock.GetAttribute("source_address_prefix"); sourceAddressAttr.IsString() {
 		rule.SourceAddresses = append(rule.SourceAddresses, sourceAddressAttr.AsStringValueOrDefault("", ruleBlock))
 	} else if sourceAddressPrefixesAttr := ruleBlock.GetAttribute("source_address_prefixes"); sourceAddressPrefixesAttr.IsNotNil() {
-		for _, prefix := range sourceAddressPrefixesAttr.ValueAsStrings() {
-			rule.SourceAddresses = append(rule.SourceAddresses, types.String(prefix, sourceAddressPrefixesAttr.GetMetadata()))
-		}
+		rule.SourceAddresses = append(rule.SourceAddresses, sourceAddressPrefixesAttr.AsStringValues()...)
 	}
 
 	if sourcePortRangesAttr := ruleBlock.GetAttribute("source_port_ranges"); sourcePortRangesAttr.IsNotNil() {
-		for _, value := range sourcePortRangesAttr.ValueAsStrings() {
-			rule.SourcePorts = append(rule.SourcePorts, expandRange(value, sourcePortRangesAttr.GetMetadata()))
+		ports := sourcePortRangesAttr.AsStringValues()
+		for _, value := range ports {
+			rule.SourcePorts = append(rule.SourcePorts, expandRange(value.Value(), value.GetMetadata()))
 		}
 	} else if sourcePortRangeAttr := ruleBlock.GetAttribute("source_port_range"); sourcePortRangeAttr.IsString() {
 		rule.SourcePorts = append(rule.SourcePorts, expandRange(sourcePortRangeAttr.Value().AsString(), sourcePortRangeAttr.GetMetadata()))
@@ -150,14 +149,13 @@ func (a *adapter) adaptDestination(ruleBlock *terraform.Block, rule *network.Sec
 	if destAddressAttr := ruleBlock.GetAttribute("destination_address_prefix"); destAddressAttr.IsString() {
 		rule.DestinationAddresses = append(rule.DestinationAddresses, destAddressAttr.AsStringValueOrDefault("", ruleBlock))
 	} else if destAddressPrefixesAttr := ruleBlock.GetAttribute("destination_address_prefixes"); destAddressPrefixesAttr.IsNotNil() {
-		for _, prefix := range destAddressPrefixesAttr.ValueAsStrings() {
-			rule.DestinationAddresses = append(rule.DestinationAddresses, types.String(prefix, destAddressPrefixesAttr.GetMetadata()))
-		}
+		rule.DestinationAddresses = append(rule.DestinationAddresses, destAddressPrefixesAttr.AsStringValues()...)
 	}
 
 	if destPortRangesAttr := ruleBlock.GetAttribute("destination_port_ranges"); destPortRangesAttr.IsNotNil() {
-		for _, value := range destPortRangesAttr.ValueAsStrings() {
-			rule.DestinationPorts = append(rule.DestinationPorts, expandRange(value, destPortRangesAttr.GetMetadata()))
+		ports := destPortRangesAttr.AsStringValues()
+		for _, value := range ports {
+			rule.DestinationPorts = append(rule.DestinationPorts, expandRange(value.Value(), destPortRangesAttr.GetMetadata()))
 		}
 	} else if destPortRangeAttr := ruleBlock.GetAttribute("destination_port_range"); destPortRangeAttr.IsString() {
 		rule.DestinationPorts = append(rule.DestinationPorts, expandRange(destPortRangeAttr.Value().AsString(), destPortRangeAttr.GetMetadata()))
