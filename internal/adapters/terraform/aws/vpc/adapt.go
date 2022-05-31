@@ -143,17 +143,11 @@ func adaptSGRule(resource *terraform.Block, modules terraform.Modules) vpc.Secur
 	}
 
 	if cidrBlocks.IsNotNil() {
-		cidrsList := cidrBlocks.ValueAsStrings()
-		for _, cidr := range cidrsList {
-			cidrs = append(cidrs, types.String(cidr, cidrBlocks.GetMetadata()))
-		}
+		cidrs = cidrBlocks.AsStringValues()
 	}
 
 	if ipv6cidrBlocks.IsNotNil() {
-		cidrsList := ipv6cidrBlocks.ValueAsStrings()
-		for _, cidr := range cidrsList {
-			cidrs = append(cidrs, types.String(cidr, ipv6cidrBlocks.GetMetadata()))
-		}
+		cidrs = append(cidrs, ipv6cidrBlocks.AsStringValues()...)
 	}
 
 	return vpc.SecurityGroupRule{

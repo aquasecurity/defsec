@@ -118,12 +118,7 @@ func (a *Attribute) AsStringValueSliceOrEmpty(parent *Block) (stringValues []typ
 	if a.IsNil() {
 		return stringValues
 	}
-
-	for _, v := range a.ValueAsStrings() {
-		stringValues = append(stringValues, types.String(v, a.GetMetadata()))
-	}
-
-	return stringValues
+	return a.AsStringValues()
 }
 
 func (a *Attribute) AsBoolValueOrDefault(defaultValue bool, parent *Block) types.BoolValue {
@@ -256,65 +251,113 @@ func (a *Attribute) Name() string {
 	return a.hclAttribute.Name
 }
 
-func (a *Attribute) ValueAsStrings() []string {
+func (a *Attribute) AsStringValues() types.StringValueList {
 	if a == nil {
 		return nil
 	}
-	return getStrings(a.hclAttribute.Expr, a.ctx.Inner())
+	return a.getStringValues(a.hclAttribute.Expr, a.ctx.Inner())
 }
 
 // nolint
-func getStrings(expr hcl.Expression, ctx *hcl.EvalContext) []string {
+func (a *Attribute) getStringValues(expr hcl.Expression, ctx *hcl.EvalContext) (results []types.StringValue) {
 
 	defer func() {
 		if err := recover(); err != nil {
-			_ = err
-			// TODO: _= fmt.Errorf("go-cty bug detected - failed to derive value from expression: %w", err)
+			results = []types.StringValue{types.StringUnresolvable(a.metadata)}
 		}
 	}()
 
-	var results []string
 	switch t := expr.(type) {
 	case *hclsyntax.TupleConsExpr:
 		for _, expr := range t.Exprs {
-			results = append(results, getStrings(expr, ctx)...)
+			val, err := expr.Value(a.ctx.Inner())
+			if err != nil {
+				results = append(results, types.StringUnresolvable(a.metadata))
+				continue
+			}
+			results = append(results, a.valueToString(val))
 		}
 	case *hclsyntax.FunctionCallExpr, *hclsyntax.ConditionalExpr:
 		subVal, err := t.Value(ctx)
-		if err == nil && subVal.Type() == cty.String {
-			results = append(results, subVal.AsString())
+		if err != nil {
+			return append(results, types.StringUnresolvable(a.metadata))
 		}
+		return a.valueToStrings(subVal)
 	case *hclsyntax.LiteralValueExpr:
-		if t.Val.Type() == cty.String {
-			results = append(results, t.Val.AsString())
-		}
+		return a.valueToStrings(t.Val)
 	case *hclsyntax.TemplateExpr:
 		// walk the parts of the expression to ensure that it has a literal value
 		for _, p := range t.Parts {
-			results = append(results, getStrings(p, ctx)...)
+			val, err := p.Value(a.ctx.Inner())
+			if err != nil {
+				results = append(results, types.StringUnresolvable(a.metadata))
+				continue
+			}
+			value := a.valueToString(val)
+			results = append(results, value)
 		}
 	case *hclsyntax.ScopeTraversalExpr:
 		// handle the case for referencing a data
 		if len(t.Variables()) > 0 {
 			if t.Variables()[0].RootName() == "data" {
-				results = append(results, "Data Reference")
-				return results
+				// we can't resolve data lookups at this time, so make unresolvable
+				return append(results, types.StringUnresolvable(a.metadata))
 			}
 		}
 		subVal, err := t.Value(ctx)
-		if err == nil {
-			switch subVal.Type() {
-			case cty.String:
-				results = append(results, subVal.AsString())
-			default:
-				subVal.ForEachElement(func(_, v cty.Value) bool {
-					results = append(results, v.AsString())
-					return false
-				})
-			}
+		if err != nil {
+			return append(results, types.StringUnresolvable(a.metadata))
+		}
+		return a.valueToStrings(subVal)
+	default:
+		val, err := t.Value(a.ctx.Inner())
+		if err != nil {
+			return append(results, types.StringUnresolvable(a.metadata))
+		}
+		results = a.valueToStrings(val)
+	}
+	return results
+}
+
+func (a *Attribute) valueToStrings(value cty.Value) (results []types.StringValue) {
+	defer func() {
+		if err := recover(); err != nil {
+			results = []types.StringValue{types.StringUnresolvable(a.metadata)}
+		}
+	}()
+	if value.IsNull() {
+		return nil
+	}
+	if !value.IsKnown() {
+		return []types.StringValue{types.StringUnresolvable(a.metadata)}
+	}
+	if value.Type().IsListType() || value.Type().IsTupleType() || value.Type().IsSetType() {
+		for _, val := range value.AsValueSlice() {
+			results = append(results, a.valueToString(val))
 		}
 	}
 	return results
+}
+
+func (a *Attribute) valueToString(value cty.Value) (result types.StringValue) {
+	defer func() {
+		if err := recover(); err != nil {
+			result = types.StringUnresolvable(a.metadata)
+		}
+	}()
+
+	result = types.StringUnresolvable(a.metadata)
+
+	if value.IsNull() || !value.IsKnown() {
+		return result
+	}
+
+	switch value.Type() {
+	case cty.String:
+		return types.String(value.AsString(), a.metadata)
+	default:
+		return result
+	}
 }
 
 func (a *Attribute) listContains(val cty.Value, stringToLookFor string, ignoreCase bool) bool {

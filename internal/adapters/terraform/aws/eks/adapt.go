@@ -45,9 +45,8 @@ func adaptCluster(resource *terraform.Block) eks.Cluster {
 
 	if logTypesAttr := resource.GetAttribute("enabled_cluster_log_types"); logTypesAttr.IsNotNil() {
 		cluster.Logging.Metadata = logTypesAttr.GetMetadata()
-		logTypesList := logTypesAttr.ValueAsStrings()
-		for _, logType := range logTypesList {
-			switch logType {
+		for _, logType := range logTypesAttr.AsStringValues() {
+			switch logType.Value() {
 			case "api":
 				cluster.Logging.API = types.Bool(true, logTypesAttr.GetMetadata())
 			case "audit":
@@ -79,11 +78,11 @@ func adaptCluster(resource *terraform.Block) eks.Cluster {
 		cluster.PublicAccessEnabled = publicAccessAttr.AsBoolValueOrDefault(true, vpcBlock)
 
 		publicAccessCidrsAttr := vpcBlock.GetAttribute("public_access_cidrs")
-		cidrsList := publicAccessCidrsAttr.ValueAsStrings()
-		for _, cidr := range cidrsList {
-			cluster.PublicAccessCIDRs = append(cluster.PublicAccessCIDRs, types.String(cidr, publicAccessCidrsAttr.GetMetadata()))
+		cidrList := publicAccessCidrsAttr.AsStringValues()
+		for _, cidr := range cidrList {
+			cluster.PublicAccessCIDRs = append(cluster.PublicAccessCIDRs, cidr)
 		}
-		if len(cidrsList) == 0 {
+		if len(cidrList) == 0 {
 			cluster.PublicAccessCIDRs = append(cluster.PublicAccessCIDRs, types.StringDefault("0.0.0.0/0", vpcBlock.GetMetadata()))
 		}
 	}
