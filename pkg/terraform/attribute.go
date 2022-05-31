@@ -332,10 +332,6 @@ func (a *Attribute) valueToStrings(value cty.Value) (results []types.StringValue
 		return []types.StringValue{types.StringUnresolvable(a.metadata)}
 	}
 	if value.Type().IsListType() || value.Type().IsTupleType() || value.Type().IsSetType() {
-		value.ForEachElement(func(_, v cty.Value) bool {
-			results = append(results, types.String(v.AsString(), a.metadata))
-			return false
-		})
 		for _, val := range value.AsValueSlice() {
 			results = append(results, a.valueToString(val))
 		}
