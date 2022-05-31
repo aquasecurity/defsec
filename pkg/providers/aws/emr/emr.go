@@ -26,20 +26,3 @@ type SecurityConfiguration struct {
 	Name          types.StringValue
 	Configuration types.StringValue
 }
-
-// type Conf struct {
-// 	types.Metadata
-// 	EncryptionConfiguration struct {
-// 		AtRestEncryptionConfiguration struct {
-// 			S3EncryptionConfiguration struct {
-// 				EncryptionMode string `json:"EncryptionMode"`
-// 			} `json:"S3EncryptionConfiguration"`
-// 			LocalDiskEncryptionConfiguration struct {
-// 				EncryptionKeyProviderType string `json:"EncryptionKeyProviderType"`
-// 				AwsKmsKey                 string `json:"AwsKmsKey"`
-// 			} `json:"LocalDiskEncryptionConfiguration"`
-// 		} `json:"AtRestEncryptionConfiguration"`
-// 		EnableInTransitEncryption bool `json:"EnableInTransitEncryption"`
-// 		EnableAtRestEncryption    bool `json:"EnableAtRestEncryption"`
-// 	} `json:"EncryptionConfiguration"`
-// }
