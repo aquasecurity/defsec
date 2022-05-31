@@ -34,7 +34,7 @@ func Test_adaptDroplets(t *testing.T) {
 				{
 					Metadata: types.NewTestMetadata(),
 					SSHKeys: []types.StringValue{
-						types.String("Data Reference", types.NewTestMetadata()),
+						types.String("", types.NewTestMetadata()),
 					},
 				},
 			},

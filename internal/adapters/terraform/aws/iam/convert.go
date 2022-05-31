@@ -115,19 +115,23 @@ func parseStatement(statementBlock *terraform.Block) iamgo.Statement {
 	}
 	if actionsAttr := statementBlock.GetAttribute("actions"); actionsAttr.IsIterable() {
 		r := actionsAttr.GetMetadata().Range()
-		builder.WithActions(actionsAttr.ValueAsStrings(), r.GetStartLine(), r.GetEndLine())
+		values := actionsAttr.AsStringValues().AsStrings()
+		builder.WithActions(values, r.GetStartLine(), r.GetEndLine())
 	}
 	if notActionsAttr := statementBlock.GetAttribute("not_actions"); notActionsAttr.IsIterable() {
 		r := notActionsAttr.GetMetadata().Range()
-		builder.WithNotActions(notActionsAttr.ValueAsStrings(), r.GetStartLine(), r.GetEndLine())
+		values := notActionsAttr.AsStringValues().AsStrings()
+		builder.WithNotActions(values, r.GetStartLine(), r.GetEndLine())
 	}
 	if resourcesAttr := statementBlock.GetAttribute("resources"); resourcesAttr.IsIterable() {
 		r := resourcesAttr.GetMetadata().Range()
-		builder.WithResources(resourcesAttr.ValueAsStrings(), r.GetStartLine(), r.GetEndLine())
+		values := resourcesAttr.AsStringValues().AsStrings()
+		builder.WithResources(values, r.GetStartLine(), r.GetEndLine())
 	}
 	if notResourcesAttr := statementBlock.GetAttribute("not_resources"); notResourcesAttr.IsIterable() {
 		r := notResourcesAttr.GetMetadata().Range()
-		builder.WithNotResources(notResourcesAttr.ValueAsStrings(), r.GetStartLine(), r.GetEndLine())
+		values := notResourcesAttr.AsStringValues().AsStrings()
+		builder.WithNotResources(values, r.GetStartLine(), r.GetEndLine())
 	}
 	if effectAttr := statementBlock.GetAttribute("effect"); effectAttr.IsString() {
 		r := effectAttr.GetMetadata().Range()
@@ -150,13 +154,17 @@ func parseStatement(statementBlock *terraform.Block) iamgo.Statement {
 		case "*":
 			builder.WithAllPrincipals(true, r.GetStartLine(), r.GetEndLine())
 		case "AWS":
-			builder.WithAWSPrincipals(identifiersAttr.ValueAsStrings(), r.GetStartLine(), r.GetEndLine())
+			values := identifiersAttr.AsStringValues().AsStrings()
+			builder.WithAWSPrincipals(values, r.GetStartLine(), r.GetEndLine())
 		case "Federated":
-			builder.WithFederatedPrincipals(identifiersAttr.ValueAsStrings(), r.GetStartLine(), r.GetEndLine())
+			values := identifiersAttr.AsStringValues().AsStrings()
+			builder.WithFederatedPrincipals(values, r.GetStartLine(), r.GetEndLine())
 		case "Service":
-			builder.WithServicePrincipals(identifiersAttr.ValueAsStrings(), r.GetStartLine(), r.GetEndLine())
+			values := identifiersAttr.AsStringValues().AsStrings()
+			builder.WithServicePrincipals(values, r.GetStartLine(), r.GetEndLine())
 		case "CanonicalUser":
-			builder.WithCanonicalUsersPrincipals(identifiersAttr.ValueAsStrings(), r.GetStartLine(), r.GetEndLine())
+			values := identifiersAttr.AsStringValues().AsStrings()
+			builder.WithCanonicalUsersPrincipals(values, r.GetStartLine(), r.GetEndLine())
 		}
 	}
 
@@ -170,7 +178,8 @@ func parseStatement(statementBlock *terraform.Block) iamgo.Statement {
 			continue
 		}
 		valuesAttr := conditionBlock.GetAttribute("values")
-		if valuesAttr.IsNil() || len(valuesAttr.ValueAsStrings()) == 0 {
+		values := valuesAttr.AsStringValues().AsStrings()
+		if valuesAttr.IsNil() || len(values) == 0 {
 			continue
 		}
 
@@ -179,7 +188,7 @@ func parseStatement(statementBlock *terraform.Block) iamgo.Statement {
 		builder.WithCondition(
 			testAttr.Value().AsString(),
 			variableAttr.Value().AsString(),
-			valuesAttr.ValueAsStrings(),
+			values,
 			r.GetStartLine(),
 			r.GetEndLine(),
 		)

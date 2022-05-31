@@ -90,6 +90,10 @@ func (m Metadata) IsDefault() bool {
 	return m.isDefault
 }
 
+func (m Metadata) IsResolvable() bool {
+	return !m.isUnresolvable
+}
+
 func (m Metadata) IsExplicit() bool {
 	return m.isExplicit
 }

@@ -136,8 +136,9 @@ func adaptFirewallRule(firewall *compute.Firewall, firewallBlock, ruleBlock *ter
 	portsAttr := ruleBlock.GetAttribute("ports")
 
 	var ports []types.IntValue
-	for _, portStr := range portsAttr.ValueAsStrings() {
-		ports = append(ports, expandRange(portStr, portsAttr)...)
+	rawPorts := portsAttr.AsStringValues()
+	for _, portStr := range rawPorts {
+		ports = append(ports, expandRange(portStr.Value(), portsAttr)...)
 	}
 
 	// ingress by default
@@ -164,9 +165,7 @@ func adaptFirewallRule(firewall *compute.Firewall, firewallBlock, ruleBlock *ter
 	if isEgress {
 		var destinations []types.StringValue
 		if destinationAttr := firewallBlock.GetAttribute("destination_ranges"); destinationAttr.IsNotNil() {
-			for _, destination := range destinationAttr.ValueAsStrings() {
-				destinations = append(destinations, types.String(destination, destinationAttr.GetMetadata()))
-			}
+			destinations = append(destinations, destinationAttr.AsStringValues()...)
 		}
 		if len(destinations) == 0 {
 			destinations = append(destinations, types.StringDefault("0.0.0.0/0", firewallBlock.GetMetadata()))
@@ -179,9 +178,7 @@ func adaptFirewallRule(firewall *compute.Firewall, firewallBlock, ruleBlock *ter
 	} else {
 		var sources []types.StringValue
 		if sourceAttr := firewallBlock.GetAttribute("source_ranges"); sourceAttr.IsNotNil() {
-			for _, source := range sourceAttr.ValueAsStrings() {
-				sources = append(sources, types.String(source, sourceAttr.GetMetadata()))
-			}
+			sources = append(sources, sourceAttr.AsStringValues()...)
 		}
 		if len(sources) == 0 {
 			sources = append(sources, types.StringDefault("0.0.0.0/0", firewallBlock.GetMetadata()))

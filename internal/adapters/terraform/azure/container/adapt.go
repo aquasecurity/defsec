@@ -57,10 +57,7 @@ func adaptCluster(resource *terraform.Block) container.KubernetesCluster {
 	cluster.EnablePrivateCluster = privateClusterEnabledAttr.AsBoolValueOrDefault(false, resource)
 
 	apiServerAuthorizedIPRangesAttr := resource.GetAttribute("api_server_authorized_ip_ranges")
-	ips := apiServerAuthorizedIPRangesAttr.ValueAsStrings()
-	for _, ip := range ips {
-		cluster.APIServerAuthorizedIPRanges = append(cluster.APIServerAuthorizedIPRanges, types.String(ip, apiServerAuthorizedIPRangesAttr.GetMetadata()))
-	}
+	cluster.APIServerAuthorizedIPRanges = apiServerAuthorizedIPRangesAttr.AsStringValues()
 
 	addonProfileBlock := resource.GetBlock("addon_profile")
 	if addonProfileBlock.IsNotNil() {

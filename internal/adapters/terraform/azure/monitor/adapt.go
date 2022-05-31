@@ -45,15 +45,11 @@ func adaptLogProfile(resource *terraform.Block) monitor.LogProfile {
 	}
 
 	if categoriesAttr := resource.GetAttribute("categories"); categoriesAttr.IsNotNil() {
-		for _, category := range categoriesAttr.ValueAsStrings() {
-			logProfile.Categories = append(logProfile.Categories, types.String(category, categoriesAttr.GetMetadata()))
-		}
+		logProfile.Categories = categoriesAttr.AsStringValues()
 	}
 
 	if locationsAttr := resource.GetAttribute("locations"); locationsAttr.IsNotNil() {
-		for _, location := range locationsAttr.ValueAsStrings() {
-			logProfile.Locations = append(logProfile.Locations, types.String(location, locationsAttr.GetMetadata()))
-		}
+		logProfile.Locations = locationsAttr.AsStringValues()
 	}
 
 	return logProfile

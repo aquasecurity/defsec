@@ -296,9 +296,7 @@ func adaptMasterAuthNetworksAsBlocks(parent *terraform.Block, blocks terraform.B
 	for _, block := range blocks {
 		for _, cidrBlock := range block.GetBlocks("cidr_blocks") {
 			if cidrAttr := cidrBlock.GetAttribute("cidr_block"); cidrAttr.IsNotNil() {
-				for _, cidr := range cidrAttr.ValueAsStrings() {
-					cidrs = append(cidrs, types.String(cidr, cidrAttr.GetMetadata()))
-				}
+				cidrs = append(cidrs, cidrAttr.AsStringValues()...)
 			}
 		}
 	}

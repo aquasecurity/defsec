@@ -112,10 +112,7 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 			}
 
 			if scopesAttr := instanceBlock.GetBlock("service_account").GetAttribute("scopes"); scopesAttr.IsNotNil() {
-				scopes := scopesAttr.ValueAsStrings()
-				for _, sc := range scopes {
-					instance.ServiceAccount.Scopes = append(instance.ServiceAccount.Scopes, types.String(sc, scopesAttr.GetMetadata()))
-				}
+				instance.ServiceAccount.Scopes = append(instance.ServiceAccount.Scopes, scopesAttr.AsStringValues()...)
 			}
 		}
 

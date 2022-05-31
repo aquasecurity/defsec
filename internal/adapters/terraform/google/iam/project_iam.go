@@ -119,7 +119,8 @@ func AdaptBinding(iamBlock *terraform.Block, modules terraform.Modules) iam.Bind
 		IncludesDefaultServiceAccount: types.BoolDefault(false, iamBlock.GetMetadata()),
 	}
 	membersAttr := iamBlock.GetAttribute("members")
-	for _, member := range membersAttr.ValueAsStrings() {
+	members := membersAttr.AsStringValues().AsStrings()
+	for _, member := range members {
 		binding.Members = append(binding.Members, types.String(member, membersAttr.GetMetadata()))
 	}
 	if referencedBlock, err := modules.GetReferencedBlock(membersAttr, iamBlock); err == nil {
