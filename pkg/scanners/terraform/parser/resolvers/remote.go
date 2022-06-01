@@ -38,16 +38,18 @@ func (r *remoteResolver) Resolve(ctx context.Context, _ fs.FS, opt Options) (fil
 		return nil, "", "", false, nil
 	}
 
-	key := cacheKey(opt.OriginalSource, opt.OriginalVersion)
+	key := cacheKey(opt.OriginalSource, opt.OriginalVersion, opt.RelativePath)
 	opt.Debug("Storing with cache key %s", key)
-	cacheDir := filepath.Join(cacheDir(), key)
+
+	cacheDir := filepath.Join(locateCacheDir(), key)
 	if err := r.download(ctx, opt, cacheDir); err != nil {
 		return nil, "", "", true, err
 	}
+
 	r.incrementCount(opt)
 	opt.Debug("Successfully downloaded %s from %s", opt.Name, opt.Source)
 	opt.Debug("Module '%s' resolved via remote download.", opt.Name)
-	return os.DirFS(cacheDir), opt.Source, ".", true, nil
+	return os.DirFS(cacheDir), opt.Source, filepath.Join(".", opt.RelativePath), true, nil
 }
 
 func (r *remoteResolver) download(ctx context.Context, opt Options, dst string) error {
