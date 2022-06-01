@@ -68,7 +68,7 @@ func ResolveIntrinsicFunc(property *Property) (*Property, bool) {
 		return nil, false
 	}
 	if !property.IsMap() {
-		return property, true
+		return property, false
 	}
 
 	for funcName := range property.AsMap() {

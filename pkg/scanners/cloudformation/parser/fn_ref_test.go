@@ -60,8 +60,9 @@ func Test_property_value_correct_when_not_reference(t *testing.T) {
 		},
 	}
 
+	// should fail when trying to resolve function that is not in fact a function
 	resolvedProperty, success := ResolveIntrinsicFunc(property)
-	require.True(t, success)
+	require.False(t, success)
 
 	assert.Equal(t, "someBucketName", resolvedProperty.AsString())
 }
