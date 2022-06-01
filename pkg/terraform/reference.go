@@ -138,6 +138,9 @@ func (r *Reference) SetKey(key cty.Value) {
 	r.key = key
 }
 func (r *Reference) KeyBracketed() string {
+	if r.key.IsNull() || !r.key.IsKnown() {
+		return ""
+	}
 	switch r.key.Type() {
 	case cty.Number:
 		f := r.key.AsBigFloat()
