@@ -5,7 +5,11 @@ var terraformEnableQueueEncryptionGoodExamples = []string{
  resource "aws_sqs_queue" "good_example" {
  	kms_master_key_id = "/blah"
  }
- `,
+ `, `
+resource "aws_sqs_queue" "terraform_queue" {
+   name                    = "terraform-example-queue"
+   sqs_managed_sse_enabled = true
+}`,
 }
 
 var terraformEnableQueueEncryptionBadExamples = []string{

@@ -40,10 +40,10 @@ var CheckEnableQueueEncryption = rules.Register(
 			if queue.IsUnmanaged() {
 				continue
 			}
-			if queue.Encryption.KMSKeyID.IsEmpty() {
+			if queue.Encryption.KMSKeyID.IsEmpty() && queue.Encryption.ManagedEncryption.IsFalse() {
 				results.Add(
 					"Queue is not encrypted",
-					queue.Encryption.KMSKeyID,
+					queue.Encryption,
 				)
 			} else {
 				results.AddPassed(&queue)

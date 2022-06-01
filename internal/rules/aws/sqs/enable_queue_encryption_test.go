@@ -26,8 +26,9 @@ func TestCheckEnableQueueEncryption(t *testing.T) {
 					{
 						Metadata: types.NewTestMetadata(),
 						Encryption: sqs.Encryption{
-							Metadata: types.NewTestMetadata(),
-							KMSKeyID: types.String("", types.NewTestMetadata()),
+							Metadata:          types.NewTestMetadata(),
+							ManagedEncryption: types.Bool(false, types.NewTestMetadata()),
+							KMSKeyID:          types.String("", types.NewTestMetadata()),
 						},
 					},
 				},
@@ -41,8 +42,9 @@ func TestCheckEnableQueueEncryption(t *testing.T) {
 					{
 						Metadata: types.NewTestMetadata(),
 						Encryption: sqs.Encryption{
-							Metadata: types.NewTestMetadata(),
-							KMSKeyID: types.String("alias/aws/sqs", types.NewTestMetadata()),
+							Metadata:          types.NewTestMetadata(),
+							ManagedEncryption: types.Bool(false, types.NewTestMetadata()),
+							KMSKeyID:          types.String("alias/aws/sqs", types.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,8 +58,25 @@ func TestCheckEnableQueueEncryption(t *testing.T) {
 					{
 						Metadata: types.NewTestMetadata(),
 						Encryption: sqs.Encryption{
-							Metadata: types.NewTestMetadata(),
-							KMSKeyID: types.String("some-ok-key", types.NewTestMetadata()),
+							Metadata:          types.NewTestMetadata(),
+							ManagedEncryption: types.Bool(false, types.NewTestMetadata()),
+							KMSKeyID:          types.String("some-ok-key", types.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "SQS Queue encrypted with proper key",
+			input: sqs.SQS{
+				Queues: []sqs.Queue{
+					{
+						Metadata: types.NewTestMetadata(),
+						Encryption: sqs.Encryption{
+							Metadata:          types.NewTestMetadata(),
+							ManagedEncryption: types.Bool(true, types.NewTestMetadata()),
+							KMSKeyID:          types.String("", types.NewTestMetadata()),
 						},
 					},
 				},

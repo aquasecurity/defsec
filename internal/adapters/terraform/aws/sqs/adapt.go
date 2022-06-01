@@ -68,8 +68,9 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 		a.queues[uuid.NewString()] = sqs.Queue{
 			Metadata: types.NewUnmanagedMetadata(),
 			Encryption: sqs.Encryption{
-				Metadata: types.NewUnmanagedMetadata(),
-				KMSKeyID: types.StringDefault("", types.NewUnmanagedMetadata()),
+				Metadata:          types.NewUnmanagedMetadata(),
+				ManagedEncryption: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				KMSKeyID:          types.StringDefault("", types.NewUnmanagedMetadata()),
 			},
 			Policies: []iamp.Policy{policy},
 		}
@@ -86,6 +87,7 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 
 	kmsKeyIdAttr := resource.GetAttribute("kms_master_key_id")
 	kmsKeyIdVal := kmsKeyIdAttr.AsStringValueOrDefault("", resource)
+	managedEncryption := resource.GetAttribute("sqs_managed_sse_enabled")
 
 	var policies []iamp.Policy
 	if attr := resource.GetAttribute("policy"); attr.IsString() {
@@ -117,8 +119,9 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 	a.queues[resource.ID()] = sqs.Queue{
 		Metadata: resource.GetMetadata(),
 		Encryption: sqs.Encryption{
-			Metadata: resource.GetMetadata(),
-			KMSKeyID: kmsKeyIdVal,
+			Metadata:          resource.GetMetadata(),
+			ManagedEncryption: managedEncryption.AsBoolValueOrDefault(false, resource),
+			KMSKeyID:          kmsKeyIdVal,
 		},
 		Policies: policies,
 	}
