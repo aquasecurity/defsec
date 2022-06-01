@@ -20,6 +20,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticache"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elb"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/emr"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/kinesis"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/kms"
@@ -58,6 +59,7 @@ type AWS struct {
 	ElastiCache   elasticache.ElastiCache
 	Elasticsearch elasticsearch.Elasticsearch
 	ELB           elb.ELB
+	EMR           emr.EMR
 	IAM           iam.IAM
 	Kinesis       kinesis.Kinesis
 	KMS           kms.KMS

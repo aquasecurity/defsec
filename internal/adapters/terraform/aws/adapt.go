@@ -20,6 +20,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/elasticache"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/elb"
+	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/emr"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/iam"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/kinesis"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/kms"
@@ -60,6 +61,7 @@ func Adapt(modules terraform.Modules) aws.AWS {
 		ElastiCache:   elasticache.Adapt(modules),
 		Elasticsearch: elasticsearch.Adapt(modules),
 		ELB:           elb.Adapt(modules),
+		EMR:           emr.Adapt(modules),
 		IAM:           iam.Adapt(modules),
 		Kinesis:       kinesis.Adapt(modules),
 		KMS:           kms.Adapt(modules),
