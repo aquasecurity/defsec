@@ -505,7 +505,7 @@ resource "something" "this" {
 }
 	
 resource "bad" "thing" {
-	secure = something.this.blah.ok
+	secure = something.this.blah[0].ok
 }
 `})
 

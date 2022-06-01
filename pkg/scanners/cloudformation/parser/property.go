@@ -157,7 +157,13 @@ func (p *Property) resolveValue() (*Property, bool) {
 		return p, true
 	}
 
-	return ResolveIntrinsicFunc(p)
+	resolved, ok := ResolveIntrinsicFunc(p)
+	if ok {
+		return resolved, true
+	}
+
+	p.unresolved = true
+	return p, false
 }
 
 func (p *Property) GetStringProperty(path string, defaultValue ...string) types.StringValue {
