@@ -1,4 +1,4 @@
-package appshield.dockerfile.DS014
+package builtin.dockerfile.DS014
 
 import data.lib.docker
 

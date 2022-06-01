@@ -152,6 +152,6 @@ func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (scan.Re
 	if err != nil {
 		return nil, err
 	}
-	results.SetSourceAndFilesystem("", target)
+	results.SetSourceAndFilesystem("", target, false)
 	return results, nil
 }

@@ -13,7 +13,7 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 
 		instance := compute.Instance{
 			Metadata: instanceBlock.GetMetadata(),
-			Name:     types.StringDefault("", instanceBlock.GetMetadata()),
+			Name:     instanceBlock.GetAttribute("name").AsStringValueOrDefault("", instanceBlock),
 			ShieldedVM: compute.ShieldedVMConfig{
 				Metadata:                   instanceBlock.GetMetadata(),
 				SecureBootEnabled:          types.BoolDefault(false, instanceBlock.GetMetadata()),
@@ -79,7 +79,7 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 		for _, diskBlock := range instanceBlock.GetBlocks("boot_disk") {
 			disk := compute.Disk{
 				Metadata: diskBlock.GetMetadata(),
-				Name:     types.StringDefault("", diskBlock.GetMetadata()),
+				Name:     diskBlock.GetAttribute("device_name").AsStringValueOrDefault("", diskBlock),
 				Encryption: compute.DiskEncryption{
 					Metadata:   diskBlock.GetMetadata(),
 					RawKey:     diskBlock.GetAttribute("disk_encryption_key_raw").AsBytesValueOrDefault(nil, diskBlock),
@@ -91,7 +91,7 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 		for _, diskBlock := range instanceBlock.GetBlocks("attached_disk") {
 			disk := compute.Disk{
 				Metadata: diskBlock.GetMetadata(),
-				Name:     types.StringDefault("", diskBlock.GetMetadata()),
+				Name:     diskBlock.GetAttribute("device_name").AsStringValueOrDefault("", diskBlock),
 				Encryption: compute.DiskEncryption{
 					Metadata:   diskBlock.GetMetadata(),
 					RawKey:     diskBlock.GetAttribute("disk_encryption_key_raw").AsBytesValueOrDefault(nil, diskBlock),
@@ -99,6 +99,21 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 				},
 			}
 			instance.AttachedDisks = append(instance.AttachedDisks, disk)
+		}
+
+		if instanceBlock.GetBlock("service_account").IsNotNil() {
+			emailAttr := instanceBlock.GetBlock("service_account").GetAttribute("email")
+			instance.ServiceAccount.Email = emailAttr.AsStringValueOrDefault("", instanceBlock)
+
+			if emailAttr.IsResourceBlockReference("google_service_account") {
+				if accBlock, err := modules.GetReferencedBlock(emailAttr, instanceBlock); err == nil {
+					instance.ServiceAccount.Email = types.String(accBlock.FullName(), emailAttr.GetMetadata())
+				}
+			}
+
+			if scopesAttr := instanceBlock.GetBlock("service_account").GetAttribute("scopes"); scopesAttr.IsNotNil() {
+				instance.ServiceAccount.Scopes = append(instance.ServiceAccount.Scopes, scopesAttr.AsStringValues()...)
+			}
 		}
 
 		instances = append(instances, instance)

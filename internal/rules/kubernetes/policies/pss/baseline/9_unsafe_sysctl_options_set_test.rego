@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV026
+package builtin.kubernetes.KSV026
 
 test_sysctls_restricted_property_denied {
 	r := deny with input as {

@@ -243,3 +243,321 @@ output "mod_result" {
 	require.Equal(t, cty.String, childValAttr.Type())
 	assert.Equal(t, "ok", childValAttr.Value().AsString())
 }
+
+func Test_UndefinedModuleOutputReference(t *testing.T) {
+
+	fs := testutil.CreateFS(t, map[string]string{
+		"code/test.tf": `
+resource "something" "blah" {
+	value = module.x.y
+}
+`,
+	})
+
+	parser := New(fs, "", OptionStopOnHCLError(true))
+	if err := parser.ParseFS(context.TODO(), "code"); err != nil {
+		t.Fatal(err)
+	}
+	modules, _, err := parser.EvaluateAll(context.TODO())
+	if err != nil {
+		t.Fatal(err)
+	}
+	require.Len(t, modules, 1)
+	rootModule := modules[0]
+
+	blocks := rootModule.GetResourcesByType("something")
+	require.Len(t, blocks, 1)
+	block := blocks[0]
+
+	attr := block.GetAttribute("value")
+	require.NotNil(t, attr)
+
+	assert.Equal(t, false, attr.IsResolvable())
+}
+
+func Test_UndefinedModuleOutputReferenceInSlice(t *testing.T) {
+
+	fs := testutil.CreateFS(t, map[string]string{
+		"code/test.tf": `
+resource "something" "blah" {
+	value = ["first", module.x.y, "last"]
+}
+`,
+	})
+
+	parser := New(fs, "", OptionStopOnHCLError(true))
+	if err := parser.ParseFS(context.TODO(), "code"); err != nil {
+		t.Fatal(err)
+	}
+	modules, _, err := parser.EvaluateAll(context.TODO())
+	if err != nil {
+		t.Fatal(err)
+	}
+	require.Len(t, modules, 1)
+	rootModule := modules[0]
+
+	blocks := rootModule.GetResourcesByType("something")
+	require.Len(t, blocks, 1)
+	block := blocks[0]
+
+	attr := block.GetAttribute("value")
+	require.NotNil(t, attr)
+
+	assert.Equal(t, true, attr.IsResolvable())
+
+	values := attr.AsStringValueSliceOrEmpty(block)
+	require.Len(t, values, 3)
+
+	assert.Equal(t, "first", values[0].Value())
+	assert.Equal(t, true, values[0].GetMetadata().IsResolvable())
+
+	assert.Equal(t, false, values[1].GetMetadata().IsResolvable())
+
+	assert.Equal(t, "last", values[2].Value())
+	assert.Equal(t, true, values[2].GetMetadata().IsResolvable())
+}
+
+func Test_TemplatedSliceValue(t *testing.T) {
+
+	fs := testutil.CreateFS(t, map[string]string{
+		"code/test.tf": `
+
+variable "x" {
+	default = "hello"
+}
+
+resource "something" "blah" {
+	value = ["first", "${var.x}-${var.x}", "last"]
+}
+`,
+	})
+
+	parser := New(fs, "", OptionStopOnHCLError(true))
+	if err := parser.ParseFS(context.TODO(), "code"); err != nil {
+		t.Fatal(err)
+	}
+	modules, _, err := parser.EvaluateAll(context.TODO())
+	if err != nil {
+		t.Fatal(err)
+	}
+	require.Len(t, modules, 1)
+	rootModule := modules[0]
+
+	blocks := rootModule.GetResourcesByType("something")
+	require.Len(t, blocks, 1)
+	block := blocks[0]
+
+	attr := block.GetAttribute("value")
+	require.NotNil(t, attr)
+
+	assert.Equal(t, true, attr.IsResolvable())
+
+	values := attr.AsStringValueSliceOrEmpty(block)
+	require.Len(t, values, 3)
+
+	assert.Equal(t, "first", values[0].Value())
+	assert.Equal(t, true, values[0].GetMetadata().IsResolvable())
+
+	assert.Equal(t, "hello-hello", values[1].Value())
+	assert.Equal(t, true, values[1].GetMetadata().IsResolvable())
+
+	assert.Equal(t, "last", values[2].Value())
+	assert.Equal(t, true, values[2].GetMetadata().IsResolvable())
+}
+
+func Test_SliceOfVars(t *testing.T) {
+
+	fs := testutil.CreateFS(t, map[string]string{
+		"code/test.tf": `
+
+variable "x" {
+	default = "1"
+}
+
+variable "y" {
+	default = "2"
+}
+
+resource "something" "blah" {
+	value = [var.x, var.y]
+}
+`,
+	})
+
+	parser := New(fs, "", OptionStopOnHCLError(true))
+	if err := parser.ParseFS(context.TODO(), "code"); err != nil {
+		t.Fatal(err)
+	}
+	modules, _, err := parser.EvaluateAll(context.TODO())
+	if err != nil {
+		t.Fatal(err)
+	}
+	require.Len(t, modules, 1)
+	rootModule := modules[0]
+
+	blocks := rootModule.GetResourcesByType("something")
+	require.Len(t, blocks, 1)
+	block := blocks[0]
+
+	attr := block.GetAttribute("value")
+	require.NotNil(t, attr)
+
+	assert.Equal(t, true, attr.IsResolvable())
+
+	values := attr.AsStringValueSliceOrEmpty(block)
+	require.Len(t, values, 2)
+
+	assert.Equal(t, "1", values[0].Value())
+	assert.Equal(t, true, values[0].GetMetadata().IsResolvable())
+
+	assert.Equal(t, "2", values[1].Value())
+	assert.Equal(t, true, values[1].GetMetadata().IsResolvable())
+}
+
+func Test_VarSlice(t *testing.T) {
+
+	fs := testutil.CreateFS(t, map[string]string{
+		"code/test.tf": `
+
+variable "x" {
+	default = ["a", "b", "c"]
+}
+
+resource "something" "blah" {
+	value = var.x
+}
+`,
+	})
+
+	parser := New(fs, "", OptionStopOnHCLError(true))
+	if err := parser.ParseFS(context.TODO(), "code"); err != nil {
+		t.Fatal(err)
+	}
+	modules, _, err := parser.EvaluateAll(context.TODO())
+	if err != nil {
+		t.Fatal(err)
+	}
+	require.Len(t, modules, 1)
+	rootModule := modules[0]
+
+	blocks := rootModule.GetResourcesByType("something")
+	require.Len(t, blocks, 1)
+	block := blocks[0]
+
+	attr := block.GetAttribute("value")
+	require.NotNil(t, attr)
+
+	assert.Equal(t, true, attr.IsResolvable())
+
+	values := attr.AsStringValueSliceOrEmpty(block)
+	require.Len(t, values, 3)
+
+	assert.Equal(t, "a", values[0].Value())
+	assert.Equal(t, true, values[0].GetMetadata().IsResolvable())
+
+	assert.Equal(t, "b", values[1].Value())
+	assert.Equal(t, true, values[1].GetMetadata().IsResolvable())
+
+	assert.Equal(t, "c", values[2].Value())
+	assert.Equal(t, true, values[2].GetMetadata().IsResolvable())
+}
+
+func Test_LocalSliceNested(t *testing.T) {
+
+	fs := testutil.CreateFS(t, map[string]string{
+		"code/test.tf": `
+
+variable "x" {
+	default = "a"
+}
+
+locals {
+	y = [var.x, "b", "c"]
+}
+
+resource "something" "blah" {
+	value = local.y
+}
+`,
+	})
+
+	parser := New(fs, "", OptionStopOnHCLError(true))
+	if err := parser.ParseFS(context.TODO(), "code"); err != nil {
+		t.Fatal(err)
+	}
+	modules, _, err := parser.EvaluateAll(context.TODO())
+	if err != nil {
+		t.Fatal(err)
+	}
+	require.Len(t, modules, 1)
+	rootModule := modules[0]
+
+	blocks := rootModule.GetResourcesByType("something")
+	require.Len(t, blocks, 1)
+	block := blocks[0]
+
+	attr := block.GetAttribute("value")
+	require.NotNil(t, attr)
+
+	assert.Equal(t, true, attr.IsResolvable())
+
+	values := attr.AsStringValueSliceOrEmpty(block)
+	require.Len(t, values, 3)
+
+	assert.Equal(t, "a", values[0].Value())
+	assert.Equal(t, true, values[0].GetMetadata().IsResolvable())
+
+	assert.Equal(t, "b", values[1].Value())
+	assert.Equal(t, true, values[1].GetMetadata().IsResolvable())
+
+	assert.Equal(t, "c", values[2].Value())
+	assert.Equal(t, true, values[2].GetMetadata().IsResolvable())
+}
+
+func Test_FunctionCall(t *testing.T) {
+
+	fs := testutil.CreateFS(t, map[string]string{
+		"code/test.tf": `
+
+variable "x" {
+	default = ["a", "b"]
+}
+
+resource "something" "blah" {
+	value = concat(var.x, ["c"])
+}
+`,
+	})
+
+	parser := New(fs, "", OptionStopOnHCLError(true))
+	if err := parser.ParseFS(context.TODO(), "code"); err != nil {
+		t.Fatal(err)
+	}
+	modules, _, err := parser.EvaluateAll(context.TODO())
+	if err != nil {
+		t.Fatal(err)
+	}
+	require.Len(t, modules, 1)
+	rootModule := modules[0]
+
+	blocks := rootModule.GetResourcesByType("something")
+	require.Len(t, blocks, 1)
+	block := blocks[0]
+
+	attr := block.GetAttribute("value")
+	require.NotNil(t, attr)
+
+	assert.Equal(t, true, attr.IsResolvable())
+
+	values := attr.AsStringValueSliceOrEmpty(block)
+	require.Len(t, values, 3)
+
+	assert.Equal(t, "a", values[0].Value())
+	assert.Equal(t, true, values[0].GetMetadata().IsResolvable())
+
+	assert.Equal(t, "b", values[1].Value())
+	assert.Equal(t, true, values[1].GetMetadata().IsResolvable())
+
+	assert.Equal(t, "c", values[2].Value())
+	assert.Equal(t, true, values[2].GetMetadata().IsResolvable())
+}

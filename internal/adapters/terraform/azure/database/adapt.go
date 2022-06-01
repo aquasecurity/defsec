@@ -396,28 +396,17 @@ func adaptPostgreSQLConfig(resource *terraform.Block, configBlocks []*terraform.
 }
 
 func adaptMSSQLSecurityAlertPolicy(resource *terraform.Block) database.SecurityAlertPolicy {
-	var emailAddressesVal []types.StringValue
-	var disabledAlertsVal []types.StringValue
 
 	emailAddressesAttr := resource.GetAttribute("email_addresses")
-	emailAddresses := emailAddressesAttr.ValueAsStrings()
-	for _, email := range emailAddresses {
-		emailAddressesVal = append(emailAddressesVal, types.String(email, emailAddressesAttr.GetMetadata()))
-	}
-
 	disabledAlertsAttr := resource.GetAttribute("disabled_alerts")
-	disabledAlerts := disabledAlertsAttr.ValueAsStrings()
-	for _, alert := range disabledAlerts {
-		disabledAlertsVal = append(disabledAlertsVal, types.String(alert, disabledAlertsAttr.GetMetadata()))
-	}
 
 	emailAccountAdminsAttr := resource.GetAttribute("email_account_admins")
 	emailAccountAdminsVal := emailAccountAdminsAttr.AsBoolValueOrDefault(false, resource)
 
 	return database.SecurityAlertPolicy{
 		Metadata:           resource.GetMetadata(),
-		EmailAddresses:     emailAddressesVal,
-		DisabledAlerts:     disabledAlertsVal,
+		EmailAddresses:     emailAddressesAttr.AsStringValues(),
+		DisabledAlerts:     disabledAlertsAttr.AsStringValues(),
 		EmailAccountAdmins: emailAccountAdminsVal,
 	}
 }

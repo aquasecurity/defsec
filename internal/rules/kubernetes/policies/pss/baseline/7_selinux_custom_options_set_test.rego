@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV025
+package builtin.kubernetes.KSV025
 
 test_pod_invalid_selinux_type_denied {
 	r := deny with input as {

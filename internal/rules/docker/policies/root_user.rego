@@ -1,11 +1,11 @@
-package appshield.dockerfile.DS002
+package builtin.dockerfile.DS002
 
 import data.lib.docker
 
 __rego_metadata__ := {
 	"id": "DS002",
 	"avd_id": "AVD-DS-0002",
-	"title": "root user",
+	"title": "Image user should not be 'root'",
 	"short_code": "least-privilege-user",
 	"severity": "HIGH",
 	"type": "Dockerfile Security Check",
@@ -33,12 +33,10 @@ fail_user_count {
 
 # fail_last_user_root is true if the last USER command
 # value is "root"
-fail_last_user_root[last] {
-	stage_users := docker.stage_user[_]
-	len := count(stage_users)
-	last := stage_users[len - 1]
-	user := last.Value[0]
-	user == "root"
+fail_last_user_root[lastUser] {
+	users := [user | user := docker.user[_]; true]
+	lastUser := users[count(users) - 1]
+	lastUser.Value[0] == "root"
 }
 
 deny[res] {

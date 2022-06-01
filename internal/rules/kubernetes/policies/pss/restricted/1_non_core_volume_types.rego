@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV028
+package builtin.kubernetes.KSV028
 
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 __rego_metadata__ := {
@@ -63,14 +64,6 @@ failVolumeTypes {
 
 deny[res] {
 	failVolumeTypes
-
 	msg := kubernetes.format(sprintf("%s '%s' should set 'spec.volumes[*]' to type 'PersistentVolumeClaim'", [kubernetes.kind, kubernetes.name]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res := result.new(msg, input.spec)
 }

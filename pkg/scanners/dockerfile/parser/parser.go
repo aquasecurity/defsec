@@ -95,8 +95,7 @@ func (p *Parser) parse(path string, r io.Reader) (*dockerfile.Dockerfile, error)
 	}
 
 	var parsedFile dockerfile.Dockerfile
-	parsedFile.Stages = make(map[string][]dockerfile.Command)
-
+	var stage dockerfile.Stage
 	var stageIndex int
 	fromValue := "args"
 	for _, child := range parsed.AST.Children {
@@ -108,10 +107,16 @@ func (p *Parser) parse(path string, r io.Reader) (*dockerfile.Dockerfile, error)
 		}
 
 		if _, ok := instr.(*instructions.Stage); ok {
+			if len(stage.Commands) > 0 {
+				parsedFile.Stages = append(parsedFile.Stages, stage)
+			}
 			if fromValue != "args" {
 				stageIndex++
 			}
 			fromValue = strings.TrimSpace(strings.TrimPrefix(child.Original, "FROM "))
+			stage = dockerfile.Stage{
+				Name: fromValue,
+			}
 		}
 
 		cmd := dockerfile.Command{
@@ -134,8 +139,11 @@ func (p *Parser) parse(path string, r io.Reader) (*dockerfile.Dockerfile, error)
 			cmd.Value = append(cmd.Value, n.Value)
 		}
 
-		parsedFile.Stages[fromValue] = append(parsedFile.Stages[fromValue], cmd)
+		stage.Commands = append(stage.Commands, cmd)
 
+	}
+	if len(stage.Commands) > 0 {
+		parsedFile.Stages = append(parsedFile.Stages, stage)
 	}
 
 	return &parsedFile, nil

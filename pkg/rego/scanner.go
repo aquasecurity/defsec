@@ -9,13 +9,14 @@ import (
 	"io/fs"
 	"strings"
 
+	"github.com/open-policy-agent/opa/ast"
+	"github.com/open-policy-agent/opa/rego"
+	"github.com/open-policy-agent/opa/storage"
+
 	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
-	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/rego"
-	"github.com/open-policy-agent/opa/storage"
 )
 
 var _ options.ConfigurableScanner = (*Scanner)(nil)
@@ -36,6 +37,16 @@ type Scanner struct {
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
 	// handled externally
+}
+func (s *Scanner) trace(heading string, input interface{}) {
+	if s.traceWriter == nil {
+		return
+	}
+	data, err := json.MarshalIndent(input, "", "  ")
+	if err != nil {
+		return
+	}
+	_, _ = fmt.Fprintf(s.traceWriter, "REGO %[1]s:\n%s\nEND REGO %[1]s\n\n", heading, string(data))
 }
 
 func (s *Scanner) SetPolicyFilesystem(fs fs.FS) {
@@ -87,6 +98,7 @@ type DynamicMetadata struct {
 func NewScanner(options ...options.ScannerOption) *Scanner {
 	s := &Scanner{
 		ruleNamespaces: map[string]struct{}{
+			"builtin":   {},
 			"appshield": {},
 			"defsec":    {},
 		},
@@ -196,9 +208,15 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 			continue
 		}
 
+		usedRules := make(map[string]struct{})
+
 		// all rules
 		for _, rule := range module.Rules {
 			ruleName := rule.Head.Name.String()
+			if _, ok := usedRules[ruleName]; ok {
+				continue
+			}
+			usedRules[ruleName] = struct{}{}
 			if isEnforcedRule(ruleName) {
 				ruleResults, err := s.applyRule(ctx, namespace, ruleName, filteredInputs, staticMeta.InputOptions.Combined)
 				if err != nil {
@@ -213,30 +231,19 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 	return results, nil
 }
 
-func (s *Scanner) traceInput(input interface{}) {
-	if s.traceWriter == nil {
-		return
-	}
-	data, err := json.MarshalIndent(input, "", "  ")
-	if err != nil {
-		return
-	}
-	_, _ = fmt.Fprintf(s.traceWriter, "REGO INPUT:\n%s\nEND REGO INPUT\n\n", string(data))
-}
-
 func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, inputs []Input, combined bool) (scan.Results, error) {
 
 	// handle combined evaluations if possible
 	if combined {
-		s.traceInput(inputs)
+		s.trace("INPUT", inputs)
 		return s.applyRuleCombined(ctx, namespace, rule, inputs)
 	}
 
 	var results scan.Results
 	qualified := fmt.Sprintf("data.%s.%s", namespace, rule)
 	for _, input := range inputs {
-		s.traceInput(input)
-		if ignored, err := s.isIgnored(ctx, namespace, rule, input); err != nil {
+		s.trace("INPUT", input)
+		if ignored, err := s.isIgnored(ctx, namespace, rule, input.Contents); err != nil {
 			return nil, err
 		} else if ignored {
 			var result regoResult
@@ -250,6 +257,7 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 		if err != nil {
 			return nil, err
 		}
+		s.trace("RESULTSET", set)
 		ruleResults := s.convertResults(set, input, namespace, rule, traces)
 		if len(ruleResults) == 0 {
 			var result regoResult

@@ -2,7 +2,6 @@ package types
 
 import (
 	"encoding/json"
-	"fmt"
 	"strings"
 )
 
@@ -37,6 +36,8 @@ func StringExplicit(value string, m Metadata) StringValue {
 	return b
 }
 
+type StringValueList []StringValue
+
 type StringValue interface {
 	metadataProvider
 	Value() string
@@ -55,6 +56,13 @@ type stringValue struct {
 	value string
 }
 
+func (l StringValueList) AsStrings() (output []string) {
+	for _, item := range l {
+		output = append(output, item.Value())
+	}
+	return output
+}
+
 type stringCheckFunc func(string, string) bool
 
 func (v *stringValue) MarshalJSON() ([]byte, error) {
@@ -70,7 +78,7 @@ func (s *stringValue) ToRego() interface{} {
 		"explicit":  s.metadata.isExplicit,
 		"value":     s.Value(),
 		"fskey":     CreateFSKey(s.metadata.Range().GetFS()),
-		"resource":  fmt.Sprintf("%s", s.metadata.Reference()),
+		"resource":  s.metadata.Reference().String(),
 	}
 }
 

@@ -21,7 +21,7 @@ func main() {
 		panic(err)
 	}
 	fsys := extrafs.OSDir(abs)
-	results, err := universal.New(options.ScannerWithDebug(os.Stderr)).ScanFS(context.TODO(), fsys, ".")
+	results, err := universal.New(options.ScannerWithDebug(os.Stderr), options.ScannerWithEmbeddedPolicies(true)).ScanFS(context.TODO(), fsys, ".")
 	if err != nil {
 		panic(err)
 	}

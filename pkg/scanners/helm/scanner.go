@@ -5,7 +5,11 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"path/filepath"
 	"strings"
+
+	"github.com/aquasecurity/defsec/pkg/detection"
+	"github.com/liamg/memoryfs"
 
 	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/aquasecurity/defsec/internal/types"
@@ -18,25 +22,20 @@ import (
 )
 
 type Scanner struct {
-	chartName     string
 	policyDirs    []string
 	dataDirs      []string
-	paths         []string
 	debug         debug.Logger
 	options       []options.ScannerOption
 	policyReaders []io.Reader
-	regoScanner   *rego.Scanner
-	parser        *parser.Parser
 	loadEmbedded  bool
 	policyFS      fs.FS
 	skipRequired  bool
 }
 
 // New creates a new Scanner
-func New(chartName string, options ...options.ScannerOption) *Scanner {
+func New(options ...options.ScannerOption) *Scanner {
 	s := &Scanner{
-		chartName: chartName,
-		options:   options,
+		options: options,
 	}
 
 	for _, option := range options {
@@ -89,22 +88,64 @@ func (s *Scanner) SetPolicyFilesystem(policyFS fs.FS) {
 	s.policyFS = policyFS
 }
 
-func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Results, error) {
+func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, path string) (scan.Results, error) {
 
-	helmParser := parser.New(s.chartName)
+	var results []scan.Result
+	if err := fs.WalkDir(target, path, func(path string, d fs.DirEntry, err error) error {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		default:
+		}
 
-	if err := helmParser.ParseFS(ctx, fs, path); err != nil {
+		if err != nil {
+			return err
+		}
+
+		if d.IsDir() {
+			return nil
+		}
+
+		if detection.IsArchive(path) {
+			if scanResults, err := s.getScanResults(path, ctx, target); err != nil {
+				return err
+			} else {
+				results = append(results, scanResults...)
+			}
+		}
+
+		if strings.HasSuffix(path, "Chart.yaml") {
+			if scanResults, err := s.getScanResults(filepath.Dir(path), ctx, target); err != nil {
+				return err
+			} else {
+				results = append(results, scanResults...)
+			}
+		}
+
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+
+	return results, nil
+
+}
+
+func (s *Scanner) getScanResults(path string, ctx context.Context, target fs.FS) (results []scan.Result, err error) {
+	helmParser := parser.New(path)
+
+	if err := helmParser.ParseFS(ctx, target, path); err != nil {
 		return nil, err
 	}
 
 	chartFiles, err := helmParser.RenderedChartFiles()
-	if err != nil {
-		return nil, err
+	if err != nil { // not valid helm, maybe some other yaml etc., abort
+		return nil, nil
 	}
 
-	var results []scan.Result
 	regoScanner := rego.NewScanner(s.options...)
-	policyFS := fs
+	s.loadEmbedded = len(s.policyDirs)+len(s.policyReaders) == 0
+	policyFS := target
 	if s.policyFS != nil {
 		policyFS = s.policyFS
 	}
@@ -114,7 +155,7 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 	for _, file := range chartFiles {
 		s.debug.Log("Processing rendered chart file: %s", file.TemplateFilePath)
 
-		manifests, err := kparser.New().Parse(strings.NewReader(file.ManifestContent))
+		manifests, err := kparser.New().Parse(strings.NewReader(file.ManifestContent), file.TemplateFilePath)
 		if err != nil {
 			return nil, fmt.Errorf("unmarshal yaml: %w", err)
 		}
@@ -127,10 +168,23 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 			if err != nil {
 				return nil, fmt.Errorf("scanning error: %w", err)
 			}
+
+			if len(fileResults) > 0 {
+				renderedFS := memoryfs.New()
+				if err := renderedFS.MkdirAll(filepath.Dir(file.TemplateFilePath), fs.ModePerm); err != nil {
+					return nil, err
+				}
+				if err := renderedFS.WriteLazyFile(file.TemplateFilePath, func() (io.Reader, error) {
+					return strings.NewReader(file.ManifestContent), nil
+				}, fs.ModePerm); err != nil {
+					return nil, err
+				}
+				fileResults.SetSourceAndFilesystem(helmParser.ChartSource, renderedFS, detection.IsArchive(helmParser.ChartSource))
+			}
+
 			results = append(results, fileResults...)
 		}
+
 	}
-
 	return results, nil
-
 }

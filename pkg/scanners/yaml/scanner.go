@@ -146,6 +146,6 @@ func (s *Scanner) scanRego(ctx context.Context, srcFS fs.FS, inputs ...rego.Inpu
 	if err != nil {
 		return nil, err
 	}
-	results.SetSourceAndFilesystem("", srcFS)
+	results.SetSourceAndFilesystem("", srcFS, false)
 	return results, nil
 }

@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV017
+package builtin.kubernetes.KSV017
 
 import data.lib.kubernetes
+import data.lib.result
 
 default failPrivileged = false
 
@@ -25,26 +26,12 @@ __rego_input__ := {
 # getPrivilegedContainers returns all containers which have
 # securityContext.privileged set to true.
 getPrivilegedContainers[container] {
-	allContainers := kubernetes.containers[_]
-	allContainers.securityContext.privileged == true
-	container := allContainers.name
-}
-
-# failPrivileged is true if there is ANY container with securityContext.privileged
-# set to true.
-failPrivileged {
-	count(getPrivilegedContainers) > 0
+	container := kubernetes.containers[_]
+	container.securityContext.privileged == true
 }
 
 deny[res] {
-	failPrivileged
-
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.privileged' to false", [getPrivilegedContainers[_], kubernetes.kind, kubernetes.name]))
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	output := getPrivilegedContainers[_]
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.privileged' to false", [output.name, kubernetes.kind, kubernetes.name]))
+	res := result.new(msg, output)
 }

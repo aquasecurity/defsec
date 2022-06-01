@@ -1,6 +1,6 @@
-package lib.defsec
+package lib.result
 
-result(msg, cause) = result {
+new(msg, cause) = result {
 	metadata := object.get(cause, "__defsec_metadata", cause)
 	result := {
 		"msg": msg,

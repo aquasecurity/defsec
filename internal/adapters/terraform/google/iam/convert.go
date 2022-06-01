@@ -16,7 +16,8 @@ func ParsePolicyBlock(block *terraform.Block) []iam.Binding {
 			IncludesDefaultServiceAccount: types.BoolDefault(false, bindingBlock.GetMetadata()),
 		}
 		membersAttr := bindingBlock.GetAttribute("members")
-		for _, member := range membersAttr.ValueAsStrings() {
+		members := membersAttr.AsStringValues().AsStrings()
+		for _, member := range members {
 			binding.Members = append(binding.Members, types.String(member, membersAttr.GetMetadata()))
 		}
 		bindings = append(bindings, binding)

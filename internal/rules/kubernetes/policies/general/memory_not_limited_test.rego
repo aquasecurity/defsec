@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV018
+package builtin.kubernetes.KSV018
 
 test_memory_not_limited_denied {
 	r := deny with input as {

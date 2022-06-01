@@ -1,25 +1,33 @@
 package dockerfile
 
+import (
+	"reflect"
+
+	"github.com/aquasecurity/defsec/pkg/rego/convert"
+)
+
 // NOTE: we are currently preserving mixed case json here for backward compatibility
 
 // Dockerfile represents a parsed Dockerfile
 type Dockerfile struct {
-	Stages map[string][]Command
+	Stages []Stage
 }
 
-func (d Dockerfile) ToRego() map[string]interface{} {
+type Stage struct {
+	Name     string
+	Commands []Command
+}
 
-	stages := make(map[string]interface{})
-	for from, commands := range d.Stages {
-		var converted []map[string]interface{}
-		for _, command := range commands {
-			converted = append(converted, command.ToRego())
-		}
-		stages[from] = converted
-	}
-
+func (d Dockerfile) ToRego() interface{} {
 	return map[string]interface{}{
-		"stages": stages,
+		"Stages": convert.SliceToRego(reflect.ValueOf(d.Stages)),
+	}
+}
+
+func (s Stage) ToRego() interface{} {
+	return map[string]interface{}{
+		"Name":     s.Name,
+		"Commands": convert.SliceToRego(reflect.ValueOf(s.Commands)),
 	}
 }
 
@@ -37,7 +45,7 @@ type Command struct {
 	EndLine   int
 }
 
-func (c Command) ToRego() map[string]interface{} {
+func (c Command) ToRego() interface{} {
 	return map[string]interface{}{
 		"Cmd":       c.Cmd,
 		"SubCmd":    c.SubCmd,

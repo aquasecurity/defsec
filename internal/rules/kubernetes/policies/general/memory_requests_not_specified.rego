@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV016
+package builtin.kubernetes.KSV016
 
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default failRequestsMemory = false
@@ -25,34 +26,19 @@ __rego_input__ := {
 
 # getRequestsMemoryContainers returns all containers which have set resources.requests.memory
 getRequestsMemoryContainers[container] {
-	allContainers := kubernetes.containers[_]
-	utils.has_key(allContainers.resources.requests, "memory")
-	container := allContainers.name
+	container := kubernetes.containers[_]
+	utils.has_key(container.resources.requests, "memory")
 }
 
 # getNoRequestsMemoryContainers returns all containers which have not set
 # resources.requests.memory
 getNoRequestsMemoryContainers[container] {
-	container := kubernetes.containers[_].name
+	container := kubernetes.containers[_]
 	not getRequestsMemoryContainers[container]
 }
 
-# failRequestsMemory is true if containers[].resources.requests.memory is not set
-# for ANY container
-failRequestsMemory {
-	count(getNoRequestsMemoryContainers) > 0
-}
-
 deny[res] {
-	failRequestsMemory
-
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'resources.requests.memory'", [getNoRequestsMemoryContainers[_], kubernetes.kind, kubernetes.name]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	output := getNoRequestsMemoryContainers[_]
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'resources.requests.memory'", [output.name, kubernetes.kind, kubernetes.name]))
+	res := result.new(msg, output)
 }

@@ -30,9 +30,8 @@ func adaptCluster(resource *terraform.Block, module *terraform.Module) documentd
 	var instances []documentdb.Instance
 
 	enabledLogExportsAttr := resource.GetAttribute("enabled_cloudwatch_logs_exports")
-	enabledLogExportsList := enabledLogExportsAttr.ValueAsStrings()
-	for _, logExport := range enabledLogExportsList {
-		enabledLogExports = append(enabledLogExports, types.String(logExport, enabledLogExportsAttr.GetMetadata()))
+	for _, logExport := range enabledLogExportsAttr.AsStringValues() {
+		enabledLogExports = append(enabledLogExports, logExport)
 	}
 
 	instancesRes := module.GetReferencingResources(resource, "aws_docdb_cluster_instance", "cluster_identifier")

@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV002
+package builtin.kubernetes.KSV002
 
 import data.lib.kubernetes
+import data.lib.result
 
 default failAppArmor = false
 
@@ -23,8 +24,8 @@ __rego_input__ := {
 }
 
 apparmor_keys[container] = key {
-	container := kubernetes.containers[_].name
-	key := sprintf("%s/%s", ["container.apparmor.security.beta.kubernetes.io", container])
+	container := kubernetes.containers[_]
+	key := sprintf("%s/%s", ["container.apparmor.security.beta.kubernetes.io", container.name])
 }
 
 custom_apparmor_containers[container] {
@@ -35,15 +36,7 @@ custom_apparmor_containers[container] {
 }
 
 deny[res] {
-	container := custom_apparmor_containers[_]
-
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should specify an AppArmor profile", [container, kubernetes.kind, kubernetes.name]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	output := custom_apparmor_containers[_]
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should specify an AppArmor profile", [output.name, kubernetes.kind, kubernetes.name]))
+	res := result.new(msg, output)
 }

@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV021
+package builtin.kubernetes.KSV021
 
 test_GID_gt_10000_allowed {
 	r := deny with input as {

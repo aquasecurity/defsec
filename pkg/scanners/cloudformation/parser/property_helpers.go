@@ -14,15 +14,15 @@ func (p *Property) IsNil() bool {
 }
 
 func (p *Property) IsNotNil() bool {
-	return !p.IsNil()
+	return !p.IsUnresolved() && !p.IsNil()
 }
 
 func (p *Property) IsString() bool {
-	if p.IsNil() {
+	if p.IsNil() || p.IsUnresolved() {
 		return false
 	}
 	if p.isFunction() {
-		if prop, success := p.resolveValue(); success {
+		if prop, success := p.resolveValue(); success && prop != p {
 			return prop.IsString()
 		}
 	}
@@ -30,15 +30,15 @@ func (p *Property) IsString() bool {
 }
 
 func (p *Property) IsNotString() bool {
-	return !p.IsString()
+	return !p.IsUnresolved() && !p.IsString()
 }
 
 func (p *Property) IsInt() bool {
-	if p.IsNil() {
+	if p.IsNil() || p.IsUnresolved() {
 		return false
 	}
 	if p.isFunction() {
-		if prop, success := p.resolveValue(); success {
+		if prop, success := p.resolveValue(); success && prop != p {
 			return prop.IsInt()
 		}
 	}
@@ -46,26 +46,26 @@ func (p *Property) IsInt() bool {
 }
 
 func (p *Property) IsNotInt() bool {
-	return !p.IsInt()
+	return !p.IsUnresolved() && !p.IsInt()
 }
 
 func (p *Property) IsMap() bool {
-	if p.IsNil() {
+	if p.IsNil() || p.IsUnresolved() {
 		return false
 	}
 	return p.Inner.Type == cftypes.Map
 }
 
 func (p *Property) IsNotMap() bool {
-	return !p.IsMap()
+	return !p.IsUnresolved() && !p.IsMap()
 }
 
 func (p *Property) IsList() bool {
-	if p.IsNil() {
+	if p.IsNil() || p.IsUnresolved() {
 		return false
 	}
 	if p.isFunction() {
-		if prop, success := p.resolveValue(); success {
+		if prop, success := p.resolveValue(); success && prop != p {
 			return prop.IsList()
 		}
 	}
@@ -73,28 +73,32 @@ func (p *Property) IsList() bool {
 }
 
 func (p *Property) IsNotList() bool {
-	return !p.IsList()
+	return !p.IsUnresolved() && !p.IsList()
 }
 
 func (p *Property) IsBool() bool {
-	if p.IsNil() {
+	if p.IsNil() || p.IsUnresolved() {
 		return false
 	}
 	if p.isFunction() {
-		if prop, success := p.resolveValue(); success {
-			return prop.AsBool()
+		if prop, success := p.resolveValue(); success && prop != p {
+			return prop.IsBool()
 		}
 	}
 	return p.Inner.Type == cftypes.Bool
 }
 
+func (p *Property) IsUnresolved() bool {
+	return p != nil && p.unresolved
+}
+
 func (p *Property) IsNotBool() bool {
-	return !p.IsBool()
+	return !p.IsUnresolved() && !p.IsBool()
 }
 
 func (p *Property) AsString() string {
 	if p.isFunction() {
-		if prop, success := p.resolveValue(); success {
+		if prop, success := p.resolveValue(); success && prop != p {
 			return prop.AsString()
 		}
 		return ""
@@ -110,12 +114,15 @@ func (p *Property) AsString() string {
 }
 
 func (p *Property) AsStringValue() types.StringValue {
+	if p.unresolved {
+		return types.StringUnresolvable(p.Metadata())
+	}
 	return types.StringExplicit(p.AsString(), p.Metadata())
 }
 
 func (p *Property) AsInt() int {
 	if p.isFunction() {
-		if prop, success := p.resolveValue(); success {
+		if prop, success := p.resolveValue(); success && prop != p {
 			return prop.AsInt()
 		}
 		return 0
@@ -131,12 +138,15 @@ func (p *Property) AsInt() int {
 }
 
 func (p *Property) AsIntValue() types.IntValue {
+	if p.unresolved {
+		return types.IntUnresolvable(p.Metadata())
+	}
 	return types.IntExplicit(p.AsInt(), p.Metadata())
 }
 
 func (p *Property) AsBool() bool {
 	if p.isFunction() {
-		if prop, success := p.resolveValue(); success {
+		if prop, success := p.resolveValue(); success && prop != p {
 			return prop.AsBool()
 		}
 		return false
@@ -148,6 +158,9 @@ func (p *Property) AsBool() bool {
 }
 
 func (p *Property) AsBoolValue() types.BoolValue {
+	if p.unresolved {
+		return types.BoolUnresolvable(p.Metadata())
+	}
 	return types.Bool(p.AsBool(), p.Metadata())
 }
 
@@ -161,7 +174,7 @@ func (p *Property) AsMap() map[string]*Property {
 
 func (p *Property) AsList() []*Property {
 	if p.isFunction() {
-		if prop, success := p.resolveValue(); success {
+		if prop, success := p.resolveValue(); success && prop != p {
 			return prop.AsList()
 		}
 		return []*Property{}
@@ -221,6 +234,9 @@ func (p *Property) IsEmpty() bool {
 
 	if p.IsNil() {
 		return true
+	}
+	if p.IsUnresolved() {
+		return false
 	}
 
 	switch p.Inner.Type {

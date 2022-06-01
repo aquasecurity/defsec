@@ -80,12 +80,12 @@ func outputJUnit(b ConfigurableFormatter, results scan.Results) error {
 
 // highlight the lines of code which caused a problem, if available
 func highlightCodeJunit(res scan.Result) string {
-	code, err := res.GetCode(false)
+	code, err := res.GetCode()
 	if err != nil {
 		return ""
 	}
 	var output string
-	for _, line := range code.Lines() {
+	for _, line := range code.Lines {
 		if line.IsCause {
 			output += fmt.Sprintf("%s\n", line.Content)
 		}
@@ -104,10 +104,16 @@ func buildFailure(b ConfigurableFormatter, res scan.Result) *jUnitFailure {
 		link = links[0]
 	}
 
+	lineInfo := fmt.Sprintf("%d-%d", res.Range().GetStartLine(), res.Range().GetEndLine())
+	if !res.Range().IsMultiLine() {
+		lineInfo = fmt.Sprintf("%d", res.Range().GetStartLine())
+	}
+	location := fmt.Sprintf("%s:%s", b.Path(res), lineInfo)
+
 	return &jUnitFailure{
 		Message: res.Description(),
-		Contents: fmt.Sprintf("%s\n%s\n%s",
-			res.Range().String(),
+		Contents: fmt.Sprintf("%s\n\n%s\n\nSee %s",
+			location,
 			highlightCodeJunit(res),
 			link,
 		),

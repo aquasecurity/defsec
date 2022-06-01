@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV025
+package builtin.kubernetes.KSV025
 
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default failSELinux = false
@@ -69,30 +70,13 @@ hasAllowedType(options) {
 
 deny[res] {
 	type := failSELinuxType[_]
-
 	msg := kubernetes.format(sprintf("%s '%s' uses invalid seLinux type '%s'", [kubernetes.kind, kubernetes.name, type]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res := result.new(msg, input.spec)
 }
 
 deny[res] {
 	keys := failForbiddenSELinuxProperties
-
 	count(keys) > 0
-
 	msg := kubernetes.format(sprintf("%s '%s' uses restricted properties in seLinuxOptions: (%s)", [kubernetes.kind, kubernetes.name, concat(", ", keys)]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res := result.new(msg, input.spec)
 }

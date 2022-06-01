@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV028
+package builtin.kubernetes.KSV028
 
 test_disallowed_volume_type_used_denied {
 	r := deny with input as {

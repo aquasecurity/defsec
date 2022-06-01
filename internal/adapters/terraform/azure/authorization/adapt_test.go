@@ -47,7 +47,7 @@ func Test_adaptRoleDefinition(t *testing.T) {
 					},
 				},
 				AssignableScopes: []types.StringValue{
-					types.String("Data Reference", types.NewTestMetadata()),
+					types.StringUnresolvable(types.NewTestMetadata()),
 				},
 			},
 		},

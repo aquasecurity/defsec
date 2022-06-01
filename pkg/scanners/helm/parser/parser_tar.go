@@ -10,30 +10,32 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
 
 	"github.com/liamg/memoryfs"
+
+	"github.com/aquasecurity/defsec/pkg/detection"
 )
 
 func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 
+	var file io.ReadCloser
+	var err error
+
 	tarFS := memoryfs.CloneFS(p.workingFS)
-	file, err := tarFS.Open(path)
+	file, err = tarFS.Open(path)
 	if err != nil {
 		return nil, err
 	}
 
-	var fr io.ReadCloser = file
-
-	if isZipped(path) {
-		if fr, err = gzip.NewReader(file); err != nil {
+	if detection.IsZip(path) {
+		if file, err = gzip.NewReader(file); err != nil {
 			return nil, err
 		}
 	}
 
-	defer func() { _ = fr.Close() }()
+	defer func() { _ = file.Close() }()
 
-	tr := tar.NewReader(fr)
+	tr := tar.NewReader(file)
 
 	for {
 		header, err := tr.Next()
@@ -79,27 +81,13 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 		}
 	}
 
+	// force close the file for Windows so we can remove it from FS
+	_ = file.Close()
+
 	// remove the tarball from the fs
 	if err := tarFS.Remove(path); err != nil {
 		return nil, err
 	}
 
 	return tarFS, nil
-}
-
-func isArchive(path string) bool {
-	if strings.HasSuffix(path, ".tar") ||
-		strings.HasSuffix(path, ".tgz") ||
-		strings.HasSuffix(path, ".tar.gz") {
-		return true
-	}
-	return false
-}
-
-func isZipped(path string) bool {
-	if strings.HasSuffix(path, ".tgz") ||
-		strings.HasSuffix(path, ".tar.gz") {
-		return true
-	}
-	return false
 }

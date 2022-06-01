@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV038
+package builtin.kubernetes.KSV038
 
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 __rego_metadata__ := {
@@ -21,74 +22,60 @@ __rego_input__ := {
 	"selector": [{"type": "kubernetes"}],
 }
 
-deny[res] {
-	not hasSelector(input.spec)
-	msg := "Network policy should uses podSelector and/or the namespaceSelector to restrict ingress and egress traffic within the Pod network"
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
-}
-
 hasSelector(spec) {
-	lower(kubernetes.kind) == "networkpolicy"
 	kubernetes.has_field(spec, "podSelector")
 	kubernetes.has_field(spec.podSelector, "matchLabels")
 }
 
 hasSelector(spec) {
-	lower(kubernetes.kind) == "networkpolicy"
 	kubernetes.has_field(spec, "namespaceSelector")
 }
 
 hasSelector(spec) {
-	lower(kubernetes.kind) == "networkpolicy"
 	kubernetes.has_field(spec, "podSelector")
 }
 
 hasSelector(spec) {
-	lower(kubernetes.kind) == "networkpolicy"
 	kubernetes.has_field(spec, "ingress")
 	kubernetes.has_field(spec.ingress[_], "from")
 	kubernetes.has_field(spec.ingress[_].from[_], "namespaceSelector")
 }
 
 hasSelector(spec) {
-	lower(kubernetes.kind) == "networkpolicy"
 	kubernetes.has_field(spec, "ingress")
 	kubernetes.has_field(spec.ingress[_], "from")
 	kubernetes.has_field(spec.ingress[_].from[_], "podSelector")
 }
 
 hasSelector(spec) {
-	lower(kubernetes.kind) == "networkpolicy"
 	kubernetes.has_field(spec, "egress")
 	kubernetes.has_field(spec.egress[_], "to")
 	kubernetes.has_field(spec.egress[_].to[_], "podSelector")
 }
 
 hasSelector(spec) {
-	lower(kubernetes.kind) == "networkpolicy"
 	kubernetes.has_field(spec, "egress")
 	kubernetes.has_field(spec.egress[_], "to")
 	kubernetes.has_field(spec.egress[_].to[_], "namespaceSelector")
 }
 
 hasSelector(spec) {
-	lower(kubernetes.kind) == "networkpolicy"
 	kubernetes.spec.podSelector == {}
 	contains(input.spec.policyType, "Egress")
 }
 
 hasSelector(spec) {
-	lower(kubernetes.kind) == "networkpolicy"
 	kubernetes.spec.podSelector == {}
 	contains(input.spec.policyType, "Ingress")
 }
 
 contains(arr, elem) {
 	arr[_] = elem
+}
+
+deny[res] {
+	lower(kubernetes.kind) == "networkpolicy"
+	not hasSelector(input.spec)
+	msg := "Network policy should uses podSelector and/or the namespaceSelector to restrict ingress and egress traffic within the Pod network"
+	res := result.new(msg, input.spec)
 }

@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV024
+package builtin.kubernetes.KSV024
 
 import data.lib.kubernetes
+import data.lib.result
 
 default failHostPorts = false
 
@@ -42,21 +43,14 @@ host_ports_msg = "" {
 	msg := sprintf(" or set it to the following allowed values: %s", [concat(", ", allowed_host_ports)])
 }
 
-# failHostPorts is true if there are containers which set host ports
-# not included in the allowed host ports list
-failHostPorts {
-	count(getContainersWithDisallowedHostPorts) > 0
+# Get all containers which don't include 'ALL' in security.capabilities.drop
+getContainersWitNohDisallowedHostPorts[container] {
+	container := kubernetes.containers[_]
+	not getContainersWithDisallowedHostPorts[container]
 }
 
 deny[res] {
-	failHostPorts
-
+	output := getContainersWitNohDisallowedHostPorts[_]
 	msg := sprintf("Container '%s' of %s '%s' should not set host ports, 'ports[*].hostPort'%s", [getContainersWithDisallowedHostPorts[_], kubernetes.kind, kubernetes.name, host_ports_msg])
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res := result.new(msg, output)
 }

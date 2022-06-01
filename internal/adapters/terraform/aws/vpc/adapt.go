@@ -143,21 +143,11 @@ func adaptSGRule(resource *terraform.Block, modules terraform.Modules) vpc.Secur
 	}
 
 	if cidrBlocks.IsNotNil() {
-		cidrsList := cidrBlocks.ValueAsStrings()
-		for _, cidr := range cidrsList {
-			cidrs = append(cidrs, types.String(cidr, cidrBlocks.GetMetadata()))
-		}
-	} else {
-		cidrs = append(cidrs, cidrBlocks.AsStringValueOrDefault("", resource))
+		cidrs = cidrBlocks.AsStringValues()
 	}
 
 	if ipv6cidrBlocks.IsNotNil() {
-		cidrsList := ipv6cidrBlocks.ValueAsStrings()
-		for _, cidr := range cidrsList {
-			cidrs = append(cidrs, types.String(cidr, ipv6cidrBlocks.GetMetadata()))
-		}
-	} else {
-		cidrs = append(cidrs, ipv6cidrBlocks.AsStringValueOrDefault("", resource))
+		cidrs = append(cidrs, ipv6cidrBlocks.AsStringValues()...)
 	}
 
 	return vpc.SecurityGroupRule{
@@ -187,7 +177,9 @@ func adaptNetworkACLRule(resource *terraform.Block) vpc.NetworkACLRule {
 
 	egressAtrr := resource.GetAttribute("egress")
 	if egressAtrr.IsTrue() {
-		typeVal = types.String("egress", resource.GetMetadata())
+		typeVal = types.String("egress", egressAtrr.GetMetadata())
+	} else if egressAtrr.IsNotNil() {
+		typeVal = types.String("ingress", egressAtrr.GetMetadata())
 	}
 
 	actionAttr := resource.GetAttribute("rule_action")
@@ -197,9 +189,13 @@ func adaptNetworkACLRule(resource *terraform.Block) vpc.NetworkACLRule {
 	protocolVal := protocolAtrr.AsStringValueOrDefault("-1", resource)
 
 	cidrAttr := resource.GetAttribute("cidr_block")
+	if cidrAttr.IsNotNil() {
+		cidrs = append(cidrs, cidrAttr.AsStringValueOrDefault("", resource))
+	}
 	ipv4cidrAttr := resource.GetAttribute("ipv6_cidr_block")
-	cidrs = append(cidrs, cidrAttr.AsStringValueOrDefault("", resource))
-	cidrs = append(cidrs, ipv4cidrAttr.AsStringValueOrDefault("", resource))
+	if ipv4cidrAttr.IsNotNil() {
+		cidrs = append(cidrs, ipv4cidrAttr.AsStringValueOrDefault("", resource))
+	}
 
 	return vpc.NetworkACLRule{
 		Metadata: resource.GetMetadata(),

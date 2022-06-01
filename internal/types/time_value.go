@@ -2,7 +2,6 @@ package types
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 )
 
@@ -92,6 +91,6 @@ func (s *timeValue) ToRego() interface{} {
 		"explicit":  s.metadata.isExplicit,
 		"value":     s.Value().Format(time.RFC3339),
 		"fskey":     CreateFSKey(s.metadata.Range().GetFS()),
-		"resource":  fmt.Sprintf("%s", s.metadata.Reference()),
+		"resource":  s.metadata.Reference().String(),
 	}
 }

@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV012
+package builtin.kubernetes.KSV012
 
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default checkRunAsNonRoot = false
@@ -34,8 +35,8 @@ getNonRootContainers[container] {
 # getRootContainers returns the names of all containers which have
 # securityContext.runAsNonRoot set to false or not set.
 getRootContainers[container] {
-	container := kubernetes.containers[_].name
-	not getNonRootContainers[container]
+	container := kubernetes.containers[_]
+	not getNonRootContainers[container.name]
 }
 
 # checkRunAsNonRoot is true if securityContext.runAsNonRoot is set to false
@@ -51,16 +52,7 @@ checkRunAsNonRootPod {
 
 deny[res] {
 	checkRunAsNonRootPod
-
-	checkRunAsNonRootContainers
-
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.runAsNonRoot' to true", [getRootContainers[_], kubernetes.kind, kubernetes.name]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	output := getRootContainers[_]
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.runAsNonRoot' to true", [output.name, kubernetes.kind, kubernetes.name]))
+	res := result.new(msg, output)
 }

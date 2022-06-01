@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV001
+package builtin.kubernetes.KSV001
 
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default checkAllowPrivilegeEscalation = false
@@ -34,26 +35,13 @@ getNoPrivilegeEscalationContainers[container] {
 # getPrivilegeEscalationContainers returns the names of all containers which have
 # securityContext.allowPrivilegeEscalation set to true or not set.
 getPrivilegeEscalationContainers[container] {
-	container := kubernetes.containers[_].name
-	not getNoPrivilegeEscalationContainers[container]
-}
-
-# checkAllowPrivilegeEscalation is true if any container has
-# securityContext.allowPrivilegeEscalation set to true or not set.
-checkAllowPrivilegeEscalation {
-	count(getPrivilegeEscalationContainers) > 0
+	containerName := kubernetes.containers[_].name
+	not getNoPrivilegeEscalationContainers[containerName]
+	container := kubernetes.containers[_]
 }
 
 deny[res] {
-	checkAllowPrivilegeEscalation
-
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.allowPrivilegeEscalation' to false", [getPrivilegeEscalationContainers[_], kubernetes.kind, kubernetes.name]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	output := getPrivilegeEscalationContainers[_]
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.allowPrivilegeEscalation' to false", [output.name, kubernetes.kind, kubernetes.name]))
+	res := result.new(msg, output)
 }

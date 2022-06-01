@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV013
+package builtin.kubernetes.KSV013
 
 test_image_with_no_tag_denied {
 	r := deny with input as {

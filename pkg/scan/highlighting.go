@@ -1,196 +1,124 @@
 package scan
 
 import (
+	"bytes"
 	"fmt"
-	"path/filepath"
 	"strings"
+	"sync"
 
-	"github.com/liamg/tml"
+	"github.com/alecthomas/chroma"
+	"github.com/alecthomas/chroma/formatters"
+	"github.com/alecthomas/chroma/lexers"
+	"github.com/alecthomas/chroma/styles"
 )
 
-const (
-	formatKeyword         = "<lightblue>"
-	formatSymbol          = "<lightblue>"
-	formatBrace           = "<lightgrey>"
-	formatBracket         = "<lightgrey>"
-	formatMarker          = "<italic><lightmagenta>"
-	formatString          = "<lightyellow>"
-	formatMultilineString = "<lightmagenta>"
-	formatComment         = "<darkgrey>"
-)
-
-func highlight(filename string, inputLines []Line) []Line {
-	switch strings.ToLower(filepath.Ext(filename)) {
-	case ".tf":
-		return highlightHCL(inputLines)
-	}
-	return highlightDefault(inputLines)
+type cache struct {
+	sync.RWMutex
+	data map[string][]string
 }
 
-func highlightDefault(inputLines []Line) []Line {
-	var output []Line
-	for _, line := range inputLines {
-		line.Highlighted = line.Content
-		output = append(output, line)
-	}
-	return output
+func (c *cache) Get(key string) ([]string, bool) {
+	c.RLock()
+	defer c.RUnlock()
+	data, ok := c.data[key]
+	return data, ok
 }
 
-// nolint
-func highlightHCL(inputLines []Line) []Line {
-	var output []Line
-	var inComment, inMultilineComment, inString, inMultilineString, inAssignment, inEOLMarker, inTemplate, dollared bool
+func (c *cache) Set(key string, data []string) {
+	c.Lock()
+	defer c.Unlock()
+	c.data[key] = data
+}
 
-	var blockDepth int
-	var currentEOL string
-	var format string
-	var foundFirstCause bool
-	maxCause := -1
-	for i, line := range inputLines {
-		highlighted := ""
-		inEOLMarker = false
-		inAssignment = false
-		inString = false
-		inTemplate = false
-		inComment = false
-		format = ""
+var globalCache = &cache{
+	data: make(map[string][]string),
+}
 
-		switch {
-		case line.Truncated:
-			line.Highlighted = tml.Sprintf("  <italic><dim>...")
-		case currentEOL != "" && line.Content == currentEOL:
-			currentEOL = ""
-			inMultilineString = false
-			line.Highlighted = tml.Sprintf(formatMarker+"%s", line.Content)
-		default:
+func highlight(fsKey string, filename string, input []byte, theme string) []string {
 
-			lastC := rune(0)
-			peekC := rune(0)
+	key := fmt.Sprintf("%s|%s", fsKey, filename)
+	if lines, ok := globalCache.Get(key); ok {
+		return lines
+	}
 
-			for i, c := range line.Content {
+	lexer := lexers.Match(filename)
+	if lexer == nil {
+		lexer = lexers.Fallback
+	}
+	lexer = chroma.Coalesce(lexer)
 
-				if i+1 < len([]rune(line.Content))-1 {
-					peekC = []rune(line.Content)[i+1]
-				} else {
-					peekC = 0
+	style := styles.Get(theme)
+	if style == nil {
+		style = styles.Fallback
+	}
+	formatter := formatters.Get("terminal256")
+	if formatter == nil {
+		formatter = formatters.Fallback
+	}
+
+	// replace windows line endings
+	input = bytes.ReplaceAll(input, []byte{0x0d}, []byte{})
+	iterator, err := lexer.Tokenise(nil, string(input))
+	if err != nil {
+		return nil
+	}
+
+	buffer := bytes.NewBuffer([]byte{})
+	if err := formatter.Format(buffer, style, iterator); err != nil {
+		return nil
+	}
+
+	raw := shiftANSIOverLineEndings(buffer.Bytes())
+	lines := strings.Split(string(raw), "\n")
+	globalCache.Set(key, lines)
+	return lines
+}
+
+func shiftANSIOverLineEndings(input []byte) []byte {
+	var output []byte
+	prev := byte(0)
+	inCSI := false
+	csiShouldCarry := false
+	var csi []byte
+	var skipOutput bool
+	for _, r := range input {
+		skipOutput = false
+		if !inCSI {
+			switch {
+			case r == '\n':
+				if csiShouldCarry && len(csi) > 0 {
+					skipOutput = true
+					output = append(output, '\n')
+					output = append(output, csi...)
+					csi = nil
+					csiShouldCarry = false
 				}
-
-				if inAssignment {
-					switch c {
-					case ' ', '\t':
-					case '<':
-						inEOLMarker = true
-						format += formatMarker
-						inAssignment = false
-					default:
-						inAssignment = false
-					}
+			case r == '[' && prev == 0x1b:
+				inCSI = true
+				csi = append(csi, 0x1b, '[')
+				output = output[:len(output)-1]
+				skipOutput = true
+			default:
+				csiShouldCarry = false
+				if len(csi) > 0 {
+					output = append(output, csi...)
+					csi = nil
 				}
-
-				switch {
-				case inComment:
-				case inMultilineComment:
-					switch c {
-					case '*':
-						if peekC == '/' {
-							inMultilineComment = false
-						}
-					}
-				case inString && !inTemplate:
-					format += formatString
-					switch c {
-					case '{':
-						if dollared {
-							inTemplate = true
-							format += formatBrace
-						}
-					case '"':
-						inString = false
-					default:
-					}
-					dollared = c == '$' && lastC != '\\'
-					if dollared {
-						format += formatBrace
-					}
-				case inMultilineString:
-					format += formatMultilineString
-				case inEOLMarker:
-					currentEOL += string(c)
-				default:
-					switch c {
-					case '"':
-						inString = true
-						dollared = false
-						format += formatString
-					case '{':
-						format += formatBrace
-						blockDepth++
-					case '}':
-						format += formatBrace
-						if !inTemplate {
-							blockDepth--
-						}
-						inTemplate = false
-					case '[', ']', '(', ')':
-						format += formatBracket
-					case '=':
-						inAssignment = true
-						format += formatSymbol
-					case '.', ',', '+', '-', '*':
-						format += formatSymbol
-					case '#':
-						inComment = true
-						format += formatComment
-					case '/':
-						switch {
-						case peekC == '/':
-							inComment = true
-							format += formatComment
-						case peekC == '*':
-							inMultilineComment = true
-							format += formatComment
-						default:
-							format += formatSymbol
-						}
-					case ' ', '\t':
-					default:
-						format = ""
-						if blockDepth == 0 {
-							format += formatKeyword
-						}
-						inAssignment = false
-					}
-
-				}
-				if format != "" {
-					highlighted += tml.Sprintf(fmt.Sprintf("%s%%c", format), c)
-				} else {
-					highlighted += string(c)
-				}
-
-				lastC = c
 			}
-
-			line.Highlighted = highlighted
+		} else {
+			csi = append(csi, r)
+			skipOutput = true
+			switch {
+			case r >= 0x40 && r <= 0x7E:
+				csiShouldCarry = true
+				inCSI = false
+			}
 		}
-
-		if inEOLMarker && len(currentEOL) > 2 {
-			currentEOL = currentEOL[2:]
-			inMultilineString = true
+		if !skipOutput {
+			output = append(output, r)
 		}
-
-		if line.IsCause {
-			maxCause = i
-		}
-		line.FirstCause = !foundFirstCause && line.IsCause
-		if line.FirstCause {
-			foundFirstCause = true
-		}
-
-		output = append(output, line)
+		prev = r
 	}
-	if maxCause > -1 {
-		output[maxCause].LastCause = true
-	}
-	return output
+
+	return append(output, csi...)
 }

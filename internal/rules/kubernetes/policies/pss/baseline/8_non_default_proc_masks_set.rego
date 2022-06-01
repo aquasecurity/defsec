@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV027
+package builtin.kubernetes.KSV027
 
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default failProcMount = false
@@ -24,21 +25,13 @@ __rego_input__ := {
 }
 
 # failProcMountOpts is true if securityContext.procMount is set in any container
-failProcMountOpts {
-	allContainers := kubernetes.containers[_]
-	utils.has_key(allContainers.securityContext, "procMount")
+failProcMountOpts[container] {
+	container := kubernetes.containers[_]
+	utils.has_key(container.securityContext, "procMount")
 }
 
 deny[res] {
-	failProcMountOpts
-
+	output := failProcMountOpts[_]
 	msg := kubernetes.format(sprintf("%s '%s' should not set 'spec.containers[*].securityContext.procMount' or 'spec.initContainers[*].securityContext.procMount'", [kubernetes.kind, kubernetes.name]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	res := result.new(msg, output)
 }

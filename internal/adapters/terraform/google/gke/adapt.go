@@ -147,6 +147,9 @@ func (a *adapter) adaptCluster(resource *terraform.Block, module *terraform.Modu
 	}
 
 	if configBlock := resource.GetBlock("node_config"); configBlock.IsNotNil() {
+		if configBlock.GetBlock("metadata").IsNotNil() {
+			cluster.ClusterMetadata.Metadata = configBlock.GetBlock("metadata").GetMetadata()
+		}
 		cluster.NodeConfig = adaptNodeConfig(configBlock)
 	}
 
@@ -178,9 +181,6 @@ func (a *adapter) adaptNodePools() {
 }
 
 func (a *adapter) adaptNodePool(resource *terraform.Block) {
-	autoRepair := types.BoolDefault(false, resource.GetMetadata())
-	autoUpgrade := types.BoolDefault(false, resource.GetMetadata())
-
 	nodeConfig := gke.NodeConfig{
 		Metadata:  resource.GetMetadata(),
 		ImageType: types.StringDefault("", resource.GetMetadata()),
@@ -191,12 +191,20 @@ func (a *adapter) adaptNodePool(resource *terraform.Block) {
 		ServiceAccount: types.StringDefault("", resource.GetMetadata()),
 	}
 
+	management := gke.Management{
+		Metadata:          resource.GetMetadata(),
+		EnableAutoRepair:  types.BoolDefault(false, resource.GetMetadata()),
+		EnableAutoUpgrade: types.BoolDefault(false, resource.GetMetadata()),
+	}
+
 	if resource.HasChild("management") {
+		management.Metadata = resource.GetBlock("management").GetMetadata()
+
 		autoRepairAttr := resource.GetBlock("management").GetAttribute("auto_repair")
-		autoRepair = autoRepairAttr.AsBoolValueOrDefault(false, resource.GetBlock("management"))
+		management.EnableAutoRepair = autoRepairAttr.AsBoolValueOrDefault(false, resource.GetBlock("management"))
 
 		autoUpgradeAttr := resource.GetBlock("management").GetAttribute("auto_upgrade")
-		autoUpgrade = autoUpgradeAttr.AsBoolValueOrDefault(false, resource.GetBlock("management"))
+		management.EnableAutoUpgrade = autoUpgradeAttr.AsBoolValueOrDefault(false, resource.GetBlock("management"))
 	}
 
 	if resource.HasChild("node_config") {
@@ -204,12 +212,8 @@ func (a *adapter) adaptNodePool(resource *terraform.Block) {
 	}
 
 	nodePool := gke.NodePool{
-		Metadata: resource.GetMetadata(),
-		Management: gke.Management{
-			Metadata:          resource.GetMetadata(),
-			EnableAutoRepair:  autoRepair,
-			EnableAutoUpgrade: autoUpgrade,
-		},
+		Metadata:   resource.GetMetadata(),
+		Management: management,
 		NodeConfig: nodeConfig,
 	}
 
@@ -235,44 +239,55 @@ func adaptNodeConfig(resource *terraform.Block) gke.NodeConfig {
 	imageTypeAttr := resource.GetAttribute("image_type")
 	imageType := imageTypeAttr.AsStringValueOrDefault("", resource)
 
-	modeAttr := resource.GetNestedAttribute("workload_metadata_config.node_metadata")
-	if modeAttr.IsNil() {
-		modeAttr = resource.GetNestedAttribute("workload_metadata_config.mode") // try newest version
+	workloadMetadata := gke.WorkloadMetadataConfig{
+		Metadata:     resource.GetMetadata(),
+		NodeMetadata: types.StringDefault("UNSPECIFIED", resource.GetMetadata()),
 	}
-	nodeMetadata := modeAttr.AsStringValueOrDefault("UNSPECIFIED", resource)
 
-	serviceAcc := resource.GetAttribute("service_account").AsStringValueOrDefault("", resource)
+	workloadBlock := resource.GetBlock("workload_metadata_config")
+	if workloadBlock.IsNotNil() {
+		workloadMetadata.Metadata = workloadBlock.GetMetadata()
+		modeAttr := workloadBlock.GetAttribute("node_metadata")
+		if modeAttr.IsNil() {
+			modeAttr = workloadBlock.GetAttribute("mode") // try newest version
+		}
+		workloadMetadata.NodeMetadata = modeAttr.AsStringValueOrDefault("UNSPECIFIED", workloadBlock)
+	}
+
+	serviceAccAttr := resource.GetAttribute("service_account")
+	serviceAcc := serviceAccAttr.AsStringValueOrDefault("", resource)
+	if serviceAccAttr.IsResourceBlockReference("google_service_account") {
+		serviceAcc = types.String("Resource reference", serviceAccAttr.GetMetadata())
+	}
 
 	return gke.NodeConfig{
-		Metadata:  resource.GetMetadata(),
-		ImageType: imageType,
-		WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
-			Metadata:     resource.GetMetadata(),
-			NodeMetadata: nodeMetadata,
-		},
-		ServiceAccount: serviceAcc,
+		Metadata:               resource.GetMetadata(),
+		ImageType:              imageType,
+		WorkloadMetadataConfig: workloadMetadata,
+		ServiceAccount:         serviceAcc,
 	}
 }
 
 func adaptMasterAuth(resource *terraform.Block) gke.MasterAuth {
-	issueClientCert := types.BoolDefault(false, resource.GetMetadata())
+	clientCert := gke.ClientCertificate{
+		Metadata:         resource.GetMetadata(),
+		IssueCertificate: types.BoolDefault(false, resource.GetMetadata()),
+	}
 
 	if resource.HasChild("client_certificate_config") {
 		clientCertAttr := resource.GetBlock("client_certificate_config").GetAttribute("issue_client_certificate")
-		issueClientCert = clientCertAttr.AsBoolValueOrDefault(false, resource.GetBlock("client_certificate_config"))
+		clientCert.IssueCertificate = clientCertAttr.AsBoolValueOrDefault(false, resource.GetBlock("client_certificate_config"))
+		clientCert.Metadata = resource.GetBlock("client_certificate_config").GetMetadata()
 	}
 
 	username := resource.GetAttribute("username").AsStringValueOrDefault("", resource)
 	password := resource.GetAttribute("password").AsStringValueOrDefault("", resource)
 
 	return gke.MasterAuth{
-		Metadata: resource.GetMetadata(),
-		ClientCertificate: gke.ClientCertificate{
-			Metadata:         resource.GetMetadata(),
-			IssueCertificate: issueClientCert,
-		},
-		Username: username,
-		Password: password,
+		Metadata:          resource.GetMetadata(),
+		ClientCertificate: clientCert,
+		Username:          username,
+		Password:          password,
 	}
 }
 
@@ -281,15 +296,13 @@ func adaptMasterAuthNetworksAsBlocks(parent *terraform.Block, blocks terraform.B
 	for _, block := range blocks {
 		for _, cidrBlock := range block.GetBlocks("cidr_blocks") {
 			if cidrAttr := cidrBlock.GetAttribute("cidr_block"); cidrAttr.IsNotNil() {
-				for _, cidr := range cidrAttr.ValueAsStrings() {
-					cidrs = append(cidrs, types.String(cidr, cidrAttr.GetMetadata()))
-				}
+				cidrs = append(cidrs, cidrAttr.AsStringValues()...)
 			}
 		}
 	}
 	enabled := types.Bool(true, blocks[0].GetMetadata())
 	return gke.MasterAuthorizedNetworks{
-		Metadata: parent.GetMetadata(),
+		Metadata: blocks[0].GetMetadata(),
 		Enabled:  enabled,
 		CIDRs:    cidrs,
 	}

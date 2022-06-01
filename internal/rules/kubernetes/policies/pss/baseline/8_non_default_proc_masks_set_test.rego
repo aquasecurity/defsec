@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV027
+package builtin.kubernetes.KSV027
 
 test_proc_mount_is_set_denied {
 	r := deny with input as {

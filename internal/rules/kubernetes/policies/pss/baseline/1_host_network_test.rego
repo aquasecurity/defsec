@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV009
+package builtin.kubernetes.KSV009
 
 test_host_network_set_to_true_denied {
 	r := deny with input as {

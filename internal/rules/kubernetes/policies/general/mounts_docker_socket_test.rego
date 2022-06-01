@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV006
+package builtin.kubernetes.KSV006
 
 test_docker_socket_not_mounted_allowed {
 	r := deny with input as {

@@ -23,7 +23,7 @@ func Test_BasicScan(t *testing.T) {
 y = 123
 z = ["a", "b", "c"]
 `,
-		"/rules/rule.rego": `package appshield.toml.lol
+		"/rules/rule.rego": `package builtin.toml.lol
 
 __rego_metadata__ := {
 	"id": "ABC123",
@@ -77,7 +77,7 @@ deny[res] {
 		CloudFormation: (*scan.EngineMetadata)(nil),
 		CustomChecks: scan.CustomChecks{
 			Terraform: (*scan.TerraformCustomCheck)(nil)},
-		RegoPackage: "data.appshield.toml.lol",
+		RegoPackage: "data.builtin.toml.lol",
 	},
 		results.GetFailed()[0].Rule(),
 	)

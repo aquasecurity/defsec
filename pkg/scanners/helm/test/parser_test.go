@@ -10,6 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/pkg/scanners/helm/parser"
 )
 
@@ -39,13 +40,54 @@ func Test_helm_parser(t *testing.T) {
 		assert.Len(t, manifests, 3)
 
 		for _, manifest := range manifests {
-			expectedPath := filepath.Join("testdata", "expected", manifest.TemplateFilePath)
+			expectedPath := filepath.Join("testdata", "expected", chartName, manifest.TemplateFilePath)
 
 			expectedContent, err := os.ReadFile(expectedPath)
 			require.NoError(t, err)
 
 			assert.Equal(t, strings.ReplaceAll(string(expectedContent), "\r\n", "\n"), strings.ReplaceAll(manifest.ManifestContent, "\r\n", "\n"))
 		}
+	}
+}
+
+func Test_tar_is_chart(t *testing.T) {
+
+	tests := []struct {
+		testName    string
+		archiveFile string
+		isHelmChart bool
+	}{
+		{
+			testName:    "standard tarball",
+			archiveFile: "mysql-8.8.26.tar",
+			isHelmChart: true,
+		},
+		{
+			testName:    "gzip tarball with tar.gz extension",
+			archiveFile: "mysql-8.8.26.tar.gz",
+			isHelmChart: true,
+		},
+		{
+			testName:    "gzip tarball with tgz extension",
+			archiveFile: "mysql-8.8.26.tgz",
+			isHelmChart: true,
+		},
+		{
+			testName:    "gzip tarball that has nothing of interest in it",
+			archiveFile: "nope.tgz",
+			isHelmChart: false,
+		},
+	}
+
+	for _, test := range tests {
+
+		t.Logf("Running test: %s", test.testName)
+		testPath := filepath.Join("testdata", test.archiveFile)
+		file, err := os.Open(testPath)
+		require.NoError(t, err)
+
+		assert.Equal(t, test.isHelmChart, detection.IsHelmChartArchive(test.archiveFile, file))
+
 	}
 }
 
@@ -85,7 +127,7 @@ func Test_helm_tarball_parser(t *testing.T) {
 
 		testFs := os.DirFS(testTemp)
 
-		helmParser := parser.New(test.chartName)
+		helmParser := parser.New(test.archiveFile)
 		err := helmParser.ParseFS(context.TODO(), testFs, ".")
 		require.NoError(t, err)
 
@@ -110,7 +152,7 @@ func Test_helm_tarball_parser(t *testing.T) {
 			if strings.HasSuffix(manifest.TemplateFilePath, "secrets.yaml") {
 				continue
 			}
-			expectedPath := filepath.Join("testdata", "expected", manifest.TemplateFilePath)
+			expectedPath := filepath.Join("testdata", "expected", test.chartName, manifest.TemplateFilePath)
 
 			expectedContent, err := os.ReadFile(expectedPath)
 			require.NoError(t, err)

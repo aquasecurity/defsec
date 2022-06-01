@@ -8,15 +8,16 @@ import (
 
 type Manifest struct {
 	Path    string
-	Content ManifestNode
+	Content *ManifestNode
 }
 
 func (m *Manifest) UnmarshalYAML(value *yaml.Node) error {
 
 	switch value.Tag {
 	case "!!map":
-		node := make(ManifestNode)
-		if err := value.Decode(&node); err != nil {
+		node := new(ManifestNode)
+		node.Path = m.Path
+		if err := value.Decode(node); err != nil {
 			return err
 		}
 		m.Content = node
@@ -27,6 +28,6 @@ func (m *Manifest) UnmarshalYAML(value *yaml.Node) error {
 	return nil
 }
 
-func (m *Manifest) ToRegoMap() map[string]interface{} {
-	return m.Content
+func (m *Manifest) ToRego() interface{} {
+	return m.Content.ToRego()
 }

@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV038
+package builtin.kubernetes.KSV038
 
 test_networkpolicy_with_spec_pod_selector {
 	r := deny with input as {
@@ -105,6 +105,23 @@ test_networkpolicy_with_deny_all_ingress_pod_selector {
 		"spec": {
 			"podSelector": {},
 			"policyType": ["Ingress"],
+		},
+	}
+
+	count(r) == 0
+}
+
+test_service {
+	r := deny with input as {
+		"apiVersion": "v1",
+		"kind": "Service",
+		"spec": {
+			"clusterIP": "None",
+			"internalTrafficPolicy": "Cluster",
+			"ipFamilyPolicy": "SingleStack",
+			"selector": {"app": "x"},
+			"sessionAffinity": "None",
+			"type": "ClusterIP",
 		},
 	}
 

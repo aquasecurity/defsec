@@ -1,4 +1,4 @@
-package appshield.dockerfile.DS017
+package builtin.dockerfile.DS017
 
 import data.lib.docker
 
@@ -45,6 +45,7 @@ is_valid_update(command) {
 
 update_followed_by_install(command) {
 	command_list = [
+		"upgrade",
 		"install",
 		"source-install",
 		"reinstall",

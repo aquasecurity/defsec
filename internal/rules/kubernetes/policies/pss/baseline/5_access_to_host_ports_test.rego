@@ -1,4 +1,4 @@
-package appshield.kubernetes.KSV024
+package builtin.kubernetes.KSV024
 
 test_host_ports_defined_denied {
 	r := deny with input as {

@@ -10,7 +10,7 @@ func outputJSON(b ConfigurableFormatter, results scan.Results) error {
 	jsonWriter := json.NewEncoder(b.Writer())
 	jsonWriter.SetIndent("", "\t")
 	var flatResults []scan.FlatResult
-	for _, result := range results.GetFailed() {
+	for _, result := range results {
 		switch result.Status() {
 		case scan.StatusIgnored:
 			if !b.IncludeIgnored() {

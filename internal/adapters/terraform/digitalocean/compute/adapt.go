@@ -1,7 +1,6 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/digitalocean/compute"
 	"github.com/aquasecurity/defsec/pkg/terraform"
 )
@@ -26,10 +25,7 @@ func adaptDroplets(module terraform.Modules) []compute.Droplet {
 			}
 			sshKeys := block.GetAttribute("ssh_keys")
 			if sshKeys != nil {
-				droplet.SSHKeys = []types.StringValue{}
-				for _, value := range sshKeys.ValueAsStrings() {
-					droplet.SSHKeys = append(droplet.SSHKeys, types.String(value, sshKeys.GetMetadata()))
-				}
+				droplet.SSHKeys = sshKeys.AsStringValues()
 			}
 
 			droplets = append(droplets, droplet)
@@ -47,24 +43,22 @@ func adaptFirewalls(module terraform.Modules) []compute.Firewall {
 
 		inboundFirewallRules := []compute.InboundFirewallRule{}
 		for _, inBoundRule := range inboundRules {
-			inboundFirewallRule := compute.InboundFirewallRule{}
+			inboundFirewallRule := compute.InboundFirewallRule{
+				Metadata: inBoundRule.GetMetadata(),
+			}
 			if ibSourceAddresses := inBoundRule.GetAttribute("source_addresses"); ibSourceAddresses != nil {
-				inboundFirewallRule.SourceAddresses = []types.StringValue{}
-				for _, value := range ibSourceAddresses.ValueAsStrings() {
-					inboundFirewallRule.SourceAddresses = append(inboundFirewallRule.SourceAddresses, types.String(value, inBoundRule.GetMetadata()))
-				}
+				inboundFirewallRule.SourceAddresses = ibSourceAddresses.AsStringValues()
 			}
 			inboundFirewallRules = append(inboundFirewallRules, inboundFirewallRule)
 		}
 
 		outboundFirewallRules := []compute.OutboundFirewallRule{}
 		for _, outBoundRule := range outboundRules {
-			outboundFirewallRule := compute.OutboundFirewallRule{}
+			outboundFirewallRule := compute.OutboundFirewallRule{
+				Metadata: outBoundRule.GetMetadata(),
+			}
 			if obDestinationAddresses := outBoundRule.GetAttribute("destination_addresses"); obDestinationAddresses != nil {
-				outboundFirewallRule.DestinationAddresses = []types.StringValue{}
-				for _, value := range obDestinationAddresses.ValueAsStrings() {
-					outboundFirewallRule.DestinationAddresses = append(outboundFirewallRule.DestinationAddresses, types.String(value, outBoundRule.GetMetadata()))
-				}
+				outboundFirewallRule.DestinationAddresses = obDestinationAddresses.AsStringValues()
 			}
 			outboundFirewallRules = append(outboundFirewallRules, outboundFirewallRule)
 		}

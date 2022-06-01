@@ -22,7 +22,7 @@ func Test_BasicScan(t *testing.T) {
 
 USER root
 `,
-		"/rules/rule.rego": `package appshield.dockerfile.DS006
+		"/rules/rule.rego": `package builtin.dockerfile.DS006
 
 __rego_metadata__ := {
 	"id": "DS006",
@@ -85,19 +85,24 @@ deny[res] {
 			CloudFormation: (*scan.EngineMetadata)(nil),
 			CustomChecks: scan.CustomChecks{
 				Terraform: (*scan.TerraformCustomCheck)(nil)},
-			RegoPackage: "data.appshield.dockerfile.DS006",
+			RegoPackage: "data.builtin.dockerfile.DS006",
 		},
 		results.GetFailed()[0].Rule(),
 	)
 
-	actualCode, err := results.GetFailed()[0].GetCode(false)
+	actualCode, err := results.GetFailed()[0].GetCode()
 	require.NoError(t, err)
+	for i := range actualCode.Lines {
+		actualCode.Lines[i].Highlighted = ""
+	}
 	assert.Equal(t, []scan.Line{
 		{
 			Number:     1,
 			Content:    "FROM ubuntu",
 			IsCause:    true,
+			FirstCause: true,
+			LastCause:  true,
 			Annotation: "",
 		},
-	}, actualCode.Lines())
+	}, actualCode.Lines)
 }

@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV020
+package builtin.kubernetes.KSV020
 
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 default failRunAsUser = false
@@ -26,43 +27,26 @@ __rego_input__ := {
 # getUserIdContainers returns the names of all containers which have
 # securityContext.runAsUser less than or equal to 100000.
 getUserIdContainers[container] {
-	allContainers := kubernetes.containers[_]
-	allContainers.securityContext.runAsUser <= 10000
-	container := allContainers.name
+	container := kubernetes.containers[_]
+	container.securityContext.runAsUser <= 10000
 }
 
 # getUserIdContainers returns the names of all containers which do
 # not have securityContext.runAsUser set.
 getUserIdContainers[container] {
-	allContainers := kubernetes.containers[_]
-	not utils.has_key(allContainers.securityContext, "runAsUser")
-	container := allContainers.name
+	container := kubernetes.containers[_]
+	not utils.has_key(container.securityContext, "runAsUser")
 }
 
 # getUserIdContainers returns the names of all containers which do
 # not have securityContext set.
 getUserIdContainers[container] {
-	allContainers := kubernetes.containers[_]
-	not utils.has_key(allContainers, "securityContext")
-	container := allContainers.name
-}
-
-# failRunAsUser is true if securityContext.runAsUser is less than or
-# equal to 10000 or if securityContext.runAsUser is not set.
-failRunAsUser {
-	count(getUserIdContainers) > 0
+	container := kubernetes.containers[_]
+	not utils.has_key(container, "securityContext")
 }
 
 deny[res] {
-	failRunAsUser
-
-	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.runAsUser' > 10000", [getUserIdContainers[_], kubernetes.kind, kubernetes.name]))
-
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
+	output := getUserIdContainers[_]
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.runAsUser' > 10000", [output.name, kubernetes.kind, kubernetes.name]))
+	res := result.new(msg, output)
 }

@@ -1,4 +1,4 @@
-package appshield.dockerfile.DS012
+package builtin.dockerfile.DS012
 
 import data.lib.docker
 
@@ -27,6 +27,7 @@ get_duplicate_alias[output] {
 	[_, alias1] := regex.split(`\s+as\s+`, output1.arg)
 	[_, alias2] := regex.split(`\s+as\s+`, output2.arg)
 	alias1 == alias2
+	output1.cmd.StartLine < output2.cmd.StartLine # avoid duplicates
 	output := {
 		"alias": alias1,
 		"cmd": output1.cmd,
@@ -34,10 +35,10 @@ get_duplicate_alias[output] {
 }
 
 get_aliased_name[output] {
-	some name
-	stage := input.stages[name]
+	stage := input.Stages[_]
+	name := stage.Name
 
-	cmd := stage[0]
+	cmd := stage.Commands[0]
 
 	arg = lower(name)
 	contains(arg, " as ")

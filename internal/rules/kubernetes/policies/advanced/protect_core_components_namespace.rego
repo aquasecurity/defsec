@@ -1,6 +1,7 @@
-package appshield.kubernetes.KSV037
+package builtin.kubernetes.KSV037
 
 import data.lib.kubernetes
+import data.lib.result
 import data.lib.utils
 
 __rego_metadata__ := {
@@ -21,18 +22,6 @@ __rego_input__ := {
 	"selector": [{"type": "kubernetes"}],
 }
 
-deny[res] {
-	systemNamespaceInUse(input.metadata, input.spec)
-	msg := sprintf("%s '%s' should not be set with 'kube-system' namespace", [kubernetes.kind, kubernetes.name])
-	res := {
-		"msg": msg,
-		"id": __rego_metadata__.id,
-		"title": __rego_metadata__.title,
-		"severity": __rego_metadata__.severity,
-		"type": __rego_metadata__.type,
-	}
-}
-
 systemNamespaceInUse(metadata, spec) {
 	kubernetes.namespace == "kube-system"
 	not core_component(metadata, spec)
@@ -46,4 +35,10 @@ core_component(metadata, spec) {
 	kubernetes.has_field(metadata.labels, "component")
 	coreComponentLabels := ["kube-apiserver", "etcd", "kube-controller-manager", "kube-scheduler"]
 	metadata.labels.component = coreComponentLabels[_]
+}
+
+deny[res] {
+	systemNamespaceInUse(input.metadata, input.spec)
+	msg := sprintf("%s '%s' should not be set with 'kube-system' namespace", [kubernetes.kind, kubernetes.name])
+	res := result.new(msg, input.spec)
 }

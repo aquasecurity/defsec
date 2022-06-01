@@ -38,7 +38,6 @@ func adaptOrphanContainers(modules terraform.Modules, containers []string) (orph
 			if _, ok := accountedFor[containerResource.ID()]; ok {
 				continue
 			}
-
 			orphans = append(orphans, adaptContainer(containerResource))
 		}
 	}
@@ -127,12 +126,12 @@ func adaptAccount(resource *terraform.Block) storage.Account {
 
 func adaptContainer(resource *terraform.Block) storage.Container {
 	accessTypeAttr := resource.GetAttribute("container_access_type")
-	publicAccess := types.String(storage.PublicAccessOff, resource.GetMetadata())
+	publicAccess := types.StringDefault(storage.PublicAccessOff, resource.GetMetadata())
 
 	if accessTypeAttr.Equals("blob") {
-		publicAccess = types.String(storage.PublicAccessBlob, resource.GetMetadata())
+		publicAccess = types.String(storage.PublicAccessBlob, accessTypeAttr.GetMetadata())
 	} else if accessTypeAttr.Equals("container") {
-		publicAccess = types.String(storage.PublicAccessContainer, resource.GetMetadata())
+		publicAccess = types.String(storage.PublicAccessContainer, accessTypeAttr.GetMetadata())
 	}
 
 	return storage.Container{
@@ -147,17 +146,14 @@ func adaptNetworkRule(resource *terraform.Block) storage.NetworkRule {
 
 	defaultActionAttr := resource.GetAttribute("default_action")
 	if defaultActionAttr.Equals("allow", terraform.IgnoreCase) {
-		allowByDefault = types.Bool(true, resource.GetMetadata())
+		allowByDefault = types.Bool(true, defaultActionAttr.GetMetadata())
 	} else if defaultActionAttr.Equals("deny", terraform.IgnoreCase) {
-		allowByDefault = types.Bool(false, resource.GetMetadata())
+		allowByDefault = types.Bool(false, defaultActionAttr.GetMetadata())
 	}
 
 	if resource.HasChild("bypass") {
 		bypassAttr := resource.GetAttribute("bypass")
-		bypassList := bypassAttr.ValueAsStrings()
-		for _, bypassVal := range bypassList {
-			bypass = append(bypass, types.String(bypassVal, resource.GetMetadata()))
-		}
+		bypass = bypassAttr.AsStringValues()
 	}
 
 	return storage.NetworkRule{
