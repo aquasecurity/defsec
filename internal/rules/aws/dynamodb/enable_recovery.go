@@ -45,6 +45,19 @@ By enabling point-in-time-recovery you can restore to a known point in the event
 				results.AddPassed(&cluster)
 			}
 		}
+		for _, table := range s.AWS.DynamoDB.Tables {
+			if table.IsUnmanaged() {
+				continue
+			}
+			if table.PointInTimeRecovery.IsFalse() {
+				results.Add(
+					"Point-in-time recovery is not enabled.",
+					table.PointInTimeRecovery,
+				)
+			} else {
+				results.AddPassed(&table)
+			}
+		}
 		return
 	},
 )

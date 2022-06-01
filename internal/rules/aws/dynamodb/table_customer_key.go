@@ -49,6 +49,24 @@ var CheckTableCustomerKey = rules.Register(
 				results.AddPassed(&cluster)
 			}
 		}
+		for _, table := range s.AWS.DynamoDB.Tables {
+			if table.IsUnmanaged() {
+				continue
+			}
+			if table.ServerSideEncryption.KMSKeyID.IsEmpty() {
+				results.Add(
+					"Table encryption does not use a customer-managed KMS key.",
+					table.ServerSideEncryption.KMSKeyID,
+				)
+			} else if table.ServerSideEncryption.KMSKeyID.EqualTo(dynamodb.DefaultKMSKeyID) {
+				results.Add(
+					"Table encryption explicitly uses the default KMS key.",
+					table.ServerSideEncryption.KMSKeyID,
+				)
+			} else {
+				results.AddPassed(&table)
+			}
+		}
 		return
 	},
 )

@@ -9,6 +9,7 @@ import (
 func Adapt(modules terraform.Modules) dynamodb.DynamoDB {
 	return dynamodb.DynamoDB{
 		DAXClusters: adaptClusters(modules),
+		Tables:      adaptTables(modules),
 	}
 }
 
@@ -18,11 +19,18 @@ func adaptClusters(modules terraform.Modules) []dynamodb.DAXCluster {
 		for _, resource := range module.GetResourcesByType("aws_dax_cluster") {
 			clusters = append(clusters, adaptCluster(resource, module))
 		}
-		for _, resource := range module.GetResourcesByType("aws_dynamodb_table") {
-			clusters = append(clusters, adaptCluster(resource, module))
-		}
 	}
 	return clusters
+}
+
+func adaptTables(modules terraform.Modules) []dynamodb.Table {
+	var tables []dynamodb.Table
+	for _, module := range modules {
+		for _, resource := range module.GetResourcesByType("aws_dynamodb_table") {
+			tables = append(tables, adaptTable(resource, module))
+		}
+	}
+	return tables
 }
 
 func adaptCluster(resource *terraform.Block, module *terraform.Module) dynamodb.DAXCluster {
@@ -41,16 +49,6 @@ func adaptCluster(resource *terraform.Block, module *terraform.Module) dynamodb.
 		cluster.ServerSideEncryption.Metadata = ssEncryptionBlock.GetMetadata()
 		enabledAttr := ssEncryptionBlock.GetAttribute("enabled")
 		cluster.ServerSideEncryption.Enabled = enabledAttr.AsBoolValueOrDefault(false, ssEncryptionBlock)
-
-		if resource.TypeLabel() == "aws_dynamodb_table" {
-			kmsKeyIdAttr := ssEncryptionBlock.GetAttribute("kms_key_arn")
-			cluster.ServerSideEncryption.KMSKeyID = kmsKeyIdAttr.AsStringValueOrDefault("alias/aws/dynamodb", ssEncryptionBlock)
-
-			kmsBlock, err := module.GetReferencedBlock(kmsKeyIdAttr, resource)
-			if err == nil && kmsBlock.IsNotNil() {
-				cluster.ServerSideEncryption.KMSKeyID = types.String(kmsBlock.FullName(), kmsBlock.GetMetadata())
-			}
-		}
 	}
 
 	if recoveryBlock := resource.GetBlock("point_in_time_recovery"); recoveryBlock.IsNotNil() {
@@ -59,4 +57,38 @@ func adaptCluster(resource *terraform.Block, module *terraform.Module) dynamodb.
 	}
 
 	return cluster
+}
+
+func adaptTable(resource *terraform.Block, module *terraform.Module) dynamodb.Table {
+
+	table := dynamodb.Table{
+		Metadata: resource.GetMetadata(),
+		ServerSideEncryption: dynamodb.ServerSideEncryption{
+			Metadata: resource.GetMetadata(),
+			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
+			KMSKeyID: types.StringDefault("", resource.GetMetadata()),
+		},
+		PointInTimeRecovery: types.BoolDefault(false, resource.GetMetadata()),
+	}
+
+	if ssEncryptionBlock := resource.GetBlock("server_side_encryption"); ssEncryptionBlock.IsNotNil() {
+		table.ServerSideEncryption.Metadata = ssEncryptionBlock.GetMetadata()
+		enabledAttr := ssEncryptionBlock.GetAttribute("enabled")
+		table.ServerSideEncryption.Enabled = enabledAttr.AsBoolValueOrDefault(false, ssEncryptionBlock)
+
+		kmsKeyIdAttr := ssEncryptionBlock.GetAttribute("kms_key_arn")
+		table.ServerSideEncryption.KMSKeyID = kmsKeyIdAttr.AsStringValueOrDefault("alias/aws/dynamodb", ssEncryptionBlock)
+
+		kmsBlock, err := module.GetReferencedBlock(kmsKeyIdAttr, resource)
+		if err == nil && kmsBlock.IsNotNil() {
+			table.ServerSideEncryption.KMSKeyID = types.String(kmsBlock.FullName(), kmsBlock.GetMetadata())
+		}
+	}
+
+	if recoveryBlock := resource.GetBlock("point_in_time_recovery"); recoveryBlock.IsNotNil() {
+		recoveryEnabledAttr := recoveryBlock.GetAttribute("enabled")
+		table.PointInTimeRecovery = recoveryEnabledAttr.AsBoolValueOrDefault(false, recoveryBlock)
+	}
+
+	return table
 }

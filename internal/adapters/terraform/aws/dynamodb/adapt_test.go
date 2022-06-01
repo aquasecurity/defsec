@@ -21,6 +21,42 @@ func Test_adaptCluster(t *testing.T) {
 		expected  dynamodb.DAXCluster
 	}{
 		{
+			name: "cluster",
+			terraform: `
+			resource "aws_dax_cluster" "example" {
+				server_side_encryption {
+					enabled = true
+				}
+			  }
+`,
+			expected: dynamodb.DAXCluster{
+				Metadata: types.NewTestMetadata(),
+				ServerSideEncryption: dynamodb.ServerSideEncryption{
+					Metadata: types.NewTestMetadata(),
+					Enabled:  types.Bool(true, types.NewTestMetadata()),
+					KMSKeyID: types.String("", types.NewTestMetadata()),
+				},
+				PointInTimeRecovery: types.Bool(false, types.NewTestMetadata()),
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
+			adapted := adaptCluster(modules.GetBlocks()[0], modules[0])
+			testutil.AssertDefsecEqual(t, test.expected, adapted)
+		})
+	}
+}
+
+func Test_adaptTable(t *testing.T) {
+	tests := []struct {
+		name      string
+		terraform string
+		expected  dynamodb.Table
+	}{
+		{
 			name: "table",
 			terraform: `
 			resource "aws_dynamodb_table" "example" {
@@ -36,7 +72,7 @@ func Test_adaptCluster(t *testing.T) {
 				}
 			}
 `,
-			expected: dynamodb.DAXCluster{
+			expected: dynamodb.Table{
 				Metadata: types.NewTestMetadata(),
 				ServerSideEncryption: dynamodb.ServerSideEncryption{
 					Metadata: types.NewTestMetadata(),
@@ -47,7 +83,7 @@ func Test_adaptCluster(t *testing.T) {
 			},
 		},
 		{
-			name: "cluster",
+			name: "table no kms",
 			terraform: `
 			resource "aws_dax_cluster" "example" {
 				server_side_encryption {
@@ -55,12 +91,12 @@ func Test_adaptCluster(t *testing.T) {
 				}
 			  }
 `,
-			expected: dynamodb.DAXCluster{
+			expected: dynamodb.Table{
 				Metadata: types.NewTestMetadata(),
 				ServerSideEncryption: dynamodb.ServerSideEncryption{
 					Metadata: types.NewTestMetadata(),
 					Enabled:  types.Bool(true, types.NewTestMetadata()),
-					KMSKeyID: types.String("", types.NewTestMetadata()),
+					KMSKeyID: types.String("alias/aws/dynamodb", types.NewTestMetadata()),
 				},
 				PointInTimeRecovery: types.Bool(false, types.NewTestMetadata()),
 			},
@@ -80,7 +116,7 @@ func Test_adaptCluster(t *testing.T) {
 			resource "aws_kms_key" "a" {
 			  }
 `,
-			expected: dynamodb.DAXCluster{
+			expected: dynamodb.Table{
 				Metadata: types.NewTestMetadata(),
 				ServerSideEncryption: dynamodb.ServerSideEncryption{
 					Metadata: types.NewTestMetadata(),
@@ -95,7 +131,7 @@ func Test_adaptCluster(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
-			adapted := adaptCluster(modules.GetBlocks()[0], modules[0])
+			adapted := adaptTable(modules.GetBlocks()[0], modules[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
 	}
@@ -119,8 +155,9 @@ func TestLines(t *testing.T) {
 	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
-	require.Len(t, adapted.DAXClusters, 1)
-	table := adapted.DAXClusters[0]
+	require.Len(t, adapted.DAXClusters, 0)
+	require.Len(t, adapted.Tables, 1)
+	table := adapted.Tables[0]
 
 	assert.Equal(t, 2, table.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 13, table.GetMetadata().Range().GetEndLine())
