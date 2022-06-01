@@ -338,13 +338,19 @@ func (b *Block) FullName() string {
 func (b *Block) ModuleName() string {
 	name := strings.TrimPrefix(b.LocalName(), "module.")
 	if b.moduleBlock != nil {
+		module := strings.TrimPrefix(b.moduleBlock.FullName(), "module.")
 		name = fmt.Sprintf(
 			"%s.%s",
-			strings.TrimPrefix(b.moduleBlock.FullName(), "module."),
+			module,
 			name,
 		)
 	}
-	return strings.Split(name, "[")[0]
+	var parts []string
+	for _, part := range strings.Split(name, ".") {
+		part = strings.Split(part, "[")[0]
+		parts = append(parts, part)
+	}
+	return strings.Join(parts, ".")
 }
 
 func (b *Block) UniqueName() string {

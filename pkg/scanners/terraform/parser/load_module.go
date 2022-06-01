@@ -123,6 +123,12 @@ func (e *evaluator) loadModuleFromTerraformCache(ctx context.Context, b *terrafo
 	if strings.HasPrefix(source, ".") {
 		source = ""
 	}
+
+	if prefix, relativeDir, ok := strings.Cut(source, "//"); ok && !strings.HasSuffix(prefix, ":") && strings.Count(prefix, "/") == 2 {
+		modulePath = fmt.Sprintf("%s/%s", modulePath, relativeDir)
+	}
+
+	e.debug("Module '%s' resolved to path '%s' in filesystem '%s' using modules.json", b.FullName(), modulePath, e.filesystem)
 	moduleParser := e.parentParser.newModuleParser(e.filesystem, source, modulePath, b.Label(), b)
 	if err := moduleParser.ParseFS(ctx, modulePath); err != nil {
 		return nil, err
