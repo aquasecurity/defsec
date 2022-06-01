@@ -17,5 +17,6 @@ type Queue struct {
 
 type Encryption struct {
 	types.Metadata
-	KMSKeyID types.StringValue
+	KMSKeyID          types.StringValue
+	ManagedEncryption types.BoolValue
 }

@@ -43,8 +43,9 @@ func Test_Adapt(t *testing.T) {
 					{
 						Metadata: types.NewTestMetadata(),
 						Encryption: sqs.Encryption{
-							Metadata: types.NewTestMetadata(),
-							KMSKeyID: types.String("", types.NewTestMetadata()),
+							Metadata:          types.NewTestMetadata(),
+							ManagedEncryption: types.Bool(false, types.NewTestMetadata()),
+							KMSKeyID:          types.String("", types.NewTestMetadata()),
 						},
 						Policies: func() []iam.Policy {
 							sb := iamgo.NewStatementBuilder()
@@ -82,8 +83,9 @@ func Test_Adapt(t *testing.T) {
 					{
 						Metadata: types.NewTestMetadata(),
 						Encryption: sqs.Encryption{
-							Metadata: types.NewTestMetadata(),
-							KMSKeyID: types.String("/blah", types.NewTestMetadata()),
+							Metadata:          types.NewTestMetadata(),
+							ManagedEncryption: types.Bool(false, types.NewTestMetadata()),
+							KMSKeyID:          types.String("/blah", types.NewTestMetadata()),
 						},
 					},
 				},

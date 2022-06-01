@@ -23,7 +23,6 @@ Resources:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: my-queue
-
 `,
 }
 

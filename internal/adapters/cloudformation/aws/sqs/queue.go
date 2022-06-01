@@ -5,6 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 
+	defsecTypes "github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 
@@ -16,8 +17,9 @@ func getQueues(ctx parser.FileContext) (queues []sqs.Queue) {
 		queue := sqs.Queue{
 			Metadata: r.Metadata(),
 			Encryption: sqs.Encryption{
-				Metadata: r.Metadata(),
-				KMSKeyID: r.GetStringProperty("KmsMasterKeyId"),
+				Metadata:          r.Metadata(),
+				ManagedEncryption: defsecTypes.Bool(false, r.Metadata()),
+				KMSKeyID:          r.GetStringProperty("KmsMasterKeyId"),
 			},
 			Policies: []iam.Policy{},
 		}
