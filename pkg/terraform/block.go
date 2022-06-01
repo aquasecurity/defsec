@@ -430,6 +430,10 @@ func (b *Block) Attributes() map[string]*Attribute {
 
 func (b *Block) Values() cty.Value {
 	values := make(map[string]cty.Value)
+	// here we set up common "id" values that are set by the provider - this ensures all blocks have a default
+	// referencable id/arn. this isn't perfect, but the only way to link blocks in certain circumstances.
+	values["id"] = cty.StringVal(b.ID())
+	values["arn"] = cty.StringVal(b.ID())
 	for _, attribute := range b.GetAttributes() {
 		values[attribute.Name()] = attribute.Value()
 	}
