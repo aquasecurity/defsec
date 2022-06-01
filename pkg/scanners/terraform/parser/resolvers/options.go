@@ -11,6 +11,7 @@ type Options struct {
 	DebugWriter                                                                    io.Writer
 	AllowDownloads                                                                 bool
 	AllowCache                                                                     bool
+	RelativePath                                                                   string
 }
 
 func (o *Options) hasPrefix(prefixes ...string) bool {

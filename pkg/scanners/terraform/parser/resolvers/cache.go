@@ -16,7 +16,7 @@ var Cache = &cacheResolver{}
 var cacheFS fs.FS
 
 func init() {
-	dir := cacheDir()
+	dir := locateCacheDir()
 	if dir == "" {
 		return
 	}
@@ -26,7 +26,7 @@ func init() {
 	cacheFS = os.DirFS(dir)
 }
 
-func cacheDir() string {
+func locateCacheDir() string {
 
 	locations := []string{
 		filepath.Join(os.TempDir(), ".tfsec", "cache"),
@@ -61,15 +61,15 @@ func (r *cacheResolver) Resolve(_ context.Context, _ fs.FS, opt Options) (filesy
 		opt.Debug("No cache filesystem is available on this machine.")
 		return nil, "", "", false, nil
 	}
-	key := cacheKey(opt.Source, opt.Version)
+	key := cacheKey(opt.Source, opt.Version, opt.RelativePath)
 	opt.Debug("Trying to resolve: %s", key)
 	if info, err := fs.Stat(cacheFS, filepath.ToSlash(key)); err == nil && info.IsDir() {
 		opt.Debug("Module '%s' resolving via cache...", opt.Name)
-		return os.DirFS(filepath.Join(cacheDir(), key)), opt.OriginalSource, ".", true, nil
+		return os.DirFS(filepath.Join(locateCacheDir(), key)), opt.OriginalSource, ".", true, nil
 	}
 	return nil, "", "", false, nil
 }
 
-func cacheKey(source, version string) string {
-	return fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s", source, version)))) // nolint
+func cacheKey(source, version, relativePath string) string {
+	return fmt.Sprintf("%x", md5.Sum([]byte(fmt.Sprintf("%s:%s:%s", source, version, relativePath)))) // nolint
 }
