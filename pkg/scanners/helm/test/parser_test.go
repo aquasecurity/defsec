@@ -68,6 +68,11 @@ func Test_tar_is_chart(t *testing.T) {
 			isHelmChart: true,
 		},
 		{
+			testName:    "broken gzip tarball with tar.gz extension",
+			archiveFile: "aws-cluster-autoscaler-bad.tar.gz",
+			isHelmChart: true,
+		},
+		{
 			testName:    "gzip tarball with tgz extension",
 			archiveFile: "mysql-8.8.26.tgz",
 			isHelmChart: true,

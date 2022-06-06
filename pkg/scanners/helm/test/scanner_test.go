@@ -62,10 +62,44 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 
 		sort.Strings(errorCodes)
 
-		assert.Equal(t, []string{"AVD-KSV-0001", "AVD-KSV-0003",
+		assert.Equal(t, []string{
+			"AVD-KSV-0001", "AVD-KSV-0003",
 			"AVD-KSV-0011", "AVD-KSV-0012", "AVD-KSV-0014",
 			"AVD-KSV-0015", "AVD-KSV-0016", "AVD-KSV-0018",
-			"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0029"}, errorCodes)
+			"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0029",
+		}, errorCodes)
+	}
+}
+
+func Test_malformed_helm_scanner_with_archive(t *testing.T) {
+
+	tests := []struct {
+		testName    string
+		chartName   string
+		path        string
+		archiveName string
+	}{
+
+		{
+			testName:    "Parsing tarball 'aws-cluster-autoscaler-bad.tar.gz'",
+			chartName:   "aws-cluster-autoscaler",
+			path:        filepath.Join("testdata", "aws-cluster-autoscaler-bad.tar.gz"),
+			archiveName: "aws-cluster-autoscaler-bad.tar.gz",
+		},
+	}
+
+	for _, test := range tests {
+		t.Logf("Running test: %s", test.testName)
+
+		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true))
+
+		testTemp := t.TempDir()
+		testFileName := filepath.Join(testTemp, test.archiveName)
+		require.NoError(t, copyArchive(test.path, testFileName))
+
+		testFs := os.DirFS(testTemp)
+		_, err := helmScanner.ScanFS(context.TODO(), testFs, ".")
+		require.Error(t, err)
 	}
 }
 
@@ -107,10 +141,12 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 
 		sort.Strings(errorCodes)
 
-		assert.Equal(t, []string{"AVD-KSV-0001", "AVD-KSV-0003",
+		assert.Equal(t, []string{
+			"AVD-KSV-0001", "AVD-KSV-0003",
 			"AVD-KSV-0011", "AVD-KSV-0012", "AVD-KSV-0014",
 			"AVD-KSV-0015", "AVD-KSV-0016", "AVD-KSV-0018",
-			"AVD-KSV-0020", "AVD-KSV-0021"}, errorCodes)
+			"AVD-KSV-0020", "AVD-KSV-0021",
+		}, errorCodes)
 	}
 }
 
