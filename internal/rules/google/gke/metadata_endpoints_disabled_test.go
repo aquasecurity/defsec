@@ -25,10 +25,11 @@ func TestCheckMetadataEndpointsDisabled(t *testing.T) {
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
-						ClusterMetadata: gke.Metadata{
+						NodeConfig: gke.NodeConfig{
 							Metadata:              types.NewTestMetadata(),
 							EnableLegacyEndpoints: types.Bool(true, types.NewTestMetadata()),
 						},
+						RemoveDefaultNodePool: types.Bool(false, types.NewTestMetadata()),
 					},
 				},
 			},
@@ -40,14 +41,63 @@ func TestCheckMetadataEndpointsDisabled(t *testing.T) {
 				Clusters: []gke.Cluster{
 					{
 						Metadata: types.NewTestMetadata(),
-						ClusterMetadata: gke.Metadata{
+						NodeConfig: gke.NodeConfig{
 							Metadata:              types.NewTestMetadata(),
 							EnableLegacyEndpoints: types.Bool(false, types.NewTestMetadata()),
+						},
+						RemoveDefaultNodePool: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "Cluster legacy metadata endpoints disabled on non-default node pool",
+			input: gke.GKE{
+				Clusters: []gke.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						NodeConfig: gke.NodeConfig{
+							Metadata:              types.NewTestMetadata(),
+							EnableLegacyEndpoints: types.Bool(true, types.NewTestMetadata()),
+						},
+						RemoveDefaultNodePool: types.Bool(true, types.NewTestMetadata()),
+						NodePools: []gke.NodePool{
+							{
+								Metadata: types.NewTestMetadata(),
+								NodeConfig: gke.NodeConfig{
+									EnableLegacyEndpoints: types.Bool(false, types.NewTestMetadata()),
+								},
+							},
 						},
 					},
 				},
 			},
 			expected: false,
+		},
+		{
+			name: "Cluster legacy metadata endpoints enabled on non-default node pool",
+			input: gke.GKE{
+				Clusters: []gke.Cluster{
+					{
+						Metadata: types.NewTestMetadata(),
+						NodeConfig: gke.NodeConfig{
+							Metadata:              types.NewTestMetadata(),
+							EnableLegacyEndpoints: types.Bool(true, types.NewTestMetadata()),
+						},
+						RemoveDefaultNodePool: types.Bool(true, types.NewTestMetadata()),
+						NodePools: []gke.NodePool{
+							{
+								Metadata: types.NewTestMetadata(),
+								NodeConfig: gke.NodeConfig{
+									EnableLegacyEndpoints: types.Bool(true, types.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: true,
 		},
 	}
 	for _, test := range tests {
