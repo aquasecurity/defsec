@@ -127,14 +127,16 @@ func init() {
 	}
 
 	matchers[FileTypeDockerfile] = func(name string, _ io.ReadSeeker) bool {
-		const requiredFile = "Dockerfile"
-		base := filepath.Base(name)
-		ext := filepath.Ext(base)
-		if strings.TrimSuffix(base, ext) == requiredFile {
-			return true
-		}
-		if strings.EqualFold(ext, "."+requiredFile) {
-			return true
+		requiredFiles := []string{"Dockerfile", "Containerfile"}
+		for _, requiredFile := range requiredFiles {
+			base := filepath.Base(name)
+			ext := filepath.Ext(base)
+			if strings.TrimSuffix(base, ext) == requiredFile {
+				return true
+			}
+			if strings.EqualFold(ext, "."+requiredFile) {
+				return true
+			}
 		}
 		return false
 	}

@@ -114,6 +114,14 @@ Resources:
 			},
 		},
 		{
+			name: "Containerfile, no reader",
+			path: "Containerfile",
+			r:    nil,
+			expected: []FileType{
+				FileTypeDockerfile,
+			},
+		},
+		{
 			name: "Dockerfile, reader",
 			path: "Dockerfile",
 			r:    strings.NewReader("FROM ubuntu\n"),
