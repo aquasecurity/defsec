@@ -13,7 +13,7 @@ __rego_metadata__ := {
 	"severity": "MEDIUM",
 	"type": "Kubernetes Security Check",
 	"description": "ensure that Pod specifications disable the secret token being mounted by setting automountServiceAccountToken: false",
-	"recommended_actions": "Remove 'container.apparmor.security.beta.kubernetes.io' annotation or set it to 'runtime/default'.",
+	"recommended_actions": "Disable the mounting of service account secret token by setting automountServiceAccountToken to false",
 	"url": "https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#serviceaccount-admission-controller",
 }
 
