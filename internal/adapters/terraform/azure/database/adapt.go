@@ -11,7 +11,7 @@ func Adapt(modules terraform.Modules) database.Database {
 	mssqlAdapter := mssqlAdapter{
 		alertPolicyIDs:    modules.GetChildResourceIDMapByType("azurerm_mssql_server_security_alert_policy"),
 		auditingPolicyIDs: modules.GetChildResourceIDMapByType("azurerm_mssql_server_extended_auditing_policy", "azurerm_mssql_database_extended_auditing_policy"),
-		firewallIDs:       modules.GetChildResourceIDMapByType("azurerm_sql_firewall_rule"),
+		firewallIDs:       modules.GetChildResourceIDMapByType("azurerm_sql_firewall_rule", "azurerm_mssql_firewall_rule"),
 	}
 
 	mysqlAdapter := mysqlAdapter{
@@ -260,7 +260,9 @@ func (a *mssqlAdapter) adaptMSSQLServer(resource *terraform.Block, module *terra
 	}
 
 	firewallRuleBlocks := module.GetReferencingResources(resource, "azurerm_sql_firewall_rule", "server_name")
+	firewallRuleBlocks = append(firewallRuleBlocks, module.GetReferencingResources(resource, "azurerm_mssql_firewall_rule", "server_id")...)
 	for _, firewallBlock := range firewallRuleBlocks {
+		a.firewallIDs.Resolve(firewallBlock.ID())
 		firewallRules = append(firewallRules, adaptFirewallRule(firewallBlock))
 	}
 
