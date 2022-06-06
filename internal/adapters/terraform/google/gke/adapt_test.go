@@ -108,7 +108,8 @@ func Test_Adapt(t *testing.T) {
 								Metadata:     types.NewTestMetadata(),
 								NodeMetadata: types.String("GCE_METADATA", types.NewTestMetadata()),
 							},
-							ServiceAccount: types.String("Resource reference", types.NewTestMetadata()),
+							ServiceAccount:        types.String("", types.NewTestMetadata()),
+							EnableLegacyEndpoints: types.Bool(false, types.NewTestMetadata()),
 						},
 						NodePools: []gke.NodePool{
 							{
@@ -125,7 +126,8 @@ func Test_Adapt(t *testing.T) {
 										Metadata:     types.NewTestMetadata(),
 										NodeMetadata: types.String("GCE_METADATA", types.NewTestMetadata()),
 									},
-									ServiceAccount: types.String("Resource reference", types.NewTestMetadata()),
+									ServiceAccount:        types.String("", types.NewTestMetadata()),
+									EnableLegacyEndpoints: types.Bool(false, types.NewTestMetadata()),
 								},
 							},
 						},
@@ -153,10 +155,6 @@ func Test_Adapt(t *testing.T) {
 						PodSecurityPolicy: gke.PodSecurityPolicy{
 							Metadata: types.NewTestMetadata(),
 							Enabled:  types.Bool(true, types.NewTestMetadata()),
-						},
-						ClusterMetadata: gke.Metadata{
-							Metadata:              types.NewTestMetadata(),
-							EnableLegacyEndpoints: types.Bool(false, types.NewTestMetadata()),
 						},
 						MasterAuth: gke.MasterAuth{
 							Metadata: types.NewTestMetadata(),
@@ -205,7 +203,8 @@ func Test_Adapt(t *testing.T) {
 								Metadata:     types.NewTestMetadata(),
 								NodeMetadata: types.String("GCE_METADATA", types.NewTestMetadata()),
 							},
-							ServiceAccount: types.String("service-account", types.NewTestMetadata()),
+							ServiceAccount:        types.String("service-account", types.NewTestMetadata()),
+							EnableLegacyEndpoints: types.Bool(false, types.NewTestMetadata()),
 						},
 
 						IPAllocationPolicy: gke.IPAllocationPolicy{
@@ -230,10 +229,6 @@ func Test_Adapt(t *testing.T) {
 						PodSecurityPolicy: gke.PodSecurityPolicy{
 							Metadata: types.NewTestMetadata(),
 							Enabled:  types.Bool(false, types.NewTestMetadata()),
-						},
-						ClusterMetadata: gke.Metadata{
-							Metadata:              types.NewTestMetadata(),
-							EnableLegacyEndpoints: types.Bool(false, types.NewTestMetadata()),
 						},
 						MasterAuth: gke.MasterAuth{
 							Metadata: types.NewTestMetadata(),
@@ -340,11 +335,11 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 2, cluster.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 44, cluster.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 5, cluster.ClusterMetadata.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 7, cluster.ClusterMetadata.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 49, cluster.NodeConfig.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 59, cluster.NodeConfig.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 6, cluster.ClusterMetadata.EnableLegacyEndpoints.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 6, cluster.ClusterMetadata.EnableLegacyEndpoints.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 51, cluster.NodeConfig.EnableLegacyEndpoints.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 51, cluster.NodeConfig.EnableLegacyEndpoints.GetMetadata().Range().GetEndLine())
 
 	assert.Equal(t, 9, cluster.PodSecurityPolicy.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 11, cluster.PodSecurityPolicy.GetMetadata().Range().GetEndLine())

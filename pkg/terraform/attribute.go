@@ -326,7 +326,7 @@ func (a *Attribute) valueToStrings(value cty.Value) (results []types.StringValue
 		}
 	}()
 	if value.IsNull() {
-		return nil
+		return []types.StringValue{types.StringUnresolvable(a.metadata)}
 	}
 	if !value.IsKnown() {
 		return []types.StringValue{types.StringUnresolvable(a.metadata)}
