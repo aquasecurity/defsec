@@ -189,3 +189,31 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 20, cluster.RoleBasedAccessControl.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 20, cluster.RoleBasedAccessControl.Enabled.GetMetadata().Range().GetEndLine())
 }
+
+func TestWithLocals(t *testing.T) {
+	src := `
+	variable "ip_whitelist" {
+  description = "IP Ranges with allowed access."
+  type        = list(string)
+  default     = ["1.2.3.4"]
+}
+
+locals {
+  ip_whitelist = concat(var.ip_whitelist, split(",", data.azurerm_public_ip.build_agents.ip_address))
+}
+
+resource "azurerm_kubernetes_cluster" "aks" {
+  # not working
+  api_server_authorized_ip_ranges = local.ip_whitelist
+  # working
+  # api_server_authorized_ip_ranges = concat(var.ip_whitelist, split(",", data.azurerm_public_ip.example.ip_address))
+}`
+
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
+	adapted := Adapt(modules)
+
+	require.Len(t, adapted.KubernetesClusters, 1)
+	cluster := adapted.KubernetesClusters[0]
+	require.Len(t, cluster.APIServerAuthorizedIPRanges, 1)
+	assert.False(t, cluster.APIServerAuthorizedIPRanges[0].GetMetadata().IsResolvable())
+}
