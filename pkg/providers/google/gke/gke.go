@@ -18,7 +18,6 @@ type Cluster struct {
 	LoggingService           types.StringValue
 	MonitoringService        types.StringValue
 	PodSecurityPolicy        PodSecurityPolicy
-	ClusterMetadata          Metadata
 	MasterAuth               MasterAuth
 	NodeConfig               NodeConfig
 	EnableShieldedNodes      types.BoolValue
@@ -32,6 +31,7 @@ type NodeConfig struct {
 	ImageType              types.StringValue
 	WorkloadMetadataConfig WorkloadMetadataConfig
 	ServiceAccount         types.StringValue
+	EnableLegacyEndpoints  types.BoolValue
 }
 
 type WorkloadMetadataConfig struct {
@@ -49,11 +49,6 @@ type MasterAuth struct {
 type ClientCertificate struct {
 	types.Metadata
 	IssueCertificate types.BoolValue
-}
-
-type Metadata struct {
-	types.Metadata
-	EnableLegacyEndpoints types.BoolValue
 }
 
 type PodSecurityPolicy struct {

@@ -40,10 +40,19 @@ When setting the <code>metadata</code> block, the default value for <code>disabl
 			if cluster.IsUnmanaged() {
 				continue
 			}
-			if cluster.ClusterMetadata.EnableLegacyEndpoints.IsTrue() {
+			if cluster.RemoveDefaultNodePool.IsTrue() {
+				for _, pool := range cluster.NodePools {
+					if pool.NodeConfig.EnableLegacyEndpoints.IsTrue() {
+						results.Add(
+							"Cluster has legacy metadata endpoints enabled.",
+							pool.NodeConfig.EnableLegacyEndpoints,
+						)
+					}
+				}
+			} else if cluster.NodeConfig.EnableLegacyEndpoints.IsTrue() {
 				results.Add(
 					"Cluster has legacy metadata endpoints enabled.",
-					cluster.ClusterMetadata.EnableLegacyEndpoints,
+					cluster.NodeConfig.EnableLegacyEndpoints,
 				)
 			} else {
 				results.AddPassed(&cluster)
