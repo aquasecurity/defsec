@@ -14,12 +14,12 @@ Follow these steps to pull a policy and test Kubernetes workload manifest:
 ```
 mkdir myPolicy
 ```
-2. Download the main library and the desired checks(s) into "policy" directory - in this example we use the "is_privileged" check only
+2. Download the main library and the desired checks(s) into "myPolicy" directory - in this example we use the "host_ipc" check only
 ```
 wget https://github.com/aquasecurity/defsec/raw/master/internal/rules/kubernetes/lib/kubernetes.rego
 wget https://github.com/aquasecurity/defsec/raw/master/internal/rules/kubernetes/lib/utils.rego
 wget https://github.com/aquasecurity/defsec/raw/master/internal/rules/defsec/lib/defsec.rego
-wget https://github.com/aquasecurity/defsec/raw/master/internal/rules/kubernetes/policies/pss/Baseline%20%232%20-%20Privileged.rego
+wget https://github.com/aquasecurity/defsec/raw/master/internal/rules/kubernetes/policies/pss/baseline/1_host_ipc.rego
 ```
 3. Download an example of a non-compliant kubernetes deployment (in yaml format) 
 ```
@@ -27,7 +27,7 @@ wget https://github.com/aquasecurity/defsec/raw/master/test/testdata/kubernetes/
 ```
 4. Use any tool that supports REGO to test the example file. In this example we are using conftest
 ```
-conftest test test.yaml --policy myPolicy/
+conftest test denied.yaml --policy myPolicy/ --namespace builtin.kubernetes.KSV008
 ```
 
 # Standards and best practices
