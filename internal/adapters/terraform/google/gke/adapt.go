@@ -73,10 +73,6 @@ func (a *adapter) adaptCluster(resource *terraform.Block, module *terraform.Modu
 			Metadata: resource.GetMetadata(),
 			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
 		},
-		ClusterMetadata: gke.Metadata{
-			Metadata:              resource.GetMetadata(),
-			EnableLegacyEndpoints: types.BoolDefault(true, resource.GetMetadata()),
-		},
 		MasterAuth: gke.MasterAuth{
 			Metadata: resource.GetMetadata(),
 			ClientCertificate: gke.ClientCertificate{
@@ -93,7 +89,8 @@ func (a *adapter) adaptCluster(resource *terraform.Block, module *terraform.Modu
 				Metadata:     resource.GetMetadata(),
 				NodeMetadata: types.StringDefault("", resource.GetMetadata()),
 			},
-			ServiceAccount: types.StringDefault("", resource.GetMetadata()),
+			ServiceAccount:        types.StringDefault("", resource.GetMetadata()),
+			EnableLegacyEndpoints: types.BoolDefault(true, resource.GetMetadata()),
 		},
 		EnableShieldedNodes:   types.BoolDefault(true, resource.GetMetadata()),
 		EnableLegacyABAC:      types.BoolDefault(false, resource.GetMetadata()),
@@ -133,22 +130,13 @@ func (a *adapter) adaptCluster(resource *terraform.Block, module *terraform.Modu
 		cluster.PodSecurityPolicy.Enabled = enabledAttr.AsBoolValueOrDefault(false, policyBlock)
 	}
 
-	legacyMetadataAttr := resource.GetNestedAttribute("node_config.metadata.disable-legacy-endpoints")
-	if legacyMetadataAttr.IsNotNil() {
-		if legacyMetadataAttr.IsTrue() {
-			cluster.ClusterMetadata.EnableLegacyEndpoints = types.Bool(false, legacyMetadataAttr.GetMetadata())
-		} else if legacyMetadataAttr.IsFalse() {
-			cluster.ClusterMetadata.EnableLegacyEndpoints = types.Bool(true, legacyMetadataAttr.GetMetadata())
-		}
-	}
-
 	if masterBlock := resource.GetBlock("master_auth"); masterBlock.IsNotNil() {
 		cluster.MasterAuth = adaptMasterAuth(masterBlock)
 	}
 
 	if configBlock := resource.GetBlock("node_config"); configBlock.IsNotNil() {
 		if configBlock.GetBlock("metadata").IsNotNil() {
-			cluster.ClusterMetadata.Metadata = configBlock.GetBlock("metadata").GetMetadata()
+			cluster.NodeConfig.Metadata = configBlock.GetBlock("metadata").GetMetadata()
 		}
 		cluster.NodeConfig = adaptNodeConfig(configBlock)
 	}
@@ -188,7 +176,8 @@ func (a *adapter) adaptNodePool(resource *terraform.Block) {
 			Metadata:     resource.GetMetadata(),
 			NodeMetadata: types.StringDefault("", resource.GetMetadata()),
 		},
-		ServiceAccount: types.StringDefault("", resource.GetMetadata()),
+		ServiceAccount:        types.StringDefault("", resource.GetMetadata()),
+		EnableLegacyEndpoints: types.BoolDefault(true, resource.GetMetadata()),
 	}
 
 	management := gke.Management{
@@ -236,36 +225,38 @@ func (a *adapter) adaptNodePool(resource *terraform.Block) {
 }
 
 func adaptNodeConfig(resource *terraform.Block) gke.NodeConfig {
-	imageTypeAttr := resource.GetAttribute("image_type")
-	imageType := imageTypeAttr.AsStringValueOrDefault("", resource)
 
-	workloadMetadata := gke.WorkloadMetadataConfig{
-		Metadata:     resource.GetMetadata(),
-		NodeMetadata: types.StringDefault("UNSPECIFIED", resource.GetMetadata()),
+	config := gke.NodeConfig{
+		Metadata:  resource.GetMetadata(),
+		ImageType: resource.GetAttribute("image_type").AsStringValueOrDefault("", resource),
+		WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
+			Metadata:     resource.GetMetadata(),
+			NodeMetadata: types.StringDefault("UNSPECIFIED", resource.GetMetadata()),
+		},
+		ServiceAccount:        resource.GetAttribute("service_account").AsStringValueOrDefault("", resource),
+		EnableLegacyEndpoints: types.BoolDefault(true, resource.GetMetadata()),
+	}
+
+	legacyMetadataAttr := resource.GetNestedAttribute("metadata.disable-legacy-endpoints")
+	if legacyMetadataAttr.IsNotNil() {
+		if legacyMetadataAttr.IsTrue() {
+			config.EnableLegacyEndpoints = types.Bool(false, legacyMetadataAttr.GetMetadata())
+		} else if legacyMetadataAttr.IsFalse() {
+			config.EnableLegacyEndpoints = types.Bool(true, legacyMetadataAttr.GetMetadata())
+		}
 	}
 
 	workloadBlock := resource.GetBlock("workload_metadata_config")
 	if workloadBlock.IsNotNil() {
-		workloadMetadata.Metadata = workloadBlock.GetMetadata()
+		config.WorkloadMetadataConfig.Metadata = workloadBlock.GetMetadata()
 		modeAttr := workloadBlock.GetAttribute("node_metadata")
 		if modeAttr.IsNil() {
 			modeAttr = workloadBlock.GetAttribute("mode") // try newest version
 		}
-		workloadMetadata.NodeMetadata = modeAttr.AsStringValueOrDefault("UNSPECIFIED", workloadBlock)
+		config.WorkloadMetadataConfig.NodeMetadata = modeAttr.AsStringValueOrDefault("UNSPECIFIED", workloadBlock)
 	}
 
-	serviceAccAttr := resource.GetAttribute("service_account")
-	serviceAcc := serviceAccAttr.AsStringValueOrDefault("", resource)
-	if serviceAccAttr.IsResourceBlockReference("google_service_account") {
-		serviceAcc = types.String("Resource reference", serviceAccAttr.GetMetadata())
-	}
-
-	return gke.NodeConfig{
-		Metadata:               resource.GetMetadata(),
-		ImageType:              imageType,
-		WorkloadMetadataConfig: workloadMetadata,
-		ServiceAccount:         serviceAcc,
-	}
+	return config
 }
 
 func adaptMasterAuth(resource *terraform.Block) gke.MasterAuth {
