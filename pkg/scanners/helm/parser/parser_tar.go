@@ -30,12 +30,14 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 		return nil, err
 	}
 
+	defer func() { _ = file.Close() }()
+
 	if detection.IsZip(path) {
 		if file, err = gzip.NewReader(file); err != nil {
 			return nil, err
 		}
+		defer func() { _ = file.Close() }()
 	}
-	defer func() { _ = file.Close() }()
 
 	tr := tar.NewReader(file)
 

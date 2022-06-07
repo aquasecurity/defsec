@@ -79,7 +79,6 @@ func Test_malformed_helm_scanner_with_archive(t *testing.T) {
 		path        string
 		archiveName string
 	}{
-
 		{
 			testName:    "Parsing tarball 'aws-cluster-autoscaler-bad.tar.gz'",
 			chartName:   "aws-cluster-autoscaler",
