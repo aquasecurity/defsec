@@ -26,12 +26,12 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 		return nil, err
 	}
 
+	file, err := tarFS.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = file.Close() }()
 	if detection.IsZip(path) {
-		file, err := tarFS.Open(path)
-		if err != nil {
-			return nil, err
-		}
-		defer func() { _ = file.Close() }()
 		zipped, err := gzip.NewReader(file)
 		if err != nil {
 			return nil, err
@@ -39,12 +39,6 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 		defer func() { _ = zipped.Close() }()
 		tr = tar.NewReader(zipped)
 	} else {
-		file, err := tarFS.Open(path)
-		if err != nil {
-			return nil, err
-		}
-		defer func() { _ = file.Close() }()
-
 		tr = tar.NewReader(file)
 	}
 
@@ -91,6 +85,7 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 			return nil, fmt.Errorf("could not untar the section")
 		}
 	}
+
 	// remove the tarball from the fs
 	if err := tarFS.Remove(path); err != nil {
 		return nil, err
