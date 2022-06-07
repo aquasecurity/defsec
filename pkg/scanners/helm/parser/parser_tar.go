@@ -18,24 +18,29 @@ import (
 
 func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 
-	var file io.ReadCloser
+	var tr *tar.Reader
 	var err error
 
 	tarFS := memoryfs.CloneFS(p.workingFS)
-	file, err = tarFS.Open(path)
 	if err != nil {
 		return nil, err
 	}
 
+	file, err := tarFS.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = file.Close() }()
 	if detection.IsZip(path) {
-		if file, err = gzip.NewReader(file); err != nil {
+		zipped, err := gzip.NewReader(file)
+		if err != nil {
 			return nil, err
 		}
+		defer func() { _ = zipped.Close() }()
+		tr = tar.NewReader(zipped)
+	} else {
+		tr = tar.NewReader(file)
 	}
-
-	defer func() { _ = file.Close() }()
-
-	tr := tar.NewReader(file)
 
 	for {
 		header, err := tr.Next()
@@ -55,7 +60,7 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 				return nil, err
 			}
 		case tar.TypeReg:
-			p.debug.Log("Untarring %s", path)
+			p.debug.Log("Unpacking tar %s", path)
 			_ = tarFS.MkdirAll(filepath.Dir(path), fs.ModePerm)
 			content := []byte{}
 			writer := bytes.NewBuffer(content)
@@ -80,9 +85,6 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 			return nil, fmt.Errorf("could not untar the section")
 		}
 	}
-
-	// force close the file for Windows so we can remove it from FS
-	_ = file.Close()
 
 	// remove the tarball from the fs
 	if err := tarFS.Remove(path); err != nil {
