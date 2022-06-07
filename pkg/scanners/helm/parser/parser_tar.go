@@ -22,8 +22,11 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 	var err error
 
 	tarFS := memoryfs.CloneFS(p.workingFS)
-	file, err = tarFS.Open(path)
 	if err != nil {
+		return nil, err
+	}
+
+	if file, err = tarFS.Open(path); err != nil {
 		return nil, err
 	}
 
@@ -32,7 +35,6 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 			return nil, err
 		}
 	}
-
 	defer func() { _ = file.Close() }()
 
 	tr := tar.NewReader(file)
@@ -55,7 +57,7 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 				return nil, err
 			}
 		case tar.TypeReg:
-			p.debug.Log("Untarring %s", path)
+			p.debug.Log("Unpacking tar %s", path)
 			_ = tarFS.MkdirAll(filepath.Dir(path), fs.ModePerm)
 			content := []byte{}
 			writer := bytes.NewBuffer(content)

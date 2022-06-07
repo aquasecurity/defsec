@@ -130,6 +130,7 @@ func (p *Parser) extractChartName(chartPath string) error {
 	if err != nil {
 		return err
 	}
+	defer func() { _ = chart.Close() }()
 
 	var chartContent map[string]interface{}
 	if err := yaml.NewDecoder(chart).Decode(&chartContent); err != nil {
