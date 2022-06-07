@@ -18,7 +18,7 @@ import (
 
 func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 
-	var file io.ReadCloser
+	var tr *tar.Reader
 	var err error
 
 	tarFS := memoryfs.CloneFS(p.workingFS)
@@ -26,20 +26,27 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 		return nil, err
 	}
 
-	if file, err = tarFS.Open(path); err != nil {
-		return nil, err
-	}
-
-	defer func() { _ = file.Close() }()
-
 	if detection.IsZip(path) {
-		if file, err = gzip.NewReader(file); err != nil {
+		file, err := tarFS.Open(path)
+		if err != nil {
 			return nil, err
 		}
 		defer func() { _ = file.Close() }()
-	}
+		zipped, err := gzip.NewReader(file)
+		if err != nil {
+			return nil, err
+		}
+		defer func() { _ = zipped.Close() }()
+		tr = tar.NewReader(zipped)
+	} else {
+		file, err := tarFS.Open(path)
+		if err != nil {
+			return nil, err
+		}
+		defer func() { _ = file.Close() }()
 
-	tr := tar.NewReader(file)
+		tr = tar.NewReader(file)
+	}
 
 	for {
 		header, err := tr.Next()
@@ -84,10 +91,6 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 			return nil, fmt.Errorf("could not untar the section")
 		}
 	}
-
-	// force close the file for Windows so we can remove it from FS
-	_ = file.Close()
-
 	// remove the tarball from the fs
 	if err := tarFS.Remove(path); err != nil {
 		return nil, err
