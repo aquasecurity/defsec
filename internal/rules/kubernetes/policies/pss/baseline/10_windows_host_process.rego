@@ -21,18 +21,18 @@ __rego_input__ := {
 }
 
 failHostProcess[spec] {
-    spec := input.spec
-    spec.securityContext.windowsOptions.hostProcess == true
+	spec := input.spec
+	spec.securityContext.windowsOptions.hostProcess == true
 }
 
 failHostProcess[options] {
 	container := kubernetes.containers[_]
-    options	:= container.securityContext.windowsOptions
+	options := container.securityContext.windowsOptions
 	options.hostProcess == true
 }
 
 deny[res] {
-    cause := failHostProcess[_]
+	cause := failHostProcess[_]
 	msg := "You should not enable hostProcess."
 	res := result.new(msg, cause)
 }

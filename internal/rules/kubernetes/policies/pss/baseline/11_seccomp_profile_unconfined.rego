@@ -21,19 +21,19 @@ __rego_input__ := {
 }
 
 failSeccomp[profile] {
-    spec := input.spec
-    profile := spec.securityContext.seccompProfile
-    profile.type == "Unconfined"
+	spec := input.spec
+	profile := spec.securityContext.seccompProfile
+	profile.type == "Unconfined"
 }
 
 failSeccomp[profile] {
 	container := kubernetes.containers[_]
-    profile	:= container.securityContext.seccompProfile
-	profile.type ==  "Unconfined"
+	profile := container.securityContext.seccompProfile
+	profile.type == "Unconfined"
 }
 
 deny[res] {
-    cause := failSeccomp[_]
+	cause := failSeccomp[_]
 	msg := "You should not set Seccomp profile to 'Unconfined'."
 	res := result.new(msg, cause)
 }

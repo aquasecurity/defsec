@@ -6,11 +6,7 @@ test_base_securityContext_seccompProfile_unconfined_denied {
 		"kind": "Pod",
 		"metadata": {"name": "hello-sysctls"},
 		"spec": {
-			"securityContext": {
-			    "seccompProfile": {
-					"type": "Unconfined"
-                }
-            },
+			"securityContext": {"seccompProfile": {"type": "Unconfined"}},
 			"containers": [{
 				"command": [
 					"sh",
@@ -33,10 +29,7 @@ test_base_securityContext_seccompProfile_unspecified_allowed {
 		"kind": "Pod",
 		"metadata": {"name": "hello-sysctls"},
 		"spec": {
-			"securityContext": {
-			    "seccompProfile": {
-                }
-            },
+			"securityContext": {"seccompProfile": {}},
 			"containers": [{
 				"command": [
 					"sh",
@@ -52,18 +45,13 @@ test_base_securityContext_seccompProfile_unspecified_allowed {
 	count(r) == 0
 }
 
-
 test_base_securityContext_seccompProfile_RuntimeDefault_allowed {
 	r := deny with input as {
 		"apiVersion": "v1",
 		"kind": "Pod",
 		"metadata": {"name": "hello-sysctls"},
 		"spec": {
-			"securityContext": {
-			    "seccompProfile": {
-			        "type": "RuntimeDefault"
-                }
-            },
+			"securityContext": {"seccompProfile": {"type": "RuntimeDefault"}},
 			"containers": [{
 				"command": [
 					"sh",
@@ -84,22 +72,16 @@ test_container_securityContext_seccompProfile_unconfined_denied {
 		"apiVersion": "v1",
 		"kind": "Pod",
 		"metadata": {"name": "hello-sysctls"},
-		"spec": {
-			"containers": [{
-				"command": [
-					"sh",
-					"-c",
-					"echo 'Hello' && sleep 1h",
-				],
-				"image": "busybox",
-				"name": "hello",
-                "securityContext": {
-                    "seccompProfile": {
-                        "type": "Unconfined"
-                    }
-                },
-			}],
-		},
+		"spec": {"containers": [{
+			"command": [
+				"sh",
+				"-c",
+				"echo 'Hello' && sleep 1h",
+			],
+			"image": "busybox",
+			"name": "hello",
+			"securityContext": {"seccompProfile": {"type": "Unconfined"}},
+		}]},
 	}
 
 	count(r) == 1
@@ -111,47 +93,36 @@ test_container_securityContext_seccompProfile_unspecified_allowed {
 		"apiVersion": "v1",
 		"kind": "Pod",
 		"metadata": {"name": "hello-sysctls"},
-		"spec": {
-			"containers": [{
-				"command": [
-					"sh",
-					"-c",
-					"echo 'Hello' && sleep 1h",
-				],
-				"image": "busybox",
-				"name": "hello",
-                "securityContext": {
-                    "seccompProfile": {}
-                 },
-            }],
-		},
+		"spec": {"containers": [{
+			"command": [
+				"sh",
+				"-c",
+				"echo 'Hello' && sleep 1h",
+			],
+			"image": "busybox",
+			"name": "hello",
+			"securityContext": {"seccompProfile": {}},
+		}]},
 	}
 
 	count(r) == 0
 }
-
 
 test_container_securityContext_seccompProfile_RuntimeDefault_allowed {
 	r := deny with input as {
 		"apiVersion": "v1",
 		"kind": "Pod",
 		"metadata": {"name": "hello-sysctls"},
-		"spec": {
-			"containers": [{
-				"command": [
-					"sh",
-					"-c",
-					"echo 'Hello' && sleep 1h",
-				],
-				"image": "busybox",
-				"name": "hello",
-					"securityContext": {
-                        "seccompProfile": {
-                            "type": "RuntimeDefault"
-                        }
-                    },
-			}],
-		},
+		"spec": {"containers": [{
+			"command": [
+				"sh",
+				"-c",
+				"echo 'Hello' && sleep 1h",
+			],
+			"image": "busybox",
+			"name": "hello",
+			"securityContext": {"seccompProfile": {"type": "RuntimeDefault"}},
+		}]},
 	}
 
 	count(r) == 0

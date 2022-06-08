@@ -6,11 +6,7 @@ test_base_securityContext_hostProcess_enabled_denied {
 		"kind": "Pod",
 		"metadata": {"name": "hello-sysctls"},
 		"spec": {
-			"securityContext": {
-			    "windowsOptions": {
-					"hostProcess": true
-                }
-            },
+			"securityContext": {"windowsOptions": {"hostProcess": true}},
 			"containers": [{
 				"command": [
 					"sh",
@@ -33,11 +29,7 @@ test_base_securityContext_hostProcess_disabled_allowed {
 		"kind": "Pod",
 		"metadata": {"name": "hello-sysctls"},
 		"spec": {
-			"securityContext": {
-			    "windowsOptions": {
-					"hostProcess": false
-                }
-            },
+			"securityContext": {"windowsOptions": {"hostProcess": false}},
 			"containers": [{
 				"command": [
 					"sh",
@@ -59,11 +51,7 @@ test_base_securityContext_hostProcess_unspecified_allowed {
 		"kind": "Pod",
 		"metadata": {"name": "hello-sysctls"},
 		"spec": {
-			"securityContext": {
-			    "windowsOptions": {
-					"hostProcess": false
-                }
-            },
+			"securityContext": {"windowsOptions": {"hostProcess": false}},
 			"containers": [{
 				"command": [
 					"sh",
@@ -94,11 +82,7 @@ test_container_securityContext_hostProcess_enabled_denied {
 				],
 				"image": "busybox",
 				"name": "hello",
-				"securityContext": {
-                    "windowsOptions": {
-                        "hostProcess": true
-                    }
-                }
+				"securityContext": {"windowsOptions": {"hostProcess": true}},
 			}],
 		},
 	}
@@ -122,11 +106,7 @@ test_container_securityContext_hostProcess_disabled_allowed {
 				],
 				"image": "busybox",
 				"name": "hello",
-				"securityContext": {
-                    "windowsOptions": {
-                        "hostProcess": false
-                    }
-                }
+				"securityContext": {"windowsOptions": {"hostProcess": false}},
 			}],
 		},
 	}
@@ -149,10 +129,7 @@ test_container_securityContext_hostProcess_unspecified_allowed {
 				],
 				"image": "busybox",
 				"name": "hello",
-				"securityContext": {
-                    "windowsOptions": {
-                    }
-                }
+				"securityContext": {"windowsOptions": {}},
 			}],
 		},
 	}
