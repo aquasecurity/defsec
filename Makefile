@@ -32,8 +32,8 @@ update-loader:
 metadata_lint:
 	go run ./cmd/lint
 
-.PHONY: generate_missing_docs
-generate_missing_docs:
+.PHONY: docs
+docs:
 	go run ./cmd/avd_generator
 
 .PHONY: id
