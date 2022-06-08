@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	_ "github.com/aquasecurity/defsec/pkg/rego"
 	"github.com/aquasecurity/defsec/pkg/rules"
 )
 
