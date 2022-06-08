@@ -8,6 +8,7 @@ import (
 	"text/template"
 
 	"github.com/aquasecurity/defsec/internal/rules"
+	_ "github.com/aquasecurity/defsec/pkg/rego"
 	registered "github.com/aquasecurity/defsec/pkg/rules"
 )
 
