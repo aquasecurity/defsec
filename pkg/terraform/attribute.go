@@ -364,6 +364,7 @@ func (a *Attribute) listContains(val cty.Value, stringToLookFor string, ignoreCa
 	if a == nil {
 		return false
 	}
+
 	valueSlice := val.AsValueSlice()
 	for _, value := range valueSlice {
 		stringToTest := value
@@ -372,7 +373,11 @@ func (a *Attribute) listContains(val cty.Value, stringToLookFor string, ignoreCa
 			stringToTest = valueMap["key"]
 		}
 		if value.Type().HasDynamicTypes() {
-			// References without a value can't logically "contain" a some string to check against.
+			for _, extracted := range a.extractListValues() {
+				if extracted == stringToLookFor {
+					return true
+				}
+			}
 			return false
 		}
 		if !value.IsKnown() {
@@ -386,6 +391,17 @@ func (a *Attribute) listContains(val cty.Value, stringToLookFor string, ignoreCa
 		}
 	}
 	return false
+}
+
+func (a *Attribute) extractListValues() []string {
+	var values []string
+	if a.hclAttribute == nil || a.hclAttribute.Expr == nil || a.hclAttribute.Expr.Variables() == nil {
+		return values
+	}
+	for _, v := range a.hclAttribute.Expr.Variables() {
+		values = append(values, v.RootName())
+	}
+	return values
 }
 
 func (a *Attribute) mapContains(checkValue interface{}, val cty.Value) bool {
