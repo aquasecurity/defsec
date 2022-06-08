@@ -149,6 +149,8 @@ func adaptNetworkRule(resource *terraform.Block) storage.NetworkRule {
 		allowByDefault = types.Bool(true, defaultActionAttr.GetMetadata())
 	} else if defaultActionAttr.Equals("deny", terraform.IgnoreCase) {
 		allowByDefault = types.Bool(false, defaultActionAttr.GetMetadata())
+	} else {
+		allowByDefault = types.BoolDefault(false, resource.GetMetadata())
 	}
 
 	if resource.HasChild("bypass") {
