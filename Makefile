@@ -3,6 +3,11 @@ test:
 	which gotestsum || go install gotest.tools/gotestsum@latest
 	go test -race ./...
 
+.PHONY: rego
+rego:
+	opa fmt -w internal/rules
+	opa test internal/rules --explain fails
+
 .PHONY: typos
 typos:
 	which codespell || pip3 install codespell
