@@ -19,6 +19,20 @@ resource "aws_s3_bucket" "good_example" {
    }
  }
  `,
+	`
+resource "aws_s3_bucket" "good_example" {
+   bucket = "mybucket" 
+   acl    = "log-delivery-write"
+ 
+   server_side_encryption_configuration {
+     rule {
+       apply_server_side_encryption_by_default {
+         sse_algorithm     = "AES256"
+       }
+     }
+   }
+ }
+ `,
 }
 
 var terraformCheckEncryptionCustomerKeyBadExamples = []string{
