@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"strings"
+
 	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/storage"
 	"github.com/aquasecurity/defsec/pkg/terraform"
@@ -145,10 +147,14 @@ func adaptNetworkRule(resource *terraform.Block) storage.NetworkRule {
 	var bypass []types.StringValue
 
 	defaultActionAttr := resource.GetAttribute("default_action")
-	if defaultActionAttr.Equals("allow", terraform.IgnoreCase) {
-		allowByDefault = types.Bool(true, defaultActionAttr.GetMetadata())
-	} else if defaultActionAttr.Equals("deny", terraform.IgnoreCase) {
-		allowByDefault = types.Bool(false, defaultActionAttr.GetMetadata())
+
+	if defaultActionAttr.IsNotNil() {
+		switch strings.ToLower(defaultActionAttr.Value().AsString()) {
+		case "allow":
+			allowByDefault = types.Bool(true, defaultActionAttr.GetMetadata())
+		case "deny":
+			allowByDefault = types.Bool(false, defaultActionAttr.GetMetadata())
+		}
 	} else {
 		allowByDefault = types.BoolDefault(false, resource.GetMetadata())
 	}
