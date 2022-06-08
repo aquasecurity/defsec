@@ -44,7 +44,6 @@ disallowed_volume_types = [
 	"portworxVolume",
 	"scaleIO",
 	"storageos",
-	"csi",
 ]
 
 # getDisallowedVolumes returns a list of volume names
