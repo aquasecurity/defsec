@@ -6,7 +6,7 @@ test:
 .PHONY: rego
 rego:
 	opa fmt -w internal/rules
-	opa test internal/rules --explain fails
+	opa test internal/rules
 
 .PHONY: typos
 typos:
