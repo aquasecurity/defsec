@@ -3,6 +3,11 @@ test:
 	which gotestsum || go install gotest.tools/gotestsum@latest
 	go test -race ./...
 
+.PHONY: rego
+rego:
+	opa fmt -w internal/rules
+	opa test internal/rules
+
 .PHONY: typos
 typos:
 	which codespell || pip3 install codespell
@@ -27,8 +32,8 @@ update-loader:
 metadata_lint:
 	go run ./cmd/lint
 
-.PHONY: generate_missing_docs
-generate_missing_docs:
+.PHONY: docs
+docs:
 	go run ./cmd/avd_generator
 
 .PHONY: id

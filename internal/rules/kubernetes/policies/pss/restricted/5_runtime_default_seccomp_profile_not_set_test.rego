@@ -22,10 +22,9 @@ test_pod_context_custom_profile_denied {
 	}
 
 	count(r) == 1
-	r[_].msg == "Pod 'hello-seccomp' should set 'spec.securityContext.seccompProfile.type' to 'RuntimeDefault'"
 }
 
-test_pod_context_undefined_type_allowed {
+test_both_undefined_type_denied {
 	r := deny with input as {
 		"apiVersion": "v1",
 		"kind": "Pod",
@@ -44,10 +43,10 @@ test_pod_context_undefined_type_allowed {
 		},
 	}
 
-	count(r) == 0
+	count(r) == 1
 }
 
-test_pod_context_undefined_profile_allowed {
+test_pod_context_undefined_profile_denied {
 	r := deny with input as {
 		"apiVersion": "v1",
 		"kind": "Pod",
@@ -63,7 +62,7 @@ test_pod_context_undefined_profile_allowed {
 		}]},
 	}
 
-	count(r) == 0
+	count(r) == 1
 }
 
 test_pod_context_runtime_default_allowed {
@@ -106,10 +105,9 @@ test_container_context_custom_profile_denied {
 	}
 
 	count(r) == 1
-	r[_].msg == "Container 'hello' of Pod 'hello-seccomp' should set 'spec.containers[*].securityContext.seccompProfile.type' to 'RuntimeDefault'"
 }
 
-test_container_context_undefined_type_allowed {
+test_container_context_undefined_type_denied {
 	r := deny with input as {
 		"apiVersion": "v1",
 		"kind": "Pod",
@@ -126,10 +124,10 @@ test_container_context_undefined_type_allowed {
 		}]},
 	}
 
-	count(r) == 0
+	count(r) == 1
 }
 
-test_container_context_undefined_profile_allowed {
+test_container_context_undefined_profile_denied {
 	r := deny with input as {
 		"apiVersion": "v1",
 		"kind": "Pod",
@@ -145,7 +143,7 @@ test_container_context_undefined_profile_allowed {
 		}]},
 	}
 
-	count(r) == 0
+	count(r) == 1
 }
 
 test_container_context_runtime_default_allowed {
@@ -210,5 +208,46 @@ test_annotation_denied {
 	}
 
 	count(r) == 1
-	r[_].msg == "Pod 'hello-seccomp' should set 'seccomp.security.alpha.kubernetes.io/pod' to 'runtime/default'"
+}
+
+test_pod_context_correct_profile_at_pod_allowed {
+	r := deny with input as {
+		"apiVersion": "v1",
+		"kind": "Pod",
+		"metadata": {"name": "hello-seccomp"},
+		"spec": {
+			"securityContext": {"seccompProfile": {"type": "RuntimeDefault"}},
+			"containers": [{
+				"command": [
+					"sh",
+					"-c",
+					"echo 'Hello' && sleep 1h",
+				],
+				"image": "busybox",
+				"name": "hello",
+			}],
+		},
+	}
+
+	count(r) == 0
+}
+
+test_pod_context_correct_profile_at_container_allowed {
+	r := deny with input as {
+		"apiVersion": "v1",
+		"kind": "Pod",
+		"metadata": {"name": "hello-seccomp"},
+		"spec": {"containers": [{
+			"command": [
+				"sh",
+				"-c",
+				"echo 'Hello' && sleep 1h",
+			],
+			"image": "busybox",
+			"name": "hello",
+			"securityContext": {"seccompProfile": {"type": "RuntimeDefault"}},
+		}]},
+	}
+
+	count(r) == 0
 }

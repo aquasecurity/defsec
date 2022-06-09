@@ -1,5 +1,5 @@
 
-The RuntimeDefault/Localhost seccomp profile must be required, or allow specific additional profiles.
+Containers should be forbidden from running with a root UID.
 
 ### Impact
 <!-- Add Impact here -->

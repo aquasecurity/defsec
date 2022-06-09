@@ -1,5 +1,5 @@
 
-The RuntimeDefault/Localhost seccomp profile must be required, or allow specific additional profiles.
+Containers must drop ALL capabilities, and are only permitted to add back the NET_BIND_SERVICE capability.
 
 ### Impact
 <!-- Add Impact here -->
