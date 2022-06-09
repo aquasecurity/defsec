@@ -21,7 +21,7 @@ __rego_input__ := {
 }
 
 getType(target) = type {
-    context := getOr(target, "securityContext", {})
+	context := getOr(target, "securityContext", {})
 	profile := getOr(context, "seccompProfile", {})
 	type := getOr(profile, "type", "")
 }
@@ -39,11 +39,12 @@ isUndefinedProfileType(target) {
 }
 
 getOr(obj, key, def) = res {
-    res := obj[key]
+	res := obj[key]
 }
+
 getOr(obj, key, def) = res {
-    not obj[key]
-    res := def
+	not obj[key]
+	res := def
 }
 
 isDefinedProfileType(target) {
@@ -51,12 +52,12 @@ isDefinedProfileType(target) {
 }
 
 getAnnotations[type] {
-    annotation := kubernetes.annotations[_]
-    type := annotation["seccomp.security.alpha.kubernetes.io/pod"]
+	annotation := kubernetes.annotations[_]
+	type := annotation["seccomp.security.alpha.kubernetes.io/pod"]
 }
 
 hasAnnotations {
-    count(getAnnotations) > 0
+	count(getAnnotations) > 0
 }
 
 failSeccompAnnotation[annotation] {
@@ -75,18 +76,18 @@ deny[res] {
 # (Kubernetes post-v1.19)
 
 isDefinedOnPod {
-    count(definedPods) > 0
+	count(definedPods) > 0
 }
 
 definedPods[pod] {
-    pod := kubernetes.pods[_]
-    not isUndefinedProfileType(pod.spec)
+	pod := kubernetes.pods[_]
+	not isUndefinedProfileType(pod.spec)
 }
 
 # deny if container-level is undefined and pod-level is undefined
 deny[res] {
-    not hasAnnotations
-    not isDefinedOnPod
+	not hasAnnotations
+	not isDefinedOnPod
 	container := kubernetes.containers[_]
 	isUndefinedProfileType(container)
 	msg := "Either Pod or Container should set 'securityContext.seccompProfile.type' to 'RuntimeDefault'"
