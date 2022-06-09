@@ -12,7 +12,9 @@ type TagType string
 const (
 	TagBool   TagType = "!!bool"
 	TagInt    TagType = "!!int"
-	TagString TagType = "!!str"
+	TagFloat  TagType = "!!float"
+	TagStr    TagType = "!!str"
+	TagString TagType = "!!string"
 	TagSlice  TagType = "!!seq"
 	TagMap    TagType = "!!map"
 )
@@ -30,7 +32,7 @@ func (r *ManifestNode) ToRego() interface{} {
 		return nil
 	}
 	switch r.Type {
-	case TagBool, TagInt, TagString:
+	case TagBool, TagInt, TagString, TagStr:
 		return r.Value
 	case TagSlice:
 		var output []interface{}
@@ -60,10 +62,17 @@ func (r *ManifestNode) UnmarshalYAML(node *yaml.Node) error {
 	r.Type = TagType(node.Tag)
 
 	switch TagType(node.Tag) {
-	case TagString:
+	case TagString, TagStr:
+
 		r.Value = node.Value
 	case TagInt:
 		val, err := strconv.Atoi(node.Value)
+		if err != nil {
+			return err
+		}
+		r.Value = val
+	case TagFloat:
+		val, err := strconv.ParseFloat(node.Value, 64)
 		if err != nil {
 			return err
 		}
