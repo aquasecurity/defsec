@@ -17,7 +17,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "kubernetes"}],
+	"selector": [{"type": "rbac"}],
 }
 
 readKinds := ["Role", "ClusterRole"]
