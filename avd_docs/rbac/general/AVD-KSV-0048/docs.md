@@ -1,5 +1,5 @@
 
-check weather Role permit update a malicious pod
+check weather Role permit update/create a malicious pod
 
 ### Impact
 <!-- Add Impact here -->
