@@ -3,14 +3,15 @@ package parser
 import (
 	"bytes"
 	"context"
-	"github.com/aquasecurity/defsec/internal/debug"
-	"github.com/aquasecurity/defsec/pkg/detection"
-	k8s "github.com/aquasecurity/defsec/pkg/scanners/kubernetes/parser"
-	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"io"
 	"io/fs"
 	"io/ioutil"
 	"path/filepath"
+
+	"github.com/aquasecurity/defsec/internal/debug"
+	"github.com/aquasecurity/defsec/pkg/detection"
+	k8s "github.com/aquasecurity/defsec/pkg/scanners/kubernetes/parser"
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 )
 
 var _ options.ConfigurableParser = (*Parser)(nil)

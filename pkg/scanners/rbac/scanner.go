@@ -2,12 +2,13 @@ package rbac
 
 import (
 	"context"
-	"github.com/aquasecurity/defsec/pkg/scanners/kubernetes"
 	"io"
 	"io/fs"
 	"io/ioutil"
 	"path/filepath"
 	"sync"
+
+	"github.com/aquasecurity/defsec/pkg/scanners/kubernetes"
 
 	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/liamg/memoryfs"
