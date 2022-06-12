@@ -19,6 +19,7 @@ const (
 	FileTypeTerraformPlan  FileType = "terraformplan"
 	FileTypeDockerfile     FileType = "dockerfile"
 	FileTypeKubernetes     FileType = "kubernetes"
+	FileTypeRbac           FileType = "rbac"
 	FileTypeYAML           FileType = "yaml"
 	FileTypeTOML           FileType = "toml"
 	FileTypeJSON           FileType = "json"
@@ -173,6 +174,60 @@ func init() {
 		}
 
 		expectedProperties := []string{"apiVersion", "kind", "metadata", "spec"}
+
+		if IsType(name, r, FileTypeJSON) {
+			var result map[string]interface{}
+			if err := json.Unmarshal(contents, &result); err != nil {
+				return false
+			}
+			for _, expected := range expectedProperties {
+				if _, ok := result[expected]; !ok {
+					return false
+				}
+			}
+			return true
+		}
+
+		marker := "\n---\n"
+		altMarker := "\r\n---\r\n"
+		if bytes.Contains(contents, []byte(altMarker)) {
+			marker = altMarker
+		}
+
+		for _, partial := range strings.Split(string(contents), marker) {
+			var result map[string]interface{}
+			if err := yaml.Unmarshal([]byte(partial), &result); err != nil {
+				continue
+			}
+			match := true
+			for _, expected := range expectedProperties {
+				if _, ok := result[expected]; !ok {
+					match = false
+					break
+				}
+			}
+			if match {
+				return true
+			}
+		}
+
+		return false
+	}
+	matchers[FileTypeRbac] = func(name string, r io.ReadSeeker) bool {
+
+		if !IsType(name, r, FileTypeYAML) && !IsType(name, r, FileTypeJSON) {
+			return false
+		}
+		if resetReader(r) == nil {
+			return false
+		}
+
+		contents, err := ioutil.ReadAll(r)
+		if err != nil {
+			return false
+		}
+
+		expectedProperties := []string{"apiVersion", "kind", "metadata", "rules"}
 
 		if IsType(name, r, FileTypeJSON) {
 			var result map[string]interface{}

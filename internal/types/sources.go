@@ -6,6 +6,7 @@ const (
 	SourceTerraform      Source = "terraform"
 	SourceDockerfile     Source = "dockerfile"
 	SourceKubernetes     Source = "kubernetes"
+	SourceRbac           Source = "rbac"
 	SourceCloudFormation Source = "cloudformation"
 	SourceAnsible        Source = "ansible"
 	SourceDefsec         Source = "defsec"
