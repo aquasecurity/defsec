@@ -56,6 +56,11 @@ func (r *registryResolver) Resolve(ctx context.Context, target fs.FS, opt Option
 
 		envVar := fmt.Sprintf("TF_TOKEN_%s", strings.ReplaceAll(hostname, ".", "_"))
 		token = os.Getenv(envVar)
+		if token != "" {
+			opt.Debug("Found a token for the registry at %s", hostname)
+		} else {
+			opt.Debug("No token was found for the registry at %s", hostname)
+		}
 	}
 
 	moduleName := strings.Join(parts, "/")
