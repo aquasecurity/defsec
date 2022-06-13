@@ -54,7 +54,7 @@ func (s *Scanner) SetSkipRequiredCheck(skip bool) {
 }
 
 func (s *Scanner) SetDebugWriter(writer io.Writer) {
-	s.debug = debug.New(writer, "scan:kubernetes")
+	s.debug = debug.New(writer, "scan:rbac")
 }
 
 func (s *Scanner) SetTraceWriter(_ io.Writer) {
