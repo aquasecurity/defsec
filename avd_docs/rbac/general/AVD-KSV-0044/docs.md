@@ -1,5 +1,5 @@
 
-check weather Role permit any verb on any resource
+Check whether role permits any verb on any resource
 
 ### Impact
 <!-- Add Impact here -->

@@ -1,5 +1,5 @@
 
-check weather Role permit getting shell on pods
+Check whether role permits getting shell on pods
 
 ### Impact
 <!-- Add Impact here -->

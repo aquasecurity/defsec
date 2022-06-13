@@ -7,12 +7,11 @@ import data.lib.utils
 __rego_metadata__ := {
 	"id": "KSV055",
 	"avd_id": "AVD-KSV-0055",
-	"title": "allowing users in a rolebinding to add other users to their rolebindings",
+	"title": "Do not allow users in a rolebinding to add other users to their rolebindings",
 	"short_code": "view-all-secrets",
 	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "check weather Role permit allowing users in a rolebinding to add other users to their rolebindings",
-	"recommended_actions": "create a Role which do not permit allowing users in a rolebinding to add other users to their rolebindings if not needed",
+	"description": "Check whether role permits allowing users in a rolebinding to add other users to their rolebindings",
+	"recommended_actions": "Create a role which does not permit allowing users in a rolebinding to add other users to their rolebindings if not needed",
 	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
 }
 
@@ -33,6 +32,6 @@ allowing_users_rolebinding_add_other_users_their_rolebindings {
 
 deny[res] {
 	allowing_users_rolebinding_add_other_users_their_rolebindings
-	msg := "role permit allowing users in a rolebinding to add other users to their rolebindings"
+	msg := "Role permits allowing users in a rolebinding to add other users to their rolebindings"
 	res := result.new(msg, input)
 }

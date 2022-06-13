@@ -1,5 +1,5 @@
 
-check weather Role permit managing secrets
+Check whether role permits managing secrets
 
 ### Impact
 <!-- Add Impact here -->

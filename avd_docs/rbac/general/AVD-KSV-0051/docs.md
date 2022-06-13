@@ -1,5 +1,5 @@
 
-check weather Role permit creating role binding and associate to privileged role/clusterrole
+Check whether role permits creating role binding and associate to privileged role/clusterrole
 
 ### Impact
 <!-- Add Impact here -->

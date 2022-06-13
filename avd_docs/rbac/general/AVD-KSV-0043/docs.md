@@ -1,5 +1,5 @@
 
-check weather Role permit impersonating privileged groups
+Check whether role permits impersonating privileged groups
 
 ### Impact
 <!-- Add Impact here -->

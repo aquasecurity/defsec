@@ -1,5 +1,5 @@
 
-check weather Role permit creating role clusterrolebindings and associate to privileged cluster role
+Check whether role permits creating role clusterrolebindings and associate to privileged cluster role
 
 ### Impact
 <!-- Add Impact here -->

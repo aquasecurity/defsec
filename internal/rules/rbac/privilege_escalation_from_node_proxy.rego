@@ -7,12 +7,11 @@ import data.lib.utils
 __rego_metadata__ := {
 	"id": "KSV047",
 	"avd_id": "AVD-KSV-0047",
-	"title": "privilege escalation from node proxy",
-	"short_code": "privilege-escalation-from-node-proxy",
+	"title": "Do not allow privilege escalation from node proxy",
+	"short_code": "no-privilege-escalation-from-node-proxy",
 	"severity": "HIGH",
-	"type": "Kubernetes Security Check",
-	"description": "check weather Role permit privilege escalation from node proxy",
-	"recommended_actions": "create a Role which do not permit privilege escalation from node proxy",
+	"description": "Check whether role permits privilege escalation from node proxy",
+	"recommended_actions": "Create a role which does not permit privilege escalation from node proxy",
 	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
 }
 
@@ -34,6 +33,6 @@ privilegeEscalationFromNodeProxy {
 
 deny[res] {
 	privilegeEscalationFromNodeProxy
-	msg := "role permit privilege escalation from node proxy"
+	msg := "Role permits privilege escalation from node proxy"
 	res := result.new(msg, input)
 }

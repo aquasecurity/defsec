@@ -7,12 +7,11 @@ import data.lib.utils
 __rego_metadata__ := {
 	"id": "KSV043",
 	"avd_id": "AVD-KSV-0043",
-	"title": "impersonate privileged groups",
-	"short_code": "impersonate-privileged-groups",
+	"title": "Do not allow impersonation of privileged groups",
+	"short_code": "no-impersonate-privileged-groups",
 	"severity": "CRITICAL",
-	"type": "Kubernetes Security Check",
-	"description": "check weather Role permit impersonating privileged groups",
-	"recommended_actions": "create a Role which do not permit to impersonate privileged groups if not needed",
+	"description": "Check whether role permits impersonating privileged groups",
+	"recommended_actions": "Create a role which does not permit to impersonate privileged groups if not needed",
 	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
 }
 
@@ -32,6 +31,6 @@ impersonatePrivilegedGroups {
 
 deny[res] {
 	impersonatePrivilegedGroups
-	msg := "role permit to impersonate privileged groups"
+	msg := "Role permits impersonation of privileged groups"
 	res := result.new(msg, input)
 }

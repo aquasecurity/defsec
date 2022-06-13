@@ -7,10 +7,9 @@ import data.lib.utils
 __rego_metadata__ := {
 	"id": "KSV049",
 	"avd_id": "AVD-KSV-0049",
-	"title": "manage configmaps",
-	"short_code": "manage-configmaps",
+	"title": "Do not allow management of configmaps",
+	"short_code": "no-manage-configmaps",
 	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
 	"description": "Some workloads leverage configmaps to store sensitive data or configuration parameters that affect runtime behavior that can be modified by an attacker or combined with another issue to potentially lead to compromise.",
 	"recommended_actions": "Remove write permission verbs for resource 'configmaps'",
 	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",

@@ -1,5 +1,5 @@
 
-check weather Role permit attaching shell on pods
+Check whether role permits attaching shell on pods
 
 ### Impact
 <!-- Add Impact here -->

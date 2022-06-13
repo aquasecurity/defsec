@@ -7,12 +7,11 @@ import data.lib.utils
 __rego_metadata__ := {
 	"id": "KSV053",
 	"avd_id": "AVD-KSV-0053",
-	"title": "getting shell on pods",
-	"short_code": "getting-shell-pods",
+	"title": "Do not allow getting shell on pods",
+	"short_code": "no-getting-shell-pods",
 	"severity": "HIGH",
-	"type": "Kubernetes Security Check",
-	"description": "check weather Role permit getting shell on pods",
-	"recommended_actions": "create a Role which do not permit getting shell on pods",
+	"description": "Check whether role permits getting shell on pods",
+	"recommended_actions": "Create a role which does not permit getting shell on pods",
 	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
 }
 
@@ -35,6 +34,6 @@ get_shell_on_pod {
 
 deny[res] {
 	get_shell_on_pod
-	msg := "role permit getting shell on pods"
+	msg := "Role permits getting shell on pods"
 	res := result.new(msg, input)
 }

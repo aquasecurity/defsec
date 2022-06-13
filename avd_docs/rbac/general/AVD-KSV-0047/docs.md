@@ -1,5 +1,5 @@
 
-check weather Role permit privilege escalation from node proxy
+Check whether role permits privilege escalation from node proxy
 
 ### Impact
 <!-- Add Impact here -->

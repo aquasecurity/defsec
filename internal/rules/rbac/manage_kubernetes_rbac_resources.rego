@@ -7,11 +7,10 @@ import data.lib.utils
 __rego_metadata__ := {
 	"id": "KSV050",
 	"avd_id": "AVD-KSV-0050",
-	"title": "Manage Kubernetes RBAC resources",
-	"short_code": "manage_kubernetes_RBAC_resources",
+	"title": "Do not allow management of RBAC resources",
+	"short_code": "no-manage-rbac-resources",
 	"severity": "CRITICAL",
-	"type": "Kubernetes Security Check",
-	"description": "An effective level of access equivalent to cluster-admin.",
+	"description": "An effective level of access equivalent to cluster-admin should not be provided.",
 	"recommended_actions": "Remove write permission verbs for resource 'roles' and 'rolebindings'",
 	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
 }

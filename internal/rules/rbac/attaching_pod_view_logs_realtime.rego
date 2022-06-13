@@ -7,12 +7,11 @@ import data.lib.utils
 __rego_metadata__ := {
 	"id": "KSV054",
 	"avd_id": "AVD-KSV-0054",
-	"title": "attaching shell on pods",
-	"short_code": "attaching-shell-pods",
+	"title": "Do not allow attaching to shell on pods",
+	"short_code": "no-attaching-shell-pods",
 	"severity": "HIGH",
-	"type": "Kubernetes Security Check",
-	"description": "check weather Role permit attaching shell on pods",
-	"recommended_actions": "create a Role which do not permit attaching shell on pods",
+	"description": "Check whether role permits attaching to shell on pods",
+	"recommended_actions": "Create a role which does not permit attaching to shell on pods",
 	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
 }
 
@@ -35,6 +34,6 @@ attach_shell_on_pod {
 
 deny[res] {
 	attach_shell_on_pod
-	msg := "role permit getting shell on pods"
+	msg := "Role permits attaching to shell on pods"
 	res := result.new(msg, input)
 }

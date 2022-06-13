@@ -7,12 +7,11 @@ import data.lib.utils
 __rego_metadata__ := {
 	"id": "KSV041",
 	"avd_id": "AVD-KSV-0041",
-	"title": "manage secrets",
-	"short_code": "manage-secrets",
+	"title": "Do not allow management of secrets",
+	"short_code": "no-manage-secrets",
 	"severity": "CRITICAL",
-	"type": "Kubernetes Security Check",
-	"description": "check weather Role permit managing secrets",
-	"recommended_actions": "create a Role which do not permit to manage secrets if not needed",
+	"description": "Check whether role permits managing secrets",
+	"recommended_actions": "Create a role which does not permit to manage secrets if not needed",
 	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
 }
 
@@ -34,6 +33,6 @@ resourceManageSecret {
 
 deny[res] {
 	resourceManageSecret
-	msg := "role permit to view specific secret"
+	msg := "Role permits management of secret(s)"
 	res := result.new(msg, input)
 }

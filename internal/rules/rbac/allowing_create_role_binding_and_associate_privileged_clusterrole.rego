@@ -7,12 +7,11 @@ import data.lib.utils
 __rego_metadata__ := {
 	"id": "KSV051",
 	"avd_id": "AVD-KSV-0051",
-	"title": "allow role binding and associate to privileged role/clusterrole",
-	"short_code": "allow-role-binding-associate-privileged-cluster-role",
+	"title": "Do not allow role binding creation and association with privileged role/clusterrole",
+	"short_code": "do-not-allow-role-binding-associate-privileged-role",
 	"severity": "HIGH",
-	"type": "Kubernetes Security Check",
-	"description": "check weather Role permit creating role binding and associate to privileged role/clusterrole",
-	"recommended_actions": "create a Role which do not ermit to create role binding and associate to privileged cluster role",
+	"description": "Check whether role permits creating role bindings and associating to privileged role/clusterrole",
+	"recommended_actions": "Create a role which does not permit creation of role bindings and associating with privileged cluster role",
 	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
 }
 
@@ -36,6 +35,6 @@ allowing_create_role_binding_and_associate_cluster_role {
 
 deny[res] {
 	allowing_create_role_binding_and_associate_cluster_role
-	msg := "role permit create role binding and associate to role"
+	msg := "Role permits creation of role binding and association with privileged role"
 	res := result.new(msg, input)
 }

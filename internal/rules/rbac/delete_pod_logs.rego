@@ -7,10 +7,9 @@ import data.lib.utils
 __rego_metadata__ := {
 	"id": "KSV042",
 	"avd_id": "AVD-KSV-0042",
-	"title": "Delete pod logs",
-	"short_code": "delete-pod-logs",
+	"title": "Do not allow deletion of pod logs",
+	"short_code": "no-delete-pod-logs",
 	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
 	"description": "Used to cover attacker’s tracks, but most clusters ship logs quickly off-cluster.",
 	"recommended_actions": "Remove verbs 'delete' and 'deletecollection' for resource 'pods/log' for Role and ClusterRole",
 	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",

@@ -7,12 +7,11 @@ import data.lib.utils
 __rego_metadata__ := {
 	"id": "KSV044",
 	"avd_id": "AVD-KSV-0044",
-	"title": "any any role",
-	"short_code": "any-any-role",
+	"title": "No wildcard verb and resource roles",
+	"short_code": "no-wildcard-verb-resource-role",
 	"severity": "CRITICAL",
-	"type": "Kubernetes Security Check",
-	"description": "check weather Role permit any verb on any resource",
-	"recommended_actions": "create a Role which do not permit any verb on any resource",
+	"description": "Check whether role permits wildcard verb on wildcard resource",
+	"recommended_actions": "Create a role which does not permit wildcard verb on wildcard resource",
 	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
 }
 
@@ -32,6 +31,6 @@ anyAnyResource {
 
 deny[res] {
 	anyAnyResource
-	msg := "role permit any verb on any resource"
+	msg := "Role permits wildcard verb on wildcard resource"
 	res := result.new(msg, input)
 }

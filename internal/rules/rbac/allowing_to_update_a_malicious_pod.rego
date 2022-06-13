@@ -7,12 +7,11 @@ import data.lib.utils
 __rego_metadata__ := {
 	"id": "KSV048",
 	"avd_id": "AVD-KSV-0048",
-	"title": "allowing to update/create a malicious pod",
-	"short_code": "allowing-update-malicious-pod",
+	"title": "Do not allow update/create of a malicious pod",
+	"short_code": "deny-create-update-malicious-pod",
 	"severity": "HIGH",
-	"type": "Kubernetes Security Check",
-	"description": "check weather Role permit update/create a malicious pod",
-	"recommended_actions": "create a Role which do not permit update/create a malicious pod",
+	"description": "Check whether role permits update/create of a malicious pod",
+	"recommended_actions": "Create a role which does not permit update/create of a malicious pod",
 	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
 }
 
@@ -36,6 +35,6 @@ update_malicious_pod {
 
 deny[res] {
 	update_malicious_pod
-	msg := "role permit to update malicious pod"
+	msg := "Role permits create/update of a malicious pod"
 	res := result.new(msg, input)
 }
