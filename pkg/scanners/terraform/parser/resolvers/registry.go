@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/fs"
 	"net/http"
+	"os"
 	"sort"
 	"strings"
 	"time"
@@ -34,6 +35,7 @@ type moduleVersions struct {
 
 const registryHostname = "registry.terraform.io"
 
+// nolint
 func (r *registryResolver) Resolve(ctx context.Context, target fs.FS, opt Options) (filesystem fs.FS, prefix string, downloadPath string, applies bool, err error) {
 
 	if !opt.AllowDownloads {
@@ -47,20 +49,32 @@ func (r *registryResolver) Resolve(ctx context.Context, target fs.FS, opt Option
 		return
 	}
 
-	rootParts := parts
-	if len(rootParts) > 3 {
-		rootParts = rootParts[:3]
-		relativePath = strings.Join(rootParts[3:], "/")
+	hostname := registryHostname
+	var token string
+	if len(parts) == 4 {
+		hostname = parts[0]
+		parts = parts[1:]
+
+		envVar := fmt.Sprintf("TF_TOKEN_%s", strings.ReplaceAll(hostname, ".", "_"))
+		token = os.Getenv(envVar)
+		if token != "" {
+			opt.Debug("Found a token for the registry at %s", hostname)
+		} else {
+			opt.Debug("No token was found for the registry at %s", hostname)
+		}
 	}
 
-	moduleName := strings.Join(rootParts, "/")
+	moduleName := strings.Join(parts, "/")
 
 	if opt.Version != "" {
-		versionUrl := fmt.Sprintf("https://%s/v1/modules/%s/versions", registryHostname, moduleName)
+		versionUrl := fmt.Sprintf("https://%s/v1/modules/%s/versions", hostname, moduleName)
 		opt.Debug("Requesting module versions from registry using '%s'...", versionUrl)
 		req, err := http.NewRequestWithContext(ctx, http.MethodGet, versionUrl, nil)
 		if err != nil {
 			return nil, "", "", true, err
+		}
+		if token != "" {
+			req.Header.Set("Authorization", "Bearer "+token)
 		}
 		resp, err := r.client.Do(req)
 		if err != nil {
@@ -84,9 +98,9 @@ func (r *registryResolver) Resolve(ctx context.Context, target fs.FS, opt Option
 
 	var url string
 	if opt.Version == "" {
-		url = fmt.Sprintf("https://%s/v1/modules/%s/download", registryHostname, moduleName)
+		url = fmt.Sprintf("https://%s/v1/modules/%s/download", hostname, moduleName)
 	} else {
-		url = fmt.Sprintf("https://%s/v1/modules/%s/%s/download", registryHostname, moduleName, opt.Version)
+		url = fmt.Sprintf("https://%s/v1/modules/%s/%s/download", hostname, moduleName, opt.Version)
 	}
 
 	opt.Debug("Requesting module source from registry using '%s'...", url)
@@ -94,6 +108,9 @@ func (r *registryResolver) Resolve(ctx context.Context, target fs.FS, opt Option
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, "", "", true, err
+	}
+	if token != "" {
+		req.Header.Set("Authorization", "Bearer "+token)
 	}
 	if opt.Version != "" {
 		req.Header.Set("X-Terraform-Version", opt.Version)

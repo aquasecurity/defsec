@@ -28,7 +28,7 @@ func locateCacheDir() (string, error) {
 	if err := os.MkdirAll(cacheDir, 0o755); err != nil {
 		return "", err
 	}
-	if isWritable(cacheDir) {
+	if !isWritable(cacheDir) {
 		return "", fmt.Errorf("cache directory is not writable")
 	}
 	return cacheDir, nil
