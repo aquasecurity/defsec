@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -48,7 +49,11 @@ func (r *remoteResolver) Resolve(ctx context.Context, _ fs.FS, opt Options) (fil
 	key := cacheKey(opt.OriginalSource, opt.OriginalVersion, opt.RelativePath)
 	opt.Debug("Storing with cache key %s", key)
 
-	cacheDir := filepath.Join(locateCacheDir(), key)
+	baseCacheDir, err := locateCacheDir()
+	if err != nil {
+		return nil, "", "", true, fmt.Errorf("failed to locate cache directory: %w", err)
+	}
+	cacheDir := filepath.Join(baseCacheDir, key)
 	if err := r.download(ctx, opt, cacheDir); err != nil {
 		return nil, "", "", true, err
 	}
