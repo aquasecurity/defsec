@@ -35,6 +35,7 @@ type moduleVersions struct {
 
 const registryHostname = "registry.terraform.io"
 
+// nolint
 func (r *registryResolver) Resolve(ctx context.Context, target fs.FS, opt Options) (filesystem fs.FS, prefix string, downloadPath string, applies bool, err error) {
 
 	if !opt.AllowDownloads {
