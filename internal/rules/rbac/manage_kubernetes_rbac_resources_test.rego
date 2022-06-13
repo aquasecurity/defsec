@@ -10,7 +10,7 @@ test_manage_K8s_RBAC_resources_create {
 		},
 		"rules": [{
 			"apiGroups": ["*"],
-			"resources": ["role"],
+			"resources": ["roles"],
 			"verbs": ["create"],
 		}],
 	}
@@ -28,7 +28,7 @@ test_manage_K8s_RBAC_resources_create {
 		},
 		"rules": [{
 			"apiGroups": ["*"],
-			"resources": ["role"],
+			"resources": ["roles"],
 			"verbs": ["update"],
 		}],
 	}
@@ -46,7 +46,7 @@ test_manage_K8s_RBAC_resources_delete {
 		},
 		"rules": [{
 			"apiGroups": ["*"],
-			"resources": ["role"],
+			"resources": ["roles"],
 			"verbs": ["update"],
 		}],
 	}

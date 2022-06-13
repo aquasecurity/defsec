@@ -24,14 +24,13 @@ readKinds := ["Role", "ClusterRole"]
 
 allowing_create_clusterrolebindings_binding_and_associate_cluster_role {
 	input.kind == readKinds[_]
-	rule := input.rules[_]
-	rule.apiGroups[_] == "rbac.authorization.k8s.io"
-	rule.resources[_] == "clusterrolebindings"
-	rule.verbs[_] == "create"
-	rule.apiGroups[_] == "rbac.authorization.k8s.io"
-	rule.resources[_] == "clusterroles"
-	rule.verbs[_] == "bind"
-	rule.resourceNames[_] == "*"
+	input.rules[_].apiGroups[_] == "rbac.authorization.k8s.io"
+	input.rules[_].resources[_] == "clusterrolebindings"
+	input.rules[_].verbs[_] == "create"
+	input.rules[_].apiGroups[_] == "rbac.authorization.k8s.io"
+	input.rules[_].resources[_] == "clusterroles"
+	input.rules[_].verbs[_] == "bind"
+	input.rules[_].resourceNames[_] == "*"
 }
 
 deny[res] {
