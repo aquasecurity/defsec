@@ -1,6 +1,6 @@
 package builtin.kubernetes.KSV042
 
-itest_delete_podsLog_restricted_verb_delete {
+test_delete_podsLog_restricted_verb_delete {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -18,7 +18,7 @@ itest_delete_podsLog_restricted_verb_delete {
 	count(r) > 0
 }
 
-itest_delete_podsLog_restricted_verb_delete_collection {
+test_delete_podsLog_restricted_verb_delete_collection {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -36,7 +36,7 @@ itest_delete_podsLog_restricted_verb_delete_collection {
 	count(r) > 0
 }
 
-itest_delete_podsLog_restricted_verb_all {
+test_delete_podsLog_restricted_verb_all {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -54,7 +54,7 @@ itest_delete_podsLog_restricted_verb_all {
 	count(r) > 0
 }
 
-itest_delete_podsLog_restricted_verb_other {
+test_delete_podsLog_restricted_verb_other {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",

@@ -1,6 +1,6 @@
 package builtin.kubernetes.KSV050
 
-itest_manage_K8s_RBAC_resources_create {
+test_manage_K8s_RBAC_resources_create {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -18,7 +18,7 @@ itest_manage_K8s_RBAC_resources_create {
 	count(r) > 0
 }
 
-itest_manage_K8s_RBAC_resources_create {
+test_manage_K8s_RBAC_resources_create {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -36,7 +36,7 @@ itest_manage_K8s_RBAC_resources_create {
 	count(r) > 0
 }
 
-itest_manage_K8s_RBAC_resources_delete {
+test_manage_K8s_RBAC_resources_delete {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -54,7 +54,7 @@ itest_manage_K8s_RBAC_resources_delete {
 	count(r) > 0
 }
 
-itest_manage_K8s_RBAC_resources_deletecollection {
+test_manage_K8s_RBAC_resources_deletecollection {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -72,7 +72,7 @@ itest_manage_K8s_RBAC_resources_deletecollection {
 	count(r) > 0
 }
 
-itest_manage_K8s_RBAC_resources_deletecollection {
+test_manage_K8s_RBAC_resources_deletecollection {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -90,7 +90,7 @@ itest_manage_K8s_RBAC_resources_deletecollection {
 	count(r) > 0
 }
 
-itest_manage_K8s_RBAC_resources_all {
+test_manage_K8s_RBAC_resources_all {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -108,7 +108,7 @@ itest_manage_K8s_RBAC_resources_all {
 	count(r) > 0
 }
 
-itest_manage_K8s_RBAC_resources_all {
+test_manage_K8s_RBAC_resources_all {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",

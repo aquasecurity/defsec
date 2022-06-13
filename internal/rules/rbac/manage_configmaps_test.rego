@@ -1,6 +1,6 @@
 package builtin.kubernetes.KSV049
 
-itest_manageConfigmaps_verb_create {
+test_manageConfigmaps_verb_create {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -18,7 +18,7 @@ itest_manageConfigmaps_verb_create {
 	count(r) > 0
 }
 
-itest_manageConfigmaps_verb_update {
+test_manageConfigmaps_verb_update {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -36,7 +36,7 @@ itest_manageConfigmaps_verb_update {
 	count(r) > 0
 }
 
-itest_manageConfigmaps_verb_patch {
+test_manageConfigmaps_verb_patch {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -54,7 +54,7 @@ itest_manageConfigmaps_verb_patch {
 	count(r) > 0
 }
 
-itest_manageConfigmaps_verb_delete {
+test_manageConfigmaps_verb_delete {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -72,7 +72,7 @@ itest_manageConfigmaps_verb_delete {
 	count(r) > 0
 }
 
-itest_manageConfigmaps_verb_deletecollection {
+test_manageConfigmaps_verb_deletecollection {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -90,7 +90,7 @@ itest_manageConfigmaps_verb_deletecollection {
 	count(r) > 0
 }
 
-itest_manageConfigmaps_verb_impersonate {
+test_manageConfigmaps_verb_impersonate {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -108,7 +108,7 @@ itest_manageConfigmaps_verb_impersonate {
 	count(r) > 0
 }
 
-itest_manageConfigmaps_verb_all {
+test_manageConfigmaps_verb_all {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -126,7 +126,7 @@ itest_manageConfigmaps_verb_all {
 	count(r) > 0
 }
 
-itest_manageConfigmaps_verb_wrong {
+test_manageConfigmaps_verb_wrong {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
