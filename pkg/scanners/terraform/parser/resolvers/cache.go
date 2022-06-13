@@ -13,43 +13,25 @@ type cacheResolver struct{}
 
 var Cache = &cacheResolver{}
 
-var cacheFS fs.FS
+const tempDirName = ".aqua"
 
-func init() {
-	dir := locateCacheDir()
-	if dir == "" {
-		return
+func locateCacheFS() (fs.FS, error) {
+	dir, err := locateCacheDir()
+	if err != nil {
+		return nil, err
 	}
-	if err := os.MkdirAll(dir, 0o755); err != nil {
-		return
-	}
-	cacheFS = os.DirFS(dir)
+	return os.DirFS(dir), nil
 }
 
-func locateCacheDir() string {
-
-	locations := []string{
-		filepath.Join(os.TempDir(), ".tfsec", "cache"),
+func locateCacheDir() (string, error) {
+	cacheDir := filepath.Join(os.TempDir(), tempDirName, "cache")
+	if err := os.MkdirAll(cacheDir, 0o755); err != nil {
+		return "", err
 	}
-	// if we're not in docker, we can cache in the local project
-	if _, err := os.Stat("/.dockerenv"); err != nil {
-		tfsecDir := ".tfsec"
-		if stat, err := os.Stat(tfsecDir); err == nil && stat.IsDir() && isWritable(tfsecDir) {
-			projectCache := filepath.Join(tfsecDir, "cache")
-			locations = append([]string{
-				projectCache,
-			}, locations...)
-		}
+	if isWritable(cacheDir) {
+		return "", fmt.Errorf("cache directory is not writable")
 	}
-	for _, attempt := range locations {
-		if err := os.MkdirAll(attempt, 0o755); err != nil {
-			continue
-		}
-		if isWritable(attempt) {
-			return attempt
-		}
-	}
-	return ""
+	return cacheDir, nil
 }
 
 func (r *cacheResolver) Resolve(_ context.Context, _ fs.FS, opt Options) (filesystem fs.FS, prefix string, downloadPath string, applies bool, err error) {
@@ -57,7 +39,8 @@ func (r *cacheResolver) Resolve(_ context.Context, _ fs.FS, opt Options) (filesy
 		opt.Debug("Cache is disabled.")
 		return nil, "", "", false, nil
 	}
-	if cacheFS == nil {
+	cacheFS, err := locateCacheFS()
+	if err != nil {
 		opt.Debug("No cache filesystem is available on this machine.")
 		return nil, "", "", false, nil
 	}
@@ -65,7 +48,11 @@ func (r *cacheResolver) Resolve(_ context.Context, _ fs.FS, opt Options) (filesy
 	opt.Debug("Trying to resolve: %s", key)
 	if info, err := fs.Stat(cacheFS, filepath.ToSlash(key)); err == nil && info.IsDir() {
 		opt.Debug("Module '%s' resolving via cache...", opt.Name)
-		return os.DirFS(filepath.Join(locateCacheDir(), key)), opt.OriginalSource, ".", true, nil
+		cacheDir, err := locateCacheDir()
+		if err != nil {
+			return nil, "", "", true, err
+		}
+		return os.DirFS(filepath.Join(cacheDir, key)), opt.OriginalSource, ".", true, nil
 	}
 	return nil, "", "", false, nil
 }
