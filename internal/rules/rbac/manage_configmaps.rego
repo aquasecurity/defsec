@@ -26,15 +26,15 @@ readKinds := ["Role", "ClusterRole"]
 
 readResource = "configmaps"
 
-manageConfigmaps {
+manageConfigmaps[input.rules[ru]] {
 	some ru, r, v
-	kubernetes.kind == readKinds[_]
-	kubernetes.object.rules[ru].resources[r] == readResource
-	kubernetes.object.rules[ru].verbs[v] == readVerbs[_]
+	input.kind == readKinds[_]
+	input.rules[ru].resources[r] == readResource
+	input.rules[ru].verbs[v] == readVerbs[_]
 }
 
 deny[res] {
-	manageConfigmaps
+	badRule := manageConfigmaps[_]
 	msg := kubernetes.format(sprintf("%s '%s' should not have access to resource '%s' for verbs %s", [kubernetes.kind, kubernetes.name, readResource, readVerbs]))
-	res := result.new(msg, input)
+	res := result.new(msg, badRule)
 }

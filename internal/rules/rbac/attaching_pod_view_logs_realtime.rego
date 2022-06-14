@@ -22,18 +22,22 @@ __rego_input__ := {
 
 readKinds := ["Role", "ClusterRole"]
 
-attach_shell_on_pod {
+attach_shell_on_pod[ruleA] {
 	input.kind == readKinds[_]
-	input.rules[_].apiGroups[_] == "*"
-	input.rules[_].resources[_] == "pods/attach"
-	input.rules[_].verbs[_] == "create"
-	input.rules[_].apiGroups[_] == "*"
-	input.rules[_].resources[_] == "pods"
-	input.rules[_].verbs[_] == "get"
+	some i, j
+	ruleA := input.rules[i]
+	ruleB := input.rules[j]
+	i < j
+	ruleA.apiGroups[_] == "*"
+	ruleA.resources[_] == "pods/attach"
+	ruleA.verbs[_] == "create"
+	ruleB.apiGroups[_] == "*"
+	ruleB.resources[_] == "pods"
+	ruleB.verbs[_] == "get"
 }
 
 deny[res] {
-	attach_shell_on_pod
+	badRule := attach_shell_on_pod[_]
 	msg := "Role permits attaching to shell on pods"
-	res := result.new(msg, input)
+	res := result.new(msg, badRule)
 }

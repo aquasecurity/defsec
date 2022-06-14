@@ -22,15 +22,16 @@ __rego_input__ := {
 
 readKinds := ["Role", "ClusterRole"]
 
-anyAnyResource {
+anyAnyResource[input.rules[ru]] {
+	some ru
 	input.kind == readKinds[_]
-	input.rules[_].apiGroups[_] == "*"
-	input.rules[_].resources[_] == "*"
-	input.rules[_].verbs[_] == "*"
+	input.rules[ru].apiGroups[_] == "*"
+	input.rules[ru].resources[_] == "*"
+	input.rules[ru].verbs[_] == "*"
 }
 
 deny[res] {
-	anyAnyResource
+	badRule := anyAnyResource[_]
 	msg := "Role permits wildcard verb on wildcard resource"
-	res := result.new(msg, input)
+	res := result.new(msg, badRule)
 }

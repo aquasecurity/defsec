@@ -22,7 +22,7 @@ test_getting_shell_on_pods {
 		],
 	}
 
-	count(r) > 0
+	count(r) == 1
 }
 
 test_getting_shell_on_pods_no_pod_exec {

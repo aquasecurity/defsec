@@ -22,16 +22,17 @@ __rego_input__ := {
 
 readKinds := ["Role", "ClusterRole"]
 
-allowing_users_rolebinding_add_other_users_their_rolebindings {
+allowing_users_rolebinding_add_other_users_their_rolebindings[input.rules[ru]] {
+	some ru
 	input.kind == readKinds[_]
-	input.rules[_].apiGroups[_] == "*"
-	input.rules[_].resources[_] == "rolebindings"
-	input.rules[_].verbs[_] == "get"
-	input.rules[_].verbs[_] == "patch"
+	input.rules[ru].apiGroups[_] == "*"
+	input.rules[ru].resources[_] == "rolebindings"
+	input.rules[ru].verbs[_] == "get"
+	input.rules[ru].verbs[_] == "patch"
 }
 
 deny[res] {
-	allowing_users_rolebinding_add_other_users_their_rolebindings
+	badRule := allowing_users_rolebinding_add_other_users_their_rolebindings[_]
 	msg := "Role permits allowing users in a rolebinding to add other users to their rolebindings"
-	res := result.new(msg, input)
+	res := result.new(msg, badRule)
 }

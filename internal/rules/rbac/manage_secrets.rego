@@ -24,7 +24,7 @@ readVerbs := ["get", "list", "watch", "create", "update", "patch", "delete", "de
 
 readKinds := ["Role", "ClusterRole"]
 
-resourceManageSecret {
+resourceManageSecret[input.rules[ru]] {
 	some ru, r, v
 	input.kind == readKinds[_]
 	input.rules[ru].resources[r] == "secrets"
@@ -32,7 +32,7 @@ resourceManageSecret {
 }
 
 deny[res] {
-	resourceManageSecret
+	badRule := resourceManageSecret[_]
 	msg := "Role permits management of secret(s)"
-	res := result.new(msg, input)
+	res := result.new(msg, badRule)
 }

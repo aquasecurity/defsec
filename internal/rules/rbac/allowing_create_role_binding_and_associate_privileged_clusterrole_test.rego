@@ -23,7 +23,7 @@ test_allowing_create_role_binding_and_associate_clusterrole {
 		],
 	}
 
-	count(r) > 0
+	count(r) == 1
 }
 
 test_allowing_create_role_binding_and_associate_clusterrole_resource_not_role_binding {

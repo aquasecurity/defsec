@@ -25,15 +25,15 @@ readVerbs := ["create", "update", "patch", "delete", "deletecollection", "impers
 
 readResources := ["services", "endpoints", "endpointslices", "networkpolicies", "ingresses"]
 
-managekubernetesNetworking {
+managekubernetesNetworking[input.rules[ru]] {
 	some ru, r, v
-	kubernetes.kind == readKinds[_]
-	kubernetes.object.rules[ru].resources[r] == readResources[_]
-	kubernetes.object.rules[ru].verbs[v] == readVerbs[_]
+	input.kind == readKinds[_]
+	input.rules[ru].resources[r] == readResources[_]
+	input.rules[ru].verbs[v] == readVerbs[_]
 }
 
 deny[res] {
-	managekubernetesNetworking
+	badRule := managekubernetesNetworking[_]
 	msg := kubernetes.format(sprintf("%s '%s' should not have access to resources %s for verbs %s", [kubernetes.kind, kubernetes.name, readResources, readVerbs]))
-	res := result.new(msg, input)
+	res := result.new(msg, badRule)
 }

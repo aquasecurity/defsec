@@ -26,7 +26,7 @@ changeVerbs := ["update", "create", "*"]
 
 readKinds := ["Role", "ClusterRole"]
 
-update_malicious_pod {
+update_malicious_pod[input.rules[ru]] {
 	some ru, r, v
 	input.kind == readKinds[_]
 	input.rules[ru].resources[r] == workloads[_]
@@ -34,7 +34,7 @@ update_malicious_pod {
 }
 
 deny[res] {
-	update_malicious_pod
+	badRule := update_malicious_pod[_]
 	msg := "Role permits create/update of a malicious pod"
-	res := result.new(msg, input)
+	res := result.new(msg, badRule)
 }

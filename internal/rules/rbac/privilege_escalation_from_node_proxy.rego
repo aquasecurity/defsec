@@ -24,7 +24,7 @@ readVerbs := ["get", "create"]
 
 readKinds := ["Role", "ClusterRole"]
 
-privilegeEscalationFromNodeProxy {
+privilegeEscalationFromNodeProxy[input.rules[ru]] {
 	input.kind == readKinds[_]
 	some ru, r, v
 	input.rules[ru].resources[r] == "nodes/proxy"
@@ -32,7 +32,7 @@ privilegeEscalationFromNodeProxy {
 }
 
 deny[res] {
-	privilegeEscalationFromNodeProxy
+	badRule := privilegeEscalationFromNodeProxy[_]
 	msg := "Role permits privilege escalation from node proxy"
-	res := result.new(msg, input)
+	res := result.new(msg, badRule)
 }

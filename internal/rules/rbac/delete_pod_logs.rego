@@ -24,15 +24,15 @@ readVerbs := ["delete", "deletecollection", "*"]
 
 readKinds := ["Role", "ClusterRole"]
 
-deletePodsLogRestricted {
+deletePodsLogRestricted[input.rules[ru]] {
 	some ru, r, v
-	kubernetes.kind == readKinds[_]
-	kubernetes.object.rules[ru].resources[r] == "pods/log"
-	kubernetes.object.rules[ru].verbs[v] == readVerbs[_]
+	input.kind == readKinds[_]
+	input.rules[ru].resources[r] == "pods/log"
+	input.rules[ru].verbs[v] == readVerbs[_]
 }
 
 deny[res] {
-	deletePodsLogRestricted
+	badRule := deletePodsLogRestricted[_]
 	msg := kubernetes.format(sprintf("%s '%s' should not have access to resource 'pods/log' for verbs %s", [kubernetes.kind, kubernetes.name, readVerbs]))
-	res := result.new(msg, input)
+	res := result.new(msg, badRule)
 }

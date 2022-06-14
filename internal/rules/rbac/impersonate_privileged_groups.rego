@@ -22,15 +22,16 @@ __rego_input__ := {
 
 readKinds := ["Role", "ClusterRole"]
 
-impersonatePrivilegedGroups {
+impersonatePrivilegedGroups[input.rules[ru]] {
+	some ru
 	input.kind == readKinds[_]
-	input.rules[_].apiGroups[_] == "*"
-	input.rules[_].resources[_] == "groups"
-	input.rules[_].verbs[_] == "impersonate"
+	input.rules[ru].apiGroups[_] == "*"
+	input.rules[ru].resources[_] == "groups"
+	input.rules[ru].verbs[_] == "impersonate"
 }
 
 deny[res] {
-	impersonatePrivilegedGroups
+	badRule := impersonatePrivilegedGroups[_]
 	msg := "Role permits impersonation of privileged groups"
-	res := result.new(msg, input)
+	res := result.new(msg, badRule)
 }

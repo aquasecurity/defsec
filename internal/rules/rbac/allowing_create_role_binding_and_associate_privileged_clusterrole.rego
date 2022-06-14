@@ -22,19 +22,26 @@ __rego_input__ := {
 
 readKinds := ["Role", "ClusterRole"]
 
-allowing_create_role_binding_and_associate_cluster_role {
+readroles := ["clusterroles", "roles"]
+
+allowing_create_role_binding_and_associate_cluster_role[ruleA] {
 	input.kind == readKinds[_]
-	input.rules[_].apiGroups[_] == "rbac.authorization.k8s.io"
-	input.rules[_].resources[_] == "rolebindings"
-	input.rules[_].verbs[_] == "create"
-	input.rules[_].apiGroups[_] == "rbac.authorization.k8s.io"
-	input.rules[_].resources[_] == ["clusterroles", "roles"][_]
-	input.rules[_].verbs[_] == "bind"
-	input.rules[_].resourceNames[_] == "*"
+	some i, j
+	ruleA := input.rules[i]
+	ruleB := input.rules[j]
+	i < j
+	ruleA.apiGroups[_] == "rbac.authorization.k8s.io"
+	ruleA.resources[_] == "rolebindings"
+	ruleA.verbs[_] == "create"
+	ruleA.apiGroups[_] == "rbac.authorization.k8s.io"
+	ruleB.resources[_] == ["clusterroles", "roles"][_]
+	ruleB.verbs[_] == "bind"
+	ruleB.resourceNames[_] == "*"
+	ruleB.apiGroups[_] == "rbac.authorization.k8s.io"
 }
 
 deny[res] {
-	allowing_create_role_binding_and_associate_cluster_role
+	badRule := allowing_create_role_binding_and_associate_cluster_role[_]
 	msg := "Role permits creation of role binding and association with privileged role"
-	res := result.new(msg, input)
+	res := result.new(msg, badRule)
 }

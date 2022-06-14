@@ -24,7 +24,7 @@ readVerbs := ["create", "update", "delete", "deletecollection", "impersonate", "
 
 readKinds := ["Role", "ClusterRole"]
 
-resourceAllowSpecificVerbOnAnyResource {
+resourceAllowSpecificVerbOnAnyResource[input.rules[ru]] {
 	some ru, r, v
 	input.kind == readKinds[_]
 	input.rules[ru].resources[r] == "*"
@@ -32,7 +32,7 @@ resourceAllowSpecificVerbOnAnyResource {
 }
 
 deny[res] {
-	resourceAllowSpecificVerbOnAnyResource
+	badRule := resourceAllowSpecificVerbOnAnyResource[_]
 	msg := "Role permits specific verb on wildcard resource"
-	res := result.new(msg, input)
+	res := result.new(msg, badRule)
 }
