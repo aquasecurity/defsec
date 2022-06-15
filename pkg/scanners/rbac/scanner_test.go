@@ -346,7 +346,7 @@ rules:
 `))
 	require.NoError(t, err)
 	// @todo need to be changed after adding rbac policies
-	assert.Nil(t, results.GetFailed())
+	assert.Greater(t, len(results.GetFailed()), 0)
 }
 
 func Test_FileScan_WithSeparator(t *testing.T) {
@@ -369,7 +369,7 @@ rules:
 `))
 	require.NoError(t, err)
 
-	assert.Nil(t, results)
+	assert.Greater(t, len(results.GetFailed()), 0)
 }
 
 func Test_FileScanWithPolicyReader(t *testing.T) {
