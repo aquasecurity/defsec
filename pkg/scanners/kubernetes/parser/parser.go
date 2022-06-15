@@ -11,9 +11,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/debug"
+
 	"gopkg.in/yaml.v3"
 
-	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 )
@@ -26,7 +27,7 @@ type Parser struct {
 }
 
 func (p *Parser) SetDebugWriter(writer io.Writer) {
-	p.debug = debug.New(writer, "parse:kubernetes")
+	p.debug = debug.New(writer, "kubernetes", "parser")
 }
 
 func (p *Parser) SetSkipRequiredCheck(b bool) {

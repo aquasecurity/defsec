@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/aquasecurity/defsec/pkg/debug"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/formatters"
@@ -15,11 +17,15 @@ import (
 )
 
 func main() {
-	dir := os.Args[1]
+	dir := "."
+	if len(os.Args) > 1 {
+		dir = os.Args[1]
+	}
 	abs, err := filepath.Abs(dir)
 	if err != nil {
 		panic(err)
 	}
+	debug.LogSystemInfo(os.Stderr, "")
 	fsys := extrafs.OSDir(abs)
 	results, err := universal.New(options.ScannerWithDebug(os.Stderr), options.ScannerWithEmbeddedPolicies(true)).ScanFS(context.TODO(), fsys, ".")
 	if err != nil {

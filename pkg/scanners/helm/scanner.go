@@ -8,10 +8,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/debug"
+
 	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/liamg/memoryfs"
 
-	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/scanners/helm/parser"
@@ -61,7 +62,7 @@ func (s *Scanner) SetSkipRequiredCheck(skip bool) {
 }
 
 func (s *Scanner) SetDebugWriter(writer io.Writer) {
-	s.debug = debug.New(writer, "scan:helm")
+	s.debug = debug.New(writer, "helm", "scanner")
 }
 
 func (s *Scanner) SetTraceWriter(_ io.Writer) {

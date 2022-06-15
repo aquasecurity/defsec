@@ -1,14 +1,14 @@
 package resolvers
 
 import (
-	"fmt"
-	"io"
 	"strings"
+
+	"github.com/aquasecurity/defsec/pkg/debug"
 )
 
 type Options struct {
 	Source, OriginalSource, Version, OriginalVersion, WorkingDir, Name, ModulePath string
-	DebugWriter                                                                    io.Writer
+	DebugLogger                                                                    debug.Logger
 	AllowDownloads                                                                 bool
 	AllowCache                                                                     bool
 	RelativePath                                                                   string
@@ -24,8 +24,5 @@ func (o *Options) hasPrefix(prefixes ...string) bool {
 }
 
 func (o *Options) Debug(format string, args ...interface{}) {
-	if o.DebugWriter == nil {
-		return
-	}
-	_, _ = o.DebugWriter.Write([]byte("[module:retrieve] " + fmt.Sprintf(format, args...) + "\n"))
+	o.DebugLogger.Log(format, args...)
 }

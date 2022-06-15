@@ -9,11 +9,12 @@ import (
 	"io/fs"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/debug"
+
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/storage"
 
-	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
@@ -58,7 +59,7 @@ func (s *Scanner) SetPolicyReaders(_ []io.Reader) {
 }
 
 func (s *Scanner) SetDebugWriter(writer io.Writer) {
-	s.debug = debug.New(writer, "rego")
+	s.debug = debug.New(writer, "rego", "scanner")
 }
 
 func (s *Scanner) SetTraceWriter(writer io.Writer) {
@@ -108,6 +109,10 @@ func NewScanner(options ...options.ScannerOption) *Scanner {
 		opt(s)
 	}
 	return s
+}
+
+func (s *Scanner) SetParentDebugLogger(l debug.Logger) {
+	s.debug = l.Extend("rego")
 }
 
 func getModuleNamespace(module *ast.Module) string {
@@ -265,10 +270,8 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 			result.Filepath = input.Path
 			result.Managed = true
 			results.AddPassedRego(namespace, rule, traces, result)
-			s.debug.Log("PASS: %s.%s (%s)", namespace, rule, input.Path)
 			continue
 		}
-		s.debug.Log("FAIL: %s.%s (%s)", namespace, rule, input.Path)
 		results = append(results, ruleResults...)
 	}
 

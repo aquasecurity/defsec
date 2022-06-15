@@ -8,7 +8,8 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"github.com/aquasecurity/defsec/internal/debug"
+	"github.com/aquasecurity/defsec/pkg/debug"
+
 	"github.com/aquasecurity/defsec/pkg/detection"
 	k8s "github.com/aquasecurity/defsec/pkg/scanners/kubernetes/parser"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
@@ -23,7 +24,7 @@ type Parser struct {
 }
 
 func (p *Parser) SetDebugWriter(writer io.Writer) {
-	p.debug = debug.New(writer, "parse:rbac")
+	p.debug = debug.New(writer, "rbac", "parser")
 }
 
 func (p *Parser) SetSkipRequiredCheck(b bool) {

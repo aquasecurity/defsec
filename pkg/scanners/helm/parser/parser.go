@@ -13,6 +13,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/debug"
+
 	"gopkg.in/yaml.v3"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart"
@@ -20,7 +22,6 @@ import (
 	"helm.sh/helm/v3/pkg/release"
 	"helm.sh/helm/v3/pkg/releaseutil"
 
-	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 )
@@ -43,7 +44,7 @@ type ChartFile struct {
 }
 
 func (p *Parser) SetDebugWriter(writer io.Writer) {
-	p.debug = debug.New(writer, "parse:helm")
+	p.debug = debug.New(writer, "helm", "parser")
 }
 
 func (p *Parser) SetSkipRequiredCheck(b bool) {

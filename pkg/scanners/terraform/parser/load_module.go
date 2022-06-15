@@ -63,10 +63,10 @@ func (e *evaluator) loadModules(ctx context.Context) []*ModuleDefinition {
 				}
 				continue
 			}
-			e.debug("Failed to load module '%s'. Maybe try 'terraform init'?", err)
+			e.debug.Log("Failed to load module '%s'. Maybe try 'terraform init'?", err)
 			continue
 		}
-		e.debug("Loaded module '%s' from '%s'.", moduleDefinition.Name, moduleDefinition.Path)
+		e.debug.Log("Loaded module '%s' from '%s'.", moduleDefinition.Name, moduleDefinition.Path)
 		moduleDefinitions = append(moduleDefinitions, moduleDefinition)
 	}
 
@@ -97,7 +97,7 @@ func (e *evaluator) loadModule(ctx context.Context, b *terraform.Block) (*Module
 	}
 
 	if def, err := e.loadModuleFromTerraformCache(ctx, b, source); err == nil {
-		e.debug("found module '%s' in .terraform/modules", source)
+		e.debug.Log("found module '%s' in .terraform/modules", source)
 		return def, nil
 	}
 
@@ -128,7 +128,7 @@ func (e *evaluator) loadModuleFromTerraformCache(ctx context.Context, b *terrafo
 		modulePath = fmt.Sprintf("%s/%s", modulePath, relativeDir)
 	}
 
-	e.debug("Module '%s' resolved to path '%s' in filesystem '%s' using modules.json", b.FullName(), modulePath, e.filesystem)
+	e.debug.Log("Module '%s' resolved to path '%s' in filesystem '%s' using modules.json", b.FullName(), modulePath, e.filesystem)
 	moduleParser := e.parentParser.newModuleParser(e.filesystem, source, modulePath, b.Label(), b)
 	if err := moduleParser.ParseFS(ctx, modulePath); err != nil {
 		return nil, err
@@ -144,7 +144,7 @@ func (e *evaluator) loadModuleFromTerraformCache(ctx context.Context, b *terrafo
 
 func (e *evaluator) loadExternalModule(ctx context.Context, b *terraform.Block, source string) (*ModuleDefinition, error) {
 
-	e.debug("locating non-initialised module '%s'...", source)
+	e.debug.Log("locating non-initialised module '%s'...", source)
 
 	version := b.GetAttribute("version").AsStringValueOrDefault("", b).Value()
 	opt := resolvers.Options{
@@ -155,7 +155,7 @@ func (e *evaluator) loadExternalModule(ctx context.Context, b *terraform.Block, 
 		WorkingDir:      e.projectRootPath,
 		Name:            b.FullName(),
 		ModulePath:      e.modulePath,
-		DebugWriter:     e.debugWriter,
+		DebugLogger:     e.debug.Extend("resolver"),
 		AllowDownloads:  e.allowDownloads,
 		AllowCache:      e.allowDownloads,
 	}
@@ -164,7 +164,7 @@ func (e *evaluator) loadExternalModule(ctx context.Context, b *terraform.Block, 
 		return nil, err
 	}
 	prefix = filepath.Join(e.parentParser.moduleSource, prefix)
-	e.debug("Module '%s' resolved to path '%s' in filesystem '%s' with prefix '%s'", b.FullName(), path, filesystem, prefix)
+	e.debug.Log("Module '%s' resolved to path '%s' in filesystem '%s' with prefix '%s'", b.FullName(), path, filesystem, prefix)
 	moduleParser := e.parentParser.newModuleParser(filesystem, prefix, path, b.Label(), b)
 	if err := moduleParser.ParseFS(ctx, path); err != nil {
 		return nil, err

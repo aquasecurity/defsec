@@ -3,6 +3,8 @@ package executor
 import (
 	"io"
 
+	"github.com/aquasecurity/defsec/pkg/debug"
+
 	"github.com/aquasecurity/defsec/pkg/state"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -32,7 +34,7 @@ func OptionWithSeverityOverrides(overrides map[string]string) Option {
 
 func OptionWithDebugWriter(w io.Writer) Option {
 	return func(s *Executor) {
-		s.debugWriter = w
+		s.debug = debug.New(w, "terraform", "executor")
 	}
 }
 
