@@ -61,10 +61,17 @@ func LogSystemInfo(w io.Writer, appVersion string) {
 	if _, err := os.Stat("/.dockerenv"); err == nil || !os.IsNotExist(err) {
 		inDocker = true
 	}
+
+	var kernelInfo string
+	if data, err := os.ReadFile("/proc/version"); err == nil {
+		kernelInfo = strings.TrimSpace(string(data))
+	}
+
 	sys.Log("APP       %s", appName)
 	sys.Log("VERSION   %s", appVersion)
 	sys.Log("OS        %s", runtime.GOOS)
 	sys.Log("ARCH      %s", runtime.GOARCH)
+	sys.Log("KERNEL    %s", kernelInfo)
 	sys.Log("GOVERSION %s", runtime.Version())
 	sys.Log("GOROOT    %s", runtime.GOROOT())
 	sys.Log("CGO       %t", cgoEnabled)

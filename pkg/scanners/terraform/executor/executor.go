@@ -222,7 +222,7 @@ func (e *Executor) filterResults(results scan.Results) scan.Results {
 
 	if len(e.resultsFilters) > 0 && len(results) > 0 {
 		before := len(results.GetIgnored())
-		e.debug.Log("Applying %d results filters to %d results...", len(e.resultsFilters), before)
+		e.debug.Log("Applying %d results filters to %d results...", len(results), before)
 		for _, filter := range e.resultsFilters {
 			results = filter(results)
 		}
