@@ -5,7 +5,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/aquasecurity/defsec/internal/debug"
+	"github.com/aquasecurity/defsec/pkg/debug"
+
 	"github.com/aquasecurity/defsec/pkg/scan"
 	terraformScanner "github.com/aquasecurity/defsec/pkg/scanners/terraform"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraformplan/parser"
@@ -28,7 +29,7 @@ func New(options ...Option) *Scanner {
 }
 
 func (s *Scanner) SetDebugWriter(writer io.Writer) {
-	s.debug = debug.New(writer, "scan:terraform-plan")
+	s.debug = debug.New(writer, "tfplan", "scanner")
 }
 
 func (s *Scanner) ScanFile(filepath string) (scan.Results, error) {

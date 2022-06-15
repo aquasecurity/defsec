@@ -8,9 +8,10 @@ import (
 	"path/filepath"
 	"sync"
 
+	"github.com/aquasecurity/defsec/pkg/debug"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/kubernetes"
 
-	"github.com/aquasecurity/defsec/internal/debug"
 	"github.com/liamg/memoryfs"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
@@ -54,7 +55,7 @@ func (s *Scanner) SetSkipRequiredCheck(skip bool) {
 }
 
 func (s *Scanner) SetDebugWriter(writer io.Writer) {
-	s.debug = debug.New(writer, "scan:rbac")
+	s.debug = debug.New(writer, "rbac", "scanner")
 }
 
 func (s *Scanner) SetTraceWriter(_ io.Writer) {
@@ -100,6 +101,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 		return s.regoScanner, nil
 	}
 	regoScanner := rego.NewScanner(s.options...)
+	regoScanner.SetParentDebugLogger(s.debug)
 	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}

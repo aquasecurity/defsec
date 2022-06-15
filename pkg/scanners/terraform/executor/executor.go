@@ -1,12 +1,11 @@
 package executor
 
 import (
-	"fmt"
-	"io"
-	"io/ioutil"
 	"runtime"
 	"sort"
 	"time"
+
+	"github.com/aquasecurity/defsec/pkg/debug"
 
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
@@ -31,7 +30,7 @@ type Executor struct {
 	ignoreCheckErrors         bool
 	workspaceName             string
 	useSingleThread           bool
-	debugWriter               io.Writer
+	debug                     debug.Logger
 	resultsFilters            []func(scan.Results) scan.Results
 	alternativeIDProviderFunc func(string) []string
 	severityOverrides         map[string]string
@@ -61,7 +60,6 @@ func New(options ...Option) *Executor {
 	s := &Executor{
 		ignoreCheckErrors: true,
 		enableIgnores:     true,
-		debugWriter:       ioutil.Discard,
 		regoOnly:          false,
 	}
 	for _, option := range options {
@@ -85,22 +83,15 @@ func checkInList(id string, altIDs []string, list []string) bool {
 	return false
 }
 
-func (e *Executor) debug(format string, args ...interface{}) {
-	if e.debugWriter == nil {
-		return
-	}
-	prefix := "[debug:exec] "
-	_, _ = e.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
-}
-
 func (e *Executor) Execute(modules terraform.Modules) (scan.Results, Metrics, error) {
 
 	var metrics Metrics
 
+	e.debug.Log("Adapting modules...")
 	adaptationTime := time.Now()
 	infra := adapter.Adapt(modules)
 	metrics.Timings.Adaptation = time.Since(adaptationTime)
-	e.debug("Adapted %d module(s) into defsec state data.", len(modules))
+	e.debug.Log("Adapted %d module(s) into defsec state data.", len(modules))
 
 	threads := runtime.NumCPU()
 	if threads > 1 {
@@ -109,25 +100,28 @@ func (e *Executor) Execute(modules terraform.Modules) (scan.Results, Metrics, er
 	if e.useSingleThread {
 		threads = 1
 	}
+	e.debug.Log("Using max routines of %d", threads)
 
+	e.debug.Log("Applying state modifier functions...")
 	for _, f := range e.stateFuncs {
 		f(infra)
 	}
 
 	checksTime := time.Now()
 	registeredRules := rules.GetRegistered()
-	e.debug("Initialised %d rule(s).", len(registeredRules))
+	e.debug.Log("Initialised %d rule(s).", len(registeredRules))
 
 	pool := NewPool(threads, registeredRules, modules, infra, e.ignoreCheckErrors, e.regoScanner, e.regoOnly)
-	e.debug("Created pool with %d worker(s) to apply rules.", threads)
+	e.debug.Log("Created pool with %d worker(s) to apply rules.", threads)
 	results, err := pool.Run()
 	if err != nil {
 		return nil, metrics, err
 	}
 	metrics.Timings.RunningChecks = time.Since(checksTime)
-	e.debug("Finished applying rules.")
+	e.debug.Log("Finished applying rules.")
 
 	if e.enableIgnores {
+		e.debug.Log("Applying ignores...")
 		var ignores terraform.Ignores
 		for _, module := range modules {
 			ignores = append(ignores, module.Ignores()...)
@@ -147,10 +141,12 @@ func (e *Executor) Execute(modules terraform.Modules) (scan.Results, Metrics, er
 				e.workspaceName,
 				allIDs...,
 			) != nil {
-				e.debug("Ignored '%s' at '%s'.", result.Rule().LongID(), result.Range())
+				e.debug.Log("Ignored '%s' at '%s'.", result.Rule().LongID(), result.Range())
 				results[i].OverrideStatus(scan.StatusIgnored)
 			}
 		}
+	} else {
+		e.debug.Log("Ignores are disabled.")
 	}
 
 	results = e.updateSeverity(results)
@@ -210,7 +206,7 @@ func (e *Executor) updateSeverity(results []scan.Result) scan.Results {
 	return overriddenResults
 }
 
-func (e *Executor) filterResults(results []scan.Result) scan.Results {
+func (e *Executor) filterResults(results scan.Results) scan.Results {
 	includedOnly := len(e.includedRuleIDs) > 0
 	for i, result := range results {
 		id := result.Rule().LongID()
@@ -219,13 +215,18 @@ func (e *Executor) filterResults(results []scan.Result) scan.Results {
 			altIDs = e.alternativeIDProviderFunc(id)
 		}
 		if (includedOnly && !checkInList(id, altIDs, e.includedRuleIDs)) || checkInList(id, altIDs, e.excludedRuleIDs) {
-			e.debug("Excluding '%s' at '%s'.", result.Rule().LongID(), result.Range())
+			e.debug.Log("Excluding '%s' at '%s'.", result.Rule().LongID(), result.Range())
 			results[i].OverrideStatus(scan.StatusIgnored)
 		}
 	}
 
-	for _, filter := range e.resultsFilters {
-		results = filter(results)
+	if len(e.resultsFilters) > 0 && len(results) > 0 {
+		before := len(results.GetIgnored())
+		e.debug.Log("Applying %d results filters to %d results...", len(e.resultsFilters), before)
+		for _, filter := range e.resultsFilters {
+			results = filter(results)
+		}
+		e.debug.Log("Filtered out %d results.", len(results.GetIgnored())-before)
 	}
 
 	return results

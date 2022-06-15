@@ -2,7 +2,6 @@ package parser
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"io/fs"
 	"io/ioutil"
@@ -11,6 +10,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/aquasecurity/defsec/pkg/debug"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
@@ -61,14 +62,14 @@ type Parser struct {
 	children       []*Parser
 	metrics        Metrics
 	options        []options.ParserOption
-	debugWriter    io.Writer
+	debug          debug.Logger
 	allowDownloads bool
 	fsMap          map[string]fs.FS
 	skipRequired   bool
 }
 
 func (p *Parser) SetDebugWriter(writer io.Writer) {
-	p.debugWriter = writer
+	p.debug = debug.New(writer, "terraform", "parser", "<"+p.moduleName+">")
 }
 
 func (p *Parser) SetTFVarsPaths(s ...string) {
@@ -98,7 +99,6 @@ func New(moduleFS fs.FS, moduleSource string, opts ...options.ParserOption) *Par
 		underlying:     hclparse.NewParser(),
 		options:        opts,
 		moduleName:     "root",
-		debugWriter:    ioutil.Discard,
 		allowDownloads: true,
 		moduleFS:       moduleFS,
 		moduleSource:   moduleSource,
@@ -111,21 +111,16 @@ func New(moduleFS fs.FS, moduleSource string, opts ...options.ParserOption) *Par
 	return p
 }
 
-func (p *Parser) debug(format string, args ...interface{}) {
-	if p.debugWriter == nil {
-		return
-	}
-	prefix := fmt.Sprintf("[debug:parse][%s] ", p.moduleName)
-	_, _ = p.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
-}
-
 func (p *Parser) newModuleParser(moduleFS fs.FS, moduleSource, modulePath, moduleName string, moduleBlock *terraform.Block) *Parser {
-	mp := New(moduleFS, moduleSource, p.options...)
+	mp := New(moduleFS, moduleSource)
 	mp.modulePath = modulePath
 	mp.moduleBlock = moduleBlock
 	mp.moduleName = moduleName
 	mp.projectRoot = p.projectRoot
 	p.children = append(p.children, mp)
+	for _, option := range p.options {
+		option(p)
+	}
 	return mp
 }
 
@@ -151,7 +146,7 @@ func (p *Parser) ParseFile(_ context.Context, fullPath string) error {
 		return nil
 	}
 
-	p.debug("Parsing '%s'...", fullPath)
+	p.debug.Log("Parsing '%s'...", fullPath)
 	f, err := p.moduleFS.Open(filepath.ToSlash(fullPath))
 	if err != nil {
 		return err
@@ -163,7 +158,8 @@ func (p *Parser) ParseFile(_ context.Context, fullPath string) error {
 		return err
 	}
 	p.metrics.Timings.DiskIODuration += time.Since(diskStart)
-	if dir := filepath.Dir(fullPath); p.projectRoot == "" || len(dir) < len(p.projectRoot) {
+	if dir := filepath.Dir(fullPath); p.projectRoot == "" {
+		p.debug.Log("Setting project/module root to '%s'", dir)
 		p.projectRoot = dir
 		p.modulePath = dir
 	}
@@ -186,7 +182,7 @@ func (p *Parser) ParseFile(_ context.Context, fullPath string) error {
 	})
 	p.metrics.Counts.Files++
 	p.metrics.Timings.ParseDuration += time.Since(start)
-	p.debug("Added file %s.", fullPath)
+	p.debug.Log("Added file %s.", fullPath)
 	return nil
 }
 
@@ -196,11 +192,14 @@ func (p *Parser) ParseFS(ctx context.Context, dir string) error {
 	dir = filepath.Clean(dir)
 
 	if p.projectRoot == "" {
+		p.debug.Log("Setting project/module root to '%s'", dir)
 		p.projectRoot = dir
 		p.modulePath = dir
 	}
 
-	fileInfos, err := fs.ReadDir(p.moduleFS, filepath.ToSlash(dir))
+	slashed := filepath.ToSlash(dir)
+	p.debug.Log("Parsing FS from '%s'", slashed)
+	fileInfos, err := fs.ReadDir(p.moduleFS, slashed)
 	if err != nil {
 		return err
 	}
@@ -212,19 +211,23 @@ func (p *Parser) ParseFS(ctx context.Context, dir string) error {
 			extra, ok := p.moduleFS.(extrafs.FS)
 			if !ok {
 				// we can't handle symlinks in this fs type for now
+				p.debug.Log("Cannot resolve symlink '%s' in '%s' for this fs type", info.Name(), dir)
 				continue
 			}
 			realPath, err = extra.ResolveSymlink(info.Name(), dir)
 			if err != nil {
+				p.debug.Log("Failed to resolve symlink '%s' in '%s': %s", info.Name(), dir, err)
 				continue
 			}
 			info, err := extra.Stat(realPath)
 			if err != nil {
+				p.debug.Log("Failed to stat resolved symlink '%s': %s", realPath, err)
 				continue
 			}
 			if info.IsDir() {
 				continue
 			}
+			p.debug.Log("Resolved symlink '%s' in '%s' to '%s'", info.Name(), dir, realPath)
 		} else if info.IsDir() {
 			continue
 		}
@@ -236,19 +239,20 @@ func (p *Parser) ParseFS(ctx context.Context, dir string) error {
 			if p.stopOnHCLError {
 				return err
 			}
-			p.debug("error parsing '%s': %s", path, err)
+			p.debug.Log("error parsing '%s': %s", path, err)
 			continue
 		}
 	}
 
-	p.debug("Added directory %s.", dir)
 	return nil
 }
 
 func (p *Parser) EvaluateAll(ctx context.Context) (terraform.Modules, cty.Value, error) {
 
+	p.debug.Log("Evaluating module...")
+
 	if len(p.files) == 0 {
-		p.debug("No files found, nothing to do.")
+		p.debug.Log("No files found, nothing to do.")
 		return nil, cty.NilVal, nil
 	}
 
@@ -256,33 +260,34 @@ func (p *Parser) EvaluateAll(ctx context.Context) (terraform.Modules, cty.Value,
 	if err != nil {
 		return nil, cty.NilVal, err
 	}
-	p.debug("Read %d block(s) and %d ignore(s) for module '%s' (%d file[s])...", len(blocks), len(ignores), p.moduleName, len(p.files))
+	p.debug.Log("Read %d block(s) and %d ignore(s) for module '%s' (%d file[s])...", len(blocks), len(ignores), p.moduleName, len(p.files))
 
 	p.metrics.Counts.Blocks = len(blocks)
 
 	var inputVars map[string]cty.Value
 	if p.moduleBlock != nil {
 		inputVars = p.moduleBlock.Values().AsValueMap()
-		p.debug("Added %d input variables from module definition.", len(inputVars))
+		p.debug.Log("Added %d input variables from module definition.", len(inputVars))
 	} else {
 		inputVars, err = loadTFVars(p.moduleFS, p.tfvarsPaths)
 		if err != nil {
 			return nil, cty.NilVal, err
 		}
-		p.debug("Added %d variables from tfvars.", len(inputVars))
+		p.debug.Log("Added %d variables from tfvars.", len(inputVars))
 	}
 
-	modulesMetadata, err := loadModuleMetadata(p.moduleFS, p.projectRoot)
+	modulesMetadata, metadataPath, err := loadModuleMetadata(p.moduleFS, p.projectRoot)
 	if err != nil {
-		p.debug("Error loading module metadata: %s.", err)
+		p.debug.Log("Error loading module metadata: %s.", err)
 	} else {
-		p.debug("Loaded module metadata for %d module(s).", len(modulesMetadata.Modules))
+		p.debug.Log("Loaded module metadata for %d module(s) from '%s'.", len(modulesMetadata.Modules), metadataPath)
 	}
 
 	workingDir, err := os.Getwd()
 	if err != nil {
 		return nil, cty.NilVal, err
 	}
+	p.debug.Log("Working directory for module evaluation is '%s'", workingDir)
 	evaluator := newEvaluator(
 		p.moduleFS,
 		p,
@@ -295,13 +300,13 @@ func (p *Parser) EvaluateAll(ctx context.Context) (terraform.Modules, cty.Value,
 		modulesMetadata,
 		p.workspaceName,
 		ignores,
-		p.debugWriter,
+		p.debug.Extend("evaluator"),
 		p.allowDownloads,
 	)
 	modules, fsMap, parseDuration := evaluator.EvaluateAll(ctx)
 	p.metrics.Counts.Modules = len(modules)
 	p.metrics.Timings.ParseDuration = parseDuration
-	p.debug("Finished parsing module '%s'.", p.moduleName)
+	p.debug.Log("Finished parsing module '%s'.", p.moduleName)
 	p.fsMap = fsMap
 	return modules, evaluator.exportOutputs(), nil
 }
@@ -323,7 +328,7 @@ func (p *Parser) readBlocks(files []sourceFile) (terraform.Blocks, terraform.Ign
 			if p.stopOnHCLError {
 				return nil, nil, err
 			}
-			p.debug("Encountered HCL parse error: %s", err)
+			p.debug.Log("Encountered HCL parse error: %s", err)
 			continue
 		}
 		for _, fileBlock := range fileBlocks {

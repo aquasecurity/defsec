@@ -3,10 +3,11 @@ package parser
 import (
 	"context"
 	"fmt"
-	"io"
 	"io/fs"
 	"reflect"
 	"time"
+
+	"github.com/aquasecurity/defsec/pkg/debug"
 
 	"github.com/aquasecurity/defsec/internal/types"
 
@@ -33,7 +34,7 @@ type evaluator struct {
 	moduleName      string
 	ignores         terraform.Ignores
 	parentParser    *Parser
-	debugWriter     io.Writer
+	debug           debug.Logger
 	allowDownloads  bool
 }
 
@@ -49,7 +50,7 @@ func newEvaluator(
 	moduleMetadata *modulesMetadata,
 	workspace string,
 	ignores []terraform.Ignore,
-	debugWriter io.Writer,
+	logger debug.Logger,
 	allowDownloads bool,
 ) *evaluator {
 
@@ -80,17 +81,9 @@ func newEvaluator(
 		inputVars:       inputVars,
 		moduleMetadata:  moduleMetadata,
 		ignores:         ignores,
-		debugWriter:     debugWriter,
+		debug:           logger,
 		allowDownloads:  allowDownloads,
 	}
-}
-
-func (e *evaluator) debug(format string, args ...interface{}) {
-	if e.debugWriter == nil {
-		return
-	}
-	prefix := fmt.Sprintf("[debug:eval][%s] ", e.moduleName)
-	_, _ = e.debugWriter.Write([]byte(fmt.Sprintf(prefix+format+"\n", args...)))
 }
 
 func (e *evaluator) evaluateStep() {
@@ -117,20 +110,24 @@ func (e *evaluator) exportOutputs() cty.Value {
 			continue
 		}
 		data[block.Label()] = attr.Value()
-		e.debug("Added module output %s=%s.", block.Label(), attr.Value().GoString())
+		e.debug.Log("Added module output %s=%s.", block.Label(), attr.Value().GoString())
 	}
 	return cty.ObjectVal(data)
 }
 
 func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, map[string]fs.FS, time.Duration) {
 
+	fsKey := types.CreateFSKey(e.filesystem)
+	e.debug.Log("Filesystem key is '%s'", fsKey)
+
 	fsMap := make(map[string]fs.FS)
-	fsMap[types.CreateFSKey(e.filesystem)] = e.filesystem
+	fsMap[fsKey] = e.filesystem
 
 	var parseDuration time.Duration
 
 	var lastContext hcl.EvalContext
 	start := time.Now()
+	e.debug.Log("Starting module evaluation...")
 	for i := 0; i < maxContextIterations; i++ {
 
 		e.evaluateStep()
@@ -154,11 +151,12 @@ func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, map[str
 
 	parseDuration += time.Since(start)
 
+	e.debug.Log("Starting submodule evaluation...")
 	var modules []*terraform.Module
 	for _, definition := range e.loadModules(ctx) {
 		submodules, outputs, err := definition.Parser.EvaluateAll(ctx)
 		if err != nil {
-			e.debug("Failed to evaluate submodule '%s': %s.", definition.Name, err)
+			e.debug.Log("Failed to evaluate submodule '%s': %s.", definition.Name, err)
 			continue
 		}
 		// export module outputs
@@ -168,8 +166,9 @@ func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, map[str
 			fsMap[key] = val
 		}
 	}
-	e.debug("Finished processing %d submodule(s).", len(modules))
+	e.debug.Log("Finished processing %d submodule(s).", len(modules))
 
+	e.debug.Log("Starting post-submodule evaluation...")
 	for i := 0; i < maxContextIterations; i++ {
 
 		e.evaluateStep()
@@ -187,6 +186,7 @@ func (e *evaluator) EvaluateAll(ctx context.Context) (terraform.Modules, map[str
 		}
 	}
 
+	e.debug.Log("Module evaluation complete.")
 	parseDuration += time.Since(start)
 	return append([]*terraform.Module{terraform.NewModule(e.projectRootPath, e.modulePath, e.blocks, e.ignores)}, modules...), fsMap, parseDuration
 }
@@ -264,7 +264,7 @@ func (e *evaluator) expandBlockForEaches(blocks terraform.Blocks) terraform.Bloc
 			} else {
 				e.ctx.SetByDot(cty.TupleVal(clones), metadata.Reference().String())
 			}
-			e.debug("Expanded block '%s' into %d clones via 'for_each' attribute.", block.LocalName(), len(clones))
+			e.debug.Log("Expanded block '%s' into %d clones via 'for_each' attribute.", block.LocalName(), len(clones))
 		}
 	}
 
@@ -303,7 +303,7 @@ func (e *evaluator) expandBlockCounts(blocks terraform.Blocks) terraform.Blocks 
 		} else {
 			e.ctx.SetByDot(cty.TupleVal(clones), metadata.Reference().String())
 		}
-		e.debug("Expanded block '%s' into %d clones via 'count' attribute.", block.LocalName(), len(clones))
+		e.debug.Log("Expanded block '%s' into %d clones via 'count' attribute.", block.LocalName(), len(clones))
 	}
 
 	return countFiltered

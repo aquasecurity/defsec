@@ -7,7 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/debug"
+	"github.com/aquasecurity/defsec/pkg/debug"
+
 	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/aquasecurity/defsec/pkg/providers/dockerfile"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
@@ -24,7 +25,7 @@ type Parser struct {
 }
 
 func (p *Parser) SetDebugWriter(writer io.Writer) {
-	p.debug = debug.New(writer, "parse:dockerfile")
+	p.debug = debug.New(writer, "dockerfile", "parser")
 }
 
 func (p *Parser) SetSkipRequiredCheck(b bool) {

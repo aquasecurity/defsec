@@ -15,19 +15,19 @@ type modulesMetadata struct {
 	} `json:"Modules"`
 }
 
-func loadModuleMetadata(target fs.FS, fullPath string) (*modulesMetadata, error) {
+func loadModuleMetadata(target fs.FS, fullPath string) (*modulesMetadata, string, error) {
 	metadataPath := filepath.Join(fullPath, ".terraform/modules/modules.json")
 
 	f, err := target.Open(metadataPath)
 	if err != nil {
-		return nil, err
+		return nil, metadataPath, err
 	}
 	defer func() { _ = f.Close() }()
 
 	var metadata modulesMetadata
 	if err := json.NewDecoder(f).Decode(&metadata); err != nil {
-		return nil, err
+		return nil, metadataPath, err
 	}
 
-	return &metadata, nil
+	return &metadata, metadataPath, nil
 }

@@ -11,7 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/aquasecurity/defsec/internal/debug"
+	"github.com/aquasecurity/defsec/pkg/debug"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/rego"
@@ -79,7 +80,8 @@ func (s *Scanner) SetSkipRequiredCheck(skip bool) {
 
 func (s *Scanner) SetDebugWriter(writer io.Writer) {
 	s.parserOpt = append(s.parserOpt, options.ParserWithDebug(writer))
-	s.debug = debug.New(writer, "scan:terraform")
+	s.executorOpt = append(s.executorOpt, executor.OptionWithDebugWriter(writer))
+	s.debug = debug.New(writer, "terraform", "scanner")
 }
 
 func (s *Scanner) SetTraceWriter(_ io.Writer) {
@@ -133,6 +135,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 		return s.regoScanner, nil
 	}
 	regoScanner := rego.NewScanner(s.options...)
+	regoScanner.SetParentDebugLogger(s.debug)
 	if s.enableEmbeddedLibraries {
 		if err := regoScanner.LoadEmbeddedLibraries(); err != nil {
 			return nil, fmt.Errorf("failed to load embedded libraries: %w", err)
@@ -149,7 +152,7 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 
 	var metrics Metrics
 
-	s.debug.Log("scanning [%s] at %s", target, dir)
+	s.debug.Log("Scanning [%s] at '%s'...", target, dir)
 
 	// find directories which directly contain tf files (and have no parent containing tf files)
 	rootDirs := s.findRootModules(target, dir, dir)
