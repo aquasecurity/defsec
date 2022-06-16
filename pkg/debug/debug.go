@@ -72,6 +72,8 @@ func LogSystemInfo(w io.Writer, appVersion string) {
 	sys.Log("OS        %s", runtime.GOOS)
 	sys.Log("ARCH      %s", runtime.GOARCH)
 	sys.Log("KERNEL    %s", kernelInfo)
+	sys.Log("TERM      %s", os.Getenv("TERM"))
+	sys.Log("SHELL     %s", os.Getenv("SHELL"))
 	sys.Log("GOVERSION %s", runtime.Version())
 	sys.Log("GOROOT    %s", runtime.GOROOT())
 	sys.Log("CGO       %t", cgoEnabled)
