@@ -145,7 +145,6 @@ func (s *Scanner) getScanResults(path string, ctx context.Context, target fs.FS)
 	}
 
 	regoScanner := rego.NewScanner(s.options...)
-	s.loadEmbedded = len(s.policyDirs)+len(s.policyReaders) == 0
 	policyFS := target
 	if s.policyFS != nil {
 		policyFS = s.policyFS
