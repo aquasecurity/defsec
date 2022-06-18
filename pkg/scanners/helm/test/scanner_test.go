@@ -205,7 +205,7 @@ deny[res] {
 
 		policyDirName := filepath.Join(testTemp, "rules")
 		require.NoError(t, os.Mkdir(policyDirName, 0o700))
-		require.NoError(t, os.WriteFile(filepath.Join(policyDirName, "rule.rego"), []byte(regoRule), 0o644))
+		require.NoError(t, os.WriteFile(filepath.Join(policyDirName, "rule.rego"), []byte(regoRule), 0o600))
 
 		testFs := os.DirFS(testTemp)
 
