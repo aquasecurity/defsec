@@ -72,7 +72,7 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 	}
 }
 
-func Test_malformed_helm_scanner_with_archive(t *testing.T) {
+func Test_helm_scanner_with_missing_name_can_recover(t *testing.T) {
 
 	tests := []struct {
 		testName    string
@@ -99,7 +99,7 @@ func Test_malformed_helm_scanner_with_archive(t *testing.T) {
 
 		testFs := os.DirFS(testTemp)
 		_, err := helmScanner.ScanFS(context.TODO(), testFs, ".")
-		require.Error(t, err)
+		require.NoError(t, err)
 	}
 }
 
@@ -168,4 +168,11 @@ func copyArchive(src, dst string) error {
 		return err
 	}
 	return nil
+}
+
+func Test_helm_chart_with_templated_name(t *testing.T) {
+	helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true))
+	testFs := os.DirFS(filepath.Join("testdata", "templated-name"))
+	_, err := helmScanner.ScanFS(context.TODO(), testFs, ".")
+	require.NoError(t, err)
 }
