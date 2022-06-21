@@ -13,6 +13,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/google/uuid"
+
 	"github.com/aquasecurity/defsec/pkg/debug"
 
 	"gopkg.in/yaml.v3"
@@ -135,7 +137,13 @@ func (p *Parser) extractChartName(chartPath string) error {
 
 	var chartContent map[string]interface{}
 	if err := yaml.NewDecoder(chart).Decode(&chartContent); err != nil {
-		return err
+		// the chart likely has the name templated and so cannot be parsed as yaml - use a temporary name
+		if dir := filepath.Dir(chartPath); dir != "" && dir != "." {
+			p.helmClient.ReleaseName = dir
+		} else {
+			p.helmClient.ReleaseName = uuid.NewString()
+		}
+		return nil
 	}
 
 	if name, ok := chartContent["name"]; !ok {
@@ -186,7 +194,7 @@ func (p *Parser) getRelease(chart *chart.Chart) (*release.Release, error) {
 	}
 
 	if r == nil {
-		return nil, fmt.Errorf("there is nothing in the r")
+		return nil, fmt.Errorf("there is nothing in the release")
 	}
 	return r, nil
 }
