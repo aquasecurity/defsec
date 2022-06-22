@@ -119,12 +119,13 @@ func init() {
 			return false
 		}
 
-		contents := make(map[string]interface{})
-		if err := unmarshalFunc(data, &contents); err != nil {
+		sniff := struct {
+			Resources map[string]map[string]interface{} `json:"Resources" yaml:"Resources"`
+		}{}
+		if err := unmarshalFunc(data, &sniff); err != nil {
 			return false
 		}
-		_, ok := contents["Resources"]
-		return ok
+		return sniff.Resources != nil
 	}
 
 	matchers[FileTypeDockerfile] = func(name string, _ io.ReadSeeker) bool {

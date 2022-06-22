@@ -64,7 +64,8 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, dir string) (FileCon
 
 		c, err := p.ParseFile(ctx, target, path)
 		if err != nil {
-			return err
+			p.debug.Log("Error parsing file '%s': %s", path, err)
+			return nil
 		}
 		contexts = append(contexts, c)
 		return nil
