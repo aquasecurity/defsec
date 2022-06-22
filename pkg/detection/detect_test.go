@@ -106,7 +106,7 @@ Resources:
 			},
 		},
 		{
-			name: "JSON with Resources, not clodformation",
+			name: "JSON with Resources, not cloudformation",
 			path: "whatever.json",
 			r: strings.NewReader(`{
   "Resources": ["something"]
