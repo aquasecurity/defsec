@@ -106,6 +106,16 @@ Resources:
 			},
 		},
 		{
+			name: "JSON with Resources, not clodformation",
+			path: "whatever.json",
+			r: strings.NewReader(`{
+  "Resources": ["something"]
+}`),
+			expected: []FileType{
+				FileTypeJSON,
+			},
+		},
+		{
 			name: "Dockerfile, no reader",
 			path: "Dockerfile",
 			r:    nil,
