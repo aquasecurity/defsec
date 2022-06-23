@@ -1,6 +1,8 @@
 package executor
 
 import (
+	"encoding/json"
+	"fmt"
 	"io"
 	"sort"
 	"strconv"
@@ -12,13 +14,17 @@ import (
 )
 
 type StatisticsItem struct {
-	RuleID          string
-	RuleDescription string
-	Links           []string
-	Count           int
+	RuleID          string   `json:"rule_id"`
+	RuleDescription string   `json:"rule_description"`
+	Links           []string `json:"links"`
+	Count           int      `json:"count"`
 }
 
 type Statistics []StatisticsItem
+
+type StatisticsResult struct {
+	Result Statistics `json:"results"`
+}
 
 func SortStatistics(statistics Statistics) Statistics {
 	sort.Slice(statistics, func(i, j int) bool {
@@ -27,11 +33,34 @@ func SortStatistics(statistics Statistics) Statistics {
 	return statistics
 }
 
-func (statistics Statistics) PrintStatisticsTable(w io.Writer) {
-	table := tablewriter.NewWriter(w)
+func (statistics Statistics) PrintStatisticsTable(format string, w io.Writer) error {
+	// lovely is the default so we keep it like that
+	if format != "lovely" && format != "markdown" && format != "json" {
+		return fmt.Errorf("you must specify only lovely, markdown or json format with --run-statistics")
+	}
+
 	sorted := SortStatistics(statistics)
+
+	if format == "json" {
+		result := StatisticsResult{Result: sorted}
+		val, err := json.MarshalIndent(result, "", "    ")
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(string(val))
+
+		return nil
+	}
+
+	table := tablewriter.NewWriter(w)
 	table.SetHeader([]string{"Rule ID", "Description", "Link", "Count"})
 	table.SetRowLine(true)
+
+	if format == "markdown" {
+		table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+		table.SetCenterSeparator("|")
+	}
 
 	for _, item := range sorted {
 		table.Append([]string{item.RuleID,
@@ -41,6 +70,8 @@ func (statistics Statistics) PrintStatisticsTable(w io.Writer) {
 	}
 
 	table.Render()
+
+	return nil
 }
 
 func AddStatisticsCount(statistics Statistics, result scan.Result) Statistics {
