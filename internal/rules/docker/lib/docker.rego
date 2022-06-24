@@ -20,9 +20,8 @@ copy[instruction] {
 	instruction.Cmd == "copy"
 }
 
-stage_copies[stage_name] = copies {
+stage_copies[stage] = copies {
 	stage := input.Stages[_]
-	stage_name := stage.Name
 	copies := [copy | copy := stage.Commands[_]; copy.Cmd == "copy"]
 }
 
