@@ -10,7 +10,7 @@ __rego_metadata__ := {
 	"severity": "CRITICAL",
 	"type": "Dockerfile Security Check",
 	"description": "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself.",
-	"recommended_actions": "Change the '--form' so that it will not refer to itself",
+	"recommended_actions": "Change the '--from' so that it will not refer to itself",
 	"url": "https://docs.docker.com/develop/develop-images/multistage-build/",
 }
 
@@ -27,7 +27,7 @@ get_alias_from_copy[output] {
 	contains(flag, "--from=")
 	parts := split(flag, "=")
 
-	is_alias_current_from_alias(stage, parts[1])
+	is_alias_current_from_alias(stage.Name, parts[1])
 	args := parts[1]
 	output := {
 		"args": args,
