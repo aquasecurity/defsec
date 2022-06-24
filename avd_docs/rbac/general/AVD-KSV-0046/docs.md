@@ -1,5 +1,5 @@
 
-Check whether role permits specific verb on any resources
+Check whether role permits specific verb on wildcard resources
 
 ### Impact
 <!-- Add Impact here -->

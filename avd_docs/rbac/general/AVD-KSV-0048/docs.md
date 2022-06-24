@@ -1,5 +1,5 @@
 
-Check whether role permits update/create a malicious pod
+Check whether role permits update/create of a malicious pod
 
 ### Impact
 <!-- Add Impact here -->
