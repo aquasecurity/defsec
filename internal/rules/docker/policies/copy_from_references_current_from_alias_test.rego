@@ -175,23 +175,23 @@ test_duplicate_allowed {
 				},
 			],
 		},
-        {
-            "Name": "golang:1.7.3",
-            "Commands": [
-                {
-                    "Cmd": "from",
-                    "Value": ["golang:1.7.3"],
-                },
-                {
-                    "Cmd": "copy",
-                    "Flags": ["--from=0"],
-                    "Value": [
-                        "app/",
-                        "/app/",
-                    ],
-                },
-            ],
-        },
+		{
+			"Name": "golang:1.7.3",
+			"Commands": [
+				{
+					"Cmd": "from",
+					"Value": ["golang:1.7.3"],
+				},
+				{
+					"Cmd": "copy",
+					"Flags": ["--from=0"],
+					"Value": [
+						"app/",
+						"/app/",
+					],
+				},
+			],
+		},
 	]}
 
 	count(r) == 0
