@@ -22,7 +22,7 @@ require (
 	github.com/open-policy-agent/opa v0.41.0
 	github.com/owenrumney/go-sarif/v2 v2.1.1
 	github.com/owenrumney/squealer v1.0.1-0.20220510063705-c0be93f0edea
-	github.com/stretchr/testify v1.7.2
+	github.com/stretchr/testify v1.7.5
 	github.com/zclconf/go-cty v1.10.0
 	github.com/zclconf/go-cty-yaml v1.0.2
 	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd
