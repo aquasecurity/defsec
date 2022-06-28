@@ -2,6 +2,7 @@ package gke
 
 import (
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -30,7 +31,7 @@ var CheckNodePoolUsesCos = rules.Register(
 	func(s *state.State) (results scan.Results) {
 		for _, cluster := range s.Google.GKE.Clusters {
 			if cluster.IsManaged() {
-				if cluster.NodeConfig.ImageType.NotEqualTo("") && cluster.NodeConfig.ImageType.NotEqualTo("COS_CONTAINERD") && cluster.NodeConfig.ImageType.NotEqualTo("COS") {
+				if cluster.NodeConfig.ImageType.NotEqualTo("") && cluster.NodeConfig.ImageType.NotEqualTo("COS_CONTAINERD", types.IgnoreCase) && cluster.NodeConfig.ImageType.NotEqualTo("COS", types.IgnoreCase) {
 					results.Add(
 						"Cluster is not configuring node pools to use the COS containerd image type by default.",
 						cluster.NodeConfig.ImageType,
@@ -40,7 +41,7 @@ var CheckNodePoolUsesCos = rules.Register(
 				}
 			}
 			for _, pool := range cluster.NodePools {
-				if pool.NodeConfig.ImageType.NotEqualTo("COS_CONTAINERD") && pool.NodeConfig.ImageType.NotEqualTo("COS") {
+				if pool.NodeConfig.ImageType.NotEqualTo("COS_CONTAINERD", types.IgnoreCase) && pool.NodeConfig.ImageType.NotEqualTo("COS", types.IgnoreCase) {
 					results.Add(
 						"Node pool is not using the COS containerd image type.",
 						pool.NodeConfig.ImageType,
