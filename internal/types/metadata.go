@@ -1,5 +1,10 @@
 package types
 
+import (
+	"fmt"
+	"strings"
+)
+
 type metadataProvider interface {
 	GetMetadata() Metadata
 	GetRawValue() interface{}
@@ -84,6 +89,10 @@ func NewUnmanagedMetadata() Metadata {
 
 func NewTestMetadata() Metadata {
 	return NewMetadata(NewRange("test.test", 123, 123, "", nil), &FakeReference{})
+}
+
+func NewApiMetadata(provider string, parts ...string) Metadata {
+	return NewMetadata(NewRange(fmt.Sprintf("/%s/%s", provider, strings.Join(parts, "/")), 0, 0, "", nil), &FakeReference{})
 }
 
 func (m Metadata) IsDefault() bool {

@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
+	"github.com/aquasecurity/defsec/pkg/progress"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
@@ -34,6 +35,11 @@ type Scanner struct {
 	tracePerResult bool
 	retriever      *MetadataRetriever
 	policyFS       fs.FS
+}
+
+func (s *Scanner) SetProgressTracker(t progress.Tracker) {
+	// TODO implement me
+	panic("implement me")
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {

@@ -381,7 +381,7 @@ spec:
 
 func Test_FileScanWithPolicyReader(t *testing.T) {
 
-	results, err := NewScanner(options.OptionWithPolicyReaders(strings.NewReader(`package defsec
+	results, err := NewScanner(options.ScannerWithPolicyReader(strings.NewReader(`package defsec
 
 deny[msg] {
   msg = "fail"
@@ -404,7 +404,7 @@ spec:
 
 func Test_FileScanJSON(t *testing.T) {
 
-	results, err := NewScanner(options.OptionWithPolicyReaders(strings.NewReader(`package defsec
+	results, err := NewScanner(options.ScannerWithPolicyReader(strings.NewReader(`package defsec
 
 deny[msg] {
   input.kind == "Pod"
@@ -462,7 +462,7 @@ func Test_FileScanWithMetadata(t *testing.T) {
 	results, err := NewScanner(
 		options.ScannerWithDebug(os.Stdout),
 		options.ScannerWithTrace(os.Stdout),
-		options.OptionWithPolicyReaders(strings.NewReader(`package defsec
+		options.ScannerWithPolicyReader(strings.NewReader(`package defsec
 
 deny[msg] {
   input.kind == "Pod"
@@ -504,7 +504,7 @@ func Test_FileScanExampleWithResultFunction(t *testing.T) {
 		options.ScannerWithTrace(os.Stdout),
 		options.ScannerWithPolicyFilesystem(os.DirFS("../../../internal/rules")),
 		options.ScannerWithPolicyDirs("defsec/lib", "kubernetes/lib"),
-		options.OptionWithPolicyReaders(strings.NewReader(`package defsec
+		options.ScannerWithPolicyReader(strings.NewReader(`package defsec
 
 import data.lib.kubernetes
 import data.lib.result

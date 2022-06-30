@@ -27,10 +27,22 @@ func main() {
 	}
 	debug.LogSystemInfo(os.Stderr, "")
 	fsys := extrafs.OSDir(abs)
-	results, err := universal.New(options.ScannerWithDebug(os.Stderr), options.ScannerWithEmbeddedPolicies(true)).ScanFS(context.TODO(), fsys, ".")
+	s := universal.New(options.ScannerWithDebug(os.Stderr), options.ScannerWithEmbeddedPolicies(true))
+
+	// Execute the filesystem based scanners
+	results, err := s.ScanFS(context.TODO(), fsys, ".")
 	if err != nil {
 		panic(err)
 	}
+
+	// Execute the API scanners //TODO do we even want this here?
+	apiScanResults, err := s.Scan(context.TODO())
+	if err != nil {
+		panic(err)
+	}
+
+	results = append(results, apiScanResults...)
+
 	if err := formatters.New().WithBaseDir(abs).AsSARIF().Build().Output(results); err != nil {
 		panic(err)
 	}

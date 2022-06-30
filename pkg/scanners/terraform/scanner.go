@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
+	"github.com/aquasecurity/defsec/pkg/progress"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
@@ -26,7 +27,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/extrafs"
 )
 
-var _ scanners.Scanner = (*Scanner)(nil)
+var _ scanners.FSScanner = (*Scanner)(nil)
 var _ options.ConfigurableScanner = (*Scanner)(nil)
 var _ ConfigurableTerraformScanner = (*Scanner)(nil)
 
@@ -99,6 +100,8 @@ func (s *Scanner) SetDataDirs(_ ...string) {
 
 func (s *Scanner) SetPolicyNamespaces(_ ...string) {
 }
+
+func (s *Scanner) SetProgressTracker(t progress.Tracker) {}
 
 func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on
