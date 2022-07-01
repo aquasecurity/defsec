@@ -33,11 +33,11 @@ allowing_create_role_binding_and_associate_cluster_role[ruleA] {
 	ruleA.apiGroups[_] == "rbac.authorization.k8s.io"
 	ruleA.resources[_] == "rolebindings"
 	ruleA.verbs[_] == "create"
-	ruleA.apiGroups[_] == "rbac.authorization.k8s.io"
+
+	ruleB.apiGroups[_] == "rbac.authorization.k8s.io"
 	ruleB.resources[_] == ["clusterroles", "roles"][_]
 	ruleB.verbs[_] == "bind"
 	ruleB.resourceNames[_] == "*"
-	ruleB.apiGroups[_] == "rbac.authorization.k8s.io"
 }
 
 deny[res] {
