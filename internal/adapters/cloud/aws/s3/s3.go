@@ -44,6 +44,7 @@ func (a *S3Adapter) getBuckets() (buckets []s3.Bucket, err error) {
 		return buckets, err
 	}
 
+	a.Tracker().SetServiceLabel("Scanning buckets...")
 	a.Tracker().SetTotalResources(len(apiBuckets.Buckets))
 
 	for _, bucket := range apiBuckets.Buckets {

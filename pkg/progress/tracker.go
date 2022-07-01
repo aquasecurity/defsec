@@ -8,6 +8,7 @@ type Tracker interface {
 }
 
 type ServiceTracker interface {
+	SetServiceLabel(label string)
 	SetTotalResources(i int)
 	IncrementResource()
 }
@@ -16,8 +17,9 @@ var NoProgress = nilTracker{}
 
 type nilTracker struct{}
 
-func (n nilTracker) SetTotalServices(_ int)  {}
-func (n nilTracker) SetTotalResources(_ int) {}
-func (n nilTracker) IncrementResource()      {}
-func (n nilTracker) StartService(_ string)   {}
-func (n nilTracker) FinishService()          {}
+func (n nilTracker) SetTotalServices(_ int)   {}
+func (n nilTracker) SetTotalResources(_ int)  {}
+func (n nilTracker) IncrementResource()       {}
+func (n nilTracker) StartService(_ string)    {}
+func (n nilTracker) FinishService()           {}
+func (n nilTracker) SetServiceLabel(_ string) {}
