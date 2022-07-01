@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
-	"github.com/aquasecurity/defsec/pkg/progress"
 
 	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/liamg/memoryfs"
@@ -89,8 +88,6 @@ func (s *Scanner) SetPolicyNamespaces(namespaces ...string) {
 func (s *Scanner) SetPolicyFilesystem(policyFS fs.FS) {
 	s.policyFS = policyFS
 }
-
-func (s *Scanner) SetProgressTracker(t progress.Tracker) {}
 
 func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, path string) (scan.Results, error) {
 

@@ -14,10 +14,27 @@ import (
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 )
 
+var _ ConfigurableAWSScanner = (*Scanner)(nil)
+
 type Scanner struct {
 	debug           debug.Logger
 	options         []options.ScannerOption
 	progressTracker progress.Tracker
+	region          string
+	endpoint        string
+	services        []string
+}
+
+func (s *Scanner) SetAWSRegion(region string) {
+	s.region = region
+}
+
+func (s *Scanner) SetAWSEndpoint(endpoint string) {
+	s.endpoint = endpoint
+}
+
+func (s *Scanner) SetAWSServices(services []string) {
+	s.services = services
 }
 
 func New(opts ...options.ScannerOption) *Scanner {

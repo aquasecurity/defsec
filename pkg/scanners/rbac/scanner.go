@@ -9,7 +9,6 @@ import (
 	"sync"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
-	"github.com/aquasecurity/defsec/pkg/progress"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/kubernetes"
 
@@ -75,8 +74,6 @@ func (s *Scanner) SetDataDirs(_ ...string) {
 func (s *Scanner) SetPolicyNamespaces(_ ...string) {
 
 }
-
-func (s *Scanner) SetProgressTracker(t progress.Tracker) {}
 
 func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on

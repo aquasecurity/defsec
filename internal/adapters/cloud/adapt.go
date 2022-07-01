@@ -4,15 +4,15 @@ import (
 	"context"
 
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	"github.com/aquasecurity/defsec/pkg/progress"
+	"github.com/aquasecurity/defsec/internal/adapters/cloud/options"
 	"github.com/aquasecurity/defsec/pkg/state"
 )
 
 // Adapt ...
-func Adapt(ctx context.Context, progress progress.Tracker) (*state.State, error) {
+func Adapt(ctx context.Context, opt options.Options) (*state.State, error) {
 
 	cloudState := &state.State{}
-	if err := aws.Adapt(ctx, cloudState, progress); err != nil {
+	if err := aws.Adapt(ctx, cloudState, opt); err != nil {
 		return nil, err
 	}
 

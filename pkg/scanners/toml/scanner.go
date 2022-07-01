@@ -7,7 +7,6 @@ import (
 	"sync"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
-	"github.com/aquasecurity/defsec/pkg/progress"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
@@ -58,8 +57,6 @@ func (s *Scanner) SetTraceWriter(_ io.Writer) {
 func (s *Scanner) SetPerResultTracingEnabled(_ bool) {
 
 }
-
-func (s *Scanner) SetProgressTracker(t progress.Tracker) {}
 
 func (s *Scanner) SetPolicyDirs(dirs ...string) {
 	s.policyDirs = dirs

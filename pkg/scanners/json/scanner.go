@@ -7,7 +7,6 @@ import (
 	"sync"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
-	"github.com/aquasecurity/defsec/pkg/progress"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
@@ -70,8 +69,6 @@ func (s *Scanner) SetSkipRequiredCheck(skip bool) {
 func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on
 }
-
-func (s *Scanner) SetProgressTracker(t progress.Tracker) {}
 
 func NewScanner(opts ...options.ScannerOption) *Scanner {
 	s := &Scanner{

@@ -9,8 +9,6 @@ import (
 	"sync"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
-	"github.com/aquasecurity/defsec/pkg/progress"
-
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/internal/types"
@@ -74,11 +72,10 @@ func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on
 }
 
-func (s *Scanner) SetTraceWriter(_ io.Writer)            {}
-func (s *Scanner) SetPerResultTracingEnabled(_ bool)     {}
-func (s *Scanner) SetDataDirs(_ ...string)               {}
-func (s *Scanner) SetPolicyNamespaces(_ ...string)       {}
-func (s *Scanner) SetProgressTracker(t progress.Tracker) {}
+func (s *Scanner) SetTraceWriter(_ io.Writer)        {}
+func (s *Scanner) SetPerResultTracingEnabled(_ bool) {}
+func (s *Scanner) SetDataDirs(_ ...string)           {}
+func (s *Scanner) SetPolicyNamespaces(_ ...string)   {}
 
 // New creates a new Scanner
 func New(opts ...options.ScannerOption) *Scanner {

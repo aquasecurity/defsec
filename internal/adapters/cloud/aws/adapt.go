@@ -3,9 +3,10 @@ package aws
 import (
 	"context"
 
+	"github.com/aquasecurity/defsec/internal/adapters/cloud/options"
 	"github.com/aquasecurity/defsec/pkg/progress"
 	"github.com/aquasecurity/defsec/pkg/state"
-	aws2 "github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 )
 
@@ -22,11 +23,11 @@ type ServiceAdapter interface {
 
 type RootAdapter struct {
 	ctx        context.Context
-	sessionCfg aws2.Config
+	sessionCfg aws.Config
 	tracker    progress.ServiceTracker
 }
 
-func (a *RootAdapter) SessionConfig() aws2.Config {
+func (a *RootAdapter) SessionConfig() aws.Config {
 	return a.sessionCfg
 }
 
@@ -38,10 +39,28 @@ func (a *RootAdapter) Tracker() progress.ServiceTracker {
 	return a.tracker
 }
 
-func Adapt(ctx context.Context, state *state.State, tracker progress.Tracker) error {
+type resolver struct {
+	endpoint string
+}
+
+func (r *resolver) ResolveEndpoint(_, _ string, _ ...interface{}) (aws.Endpoint, error) {
+	return aws.Endpoint{
+		URL:           r.endpoint,
+		SigningRegion: "custom-signing-region",
+		Source:        aws.EndpointSourceCustom,
+	}, nil
+}
+
+func createResolver(endpoint string) aws.EndpointResolverWithOptions {
+	return &resolver{
+		endpoint: endpoint,
+	}
+}
+
+func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 	c := &RootAdapter{
 		ctx:     ctx,
-		tracker: tracker,
+		tracker: opt.ProgressTracker,
 	}
 
 	cfg, err := config.LoadDefaultConfig(ctx)
@@ -51,14 +70,37 @@ func Adapt(ctx context.Context, state *state.State, tracker progress.Tracker) er
 
 	c.sessionCfg = cfg
 
-	tracker.SetTotalServices(len(registeredAdapters))
+	if opt.Region != "" {
+		c.sessionCfg.Region = opt.Region
+	}
+	if opt.Endpoint != "" {
+		c.sessionCfg.EndpointResolverWithOptions = createResolver(opt.Endpoint)
+	}
+
+	if len(opt.Services) == 0 {
+		opt.ProgressTracker.SetTotalServices(len(registeredAdapters))
+	} else {
+		opt.ProgressTracker.SetTotalServices(len(opt.Services))
+	}
 
 	for _, adapter := range registeredAdapters {
-		tracker.StartService(adapter.Name())
+		if len(opt.Services) != 0 && !contains(opt.Services, adapter.Name()) {
+			continue
+		}
+		opt.ProgressTracker.StartService(adapter.Name())
 		if err := adapter.Adapt(c, state); err != nil {
 			return err
 		}
-		tracker.FinishService()
+		opt.ProgressTracker.FinishService()
 	}
 	return nil
+}
+
+func contains(services []string, service string) bool {
+	for _, s := range services {
+		if s == service {
+			return true
+		}
+	}
+	return false
 }

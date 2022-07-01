@@ -3,8 +3,6 @@ package options
 import (
 	"io"
 	"io/fs"
-
-	"github.com/aquasecurity/defsec/pkg/progress"
 )
 
 type ConfigurableScanner interface {
@@ -18,7 +16,6 @@ type ConfigurableScanner interface {
 	SetPolicyReaders([]io.Reader)
 	SetPolicyFilesystem(fs.FS)
 	SetUseEmbeddedPolicies(bool)
-	SetProgressTracker(t progress.Tracker)
 }
 
 type ScannerOption func(s ConfigurableScanner)
@@ -27,13 +24,6 @@ func ScannerWithPolicyReader(readers ...io.Reader) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetPolicyReaders(readers)
 	}
-}
-
-func ScannerWithProgressTracker(t progress.Tracker) ScannerOption {
-	return func(s ConfigurableScanner) {
-		s.SetProgressTracker(t)
-	}
-
 }
 
 // ScannerWithDebug specifies an io.Writer for debug logs - if not set, they are discarded
