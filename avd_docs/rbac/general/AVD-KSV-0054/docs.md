@@ -1,5 +1,5 @@
 
-Check whether role permits attaching shell on pods
+Check whether role permits attaching to shell on pods
 
 ### Impact
 <!-- Add Impact here -->

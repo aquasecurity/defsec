@@ -1,5 +1,5 @@
 
-Check whether role permits creating role clusterrolebindings and associate to privileged cluster role
+Check whether role permits creating role ClusterRoleBindings and association with privileged cluster role
 
 ### Impact
 <!-- Add Impact here -->
