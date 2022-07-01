@@ -166,3 +166,11 @@ host_aliases[host_alias] {
 	pods[pod]
 	host_alias = pod.spec
 }
+
+is_apiserver(container) {
+	regex.match("kube-apiserver", container.command[0])
+}
+
+command_has_flag(command, flag) {
+	regex.match(flag, command[_])
+}

@@ -1,0 +1,13 @@
+
+Do not disable the secure port.
+
+### Impact
+<!-- Add Impact here -->
+
+<!-- DO NOT CHANGE -->
+{{ remediationActions }}
+
+### Links
+- https://www.cisecurity.org/benchmark/kubernetes
+
+
