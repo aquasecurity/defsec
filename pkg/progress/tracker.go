@@ -1,14 +1,23 @@
 package progress
 
 type Tracker interface {
-	SetTotal(total int)
-	Increment()
+	SetTotalServices(i int)
+	StartService(name string)
+	FinishService()
+	ServiceTracker
+}
+
+type ServiceTracker interface {
+	SetTotalResources(i int)
+	IncrementResource()
 }
 
 var NoProgress = nilTracker{}
 
 type nilTracker struct{}
 
-func (n nilTracker) SetTotal(total int) {}
-
-func (n nilTracker) Increment() {}
+func (n nilTracker) SetTotalServices(_ int)  {}
+func (n nilTracker) SetTotalResources(_ int) {}
+func (n nilTracker) IncrementResource()      {}
+func (n nilTracker) StartService(_ string)   {}
+func (n nilTracker) FinishService()          {}

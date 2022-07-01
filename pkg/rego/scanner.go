@@ -37,10 +37,7 @@ type Scanner struct {
 	policyFS       fs.FS
 }
 
-func (s *Scanner) SetProgressTracker(t progress.Tracker) {
-	// TODO implement me
-	panic("implement me")
-}
+func (s *Scanner) SetProgressTracker(_ progress.Tracker) {}
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
 	// handled externally

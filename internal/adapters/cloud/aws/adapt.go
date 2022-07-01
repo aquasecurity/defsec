@@ -17,12 +17,13 @@ func RegisterServiceAdapter(adapter ServiceAdapter) {
 
 type ServiceAdapter interface {
 	Name() string
-	Adapt(root *RootAdapter, state *state.State, progress progress.Tracker) error
+	Adapt(root *RootAdapter, state *state.State) error
 }
 
 type RootAdapter struct {
 	ctx        context.Context
 	sessionCfg aws2.Config
+	tracker    progress.ServiceTracker
 }
 
 func (a *RootAdapter) SessionConfig() aws2.Config {
@@ -33,9 +34,14 @@ func (a *RootAdapter) Context() context.Context {
 	return a.ctx
 }
 
-func Adapt(ctx context.Context, state *state.State, progress progress.Tracker) error {
+func (a *RootAdapter) Tracker() progress.ServiceTracker {
+	return a.tracker
+}
+
+func Adapt(ctx context.Context, state *state.State, tracker progress.Tracker) error {
 	c := &RootAdapter{
-		ctx: ctx,
+		ctx:     ctx,
+		tracker: tracker,
 	}
 
 	cfg, err := config.LoadDefaultConfig(ctx)
@@ -45,10 +51,14 @@ func Adapt(ctx context.Context, state *state.State, progress progress.Tracker) e
 
 	c.sessionCfg = cfg
 
+	tracker.SetTotalServices(len(registeredAdapters))
+
 	for _, adapter := range registeredAdapters {
-		if err := adapter.Adapt(c, state, progress); err != nil {
+		tracker.StartService(adapter.Name())
+		if err := adapter.Adapt(c, state); err != nil {
 			return err
 		}
+		tracker.FinishService()
 	}
 	return nil
 }

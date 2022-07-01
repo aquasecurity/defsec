@@ -1,11 +1,8 @@
 package s3
 
 import (
-	"context"
-
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/internal/types"
-	"github.com/aquasecurity/defsec/pkg/progress"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -16,7 +13,6 @@ import (
 
 type S3Adapter struct {
 	*aws.RootAdapter
-	ctx context.Context
 	api *s3api.Client
 }
 
@@ -24,27 +20,17 @@ func init() {
 	aws.RegisterServiceAdapter(&S3Adapter{})
 }
 
-func New(root *aws.RootAdapter) (result *S3Adapter) {
-	// create s3 api
-	api := s3api.NewFromConfig(root.SessionConfig())
-
-	return &S3Adapter{
-		root,
-		root.Context(),
-		api,
-	}
-}
-
 func (a *S3Adapter) Name() string {
 	return "aws/s3"
 }
 
-func (a *S3Adapter) Adapt(root *aws.RootAdapter, state *state.State, progress progress.Tracker) error {
+func (a *S3Adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 
-	adapter := New(root)
+	a.RootAdapter = root
+	a.api = s3api.NewFromConfig(root.SessionConfig())
+
 	var err error
-
-	state.AWS.S3.Buckets, err = adapter.getBuckets(progress)
+	state.AWS.S3.Buckets, err = a.getBuckets()
 	if err != nil {
 		return err
 	}
@@ -52,13 +38,13 @@ func (a *S3Adapter) Adapt(root *aws.RootAdapter, state *state.State, progress pr
 	return nil
 }
 
-func (a *S3Adapter) getBuckets(progress progress.Tracker) (buckets []s3.Bucket, err error) {
-	apiBuckets, err := a.api.ListBuckets(a.ctx, &s3api.ListBucketsInput{})
+func (a *S3Adapter) getBuckets() (buckets []s3.Bucket, err error) {
+	apiBuckets, err := a.api.ListBuckets(a.Context(), &s3api.ListBucketsInput{})
 	if err != nil {
 		return buckets, err
 	}
 
-	progress.SetTotal(len(apiBuckets.Buckets))
+	a.Tracker().SetTotalResources(len(apiBuckets.Buckets))
 
 	for _, bucket := range apiBuckets.Buckets {
 
@@ -74,7 +60,7 @@ func (a *S3Adapter) getBuckets(progress progress.Tracker) (buckets []s3.Bucket, 
 		b.ACL = a.getBucketACL(bucket.Name, bucketMetadata)
 
 		buckets = append(buckets, b)
-		progress.Increment()
+		a.Tracker().IncrementResource()
 	}
 
 	return buckets, nil
@@ -82,7 +68,7 @@ func (a *S3Adapter) getBuckets(progress progress.Tracker) (buckets []s3.Bucket, 
 
 func (a *S3Adapter) getPublicAccessBlock(bucketName *string, metadata types.Metadata) *s3.PublicAccessBlock {
 
-	publicAccessBlocks, err := a.api.GetPublicAccessBlock(a.ctx, &s3api.GetPublicAccessBlockInput{
+	publicAccessBlocks, err := a.api.GetPublicAccessBlock(a.Context(), &s3api.GetPublicAccessBlockInput{
 		Bucket: bucketName,
 	})
 	if err != nil {
@@ -107,7 +93,7 @@ func (a *S3Adapter) getPublicAccessBlock(bucketName *string, metadata types.Meta
 func (a *S3Adapter) getBucketPolicies(bucketName *string, metadata types.Metadata) []iam.Policy {
 	var bucketPolicies []iam.Policy
 
-	bucketPolicy, err := a.api.GetBucketPolicy(a.ctx, &s3api.GetBucketPolicyInput{Bucket: bucketName})
+	bucketPolicy, err := a.api.GetBucketPolicy(a.Context(), &s3api.GetBucketPolicyInput{Bucket: bucketName})
 	if err != nil {
 		return bucketPolicies
 	}
@@ -139,7 +125,7 @@ func (a *S3Adapter) getBucketEncryption(bucketName *string, metadata types.Metad
 		KMSKeyId:  types.StringDefault("", metadata),
 	}
 
-	encryption, err := a.api.GetBucketEncryption(a.ctx, &s3api.GetBucketEncryptionInput{Bucket: bucketName})
+	encryption, err := a.api.GetBucketEncryption(a.Context(), &s3api.GetBucketEncryptionInput{Bucket: bucketName})
 	if err != nil {
 		return bucketEncryption
 	}
@@ -164,7 +150,7 @@ func (a *S3Adapter) getBucketVersioning(bucketName *string, metadata types.Metad
 		Enabled:  types.BoolDefault(false, metadata),
 	}
 
-	versioning, err := a.api.GetBucketVersioning(a.ctx, &s3api.GetBucketVersioningInput{Bucket: bucketName})
+	versioning, err := a.api.GetBucketVersioning(a.Context(), &s3api.GetBucketVersioningInput{Bucket: bucketName})
 	if err != nil {
 		return bucketVersioning
 	}
@@ -184,7 +170,7 @@ func (a *S3Adapter) getBucketLogging(bucketName *string, metadata types.Metadata
 		TargetBucket: types.StringDefault("", metadata),
 	}
 
-	logging, err := a.api.GetBucketLogging(a.ctx, &s3api.GetBucketLoggingInput{Bucket: bucketName})
+	logging, err := a.api.GetBucketLogging(a.Context(), &s3api.GetBucketLoggingInput{Bucket: bucketName})
 	if err != nil {
 		return bucketLogging
 	}
@@ -198,7 +184,7 @@ func (a *S3Adapter) getBucketLogging(bucketName *string, metadata types.Metadata
 }
 
 func (a *S3Adapter) getBucketACL(bucketName *string, metadata types.Metadata) types.StringValue {
-	acl, err := a.api.GetBucketAcl(a.ctx, &s3api.GetBucketAclInput{Bucket: bucketName})
+	acl, err := a.api.GetBucketAcl(a.Context(), &s3api.GetBucketAclInput{Bucket: bucketName})
 	if err != nil {
 		return types.StringDefault("private", metadata)
 	}
