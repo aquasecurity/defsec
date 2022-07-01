@@ -48,7 +48,7 @@ func (statistics Statistics) PrintStatisticsTable(format string, w io.Writer) er
 			return err
 		}
 
-		fmt.Println(string(val))
+		_, _ = fmt.Fprintln(w, string(val))
 
 		return nil
 	}
