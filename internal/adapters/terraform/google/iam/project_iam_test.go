@@ -6,6 +6,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/google/iam"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
+	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aquasecurity/defsec/test/testutil"
 )
@@ -38,20 +39,40 @@ resource "" "example" {
 }
 
 func Test_AdaptBinding(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name      string
 		terraform string
 		expected  iam.Binding
 	}{
 		{
-			name: "basic",
+			name: "defined",
 			terraform: `
-resource "" "example" {
-    
-}
-`,
-			expected: iam.Binding{},
+		resource "google_organization_iam_binding" "binding" {
+			org_id = data.google_organization.org.id
+			role    = "roles/browser"
+			
+			members = [
+				"user:alice@gmail.com",
+			]
+		}`,
+			expected: iam.Binding{
+				Metadata: types.NewTestMetadata(),
+				Members: []types.StringValue{
+					types.String("user:alice@gmail.com", types.NewTestMetadata())},
+				Role:                          types.String("roles/browser", types.NewTestMetadata()),
+				IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+			},
+		},
+		{
+			name: "defaults",
+			terraform: `
+		resource "google_organization_iam_binding" "binding" {
+		}`,
+			expected: iam.Binding{
+				Metadata:                      types.NewTestMetadata(),
+				Role:                          types.String("", types.NewTestMetadata()),
+				IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+			},
 		},
 	}
 
