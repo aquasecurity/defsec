@@ -42,7 +42,7 @@ func getEncryption(block *terraform.Block, a *adapter) s3.Encryption {
 		return s3.Encryption{
 			Metadata:  block.GetMetadata(),
 			Enabled:   isEncrypted(block.GetBlock("server_side_encryption_configuration")),
-			Algorithm: types.StringDefault("", block.GetMetadata()),
+			Algorithm: block.GetNestedAttribute("server_side_encryption_configuration.rule.apply_server_side_encryption_by_default. sse_algorithm").AsStringValueOrDefault("", block),
 			KMSKeyId:  block.GetNestedAttribute("server_side_encryption_configuration.rule.apply_server_side_encryption_by_default.kms_master_key_id").AsStringValueOrDefault("", block),
 		}
 	}
@@ -54,7 +54,7 @@ func getEncryption(block *terraform.Block, a *adapter) s3.Encryption {
 					return s3.Encryption{
 						Metadata:  encryptionResource.GetMetadata(),
 						Enabled:   isEncrypted(encryptionResource),
-						Algorithm: types.StringDefault("", block.GetMetadata()),
+						Algorithm: encryptionResource.GetNestedAttribute("rule.apply_server_side_encryption_by_default.sse_algorithm").AsStringValueOrDefault("", block),
 						KMSKeyId:  encryptionResource.GetNestedAttribute("rule.apply_server_side_encryption_by_default.kms_master_key_id").AsStringValueOrDefault("", block),
 					}
 				}
@@ -98,22 +98,30 @@ func getVersioning(block *terraform.Block, a *adapter) s3.Versioning {
 
 func getLogging(block *terraform.Block, a *adapter) s3.Logging {
 	if loggingBlock := block.GetBlock("logging"); loggingBlock.IsNotNil() {
+		targetBucket := loggingBlock.GetAttribute("target_bucket").AsStringValueOrDefault("", loggingBlock)
+		if referencedBlock, err := a.modules.GetReferencedBlock(loggingBlock.GetAttribute("target_bucket"), loggingBlock); err == nil {
+			targetBucket = types.String(referencedBlock.FullName(), loggingBlock.GetAttribute("target_bucket").GetMetadata())
+		}
 		return s3.Logging{
 			Metadata:     loggingBlock.GetMetadata(),
 			Enabled:      types.Bool(true, loggingBlock.GetMetadata()),
-			TargetBucket: loggingBlock.GetAttribute("target_bucket").AsStringValueOrDefault("", loggingBlock),
+			TargetBucket: targetBucket,
 		}
 	}
 
 	for _, loggingResource := range a.modules.GetResourcesByType("aws_s3_bucket_logging") {
 		bucketAttr := loggingResource.GetAttribute("bucket")
 		if bucketAttr.IsNotNil() {
+			targetBucket := loggingResource.GetAttribute("target-bucket").AsStringValueOrDefault("", loggingResource)
+			if referencedBlock, err := a.modules.GetReferencedBlock(loggingResource.GetAttribute("target_bucket"), loggingResource); err == nil {
+				targetBucket = types.String(referencedBlock.FullName(), loggingResource.GetAttribute("target_bucket").GetMetadata())
+			}
 			if referencedBlock, err := a.modules.GetReferencedBlock(bucketAttr, loggingResource); err == nil {
 				if referencedBlock.ID() == block.ID() {
 					return s3.Logging{
 						Metadata:     loggingResource.GetMetadata(),
 						Enabled:      hasLogging(loggingResource),
-						TargetBucket: loggingResource.GetAttribute("target-bucket").AsStringValueOrDefault("", loggingResource),
+						TargetBucket: targetBucket,
 					}
 				}
 			}
