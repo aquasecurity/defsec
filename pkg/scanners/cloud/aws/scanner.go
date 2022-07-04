@@ -5,6 +5,8 @@ import (
 	"io"
 	"io/fs"
 
+	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+
 	adapter "github.com/aquasecurity/defsec/internal/adapters/cloud"
 	cloudoptions "github.com/aquasecurity/defsec/internal/adapters/cloud/options"
 	"github.com/aquasecurity/defsec/internal/rules"
@@ -24,6 +26,10 @@ type Scanner struct {
 	region          string
 	endpoint        string
 	services        []string
+}
+
+func AllSupportedServices() []string {
+	return aws.AllServices()
 }
 
 func (s *Scanner) SetAWSRegion(region string) {
@@ -53,9 +59,12 @@ func New(opts ...options.ScannerOption) *Scanner {
 func (s *Scanner) Scan(ctx context.Context) (results scan.Results, err error) {
 	state, err := adapter.Adapt(ctx, cloudoptions.Options{
 		ProgressTracker: s.progressTracker,
+		Region:          s.region,
+		Endpoint:        s.endpoint,
+		Services:        s.services,
 	})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	for _, rule := range rules.GetRegistered() {

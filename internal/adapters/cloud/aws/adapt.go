@@ -18,6 +18,7 @@ func RegisterServiceAdapter(adapter ServiceAdapter) {
 
 type ServiceAdapter interface {
 	Name() string
+	Provider() string
 	Adapt(root *RootAdapter, state *state.State) error
 }
 
@@ -55,6 +56,14 @@ func createResolver(endpoint string) aws.EndpointResolverWithOptions {
 	return &resolver{
 		endpoint: endpoint,
 	}
+}
+
+func AllServices() []string {
+	var services []string
+	for _, reg := range registeredAdapters {
+		services = append(services, reg.Name())
+	}
+	return services
 }
 
 func Adapt(ctx context.Context, state *state.State, opt options.Options) error {

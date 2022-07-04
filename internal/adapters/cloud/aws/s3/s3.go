@@ -21,8 +21,12 @@ func init() {
 	aws.RegisterServiceAdapter(&S3Adapter{})
 }
 
+func (a *S3Adapter) Provider() string {
+	return "aws"
+}
+
 func (a *S3Adapter) Name() string {
-	return "aws/s3"
+	return "s3"
 }
 
 func (a *S3Adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
