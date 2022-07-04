@@ -2,6 +2,7 @@ package s3
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws/arn"
 	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
@@ -48,8 +49,11 @@ func (a *S3Adapter) getBuckets() (buckets []s3.Bucket, err error) {
 	a.Tracker().SetTotalResources(len(apiBuckets.Buckets))
 
 	for _, bucket := range apiBuckets.Buckets {
+		if bucket.Name == nil {
+			continue
+		}
 
-		bucketMetadata := types.NewApiMetadata("aws", "s3", "buckets", *bucket.Name)
+		bucketMetadata := arn.New("s3", "", "", *bucket.Name).Metadata()
 
 		b := s3.NewBucket(bucketMetadata)
 		b.Name = types.String(*bucket.Name, bucketMetadata)

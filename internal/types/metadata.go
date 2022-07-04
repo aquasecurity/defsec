@@ -95,6 +95,10 @@ func NewApiMetadata(provider string, parts ...string) Metadata {
 	return NewMetadata(NewRange(fmt.Sprintf("/%s/%s", provider, strings.Join(parts, "/")), 0, 0, "", nil), &FakeReference{})
 }
 
+func NewRemoteMetadata(id string) Metadata {
+	return NewMetadata(NewRange(id, 0, 0, "remote", nil), NewNamedReference(id))
+}
+
 func (m Metadata) IsDefault() bool {
 	return m.isDefault
 }
