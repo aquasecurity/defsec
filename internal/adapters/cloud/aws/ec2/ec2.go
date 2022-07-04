@@ -20,8 +20,12 @@ func init() {
 	aws.RegisterServiceAdapter(&EC2Adapter{})
 }
 
+func (a *EC2Adapter) Provider() string {
+	return "aws"
+}
+
 func (a *EC2Adapter) Name() string {
-	return "aws/s3"
+	return "ec2"
 }
 
 func (a *EC2Adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
@@ -122,6 +126,5 @@ func (a *EC2Adapter) getInstanceBatch(token *string) (instances []ec2.Instance, 
 			block.Encrypted = types.Bool(*v.Encrypted, block.Metadata)
 		}
 	}
-
 	return instances, apiInstances.NextToken, nil
 }
