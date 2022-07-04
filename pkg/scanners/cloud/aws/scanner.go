@@ -6,6 +6,7 @@ import (
 	"io/fs"
 
 	adapter "github.com/aquasecurity/defsec/internal/adapters/cloud"
+	cloudoptions "github.com/aquasecurity/defsec/internal/adapters/cloud/options"
 	"github.com/aquasecurity/defsec/internal/rules"
 	"github.com/aquasecurity/defsec/pkg/debug"
 	"github.com/aquasecurity/defsec/pkg/progress"
@@ -49,7 +50,9 @@ func New(opts ...options.ScannerOption) *Scanner {
 }
 
 func (s *Scanner) Scan(ctx context.Context) (results scan.Results, err error) {
-	state, err := adapter.Adapt(ctx, s.progressTracker)
+	state, err := adapter.Adapt(ctx, cloudoptions.Options{
+		ProgressTracker: s.progressTracker,
+	})
 	if err != nil {
 		panic(err)
 	}
