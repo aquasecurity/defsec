@@ -201,9 +201,11 @@ func (a *S3Adapter) getBucketACL(bucketName *string, metadata types.Metadata) ty
 	aclValue := "private"
 
 	for _, grant := range acl.Grants {
-		if *grant.Grantee.DisplayName == "AuthenticatedUsers" {
-			aclValue = "authenticated-read"
-			break
+		if grant.Grantee != nil && grant.Grantee.DisplayName != nil {
+			if *grant.Grantee.DisplayName == "AuthenticatedUsers" {
+				aclValue = "authenticated-read"
+				break
+			}
 		}
 	}
 
