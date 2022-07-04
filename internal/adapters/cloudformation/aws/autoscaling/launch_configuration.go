@@ -36,7 +36,7 @@ func getLaunchConfigurations(file parser.FileContext) (launchConfigurations []au
 		for i, device := range blockDevices {
 			copyDevice := device
 			if i == 0 {
-				launchConfig.RootBlockDevice = &copyDevice
+				launchConfig.RootBlockDevice = copyDevice
 				continue
 			}
 			launchConfig.EBSBlockDevices = append(launchConfig.EBSBlockDevices, device)
@@ -48,8 +48,8 @@ func getLaunchConfigurations(file parser.FileContext) (launchConfigurations []au
 	return launchConfigurations
 }
 
-func getBlockDevices(r *parser.Resource) []ec2.BlockDevice {
-	var blockDevices []ec2.BlockDevice
+func getBlockDevices(r *parser.Resource) []*ec2.BlockDevice {
+	var blockDevices []*ec2.BlockDevice
 
 	devicesProp := r.GetProperty("BlockDeviceMappings")
 
@@ -66,7 +66,7 @@ func getBlockDevices(r *parser.Resource) []ec2.BlockDevice {
 			result = encrypted.AsBoolValue()
 		}
 
-		device := ec2.BlockDevice{
+		device := &ec2.BlockDevice{
 			Metadata:  d.Metadata(),
 			Encrypted: result,
 		}

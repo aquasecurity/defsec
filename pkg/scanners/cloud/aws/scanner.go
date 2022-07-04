@@ -39,6 +39,7 @@ func (s *Scanner) SetAWSServices(services []string) {
 }
 
 func New(opts ...options.ScannerOption) *Scanner {
+
 	s := &Scanner{
 		options:         opts,
 		progressTracker: progress.NoProgress,

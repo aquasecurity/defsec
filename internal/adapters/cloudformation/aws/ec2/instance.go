@@ -29,7 +29,7 @@ func getInstances(ctx parser.FileContext) (instances []ec2.Instance) {
 		for i, device := range blockDevices {
 			copyDevice := device
 			if i == 0 {
-				instance.RootBlockDevice = &copyDevice
+				instance.RootBlockDevice = copyDevice
 				continue
 			}
 			instance.EBSBlockDevices = append(instance.EBSBlockDevices, device)
@@ -40,8 +40,8 @@ func getInstances(ctx parser.FileContext) (instances []ec2.Instance) {
 	return instances
 }
 
-func getBlockDevices(r *parser.Resource) []ec2.BlockDevice {
-	var blockDevices []ec2.BlockDevice
+func getBlockDevices(r *parser.Resource) []*ec2.BlockDevice {
+	var blockDevices []*ec2.BlockDevice
 
 	devicesProp := r.GetProperty("BlockDeviceMappings")
 
@@ -58,7 +58,7 @@ func getBlockDevices(r *parser.Resource) []ec2.BlockDevice {
 			result = encrypted.AsBoolValue()
 		}
 
-		device := ec2.BlockDevice{
+		device := &ec2.BlockDevice{
 			Metadata:  d.Metadata(),
 			Encrypted: result,
 		}

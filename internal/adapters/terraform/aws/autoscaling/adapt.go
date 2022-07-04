@@ -53,7 +53,7 @@ func adaptLaunchConfigurations(modules terraform.Modules) []autoscaling.LaunchCo
 				if resource.GetAttribute("enabled").NotEqual(false) {
 					launchConfig.RootBlockDevice.Encrypted = types.BoolDefault(true, resource.GetMetadata())
 					for i := 0; i < len(launchConfig.EBSBlockDevices); i++ {
-						ebs := &launchConfig.EBSBlockDevices[i]
+						ebs := launchConfig.EBSBlockDevices[i]
 						ebs.Encrypted = types.BoolDefault(true, resource.GetMetadata())
 					}
 				}
@@ -93,7 +93,7 @@ func adaptLaunchConfiguration(resource *terraform.Block) autoscaling.LaunchConfi
 	for _, EBSBlockDevicesBlock := range EBSBlockDevicesBlocks {
 		encryptedAttr := EBSBlockDevicesBlock.GetAttribute("encrypted")
 		encryptedVal := encryptedAttr.AsBoolValueOrDefault(false, EBSBlockDevicesBlock)
-		launchConfig.EBSBlockDevices = append(launchConfig.EBSBlockDevices, ec2.BlockDevice{
+		launchConfig.EBSBlockDevices = append(launchConfig.EBSBlockDevices, &ec2.BlockDevice{
 			Metadata:  EBSBlockDevicesBlock.GetMetadata(),
 			Encrypted: encryptedVal,
 		})

@@ -40,7 +40,7 @@ func getInstances(modules terraform.Modules) []ec2.Instance {
 		}
 
 		for _, ebsBlock := range b.GetBlocks("ebs_block_device") {
-			instance.EBSBlockDevices = append(instance.EBSBlockDevices, ec2.BlockDevice{
+			instance.EBSBlockDevices = append(instance.EBSBlockDevices, &ec2.BlockDevice{
 				Metadata:  ebsBlock.GetMetadata(),
 				Encrypted: ebsBlock.GetAttribute("encrypted").AsBoolValueOrDefault(false, b),
 			})
@@ -50,7 +50,7 @@ func getInstances(modules terraform.Modules) []ec2.Instance {
 			if resource.GetAttribute("enabled").NotEqual(false) {
 				instance.RootBlockDevice.Encrypted = types.BoolDefault(true, resource.GetMetadata())
 				for i := 0; i < len(instance.EBSBlockDevices); i++ {
-					ebs := &instance.EBSBlockDevices[i]
+					ebs := instance.EBSBlockDevices[i]
 					ebs.Encrypted = types.BoolDefault(true, resource.GetMetadata())
 				}
 			}

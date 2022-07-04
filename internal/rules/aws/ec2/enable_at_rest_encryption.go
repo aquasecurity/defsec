@@ -52,7 +52,7 @@ var CheckEnableAtRestEncryption = rules.Register(
 						device.Encrypted,
 					)
 				} else {
-					results.AddPassed(&device)
+					results.AddPassed(device)
 				}
 			}
 		}

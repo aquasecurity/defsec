@@ -43,7 +43,7 @@ func getLaunchTemplates(file parser.FileContext) (templates []autoscaling.Launch
 			for i, device := range blockDevices {
 				copyDevice := device
 				if i == 0 {
-					launchTemplate.RootBlockDevice = &copyDevice
+					launchTemplate.RootBlockDevice = copyDevice
 					continue
 				}
 				launchTemplate.EBSBlockDevices = append(launchTemplate.EBSBlockDevices, device)

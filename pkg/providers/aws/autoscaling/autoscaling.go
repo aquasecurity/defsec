@@ -15,7 +15,7 @@ type LaunchConfiguration struct {
 	Name              types.StringValue
 	AssociatePublicIP types.BoolValue
 	RootBlockDevice   *ec2.BlockDevice
-	EBSBlockDevices   []ec2.BlockDevice
+	EBSBlockDevices   []*ec2.BlockDevice
 	MetadataOptions   ec2.MetadataOptions
 	UserData          types.StringValue
 }
