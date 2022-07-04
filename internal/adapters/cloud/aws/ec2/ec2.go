@@ -11,42 +11,38 @@ import (
 	ec2api "github.com/aws/aws-sdk-go-v2/service/ec2"
 )
 
-type EC2Adapter struct {
+type adapter struct {
 	*aws.RootAdapter
 	api *ec2api.Client
 }
 
 func init() {
-	aws.RegisterServiceAdapter(&EC2Adapter{})
+	aws.RegisterServiceAdapter(&adapter{})
 }
 
-func (a *EC2Adapter) Provider() string {
+func (a *adapter) Provider() string {
 	return "aws"
 }
 
-func (a *EC2Adapter) Name() string {
+func (a *adapter) Name() string {
 	return "ec2"
 }
 
-func (a *EC2Adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
+func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 
 	a.RootAdapter = root
 	a.api = ec2api.NewFromConfig(root.SessionConfig())
 	var err error
 
-	instances, err := a.getInstances()
+	state.AWS.EC2.Instances, err = a.getInstances()
 	if err != nil {
 		return err
-	}
-
-	for _, instance := range instances {
-		state.AWS.EC2.Instances = append(state.AWS.EC2.Instances, instance)
 	}
 
 	return nil
 }
 
-func (a *EC2Adapter) getInstances() (instances []ec2.Instance, err error) {
+func (a *adapter) getInstances() (instances []ec2.Instance, err error) {
 
 	batchInstances, token, err := a.getInstanceBatch(nil)
 	if err != nil {
@@ -66,7 +62,7 @@ func (a *EC2Adapter) getInstances() (instances []ec2.Instance, err error) {
 	return instances, nil
 }
 
-func (a *EC2Adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nextToken *string, err error) {
+func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nextToken *string, err error) {
 
 	input := &ec2api.DescribeInstancesInput{}
 

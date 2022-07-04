@@ -12,24 +12,24 @@ import (
 	"github.com/liamg/iamgo"
 )
 
-type S3Adapter struct {
+type adapter struct {
 	*aws.RootAdapter
 	api *s3api.Client
 }
 
 func init() {
-	aws.RegisterServiceAdapter(&S3Adapter{})
+	aws.RegisterServiceAdapter(&adapter{})
 }
 
-func (a *S3Adapter) Provider() string {
+func (a *adapter) Provider() string {
 	return "aws"
 }
 
-func (a *S3Adapter) Name() string {
+func (a *adapter) Name() string {
 	return "s3"
 }
 
-func (a *S3Adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
+func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 
 	a.RootAdapter = root
 	a.api = s3api.NewFromConfig(root.SessionConfig())
@@ -43,7 +43,7 @@ func (a *S3Adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 	return nil
 }
 
-func (a *S3Adapter) getBuckets() (buckets []s3.Bucket, err error) {
+func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 	apiBuckets, err := a.api.ListBuckets(a.Context(), &s3api.ListBucketsInput{})
 	if err != nil {
 		return buckets, err
@@ -75,7 +75,7 @@ func (a *S3Adapter) getBuckets() (buckets []s3.Bucket, err error) {
 	return buckets, nil
 }
 
-func (a *S3Adapter) getPublicAccessBlock(bucketName *string, metadata types.Metadata) *s3.PublicAccessBlock {
+func (a *adapter) getPublicAccessBlock(bucketName *string, metadata types.Metadata) *s3.PublicAccessBlock {
 
 	publicAccessBlocks, err := a.api.GetPublicAccessBlock(a.Context(), &s3api.GetPublicAccessBlockInput{
 		Bucket: bucketName,
@@ -99,7 +99,7 @@ func (a *S3Adapter) getPublicAccessBlock(bucketName *string, metadata types.Meta
 	return &pab
 }
 
-func (a *S3Adapter) getBucketPolicies(bucketName *string, metadata types.Metadata) []iam.Policy {
+func (a *adapter) getBucketPolicies(bucketName *string, metadata types.Metadata) []iam.Policy {
 	var bucketPolicies []iam.Policy
 
 	bucketPolicy, err := a.api.GetBucketPolicy(a.Context(), &s3api.GetBucketPolicyInput{Bucket: bucketName})
@@ -126,7 +126,7 @@ func (a *S3Adapter) getBucketPolicies(bucketName *string, metadata types.Metadat
 
 }
 
-func (a *S3Adapter) getBucketEncryption(bucketName *string, metadata types.Metadata) s3.Encryption {
+func (a *adapter) getBucketEncryption(bucketName *string, metadata types.Metadata) s3.Encryption {
 	bucketEncryption := s3.Encryption{
 		Metadata:  metadata,
 		Enabled:   types.BoolDefault(false, metadata),
@@ -153,7 +153,7 @@ func (a *S3Adapter) getBucketEncryption(bucketName *string, metadata types.Metad
 	return bucketEncryption
 }
 
-func (a *S3Adapter) getBucketVersioning(bucketName *string, metadata types.Metadata) s3.Versioning {
+func (a *adapter) getBucketVersioning(bucketName *string, metadata types.Metadata) s3.Versioning {
 	bucketVersioning := s3.Versioning{
 		Metadata: metadata,
 		Enabled:  types.BoolDefault(false, metadata),
@@ -171,7 +171,7 @@ func (a *S3Adapter) getBucketVersioning(bucketName *string, metadata types.Metad
 	return bucketVersioning
 }
 
-func (a *S3Adapter) getBucketLogging(bucketName *string, metadata types.Metadata) s3.Logging {
+func (a *adapter) getBucketLogging(bucketName *string, metadata types.Metadata) s3.Logging {
 
 	bucketLogging := s3.Logging{
 		Metadata:     metadata,
@@ -192,7 +192,7 @@ func (a *S3Adapter) getBucketLogging(bucketName *string, metadata types.Metadata
 	return bucketLogging
 }
 
-func (a *S3Adapter) getBucketACL(bucketName *string, metadata types.Metadata) types.StringValue {
+func (a *adapter) getBucketACL(bucketName *string, metadata types.Metadata) types.StringValue {
 	acl, err := a.api.GetBucketAcl(a.Context(), &s3api.GetBucketAclInput{Bucket: bucketName})
 	if err != nil {
 		return types.StringDefault("private", metadata)

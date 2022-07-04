@@ -97,6 +97,7 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 			continue
 		}
 		opt.ProgressTracker.StartService(adapter.Name())
+		
 		if err := adapter.Adapt(c, state); err != nil {
 			return err
 		}

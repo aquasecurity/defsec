@@ -15,6 +15,18 @@ type Queue struct {
 	Policies   []iam.Policy
 }
 
+func NewQueue(metadata types.Metadata) Queue {
+	return Queue{
+		Metadata: metadata,
+		Policies: []iam.Policy{},
+		Encryption: Encryption{
+			Metadata:          metadata,
+			KMSKeyID:          types.StringDefault("", metadata),
+			ManagedEncryption: types.BoolDefault(false, metadata),
+		},
+	}
+}
+
 type Encryption struct {
 	types.Metadata
 	KMSKeyID          types.StringValue
