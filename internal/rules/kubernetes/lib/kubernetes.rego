@@ -166,3 +166,19 @@ host_aliases[host_alias] {
 	pods[pod]
 	host_alias = pod.spec
 }
+
+command_has_flag(command, flag) {
+	regex.match(flag, command[_])
+}
+
+is_controllermananager(container) {
+	regex.match("kube-controller-manager", container.command[0])
+}
+
+is_etcd(container) {
+	regex.match("etcd", container.command[0])
+}
+
+is_scheduler(container) {
+	regex.match("kube-scheduler", container.command[0])
+}
