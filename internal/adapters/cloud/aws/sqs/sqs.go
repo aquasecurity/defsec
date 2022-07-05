@@ -1,25 +1,24 @@
 package sqs
 
 import (
-	"strconv"
-
-	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 	"github.com/aquasecurity/defsec/pkg/state"
+	"github.com/aws/aws-sdk-go-v2/aws"
 	sqsapi "github.com/aws/aws-sdk-go-v2/service/sqs"
 	sqsTypes "github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/liamg/iamgo"
 )
 
 type adapter struct {
-	*aws.RootAdapter
+	*aws2.RootAdapter
 	api *sqsapi.Client
 }
 
 func init() {
-	aws.RegisterServiceAdapter(&adapter{})
+	aws2.RegisterServiceAdapter(&adapter{})
 }
 
 func (a *adapter) Provider() string {
@@ -30,7 +29,7 @@ func (a *adapter) Name() string {
 	return "sqs"
 }
 
-func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
+func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 	a.RootAdapter = root
 	a.api = sqsapi.NewFromConfig(root.SessionConfig())
@@ -77,7 +76,12 @@ func (a *adapter) getQueueBatch(token *string) (queues []sqs.Queue, nextToken *s
 
 		queueMetadata := a.CreateMetadata(queueUrl)
 		queueAttributes, err := a.api.GetQueueAttributes(a.Context(), &sqsapi.GetQueueAttributesInput{
-			QueueUrl: &queueUrl,
+			QueueUrl: aws.String(queueUrl),
+			AttributeNames: []sqsTypes.QueueAttributeName{
+				sqsTypes.QueueAttributeNameSqsManagedSseEnabled,
+				sqsTypes.QueueAttributeNameKmsMasterKeyId,
+				sqsTypes.QueueAttributeNamePolicy,
+			},
 		})
 		if err != nil {
 			return queues, nil, err
@@ -85,16 +89,14 @@ func (a *adapter) getQueueBatch(token *string) (queues []sqs.Queue, nextToken *s
 
 		queue := sqs.NewQueue(queueMetadata)
 
+		queue.QueueURL = types.String(queueUrl, queueMetadata)
+
 		sseEncrypted := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameSqsManagedSseEnabled)]
 		kmsEncryption := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameKmsMasterKeyId)]
 		queuePolicy := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNamePolicy)]
 
-		if sseEncrypted != "" {
-			encrypted, err := strconv.ParseBool(sseEncrypted)
-			if err != nil {
-				encrypted = false
-			}
-			queue.Encryption.ManagedEncryption = types.Bool(encrypted, queueMetadata)
+		if sseEncrypted == "SSE-SQS" {
+			queue.Encryption.ManagedEncryption = types.Bool(true, queueMetadata)
 		}
 
 		if kmsEncryption != "" {

@@ -72,7 +72,7 @@ func getOrCreateLocalStack(ctx context.Context, t *testing.T) (*localstack.Insta
 	return stack, nil
 }
 
-func CreateLocalstackAdapter(t *testing.T, requiredService localstack.Service) (*aws2.RootAdapter, error) {
+func CreateLocalstackAdapter(t *testing.T, requiredService localstack.Service) (*aws2.RootAdapter, *localstack.Instance, error) {
 	ctx := context.TODO()
 
 	l, err := getOrCreateLocalStack(ctx, t)
@@ -83,7 +83,7 @@ func CreateLocalstackAdapter(t *testing.T, requiredService localstack.Service) (
 
 	ra := aws2.NewRootAdapter(ctx, cfg, progress.NoProgress)
 	require.NotNil(t, ra)
-	return ra, err
+	return ra, stack, err
 }
 
 func createTestConfig(ctx context.Context, l *localstack.Instance, requiredService localstack.Service) (aws.Config, error) {

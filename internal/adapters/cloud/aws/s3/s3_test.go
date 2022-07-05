@@ -28,18 +28,12 @@ type bucketDetails struct {
 func Test_S3BucketACLs(t *testing.T) {
 
 	tests := []struct {
-		name        string
-		initializer bucketDetails
-		expected    bucketDetails
+		name    string
+		details bucketDetails
 	}{
 		{
-			name: "simple bucket with public-acl acl",
-			initializer: bucketDetails{
-				bucketName: "test-bucket",
-				acl:        "public-read",
-				encrypted:  false,
-			},
-			expected: bucketDetails{
+			name: "simple bucket with public-read acl",
+			details: bucketDetails{
 				bucketName: "test-bucket",
 				acl:        "public-read",
 				encrypted:  false,
@@ -47,12 +41,7 @@ func Test_S3BucketACLs(t *testing.T) {
 		},
 		{
 			name: "simple bucket with authenticated-read acl",
-			initializer: bucketDetails{
-				bucketName: "wide-open-bucket",
-				acl:        "authenticated-read",
-				encrypted:  false,
-			},
-			expected: bucketDetails{
+			details: bucketDetails{
 				bucketName: "wide-open-bucket",
 				acl:        "authenticated-read",
 				encrypted:  false,
@@ -60,12 +49,7 @@ func Test_S3BucketACLs(t *testing.T) {
 		},
 		{
 			name: "simple bucket with public-read-write acl",
-			initializer: bucketDetails{
-				bucketName: "public-read-write-bucket",
-				acl:        "public-read-write",
-				encrypted:  false,
-			},
-			expected: bucketDetails{
+			details: bucketDetails{
 				bucketName: "public-read-write-bucket",
 				acl:        "public-read-write",
 				encrypted:  false,
@@ -73,12 +57,7 @@ func Test_S3BucketACLs(t *testing.T) {
 		},
 		{
 			name: "simple bucket with private acl and encryption",
-			initializer: bucketDetails{
-				bucketName: "private-bucket",
-				acl:        "private",
-				encrypted:  true,
-			},
-			expected: bucketDetails{
+			details: bucketDetails{
 				bucketName: "private-bucket",
 				acl:        "private",
 				encrypted:  true,
@@ -86,72 +65,12 @@ func Test_S3BucketACLs(t *testing.T) {
 		},
 	}
 
-	ra, err := test.CreateLocalstackAdapter(t, localstack.S3)
+	ra, _, err := test.CreateLocalstackAdapter(t, localstack.S3)
 	require.NoError(t, err)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			bootstrapBucket(t, ra, tt.initializer)
-
-			testState := &state.State{}
-			s3Adapter := &adapter{}
-			err = s3Adapter.Adapt(ra, testState)
-			require.NoError(t, err)
-
-			assert.Len(t, testState.AWS.S3.Buckets, 1)
-			got := testState.AWS.S3.Buckets[0]
-
-			assert.Equal(t, tt.expected.bucketName, got.Name.Value())
-			assert.Equal(t, tt.expected.acl, got.ACL.Value())
-			assert.Equal(t, tt.expected.encrypted, got.Encryption.Enabled.Value())
-			removeBucket(t, ra, tt.initializer)
-		})
-	}
-}
-
-func Test_S3BucketLogging(t *testing.T) {
-
-	tests := []struct {
-		name        string
-		initializer bucketDetails
-		expected    bucketDetails
-	}{
-		{
-			name: "simple bucket with no logging enabled",
-			initializer: bucketDetails{
-				bucketName:     "test-bucket",
-				acl:            "public-read",
-				loggingEnabled: false,
-			},
-			expected: bucketDetails{
-				bucketName:     "test-bucket",
-				acl:            "public-read",
-				loggingEnabled: false,
-			},
-		},
-		{
-			name: "simple bucket with logging enabled",
-			initializer: bucketDetails{
-				bucketName:          "test-bucket",
-				acl:                 "public-read",
-				loggingEnabled:      true,
-				loggingTargetBucket: "access-logs",
-			},
-			expected: bucketDetails{
-				bucketName:          "test-bucket",
-				acl:                 "public-read",
-				loggingEnabled:      true,
-				loggingTargetBucket: "access-logs",
-			},
-		},
-	}
-
-	ra, err := test.CreateLocalstackAdapter(t, localstack.S3)
-	require.NoError(t, err)
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			bootstrapBucket(t, ra, tt.initializer)
+			bootstrapBucket(t, ra, tt.details)
 
 			testState := &state.State{}
 			s3Adapter := &adapter{}
@@ -161,20 +80,131 @@ func Test_S3BucketLogging(t *testing.T) {
 			assert.Len(t, testState.AWS.S3.Buckets, 2)
 			var got s3.Bucket
 			for _, b := range testState.AWS.S3.Buckets {
-				if b.Name.Value() == tt.initializer.bucketName {
+				if b.Name.Value() == tt.details.bucketName {
 					got = b
 					break
 				}
 			}
 
-			assert.Equal(t, tt.expected.bucketName, got.Name.Value())
-			if tt.expected.loggingEnabled {
-				assert.Equal(t, tt.expected.loggingTargetBucket, got.Logging.TargetBucket.Value())
-				assert.Equal(t, tt.expected.loggingEnabled, got.Logging.Enabled.Value())
+			assert.Equal(t, tt.details.bucketName, got.Name.Value())
+			assert.Equal(t, tt.details.acl, got.ACL.Value())
+			assert.Equal(t, tt.details.encrypted, got.Encryption.Enabled.Value())
+			removeBucket(t, ra, tt.details)
+		})
+	}
+}
+
+func Test_S3BucketLogging(t *testing.T) {
+
+	tests := []struct {
+		name    string
+		details bucketDetails
+	}{
+		{
+			name: "simple bucket with no logging enabled",
+			details: bucketDetails{
+				bucketName:     "test-bucket",
+				acl:            "public-read",
+				loggingEnabled: false,
+			},
+		},
+		{
+			name: "simple bucket with logging enabled",
+			details: bucketDetails{
+				bucketName:          "test-bucket",
+				acl:                 "public-read",
+				loggingEnabled:      true,
+				loggingTargetBucket: "access-logs",
+			},
+		},
+	}
+
+	ra, _, err := test.CreateLocalstackAdapter(t, localstack.S3)
+	require.NoError(t, err)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			bootstrapBucket(t, ra, tt.details)
+
+			testState := &state.State{}
+			s3Adapter := &adapter{}
+			err = s3Adapter.Adapt(ra, testState)
+			require.NoError(t, err)
+
+			assert.Len(t, testState.AWS.S3.Buckets, 2)
+			var got s3.Bucket
+			for _, b := range testState.AWS.S3.Buckets {
+				if b.Name.Value() == tt.details.bucketName {
+					got = b
+					break
+				}
+			}
+
+			assert.Equal(t, tt.details.bucketName, got.Name.Value())
+			if tt.details.loggingEnabled {
+				assert.Equal(t, tt.details.loggingTargetBucket, got.Logging.TargetBucket.Value())
+				assert.Equal(t, tt.details.loggingEnabled, got.Logging.Enabled.Value())
 			} else {
 				assert.False(t, got.Logging.Enabled.Value())
 			}
-			removeBucket(t, ra, tt.initializer)
+			removeBucket(t, ra, tt.details)
+		})
+	}
+}
+
+func Test_S3BucketVersioning(t *testing.T) {
+
+	tests := []struct {
+		name    string
+		details bucketDetails
+	}{
+		{
+			name: "simple bucket with no versioning enabled",
+			details: bucketDetails{
+				bucketName:        "test-bucket-no-versioning",
+				acl:               "public-read",
+				versioningEnabled: false,
+			},
+		},
+		{
+			name: "simple bucket with versioning enabled",
+			details: bucketDetails{
+				bucketName:        "test-bucket-versioning",
+				acl:               "public-read",
+				versioningEnabled: true,
+			},
+		},
+	}
+
+	ra, _, err := test.CreateLocalstackAdapter(t, localstack.S3)
+	require.NoError(t, err)
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			bootstrapBucket(t, ra, tt.details)
+
+			testState := &state.State{}
+			s3Adapter := &adapter{}
+			err = s3Adapter.Adapt(ra, testState)
+			require.NoError(t, err)
+
+			assert.Len(t, testState.AWS.S3.Buckets, 2)
+			var got s3.Bucket
+			for _, b := range testState.AWS.S3.Buckets {
+				if b.Name.Value() == tt.details.bucketName {
+					got = b
+					break
+				}
+			}
+
+			assert.Equal(t, tt.details.bucketName, got.Name.Value())
+			if tt.details.loggingEnabled {
+				assert.Equal(t, tt.details.loggingTargetBucket, got.Logging.TargetBucket.Value())
+				assert.Equal(t, tt.details.loggingEnabled, got.Logging.Enabled.Value())
+			} else {
+				assert.False(t, got.Logging.Enabled.Value())
+			}
+			removeBucket(t, ra, tt.details)
 		})
 	}
 }
@@ -210,7 +240,6 @@ func bootstrapBucket(t *testing.T, ra *aws2.RootAdapter, spec bucketDetails) {
 	}
 
 	if spec.loggingEnabled {
-
 		_, err = api.PutBucketLogging(ra.Context(), &s3api.PutBucketLoggingInput{
 			Bucket: aws.String(spec.bucketName),
 			BucketLoggingStatus: &s3types.BucketLoggingStatus{
@@ -232,6 +261,15 @@ func bootstrapBucket(t *testing.T, ra *aws2.RootAdapter, spec bucketDetails) {
 		require.NoError(t, err)
 	}
 
+	if spec.versioningEnabled {
+		_, err = api.PutBucketVersioning(ra.Context(), &s3api.PutBucketVersioningInput{
+			Bucket: aws.String(spec.bucketName),
+			VersioningConfiguration: &s3types.VersioningConfiguration{
+				Status: s3types.BucketVersioningStatusEnabled,
+			},
+		})
+		require.NoError(t, err)
+	}
 }
 
 func aclToCannedACL(acl string) s3types.BucketCannedACL {
@@ -254,14 +292,5 @@ func removeBucket(t *testing.T, ra *aws2.RootAdapter, spec bucketDetails) {
 	_, err := api.DeleteBucket(ra.Context(), &s3api.DeleteBucketInput{
 		Bucket: aws.String(spec.bucketName),
 	})
-	require.NoError(t, err)
-
-	if spec.loggingEnabled && spec.loggingTargetBucket != "" {
-		_, err := api.DeleteBucket(ra.Context(), &s3api.DeleteBucketInput{
-			Bucket: aws.String(spec.loggingTargetBucket),
-		})
-		require.NoError(t, err)
-	}
-
 	require.NoError(t, err)
 }

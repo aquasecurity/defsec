@@ -11,6 +11,7 @@ type SQS struct {
 
 type Queue struct {
 	types.Metadata
+	QueueURL   types.StringValue
 	Encryption Encryption
 	Policies   []iam.Policy
 }
@@ -18,6 +19,7 @@ type Queue struct {
 func NewQueue(metadata types.Metadata) Queue {
 	return Queue{
 		Metadata: metadata,
+		QueueURL: types.StringDefault("", metadata),
 		Policies: []iam.Policy{},
 		Encryption: Encryption{
 			Metadata:          metadata,
