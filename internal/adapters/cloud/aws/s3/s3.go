@@ -2,7 +2,6 @@ package s3
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws/arn"
 	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
@@ -57,7 +56,7 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 			continue
 		}
 
-		bucketMetadata := arn.New("s3", "", "", *bucket.Name).Metadata()
+		bucketMetadata := a.CreateMetadata(*bucket.Name)
 
 		b := s3.NewBucket(bucketMetadata)
 		b.Name = types.String(*bucket.Name, bucketMetadata)

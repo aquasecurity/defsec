@@ -3,9 +3,9 @@ package ec2
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws/arn"
 	"github.com/aquasecurity/defsec/internal/types"
+
+	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 	"github.com/aquasecurity/defsec/pkg/state"
 	ec2api "github.com/aws/aws-sdk-go-v2/service/ec2"
@@ -44,6 +44,8 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 
 func (a *adapter) getInstances() (instances []ec2.Instance, err error) {
 
+	a.Tracker().SetServiceLabel("Scanning instances...")
+
 	batchInstances, token, err := a.getInstanceBatch(nil)
 	if err != nil {
 		return instances, err
@@ -81,7 +83,7 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 	for _, reservation := range apiInstances.Reservations {
 		for _, instance := range reservation.Instances {
 
-			instanceMetadata := arn.New("ec2", a.RootAdapter.SessionConfig().Region, "", *instance.InstanceId).Metadata()
+			instanceMetadata := a.CreateMetadata(*instance.InstanceId)
 
 			i := ec2.NewInstance(instanceMetadata)
 			i.MetadataOptions.HttpTokens = types.StringDefault(string(instance.MetadataOptions.HttpTokens), instanceMetadata)
@@ -90,7 +92,7 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 			if instance.BlockDeviceMappings != nil {
 
 				for _, blockMapping := range instance.BlockDeviceMappings {
-					volumeMetadata := arn.New("ec2", a.RootAdapter.SessionConfig().Region, "", fmt.Sprintf("volume/%s", *blockMapping.Ebs.VolumeId)).Metadata()
+					volumeMetadata := a.CreateMetadata(fmt.Sprintf("volume/%s", *blockMapping.Ebs.VolumeId))
 					ebsDevice := &ec2.BlockDevice{
 						Metadata:  volumeMetadata,
 						Encrypted: types.BoolDefault(false, volumeMetadata),

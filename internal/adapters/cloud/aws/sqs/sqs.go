@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws/arn"
 	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
@@ -47,6 +46,8 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 
 func (a *adapter) getQueues() (queues []sqs.Queue, err error) {
 
+	a.Tracker().SetServiceLabel("Scanning queues...")
+
 	batchQueues, token, err := a.getQueueBatch(nil)
 
 	queues = append(queues, batchQueues...)
@@ -74,7 +75,7 @@ func (a *adapter) getQueueBatch(token *string) (queues []sqs.Queue, nextToken *s
 
 	for _, queueUrl := range apiQueues.QueueUrls {
 
-		queueMetadata := arn.New("sqs", a.RootAdapter.SessionConfig().Region, "", queueUrl).Metadata()
+		queueMetadata := a.CreateMetadata(queueUrl)
 		queueAttributes, err := a.api.GetQueueAttributes(a.Context(), &sqsapi.GetQueueAttributesInput{
 			QueueUrl: &queueUrl,
 		})
@@ -115,6 +116,7 @@ func (a *adapter) getQueueBatch(token *string) (queues []sqs.Queue, nextToken *s
 			}
 
 		}
+		a.Tracker().IncrementResource()
 		queues = append(queues, queue)
 	}
 	return queues, apiQueues.NextToken, nil
