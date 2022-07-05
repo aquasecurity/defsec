@@ -1,6 +1,8 @@
 package s3
 
 import (
+	"strings"
+
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -200,9 +202,17 @@ func (a *adapter) getBucketACL(bucketName *string, metadata types.Metadata) type
 	aclValue := "private"
 
 	for _, grant := range acl.Grants {
-		if grant.Grantee != nil && grant.Grantee.DisplayName != nil {
-			if *grant.Grantee.DisplayName == "AuthenticatedUsers" {
-				aclValue = "authenticated-read"
+		if grant.Grantee != nil && grant.Grantee.Type == "Group" {
+			switch grant.Permission {
+			case s3types.PermissionWrite, s3types.PermissionWriteAcp:
+				aclValue = "public-read-write"
+				break
+			case s3types.PermissionRead, s3types.PermissionReadAcp:
+				if strings.HasSuffix(*grant.Grantee.URI, "AuthenticatedUsers") {
+					aclValue = "authenticated-read"
+				} else {
+					aclValue = "public-read"
+				}
 				break
 			}
 		}

@@ -37,6 +37,14 @@ type RootAdapter struct {
 	region         string
 }
 
+func NewRootAdapter(ctx context.Context, cfg aws.Config, tracker progress.ServiceTracker) *RootAdapter {
+	return &RootAdapter{
+		ctx:        ctx,
+		tracker:    tracker,
+		sessionCfg: cfg,
+	}
+}
+
 func (a *RootAdapter) SessionConfig() aws.Config {
 	return a.sessionCfg
 }
