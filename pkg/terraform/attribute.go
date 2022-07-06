@@ -214,10 +214,7 @@ func (a *Attribute) IsNumber() bool {
 		}
 		if a.Value().Type() == cty.String {
 			_, err := strconv.ParseFloat(a.Value().AsString(), 64)
-			if err != nil {
-				return false
-			}
-			return true
+			return err == nil
 		}
 	}
 
