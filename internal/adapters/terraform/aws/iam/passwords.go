@@ -54,19 +54,19 @@ func adaptPasswordPolicy(modules terraform.Modules) iam.PasswordPolicy {
 		policy.RequireSymbols = types.BoolDefault(false, policyBlock.GetMetadata())
 	}
 	if attr := policyBlock.GetAttribute("password_reuse_prevention"); attr.IsNumber() {
-		value, _ := attr.Value().AsBigFloat().Float64()
+		value := attr.AsNumber()
 		policy.ReusePreventionCount = types.IntExplicit(int(value), attr.GetMetadata())
 	} else {
 		policy.ReusePreventionCount = types.IntDefault(0, policyBlock.GetMetadata())
 	}
 	if attr := policyBlock.GetAttribute("max_password_age"); attr.IsNumber() {
-		value, _ := attr.Value().AsBigFloat().Float64()
+		value := attr.AsNumber()
 		policy.MaxAgeDays = types.IntExplicit(int(value), attr.GetMetadata())
 	} else {
 		policy.MaxAgeDays = types.IntDefault(math.MaxInt, policyBlock.GetMetadata())
 	}
 	if attr := policyBlock.GetAttribute("minimum_password_length"); attr.IsNumber() {
-		value, _ := attr.Value().AsBigFloat().Float64()
+		value := attr.AsNumber()
 		policy.MinimumLength = types.IntExplicit(int(value), attr.GetMetadata())
 	} else {
 		policy.MinimumLength = types.IntDefault(0, policyBlock.GetMetadata())

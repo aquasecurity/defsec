@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/types"
@@ -207,10 +208,20 @@ func (a *Attribute) IsString() bool {
 }
 
 func (a *Attribute) IsNumber() bool {
-	if a == nil {
-		return false
+	if a != nil && !a.Value().IsNull() && a.Value().IsKnown() {
+		if a.Value().Type() == cty.Number {
+			return true
+		}
+		if a.Value().Type() == cty.String {
+			_, err := strconv.ParseFloat(a.Value().AsString(), 64)
+			if err != nil {
+				return false
+			}
+			return true
+		}
 	}
-	return !a.Value().IsNull() && a.Value().IsKnown() && a.Value().Type() == cty.Number
+
+	return false
 }
 
 func (a *Attribute) IsBool() bool {
@@ -959,4 +970,16 @@ func (a *Attribute) HasIntersect(checkValues ...interface{}) bool {
 	}
 	return false
 
+}
+
+func (a *Attribute) AsNumber() float64 {
+	if a.Value().Type() == cty.Number {
+		v, _ := a.Value().AsBigFloat().Float64()
+		return v
+	}
+	if a.Value().Type() == cty.String {
+		v, _ := strconv.ParseFloat(a.Value().AsString(), 64)
+		return v
+	}
+	panic("Attribute is not a number")
 }
