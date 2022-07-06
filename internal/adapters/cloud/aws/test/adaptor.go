@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"os"
-	"path/filepath"
 	"strings"
 	"sync"
 	"testing"
@@ -31,7 +30,7 @@ func getOrCreateLocalStack(ctx context.Context, t *testing.T) (*localstack.Insta
 			return nil, err
 		}
 
-		initScripts, err := filepath.Abs("../test/init-scripts")
+		initScripts, err := localstack.WithInitScriptMount("../test/init-scripts", "Bootstrap Complete")
 		if err != nil {
 			return nil, err
 		}
@@ -41,13 +40,7 @@ func getOrCreateLocalStack(ctx context.Context, t *testing.T) (*localstack.Insta
 		logger.SetLevel(log.DebugLevel)
 		logger.SetOutput(buf)
 
-		// mount the localstack init scripts to create required resources
-		mountOpt, err := localstack.WithVolumeMount("/docker-entrypoint-initaws.d", initScripts)
-		if err != nil {
-			return nil, err
-		}
-
-		stack, err = localstack.NewInstance(envOpt, mountOpt, localstack.WithLogger(logger))
+		stack, err = localstack.NewInstance(envOpt, initScripts, localstack.WithLogger(logger))
 		if err != nil {
 			return nil, err
 		}
@@ -58,13 +51,13 @@ func getOrCreateLocalStack(ctx context.Context, t *testing.T) (*localstack.Insta
 		}
 
 		// wait for ready
-		for i := 0; i < 10; i++ {
+		for i := 1; i <= 10; i++ {
 			if strings.Contains(string(buf.Bytes()), "Bootstrap Complete") {
 				break
 			}
-			t.Logf("Waiting %d seconds for bootstrap to complete", i)
+			t.Logf("Waiting %d more second(s) for bootstrap to complete", i)
 			time.Sleep(time.Duration(i) * time.Second)
-			if i == 9 {
+			if i == 10 {
 				t.Fail()
 			}
 		}

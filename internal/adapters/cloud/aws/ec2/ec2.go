@@ -2,22 +2,25 @@ package ec2
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aws/aws-sdk-go-v2/aws"
 
-	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 	"github.com/aquasecurity/defsec/pkg/state"
 	ec2api "github.com/aws/aws-sdk-go-v2/service/ec2"
+	ec2Types "github.com/aws/aws-sdk-go-v2/service/ec2/types"
 )
 
 type adapter struct {
-	*aws.RootAdapter
+	*aws2.RootAdapter
 	api *ec2api.Client
 }
 
 func init() {
-	aws.RegisterServiceAdapter(&adapter{})
+	aws2.RegisterServiceAdapter(&adapter{})
 }
 
 func (a *adapter) Provider() string {
@@ -28,7 +31,7 @@ func (a *adapter) Name() string {
 	return "ec2"
 }
 
-func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
+func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 	a.RootAdapter = root
 	a.api = ec2api.NewFromConfig(root.SessionConfig())
@@ -66,7 +69,14 @@ func (a *adapter) getInstances() (instances []ec2.Instance, err error) {
 
 func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nextToken *string, err error) {
 
-	input := &ec2api.DescribeInstancesInput{}
+	input := &ec2api.DescribeInstancesInput{
+		Filters: []ec2Types.Filter{
+			{
+				Name:   aws.String("instance-state-name"),
+				Values: []string{"running"},
+			},
+		},
+	}
 
 	if token != nil {
 		input.NextToken = token
@@ -86,8 +96,10 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 			instanceMetadata := a.CreateMetadata(*instance.InstanceId)
 
 			i := ec2.NewInstance(instanceMetadata)
-			i.MetadataOptions.HttpTokens = types.StringDefault(string(instance.MetadataOptions.HttpTokens), instanceMetadata)
-			i.MetadataOptions.HttpEndpoint = types.StringDefault(string(instance.MetadataOptions.HttpEndpoint), instanceMetadata)
+			if instance.MetadataOptions != nil {
+				i.MetadataOptions.HttpTokens = types.StringDefault(string(instance.MetadataOptions.HttpTokens), instanceMetadata)
+				i.MetadataOptions.HttpEndpoint = types.StringDefault(string(instance.MetadataOptions.HttpEndpoint), instanceMetadata)
+			}
 
 			if instance.BlockDeviceMappings != nil {
 
@@ -97,7 +109,7 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 						Metadata:  volumeMetadata,
 						Encrypted: types.BoolDefault(false, volumeMetadata),
 					}
-					if blockMapping.DeviceName == instance.RootDeviceName {
+					if strings.EqualFold(*blockMapping.DeviceName, *instance.RootDeviceName) {
 						// is root block device
 						i.RootBlockDevice = ebsDevice
 					} else {

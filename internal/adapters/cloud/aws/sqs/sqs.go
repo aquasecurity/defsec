@@ -95,7 +95,7 @@ func (a *adapter) getQueueBatch(token *string) (queues []sqs.Queue, nextToken *s
 		kmsEncryption := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameKmsMasterKeyId)]
 		queuePolicy := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNamePolicy)]
 
-		if sseEncrypted == "SSE-SQS" {
+		if sseEncrypted == "SSE-SQS" || sseEncrypted == "SSE-KMS" {
 			queue.Encryption.ManagedEncryption = types.Bool(true, queueMetadata)
 		}
 
