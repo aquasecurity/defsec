@@ -21,10 +21,8 @@ type volumeDetails struct {
 }
 
 type instanceDetails struct {
-	rootVolume          *volumeDetails
-	ebsVolume           []volumeDetails
-	httpTokensRequired  bool
-	httpEndpointEnabled bool
+	rootVolume *volumeDetails
+	ebsVolume  []volumeDetails
 }
 
 func Test_EC2RootVolumeEncrypted(t *testing.T) {
@@ -123,25 +121,11 @@ func bootstrapEC2Instance(t *testing.T, ra *aws2.RootAdapter, spec instanceDetai
 	var blockMappings []ec2Types.BlockDeviceMapping
 
 	if spec.rootVolume != nil {
-		blockMappings = append(blockMappings, ec2Types.BlockDeviceMapping{
-			DeviceName: aws.String("/dev/sda1"),
-			Ebs: &ec2Types.EbsBlockDevice{
-				Encrypted:           aws.Bool(spec.rootVolume.encrypted),
-				VolumeSize:          aws.Int32(spec.rootVolume.size),
-				DeleteOnTermination: aws.Bool(true),
-			},
-		})
+		blockMappings = bootstrapVolume(blockMappings, "/dev/sda1", *spec.rootVolume)
 	}
 
 	for _, ebs := range spec.ebsVolume {
-		blockMappings = append(blockMappings, ec2Types.BlockDeviceMapping{
-			DeviceName: aws.String("/dev/xvd"),
-			Ebs: &ec2Types.EbsBlockDevice{
-				Encrypted:           aws.Bool(ebs.encrypted),
-				VolumeSize:          aws.Int32(ebs.size),
-				DeleteOnTermination: aws.Bool(true),
-			},
-		})
+		blockMappings = bootstrapVolume(blockMappings, "/dev/xvd", ebs)
 	}
 
 	instanceResp, err := api.RunInstances(ra.Context(), &ec2api.RunInstancesInput{
@@ -153,6 +137,18 @@ func bootstrapEC2Instance(t *testing.T, ra *aws2.RootAdapter, spec instanceDetai
 	require.NoError(t, err)
 
 	return instanceResp.Instances[0].InstanceId
+}
+
+func bootstrapVolume(blockMappings []ec2Types.BlockDeviceMapping, deviceName string, volume volumeDetails) []ec2Types.BlockDeviceMapping {
+	blockMappings = append(blockMappings, ec2Types.BlockDeviceMapping{
+		DeviceName: aws.String(deviceName),
+		Ebs: &ec2Types.EbsBlockDevice{
+			Encrypted:           aws.Bool(volume.encrypted),
+			VolumeSize:          aws.Int32(volume.size),
+			DeleteOnTermination: aws.Bool(true),
+		},
+	})
+	return blockMappings
 }
 
 func removeInstance(t *testing.T, ra *aws2.RootAdapter, instanceID *string) {

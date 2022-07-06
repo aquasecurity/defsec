@@ -41,7 +41,7 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 				LaunchConfigurations: []autoscaling.LaunchConfiguration{
 					{
 						Metadata: types.NewTestMetadata(),
-						EBSBlockDevices: []ec2.BlockDevice{
+						EBSBlockDevices: []*ec2.BlockDevice{
 							{
 								Metadata:  types.NewTestMetadata(),
 								Encrypted: types.Bool(false, types.NewTestMetadata()),
@@ -62,7 +62,7 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 							Metadata:  types.NewTestMetadata(),
 							Encrypted: types.Bool(true, types.NewTestMetadata()),
 						},
-						EBSBlockDevices: []ec2.BlockDevice{
+						EBSBlockDevices: []*ec2.BlockDevice{
 							{
 								Metadata:  types.NewTestMetadata(),
 								Encrypted: types.Bool(true, types.NewTestMetadata()),
