@@ -32,7 +32,7 @@ func (a *adapter) adaptPublicAccessBlocks() {
 		if bucketAttr.IsString() {
 			bucketName = bucketAttr.Value().AsString()
 			for id, bucket := range a.bucketMap {
-				if bucket.Name.EqualTo(bucketName) {
+				if bucketAttr.Equals(id) || bucket.Name.EqualTo(bucketName) {
 					bucket.PublicAccessBlock = &pba
 					a.bucketMap[id] = bucket
 					break
