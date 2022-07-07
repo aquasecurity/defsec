@@ -102,7 +102,6 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 			}
 
 			if instance.BlockDeviceMappings != nil {
-
 				for _, blockMapping := range instance.BlockDeviceMappings {
 					volumeMetadata := a.CreateMetadata(fmt.Sprintf("volume/%s", *blockMapping.Ebs.VolumeId))
 					ebsDevice := &ec2.BlockDevice{
@@ -118,7 +117,6 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 					volumeBlockMap[*blockMapping.Ebs.VolumeId] = ebsDevice
 					volumeIds = append(volumeIds, *blockMapping.Ebs.VolumeId)
 				}
-
 			}
 
 			instances = append(instances, i)
