@@ -63,7 +63,7 @@ func (a *adapter) adaptRole(apiRole iamtypes.Role) (*iam.Role, error) {
 		policiesOutput, err := a.api.ListAttachedRolePolicies(a.Context(), input)
 		if err != nil {
 			a.Debug("Failed to locate policies attached to role '%s': %s", *apiRole.RoleName, err)
-			continue
+			break
 		}
 
 		for _, apiPolicy := range policiesOutput.AttachedPolicies {

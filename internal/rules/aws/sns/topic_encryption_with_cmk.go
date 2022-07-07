@@ -11,16 +11,17 @@ import (
 var CheckTopicEncryptionUsesCMK = rules.Register(
 	scan.Rule{
 		AVDID:       "AVD-AWS-0136",
-		Provider:    providers.AWSProvider,
-		Service:     "sns",
 		ShortCode:   "topic-encryption-use-cmk",
 		Summary:     "SNS topic not encrypted with CMK.",
+		Explanation: `Topics should be encrypted with customer managed KMS keys and not default AWS managed keys, in order to allow granular key management.`,
 		Impact:      "Key management very limited when using default keys.",
 		Resolution:  "Use a CMK for SNS Topic encryption",
-		Explanation: `Topics should be encrypted with customer managed KMS keys and not default AWS managed keys, in order to allow granular key management.`,
+		Provider:    providers.AWSProvider,
+		Service:     "sns",
 		Links: []string{
 			"https://docs.aws.amazon.com/sns/latest/dg/sns-server-side-encryption.html",
 		},
+		Severity: severity.High,
 		Terraform: &scan.EngineMetadata{
 			GoodExamples:        terraformTopicEncryptionUsesCMKGoodExamples,
 			BadExamples:         terraformTopicEncryptionUsesCMKBadExamples,
@@ -33,7 +34,8 @@ var CheckTopicEncryptionUsesCMK = rules.Register(
 			Links:               cloudFormationTopicEncryptionUsesCMKLinks,
 			RemediationMarkdown: cloudFormationTopicEncryptionUsesCMKRemediationMarkdown,
 		},
-		Severity: severity.High,
+		CustomChecks: scan.CustomChecks{},
+		RegoPackage:  "",
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, topic := range s.AWS.SNS.Topics {

@@ -65,7 +65,7 @@ func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 			output, err := a.api.ListGroupsForUser(a.Context(), input)
 			if err != nil {
 				a.Debug("Failed to locate groups attached to user '%s': %s", *apiUser.UserName, err)
-				continue
+				break
 			}
 			for _, apiGroup := range output.Groups {
 				group, err := a.adaptGroup(apiGroup, nil)
@@ -91,7 +91,7 @@ func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 			policiesOutput, err := a.api.ListAttachedUserPolicies(a.Context(), input)
 			if err != nil {
 				a.Debug("Failed to locate policies attached to user '%s': %s", *apiUser.UserName, err)
-				continue
+				break
 			}
 
 			for _, apiPolicy := range policiesOutput.AttachedPolicies {
