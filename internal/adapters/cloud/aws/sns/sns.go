@@ -22,7 +22,7 @@ func (a *adapter) Provider() string {
 }
 
 func (a *adapter) Name() string {
-	return "sqs"
+	return "sns"
 }
 
 func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {

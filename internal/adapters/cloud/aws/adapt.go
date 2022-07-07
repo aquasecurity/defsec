@@ -21,6 +21,11 @@ import (
 var registeredAdapters []ServiceAdapter
 
 func RegisterServiceAdapter(adapter ServiceAdapter) {
+	for _, existing := range registeredAdapters {
+		if existing.Name() == adapter.Name() {
+			panic(fmt.Sprintf("duplicate service adapter: %s", adapter.Name()))
+		}
+	}
 	registeredAdapters = append(registeredAdapters, adapter)
 }
 
