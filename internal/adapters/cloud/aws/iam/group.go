@@ -64,13 +64,15 @@ func (a *adapter) adaptGroup(apiGroup iamtypes.Group, state *state.State) (*iam.
 		for {
 			policiesOutput, err := a.api.ListAttachedGroupPolicies(a.Context(), input)
 			if err != nil {
-				return nil, err
+				a.Debug("Failed to locate policies attached to group '%s': %s", *apiGroup.GroupName, err)
+				continue
 			}
 
 			for _, apiPolicy := range policiesOutput.AttachedPolicies {
 				policy, err := a.adaptAttachedPolicy(apiPolicy)
 				if err != nil {
-					return nil, err
+					a.Debug("Failed to adapt policy attached to group '%s': %s", *apiGroup.GroupName, err)
+					continue
 				}
 				policies = append(policies, *policy)
 			}

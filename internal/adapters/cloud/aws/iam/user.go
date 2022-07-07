@@ -64,12 +64,14 @@ func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 		for {
 			output, err := a.api.ListGroupsForUser(a.Context(), input)
 			if err != nil {
-				return nil, err
+				a.Debug("Failed to locate groups attached to user '%s': %s", *apiUser.UserName, err)
+				continue
 			}
 			for _, apiGroup := range output.Groups {
 				group, err := a.adaptGroup(apiGroup, nil)
 				if err != nil {
-					return nil, err
+					a.Debug("Failed to adapt group attached to user '%s': %s", *apiUser.UserName, err)
+					continue
 				}
 				groups = append(groups, *group)
 			}
@@ -88,13 +90,15 @@ func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 		for {
 			policiesOutput, err := a.api.ListAttachedUserPolicies(a.Context(), input)
 			if err != nil {
-				return nil, err
+				a.Debug("Failed to locate policies attached to user '%s': %s", *apiUser.UserName, err)
+				continue
 			}
 
 			for _, apiPolicy := range policiesOutput.AttachedPolicies {
 				policy, err := a.adaptAttachedPolicy(apiPolicy)
 				if err != nil {
-					return nil, err
+					a.Debug("Failed to adapt policy attached to user '%s': %s", *apiUser.UserName, err)
+					continue
 				}
 				policies = append(policies, *policy)
 			}

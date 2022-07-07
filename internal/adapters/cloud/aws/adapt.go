@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aquasecurity/defsec/pkg/debug"
+
 	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aws/aws-sdk-go-v2/service/sts"
@@ -35,6 +37,7 @@ type RootAdapter struct {
 	accountID      string
 	currentService string
 	region         string
+	debugWriter    debug.Logger
 }
 
 func NewRootAdapter(ctx context.Context, cfg aws.Config, tracker progress.ServiceTracker) *RootAdapter {
@@ -43,6 +46,10 @@ func NewRootAdapter(ctx context.Context, cfg aws.Config, tracker progress.Servic
 		tracker:    tracker,
 		sessionCfg: cfg,
 	}
+}
+
+func (a *RootAdapter) Debug(format string, args ...interface{}) {
+	a.debugWriter.Log(format, args...)
 }
 
 func (a *RootAdapter) SessionConfig() aws.Config {
@@ -110,8 +117,9 @@ func AllServices() []string {
 
 func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 	c := &RootAdapter{
-		ctx:     ctx,
-		tracker: opt.ProgressTracker,
+		ctx:         ctx,
+		tracker:     opt.ProgressTracker,
+		debugWriter: debug.New(opt.DebugWriter, "adapt", "aws"),
 	}
 
 	cfg, err := config.LoadDefaultConfig(ctx)
@@ -122,12 +130,15 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 	c.sessionCfg = cfg
 
 	if opt.Region != "" {
+		c.Debug("Using region '%s'", opt.Region)
 		c.sessionCfg.Region = opt.Region
 	}
 	if opt.Endpoint != "" {
+		c.Debug("Using endpoint '%s'", opt.Endpoint)
 		c.sessionCfg.EndpointResolverWithOptions = createResolver(opt.Endpoint)
 	}
 
+	c.Debug("Discovering caller identity...")
 	stsClient := sts.NewFromConfig(c.sessionCfg)
 	result, err := stsClient.GetCallerIdentity(ctx, &sts.GetCallerIdentityInput{})
 	if err != nil {
@@ -137,10 +148,13 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 		return fmt.Errorf("missing account id for aws account")
 	}
 	c.accountID = *result.Account
+	c.Debug("AWS account ID: %s", c.accountID)
 
 	if len(opt.Services) == 0 {
+		c.Debug("Preparing to run for all %d registered services...", len(registeredAdapters))
 		opt.ProgressTracker.SetTotalServices(len(registeredAdapters))
 	} else {
+		c.Debug("Preparing to run for %d filtered services...", len(opt.Services))
 		opt.ProgressTracker.SetTotalServices(len(opt.Services))
 	}
 
@@ -151,6 +165,7 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 			continue
 		}
 		c.currentService = adapter.Name()
+		c.Debug("Running adapter for %s...", adapter.Name())
 		opt.ProgressTracker.StartService(adapter.Name())
 
 		if err := adapter.Adapt(c, state); err != nil {
