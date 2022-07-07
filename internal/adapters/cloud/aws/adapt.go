@@ -119,7 +119,7 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 	c := &RootAdapter{
 		ctx:         ctx,
 		tracker:     opt.ProgressTracker,
-		debugWriter: debug.New(opt.DebugWriter, "adapt", "aws"),
+		debugWriter: opt.DebugWriter.Extend("adapt", "aws"),
 	}
 
 	cfg, err := config.LoadDefaultConfig(ctx)

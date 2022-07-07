@@ -1,8 +1,7 @@
 package options
 
 import (
-	"io"
-
+	"github.com/aquasecurity/defsec/pkg/debug"
 	"github.com/aquasecurity/defsec/pkg/progress"
 )
 
@@ -11,5 +10,5 @@ type Options struct {
 	Region          string
 	Endpoint        string
 	Services        []string
-	DebugWriter     io.Writer
+	DebugWriter     debug.Logger
 }

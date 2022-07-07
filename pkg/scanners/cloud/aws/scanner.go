@@ -62,6 +62,7 @@ func (s *Scanner) Scan(ctx context.Context) (results scan.Results, err error) {
 		Region:          s.region,
 		Endpoint:        s.endpoint,
 		Services:        s.services,
+		DebugWriter:     s.debug,
 	})
 	if err != nil {
 		return nil, err
