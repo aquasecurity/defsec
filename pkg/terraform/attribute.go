@@ -142,8 +142,7 @@ func (a *Attribute) AsIntValueOrDefault(defaultValue int, parent *Block) types.I
 	if a.IsNotResolvable() || !a.IsNumber() {
 		return types.IntUnresolvable(a.GetMetadata())
 	}
-	big := a.Value().AsBigFloat()
-	flt, _ := big.Float64()
+	flt := a.AsNumber()
 	return types.IntExplicit(
 		int(flt),
 		a.GetMetadata(),

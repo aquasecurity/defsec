@@ -135,8 +135,7 @@ func (a *adapter) adaptSource(ruleBlock *terraform.Block, rule *network.Security
 	} else if sourcePortRangeAttr := ruleBlock.GetAttribute("source_port_range"); sourcePortRangeAttr.IsString() {
 		rule.SourcePorts = append(rule.SourcePorts, expandRange(sourcePortRangeAttr.Value().AsString(), sourcePortRangeAttr.GetMetadata()))
 	} else if sourcePortRangeAttr := ruleBlock.GetAttribute("source_port_range"); sourcePortRangeAttr.IsNumber() {
-		bf := sourcePortRangeAttr.Value().AsBigFloat()
-		f, _ := bf.Float64()
+		f := sourcePortRangeAttr.AsNumber()
 		rule.SourcePorts = append(rule.SourcePorts, network.PortRange{
 			Metadata: sourcePortRangeAttr.GetMetadata(),
 			Start:    int(f),
@@ -160,8 +159,7 @@ func (a *adapter) adaptDestination(ruleBlock *terraform.Block, rule *network.Sec
 	} else if destPortRangeAttr := ruleBlock.GetAttribute("destination_port_range"); destPortRangeAttr.IsString() {
 		rule.DestinationPorts = append(rule.DestinationPorts, expandRange(destPortRangeAttr.Value().AsString(), destPortRangeAttr.GetMetadata()))
 	} else if destPortRangeAttr := ruleBlock.GetAttribute("destination_port_range"); destPortRangeAttr.IsNumber() {
-		bf := destPortRangeAttr.Value().AsBigFloat()
-		f, _ := bf.Float64()
+		f := destPortRangeAttr.AsNumber()
 		rule.DestinationPorts = append(rule.DestinationPorts, network.PortRange{
 			Metadata: destPortRangeAttr.GetMetadata(),
 			Start:    int(f),
