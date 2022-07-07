@@ -824,8 +824,8 @@ github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 h1:SOEGU9fKiNWd/HOJuq
 github.com/lann/builder v0.0.0-20180802200727-47ae307949d0/go.mod h1:dXGbAdH5GtBTC4WfIxhKZfyBF/HBFgRZSWwZ9g/He9o=
 github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 h1:P6pPBnrTSX3DEVR4fDembhRWSsG5rVo6hYhAB/ADZrk=
 github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0/go.mod h1:vmVJ0l/dxyfGW6FmdpVm2joNMFikkuWg0EoCKLGUMNw=
-github.com/liamg/iamgo v0.0.6 h1:VUzOnf39c7QYQfXzOr9upTmIqikmipqu1AvSIoX36PQ=
-github.com/liamg/iamgo v0.0.6/go.mod h1:Kk6ZxBF/GQqG9nnaUjIi6jf+WXNpeOTyhwc6gnguaZQ=
+github.com/liamg/iamgo v0.0.9 h1:tADGm3xVotyRJmuKKaH4+zsBn7LOcvgdpuF3WsSKW3c=
+github.com/liamg/iamgo v0.0.9/go.mod h1:Kk6ZxBF/GQqG9nnaUjIi6jf+WXNpeOTyhwc6gnguaZQ=
 github.com/liamg/jfather v0.0.7 h1:Xf78zS263yfT+xr2VSo6+kyAy4ROlCacRqJG7s5jt4k=
 github.com/liamg/jfather v0.0.7/go.mod h1:xXBGiBoiZ6tmHhfy5Jzw8sugzajwYdi6VosIpB3/cPM=
 github.com/liamg/memoryfs v1.4.2 h1:6T9Oy1DdWxGCzIY89p0Ykeya5H0uAlzG2xHEGcvo6MU=
