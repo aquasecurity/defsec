@@ -8,7 +8,6 @@ import (
 	"github.com/aquasecurity/defsec/pkg/state"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	snsapi "github.com/aws/aws-sdk-go-v2/service/sns"
-	"github.com/elgohr/go-localstack"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -47,7 +46,8 @@ func Test_SNSTopicEncryption(t *testing.T) {
 		},
 	}
 
-	ra, _, err := test.CreateLocalstackAdapter(t, localstack.SNS)
+	ra, stack, err := test.CreateLocalstackAdapter(t)
+	defer func() { _ = stack.Stop() }()
 	require.NoError(t, err)
 
 	for _, tt := range tests {

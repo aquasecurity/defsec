@@ -9,7 +9,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	s3api "github.com/aws/aws-sdk-go-v2/service/s3"
 	s3types "github.com/aws/aws-sdk-go-v2/service/s3/types"
-	"github.com/elgohr/go-localstack"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -75,7 +74,8 @@ func Test_S3BucketACLs(t *testing.T) {
 		},
 	}
 
-	ra, _, err := test.CreateLocalstackAdapter(t, localstack.S3)
+	ra, stack, err := test.CreateLocalstackAdapter(t)
+	defer func() { _ = stack.Stop() }()
 	require.NoError(t, err)
 
 	for _, tt := range tests {
@@ -129,7 +129,8 @@ func Test_S3BucketLogging(t *testing.T) {
 		},
 	}
 
-	ra, _, err := test.CreateLocalstackAdapter(t, localstack.S3)
+	ra, stack, err := test.CreateLocalstackAdapter(t)
+	defer func() { _ = stack.Stop() }()
 	require.NoError(t, err)
 
 	for _, tt := range tests {
@@ -186,7 +187,8 @@ func Test_S3BucketVersioning(t *testing.T) {
 		},
 	}
 
-	ra, _, err := test.CreateLocalstackAdapter(t, localstack.S3)
+	ra, stack, err := test.CreateLocalstackAdapter(t)
+	defer func() { _ = stack.Stop() }()
 	require.NoError(t, err)
 
 	for _, tt := range tests {
@@ -263,7 +265,8 @@ func Test_S3PublicAccessBlock(t *testing.T) {
 		},
 	}
 
-	ra, _, err := test.CreateLocalstackAdapter(t, localstack.S3)
+	ra, stack, err := test.CreateLocalstackAdapter(t)
+	defer func() { _ = stack.Stop() }()
 	require.NoError(t, err)
 
 	for _, tt := range tests {

@@ -16,10 +16,10 @@ type Queue struct {
 	Policies   []iam.Policy
 }
 
-func NewQueue(metadata types.Metadata) Queue {
+func NewQueue(metadata types.Metadata, queueUrl string) Queue {
 	return Queue{
 		Metadata: metadata,
-		QueueURL: types.StringDefault("", metadata),
+		QueueURL: types.StringDefault(queueUrl, metadata),
 		Policies: []iam.Policy{},
 		Encryption: Encryption{
 			Metadata:          metadata,

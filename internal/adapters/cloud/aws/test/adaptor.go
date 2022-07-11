@@ -4,89 +4,64 @@ import (
 	"bytes"
 	"context"
 	"os"
-	"strings"
 	"sync"
 	"testing"
-	"time"
 
 	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/progress"
+	"github.com/aquasecurity/go-mock-aws"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
-	"github.com/elgohr/go-localstack"
 	log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 )
 
-var stack *localstack.Instance
+func getOrCreateLocalStack(ctx context.Context) (*localstack.Stack, error) {
+	_ = os.Setenv("DOCKER_API_VERSION", "1.41")
+	stack := localstack.New()
 
-func getOrCreateLocalStack(ctx context.Context, t *testing.T) (*localstack.Instance, error) {
-	if stack == nil {
-		_ = os.Setenv("DOCKER_API_VERSION", "1.41")
-
-		envOpt, err := localstack.WithClientFromEnv()
-		if err != nil {
-			return nil, err
-		}
-
-		initScripts, err := localstack.WithInitScriptMount("../test/init-scripts", "Bootstrap Complete")
-		if err != nil {
-			return nil, err
-		}
-
-		buf := &concurrentWriter{buf: &bytes.Buffer{}}
-		logger := log.New()
-		logger.SetLevel(log.DebugLevel)
-		logger.SetOutput(buf)
-
-		stack, err = localstack.NewInstance(envOpt, initScripts, localstack.WithLogger(logger))
-		if err != nil {
-			return nil, err
-		}
-
-		err = stack.StartWithContext(ctx)
-		if err != nil {
-			return nil, err
-		}
-
-		// wait for ready
-		for i := 1; i <= 10; i++ {
-			if strings.Contains(string(buf.Bytes()), "Bootstrap Complete") {
-				break
-			}
-			t.Logf("Waiting %d more second(s) for bootstrap to complete", i)
-			time.Sleep(time.Duration(i) * time.Second)
-			if i == 10 {
-				t.Fail()
-			}
-		}
+	initScripts, err := localstack.WithInitScriptMount(
+		"../test/init-scripts",
+		"Bootstrap Complete")
+	if err != nil {
+		return nil, err
 	}
+
+	buf := &concurrentWriter{buf: &bytes.Buffer{}}
+	logger := log.New()
+	logger.SetLevel(log.DebugLevel)
+	logger.SetOutput(buf)
+
+	err = stack.Start(false, initScripts, localstack.WithContext(ctx))
+	if err != nil {
+		return nil, err
+	}
+
 	return stack, nil
 }
 
-func CreateLocalstackAdapter(t *testing.T, requiredService localstack.Service) (*aws2.RootAdapter, *localstack.Instance, error) {
-	ctx := context.TODO()
-
-	l, err := getOrCreateLocalStack(ctx, t)
+func CreateLocalstackAdapter(t *testing.T) (*aws2.RootAdapter, *localstack.Stack, error) {
+	ctx := context.Background()
+	l, err := getOrCreateLocalStack(ctx)
 	require.NoError(t, err)
 
-	cfg, err := createTestConfig(ctx, l, requiredService)
+	cfg, err := createTestConfig(ctx, l)
 	require.NoError(t, err)
 
 	ra := aws2.NewRootAdapter(ctx, cfg, progress.NoProgress)
 	require.NotNil(t, ra)
-	return ra, stack, err
+	return ra, l, err
 }
 
-func createTestConfig(ctx context.Context, l *localstack.Instance, requiredService localstack.Service) (aws.Config, error) {
+func createTestConfig(ctx context.Context, l *localstack.Stack) (aws.Config, error) {
 	return config.LoadDefaultConfig(ctx,
 		config.WithRegion("us-east-1"),
 		config.WithEndpointResolverWithOptions(aws.EndpointResolverWithOptionsFunc(func(_, _ string, _ ...interface{}) (aws.Endpoint, error) {
 			return aws.Endpoint{
 				PartitionID:       "aws",
-				URL:               l.EndpointV2(requiredService),
 				SigningRegion:     "us-east-1",
+				URL:               l.EndpointURL(),
 				HostnameImmutable: true,
 			}, nil
 		})),

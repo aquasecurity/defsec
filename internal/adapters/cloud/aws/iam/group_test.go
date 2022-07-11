@@ -12,7 +12,6 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws/test"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/state"
-	"github.com/elgohr/go-localstack"
 	"github.com/stretchr/testify/require"
 )
 
@@ -33,15 +32,16 @@ func Test_IAMGroups(t *testing.T) {
 		},
 	}
 
-	rootAdapter, _, err := test.CreateLocalstackAdapter(t, localstack.SQS)
+	ra, stack, err := test.CreateLocalstackAdapter(t)
+	defer func() { _ = stack.Stop() }()
 	require.NoError(t, err)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			arn := bootstrapIAMGroup(t, rootAdapter, tt.details)
+			arn := bootstrapIAMGroup(t, ra, tt.details)
 			testState := &state.State{}
 			iamAdapter := &adapter{}
-			err := iamAdapter.Adapt(rootAdapter, testState)
+			err := iamAdapter.Adapt(ra, testState)
 			require.NoError(t, err)
 
 			var found int

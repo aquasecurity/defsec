@@ -6,7 +6,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	ec2api "github.com/aws/aws-sdk-go-v2/service/ec2"
 	ec2Types "github.com/aws/aws-sdk-go-v2/service/ec2/types"
-	"github.com/elgohr/go-localstack"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -81,7 +80,8 @@ func Test_EC2RootVolumeEncrypted(t *testing.T) {
 		},
 	}
 
-	ra, _, err := test.CreateLocalstackAdapter(t, localstack.EC2)
+	ra, stack, err := test.CreateLocalstackAdapter(t)
+	defer func() { _ = stack.Stop() }()
 	require.NoError(t, err)
 
 	for _, tt := range tests {

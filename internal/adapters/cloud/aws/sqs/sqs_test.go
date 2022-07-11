@@ -6,10 +6,10 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws/test"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 	"github.com/aquasecurity/defsec/pkg/state"
+	"github.com/aquasecurity/go-mock-aws"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	sqsapi "github.com/aws/aws-sdk-go-v2/service/sqs"
 	sqsTypes "github.com/aws/aws-sdk-go-v2/service/sqs/types"
-	"github.com/elgohr/go-localstack"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -23,8 +23,8 @@ type queueDetails struct {
 	managedEncryption bool
 }
 
-func (q queueDetails) QueueURL(stack *localstack.Instance) string {
-	return fmt.Sprintf("%s/000000000000/%s", stack.EndpointV2(localstack.SQS), q.queueName)
+func (q queueDetails) QueueURL(stack *localstack.Stack) string {
+	return fmt.Sprintf("%s/000000000000/%s", stack.EndpointURL(), q.queueName)
 }
 
 func Test_SQSQueueEncrypted(t *testing.T) {
@@ -49,7 +49,8 @@ func Test_SQSQueueEncrypted(t *testing.T) {
 		},
 	}
 
-	ra, stack, err := test.CreateLocalstackAdapter(t, localstack.SQS)
+	ra, stack, err := test.CreateLocalstackAdapter(t)
+	defer func() { _ = stack.Stop() }()
 	require.NoError(t, err)
 
 	for _, tt := range tests {
