@@ -29,6 +29,7 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 
 	a.RootAdapter = root
 	a.clientV1 = apiv1.NewFromConfig(root.SessionConfig())
+	a.clientV2 = apiv2.NewFromConfig(root.SessionConfig())
 	var err error
 
 	state.AWS.APIGateway.V1.DomainNames, err = a.getDomainNamesv1()
