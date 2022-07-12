@@ -78,7 +78,7 @@ func (a *adapter) adaptStageV2(remoteAPI agTypes.Api, stage agTypes.Stage) v2.St
 	metadata := a.CreateMetadata(fmt.Sprintf("/apis/%s/stages/%s", *remoteAPI.ApiId, *stage.StageName))
 
 	var logARN string
-	if stage.AccessLogSettings.DestinationArn != nil {
+	if stage.AccessLogSettings != nil && stage.AccessLogSettings.DestinationArn != nil {
 		logARN = *stage.AccessLogSettings.DestinationArn
 	}
 
