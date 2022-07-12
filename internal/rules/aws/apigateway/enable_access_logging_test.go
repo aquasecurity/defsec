@@ -3,11 +3,12 @@ package apigateway
 import (
 	"testing"
 
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
+
 	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/pkg/scan"
 
 	"github.com/stretchr/testify/assert"
@@ -16,19 +17,19 @@ import (
 func TestCheckEnableAccessLogging(t *testing.T) {
 	tests := []struct {
 		name     string
-		input    apigateway.APIGateway
+		input    v1.APIGateway
 		expected bool
 	}{
 		{
 			name: "API Gateway stage with no log group ARN",
-			input: apigateway.APIGateway{
-				APIs: []apigateway.API{
+			input: v1.APIGateway{
+				APIs: []v1.API{
 					{
 						Metadata: types.NewTestMetadata(),
-						Stages: []apigateway.Stage{
+						Stages: []v1.Stage{
 							{
 								Metadata: types.NewTestMetadata(),
-								AccessLogging: apigateway.AccessLogging{
+								AccessLogging: v1.AccessLogging{
 									Metadata:              types.NewTestMetadata(),
 									CloudwatchLogGroupARN: types.String("", types.NewTestMetadata()),
 								},
@@ -41,14 +42,14 @@ func TestCheckEnableAccessLogging(t *testing.T) {
 		},
 		{
 			name: "API Gateway stage with log group ARN",
-			input: apigateway.APIGateway{
-				APIs: []apigateway.API{
+			input: v1.APIGateway{
+				APIs: []v1.API{
 					{
 						Metadata: types.NewTestMetadata(),
-						Stages: []apigateway.Stage{
+						Stages: []v1.Stage{
 							{
 								Metadata: types.NewTestMetadata(),
-								AccessLogging: apigateway.AccessLogging{
+								AccessLogging: v1.AccessLogging{
 									Metadata:              types.NewTestMetadata(),
 									CloudwatchLogGroupARN: types.String("log-group-arn", types.NewTestMetadata()),
 								},
@@ -63,7 +64,7 @@ func TestCheckEnableAccessLogging(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
-			testState.AWS.APIGateway = test.input
+			testState.AWS.APIGateway.V1 = test.input
 			results := CheckEnableAccessLogging.Evaluate(&testState)
 			var found bool
 			for _, result := range results {

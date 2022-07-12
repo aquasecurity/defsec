@@ -3,7 +3,7 @@ package apigateway
 import (
 	"github.com/aquasecurity/defsec/internal/rules"
 	"github.com/aquasecurity/defsec/pkg/providers"
-	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -29,24 +29,26 @@ var CheckNoPublicAccess = rules.Register(
 		Severity: severity.Low,
 	},
 	func(s *state.State) (results scan.Results) {
-		for _, api := range s.AWS.APIGateway.APIs {
-			if api.IsUnmanaged() || api.ProtocolType.NotEqualTo(apigateway.ProtocolTypeREST) {
+		for _, api := range s.AWS.APIGateway.V1.APIs {
+			if api.IsUnmanaged() {
 				continue
 			}
-			for _, method := range api.RESTMethods {
-				if method.HTTPMethod.EqualTo("OPTION") {
-					continue
-				}
-				if method.APIKeyRequired.IsTrue() {
-					continue
-				}
-				if method.AuthorizationType.EqualTo(apigateway.AuthorizationNone) {
-					results.Add(
-						"Authorization is not enabled for this method.",
-						method.AuthorizationType,
-					)
-				} else {
-					results.AddPassed(&method)
+			for _, resource := range api.Resources {
+				for _, method := range resource.Methods {
+					if method.HTTPMethod.EqualTo("OPTION") {
+						continue
+					}
+					if method.APIKeyRequired.IsTrue() {
+						continue
+					}
+					if method.AuthorizationType.EqualTo(v1.AuthorizationNone) {
+						results.Add(
+							"Authorization is not enabled for this method.",
+							method.AuthorizationType,
+						)
+					} else {
+						results.AddPassed(&method)
+					}
 				}
 			}
 		}

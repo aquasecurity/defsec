@@ -7,6 +7,6 @@ import (
 
 // Adapt ...
 func Adapt(cfFile parser.FileContext) (gateway apigateway.APIGateway) {
-	gateway.APIs = getApis(cfFile)
+	gateway.V2.APIs = getApis(cfFile)
 	return gateway
 }

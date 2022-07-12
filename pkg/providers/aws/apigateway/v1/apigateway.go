@@ -1,4 +1,4 @@
-package apigateway
+package v1
 
 import (
 	"github.com/aquasecurity/defsec/internal/types"
@@ -9,29 +9,24 @@ type APIGateway struct {
 	DomainNames []DomainName
 }
 
-const (
-	ProtocolTypeUnknown   string = ""
-	ProtocolTypeREST      string = "REST"
-	ProtocolTypeHTTP      string = "HTTP"
-	ProtocolTypeWebsocket string = "WEBSOCKET"
-)
-
 type API struct {
 	types.Metadata
-	Name         types.StringValue
-	Version      types.IntValue
-	ProtocolType types.StringValue
-	Stages       []Stage
-	RESTMethods  []RESTMethod
+	Name      types.StringValue
+	Stages    []Stage
+	Resources []Resource
 }
 
 type Stage struct {
 	types.Metadata
 	Name               types.StringValue
-	Version            types.IntValue
 	AccessLogging      AccessLogging
-	RESTMethodSettings RESTMethodSettings
 	XRayTracingEnabled types.BoolValue
+	RESTMethodSettings []RESTMethodSettings
+}
+
+type Resource struct {
+	types.Metadata
+	Methods []Method
 }
 
 type AccessLogging struct {
@@ -41,6 +36,7 @@ type AccessLogging struct {
 
 type RESTMethodSettings struct {
 	types.Metadata
+	Method             types.StringValue
 	CacheDataEncrypted types.BoolValue
 	CacheEnabled       types.BoolValue
 }
@@ -52,7 +48,7 @@ const (
 	AuthorizationCognitoUserPools = "COGNITO_USER_POOLS"
 )
 
-type RESTMethod struct {
+type Method struct {
 	types.Metadata
 	HTTPMethod        types.StringValue
 	AuthorizationType types.StringValue
@@ -62,6 +58,5 @@ type RESTMethod struct {
 type DomainName struct {
 	types.Metadata
 	Name           types.StringValue
-	Version        types.IntValue
 	SecurityPolicy types.StringValue
 }

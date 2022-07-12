@@ -3,7 +3,6 @@ package apigateway
 import (
 	"github.com/aquasecurity/defsec/internal/rules"
 	"github.com/aquasecurity/defsec/pkg/providers"
-	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -29,24 +28,29 @@ var CheckEnableCacheEncryption = rules.Register(
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results scan.Results) {
-		for _, api := range s.AWS.APIGateway.APIs {
-			if api.IsUnmanaged() || api.ProtocolType.NotEqualTo(apigateway.ProtocolTypeREST) {
+		for _, api := range s.AWS.APIGateway.V1.APIs {
+			if api.IsUnmanaged() {
 				continue
 			}
 			for _, stage := range api.Stages {
-				if stage.IsUnmanaged() || stage.Version.NotEqualTo(1) {
+				if stage.IsUnmanaged() {
 					continue
 				}
-				if stage.RESTMethodSettings.CacheEnabled.IsFalse() {
-					continue
-				}
-				if stage.RESTMethodSettings.CacheDataEncrypted.IsFalse() {
-					results.Add(
-						"Cache data is not encrypted.",
-						stage.RESTMethodSettings.CacheDataEncrypted,
-					)
-				} else {
-					results.AddPassed(&stage)
+				for _, settings := range stage.RESTMethodSettings {
+					if settings.IsUnmanaged() {
+						continue
+					}
+					if settings.CacheEnabled.IsFalse() {
+						continue
+					}
+					if settings.CacheDataEncrypted.IsFalse() {
+						results.Add(
+							"Cache data is not encrypted.",
+							settings.CacheDataEncrypted,
+						)
+					} else {
+						results.AddPassed(&settings)
+					}
 				}
 			}
 		}

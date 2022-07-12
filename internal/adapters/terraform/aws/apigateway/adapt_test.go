@@ -4,10 +4,13 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/internal/types"
+	v2 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
+
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
 
@@ -27,9 +30,12 @@ resource "aws_api_gateway_rest_api" "MyDemoAPI" {
   name        = "MyDemoAPI"
   description = "This is my API for demonstration purposes"
 }
-
+resource "aws_api_gateway_resource" "example" {
+    rest_api_id = aws_api_gateway_rest_api.MyDemoAPI.id
+}
 resource "aws_api_gateway_method" "example" {
     rest_api_id = aws_api_gateway_rest_api.MyDemoAPI.id
+	resource_id = aws_api_gateway_resource.example.id
     http_method      = "GET"
     authorization    = "NONE"
 }
@@ -37,6 +43,7 @@ resource "aws_apigatewayv2_api" "example" {
     name = "tfsec"
     protocol_type = "HTTP"
 }
+
 
 resource "aws_apigatewayv2_stage" "example" {
     api_id = aws_apigatewayv2_api.example.id
@@ -59,48 +66,51 @@ resource "aws_apigatewayv2_domain_name" "example" {
 }
 `,
 			expected: apigateway.APIGateway{
-				APIs: []apigateway.API{
-					{
-						Name:         String("MyDemoAPI"),
-						Version:      Int(1),
-						ProtocolType: String("REST"),
-						RESTMethods: []apigateway.RESTMethod{
-							{
-								HTTPMethod:        String("GET"),
-								AuthorizationType: String("NONE"),
-								APIKeyRequired:    Bool(false),
+				V1: v1.APIGateway{
+					APIs: []v1.API{
+						{
+							Metadata: types.Metadata{},
+							Name:     String("MyDemoAPI"),
+							Resources: []v1.Resource{
+								{
+									Methods: []v1.Method{
+										{
+											HTTPMethod:        String("GET"),
+											AuthorizationType: String("NONE"),
+											APIKeyRequired:    Bool(false),
+										},
+									},
+								},
 							},
 						},
 					},
-					{
-						Name:         String("tfsec"),
-						Version:      Int(2),
-						ProtocolType: String("HTTP"),
-						Stages: []apigateway.Stage{
-							{
-								Version: Int(2),
-								Name:    String("tfsec"),
-								AccessLogging: apigateway.AccessLogging{
-									CloudwatchLogGroupARN: String("arn:123"),
-								},
-								RESTMethodSettings: apigateway.RESTMethodSettings{
-									CacheDataEncrypted: Bool(true),
-									CacheEnabled:       Bool(false),
-								},
-							},
+					DomainNames: []v1.DomainName{
+						{
+							Name:           String("v1.com"),
+							SecurityPolicy: String("TLS_1_0"),
 						},
 					},
 				},
-				DomainNames: []apigateway.DomainName{
-					{
-						Name:           String("v1.com"),
-						Version:        Int(1),
-						SecurityPolicy: String("TLS_1_0"),
+				V2: v2.APIGateway{
+					APIs: []v2.API{
+						{
+							Name:         String("tfsec"),
+							ProtocolType: String("HTTP"),
+							Stages: []v2.Stage{
+								{
+									Name: String("tfsec"),
+									AccessLogging: v2.AccessLogging{
+										CloudwatchLogGroupARN: String("arn:123"),
+									},
+								},
+							},
+						},
 					},
-					{
-						Name:           String("v2.com"),
-						Version:        Int(2),
-						SecurityPolicy: String("TLS_1_2"),
+					DomainNames: []v2.DomainName{
+						{
+							Name:           String("v2.com"),
+							SecurityPolicy: String("TLS_1_2"),
+						},
 					},
 				},
 			},

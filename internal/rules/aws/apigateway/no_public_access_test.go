@@ -3,11 +3,12 @@ package apigateway
 import (
 	"testing"
 
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
+
 	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/pkg/scan"
 
 	"github.com/stretchr/testify/assert"
@@ -16,22 +17,25 @@ import (
 func TestCheckNoPublicAccess(t *testing.T) {
 	tests := []struct {
 		name     string
-		input    apigateway.APIGateway
+		input    v1.APIGateway
 		expected bool
 	}{
 		{
 			name: "API GET method without authorization",
-			input: apigateway.APIGateway{
-				APIs: []apigateway.API{
+			input: v1.APIGateway{
+				APIs: []v1.API{
 					{
-						Metadata:     types.NewTestMetadata(),
-						ProtocolType: types.String(apigateway.ProtocolTypeREST, types.NewTestMetadata()),
-						RESTMethods: []apigateway.RESTMethod{
+						Metadata: types.NewTestMetadata(),
+						Resources: []v1.Resource{
 							{
-								Metadata:          types.NewTestMetadata(),
-								HTTPMethod:        types.String("GET", types.NewTestMetadata()),
-								APIKeyRequired:    types.Bool(false, types.NewTestMetadata()),
-								AuthorizationType: types.String(apigateway.AuthorizationNone, types.NewTestMetadata()),
+								Methods: []v1.Method{
+									{
+										Metadata:          types.NewTestMetadata(),
+										HTTPMethod:        types.String("GET", types.NewTestMetadata()),
+										APIKeyRequired:    types.Bool(false, types.NewTestMetadata()),
+										AuthorizationType: types.String(v1.AuthorizationNone, types.NewTestMetadata()),
+									},
+								},
 							},
 						},
 					},
@@ -41,17 +45,20 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		},
 		{
 			name: "API OPTION method without authorization",
-			input: apigateway.APIGateway{
-				APIs: []apigateway.API{
+			input: v1.APIGateway{
+				APIs: []v1.API{
 					{
-						Metadata:     types.NewTestMetadata(),
-						ProtocolType: types.String(apigateway.ProtocolTypeREST, types.NewTestMetadata()),
-						RESTMethods: []apigateway.RESTMethod{
+						Metadata: types.NewTestMetadata(),
+						Resources: []v1.Resource{
 							{
-								Metadata:          types.NewTestMetadata(),
-								HTTPMethod:        types.String("OPTION", types.NewTestMetadata()),
-								APIKeyRequired:    types.Bool(true, types.NewTestMetadata()),
-								AuthorizationType: types.String(apigateway.AuthorizationNone, types.NewTestMetadata()),
+								Methods: []v1.Method{
+									{
+										Metadata:          types.NewTestMetadata(),
+										HTTPMethod:        types.String("OPTION", types.NewTestMetadata()),
+										APIKeyRequired:    types.Bool(true, types.NewTestMetadata()),
+										AuthorizationType: types.String(v1.AuthorizationNone, types.NewTestMetadata()),
+									},
+								},
 							},
 						},
 					},
@@ -61,17 +68,20 @@ func TestCheckNoPublicAccess(t *testing.T) {
 		},
 		{
 			name: "API GET method with IAM authorization",
-			input: apigateway.APIGateway{
-				APIs: []apigateway.API{
+			input: v1.APIGateway{
+				APIs: []v1.API{
 					{
-						Metadata:     types.NewTestMetadata(),
-						ProtocolType: types.String(apigateway.ProtocolTypeREST, types.NewTestMetadata()),
-						RESTMethods: []apigateway.RESTMethod{
+						Metadata: types.NewTestMetadata(),
+						Resources: []v1.Resource{
 							{
-								Metadata:          types.NewTestMetadata(),
-								HTTPMethod:        types.String("GET", types.NewTestMetadata()),
-								APIKeyRequired:    types.Bool(false, types.NewTestMetadata()),
-								AuthorizationType: types.String(apigateway.AuthorizationIAM, types.NewTestMetadata()),
+								Methods: []v1.Method{
+									{
+										Metadata:          types.NewTestMetadata(),
+										HTTPMethod:        types.String("GET", types.NewTestMetadata()),
+										APIKeyRequired:    types.Bool(false, types.NewTestMetadata()),
+										AuthorizationType: types.String(v1.AuthorizationIAM, types.NewTestMetadata()),
+									},
+								},
 							},
 						},
 					},
@@ -83,7 +93,7 @@ func TestCheckNoPublicAccess(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
-			testState.AWS.APIGateway = test.input
+			testState.AWS.APIGateway.V1 = test.input
 			results := CheckNoPublicAccess.Evaluate(&testState)
 			var found bool
 			for _, result := range results {

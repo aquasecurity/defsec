@@ -30,7 +30,17 @@ var CheckUseSecureTlsPolicy = rules.Register(
 		Severity: severity.High,
 	},
 	func(s *state.State) (results scan.Results) {
-		for _, domain := range s.AWS.APIGateway.DomainNames {
+		for _, domain := range s.AWS.APIGateway.V1.DomainNames {
+			if domain.SecurityPolicy.NotEqualTo("TLS_1_2") {
+				results.Add(
+					"Domain name is configured with an outdated TLS policy.",
+					domain.SecurityPolicy,
+				)
+			} else {
+				results.AddPassed(&domain)
+			}
+		}
+		for _, domain := range s.AWS.APIGateway.V2.DomainNames {
 			if domain.SecurityPolicy.NotEqualTo("TLS_1_2") {
 				results.Add(
 					"Domain name is configured with an outdated TLS policy.",

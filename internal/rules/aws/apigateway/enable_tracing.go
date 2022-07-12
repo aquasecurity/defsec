@@ -3,7 +3,6 @@ package apigateway
 import (
 	"github.com/aquasecurity/defsec/internal/rules"
 	"github.com/aquasecurity/defsec/pkg/providers"
-	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -29,15 +28,12 @@ var CheckEnableTracing = rules.Register(
 		Severity: severity.Low,
 	},
 	func(s *state.State) (results scan.Results) {
-		for _, api := range s.AWS.APIGateway.APIs {
+		for _, api := range s.AWS.APIGateway.V1.APIs {
 			if api.IsUnmanaged() {
 				continue
 			}
-			if api.ProtocolType.NotEqualTo(apigateway.ProtocolTypeREST) {
-				continue
-			}
 			for _, stage := range api.Stages {
-				if stage.IsUnmanaged() || stage.Version.NotEqualTo(1) {
+				if stage.IsUnmanaged() {
 					continue
 				}
 				if stage.XRayTracingEnabled.IsFalse() {
