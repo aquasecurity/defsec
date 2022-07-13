@@ -15,6 +15,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.47.0
 	github.com/aws/aws-sdk-go-v2/service/iam v1.18.9
+	github.com/aws/aws-sdk-go-v2/service/lambda v1.23.4
 	github.com/aws/aws-sdk-go-v2/service/rds v1.21.5
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.26.11
 	github.com/aws/aws-sdk-go-v2/service/sns v1.17.9

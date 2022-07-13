@@ -204,8 +204,6 @@ github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.10 h1:ECUkYfucRYCdxewYfnBA
 github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.10/go.mod h1:AcRUtiDXHcF542IVjLDSsNnmEkhi089SnyRmrarZakg=
 github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8 h1:OQZODVKX58BBVtiGHdQ+l60k2HDf2q8D9Rzd6t6mFN4=
 github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8/go.mod h1:YXBCG4l+2VBAd1a634Pz/iJvlTwKaTkdkj/BmtdS4X4=
-github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.9 h1:QTPDno4J5TyfpPi3dqCZpD+y7wbHtHhUQwnNGUHUGvg=
-github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.9/go.mod h1:Req/32OLRbXpPX5TxHkwf2Ln9qclJCV6n1S7v0v+FWo=
 github.com/aws/aws-sdk-go-v2/service/ec2 v1.47.0 h1:9X0tYDbP/ygvK7QaNKb5oQhqYxujCQJBd+ygL2/qKq4=
 github.com/aws/aws-sdk-go-v2/service/ec2 v1.47.0/go.mod h1:M7k8Xgr0AsECwnDcfxXhGyDZ6ozYWLFZwb4ztT46+tI=
 github.com/aws/aws-sdk-go-v2/service/iam v1.18.9 h1:pVHvEz+KIsTwRKufwvGZr90X/YJ7swVshaBZNY4ESIY=
@@ -221,6 +219,8 @@ github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.8 h1:oKnAXxSF2F
 github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.8/go.mod h1:rDVhIMAX9N2r8nWxDUlbubvvaFMnfsm+3jAV7q+rpM4=
 github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.6 h1:SSrqxZVhrO371eg/C8Fnj6kduzltKHj/mJl2swkTBGc=
 github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.6/go.mod h1:TzDyqDka0783D93yVirkcysbibVRxjX5HFJEWms4kKA=
+github.com/aws/aws-sdk-go-v2/service/lambda v1.23.4 h1:d1Olp+josNRAlrrtacghtos74rffKS6Mq5gEUBHfgHw=
+github.com/aws/aws-sdk-go-v2/service/lambda v1.23.4/go.mod h1:XiSHsT7z5ScD2AsTgfa1UEFQaAr53dHP1oWvaqSW6jQ=
 github.com/aws/aws-sdk-go-v2/service/rds v1.21.5 h1:FxgP8Ty+UMcnFfLDYATBxBBwNqxdLUVQFglo6Qdgz6Q=
 github.com/aws/aws-sdk-go-v2/service/rds v1.21.5/go.mod h1:CETZ4xhuVW6rXcYVl9UIDaRPF1RDSjbr5IfTTCHswDM=
 github.com/aws/aws-sdk-go-v2/service/s3 v1.26.11 h1:Wt0512f6GfLiMd6a+NuOCC9r3/trmzHMTB697CBDUwg=
