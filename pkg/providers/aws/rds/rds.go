@@ -17,6 +17,7 @@ type Cluster struct {
 	PerformanceInsights       PerformanceInsights
 	Instances                 []ClusterInstance
 	Encryption                Encryption
+	PublicAccess              types.BoolValue
 }
 
 type Encryption struct {
