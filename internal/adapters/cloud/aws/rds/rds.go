@@ -5,6 +5,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/rds"
 	"github.com/aquasecurity/defsec/pkg/state"
+	"github.com/aws/aws-sdk-go-v2/aws"
 	rdsApi "github.com/aws/aws-sdk-go-v2/service/rds"
 )
 
@@ -139,7 +140,7 @@ func (a *adapter) getInstanceBatch(token *string) (instances []rds.Instance, nex
 		instances = append(instances, rds.Instance{
 			Metadata:                  dbInstanceMetadata,
 			BackupRetentionPeriodDays: types.IntFromInt32(dbInstance.BackupRetentionPeriod, dbInstanceMetadata),
-			ReplicationSourceARN:      types.String(*dbInstance.ReadReplicaSourceDBInstanceIdentifier, dbInstanceMetadata),
+			ReplicationSourceARN:      types.String(aws.ToString(dbInstance.ReadReplicaSourceDBInstanceIdentifier), dbInstanceMetadata),
 			PerformanceInsights: getPerformanceInsights(
 				dbInstance.PerformanceInsightsEnabled,
 				dbInstance.PerformanceInsightsKMSKeyId,
