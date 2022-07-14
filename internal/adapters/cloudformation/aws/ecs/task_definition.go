@@ -11,25 +11,51 @@ func getTaskDefinitions(ctx parser.FileContext) (taskDefinitions []ecs.TaskDefin
 	taskDefResources := ctx.GetResourcesByType("AWS::ECS::TaskDefinition")
 
 	for _, r := range taskDefResources {
+		definitions, _ := getContainerDefinitions(r)
 		taskDef := ecs.TaskDefinition{
 			Metadata:             r.Metadata(),
 			Volumes:              getVolumes(r),
-			ContainerDefinitions: getContainerDefinitions(r),
+			ContainerDefinitions: definitions,
 		}
-
 		taskDefinitions = append(taskDefinitions, taskDef)
 	}
 
 	return taskDefinitions
 }
 
-func getContainerDefinitions(r *parser.Resource) types.StringValue {
+func getContainerDefinitions(r *parser.Resource) ([]ecs.ContainerDefinition, error) {
+	var definitions []ecs.ContainerDefinition
 	containerDefs := r.GetProperty("ContainerDefinitions")
 	if containerDefs.IsNil() || containerDefs.IsNotList() {
-		return types.StringDefault("", r.Metadata())
+		return definitions, nil
 	}
+	for _, containerDef := range containerDefs.AsList() {
 
-	return types.String(containerDefs.GetJsonBytesAsString(), containerDefs.Metadata())
+		var envVars []ecs.EnvVar
+		envVarsList := containerDef.GetProperty("Environment")
+		if envVarsList.IsNotNil() && envVarsList.IsList() {
+			for _, envVar := range envVarsList.AsList() {
+				envVars = append(envVars, ecs.EnvVar{
+					Name:  envVar.GetStringProperty("Name", "").Value(),
+					Value: envVar.GetStringProperty("Value", "").Value(),
+				})
+			}
+		}
+		definition := ecs.ContainerDefinition{
+			Metadata:    containerDef.Metadata(),
+			Name:        containerDef.GetStringProperty("Name", ""),
+			Image:       containerDef.GetStringProperty("Image", ""),
+			Memory:      containerDef.GetIntProperty("Memory", 128),
+			CPU:         containerDef.GetIntProperty("CPU", 1),
+			Environment: envVars,
+			Essential:   containerDef.GetBoolProperty("Essential", false),
+		}
+		definitions = append(definitions, definition)
+	}
+	if containerDefs.IsNotNil() && containerDefs.IsString() {
+		return ecs.CreateDefinitionsFromString(r.Metadata(), containerDefs.AsString())
+	}
+	return definitions, nil
 }
 
 func getVolumes(r *parser.Resource) (volumes []ecs.Volume) {

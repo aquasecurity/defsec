@@ -26,7 +26,7 @@ func (a *adapter) Provider() string {
 }
 
 func (a *adapter) Name() string {
-	return "ec2"
+	return "lambda"
 }
 
 func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {

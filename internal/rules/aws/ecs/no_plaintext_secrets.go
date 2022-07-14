@@ -1,7 +1,6 @@
 package ecs
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -52,45 +51,19 @@ var CheckNoPlaintextSecrets = rules.Register(
 		scanner := squealer.NewStringScanner()
 
 		for _, definition := range s.AWS.ECS.TaskDefinitions {
-			vars, err := readEnvVarsFromContainerDefinitions(definition.ContainerDefinitions.Value())
-			if err != nil {
-				continue
-			}
-			for key, val := range vars {
-				if result := scanner.Scan(val); result.TransgressionFound || security.IsSensitiveAttribute(key) {
-					results.Add(
-						fmt.Sprintf("Container definition contains a potentially sensitive environment variable '%s': %s", key, result.Description),
-						definition.ContainerDefinitions,
-					)
-				} else {
-					results.AddPassed(&definition)
+			for _, container := range definition.ContainerDefinitions {
+				for _, env := range container.Environment {
+					if result := scanner.Scan(env.Value); result.TransgressionFound || security.IsSensitiveAttribute(env.Name) {
+						results.Add(
+							fmt.Sprintf("Container definition contains a potentially sensitive environment variable '%s': %s", env.Name, result.Description),
+							container,
+						)
+					} else {
+						results.AddPassed(&definition)
+					}
 				}
 			}
 		}
 		return
 	},
 )
-
-type definition struct {
-	EnvVars []struct {
-		Name  string `json:"name"`
-		Value string `json:"value"`
-	} `json:"environment"`
-}
-
-func readEnvVarsFromContainerDefinitions(raw string) (map[string]string, error) {
-
-	var definitions []definition
-	if err := json.Unmarshal([]byte(raw), &definitions); err != nil {
-		return nil, err
-	}
-
-	envVars := make(map[string]string)
-	for _, definition := range definitions {
-		for _, env := range definition.EnvVars {
-			envVars[env.Name] = env.Value
-		}
-	}
-
-	return envVars, nil
-}
