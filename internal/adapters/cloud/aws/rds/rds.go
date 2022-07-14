@@ -175,15 +175,15 @@ func (a *adapter) getClusterBatch(token *string) (clusters []rds.Cluster, nextTo
 
 		clusters = append(clusters, rds.Cluster{
 			Metadata:                  dbClusterMetadata,
-			BackupRetentionPeriodDays: types.IntFromInt32(*dbCluster.BackupRetentionPeriod, dbClusterMetadata),
-			ReplicationSourceARN:      types.String(*dbCluster.ReplicationSourceIdentifier, dbClusterMetadata),
+			BackupRetentionPeriodDays: types.IntFromInt32(aws.ToInt32(dbCluster.BackupRetentionPeriod), dbClusterMetadata),
+			ReplicationSourceARN:      types.String(aws.ToString(dbCluster.ReplicationSourceIdentifier), dbClusterMetadata),
 			PerformanceInsights: getPerformanceInsights(
 				dbCluster.PerformanceInsightsEnabled,
 				dbCluster.PerformanceInsightsKMSKeyId,
 				dbClusterMetadata,
 			),
 			Encryption:   getInstanceEncryption(dbCluster.StorageEncrypted, dbCluster.KmsKeyId, dbClusterMetadata),
-			PublicAccess: types.Bool(*dbCluster.PubliclyAccessible, dbClusterMetadata),
+			PublicAccess: types.Bool(aws.ToBool(dbCluster.PubliclyAccessible), dbClusterMetadata),
 		})
 
 	}
