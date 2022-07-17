@@ -50,6 +50,29 @@ func Test_helm_parser(t *testing.T) {
 	}
 }
 
+func Test_helm_parser_where_name_non_string(t *testing.T) {
+
+	tests := []struct {
+		testName  string
+		chartName string
+	}{
+		{
+			testName:  "Scanning chart with integer for name",
+			chartName: "numberName",
+		},
+	}
+
+	for _, test := range tests {
+		chartName := test.chartName
+
+		t.Logf("Running test: %s", test.testName)
+
+		helmParser := parser.New(chartName)
+		err := helmParser.ParseFS(context.TODO(), os.DirFS(filepath.Join("testdata", chartName)), ".")
+		require.NoError(t, err)
+	}
+}
+
 func Test_tar_is_chart(t *testing.T) {
 
 	tests := []struct {
