@@ -20,7 +20,7 @@ require (
 	github.com/moby/buildkit v0.10.3
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/open-policy-agent/opa v0.41.0
-	github.com/owenrumney/go-sarif/v2 v2.1.1
+	github.com/owenrumney/go-sarif/v2 v2.1.2
 	github.com/owenrumney/squealer v1.0.1-0.20220510063705-c0be93f0edea
 	github.com/stretchr/testify v1.7.2
 	github.com/zclconf/go-cty v1.10.0
