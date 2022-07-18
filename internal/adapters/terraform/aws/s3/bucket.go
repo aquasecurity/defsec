@@ -42,7 +42,7 @@ func getEncryption(block *terraform.Block, a *adapter) s3.Encryption {
 		return s3.Encryption{
 			Metadata:  block.GetMetadata(),
 			Enabled:   isEncrypted(block.GetBlock("server_side_encryption_configuration")),
-			Algorithm: block.GetNestedAttribute("server_side_encryption_configuration.rule.apply_server_side_encryption_by_default. sse_algorithm").AsStringValueOrDefault("", block),
+			Algorithm: block.GetNestedAttribute("server_side_encryption_configuration.rule.apply_server_side_encryption_by_default.sse_algorithm").AsStringValueOrDefault("", block),
 			KMSKeyId:  block.GetNestedAttribute("server_side_encryption_configuration.rule.apply_server_side_encryption_by_default.kms_master_key_id").AsStringValueOrDefault("", block),
 		}
 	}
