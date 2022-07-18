@@ -17,6 +17,9 @@ func (a *adapter) adaptOrganizationMembers() {
 	for _, iamBlock := range a.modules.GetResourcesByType("google_organization_iam_member") {
 		member := a.adaptMember(iamBlock)
 		organizationAttr := iamBlock.GetAttribute("organization")
+		if organizationAttr.IsNil() {
+			organizationAttr = iamBlock.GetAttribute("org_id")
+		}
 
 		if refBlock, err := a.modules.GetReferencedBlock(organizationAttr, iamBlock); err == nil {
 			if refBlock.TypeLabel() == "google_organization" {
@@ -76,6 +79,9 @@ func (a *adapter) adaptOrganizationBindings() {
 	for _, iamBlock := range a.modules.GetResourcesByType("google_organization_iam_binding") {
 		binding := a.adaptBinding(iamBlock)
 		organizationAttr := iamBlock.GetAttribute("organization")
+		if organizationAttr.IsNil() {
+			organizationAttr = iamBlock.GetAttribute("org_id")
+		}
 
 		if refBlock, err := a.modules.GetReferencedBlock(organizationAttr, iamBlock); err == nil {
 			if refBlock.TypeLabel() == "google_organization" {
