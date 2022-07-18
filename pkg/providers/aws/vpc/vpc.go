@@ -12,7 +12,8 @@ type VPC struct {
 
 type NetworkACL struct {
 	types.Metadata
-	Rules []NetworkACLRule
+	Rules         []NetworkACLRule
+	IsDefaultRule types.BoolValue
 }
 
 type SecurityGroup struct {

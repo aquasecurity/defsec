@@ -175,11 +175,11 @@ func (a *adapter) getNetworkACLBatch(token *string) (nacls []vpc.NetworkACL, nex
 		naclMetadata := a.CreateMetadata(*apiNacl.NetworkAclId)
 
 		nacl := vpc.NetworkACL{
-			Metadata: naclMetadata,
+			Metadata:      naclMetadata,
+			IsDefaultRule: types.BoolDefault(false, naclMetadata),
 		}
 
 		for _, entry := range apiNacl.Entries {
-
 			naclType := "ingress"
 			if aws.ToBool(entry.Egress) {
 				naclType = "egress"
@@ -195,6 +195,7 @@ func (a *adapter) getNetworkACLBatch(token *string) (nacls []vpc.NetworkACL, nex
 		}
 
 		a.Tracker().IncrementResource()
+		nacls = append(nacls, nacl)
 	}
 
 	return nacls, apiNacls.NextToken, nil
