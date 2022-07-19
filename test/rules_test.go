@@ -18,7 +18,7 @@ import (
 
 func TestAVDIDs(t *testing.T) {
 	existing := make(map[string]struct{})
-	for _, rule := range rules.GetRegistered() {
+	for _, rule := range rules.GetFrameworkRules() {
 		t.Run(rule.Rule().LongID(), func(t *testing.T) {
 			if rule.Rule().AVDID == "" {
 				t.Errorf("Rule has no AVD ID: %#v", rule)
@@ -33,7 +33,7 @@ func TestAVDIDs(t *testing.T) {
 }
 
 func TestRulesAgainstExampleCode(t *testing.T) {
-	for _, rule := range rules.GetRegistered() {
+	for _, rule := range rules.GetFrameworkRules() {
 		testName := fmt.Sprintf("%s/%s", rule.Rule().AVDID, rule.Rule().LongID())
 		t.Run(testName, func(t *testing.T) {
 			rule := rule

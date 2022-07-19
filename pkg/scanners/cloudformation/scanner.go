@@ -167,7 +167,7 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 		return nil, nil
 	}
 	if !s.regoOnly {
-		for _, rule := range rules.GetRegistered() {
+		for _, rule := range rules.GetFrameworkRules() {
 			select {
 			case <-ctx.Done():
 				return nil, ctx.Err()
