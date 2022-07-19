@@ -10,5 +10,5 @@ func Register(rule scan.Rule, f scan.CheckFunc) rules.RegisteredRule {
 }
 
 func GetRegistered() (registered []rules.RegisteredRule) {
-	return rules.GetRegistered()
+	return rules.GetFrameworkRules()
 }

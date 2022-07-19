@@ -10,7 +10,7 @@ import (
 
 func Test_EmbeddedLoading(t *testing.T) {
 
-	rules := rules.GetRegistered()
+	rules := rules.GetFrameworkRules()
 	var found bool
 	for _, rule := range rules {
 		if rule.Rule().RegoPackage != "" {

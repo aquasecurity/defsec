@@ -46,7 +46,7 @@ module "something" {
 }
 `
 
-	for _, rule := range rules.GetRegistered() {
+	for _, rule := range rules.GetFrameworkRules() {
 		if rule.Rule().Terraform == nil {
 			continue
 		}

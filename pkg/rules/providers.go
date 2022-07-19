@@ -24,7 +24,7 @@ type Check struct {
 
 func GetProvidersHierarchy() (providers map[string]map[string][]string) {
 
-	registeredRules := rules.GetRegistered()
+	registeredRules := rules.GetFrameworkRules()
 
 	provs := make(map[string]map[string][]string)
 
@@ -54,7 +54,7 @@ func GetProvidersHierarchy() (providers map[string]map[string][]string) {
 
 func GetProviders() (providers []Provider) {
 
-	registeredRules := rules.GetRegistered()
+	registeredRules := rules.GetFrameworkRules()
 
 	provs := make(map[string]map[string][]Check)
 
@@ -106,7 +106,7 @@ func GetProvidersAsJson() ([]byte, error) {
 
 func GetProviderNames() []string {
 
-	registeredRules := rules.GetRegistered()
+	registeredRules := rules.GetFrameworkRules()
 
 	providers := make(map[string]bool)
 
@@ -129,7 +129,7 @@ func GetProviderNames() []string {
 
 func GetProviderServiceNames(providerName string) []string {
 
-	registeredRules := rules.GetRegistered()
+	registeredRules := rules.GetFrameworkRules()
 
 	services := make(map[string]bool)
 
@@ -154,7 +154,7 @@ func GetProviderServiceNames(providerName string) []string {
 
 func GetProviderServiceCheckNames(providerName string, serviceName string) []string {
 
-	registeredRules := rules.GetRegistered()
+	registeredRules := rules.GetFrameworkRules()
 
 	var checks []string
 
