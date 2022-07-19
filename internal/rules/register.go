@@ -90,7 +90,7 @@ func (r *registry) deregister(rule RegisteredRule) {
 	}
 }
 
-func (r *registry) GetFrameworkRules(fw ...framework.Framework) []RegisteredRule {
+func (r *registry) getFrameworkRules(fw ...framework.Framework) []RegisteredRule {
 	r.RLock()
 	defer r.RUnlock()
 	var registered []RegisteredRule
@@ -117,5 +117,5 @@ func (r *registry) Reset() {
 }
 
 func GetFrameworkRules(fw ...framework.Framework) []RegisteredRule {
-	return coreRegistry.GetFrameworkRules(fw...)
+	return coreRegistry.getFrameworkRules(fw...)
 }
