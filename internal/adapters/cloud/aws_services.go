@@ -2,6 +2,7 @@ package cloud
 
 import (
 	_ "github.com/aquasecurity/defsec/internal/adapters/cloud/aws/api-gateway"
+	_ "github.com/aquasecurity/defsec/internal/adapters/cloud/aws/athena"
 	_ "github.com/aquasecurity/defsec/internal/adapters/cloud/aws/dynamodb"
 	_ "github.com/aquasecurity/defsec/internal/adapters/cloud/aws/ec2"
 	_ "github.com/aquasecurity/defsec/internal/adapters/cloud/aws/ecr"
