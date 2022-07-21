@@ -43,7 +43,7 @@ func Test_Kubernetes_RegoPoliciesFromDisk(t *testing.T) {
 		t.Run(entry.Name(), func(t *testing.T) {
 			var matched bool
 			for _, result := range results {
-				if result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name() {
+				if result.Rule().HasID(entry.Name()) {
 
 					failCase := fmt.Sprintf("test/testdata/kubernetes/%s/denied.yaml", entry.Name())
 					passCase := fmt.Sprintf("test/testdata/kubernetes/%s/allowed.yaml", entry.Name())
@@ -100,7 +100,7 @@ func Test_Kubernetes_RegoPoliciesEmbedded(t *testing.T) {
 		t.Run(entry.Name(), func(t *testing.T) {
 			var matched bool
 			for _, result := range results {
-				if result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name() {
+				if result.Rule().HasID(entry.Name()) {
 
 					failCase := fmt.Sprintf("test/testdata/kubernetes/%s/denied.yaml", entry.Name())
 					passCase := fmt.Sprintf("test/testdata/kubernetes/%s/allowed.yaml", entry.Name())

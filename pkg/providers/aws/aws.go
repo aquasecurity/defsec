@@ -3,7 +3,6 @@ package aws
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/athena"
-	"github.com/aquasecurity/defsec/pkg/providers/aws/autoscaling"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudfront"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
@@ -35,14 +34,12 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sns"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ssm"
-	"github.com/aquasecurity/defsec/pkg/providers/aws/vpc"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/workspaces"
 )
 
 type AWS struct {
 	APIGateway    apigateway.APIGateway
 	Athena        athena.Athena
-	Autoscaling   autoscaling.Autoscaling
 	Cloudfront    cloudfront.Cloudfront
 	CloudTrail    cloudtrail.CloudTrail
 	CloudWatch    cloudwatch.CloudWatch
@@ -74,6 +71,5 @@ type AWS struct {
 	SNS           sns.SNS
 	SQS           sqs.SQS
 	SSM           ssm.SSM
-	VPC           vpc.VPC
 	WorkSpaces    workspaces.WorkSpaces
 }

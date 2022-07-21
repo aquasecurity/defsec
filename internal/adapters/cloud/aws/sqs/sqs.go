@@ -48,6 +48,9 @@ func (a *adapter) getQueues() (queues []sqs.Queue, err error) {
 	a.Tracker().SetServiceLabel("Scanning queues...")
 
 	batchQueues, token, err := a.getQueueBatch(nil)
+	if err != nil {
+		return nil, err
+	}
 
 	queues = append(queues, batchQueues...)
 

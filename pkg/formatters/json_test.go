@@ -55,7 +55,6 @@ func Test_JSON(t *testing.T) {
 		})
 	results.SetRule(scan.Rule{
 		AVDID:       "AVD-AA-9999",
-		LegacyID:    "AAA999",
 		ShortCode:   "enable-at-rest-encryption",
 		Summary:     "summary",
 		Explanation: "explanation",

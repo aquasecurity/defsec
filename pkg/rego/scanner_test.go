@@ -495,7 +495,7 @@ deny[res] {
 	assert.Equal(t, 123, failure.Metadata().Range().GetStartLine())
 	assert.Equal(t, 456, failure.Metadata().Range().GetEndLine())
 	assert.Equal(t, "AVD-XX-9999", failure.Rule().AVDID)
-	assert.Equal(t, "AA001", failure.Rule().LegacyID)
+	assert.True(t, failure.Rule().HasID("AA001"))
 	assert.Equal(t, "This is a title", failure.Rule().Summary)
 	assert.Equal(t, severity.Low, failure.Rule().Severity)
 	assert.Equal(t, "This is a recommendation", failure.Rule().Resolution)

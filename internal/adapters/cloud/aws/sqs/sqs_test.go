@@ -6,7 +6,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws/test"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 	"github.com/aquasecurity/defsec/pkg/state"
-	"github.com/aquasecurity/go-mock-aws"
+	localstack "github.com/aquasecurity/go-mock-aws"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	sqsapi "github.com/aws/aws-sdk-go-v2/service/sqs"
 	sqsTypes "github.com/aws/aws-sdk-go-v2/service/sqs/types"

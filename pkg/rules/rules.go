@@ -3,7 +3,6 @@ package rules
 import (
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/apigateway"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/athena"
-	_ "github.com/aquasecurity/defsec/internal/rules/aws/autoscaling"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/cloudfront"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/cloudtrail"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/cloudwatch"
@@ -35,7 +34,6 @@ import (
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/sns"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/sqs"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/ssm"
-	_ "github.com/aquasecurity/defsec/internal/rules/aws/vpc"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/workspaces"
 	_ "github.com/aquasecurity/defsec/internal/rules/azure/appservice"
 	_ "github.com/aquasecurity/defsec/internal/rules/azure/authorization"

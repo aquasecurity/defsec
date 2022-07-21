@@ -3,7 +3,6 @@ package aws
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/apigateway"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/athena"
-	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/autoscaling"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/cloudfront"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/cloudwatch"
@@ -34,7 +33,6 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/sns"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/sqs"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/ssm"
-	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/vpc"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/workspaces"
 	"github.com/aquasecurity/defsec/pkg/providers/aws"
 	"github.com/aquasecurity/defsec/pkg/terraform"
@@ -44,7 +42,6 @@ func Adapt(modules terraform.Modules) aws.AWS {
 	return aws.AWS{
 		APIGateway:    apigateway.Adapt(modules),
 		Athena:        athena.Adapt(modules),
-		Autoscaling:   autoscaling.Adapt(modules),
 		Cloudfront:    cloudfront.Adapt(modules),
 		CloudTrail:    cloudtrail.Adapt(modules),
 		CloudWatch:    cloudwatch.Adapt(modules),
@@ -75,7 +72,6 @@ func Adapt(modules terraform.Modules) aws.AWS {
 		SNS:           sns.Adapt(modules),
 		SQS:           sqs.Adapt(modules),
 		SSM:           ssm.Adapt(modules),
-		VPC:           vpc.Adapt(modules),
 		WorkSpaces:    workspaces.Adapt(modules),
 	}
 }

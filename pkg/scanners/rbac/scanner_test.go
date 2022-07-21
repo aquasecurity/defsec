@@ -272,7 +272,7 @@ deny[res] {
 	rule := results.GetFailed()[0].Rule()
 	assert.Equal(t, scan.Rule{
 		AVDID:          "AVD-KSV-0041",
-		LegacyID:       "KSV041",
+		Aliases:        []string{"KSV041"},
 		ShortCode:      "manage-secrets",
 		Summary:        "manage secrets",
 		Explanation:    "check weather Role permit managing secrets",

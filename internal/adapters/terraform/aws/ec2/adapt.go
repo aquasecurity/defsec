@@ -7,8 +7,17 @@ import (
 )
 
 func Adapt(modules terraform.Modules) ec2.EC2 {
+
+	naclAdapter := naclAdapter{naclRuleIDs: modules.GetChildResourceIDMapByType("aws_network_acl_rule")}
+	sgAdapter := sgAdapter{sgRuleIDs: modules.GetChildResourceIDMapByType("aws_security_group_rule")}
+
 	return ec2.EC2{
-		Instances: getInstances(modules),
+		Instances:            getInstances(modules),
+		DefaultVPCs:          adaptDefaultVPCs(modules),
+		SecurityGroups:       sgAdapter.adaptSecurityGroups(modules),
+		NetworkACLs:          naclAdapter.adaptNetworkACLs(modules),
+		LaunchConfigurations: adaptLaunchConfigurations(modules),
+		LaunchTemplates:      adaptLaunchTemplates(modules),
 	}
 }
 
@@ -60,22 +69,4 @@ func getInstances(modules terraform.Modules) []ec2.Instance {
 	}
 
 	return instances
-}
-
-func getMetadataOptions(b *terraform.Block) ec2.MetadataOptions {
-
-	if metadataOptions := b.GetBlock("metadata_options"); metadataOptions.IsNotNil() {
-		metaOpts := ec2.MetadataOptions{
-			Metadata:     metadataOptions.GetMetadata(),
-			HttpTokens:   metadataOptions.GetAttribute("http_tokens").AsStringValueOrDefault("", metadataOptions),
-			HttpEndpoint: metadataOptions.GetAttribute("http_endpoint").AsStringValueOrDefault("", metadataOptions),
-		}
-		return metaOpts
-	}
-
-	return ec2.MetadataOptions{
-		Metadata:     b.GetMetadata(),
-		HttpTokens:   types.StringDefault("", b.GetMetadata()),
-		HttpEndpoint: types.StringDefault("", b.GetMetadata()),
-	}
 }

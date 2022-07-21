@@ -7,7 +7,11 @@ import (
 
 // Adapt ...
 func Adapt(cfFile parser.FileContext) (result ec2.EC2) {
-
+	result.LaunchConfigurations = getLaunchConfigurations(cfFile)
+	result.LaunchTemplates = getLaunchTemplates(cfFile)
 	result.Instances = getInstances(cfFile)
+	result.DefaultVPCs = nil
+	result.NetworkACLs = getNetworkACLs(cfFile)
+	result.SecurityGroups = getSecurityGroups(cfFile)
 	return result
 }

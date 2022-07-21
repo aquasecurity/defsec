@@ -42,7 +42,7 @@ type TerraformCustomCheck struct {
 
 type Rule struct {
 	AVDID          string                           `json:"avd_id"`
-	LegacyID       string                           `json:"id"`
+	Aliases        []string                         `json:"aliases"`
 	ShortCode      string                           `json:"short_code"`
 	Summary        string                           `json:"summary"`
 	Explanation    string                           `json:"explanation"`
@@ -57,6 +57,18 @@ type Rule struct {
 	CustomChecks   CustomChecks                     `json:"-"`
 	RegoPackage    string                           `json:"-"`
 	Frameworks     map[framework.Framework][]string `json:"frameworks"`
+}
+
+func (r Rule) HasID(id string) bool {
+	if r.AVDID == id || r.LongID() == id {
+		return true
+	}
+	for _, alias := range r.Aliases {
+		if alias == id {
+			return true
+		}
+	}
+	return false
 }
 
 func (r Rule) LongID() string {

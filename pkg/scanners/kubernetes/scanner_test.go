@@ -282,7 +282,7 @@ deny[res] {
 
 	assert.Equal(t, scan.Rule{
 		AVDID:          "AVD-KSV-0011",
-		LegacyID:       "KSV011",
+		Aliases:        []string{"KSV011"},
 		ShortCode:      "limit-cpu",
 		Summary:        "CPU not limited",
 		Explanation:    "Enforcing CPU limits prevents DoS via resource exhaustion.",

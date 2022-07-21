@@ -2,7 +2,6 @@ package ec2
 
 import (
 	"github.com/aquasecurity/defsec/internal/types"
-	"github.com/aquasecurity/defsec/pkg/providers/aws/vpc"
 	"github.com/owenrumney/squealer/pkg/squealer"
 )
 
@@ -10,7 +9,7 @@ type Instance struct {
 	types.Metadata
 	MetadataOptions MetadataOptions
 	UserData        types.StringValue
-	SecurityGroups  []vpc.SecurityGroup
+	SecurityGroups  []SecurityGroup
 	RootBlockDevice *BlockDevice
 	EBSBlockDevices []*BlockDevice
 }
@@ -35,7 +34,7 @@ func NewInstance(metadata types.Metadata) Instance {
 			HttpEndpoint: types.StringDefault("enabled", metadata),
 		},
 		UserData:        types.StringDefault("", metadata),
-		SecurityGroups:  []vpc.SecurityGroup{},
+		SecurityGroups:  []SecurityGroup{},
 		RootBlockDevice: nil,
 		EBSBlockDevices: nil,
 	}

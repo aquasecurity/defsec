@@ -3,7 +3,6 @@ package aws
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/apigateway"
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/athena"
-	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/autoscaling"
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/cloudfront"
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/cloudwatch"
@@ -33,7 +32,6 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/sns"
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/sqs"
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/ssm"
-	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/vpc"
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/workspaces"
 	"github.com/aquasecurity/defsec/pkg/providers/aws"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
@@ -44,7 +42,6 @@ func Adapt(cfFile parser.FileContext) aws.AWS {
 	return aws.AWS{
 		APIGateway:    apigateway.Adapt(cfFile),
 		Athena:        athena.Adapt(cfFile),
-		Autoscaling:   autoscaling.Adapt(cfFile),
 		Cloudfront:    cloudfront.Adapt(cfFile),
 		CloudTrail:    cloudtrail.Adapt(cfFile),
 		CloudWatch:    cloudwatch.Adapt(cfFile),
@@ -74,7 +71,6 @@ func Adapt(cfFile parser.FileContext) aws.AWS {
 		SNS:           sns.Adapt(cfFile),
 		SQS:           sqs.Adapt(cfFile),
 		SSM:           ssm.Adapt(cfFile),
-		VPC:           vpc.Adapt(cfFile),
 		WorkSpaces:    workspaces.Adapt(cfFile),
 	}
 }

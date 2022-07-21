@@ -42,6 +42,26 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 		return err
 	}
 
+	state.AWS.EC2.SecurityGroups, err = a.getSecurityGroups()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.NetworkACLs, err = a.getNetworkACLs()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.DefaultVPCs, err = a.getDefaultVPCs()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.LaunchTemplates, err = a.getLaunchTemplates()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
