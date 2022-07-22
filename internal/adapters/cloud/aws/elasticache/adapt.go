@@ -42,10 +42,8 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 		return err
 	}
 
-	state.AWS.ElastiCache.SecurityGroups, err = a.getSecurityGroups()
-	if err != nil {
-		return err
-	}
+	// this can error if classic resources are requested where not available
+	state.AWS.ElastiCache.SecurityGroups, _ = a.getSecurityGroups()
 
 	return nil
 }
