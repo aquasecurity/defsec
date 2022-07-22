@@ -10,7 +10,6 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/config"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/documentdb"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/dynamodb"
-	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/ebs"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/ec2"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/ecr"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/ecs"
@@ -49,7 +48,6 @@ func Adapt(modules terraform.Modules) aws.AWS {
 		Config:        config.Adapt(modules),
 		DocumentDB:    documentdb.Adapt(modules),
 		DynamoDB:      dynamodb.Adapt(modules),
-		EBS:           ebs.Adapt(modules),
 		EC2:           ec2.Adapt(modules),
 		ECR:           ecr.Adapt(modules),
 		ECS:           ecs.Adapt(modules),

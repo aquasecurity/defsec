@@ -59,9 +59,11 @@ func Test_Adapt(t *testing.T) {
 								Metadata:  types.NewTestMetadata(),
 								Protocol:  types.String("HTTPS", types.NewTestMetadata()),
 								TLSPolicy: types.String("ELBSecurityPolicy-TLS-1-1-2017-01", types.NewTestMetadata()),
-								DefaultAction: elb.Action{
-									Metadata: types.NewTestMetadata(),
-									Type:     types.String("forward", types.NewTestMetadata()),
+								DefaultActions: []elb.Action{
+									{
+										Metadata: types.NewTestMetadata(),
+										Type:     types.String("forward", types.NewTestMetadata()),
+									},
 								},
 							},
 						},
@@ -150,10 +152,10 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 18, loadBalancer.Listeners[0].TLSPolicy.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 18, loadBalancer.Listeners[0].TLSPolicy.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 20, loadBalancer.Listeners[0].DefaultAction.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 22, loadBalancer.Listeners[0].DefaultAction.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 20, loadBalancer.Listeners[0].DefaultActions[0].GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 22, loadBalancer.Listeners[0].DefaultActions[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 21, loadBalancer.Listeners[0].DefaultAction.Type.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 21, loadBalancer.Listeners[0].DefaultAction.Type.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 21, loadBalancer.Listeners[0].DefaultActions[0].Type.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 21, loadBalancer.Listeners[0].DefaultActions[0].Type.GetMetadata().Range().GetEndLine())
 
 }

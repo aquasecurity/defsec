@@ -10,7 +10,6 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/config"
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/documentdb"
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/dynamodb"
-	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/ebs"
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/ec2"
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/ecr"
 	"github.com/aquasecurity/defsec/internal/adapters/cloudformation/aws/ecs"
@@ -49,7 +48,6 @@ func Adapt(cfFile parser.FileContext) aws.AWS {
 		Config:        config.Adapt(cfFile),
 		DocumentDB:    documentdb.Adapt(cfFile),
 		DynamoDB:      dynamodb.Adapt(cfFile),
-		EBS:           ebs.Adapt(cfFile),
 		EC2:           ec2.Adapt(cfFile),
 		ECR:           ecr.Adapt(cfFile),
 		ECS:           ecs.Adapt(cfFile),

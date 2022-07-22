@@ -43,9 +43,16 @@ You should use HTTPS, which is HTTP over an encrypted (TLS) connection, meaning 
 					continue
 				}
 
-				if listener.DefaultAction.Type.EqualTo("redirect") {
+				var hasRedirect bool
+				for _, action := range listener.DefaultActions {
+					if action.Type.EqualTo("redirect") {
+						hasRedirect = true
+						break
+					}
+				}
+				if hasRedirect {
 					results.AddPassed(&listener)
-					continue
+					break
 				}
 
 				results.Add(

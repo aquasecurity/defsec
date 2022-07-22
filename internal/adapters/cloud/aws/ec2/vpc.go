@@ -9,7 +9,7 @@ import (
 
 func (a *adapter) getSecurityGroups() (securityGroups []ec2.SecurityGroup, err error) {
 
-	a.Tracker().SetServiceLabel("Scanning VPC security groups...")
+	a.Tracker().SetServiceLabel("Scanning security groups...")
 
 	batchSecurityGroups, token, err := a.getSecurityGroupBatch(nil)
 	securityGroups = append(securityGroups, batchSecurityGroups...)
@@ -27,7 +27,7 @@ func (a *adapter) getSecurityGroups() (securityGroups []ec2.SecurityGroup, err e
 
 func (a *adapter) getNetworkACLs() (nacls []ec2.NetworkACL, err error) {
 
-	a.Tracker().SetServiceLabel("Scanning VPC network ACLs...")
+	a.Tracker().SetServiceLabel("Scanning network ACLs...")
 
 	batchNacls, token, err := a.getNetworkACLBatch(nil)
 	nacls = append(nacls, batchNacls...)
@@ -45,7 +45,7 @@ func (a *adapter) getNetworkACLs() (nacls []ec2.NetworkACL, err error) {
 
 func (a *adapter) getDefaultVPCs() (defaultVpcs []ec2.DefaultVPC, err error) {
 
-	a.Tracker().SetServiceLabel("Scanning VPC default VPCs...")
+	a.Tracker().SetServiceLabel("Scanning default VPCs...")
 
 	batchDefaultVpcs, token, err := a.getDefaultVPCsBatch(nil)
 	defaultVpcs = append(defaultVpcs, batchDefaultVpcs...)

@@ -10,7 +10,6 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/config"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/documentdb"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/dynamodb"
-	"github.com/aquasecurity/defsec/pkg/providers/aws/ebs"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecr"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecs"
@@ -47,7 +46,6 @@ type AWS struct {
 	Config        config.Config
 	DocumentDB    documentdb.DocumentDB
 	DynamoDB      dynamodb.DynamoDB
-	EBS           ebs.EBS
 	EC2           ec2.EC2
 	ECR           ecr.ECR
 	ECS           ecs.ECS

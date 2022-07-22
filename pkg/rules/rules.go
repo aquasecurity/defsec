@@ -10,7 +10,6 @@ import (
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/config"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/documentdb"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/dynamodb"
-	_ "github.com/aquasecurity/defsec/internal/rules/aws/ebs"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/ec2"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/ecr"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/ecs"

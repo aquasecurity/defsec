@@ -18,6 +18,7 @@ func Adapt(modules terraform.Modules) ec2.EC2 {
 		NetworkACLs:          naclAdapter.adaptNetworkACLs(modules),
 		LaunchConfigurations: adaptLaunchConfigurations(modules),
 		LaunchTemplates:      adaptLaunchTemplates(modules),
+		Volumes:              adaptVolumes(modules),
 	}
 }
 

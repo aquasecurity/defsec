@@ -12,6 +12,8 @@ import (
 
 func (a *adapter) getLaunchTemplates() ([]ec2.LaunchTemplate, error) {
 
+	a.Tracker().SetServiceLabel("Discovering launch templates...")
+
 	input := ec2api.DescribeLaunchTemplatesInput{}
 
 	var apiTemplates []types.LaunchTemplate
@@ -21,11 +23,14 @@ func (a *adapter) getLaunchTemplates() ([]ec2.LaunchTemplate, error) {
 			return nil, err
 		}
 		apiTemplates = append(apiTemplates, output.LaunchTemplates...)
+		a.Tracker().SetTotalResources(len(apiTemplates))
 		if output.NextToken == nil {
 			break
 		}
 		input.NextToken = output.NextToken
 	}
+
+	a.Tracker().SetServiceLabel("Adapting launch templates...")
 
 	var templates []ec2.LaunchTemplate
 
@@ -35,6 +40,7 @@ func (a *adapter) getLaunchTemplates() ([]ec2.LaunchTemplate, error) {
 			return nil, err
 		}
 		templates = append(templates, *template)
+		a.Tracker().IncrementResource()
 	}
 
 	return templates, nil

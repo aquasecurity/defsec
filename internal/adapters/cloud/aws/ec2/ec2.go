@@ -62,6 +62,11 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 		return err
 	}
 
+	state.AWS.EC2.Volumes, err = a.getVolumes()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

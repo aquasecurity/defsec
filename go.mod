@@ -8,24 +8,43 @@ require (
 	github.com/alecthomas/chroma v0.10.0
 	github.com/apparentlymart/go-cidr v1.1.0
 	github.com/aquasecurity/go-mock-aws v0.0.0-20220711161857-d5b3119f8da7
+	github.com/aws/aws-sdk-go v1.44.48
 	github.com/aws/aws-sdk-go-v2 v1.16.7
 	github.com/aws/aws-sdk-go-v2/config v1.15.13
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.8
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.10
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8
 	github.com/aws/aws-sdk-go-v2/service/athena v1.17.0
+	github.com/aws/aws-sdk-go-v2/service/cloudfront v1.18.4
+	github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.16.4
+	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.15.10
+	github.com/aws/aws-sdk-go-v2/service/codebuild v1.19.8
+	github.com/aws/aws-sdk-go-v2/service/docdb v1.18.5
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.9
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.47.0
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.17.8
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.18.11
+	github.com/aws/aws-sdk-go-v2/service/efs v1.17.6
 	github.com/aws/aws-sdk-go-v2/service/eks v1.21.4
+	github.com/aws/aws-sdk-go-v2/service/elasticache v1.22.0
+	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.18.8
+	github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.15.9
+	github.com/aws/aws-sdk-go-v2/service/emr v1.20.1
 	github.com/aws/aws-sdk-go-v2/service/iam v1.18.9
+	github.com/aws/aws-sdk-go-v2/service/kafka v1.17.9
+	github.com/aws/aws-sdk-go-v2/service/kinesis v1.15.9
+	github.com/aws/aws-sdk-go-v2/service/kms v1.18.0
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.23.4
+	github.com/aws/aws-sdk-go-v2/service/mq v1.13.4
+	github.com/aws/aws-sdk-go-v2/service/neptune v1.17.2
 	github.com/aws/aws-sdk-go-v2/service/rds v1.21.5
+	github.com/aws/aws-sdk-go-v2/service/redshift v1.26.0
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.26.11
+	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.15.13
 	github.com/aws/aws-sdk-go-v2/service/sns v1.17.9
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.19.0
 	github.com/aws/aws-sdk-go-v2/service/sts v1.16.9
+	github.com/aws/aws-sdk-go-v2/service/workspaces v1.20.0
 	github.com/bmatcuk/doublestar v1.3.4
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-getter v1.6.2
@@ -71,8 +90,7 @@ require (
 	github.com/agnivade/levenshtein v1.0.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535 // indirect
-	github.com/aws/aws-sdk-go v1.44.48 // indirect
-	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.2 // indirect
+	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.3 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.8 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.14 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.8 // indirect

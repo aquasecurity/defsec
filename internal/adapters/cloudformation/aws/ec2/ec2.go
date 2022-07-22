@@ -13,5 +13,6 @@ func Adapt(cfFile parser.FileContext) (result ec2.EC2) {
 	result.DefaultVPCs = nil
 	result.NetworkACLs = getNetworkACLs(cfFile)
 	result.SecurityGroups = getSecurityGroups(cfFile)
+	result.Volumes = getVolumes(cfFile)
 	return result
 }

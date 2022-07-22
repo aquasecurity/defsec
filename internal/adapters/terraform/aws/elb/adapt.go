@@ -94,13 +94,10 @@ func (a *adapter) adaptClassicLoadBalancer(resource *terraform.Block, module ter
 
 func adaptListener(listenerBlock *terraform.Block, typeVal string) elb.Listener {
 	listener := elb.Listener{
-		Metadata:  listenerBlock.GetMetadata(),
-		Protocol:  types.StringDefault("", listenerBlock.GetMetadata()),
-		TLSPolicy: types.StringDefault("", listenerBlock.GetMetadata()),
-		DefaultAction: elb.Action{
-			Metadata: listenerBlock.GetMetadata(),
-			Type:     types.StringDefault("", listenerBlock.GetMetadata()),
-		},
+		Metadata:       listenerBlock.GetMetadata(),
+		Protocol:       types.StringDefault("", listenerBlock.GetMetadata()),
+		TLSPolicy:      types.StringDefault("", listenerBlock.GetMetadata()),
+		DefaultActions: nil,
 	}
 
 	protocolAttr := listenerBlock.GetAttribute("protocol")
@@ -111,10 +108,12 @@ func adaptListener(listenerBlock *terraform.Block, typeVal string) elb.Listener 
 	sslPolicyAttr := listenerBlock.GetAttribute("ssl_policy")
 	listener.TLSPolicy = sslPolicyAttr.AsStringValueOrDefault("", listenerBlock)
 
-	if defaultActionBlock := listenerBlock.GetBlock("default_action"); defaultActionBlock.IsNotNil() {
-		listener.DefaultAction.Metadata = defaultActionBlock.GetMetadata()
-		actionTypeAttr := defaultActionBlock.GetAttribute("type")
-		listener.DefaultAction.Type = actionTypeAttr.AsStringValueOrDefault("", defaultActionBlock)
+	for _, defaultActionBlock := range listenerBlock.GetBlocks("default_action") {
+		action := elb.Action{
+			Metadata: defaultActionBlock.GetMetadata(),
+			Type:     defaultActionBlock.GetAttribute("type").AsStringValueOrDefault("", defaultActionBlock),
+		}
+		listener.DefaultActions = append(listener.DefaultActions, action)
 	}
 
 	return listener

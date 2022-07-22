@@ -30,9 +30,11 @@ func TestCheckHttpNotUsed(t *testing.T) {
 							{
 								Metadata: types.NewTestMetadata(),
 								Protocol: types.String("HTTP", types.NewTestMetadata()),
-								DefaultAction: elb.Action{
-									Metadata: types.NewTestMetadata(),
-									Type:     types.String("forward", types.NewTestMetadata()),
+								DefaultActions: []elb.Action{
+									{
+										Metadata: types.NewTestMetadata(),
+										Type:     types.String("forward", types.NewTestMetadata()),
+									},
 								},
 							},
 						},
@@ -52,9 +54,39 @@ func TestCheckHttpNotUsed(t *testing.T) {
 							{
 								Metadata: types.NewTestMetadata(),
 								Protocol: types.String("HTTP", types.NewTestMetadata()),
-								DefaultAction: elb.Action{
-									Metadata: types.NewTestMetadata(),
-									Type:     types.String("redirect", types.NewTestMetadata()),
+								DefaultActions: []elb.Action{
+									{
+										Metadata: types.NewTestMetadata(),
+										Type:     types.String("redirect", types.NewTestMetadata()),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "Load balancer listener with HTTP protocol but redirect among multiple default actions",
+			input: elb.ELB{
+				LoadBalancers: []elb.LoadBalancer{
+					{
+						Metadata: types.NewTestMetadata(),
+						Type:     types.String(elb.TypeApplication, types.NewTestMetadata()),
+						Listeners: []elb.Listener{
+							{
+								Metadata: types.NewTestMetadata(),
+								Protocol: types.String("HTTP", types.NewTestMetadata()),
+								DefaultActions: []elb.Action{
+									{
+										Metadata: types.NewTestMetadata(),
+										Type:     types.String("forward", types.NewTestMetadata()),
+									},
+									{
+										Metadata: types.NewTestMetadata(),
+										Type:     types.String("redirect", types.NewTestMetadata()),
+									},
 								},
 							},
 						},
@@ -74,9 +106,11 @@ func TestCheckHttpNotUsed(t *testing.T) {
 							{
 								Metadata: types.NewTestMetadata(),
 								Protocol: types.String("HTTPS", types.NewTestMetadata()),
-								DefaultAction: elb.Action{
-									Metadata: types.NewTestMetadata(),
-									Type:     types.String("forward", types.NewTestMetadata()),
+								DefaultActions: []elb.Action{
+									{
+										Metadata: types.NewTestMetadata(),
+										Type:     types.String("forward", types.NewTestMetadata()),
+									},
 								},
 							},
 						},
