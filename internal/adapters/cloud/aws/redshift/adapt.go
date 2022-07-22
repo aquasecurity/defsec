@@ -37,10 +37,8 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 		return err
 	}
 
-	state.AWS.Redshift.SecurityGroups, err = a.getSecurityGroups()
-	if err != nil {
-		return err
-	}
+	// this can error is classic resources are used where disabled
+	state.AWS.Redshift.SecurityGroups, _ = a.getSecurityGroups()
 
 	return nil
 }
