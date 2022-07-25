@@ -7,20 +7,20 @@ assignees: ''
 
 ---
 
-Provider
+**Provider**
 <!-- Specify the provider. eg; aws -->
 
-Severity
+**Severity**
 <!-- Specify the severity of the issue -->
 
-Short Code
+**Short Code**
 <!-- Provide a terse code for the check -->
 
-Description
+**Description**
 <!-- Provide a description of the check -->
 
-Explanation
+**Explanation**
 <!-- Provide a longer explanation for the issue -->
 
-Link
+**Link**
 <!-- Add a link to the providers documentation -->
