@@ -31,7 +31,7 @@ func Test_Adapt(t *testing.T) {
 				name     = "my-gke-cluster"
 
 				node_config {			  
-					metadata {
+					metadata = {
 					  disable-legacy-endpoints = true
 					}
 				}
@@ -83,7 +83,7 @@ func Test_Adapt(t *testing.T) {
 			  
 				node_config {			  
 				  service_account = google_service_account.default.email
-				  metadata {
+				  metadata = {
 					disable-legacy-endpoints = true
 				}
 				  image_type = "COS_CONTAINERD"
@@ -182,7 +182,7 @@ func Test_Adapt(t *testing.T) {
 			resource "google_container_cluster" "example" {
 				node_config {			  
 					service_account = "service-account"
-					metadata {
+					metadata = {
 					  disable-legacy-endpoints = true
 				  }
 					image_type = "COS"
@@ -263,7 +263,7 @@ func TestLines(t *testing.T) {
 	resource "google_container_cluster" "example" {
 
 		node_config {
-			metadata {
+			metadata = {
 				disable-legacy-endpoints = true
 			}
 		}
@@ -308,7 +308,7 @@ func TestLines(t *testing.T) {
 		cluster    = google_container_cluster.example.name
 	  
 		node_config {
-			metadata {
+			metadata = {
 				disable-legacy-endpoints = true
 			}
 			service_account = google_service_account.default.email
@@ -338,8 +338,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 49, cluster.NodeConfig.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 59, cluster.NodeConfig.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 51, cluster.NodeConfig.EnableLegacyEndpoints.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 51, cluster.NodeConfig.EnableLegacyEndpoints.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 50, cluster.NodeConfig.EnableLegacyEndpoints.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 52, cluster.NodeConfig.EnableLegacyEndpoints.GetMetadata().Range().GetEndLine())
 
 	assert.Equal(t, 9, cluster.PodSecurityPolicy.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 11, cluster.PodSecurityPolicy.GetMetadata().Range().GetEndLine())

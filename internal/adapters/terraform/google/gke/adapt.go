@@ -237,12 +237,10 @@ func adaptNodeConfig(resource *terraform.Block) gke.NodeConfig {
 		EnableLegacyEndpoints: types.BoolDefault(true, resource.GetMetadata()),
 	}
 
-	legacyMetadataAttr := resource.GetNestedAttribute("metadata.disable-legacy-endpoints")
-	if legacyMetadataAttr.IsNotNil() {
-		if legacyMetadataAttr.IsTrue() {
-			config.EnableLegacyEndpoints = types.Bool(false, legacyMetadataAttr.GetMetadata())
-		} else if legacyMetadataAttr.IsFalse() {
-			config.EnableLegacyEndpoints = types.Bool(true, legacyMetadataAttr.GetMetadata())
+	if metadata := resource.GetAttribute("metadata"); metadata.IsNotNil() {
+		legacyMetadata := metadata.MapValue("disable-legacy-endpoints")
+		if legacyMetadata.IsWhollyKnown() && legacyMetadata.Type() == cty.Bool {
+			config.EnableLegacyEndpoints = types.Bool(legacyMetadata.False(), metadata.GetMetadata())
 		}
 	}
 
