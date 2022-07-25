@@ -4,7 +4,7 @@ var terraformMetadataEndpointsDisabledGoodExamples = []string{
 	`
  resource "google_container_cluster" "good_example" {
     node_config {
-      metadata {
+      metadata = {
         disable-legacy-endpoints = true
       }
     }
@@ -15,7 +15,7 @@ var terraformMetadataEndpointsDisabledBadExamples = []string{
 	`
  resource "google_container_cluster" "bad_example" {
     node_config {
-      metadata {
+      metadata = {
         disable-legacy-endpoints = false
       }
     }
