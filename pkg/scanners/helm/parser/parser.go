@@ -149,7 +149,7 @@ func (p *Parser) extractChartName(chartPath string) error {
 	if name, ok := chartContent["name"]; !ok {
 		return fmt.Errorf("could not extract the chart name from %s", chartPath)
 	} else {
-		p.helmClient.ReleaseName = name.(string)
+		p.helmClient.ReleaseName = fmt.Sprintf("%v", name)
 	}
 	return nil
 }

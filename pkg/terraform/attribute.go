@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/types"
@@ -141,8 +142,7 @@ func (a *Attribute) AsIntValueOrDefault(defaultValue int, parent *Block) types.I
 	if a.IsNotResolvable() || !a.IsNumber() {
 		return types.IntUnresolvable(a.GetMetadata())
 	}
-	big := a.Value().AsBigFloat()
-	flt, _ := big.Float64()
+	flt := a.AsNumber()
 	return types.IntExplicit(
 		int(flt),
 		a.GetMetadata(),
@@ -207,10 +207,17 @@ func (a *Attribute) IsString() bool {
 }
 
 func (a *Attribute) IsNumber() bool {
-	if a == nil {
-		return false
+	if a != nil && !a.Value().IsNull() && a.Value().IsKnown() {
+		if a.Value().Type() == cty.Number {
+			return true
+		}
+		if a.Value().Type() == cty.String {
+			_, err := strconv.ParseFloat(a.Value().AsString(), 64)
+			return err == nil
+		}
 	}
-	return !a.Value().IsNull() && a.Value().IsKnown() && a.Value().Type() == cty.Number
+
+	return false
 }
 
 func (a *Attribute) IsBool() bool {
@@ -959,4 +966,16 @@ func (a *Attribute) HasIntersect(checkValues ...interface{}) bool {
 	}
 	return false
 
+}
+
+func (a *Attribute) AsNumber() float64 {
+	if a.Value().Type() == cty.Number {
+		v, _ := a.Value().AsBigFloat().Float64()
+		return v
+	}
+	if a.Value().Type() == cty.String {
+		v, _ := strconv.ParseFloat(a.Value().AsString(), 64)
+		return v
+	}
+	panic("Attribute is not a number")
 }

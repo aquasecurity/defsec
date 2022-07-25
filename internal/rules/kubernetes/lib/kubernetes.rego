@@ -182,3 +182,7 @@ is_etcd(container) {
 is_scheduler(container) {
 	regex.match("kube-scheduler", container.command[0])
 }
+
+is_apiserver(container) {
+	regex.match("kube-apiserver", container.command[0])
+}

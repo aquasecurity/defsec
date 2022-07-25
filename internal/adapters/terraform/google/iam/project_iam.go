@@ -95,6 +95,19 @@ func (a *adapter) adaptProjectMembers() {
 			}
 
 			// we didn't find the project - add an unmanaged one
+			// unless it already belongs to an existing folder
+			var foundFolder bool
+			if refBlock, err := a.modules.GetReferencedBlock(iamBlock.GetAttribute("folder"), iamBlock); err == nil {
+				for _, folder := range a.folders {
+					if folder.blockID == refBlock.ID() {
+						foundFolder = true
+					}
+				}
+			}
+			if foundFolder {
+				continue
+			}
+
 			a.projects = append(a.projects, parentedProject{
 				project: iam.Project{
 					Metadata:          types.NewUnmanagedMetadata(),
@@ -249,6 +262,18 @@ func (a *adapter) adaptProjectBindings() {
 			}
 
 			// we didn't find the project - add an unmanaged one
+			// unless it already belongs to an existing folder
+			var foundFolder bool
+			if refBlock, err := a.modules.GetReferencedBlock(iamBlock.GetAttribute("folder"), iamBlock); err == nil {
+				for _, folder := range a.folders {
+					if folder.blockID == refBlock.ID() {
+						foundFolder = true
+					}
+				}
+			}
+			if foundFolder {
+				continue
+			}
 			a.projects = append(a.projects, parentedProject{
 				project: iam.Project{
 					Metadata:          types.NewUnmanagedMetadata(),

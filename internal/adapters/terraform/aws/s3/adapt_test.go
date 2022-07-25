@@ -4,7 +4,11 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-
+	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
+	"github.com/aquasecurity/defsec/test/testutil"
+	"github.com/liamg/iamgo"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -116,4 +120,262 @@ resource "aws_s3_bucket_public_access_block" "example_access_block"{
 
 		})
 	}
+}
+
+func Test_Adapt(t *testing.T) {
+	tests := []struct {
+		name      string
+		terraform string
+		expected  s3.S3
+	}{
+		{
+			name: "basic",
+			terraform: `
+			resource "aws_s3_bucket" "example" {
+				bucket = "bucket"
+			}
+			
+			resource "aws_s3_bucket_public_access_block" "example" {
+				 bucket = aws_s3_bucket.example.id
+			   
+				 restrict_public_buckets = true
+				 block_public_acls   = true
+				 block_public_policy = true
+				 ignore_public_acls = true
+
+			 }
+
+			 resource "aws_s3_bucket_acl" "example" {
+				bucket = aws_s3_bucket.example.id
+				acl    = "private"
+			  }
+
+			  resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
+				bucket = aws_s3_bucket.example.bucket
+			  
+				rule {
+				  apply_server_side_encryption_by_default {
+					kms_master_key_id = "string-key"
+					sse_algorithm     = "aws:kms"
+				  }
+				}
+			  }
+
+			  resource "aws_s3_bucket_logging" "example" {
+				bucket = aws_s3_bucket.example.id
+			  
+				target_bucket = aws_s3_bucket.example.id
+				target_prefix = "log/"
+			  }
+
+			  resource "aws_s3_bucket_versioning" "versioning_example" {
+				bucket = aws_s3_bucket.example.id
+				versioning_configuration {
+				  status = "Enabled"
+				}
+			  }
+
+			  resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
+				bucket = aws_s3_bucket.example.bucket
+				policy = data.aws_iam_policy_document.allow_access_from_another_account.json
+			  }
+			  
+			  data "aws_iam_policy_document" "allow_access_from_another_account" {
+				statement {
+			  
+				  actions = [
+					"s3:GetObject",
+					"s3:ListBucket",
+				  ]
+			  
+				  resources = [
+					"arn:aws:s3:::*",
+				  ]
+				}
+			  }
+		`,
+			expected: s3.S3{
+				Buckets: []s3.Bucket{
+					{
+						Metadata: types.NewTestMetadata(),
+						Name:     types.String("bucket", types.NewTestMetadata()),
+						PublicAccessBlock: &s3.PublicAccessBlock{
+							Metadata:              types.NewTestMetadata(),
+							BlockPublicACLs:       types.Bool(true, types.NewTestMetadata()),
+							BlockPublicPolicy:     types.Bool(true, types.NewTestMetadata()),
+							IgnorePublicACLs:      types.Bool(true, types.NewTestMetadata()),
+							RestrictPublicBuckets: types.Bool(true, types.NewTestMetadata()),
+						},
+						BucketPolicies: []iam.Policy{
+							{
+								Metadata: types.NewTestMetadata(),
+								Name:     types.String("", types.NewTestMetadata()),
+								Document: func() iam.Document {
+
+									builder := iamgo.NewPolicyBuilder()
+
+									sb := iamgo.NewStatementBuilder()
+									sb.WithEffect(iamgo.EffectAllow)
+									sb.WithActions([]string{"s3:GetObject", "s3:ListBucket"})
+									sb.WithResources([]string{"arn:aws:s3:::*"})
+
+									builder.WithStatement(sb.Build())
+
+									return iam.Document{
+										Parsed:   builder.Build(),
+										Metadata: types.NewTestMetadata(),
+										IsOffset: true,
+										HasRefs:  false,
+									}
+								}(),
+							},
+						},
+						Encryption: s3.Encryption{
+							Metadata:  types.NewTestMetadata(),
+							Enabled:   types.Bool(true, types.NewTestMetadata()),
+							Algorithm: types.String("aws:kms", types.NewTestMetadata()),
+							KMSKeyId:  types.String("string-key", types.NewTestMetadata()),
+						},
+						Versioning: s3.Versioning{
+							Metadata: types.NewTestMetadata(),
+							Enabled:  types.Bool(true, types.NewTestMetadata()),
+						},
+						Logging: s3.Logging{
+							Metadata:     types.NewTestMetadata(),
+							Enabled:      types.Bool(true, types.NewTestMetadata()),
+							TargetBucket: types.String("aws_s3_bucket.example", types.NewTestMetadata()),
+						},
+						ACL: types.String("private", types.NewTestMetadata()),
+					},
+				},
+			},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
+			adapted := Adapt(modules)
+			testutil.AssertDefsecEqual(t, test.expected, adapted)
+		})
+	}
+}
+
+func TestLines(t *testing.T) {
+	src := `
+		resource "aws_s3_bucket" "example" {
+			bucket = "bucket"
+		}
+
+		resource "aws_s3_bucket_public_access_block" "example" {
+			bucket = aws_s3_bucket.example.id
+		
+			restrict_public_buckets = true
+			block_public_acls   = true
+			block_public_policy = true
+			ignore_public_acls = true
+		}
+
+		resource "aws_s3_bucket_acl" "example" {
+			bucket = aws_s3_bucket.example.id
+			acl    = "private"
+		}
+
+		resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
+			bucket = aws_s3_bucket.example.bucket
+		
+			rule {
+			apply_server_side_encryption_by_default {
+				kms_master_key_id = "string-key"
+				sse_algorithm     = "aws:kms"
+			}
+			}
+		}
+
+		resource "aws_s3_bucket_logging" "example" {
+			bucket = aws_s3_bucket.example.id
+		
+			target_bucket = aws_s3_bucket.example.id
+			target_prefix = "log/"
+		}
+
+		resource "aws_s3_bucket_versioning" "versioning_example" {
+			bucket = aws_s3_bucket.example.id
+			versioning_configuration {
+			status = "Enabled"
+			}
+		}
+
+		resource "aws_s3_bucket_policy" "allow_access_from_another_account" {
+			bucket = aws_s3_bucket.example.bucket
+			policy = data.aws_iam_policy_document.allow_access_from_another_account.json
+		}
+		
+		data "aws_iam_policy_document" "allow_access_from_another_account" {
+			statement {
+		
+			actions = [
+				"s3:GetObject",
+				"s3:ListBucket",
+			]
+		
+			resources = [
+				"arn:aws:s3:::*",
+			]
+			}
+		}`
+
+	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
+	adapted := Adapt(modules)
+
+	require.Len(t, adapted.Buckets, 1)
+	bucket := adapted.Buckets[0]
+
+	assert.Equal(t, 2, bucket.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 4, bucket.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 6, bucket.PublicAccessBlock.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 13, bucket.PublicAccessBlock.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 9, bucket.PublicAccessBlock.RestrictPublicBuckets.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 9, bucket.PublicAccessBlock.RestrictPublicBuckets.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 10, bucket.PublicAccessBlock.BlockPublicACLs.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 10, bucket.PublicAccessBlock.BlockPublicACLs.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 11, bucket.PublicAccessBlock.BlockPublicPolicy.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 11, bucket.PublicAccessBlock.BlockPublicPolicy.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 12, bucket.PublicAccessBlock.IgnorePublicACLs.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 12, bucket.PublicAccessBlock.IgnorePublicACLs.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 17, bucket.ACL.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 17, bucket.ACL.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 20, bucket.Encryption.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 29, bucket.Encryption.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 25, bucket.Encryption.KMSKeyId.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 25, bucket.Encryption.KMSKeyId.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 26, bucket.Encryption.Algorithm.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 26, bucket.Encryption.Algorithm.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 31, bucket.Logging.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 36, bucket.Logging.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 34, bucket.Logging.TargetBucket.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 34, bucket.Logging.TargetBucket.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 38, bucket.Versioning.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 43, bucket.Versioning.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 41, bucket.Versioning.Enabled.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 41, bucket.Versioning.Enabled.GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 47, bucket.BucketPolicies[0].GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 47, bucket.BucketPolicies[0].GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 50, bucket.BucketPolicies[0].Document.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 62, bucket.BucketPolicies[0].Document.GetMetadata().Range().GetEndLine())
 }
