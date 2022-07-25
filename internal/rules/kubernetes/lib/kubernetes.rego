@@ -167,10 +167,22 @@ host_aliases[host_alias] {
 	host_alias = pod.spec
 }
 
-is_apiserver(container) {
-	regex.match("kube-apiserver", container.command[0])
-}
-
 command_has_flag(command, flag) {
 	regex.match(flag, command[_])
+}
+
+is_controllermananager(container) {
+	regex.match("kube-controller-manager", container.command[0])
+}
+
+is_etcd(container) {
+	regex.match("etcd", container.command[0])
+}
+
+is_scheduler(container) {
+	regex.match("kube-scheduler", container.command[0])
+}
+
+is_apiserver(container) {
+	regex.match("kube-apiserver", container.command[0])
 }

@@ -1,0 +1,13 @@
+
+etcd should be configured for peer authentication.
+
+### Impact
+<!-- Add Impact here -->
+
+<!-- DO NOT CHANGE -->
+{{ remediationActions }}
+
+### Links
+- <cisbench>
+
+
