@@ -57,6 +57,9 @@ func (a *adapter) getQueues() (queues []sqs.Queue, err error) {
 	// while we have a NextToken, page through the results
 	for token != nil {
 		batchQueues, token, err = a.getQueueBatch(token)
+		if err != nil {
+			return nil, err
+		}
 		queues = append(queues, batchQueues...)
 	}
 

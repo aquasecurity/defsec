@@ -77,20 +77,10 @@ func (s *Scanner) Scan(ctx context.Context) (results scan.Results, err error) {
 		if rule.Rule().RegoPackage != "" {
 			continue
 		}
-		evalResult := rule.Evaluate(state)
-		if len(evalResult) > 0 {
-			s.debug.Log("Found %d results for %s", len(evalResult), rule.Rule().AVDID)
-			for _, scanResult := range evalResult {
-
-				ref := scanResult.Metadata().Reference()
-
-				if ref == nil && scanResult.Metadata().Parent() != nil {
-					ref = scanResult.Metadata().Parent().Reference()
-				}
-
-				results = append(results, scanResult)
-
-			}
+		ruleResults := rule.Evaluate(state)
+		if len(ruleResults) > 0 {
+			s.debug.Log("Found %d results for %s", len(ruleResults), rule.Rule().AVDID)
+			results = append(results, ruleResults...)
 		}
 	}
 

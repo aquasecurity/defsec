@@ -1,13 +1,13 @@
 package rego
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/open-policy-agent/opa/loader"
 	"github.com/open-policy-agent/opa/storage"
-	"golang.org/x/xerrors"
 )
 
 // initialise a store populated with OPA data files found in dataPaths
@@ -27,12 +27,12 @@ func initStore(dataPaths, namespaces []string) (storage.Store, error) {
 		return true
 	})
 	if err != nil {
-		return nil, xerrors.Errorf("filter data paths: %w", err)
+		return nil, fmt.Errorf("filter data paths: %w", err)
 	}
 
 	documents, err := loader.NewFileLoader().All(allDocumentPaths)
 	if err != nil {
-		return nil, xerrors.Errorf("load documents: %w", err)
+		return nil, fmt.Errorf("load documents: %w", err)
 	}
 
 	// pass all namespaces so that rego rule can refer to namespaces as data.namespaces
@@ -40,7 +40,7 @@ func initStore(dataPaths, namespaces []string) (storage.Store, error) {
 
 	store, err := documents.Store()
 	if err != nil {
-		return nil, xerrors.Errorf("get documents store: %w", err)
+		return nil, fmt.Errorf("get documents store: %w", err)
 	}
 	return store, nil
 }

@@ -75,6 +75,7 @@ func (a *adapter) getClusters() ([]eks.Cluster, error) {
 	return clusters, nil
 }
 
+// nolint
 func (a *adapter) adaptCluster(name string) (*eks.Cluster, error) {
 
 	output, err := a.api.DescribeCluster(a.Context(), &eksapi.DescribeClusterInput{
@@ -113,7 +114,7 @@ func (a *adapter) adaptCluster(name string) (*eks.Cluster, error) {
 	var logAPI, logAudit, logAuth, logCM, logSched bool
 	if output.Cluster.Logging != nil {
 		for _, logging := range output.Cluster.Logging.ClusterLogging {
-			if logging.Enabled == nil || *logging.Enabled == false {
+			if logging.Enabled == nil || !*logging.Enabled {
 				continue
 			}
 			for _, logType := range logging.Types {

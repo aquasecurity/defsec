@@ -206,14 +206,12 @@ func (a *adapter) getBucketACL(bucketName *string, metadata types.Metadata) type
 			switch grant.Permission {
 			case s3types.PermissionWrite, s3types.PermissionWriteAcp:
 				aclValue = "public-read-write"
-				break
 			case s3types.PermissionRead, s3types.PermissionReadAcp:
 				if strings.HasSuffix(*grant.Grantee.URI, "AuthenticatedUsers") {
 					aclValue = "authenticated-read"
 				} else {
 					aclValue = "public-read"
 				}
-				break
 			}
 		}
 	}

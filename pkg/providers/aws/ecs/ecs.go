@@ -71,10 +71,7 @@ func (j containerDefinitionJSON) convert(metadata types.Metadata) ContainerDefin
 	}
 	var envVars []EnvVar
 	for _, env := range j.EnvVars {
-		envVars = append(envVars, EnvVar{
-			Name:  env.Name,
-			Value: env.Value,
-		})
+		envVars = append(envVars, EnvVar(env))
 	}
 	return ContainerDefinition{
 		Metadata:     metadata,

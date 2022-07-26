@@ -18,7 +18,6 @@ import (
 
 type functionDetails struct {
 	name        string
-	role        string
 	permissions []permissionDetails
 	tracing     string
 }

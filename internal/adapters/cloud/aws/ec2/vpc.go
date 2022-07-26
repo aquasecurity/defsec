@@ -12,6 +12,9 @@ func (a *adapter) getSecurityGroups() (securityGroups []ec2.SecurityGroup, err e
 	a.Tracker().SetServiceLabel("Scanning security groups...")
 
 	batchSecurityGroups, token, err := a.getSecurityGroupBatch(nil)
+	if err != nil {
+		return nil, err
+	}
 	securityGroups = append(securityGroups, batchSecurityGroups...)
 
 	for token != nil {
@@ -30,6 +33,9 @@ func (a *adapter) getNetworkACLs() (nacls []ec2.NetworkACL, err error) {
 	a.Tracker().SetServiceLabel("Scanning network ACLs...")
 
 	batchNacls, token, err := a.getNetworkACLBatch(nil)
+	if err != nil {
+		return nil, err
+	}
 	nacls = append(nacls, batchNacls...)
 
 	for token != nil {
@@ -48,6 +54,9 @@ func (a *adapter) getDefaultVPCs() (defaultVpcs []ec2.DefaultVPC, err error) {
 	a.Tracker().SetServiceLabel("Scanning default VPCs...")
 
 	batchDefaultVpcs, token, err := a.getDefaultVPCsBatch(nil)
+	if err != nil {
+		return nil, err
+	}
 	defaultVpcs = append(defaultVpcs, batchDefaultVpcs...)
 
 	for token != nil {
@@ -98,7 +107,7 @@ func (a *adapter) getSecurityGroupBatch(token *string) (securityGroups []ec2.Sec
 		for _, egress := range apiSecurityGroup.IpPermissions {
 
 			for _, ipRange := range egress.IpRanges {
-				sg.EgressRules = append(sg.IngressRules, ec2.SecurityGroupRule{
+				sg.EgressRules = append(sg.EgressRules, ec2.SecurityGroupRule{
 					Metadata:    sgMetadata,
 					Description: types.String(aws.ToString(ipRange.Description), sgMetadata),
 					CIDRs:       []types.StringValue{types.String(aws.ToString(ipRange.CidrIp), sgMetadata)},

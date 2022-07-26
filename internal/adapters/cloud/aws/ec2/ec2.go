@@ -152,6 +152,9 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 	volumes, err := a.api.DescribeVolumes(a.Context(), &ec2api.DescribeVolumesInput{
 		VolumeIds: volumeIds,
 	})
+	if err != nil {
+		return nil, nil, err
+	}
 
 	for _, v := range volumes.Volumes {
 		block := volumeBlockMap[*v.VolumeId]

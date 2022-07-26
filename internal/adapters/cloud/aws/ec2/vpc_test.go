@@ -3,8 +3,6 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
-
 	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws/test"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -79,16 +77,16 @@ func Test_VPCNetworkACLs(t *testing.T) {
 			require.NotNil(t, testState.AWS.EC2)
 			require.Len(t, testState.AWS.EC2.NetworkACLs, 3)
 
-			var acl *ec2.NetworkACL
+			var aclFound bool
 
 			for _, a := range testState.AWS.EC2.NetworkACLs {
 				if !a.IsDefaultRule.Value() {
-					acl = &a
+					aclFound = true
 					break
 				}
 			}
 
-			require.NotNil(t, acl)
+			require.True(t, aclFound)
 
 		})
 	}

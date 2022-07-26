@@ -44,11 +44,17 @@ func (a *adapter) getTopics() (queues []sns.Topic, err error) {
 	a.Tracker().SetServiceLabel("Scanning queues...")
 
 	batchQueues, token, err := a.getBatchTopics(nil)
+	if err != nil {
+		return nil, err
+	}
 
 	queues = append(queues, batchQueues...)
 
 	for token != nil {
 		batchQueues, token, err = a.getBatchTopics(token)
+		if err != nil {
+			return nil, err
+		}
 		queues = append(queues, batchQueues...)
 	}
 
