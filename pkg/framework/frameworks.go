@@ -5,5 +5,6 @@ type Framework string
 const (
 	Default      Framework = "default"
 	Experimental Framework = "experimental"
-	CISC         Framework = "cisc"
+	CIS_AWS_1_2  Framework = "cis-aws-1.2"
+	CIS_AWS_1_4  Framework = "cis-aws-1.4"
 )

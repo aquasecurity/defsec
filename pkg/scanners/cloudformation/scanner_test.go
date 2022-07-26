@@ -4,6 +4,8 @@ import (
 	"context"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -66,18 +68,25 @@ deny[res] {
 	require.Len(t, results.GetFailed(), 1)
 
 	assert.Equal(t, scan.Rule{
-		AVDID:       "AVD-DS-0006",
-		LegacyID:    "DS006",
-		ShortCode:   "no-self-referencing-copy-from",
-		Summary:     "COPY '--from' referring to the current image",
-		Explanation: "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself.",
-		Impact:      "",
-		Resolution:  "Change the '--from' so that it will not refer to itself",
-		Provider:    "defsec",
-		Service:     "general",
-		Links:       []string{"https://docs.docker.com/develop/develop-images/multistage-build/"},
-		Severity:    "CRITICAL",
-		Terraform:   (*scan.EngineMetadata)(nil), CloudFormation: (*scan.EngineMetadata)(nil), CustomChecks: scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)}, RegoPackage: "data.builtin.dockerfile.DS006"}, results.GetFailed()[0].Rule())
+		AVDID:          "AVD-DS-0006",
+		LegacyID:       "DS006",
+		ShortCode:      "no-self-referencing-copy-from",
+		Summary:        "COPY '--from' referring to the current image",
+		Explanation:    "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself.",
+		Impact:         "",
+		Resolution:     "Change the '--from' so that it will not refer to itself",
+		Provider:       "defsec",
+		Service:        "general",
+		Links:          []string{"https://docs.docker.com/develop/develop-images/multistage-build/"},
+		Severity:       "CRITICAL",
+		Terraform:      (*scan.EngineMetadata)(nil),
+		CloudFormation: (*scan.EngineMetadata)(nil),
+		CustomChecks: scan.CustomChecks{
+			Terraform: (*scan.TerraformCustomCheck)(nil),
+		},
+		RegoPackage: "data.builtin.dockerfile.DS006",
+		Frameworks:  map[framework.Framework][]string{},
+	}, results.GetFailed()[0].Rule())
 
 	failure := results.GetFailed()[0]
 	actualCode, err := failure.GetCode()

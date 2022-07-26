@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/severity"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -29,6 +30,7 @@ type StaticMetadata struct {
 	References         []string
 	InputOptions       InputOptions
 	Package            string
+	Frameworks         map[framework.Framework][]string
 }
 
 type InputOptions struct {
@@ -60,6 +62,7 @@ func (m StaticMetadata) ToRule() scan.Rule {
 		Links:       m.References,
 		Severity:    severity.Severity(m.Severity),
 		RegoPackage: m.Package,
+		Frameworks:  m.Frameworks,
 	}
 }
 
@@ -86,6 +89,7 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		Description:  fmt.Sprintf("Rego module: %s", module.Package.Path.String()),
 		Package:      module.Package.Path.String(),
 		InputOptions: m.queryInputOptions(ctx, module),
+		Frameworks:   make(map[framework.Framework][]string),
 	}
 
 	options := []func(*rego.Rego){
@@ -141,6 +145,15 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 	}
 	if raw, ok := meta["url"]; ok {
 		metadata.References = append(metadata.References, fmt.Sprintf("%s", raw))
+	}
+	if raw, ok := meta["frameworks"]; ok {
+		frameworks, ok := raw.(map[string][]string)
+		if !ok {
+			return nil, fmt.Errorf("failed to parse framework metadata: not an object")
+		}
+		for fw, sections := range frameworks {
+			metadata.Frameworks[framework.Framework(fw)] = sections
+		}
 	}
 
 	return &metadata, nil

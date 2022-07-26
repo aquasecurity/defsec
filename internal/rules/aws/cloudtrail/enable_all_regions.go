@@ -2,6 +2,7 @@ package cloudtrail
 
 import (
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -10,10 +11,14 @@ import (
 
 var CheckEnableAllRegions = rules.Register(
 	scan.Rule{
-		AVDID:       "AVD-AWS-0014",
-		Provider:    providers.AWSProvider,
-		Service:     "cloudtrail",
-		ShortCode:   "enable-all-regions",
+		AVDID:     "AVD-AWS-0014",
+		Provider:  providers.AWSProvider,
+		Service:   "cloudtrail",
+		ShortCode: "enable-all-regions",
+		Frameworks: map[framework.Framework][]string{
+			framework.Default:     nil,
+			framework.CIS_AWS_1_2: {"2.5"},
+		},
 		Summary:     "Cloudtrail should be enabled in all regions regardless of where your AWS resources are generally homed",
 		Impact:      "Activity could be happening in your account in a different region",
 		Resolution:  "Enable Cloudtrail in all regions",

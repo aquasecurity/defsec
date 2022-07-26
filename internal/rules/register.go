@@ -63,7 +63,7 @@ func (r *registry) register(rule scan.Rule, f scan.CheckFunc) RegisteredRule {
 	r.Lock()
 	defer r.Unlock()
 	if len(rule.Frameworks) == 0 {
-		rule.Frameworks = []framework.Framework{framework.Default}
+		rule.Frameworks = map[framework.Framework][]string{framework.Default: nil}
 	}
 	registeredRule := RegisteredRule{
 		number:    r.index,
@@ -71,7 +71,7 @@ func (r *registry) register(rule scan.Rule, f scan.CheckFunc) RegisteredRule {
 		checkFunc: f,
 	}
 	r.index++
-	for _, fw := range rule.Frameworks {
+	for fw := range rule.Frameworks {
 		r.frameworks[fw] = append(r.frameworks[fw], registeredRule)
 	}
 	return registeredRule
