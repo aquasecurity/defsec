@@ -144,8 +144,13 @@ func TestLines(t *testing.T) {
 		description = "This is my API for demonstration purposes"
 	  }
 	  
+	  resource "aws_api_gateway_resource" "example" {
+		rest_api_id = aws_api_gateway_rest_api.MyDemoAPI.id
+      }
+
 	  resource "aws_api_gateway_method" "example" {
-		  rest_api_id = aws_api_gateway_rest_api.MyDemoAPI.id
+		  rest_api_id = aws_api_gateway_rest_api.MyDemoAPI.id 
+          resource_id = aws_api_gateway_resource.example.id
 		  http_method      = "GET"
 		  authorization    = "NONE"
 		  api_key_required = true
@@ -173,12 +178,13 @@ func TestLines(t *testing.T) {
 	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
-	require.Len(t, adapted.APIs, 2)
-	require.Len(t, adapted.DomainNames, 1)
+	require.Len(t, adapted.V1.APIs, 1)
+	require.Len(t, adapted.V2.APIs, 1)
+	require.Len(t, adapted.V1.DomainNames, 1)
 
-	apiV1 := adapted.APIs[0]
-	apiV2 := adapted.APIs[1]
-	domainName := adapted.DomainNames[0]
+	apiV1 := adapted.V1.APIs[0]
+	apiV2 := adapted.V2.APIs[0]
+	domainName := adapted.V1.DomainNames[0]
 
 	assert.Equal(t, 2, apiV1.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 5, apiV1.GetMetadata().Range().GetEndLine())
@@ -186,46 +192,46 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 3, apiV1.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, apiV1.Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 7, apiV1.RESTMethods[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 12, apiV1.RESTMethods[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 11, apiV1.Resources[0].Methods[0].GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 17, apiV1.Resources[0].Methods[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 9, apiV1.RESTMethods[0].HTTPMethod.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 9, apiV1.RESTMethods[0].HTTPMethod.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 14, apiV1.Resources[0].Methods[0].HTTPMethod.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 14, apiV1.Resources[0].Methods[0].HTTPMethod.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 10, apiV1.RESTMethods[0].AuthorizationType.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 10, apiV1.RESTMethods[0].AuthorizationType.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 15, apiV1.Resources[0].Methods[0].AuthorizationType.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 15, apiV1.Resources[0].Methods[0].AuthorizationType.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 11, apiV1.RESTMethods[0].APIKeyRequired.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 11, apiV1.RESTMethods[0].APIKeyRequired.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 16, apiV1.Resources[0].Methods[0].APIKeyRequired.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 16, apiV1.Resources[0].Methods[0].APIKeyRequired.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 14, apiV2.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 17, apiV2.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 19, apiV2.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 22, apiV2.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 15, apiV2.Name.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 15, apiV2.Name.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 20, apiV2.Name.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 20, apiV2.Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 16, apiV2.ProtocolType.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 16, apiV2.ProtocolType.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 21, apiV2.ProtocolType.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 21, apiV2.ProtocolType.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 19, apiV2.Stages[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 25, apiV2.Stages[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 24, apiV2.Stages[0].GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 30, apiV2.Stages[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 21, apiV2.Stages[0].Name.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 21, apiV2.Stages[0].Name.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 26, apiV2.Stages[0].Name.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 26, apiV2.Stages[0].Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 22, apiV2.Stages[0].AccessLogging.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 24, apiV2.Stages[0].AccessLogging.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 27, apiV2.Stages[0].AccessLogging.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 29, apiV2.Stages[0].AccessLogging.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 23, apiV2.Stages[0].AccessLogging.CloudwatchLogGroupARN.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 23, apiV2.Stages[0].AccessLogging.CloudwatchLogGroupARN.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 28, apiV2.Stages[0].AccessLogging.CloudwatchLogGroupARN.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 28, apiV2.Stages[0].AccessLogging.CloudwatchLogGroupARN.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 27, domainName.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 30, domainName.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 32, domainName.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 35, domainName.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 28, domainName.Name.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 28, domainName.Name.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 33, domainName.Name.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 33, domainName.Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 29, domainName.SecurityPolicy.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 29, domainName.SecurityPolicy.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 34, domainName.SecurityPolicy.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 34, domainName.SecurityPolicy.GetMetadata().Range().GetEndLine())
 
 }

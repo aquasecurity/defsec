@@ -68,7 +68,7 @@ func (s *Scanner) Scan(ctx context.Context) (results scan.Results, err error) {
 		return nil, err
 	}
 
-	for _, rule := range rules.GetRegistered() {
+	for _, rule := range rules.GetFrameworkRules() {
 		select {
 		case <-ctx.Done():
 			return nil, ctx.Err()
