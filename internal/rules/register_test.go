@@ -22,7 +22,7 @@ func Test_Reset(t *testing.T) {
 func Test_Registration(t *testing.T) {
 	var tests = []struct {
 		name                 string
-		registeredFrameworks []framework.Framework
+		registeredFrameworks map[framework.Framework][]string
 		inputFrameworks      []framework.Framework
 		expected             bool
 	}{
@@ -32,7 +32,7 @@ func Test_Registration(t *testing.T) {
 		},
 		{
 			name:            "rule without framework specified should not be returned when a specific framework is requested",
-			inputFrameworks: []framework.Framework{framework.CISC},
+			inputFrameworks: []framework.Framework{framework.CIS_AWS_1_2},
 			expected:        false,
 		},
 		{
@@ -42,38 +42,38 @@ func Test_Registration(t *testing.T) {
 		},
 		{
 			name:                 "rule with default framework specified should be returned when the default framework is requested",
-			registeredFrameworks: []framework.Framework{framework.Default},
+			registeredFrameworks: map[framework.Framework][]string{framework.Default: {"1.1"}},
 			inputFrameworks:      []framework.Framework{framework.Default},
 			expected:             true,
 		},
 		{
 			name:                 "rule with default framework specified should not be returned when a specific framework is requested",
-			registeredFrameworks: []framework.Framework{framework.Default},
-			inputFrameworks:      []framework.Framework{framework.CISC},
+			registeredFrameworks: map[framework.Framework][]string{framework.Default: {"1.1"}},
+			inputFrameworks:      []framework.Framework{framework.CIS_AWS_1_2},
 			expected:             false,
 		},
 		{
 			name:                 "rule with specific framework specified should not be returned when a default framework is requested",
-			registeredFrameworks: []framework.Framework{framework.CISC},
+			registeredFrameworks: map[framework.Framework][]string{framework.CIS_AWS_1_2: {"1.1"}},
 			inputFrameworks:      []framework.Framework{framework.Default},
 			expected:             false,
 		},
 		{
 			name:                 "rule with specific framework specified should be returned when the specific framework is requested",
-			registeredFrameworks: []framework.Framework{framework.CISC},
-			inputFrameworks:      []framework.Framework{framework.CISC},
+			registeredFrameworks: map[framework.Framework][]string{framework.CIS_AWS_1_2: {"1.1"}},
+			inputFrameworks:      []framework.Framework{framework.CIS_AWS_1_2},
 			expected:             true,
 		},
 		{
 			name:                 "rule with multiple frameworks specified should be returned when the specific framework is requested",
-			registeredFrameworks: []framework.Framework{framework.CISC, "blah"},
-			inputFrameworks:      []framework.Framework{framework.CISC},
+			registeredFrameworks: map[framework.Framework][]string{framework.CIS_AWS_1_2: {"1.1"}, "blah": {"1.2"}},
+			inputFrameworks:      []framework.Framework{framework.CIS_AWS_1_2},
 			expected:             true,
 		},
 		{
 			name:                 "rule with multiple frameworks specified should be returned only once when multiple matching frameworks are requested",
-			registeredFrameworks: []framework.Framework{framework.CISC, "blah", "something"},
-			inputFrameworks:      []framework.Framework{framework.CISC, "blah", "other"},
+			registeredFrameworks: map[framework.Framework][]string{framework.CIS_AWS_1_2: {"1.1"}, "blah": {"1.2"}, "something": {"1.3"}},
+			inputFrameworks:      []framework.Framework{framework.CIS_AWS_1_2, "blah", "other"},
 			expected:             true,
 		},
 	}
@@ -121,8 +121,13 @@ func Test_DeregistrationMultipleFrameworks(t *testing.T) {
 		AVDID: "A",
 	}, nil)
 	registrationB := Register(scan.Rule{
-		AVDID:      "B",
-		Frameworks: []framework.Framework{"a", "b", "c", framework.Default},
+		AVDID: "B",
+		Frameworks: map[framework.Framework][]string{
+			"a":               nil,
+			"b":               nil,
+			"c":               nil,
+			framework.Default: nil,
+		},
 	}, nil)
 	assert.Equal(t, 2, len(GetFrameworkRules()))
 	Deregister(registrationA)

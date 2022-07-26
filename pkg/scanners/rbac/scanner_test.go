@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -284,7 +285,9 @@ deny[res] {
 		Terraform:      (*scan.EngineMetadata)(nil),
 		CloudFormation: (*scan.EngineMetadata)(nil),
 		CustomChecks:   scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)},
-		RegoPackage:    "data.builtin.kubernetes.KSV041"}, rule)
+		RegoPackage:    "data.builtin.kubernetes.KSV041",
+		Frameworks:     map[framework.Framework][]string{},
+	}, rule)
 
 	failure := results.GetFailed()[0]
 	actualCode, err := failure.GetCode()

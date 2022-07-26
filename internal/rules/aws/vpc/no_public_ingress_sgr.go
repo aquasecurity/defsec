@@ -3,6 +3,7 @@ package vpc
 import (
 	"github.com/aquasecurity/defsec/internal/cidr"
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -11,10 +12,14 @@ import (
 
 var CheckNoPublicIngressSgr = rules.Register(
 	scan.Rule{
-		AVDID:       "AVD-AWS-0107",
-		Provider:    providers.AWSProvider,
-		Service:     "vpc",
-		ShortCode:   "no-public-ingress-sgr",
+		AVDID:     "AVD-AWS-0107",
+		Provider:  providers.AWSProvider,
+		Service:   "vpc",
+		ShortCode: "no-public-ingress-sgr",
+		Frameworks: map[framework.Framework][]string{
+			framework.Default:     nil,
+			framework.CIS_AWS_1_2: {"4.1", "4.2"},
+		},
 		Summary:     "An ingress security group rule allows traffic from /0.",
 		Impact:      "Your port exposed to the internet",
 		Resolution:  "Set a more restrictive cidr range",
