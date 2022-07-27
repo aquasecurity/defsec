@@ -25,7 +25,6 @@ jobs:
       with:
         go-version-file: go.mod
         cache: false
-    - run: go version
 
     - name: Run non-localstack tests
       if: matrix.os != 'ubuntu-latest'
