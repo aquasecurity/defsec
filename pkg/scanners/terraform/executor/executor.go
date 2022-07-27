@@ -26,6 +26,7 @@ import (
 type Executor struct {
 	enableIgnores             bool
 	excludedRuleIDs           []string
+	excludeIgnoresIDs         []string
 	includedRuleIDs           []string
 	ignoreCheckErrors         bool
 	workspaceName             string
@@ -127,6 +128,8 @@ func (e *Executor) Execute(modules terraform.Modules) (scan.Results, Metrics, er
 			ignores = append(ignores, module.Ignores()...)
 		}
 
+		ignores = e.removeExcludedIgnores(ignores)
+
 		for i, result := range results {
 			allIDs := []string{
 				result.Rule().LongID(),
@@ -170,6 +173,25 @@ func (e *Executor) Execute(modules terraform.Modules) (scan.Results, Metrics, er
 
 	e.sortResults(results)
 	return results, metrics, nil
+}
+
+func (e *Executor) removeExcludedIgnores(ignores terraform.Ignores) terraform.Ignores {
+	var filteredIgnores terraform.Ignores
+	for _, ignore := range ignores {
+		if !contains(e.excludeIgnoresIDs, ignore.RuleID) {
+			filteredIgnores = append(filteredIgnores, ignore)
+		}
+	}
+	return filteredIgnores
+}
+
+func contains(arr []string, s string) bool {
+	for _, elem := range arr {
+		if elem == s {
+			return true
+		}
+	}
+	return false
 }
 
 func (e *Executor) updateSeverity(results []scan.Result) scan.Results {
