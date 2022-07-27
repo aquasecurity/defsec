@@ -1,6 +1,9 @@
 .PHONY: test
 test:
-	which gotestsum || go install gotest.tools/gotestsum@latest
+	go test -race --tags=docker ./...
+
+.PHONY: test-no-docker
+test-no-docker:
 	go test -race ./...
 
 .PHONY: rego

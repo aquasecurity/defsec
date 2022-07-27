@@ -1,3 +1,6 @@
+//go:build docker
+// +build docker
+
 package s3
 
 import (

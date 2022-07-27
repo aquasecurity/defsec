@@ -47,9 +47,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-go-
       if: runner.os == 'Windows'
-    - uses: docker-practice/actions-setup-docker@master
-    - name: Run test
+    - name: Run non-docker tests
+      if: matrix.os != 'ubuntu-latest'
+      run: make test-no-docker
+      shell: bash
+    - name: Run full tests
+      if: matrix.os == 'ubuntu-latest'
       run: make test
       shell: bash
-
-
