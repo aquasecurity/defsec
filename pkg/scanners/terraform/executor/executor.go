@@ -175,17 +175,17 @@ func (e *Executor) Execute(modules terraform.Modules) (scan.Results, Metrics, er
 	return results, metrics, nil
 }
 
-func (e *Executor) removeExcludedIgnores(ignores terraform.Ignores) terraform.Ignores{
+func (e *Executor) removeExcludedIgnores(ignores terraform.Ignores) terraform.Ignores {
 	var filteredIgnores terraform.Ignores
-		for _, ignore := range ignores {
-			if !contains(e.excludeIgnoresIDs, ignore.RuleID) {
-				filteredIgnores = append(filteredIgnores, ignore)
-			}
+	for _, ignore := range ignores {
+		if !contains(e.excludeIgnoresIDs, ignore.RuleID) {
+			filteredIgnores = append(filteredIgnores, ignore)
 		}
+	}
 	return filteredIgnores
 }
 
-func contains( arr []string, s string) bool {
+func contains(arr []string, s string) bool {
 	for _, elem := range arr {
 		if elem == s {
 			return true
