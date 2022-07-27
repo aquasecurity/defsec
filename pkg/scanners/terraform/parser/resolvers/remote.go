@@ -10,7 +10,6 @@ import (
 	"sync/atomic"
 
 	"github.com/hashicorp/go-getter"
-	"golang.org/x/xerrors"
 )
 
 type remoteResolver struct {
@@ -89,7 +88,7 @@ func (r *remoteResolver) download(ctx context.Context, opt Options, dst string) 
 	}
 
 	if err := client.Get(); err != nil {
-		return xerrors.Errorf("failed to download: %w", err)
+		return fmt.Errorf("failed to download: %w", err)
 	}
 
 	return nil

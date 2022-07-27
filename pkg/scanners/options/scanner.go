@@ -20,7 +20,7 @@ type ConfigurableScanner interface {
 
 type ScannerOption func(s ConfigurableScanner)
 
-func OptionWithPolicyReaders(readers ...io.Reader) ScannerOption {
+func ScannerWithPolicyReader(readers ...io.Reader) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetPolicyReaders(readers)
 	}

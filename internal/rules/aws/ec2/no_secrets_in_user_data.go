@@ -12,11 +12,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/rules"
 
 	"github.com/aquasecurity/defsec/pkg/providers"
-
-	"github.com/owenrumney/squealer/pkg/squealer"
 )
-
-var scanner = squealer.NewStringScanner()
 
 var CheckNoSecretsInUserData = rules.Register(
 	scan.Rule{

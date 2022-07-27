@@ -26,7 +26,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/extrafs"
 )
 
-var _ scanners.Scanner = (*Scanner)(nil)
+var _ scanners.FSScanner = (*Scanner)(nil)
 var _ options.ConfigurableScanner = (*Scanner)(nil)
 var _ ConfigurableTerraformScanner = (*Scanner)(nil)
 

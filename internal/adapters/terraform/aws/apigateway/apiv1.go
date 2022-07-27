@@ -2,14 +2,26 @@ package apigateway
 
 import (
 	"github.com/aquasecurity/defsec/internal/types"
-	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 	"github.com/aquasecurity/defsec/pkg/terraform"
 )
 
-func adaptAPIMethodsV1(modules terraform.Modules, apiBlock *terraform.Block) []apigateway.RESTMethod {
-	var methods []apigateway.RESTMethod
-	for _, methodBlock := range modules.GetReferencingResources(apiBlock, "aws_api_gateway_method", "rest_api_id") {
-		method := apigateway.RESTMethod{
+func adaptAPIResourcesV1(modules terraform.Modules, apiBlock *terraform.Block) []v1.Resource {
+	var resources []v1.Resource
+	for _, resourceBlock := range modules.GetReferencingResources(apiBlock, "aws_api_gateway_resource", "rest_api_id") {
+		method := v1.Resource{
+			Metadata: resourceBlock.GetMetadata(),
+			Methods:  adaptAPIMethodsV1(modules, resourceBlock),
+		}
+		resources = append(resources, method)
+	}
+	return resources
+}
+
+func adaptAPIMethodsV1(modules terraform.Modules, resourceBlock *terraform.Block) []v1.Method {
+	var methods []v1.Method
+	for _, methodBlock := range modules.GetReferencingResources(resourceBlock, "aws_api_gateway_method", "resource_id") {
+		method := v1.Method{
 			Metadata:          methodBlock.GetMetadata(),
 			HTTPMethod:        methodBlock.GetAttribute("http_method").AsStringValueOrDefault("", methodBlock),
 			AuthorizationType: methodBlock.GetAttribute("authorization").AsStringValueOrDefault("", methodBlock),
@@ -20,31 +32,22 @@ func adaptAPIMethodsV1(modules terraform.Modules, apiBlock *terraform.Block) []a
 	return methods
 }
 
-func adaptAPIsV1(modules terraform.Modules) []apigateway.API {
+func adaptAPIsV1(modules terraform.Modules) []v1.API {
 
-	var apis []apigateway.API
+	var apis []v1.API
 	apiStageIDs := modules.GetChildResourceIDMapByType("aws_api_gateway_stage")
 
 	for _, apiBlock := range modules.GetResourcesByType("aws_api_gateway_rest_api") {
-		api := apigateway.API{
-			Metadata:     apiBlock.GetMetadata(),
-			Name:         apiBlock.GetAttribute("name").AsStringValueOrDefault("", apiBlock),
-			Version:      types.Int(1, apiBlock.GetMetadata()),
-			ProtocolType: types.StringDefault(apigateway.ProtocolTypeREST, apiBlock.GetMetadata()),
-			Stages:       nil,
-			RESTMethods:  adaptAPIMethodsV1(modules, apiBlock),
-		}
-
-		var defaultCacheEncryption = types.BoolDefault(false, api.Metadata)
-		for _, methodSettings := range modules.GetReferencingResources(apiBlock, "aws_api_gateway_method_settings", "rest_api_id") {
-			if settings := methodSettings.GetBlock("settings"); settings.IsNotNil() {
-				defaultCacheEncryption = settings.GetAttribute("cache_data_encrypted").AsBoolValueOrDefault(false, settings)
-			}
+		api := v1.API{
+			Metadata:  apiBlock.GetMetadata(),
+			Name:      apiBlock.GetAttribute("name").AsStringValueOrDefault("", apiBlock),
+			Stages:    nil,
+			Resources: adaptAPIResourcesV1(modules, apiBlock),
 		}
 
 		for _, stageBlock := range modules.GetReferencingResources(apiBlock, "aws_api_gateway_stage", "rest_api_id") {
 			apiStageIDs.Resolve(stageBlock.ID())
-			stage := adaptStageV1(stageBlock, defaultCacheEncryption, modules)
+			stage := adaptStageV1(stageBlock, modules)
 
 			api.Stages = append(api.Stages, stage)
 		}
@@ -55,14 +58,12 @@ func adaptAPIsV1(modules terraform.Modules) []apigateway.API {
 	orphanResources := modules.GetResourceByIDs(apiStageIDs.Orphans()...)
 
 	if len(orphanResources) > 0 {
-		orphanage := apigateway.API{
-			Metadata:     types.NewUnmanagedMetadata(),
-			Name:         types.StringDefault("", types.NewUnmanagedMetadata()),
-			Version:      types.IntDefault(0, types.NewUnmanagedMetadata()),
-			ProtocolType: types.StringDefault(apigateway.ProtocolTypeREST, types.NewUnmanagedMetadata()),
+		orphanage := v1.API{
+			Metadata: types.NewUnmanagedMetadata(),
+			Name:     types.StringDefault("", types.NewUnmanagedMetadata()),
 		}
 		for _, stage := range orphanResources {
-			orphanage.Stages = append(orphanage.Stages, adaptStageV1(stage, types.BoolDefault(false, stage.GetMetadata()), modules))
+			orphanage.Stages = append(orphanage.Stages, adaptStageV1(stage, modules))
 		}
 		apis = append(apis, orphanage)
 	}
@@ -70,32 +71,35 @@ func adaptAPIsV1(modules terraform.Modules) []apigateway.API {
 	return apis
 }
 
-func adaptStageV1(stageBlock *terraform.Block, defaultCacheEncryption types.BoolValue, modules terraform.Modules) apigateway.Stage {
-	stage := apigateway.Stage{
+func adaptStageV1(stageBlock *terraform.Block, modules terraform.Modules) v1.Stage {
+	stage := v1.Stage{
 		Metadata: stageBlock.GetMetadata(),
 		Name:     stageBlock.GetAttribute("name").AsStringValueOrDefault("", stageBlock),
-		Version:  types.Int(1, stageBlock.GetMetadata()),
-		AccessLogging: apigateway.AccessLogging{
+		AccessLogging: v1.AccessLogging{
 			Metadata:              stageBlock.GetMetadata(),
 			CloudwatchLogGroupARN: types.StringDefault("", stageBlock.GetMetadata()),
-		},
-		RESTMethodSettings: apigateway.RESTMethodSettings{
-			Metadata:           stageBlock.GetMetadata(),
-			CacheDataEncrypted: defaultCacheEncryption,
-			CacheEnabled:       types.BoolDefault(false, stageBlock.GetMetadata()),
 		},
 		XRayTracingEnabled: stageBlock.GetAttribute("xray_tracing_enabled").AsBoolValueOrDefault(false, stageBlock),
 	}
 	for _, methodSettings := range modules.GetReferencingResources(stageBlock, "aws_api_gateway_method_settings", "stage_name") {
-		stage.RESTMethodSettings.Metadata = methodSettings.GetMetadata()
+
+		restMethodSettings := v1.RESTMethodSettings{
+			Metadata:           methodSettings.GetMetadata(),
+			Method:             types.String("", methodSettings.GetMetadata()),
+			CacheDataEncrypted: types.BoolDefault(false, methodSettings.GetMetadata()),
+			CacheEnabled:       types.BoolDefault(false, methodSettings.GetMetadata()),
+		}
+
 		if settings := methodSettings.GetBlock("settings"); settings.IsNotNil() {
 			if encrypted := settings.GetAttribute("cache_data_encrypted"); encrypted.IsNotNil() {
-				stage.RESTMethodSettings.CacheDataEncrypted = settings.GetAttribute("cache_data_encrypted").AsBoolValueOrDefault(false, settings)
+				restMethodSettings.CacheDataEncrypted = settings.GetAttribute("cache_data_encrypted").AsBoolValueOrDefault(false, settings)
 			}
 			if encrypted := settings.GetAttribute("caching_enabled"); encrypted.IsNotNil() {
-				stage.RESTMethodSettings.CacheEnabled = settings.GetAttribute("caching_enabled").AsBoolValueOrDefault(false, settings)
+				restMethodSettings.CacheEnabled = settings.GetAttribute("caching_enabled").AsBoolValueOrDefault(false, settings)
 			}
 		}
+
+		stage.RESTMethodSettings = append(stage.RESTMethodSettings, restMethodSettings)
 	}
 
 	stage.Name = stageBlock.GetAttribute("stage_name").AsStringValueOrDefault("", stageBlock)

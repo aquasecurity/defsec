@@ -2,6 +2,7 @@ package parser
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"io/fs"
 	"path/filepath"
@@ -14,7 +15,6 @@ import (
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"github.com/moby/buildkit/frontend/dockerfile/instructions"
 	"github.com/moby/buildkit/frontend/dockerfile/parser"
-	"golang.org/x/xerrors"
 )
 
 var _ options.ConfigurableParser = (*Parser)(nil)
@@ -92,7 +92,7 @@ func (p *Parser) Required(path string) bool {
 func (p *Parser) parse(path string, r io.Reader) (*dockerfile.Dockerfile, error) {
 	parsed, err := parser.Parse(r)
 	if err != nil {
-		return nil, xerrors.Errorf("dockerfile parse error: %w", err)
+		return nil, fmt.Errorf("dockerfile parse error: %w", err)
 	}
 
 	var parsedFile dockerfile.Dockerfile
@@ -104,7 +104,7 @@ func (p *Parser) parse(path string, r io.Reader) (*dockerfile.Dockerfile, error)
 
 		instr, err := instructions.ParseInstruction(child)
 		if err != nil {
-			return nil, xerrors.Errorf("process dockerfile instructions: %w", err)
+			return nil, fmt.Errorf("process dockerfile instructions: %w", err)
 		}
 
 		if _, ok := instr.(*instructions.Stage); ok {

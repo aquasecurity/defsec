@@ -7,8 +7,18 @@ import (
 )
 
 func Adapt(modules terraform.Modules) ec2.EC2 {
+
+	naclAdapter := naclAdapter{naclRuleIDs: modules.GetChildResourceIDMapByType("aws_network_acl_rule")}
+	sgAdapter := sgAdapter{sgRuleIDs: modules.GetChildResourceIDMapByType("aws_security_group_rule")}
+
 	return ec2.EC2{
-		Instances: getInstances(modules),
+		Instances:            getInstances(modules),
+		DefaultVPCs:          adaptDefaultVPCs(modules),
+		SecurityGroups:       sgAdapter.adaptSecurityGroups(modules),
+		NetworkACLs:          naclAdapter.adaptNetworkACLs(modules),
+		LaunchConfigurations: adaptLaunchConfigurations(modules),
+		LaunchTemplates:      adaptLaunchTemplates(modules),
+		Volumes:              adaptVolumes(modules),
 	}
 }
 
@@ -40,7 +50,7 @@ func getInstances(modules terraform.Modules) []ec2.Instance {
 		}
 
 		for _, ebsBlock := range b.GetBlocks("ebs_block_device") {
-			instance.EBSBlockDevices = append(instance.EBSBlockDevices, ec2.BlockDevice{
+			instance.EBSBlockDevices = append(instance.EBSBlockDevices, &ec2.BlockDevice{
 				Metadata:  ebsBlock.GetMetadata(),
 				Encrypted: ebsBlock.GetAttribute("encrypted").AsBoolValueOrDefault(false, b),
 			})
@@ -50,7 +60,7 @@ func getInstances(modules terraform.Modules) []ec2.Instance {
 			if resource.GetAttribute("enabled").NotEqual(false) {
 				instance.RootBlockDevice.Encrypted = types.BoolDefault(true, resource.GetMetadata())
 				for i := 0; i < len(instance.EBSBlockDevices); i++ {
-					ebs := &instance.EBSBlockDevices[i]
+					ebs := instance.EBSBlockDevices[i]
 					ebs.Encrypted = types.BoolDefault(true, resource.GetMetadata())
 				}
 			}
@@ -60,22 +70,4 @@ func getInstances(modules terraform.Modules) []ec2.Instance {
 	}
 
 	return instances
-}
-
-func getMetadataOptions(b *terraform.Block) ec2.MetadataOptions {
-
-	if metadataOptions := b.GetBlock("metadata_options"); metadataOptions.IsNotNil() {
-		metaOpts := ec2.MetadataOptions{
-			Metadata:     metadataOptions.GetMetadata(),
-			HttpTokens:   metadataOptions.GetAttribute("http_tokens").AsStringValueOrDefault("", metadataOptions),
-			HttpEndpoint: metadataOptions.GetAttribute("http_endpoint").AsStringValueOrDefault("", metadataOptions),
-		}
-		return metaOpts
-	}
-
-	return ec2.MetadataOptions{
-		Metadata:     b.GetMetadata(),
-		HttpTokens:   types.StringDefault("", b.GetMetadata()),
-		HttpEndpoint: types.StringDefault("", b.GetMetadata()),
-	}
 }

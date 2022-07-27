@@ -29,6 +29,10 @@ func Int(value int, m Metadata) IntValue {
 	}
 }
 
+func IntFromInt32(value int32, m Metadata) IntValue {
+	return Int(int(value), m)
+}
+
 func IntDefault(value int, m Metadata) IntValue {
 	b := Int(value, m)
 	b.(*intValue).BaseAttribute.metadata.isDefault = true

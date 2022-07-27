@@ -68,7 +68,7 @@ deny[res] {
 
 	assert.Equal(t, scan.Rule{
 		AVDID:          "AVD-AB-0123",
-		LegacyID:       "ABC123",
+		Aliases:        []string{"ABC123"},
 		ShortCode:      "short",
 		Summary:        "title",
 		Explanation:    "description",

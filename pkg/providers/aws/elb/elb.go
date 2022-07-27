@@ -25,9 +25,9 @@ type LoadBalancer struct {
 
 type Listener struct {
 	types.Metadata
-	Protocol      types.StringValue
-	TLSPolicy     types.StringValue
-	DefaultAction Action
+	Protocol       types.StringValue
+	TLSPolicy      types.StringValue
+	DefaultActions []Action
 }
 
 type Action struct {

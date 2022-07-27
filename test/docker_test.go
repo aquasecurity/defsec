@@ -39,7 +39,7 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 			t.Run(entry.Name(), func(t *testing.T) {
 				var matched int
 				for _, result := range results {
-					if (result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name()) && result.Status() == scan.StatusFailed {
+					if result.Rule().HasID(entry.Name()) && result.Status() == scan.StatusFailed {
 						if result.Description() != "Specify at least 1 USER command in Dockerfile with non-root user as argument" {
 							assert.Greater(t, result.Range().GetStartLine(), 0)
 							assert.Greater(t, result.Range().GetEndLine(), 0)
@@ -79,7 +79,7 @@ func Test_Docker_RegoPoliciesEmbedded(t *testing.T) {
 			t.Run(entry.Name(), func(t *testing.T) {
 				var matched bool
 				for _, result := range results {
-					if (result.Rule().AVDID == entry.Name() || result.Rule().LegacyID == entry.Name()) && result.Status() == scan.StatusFailed {
+					if result.Rule().HasID(entry.Name()) && result.Status() == scan.StatusFailed {
 						if result.Description() != "Specify at least 1 USER command in Dockerfile with non-root user as argument" {
 							assert.Greater(t, result.Range().GetStartLine(), 0)
 							assert.Greater(t, result.Range().GetEndLine(), 0)

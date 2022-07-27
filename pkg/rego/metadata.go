@@ -51,7 +51,7 @@ func (m StaticMetadata) ToRule() scan.Rule {
 
 	return scan.Rule{
 		AVDID:       m.AVDID,
-		LegacyID:    m.ID,
+		Aliases:     []string{m.ID},
 		ShortCode:   m.ShortCode,
 		Summary:     m.Title,
 		Explanation: m.Description,

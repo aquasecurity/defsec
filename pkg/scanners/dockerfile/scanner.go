@@ -7,7 +7,6 @@ import (
 	"sync"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
-
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/internal/types"
@@ -20,7 +19,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/scanners"
 )
 
-var _ scanners.Scanner = (*Scanner)(nil)
+var _ scanners.FSScanner = (*Scanner)(nil)
 var _ options.ConfigurableScanner = (*Scanner)(nil)
 
 type Scanner struct {

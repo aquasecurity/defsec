@@ -91,8 +91,10 @@ func Test_adaptTaskDefinitionResource(t *testing.T) {
 [
 	{
 	"name": "my_service",
+	"image": "my_image",
 	"essential": true,
 	"memory": 256,
+	"cpu": 2,
 	"environment": [
 		{ "name": "ENVIRONMENT", "value": "development" }
 	]
@@ -120,19 +122,23 @@ func Test_adaptTaskDefinitionResource(t *testing.T) {
 						},
 					},
 				},
-				ContainerDefinitions: types.String(
-					`[
-	{
-	"name": "my_service",
-	"essential": true,
-	"memory": 256,
-	"environment": [
-		{ "name": "ENVIRONMENT", "value": "development" }
-	]
-	}
-]
-`,
-					types.NewTestMetadata()),
+				ContainerDefinitions: []ecs.ContainerDefinition{
+					{
+						Metadata:   types.NewTestMetadata(),
+						Name:       types.String("my_service", types.NewTestMetadata()),
+						Image:      types.String("my_image", types.NewTestMetadata()),
+						CPU:        types.Int(2, types.NewTestMetadata()),
+						Memory:     types.Int(256, types.NewTestMetadata()),
+						Essential:  types.Bool(true, types.NewTestMetadata()),
+						Privileged: types.Bool(false, types.NewTestMetadata()),
+						Environment: []ecs.EnvVar{
+							{
+								Name:  "ENVIRONMENT",
+								Value: "development",
+							},
+						},
+					},
+				},
 			},
 		},
 		{
@@ -159,7 +165,7 @@ func Test_adaptTaskDefinitionResource(t *testing.T) {
 						},
 					},
 				},
-				ContainerDefinitions: types.String("", types.NewTestMetadata()),
+				ContainerDefinitions: nil,
 			},
 		},
 	}
@@ -228,9 +234,6 @@ func TestLines(t *testing.T) {
 
 	assert.Equal(t, 11, taskDefinition.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 33, taskDefinition.GetMetadata().Range().GetEndLine())
-
-	assert.Equal(t, 13, taskDefinition.ContainerDefinitions.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 24, taskDefinition.ContainerDefinitions.GetMetadata().Range().GetEndLine())
 
 	assert.Equal(t, 26, taskDefinition.Volumes[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 32, taskDefinition.Volumes[0].GetMetadata().Range().GetEndLine())

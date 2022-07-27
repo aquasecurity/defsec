@@ -25,17 +25,26 @@ func TestCheckNoPlaintextSecrets(t *testing.T) {
 				TaskDefinitions: []ecs.TaskDefinition{
 					{
 						Metadata: types.NewTestMetadata(),
-						ContainerDefinitions: types.String(`[
+						ContainerDefinitions: []ecs.ContainerDefinition{
 							{
-							  "name": "my_service",
-							  "essential": true,
-							  "memory": 256,
-							  "environment": [
-								{ "name": "ENVIRONMENT", "value": "development" },
-								{ "name": "DATABASE_PASSWORD", "value": "oh no D:"}
-							  ]
-							}
-						  ]`, types.NewTestMetadata()),
+								Metadata:  types.NewTestMetadata(),
+								Name:      types.String("my_service", types.NewTestMetadata()),
+								Image:     types.String("my_image", types.NewTestMetadata()),
+								CPU:       types.Int(2, types.NewTestMetadata()),
+								Memory:    types.Int(256, types.NewTestMetadata()),
+								Essential: types.Bool(true, types.NewTestMetadata()),
+								Environment: []ecs.EnvVar{
+									{
+										Name:  "ENVIRONMENT",
+										Value: "development",
+									},
+									{
+										Name:  "DATABASE_PASSWORD",
+										Value: "password123",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -47,16 +56,22 @@ func TestCheckNoPlaintextSecrets(t *testing.T) {
 				TaskDefinitions: []ecs.TaskDefinition{
 					{
 						Metadata: types.NewTestMetadata(),
-						ContainerDefinitions: types.String(` [
+						ContainerDefinitions: []ecs.ContainerDefinition{
 							{
-							  "name": "my_service",
-							  "essential": true,
-							  "memory": 256,
-							  "environment": [
-								{ "name": "ENVIRONMENT", "value": "development" }
-							  ]
-							}
-						  ]`, types.NewTestMetadata()),
+								Metadata:  types.NewTestMetadata(),
+								Name:      types.String("my_service", types.NewTestMetadata()),
+								Image:     types.String("my_image", types.NewTestMetadata()),
+								CPU:       types.Int(2, types.NewTestMetadata()),
+								Memory:    types.Int(256, types.NewTestMetadata()),
+								Essential: types.Bool(true, types.NewTestMetadata()),
+								Environment: []ecs.EnvVar{
+									{
+										Name:  "ENVIRONMENT",
+										Value: "development",
+									},
+								},
+							},
+						},
 					},
 				},
 			},

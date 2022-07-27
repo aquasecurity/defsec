@@ -61,7 +61,7 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 							Metadata:  types.NewTestMetadata(),
 							Encrypted: types.Bool(true, types.NewTestMetadata()),
 						},
-						EBSBlockDevices: []ec2.BlockDevice{
+						EBSBlockDevices: []*ec2.BlockDevice{
 							{
 								Metadata:  types.NewTestMetadata(),
 								Encrypted: types.Bool(true, types.NewTestMetadata()),

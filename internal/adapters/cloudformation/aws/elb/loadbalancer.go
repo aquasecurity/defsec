@@ -31,10 +31,10 @@ func getListeners(lbr *parser.Resource, ctx parser.FileContext) (listeners []elb
 	for _, r := range listenerResources {
 		if r.GetStringProperty("LoadBalancerArn").Value() == lbr.ID() {
 			listener := elb.Listener{
-				Metadata:      r.Metadata(),
-				Protocol:      r.GetStringProperty("Protocol", "HTTP"),
-				TLSPolicy:     r.GetStringProperty("SslPolicy", "ELBSecurityPolicy-2016-08"),
-				DefaultAction: getDefaultListenerAction(r),
+				Metadata:       r.Metadata(),
+				Protocol:       r.GetStringProperty("Protocol", "HTTP"),
+				TLSPolicy:      r.GetStringProperty("SslPolicy", "ELBSecurityPolicy-2016-08"),
+				DefaultActions: getDefaultListenerActions(r),
 			}
 
 			listeners = append(listeners, listener)
@@ -43,13 +43,18 @@ func getListeners(lbr *parser.Resource, ctx parser.FileContext) (listeners []elb
 	return listeners
 }
 
-func getDefaultListenerAction(r *parser.Resource) (action elb.Action) {
+func getDefaultListenerActions(r *parser.Resource) (actions []elb.Action) {
 	defaultActionsProp := r.GetProperty("DefaultActions")
-	if defaultActionsProp.IsNotList() || len(defaultActionsProp.AsList()) == 0 {
-		return action
+	if defaultActionsProp.IsNotList() {
+		return actions
 	}
-	action.Type = defaultActionsProp.AsList()[0].GetProperty("Type").AsStringValue()
-	return action
+	for _, action := range defaultActionsProp.AsList() {
+		actions = append(actions, elb.Action{
+			Metadata: action.Metadata(),
+			Type:     action.GetProperty("Type").AsStringValue(),
+		})
+	}
+	return actions
 }
 
 func isInternal(r *parser.Resource) types.BoolValue {

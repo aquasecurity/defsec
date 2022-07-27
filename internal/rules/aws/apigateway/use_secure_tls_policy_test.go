@@ -3,11 +3,12 @@ package apigateway
 import (
 	"testing"
 
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
+
 	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/pkg/scan"
 
 	"github.com/stretchr/testify/assert"
@@ -16,13 +17,13 @@ import (
 func TestCheckUseSecureTlsPolicy(t *testing.T) {
 	tests := []struct {
 		name     string
-		input    apigateway.APIGateway
+		input    v1.APIGateway
 		expected bool
 	}{
 		{
 			name: "API Gateway domain name with TLS version 1.0",
-			input: apigateway.APIGateway{
-				DomainNames: []apigateway.DomainName{
+			input: v1.APIGateway{
+				DomainNames: []v1.DomainName{
 					{
 						Metadata:       types.NewTestMetadata(),
 						SecurityPolicy: types.String("TLS_1_0", types.NewTestMetadata()),
@@ -33,8 +34,8 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		},
 		{
 			name: "API Gateway domain name with TLS version 1.2",
-			input: apigateway.APIGateway{
-				DomainNames: []apigateway.DomainName{
+			input: v1.APIGateway{
+				DomainNames: []v1.DomainName{
 					{
 						Metadata:       types.NewTestMetadata(),
 						SecurityPolicy: types.String("TLS_1_2", types.NewTestMetadata()),
@@ -47,7 +48,7 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
-			testState.AWS.APIGateway = test.input
+			testState.AWS.APIGateway.V1 = test.input
 			results := CheckUseSecureTlsPolicy.Evaluate(&testState)
 			var found bool
 			for _, result := range results {

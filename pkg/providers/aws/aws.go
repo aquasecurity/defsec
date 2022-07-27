@@ -3,7 +3,6 @@ package aws
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/athena"
-	"github.com/aquasecurity/defsec/pkg/providers/aws/autoscaling"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudfront"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
@@ -11,7 +10,6 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/config"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/documentdb"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/dynamodb"
-	"github.com/aquasecurity/defsec/pkg/providers/aws/ebs"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecr"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecs"
@@ -35,14 +33,12 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sns"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ssm"
-	"github.com/aquasecurity/defsec/pkg/providers/aws/vpc"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/workspaces"
 )
 
 type AWS struct {
 	APIGateway    apigateway.APIGateway
 	Athena        athena.Athena
-	Autoscaling   autoscaling.Autoscaling
 	Cloudfront    cloudfront.Cloudfront
 	CloudTrail    cloudtrail.CloudTrail
 	CloudWatch    cloudwatch.CloudWatch
@@ -50,7 +46,6 @@ type AWS struct {
 	Config        config.Config
 	DocumentDB    documentdb.DocumentDB
 	DynamoDB      dynamodb.DynamoDB
-	EBS           ebs.EBS
 	EC2           ec2.EC2
 	ECR           ecr.ECR
 	ECS           ecs.ECS
@@ -74,6 +69,5 @@ type AWS struct {
 	SNS           sns.SNS
 	SQS           sqs.SQS
 	SSM           ssm.SSM
-	VPC           vpc.VPC
 	WorkSpaces    workspaces.WorkSpaces
 }

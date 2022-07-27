@@ -60,10 +60,16 @@ func adaptTaskDefinitions(modules terraform.Modules) []ecs.TaskDefinition {
 }
 
 func adaptTaskDefinitionResource(resourceBlock *terraform.Block) ecs.TaskDefinition {
+
+	var definitions []ecs.ContainerDefinition
+	if ct := resourceBlock.GetAttribute("container_definitions"); ct != nil && ct.IsString() {
+		definitions, _ = ecs.CreateDefinitionsFromString(resourceBlock.GetMetadata(), ct.Value().AsString())
+	}
+
 	return ecs.TaskDefinition{
 		Metadata:             resourceBlock.GetMetadata(),
 		Volumes:              adaptVolumes(resourceBlock),
-		ContainerDefinitions: resourceBlock.GetAttribute("container_definitions").AsStringValueOrDefault("", resourceBlock),
+		ContainerDefinitions: definitions,
 	}
 }
 
