@@ -2,7 +2,6 @@ package test
 
 import (
 	"context"
-	"sync"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
@@ -40,33 +39,14 @@ func scanHCLWithWorkspace(t *testing.T, source string, workspace string) scan.Re
 	return scanHCL(t, source, tfScanner.ScannerWithWorkspaceName(workspace))
 }
 
-var terraformScanner *tfScanner.Scanner
-var tfLock sync.RWMutex
-var cloudformationScanner *cfScanner.Scanner
-var cfLock sync.RWMutex
-
-func scanHCL(t *testing.T, source string, options ...options.ScannerOption) scan.Results {
+func scanHCL(t *testing.T, source string, opts ...options.ScannerOption) scan.Results {
 
 	fs := testutil.CreateFS(t, map[string]string{
 		"main.tf": source,
 	})
 
-	tfLock.RLock()
-	localScanner := terraformScanner
-	tfLock.RUnlock()
-	if localScanner == nil || len(options) > 0 {
-		tfLock.RLock()
-		localScanner = tfScanner.New(options...)
-		tfLock.RUnlock()
-		if len(options) == 0 {
-			tfLock.Lock()
-			terraformScanner = localScanner
-			tfLock.Unlock()
-		}
-	}
-	tfLock.RLock()
+	localScanner := tfScanner.New(append(opts, options.ScannerWithEmbeddedPolicies(false))...)
 	results, err := localScanner.ScanFS(context.TODO(), fs, ".")
-	tfLock.RUnlock()
 	require.NoError(t, err)
 	return results
 }
@@ -83,28 +63,14 @@ func scanJSON(t *testing.T, source string) scan.Results {
 	return results
 }
 
-func scanCF(t *testing.T, source string, options ...options.ScannerOption) scan.Results {
+func scanCF(t *testing.T, source string, opts ...options.ScannerOption) scan.Results {
 
 	fs := testutil.CreateFS(t, map[string]string{
 		"main.yaml": source,
 	})
 
-	cfLock.RLock()
-	localScanner := cloudformationScanner
-	cfLock.RUnlock()
-	if localScanner == nil || len(options) > 0 {
-		cfLock.RLock()
-		localScanner = cfScanner.New(options...)
-		cfLock.RUnlock()
-		if len(options) == 0 {
-			cfLock.Lock()
-			cloudformationScanner = localScanner
-			cfLock.Unlock()
-		}
-	}
-	cfLock.RLock()
+	localScanner := cfScanner.New(append(opts, options.ScannerWithEmbeddedPolicies(false))...)
 	results, err := localScanner.ScanFS(context.TODO(), fs, ".")
-	cfLock.RUnlock()
 	require.NoError(t, err)
 	return results
 }
