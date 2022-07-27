@@ -11,8 +11,17 @@ type CloudWatch struct {
 
 func (w CloudWatch) GetLogGroupByArn(arn string) (logGroup *LogGroup) {
 	for _, logGroup := range w.LogGroups {
-		if logGroup.Arn.Value() == arn {
+		if logGroup.Arn.EqualTo(arn) {
 			return &logGroup
+		}
+	}
+	return nil
+}
+
+func (w CloudWatch) GetAlarmByMetricName(metricName string) (alarm *Alarm) {
+	for _, alarm := range w.Alarms {
+		if alarm.MetricName.EqualTo(metricName) {
+			return &alarm
 		}
 	}
 	return nil
@@ -23,6 +32,7 @@ type Alarm struct {
 	AlarmName  types.StringValue
 	MetricName types.StringValue
 	Dimensions []AlarmDimension
+	Metrics    []MetricDataQuery
 }
 
 type AlarmDimension struct {
@@ -40,6 +50,7 @@ type MetricFilter struct {
 type MetricDataQuery struct {
 	types.Metadata
 	Expression types.StringValue
+	ID         types.StringValue
 }
 
 type LogGroup struct {

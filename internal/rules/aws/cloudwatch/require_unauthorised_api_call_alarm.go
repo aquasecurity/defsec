@@ -21,9 +21,11 @@ var requireUnauthorizedApiCallAlarm = rules.Register(
 		Impact:     "",
 		Resolution: "",
 		Frameworks: map[framework.Framework][]string{
-			framework.Default: nil,
 			framework.CIS_AWS_1_2: {
 				"4.1",
+			},
+			framework.CIS_AWS_1_4: {
+				"3.1",
 			},
 		},
 		Explanation: `You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms. You can have more than one VPC in an account, and you can create a peer connection between two VPCs, enabling network traffic to route between VPCs.
@@ -58,8 +60,13 @@ CIS recommends that you create a metric filter and alarm for changes to VPCs. Mo
 				continue
 			}
 
-			s.AWS.CloudWatch.GetAlarmByName(metricFilter.)
+			metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName(metricFilter.FilterName.Value())
+			if metricAlarm == nil {
+				results.Add("Cloudtrail has no unauthorized API alarm", trail)
+				continue
+			}
 
+			results.AddPassed(trail)
 		}
 
 		return
