@@ -59,6 +59,14 @@ func ScannerWithExcludedRules(ruleIDs []string) options.ScannerOption {
 	}
 }
 
+func ScannerWithExcludeIgnores(ruleIDs []string) options.ScannerOption {
+	return func(s options.ConfigurableScanner) {
+		if tf, ok := s.(ConfigurableTerraformScanner); ok {
+			tf.AddExecutorOptions(executor.OptionExcludeIgnores(ruleIDs))
+		}
+	}
+}
+
 func ScannerWithIncludedRules(ruleIDs []string) options.ScannerOption {
 	return func(s options.ConfigurableScanner) {
 		if tf, ok := s.(ConfigurableTerraformScanner); ok {

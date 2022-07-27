@@ -50,6 +50,12 @@ func OptionExcludeRules(ruleIDs []string) Option {
 	}
 }
 
+func OptionExcludeIgnores(ruleIDs []string) Option {
+	return func(s *Executor) {
+		s.excludeIgnoresIDs = ruleIDs
+	}
+}
+
 func OptionIncludeRules(ruleIDs []string) Option {
 	return func(s *Executor) {
 		s.includedRuleIDs = ruleIDs
