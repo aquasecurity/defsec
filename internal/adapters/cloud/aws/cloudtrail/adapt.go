@@ -78,7 +78,7 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 
 	metadata := a.CreateMetadataFromARN(*info.TrailARN)
 
-	trail, err := a.client.GetTrail(a.Context(), &api.GetTrailInput{
+	response, err := a.client.GetTrail(a.Context(), &api.GetTrailInput{
 		Name: info.Name,
 	})
 	if err != nil {
@@ -86,15 +86,21 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 	}
 
 	var kmsKeyId string
-	if trail.Trail.KmsKeyId != nil {
-		kmsKeyId = *trail.Trail.KmsKeyId
+	if response.Trail.KmsKeyId != nil {
+		kmsKeyId = *response.Trail.KmsKeyId
 	}
 
+	status, err := a.client.GetTrailStatus(a.Context(), &api.GetTrailStatusInput{
+		Name: response.Trail.Name,
+	})
+
 	return &cloudtrail.Trail{
-		Metadata:                metadata,
-		Name:                    defsecTypes.String(*info.Name, metadata),
-		EnableLogFileValidation: defsecTypes.Bool(trail.Trail.LogFileValidationEnabled != nil && *trail.Trail.LogFileValidationEnabled, metadata),
-		IsMultiRegion:           defsecTypes.Bool(trail.Trail.IsMultiRegionTrail != nil && *trail.Trail.IsMultiRegionTrail, metadata),
-		KMSKeyID:                defsecTypes.String(kmsKeyId, metadata),
+		Metadata:                  metadata,
+		Name:                      defsecTypes.String(*info.Name, metadata),
+		EnableLogFileValidation:   defsecTypes.Bool(response.Trail.LogFileValidationEnabled != nil && *response.Trail.LogFileValidationEnabled, metadata),
+		IsMultiRegion:             defsecTypes.Bool(response.Trail.IsMultiRegionTrail != nil && *response.Trail.IsMultiRegionTrail, metadata),
+		CloudWatchLogsLogGroupArn: defsecTypes.String(*response.Trail.CloudWatchLogsLogGroupArn, metadata),
+		KMSKeyID:                  defsecTypes.String(kmsKeyId, metadata),
+		IsLogging:                 defsecTypes.Bool(*status.IsLogging, metadata),
 	}, nil
 }

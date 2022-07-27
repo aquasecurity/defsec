@@ -6,11 +6,47 @@ import (
 
 type CloudWatch struct {
 	LogGroups []LogGroup
+	Alarms    []Alarm
+}
+
+func (w CloudWatch) GetLogGroupByArn(arn string) (logGroup *LogGroup) {
+	for _, logGroup := range w.LogGroups {
+		if logGroup.Arn.Value() == arn {
+			return &logGroup
+		}
+	}
+	return nil
+}
+
+type Alarm struct {
+	types.Metadata
+	AlarmName  types.StringValue
+	MetricName types.StringValue
+	Dimensions []AlarmDimension
+}
+
+type AlarmDimension struct {
+	types.Metadata
+	Name  types.StringValue
+	Value types.StringValue
+}
+
+type MetricFilter struct {
+	types.Metadata
+	FilterName    types.StringValue
+	FilterPattern types.StringValue
+}
+
+type MetricDataQuery struct {
+	types.Metadata
+	Expression types.StringValue
 }
 
 type LogGroup struct {
 	types.Metadata
+	Arn             types.StringValue
 	Name            types.StringValue
 	KMSKeyID        types.StringValue
 	RetentionInDays types.IntValue
+	MetricFilters   []MetricFilter
 }
