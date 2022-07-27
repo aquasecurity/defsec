@@ -1,10 +1,10 @@
 .PHONY: test
 test:
-	go test -race --tags=docker ./...
-
-.PHONY: test-no-docker
-test-no-docker:
 	go test -race ./...
+
+.PHONY: test-no-localstack
+test-no-localstack:
+	go test -race $(go list ./... | grep -v internal/adapters/cloud/aws)
 
 .PHONY: rego
 rego:

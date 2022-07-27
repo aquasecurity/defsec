@@ -1,6 +1,3 @@
-//go:build docker
-// +build docker
-
 package sqs
 
 import (

@@ -1,6 +1,3 @@
-//go:build docker
-// +build docker
-
 package ec2
 
 import (
