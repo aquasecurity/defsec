@@ -10,6 +10,7 @@ type StringEqualityOption int
 const (
 	IgnoreCase StringEqualityOption = iota
 	IsPallindrome
+	IgnoreWhitespace
 )
 
 func String(str string, m Metadata) StringValue {
@@ -173,6 +174,9 @@ func (s *stringValue) executePredicate(value string, fn stringCheckFunc, equalit
 				result = string(v) + result
 			}
 			subjectString = result
+		case IgnoreWhitespace:
+			subjectString = strings.ReplaceAll(subjectString, " ", "")
+			searchString = strings.ReplaceAll(searchString, " ", "")
 		}
 	}
 
