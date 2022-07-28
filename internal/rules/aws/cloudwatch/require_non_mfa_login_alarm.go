@@ -22,10 +22,10 @@ var requireNonMFALoginAlarm = rules.Register(
 		Resolution: "Create an alarm to alert on non MFA logins",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
-				"4.2",
+				"3.2",
 			},
 			framework.CIS_AWS_1_4: {
-				"3.2",
+				"4.2",
 			},
 		},
 		Explanation: `YYou can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
