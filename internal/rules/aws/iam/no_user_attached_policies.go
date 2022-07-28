@@ -23,6 +23,7 @@ var checkNoUserAttachedPolicies = rules.Register(
 		Frameworks: map[framework.Framework][]string{
 			framework.Default:     nil,
 			framework.CIS_AWS_1_2: {"1.16"},
+			framework.CIS_AWS_1_4: {"1.15"},
 		},
 		Summary:    "IAM policies should not be granted directly to users.",
 		Impact:     "Complex access control is difficult to manage and maintain.",

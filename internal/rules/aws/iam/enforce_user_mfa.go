@@ -22,6 +22,7 @@ var CheckEnforceUserMFA = rules.Register(
 		ShortCode: "enforce-user-mfa",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {"1.2"},
+			framework.CIS_AWS_1_4: {"1.4"},
 		},
 		Summary:    "IAM Users should have MFA enforcement activated.",
 		Impact:     "User accounts are more vulnerable to compromise without multi factor authentication activated",

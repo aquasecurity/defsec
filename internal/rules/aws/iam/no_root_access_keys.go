@@ -23,6 +23,7 @@ var checkNoRootAccessKeys = rules.Register(
 		Frameworks: map[framework.Framework][]string{
 			framework.Default:     nil,
 			framework.CIS_AWS_1_2: {"1.12"},
+			framework.CIS_AWS_1_4: {"1.4"},
 		},
 		Summary:    "The root user has complete access to all services and resources in an AWS account. AWS Access Keys provide programmatic access to a given account.",
 		Impact:     "Compromise of the root account compromises the entire AWS account and all resources within it.",

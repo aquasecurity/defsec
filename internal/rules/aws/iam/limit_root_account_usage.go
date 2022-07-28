@@ -25,6 +25,7 @@ var checkLimitRootAccountUsage = rules.Register(
 		Frameworks: map[framework.Framework][]string{
 			framework.Default:     nil,
 			framework.CIS_AWS_1_2: {"1.1"},
+			framework.CIS_AWS_1_4: {"1.7"},
 		},
 		Summary:    "The \"root\" account has unrestricted access to all resources in the AWS account. It is highly\nrecommended that the use of this account be avoided.",
 		Impact:     "Compromise of the root account compromises the entire AWS account and all resources within it.",

@@ -18,6 +18,7 @@ var CheckNoPasswordReuse = rules.Register(
 		Frameworks: map[framework.Framework][]string{
 			framework.Default:     nil,
 			framework.CIS_AWS_1_2: {"1.10"},
+			framework.CIS_AWS_1_4: {"1.9"},
 		},
 		Summary:    "IAM Password policy should prevent password reuse.",
 		Impact:     "Password reuse increase the risk of compromised passwords being abused",

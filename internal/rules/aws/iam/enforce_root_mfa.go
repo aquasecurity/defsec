@@ -22,6 +22,7 @@ var checkRootMFAEnabled = rules.Register(
 		ShortCode: "enforce-root-mfa",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {"1.13"},
+			framework.CIS_AWS_1_4: {"1.5"},
 		},
 		Summary:    "The \"root\" account has unrestricted access to all resources in the AWS account. It is highly\nrecommended that this account have MFA enabled.",
 		Impact:     "Compromise of the root account compromises the entire AWS account and all resources within it.",

@@ -23,6 +23,7 @@ var CheckAccessKeysRotated = rules.Register(
 		Provider: providers.AWSProvider,
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {"1.4"},
+			framework.CIS_AWS_1_4: {"1.14"},
 		},
 		Service:    "iam",
 		ShortCode:  "rotate-access-keys",
