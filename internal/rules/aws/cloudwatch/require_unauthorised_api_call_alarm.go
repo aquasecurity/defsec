@@ -18,8 +18,8 @@ var requireUnauthorizedApiCallAlarm = rules.Register(
 		Service:    "cloudwatch",
 		ShortCode:  "require-unauthorised-api-call-alarm",
 		Summary:    "Ensure a log metric filter and alarm exist for unauthorized API calls",
-		Impact:     "",
-		Resolution: "",
+		Impact:     "Unauthorized API Calls may be attempted without being notified. CloudTrail logs these actions but without the alarm you aren't actively notified.",
+		Resolution: "Create an alarm to alert on unauthorized API calls",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
 				"4.1",
@@ -47,21 +47,22 @@ CIS recommends that you create a metric filter and alarm for changes to VPCs. Mo
 				continue
 			}
 
-			var metricFilter *cloudwatch.MetricFilter
+			var metricFilter cloudwatch.MetricFilter
+			var found bool
 			for _, filter := range logGroup.MetricFilters {
 				if filter.FilterPattern.Contains(`($.errorCode = "*UnauthorizedOperation") || ($.errorCode = "AccessDenied*")`, types.IgnoreWhitespace) {
-					metricFilter = &filter
+					metricFilter = filter
+					found = true
 					break
 				}
 			}
 
-			if metricFilter == nil {
+			if !found {
 				results.Add("Cloudtrail has no unauthorized API log filter", trail)
 				continue
 			}
 
-			metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName(metricFilter.FilterName.Value())
-			if metricAlarm == nil {
+			if metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName(metricFilter.FilterName.Value()); metricAlarm == nil {
 				results.Add("Cloudtrail has no unauthorized API alarm", trail)
 				continue
 			}

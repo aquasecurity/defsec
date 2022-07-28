@@ -20,7 +20,7 @@ func (w CloudWatch) GetLogGroupByArn(arn string) (logGroup *LogGroup) {
 
 func (w CloudWatch) GetAlarmByMetricName(metricName string) (alarm *Alarm) {
 	for _, alarm := range w.Alarms {
-		if alarm.MetricName.EqualTo(metricName) {
+		if alarm.MetricName != nil && alarm.MetricName.EqualTo(metricName) {
 			return &alarm
 		}
 	}

@@ -93,6 +93,9 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 	status, err := a.client.GetTrailStatus(a.Context(), &api.GetTrailStatusInput{
 		Name: response.Trail.Name,
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &cloudtrail.Trail{
 		Metadata:                  metadata,
