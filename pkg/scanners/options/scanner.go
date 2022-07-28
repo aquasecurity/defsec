@@ -3,6 +3,8 @@ package options
 import (
 	"io"
 	"io/fs"
+
+	"github.com/aquasecurity/defsec/pkg/framework"
 )
 
 type ConfigurableScanner interface {
@@ -16,9 +18,16 @@ type ConfigurableScanner interface {
 	SetPolicyReaders([]io.Reader)
 	SetPolicyFilesystem(fs.FS)
 	SetUseEmbeddedPolicies(bool)
+	SetFrameworks(frameworks []framework.Framework)
 }
 
 type ScannerOption func(s ConfigurableScanner)
+
+func ScannerWithFrameworks(frameworks ...framework.Framework) ScannerOption {
+	return func(s ConfigurableScanner) {
+		s.SetFrameworks(frameworks)
+	}
+}
 
 func ScannerWithPolicyReader(readers ...io.Reader) ScannerOption {
 	return func(s ConfigurableScanner) {

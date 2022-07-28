@@ -11,6 +11,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
+
 	"github.com/aquasecurity/defsec/pkg/debug"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
@@ -44,6 +46,11 @@ type Scanner struct {
 	enableEmbeddedLibraries bool
 	sync.Mutex
 	loadEmbedded bool
+	frameworks   []framework.Framework
+}
+
+func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
+	s.frameworks = frameworks
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {

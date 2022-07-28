@@ -2,6 +2,7 @@ package iam
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/aquasecurity/defsec/internal/types"
 
@@ -43,6 +44,38 @@ func (a *adapter) adaptUsers(state *state.State) error {
 	}
 
 	return nil
+}
+
+func (a *adapter) getMFADevices(user iamtypes.User) ([]iam.MFADevice, error) {
+	input := &iamapi.ListMFADevicesInput{
+		Marker:   nil,
+		UserName: user.UserName,
+	}
+	var apiDevices []iamtypes.MFADevice
+	for {
+		output, err := a.api.ListMFADevices(a.Context(), input)
+		if err != nil {
+			return nil, err
+		}
+		apiDevices = append(apiDevices, output.MFADevices...)
+		if !output.IsTruncated {
+			break
+		}
+		input.Marker = output.Marker
+	}
+
+	var devices []iam.MFADevice
+	for _, apiDevice := range apiDevices {
+		metadata := a.CreateMetadataFromARN(*apiDevice.SerialNumber)
+		if !strings.HasPrefix(*apiDevice.SerialNumber, "arn:") {
+			metadata = a.CreateMetadataFromARN(*user.Arn)
+		}
+		devices = append(devices, iam.MFADevice{
+			Metadata: metadata,
+		})
+	}
+
+	return devices, nil
 }
 
 func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
@@ -110,10 +143,59 @@ func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 		}
 	}
 
+	var keys []iam.AccessKey
+	{
+		input := iamapi.ListAccessKeysInput{
+			UserName: apiUser.UserName,
+		}
+		for {
+			output, err := a.api.ListAccessKeys(a.Context(), &input)
+			if err != nil {
+				return nil, err
+			}
+			for _, apiAccessKey := range output.AccessKeyMetadata {
+
+				lastUsed := types.TimeUnresolvable(metadata)
+				if output, err := a.api.GetAccessKeyLastUsed(a.Context(), &iamapi.GetAccessKeyLastUsedInput{
+					AccessKeyId: apiAccessKey.AccessKeyId,
+				}); err == nil {
+					if output.AccessKeyLastUsed != nil && output.AccessKeyLastUsed.LastUsedDate != nil {
+						lastUsed = types.Time(*output.AccessKeyLastUsed.LastUsedDate, metadata)
+					}
+				}
+
+				keys = append(keys, iam.AccessKey{
+					Metadata:     metadata,
+					AccessKeyId:  types.String(*apiAccessKey.AccessKeyId, metadata),
+					Active:       types.Bool(apiAccessKey.Status == iamtypes.StatusTypeActive, metadata),
+					CreationDate: types.Time(*apiAccessKey.CreateDate, metadata),
+					LastAccess:   lastUsed,
+				})
+			}
+			if !output.IsTruncated {
+				break
+			}
+			input.Marker = output.Marker
+		}
+	}
+
+	mfaDevices, err := a.getMFADevices(apiUser)
+	if err != nil {
+		return nil, err
+	}
+
+	lastAccess := types.TimeUnresolvable(metadata)
+	if apiUser.PasswordLastUsed != nil {
+		lastAccess = types.Time(*apiUser.PasswordLastUsed, metadata)
+	}
+
 	return &iam.User{
-		Metadata: metadata,
-		Name:     types.String(*apiUser.UserName, metadata),
-		Groups:   groups,
-		Policies: policies,
+		Metadata:   metadata,
+		Name:       types.String(*apiUser.UserName, metadata),
+		Groups:     groups,
+		Policies:   policies,
+		AccessKeys: keys,
+		MFADevices: mfaDevices,
+		LastAccess: lastAccess,
 	}, nil
 }

@@ -11,6 +11,7 @@ import (
 	cloudoptions "github.com/aquasecurity/defsec/internal/adapters/cloud/options"
 	"github.com/aquasecurity/defsec/internal/rules"
 	"github.com/aquasecurity/defsec/pkg/debug"
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/progress"
 	_ "github.com/aquasecurity/defsec/pkg/rules"
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -26,6 +27,11 @@ type Scanner struct {
 	region          string
 	endpoint        string
 	services        []string
+	frameworks      []framework.Framework
+}
+
+func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
+	s.frameworks = frameworks
 }
 
 func AllSupportedServices() []string {
@@ -68,7 +74,7 @@ func (s *Scanner) Scan(ctx context.Context) (results scan.Results, err error) {
 		return nil, err
 	}
 
-	for _, rule := range rules.GetFrameworkRules() {
+	for _, rule := range rules.GetFrameworkRules(s.frameworks...) {
 		select {
 		case <-ctx.Done():
 			return nil, ctx.Err()

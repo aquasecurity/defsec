@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/internal/types"
@@ -37,7 +38,12 @@ type Scanner struct {
 	regoOnly      bool
 	loadEmbedded  bool
 	options       []options.ScannerOption
+	frameworks    []framework.Framework
 	sync.Mutex
+}
+
+func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
+	s.frameworks = frameworks
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
@@ -166,7 +172,7 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 		return nil, nil
 	}
 	if !s.regoOnly {
-		for _, rule := range rules.GetFrameworkRules() {
+		for _, rule := range rules.GetFrameworkRules(s.frameworks...) {
 			select {
 			case <-ctx.Done():
 				return nil, ctx.Err()
