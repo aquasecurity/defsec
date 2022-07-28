@@ -78,6 +78,102 @@ func (a *adapter) getMFADevices(user iamtypes.User) ([]iam.MFADevice, error) {
 	return devices, nil
 }
 
+func (a *adapter) getUserGroups(apiUser iamtypes.User) []iam.Group {
+	var groups []iam.Group
+
+	input := &iamapi.ListGroupsForUserInput{
+		UserName: apiUser.UserName,
+	}
+	for {
+		output, err := a.api.ListGroupsForUser(a.Context(), input)
+		if err != nil {
+			a.Debug("Failed to locate groups attached to user '%s': %s", *apiUser.UserName, err)
+			break
+		}
+		for _, apiGroup := range output.Groups {
+			group, err := a.adaptGroup(apiGroup, nil)
+			if err != nil {
+				a.Debug("Failed to adapt group attached to user '%s': %s", *apiUser.UserName, err)
+				continue
+			}
+			groups = append(groups, *group)
+		}
+		if !output.IsTruncated {
+			break
+		}
+		input.Marker = output.Marker
+	}
+	return groups
+}
+
+func (a *adapter) getUserPolicies(apiUser iamtypes.User) []iam.Policy {
+	var policies []iam.Policy
+	input := &iamapi.ListAttachedUserPoliciesInput{
+		UserName: apiUser.UserName,
+	}
+	for {
+		policiesOutput, err := a.api.ListAttachedUserPolicies(a.Context(), input)
+		if err != nil {
+			a.Debug("Failed to locate policies attached to user '%s': %s", *apiUser.UserName, err)
+			break
+		}
+
+		for _, apiPolicy := range policiesOutput.AttachedPolicies {
+			policy, err := a.adaptAttachedPolicy(apiPolicy)
+			if err != nil {
+				a.Debug("Failed to adapt policy attached to user '%s': %s", *apiUser.UserName, err)
+				continue
+			}
+			policies = append(policies, *policy)
+		}
+
+		if !policiesOutput.IsTruncated {
+			break
+		}
+		input.Marker = policiesOutput.Marker
+	}
+	return policies
+}
+
+func (a *adapter) getUserKeys(apiUser iamtypes.User) ([]iam.AccessKey, error) {
+
+	var keys []iam.AccessKey
+	metadata := a.CreateMetadataFromARN(*apiUser.Arn)
+	input := iamapi.ListAccessKeysInput{
+		UserName: apiUser.UserName,
+	}
+	for {
+		output, err := a.api.ListAccessKeys(a.Context(), &input)
+		if err != nil {
+			return nil, err
+		}
+		for _, apiAccessKey := range output.AccessKeyMetadata {
+
+			lastUsed := types.TimeUnresolvable(metadata)
+			if output, err := a.api.GetAccessKeyLastUsed(a.Context(), &iamapi.GetAccessKeyLastUsedInput{
+				AccessKeyId: apiAccessKey.AccessKeyId,
+			}); err == nil {
+				if output.AccessKeyLastUsed != nil && output.AccessKeyLastUsed.LastUsedDate != nil {
+					lastUsed = types.Time(*output.AccessKeyLastUsed.LastUsedDate, metadata)
+				}
+			}
+
+			keys = append(keys, iam.AccessKey{
+				Metadata:     metadata,
+				AccessKeyId:  types.String(*apiAccessKey.AccessKeyId, metadata),
+				Active:       types.Bool(apiAccessKey.Status == iamtypes.StatusTypeActive, metadata),
+				CreationDate: types.Time(*apiAccessKey.CreateDate, metadata),
+				LastAccess:   lastUsed,
+			})
+		}
+		if !output.IsTruncated {
+			break
+		}
+		input.Marker = output.Marker
+	}
+	return keys, nil
+}
+
 func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 
 	if apiUser.Arn == nil {
@@ -88,95 +184,14 @@ func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 	}
 
 	metadata := a.CreateMetadataFromARN(*apiUser.Arn)
-	var groups []iam.Group
 
-	{
-		input := &iamapi.ListGroupsForUserInput{
-			UserName: apiUser.UserName,
-		}
-		for {
-			output, err := a.api.ListGroupsForUser(a.Context(), input)
-			if err != nil {
-				a.Debug("Failed to locate groups attached to user '%s': %s", *apiUser.UserName, err)
-				break
-			}
-			for _, apiGroup := range output.Groups {
-				group, err := a.adaptGroup(apiGroup, nil)
-				if err != nil {
-					a.Debug("Failed to adapt group attached to user '%s': %s", *apiUser.UserName, err)
-					continue
-				}
-				groups = append(groups, *group)
-			}
-			if !output.IsTruncated {
-				break
-			}
-			input.Marker = output.Marker
-		}
-	}
+	groups := a.getUserGroups(apiUser)
 
-	var policies []iam.Policy
-	{
-		input := &iamapi.ListAttachedUserPoliciesInput{
-			UserName: apiUser.UserName,
-		}
-		for {
-			policiesOutput, err := a.api.ListAttachedUserPolicies(a.Context(), input)
-			if err != nil {
-				a.Debug("Failed to locate policies attached to user '%s': %s", *apiUser.UserName, err)
-				break
-			}
+	policies := a.getUserPolicies(apiUser)
 
-			for _, apiPolicy := range policiesOutput.AttachedPolicies {
-				policy, err := a.adaptAttachedPolicy(apiPolicy)
-				if err != nil {
-					a.Debug("Failed to adapt policy attached to user '%s': %s", *apiUser.UserName, err)
-					continue
-				}
-				policies = append(policies, *policy)
-			}
-
-			if !policiesOutput.IsTruncated {
-				break
-			}
-			input.Marker = policiesOutput.Marker
-		}
-	}
-
-	var keys []iam.AccessKey
-	{
-		input := iamapi.ListAccessKeysInput{
-			UserName: apiUser.UserName,
-		}
-		for {
-			output, err := a.api.ListAccessKeys(a.Context(), &input)
-			if err != nil {
-				return nil, err
-			}
-			for _, apiAccessKey := range output.AccessKeyMetadata {
-
-				lastUsed := types.TimeUnresolvable(metadata)
-				if output, err := a.api.GetAccessKeyLastUsed(a.Context(), &iamapi.GetAccessKeyLastUsedInput{
-					AccessKeyId: apiAccessKey.AccessKeyId,
-				}); err == nil {
-					if output.AccessKeyLastUsed != nil && output.AccessKeyLastUsed.LastUsedDate != nil {
-						lastUsed = types.Time(*output.AccessKeyLastUsed.LastUsedDate, metadata)
-					}
-				}
-
-				keys = append(keys, iam.AccessKey{
-					Metadata:     metadata,
-					AccessKeyId:  types.String(*apiAccessKey.AccessKeyId, metadata),
-					Active:       types.Bool(apiAccessKey.Status == iamtypes.StatusTypeActive, metadata),
-					CreationDate: types.Time(*apiAccessKey.CreateDate, metadata),
-					LastAccess:   lastUsed,
-				})
-			}
-			if !output.IsTruncated {
-				break
-			}
-			input.Marker = output.Marker
-		}
+	keys, err := a.getUserKeys(apiUser)
+	if err != nil {
+		return nil, err
 	}
 
 	mfaDevices, err := a.getMFADevices(apiUser)

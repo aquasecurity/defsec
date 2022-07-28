@@ -61,6 +61,7 @@ func adaptUsers(modules terraform.Modules) []iam.User {
 	return output
 }
 
+// nolint
 func mapUsers(modules terraform.Modules) (map[string]iam.User, map[string]struct{}) {
 	userMap := make(map[string]iam.User)
 	policyMap := make(map[string]struct{})
