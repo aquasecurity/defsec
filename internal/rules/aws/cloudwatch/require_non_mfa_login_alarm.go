@@ -11,28 +11,28 @@ import (
 	"github.com/aquasecurity/defsec/pkg/state"
 )
 
-var requireUnauthorizedApiCallAlarm = rules.Register(
+var requireNonMFALoginAlarm = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0147",
+		AVDID:      "AVD-AWS-0148",
 		Provider:   providers.AWSProvider,
 		Service:    "cloudwatch",
-		ShortCode:  "require-unauthorised-api-call-alarm",
-		Summary:    "Ensure a log metric filter and alarm exist for unauthorized API calls",
-		Impact:     "Unauthorized API Calls may be attempted without being notified. CloudTrail logs these actions but without the alarm you aren't actively notified.",
-		Resolution: "Create an alarm to alert on unauthorized API calls",
+		ShortCode:  "require-non-mfa-login-alarm",
+		Summary:    "Ensure a log metric filter and alarm exist for AWS Management Console sign-in without MFA",
+		Impact:     "Not alerting on logins with no MFA allows the risk to go un-notified.",
+		Resolution: "Create an alarm to alert on non MFA logins",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
-				"3.1",
+				"3.2",
 			},
 			framework.CIS_AWS_1_4: {
-				"4.1",
+				"4.2",
 			},
 		},
-		Explanation: `You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms. You can have more than one VPC in an account, and you can create a peer connection between two VPCs, enabling network traffic to route between VPCs.
-
-CIS recommends that you create a metric filter and alarm for changes to VPCs. Monitoring these changes helps ensure that authentication and authorization controls remain intact.`,
+		Explanation: `YYou can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
+                                                                              
+  CIS recommends that you create a metric filter and alarm console logins that  aren't protected by MFA. Monitoring for single-factor console logins increases visibility into accounts that aren't protected by MFA.`,
 		Links: []string{
-			"https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/encrypt-log-data-kms.html",
+			"https://aws.amazon.com/iam/features/mfa/",
 		},
 		Terraform:      &scan.EngineMetadata{},
 		CloudFormation: &scan.EngineMetadata{},
@@ -50,7 +50,10 @@ CIS recommends that you create a metric filter and alarm for changes to VPCs. Mo
 			var metricFilter cloudwatch.MetricFilter
 			var found bool
 			for _, filter := range logGroup.MetricFilters {
-				if filter.FilterPattern.Contains(`($.errorCode = "*UnauthorizedOperation") || ($.errorCode = "AccessDenied*")`, types.IgnoreWhitespace) {
+				if filter.FilterPattern.Contains(`($.eventName = "ConsoleLogin") && 
+($.additionalEventData.MFAUsed != "Yes") && 
+($.userIdentity.type=="IAMUser") && 
+($.responseElements.ConsoleLogin == "Success")`, types.IgnoreWhitespace) {
 					metricFilter = filter
 					found = true
 					break
@@ -58,12 +61,12 @@ CIS recommends that you create a metric filter and alarm for changes to VPCs. Mo
 			}
 
 			if !found {
-				results.Add("Cloudtrail has no unauthorized API log filter", trail)
+				results.Add("Cloudtrail has no non-MFA login log filter", trail)
 				continue
 			}
 
 			if metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName(metricFilter.FilterName.Value()); metricAlarm == nil {
-				results.Add("Cloudtrail has no unauthorized API alarm", trail)
+				results.Add("Cloudtrail has no non-MFA login alarm", trail)
 				continue
 			}
 
