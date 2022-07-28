@@ -97,12 +97,17 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		return nil, err
 	}
 
+	cloudWatchLogsArn := defsecTypes.StringDefault("", metadata)
+	if response.Trail.CloudWatchLogsLogGroupArn != nil {
+		cloudWatchLogsArn = defsecTypes.String(*response.Trail.CloudWatchLogsLogGroupArn, metadata)
+	}
+
 	return &cloudtrail.Trail{
 		Metadata:                  metadata,
 		Name:                      defsecTypes.String(*info.Name, metadata),
 		EnableLogFileValidation:   defsecTypes.Bool(response.Trail.LogFileValidationEnabled != nil && *response.Trail.LogFileValidationEnabled, metadata),
 		IsMultiRegion:             defsecTypes.Bool(response.Trail.IsMultiRegionTrail != nil && *response.Trail.IsMultiRegionTrail, metadata),
-		CloudWatchLogsLogGroupArn: defsecTypes.String(*response.Trail.CloudWatchLogsLogGroupArn, metadata),
+		CloudWatchLogsLogGroupArn: cloudWatchLogsArn,
 		KMSKeyID:                  defsecTypes.String(kmsKeyId, metadata),
 		IsLogging:                 defsecTypes.Bool(*status.IsLogging, metadata),
 	}, nil
