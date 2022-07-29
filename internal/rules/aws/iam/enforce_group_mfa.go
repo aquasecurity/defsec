@@ -3,8 +3,6 @@ package iam
 import (
 	"strings"
 
-	"github.com/aquasecurity/defsec/pkg/framework"
-
 	"github.com/aquasecurity/defsec/pkg/severity"
 
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -16,21 +14,20 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers"
 )
 
-var CheckEnforceMFA = rules.Register(
+var CheckEnforceGroupMFA = rules.Register(
 	scan.Rule{
-		AVDID:     "AVD-AWS-0123",
-		Provider:  providers.AWSProvider,
-		Service:   "iam",
-		ShortCode: "enforce-mfa",
-		Frameworks: map[framework.Framework][]string{
-			framework.Default:     nil,
-			framework.CIS_AWS_1_2: {"1.2"},
+		AVDID: "AVD-AWS-0123",
+		Aliases: []string{
+			"aws-iam-enforce-mfa",
 		},
-		Summary:    "IAM Groups should have MFA enforcement activated.",
-		Impact:     "User accounts are more vulnerable to compromise without multi factor authentication activated",
+		Provider:   providers.AWSProvider,
+		Service:    "iam",
+		ShortCode:  "enforce-group-mfa",
+		Summary:    "IAM groups should have MFA enforcement activated.",
+		Impact:     "IAM groups are more vulnerable to compromise without multi factor authentication activated",
 		Resolution: "Use terraform-module/enforce-mfa/aws to ensure that MFA is enforced",
 		Explanation: `
-IAM user accounts should be protected with multi factor authentication to add safe guards to password compromise.
+IAM groups should be protected with multi factor authentication to add safe guards to password compromise.
 			`,
 		Links: []string{
 			"https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_passwords_account-policy.html#password-policy-details",

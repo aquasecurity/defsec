@@ -5,6 +5,8 @@ import (
 	"sort"
 	"time"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
+
 	"github.com/aquasecurity/defsec/pkg/debug"
 
 	"github.com/aquasecurity/defsec/pkg/terraform"
@@ -38,6 +40,7 @@ type Executor struct {
 	regoScanner               *rego.Scanner
 	regoOnly                  bool
 	stateFuncs                []func(*state.State)
+	frameworks                []framework.Framework
 }
 
 type Metrics struct {
@@ -109,7 +112,7 @@ func (e *Executor) Execute(modules terraform.Modules) (scan.Results, Metrics, er
 	}
 
 	checksTime := time.Now()
-	registeredRules := rules.GetRegistered()
+	registeredRules := rules.GetRegistered(e.frameworks...)
 	e.debug.Log("Initialised %d rule(s).", len(registeredRules))
 
 	pool := NewPool(threads, registeredRules, modules, infra, e.ignoreCheckErrors, e.regoScanner, e.regoOnly)

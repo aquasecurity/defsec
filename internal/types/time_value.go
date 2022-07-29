@@ -8,8 +8,8 @@ import (
 type TimeValue interface {
 	metadataProvider
 	Value() *time.Time
-	LessThan(i time.Time) bool
-	GreaterThan(i time.Time) bool
+	Before(i time.Time) bool
+	After(i time.Time) bool
 	IsNever() bool
 }
 
@@ -62,7 +62,7 @@ func (b *timeValue) IsNever() bool {
 	return b.value.IsZero()
 }
 
-func (b *timeValue) LessThan(i time.Time) bool {
+func (b *timeValue) Before(i time.Time) bool {
 	if b.metadata.isUnresolvable {
 		return false
 	}
@@ -72,7 +72,7 @@ func (b *timeValue) LessThan(i time.Time) bool {
 	return b.value.Before(i)
 }
 
-func (b *timeValue) GreaterThan(i time.Time) bool {
+func (b *timeValue) After(i time.Time) bool {
 	if b.metadata.isUnresolvable {
 		return false
 	}

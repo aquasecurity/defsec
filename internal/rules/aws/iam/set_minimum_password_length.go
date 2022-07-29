@@ -18,6 +18,7 @@ var CheckSetMinimumPasswordLength = rules.Register(
 		Frameworks: map[framework.Framework][]string{
 			framework.Default:     nil,
 			framework.CIS_AWS_1_2: {"1.9"},
+			framework.CIS_AWS_1_4: {"1.8"},
 		},
 		Summary:    "IAM Password policy should have minimum password length of 14 or more characters.",
 		Impact:     "Short, simple passwords are easier to compromise",

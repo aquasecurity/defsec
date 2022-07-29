@@ -47,8 +47,9 @@ func Test_adaptUsers(t *testing.T) {
 `,
 			expected: []iam.User{
 				{
-					Metadata: types.NewTestMetadata(),
-					Name:     types.String("loadbalancer", types.NewTestMetadata()),
+					Metadata:   types.NewTestMetadata(),
+					Name:       types.String("loadbalancer", types.NewTestMetadata()),
+					LastAccess: types.TimeUnresolvable(types.NewTestMetadata()),
 					Policies: []iam.Policy{
 						{
 							Metadata: types.NewTestMetadata(),

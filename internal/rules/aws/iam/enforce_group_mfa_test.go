@@ -15,7 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckEnforceMFA(t *testing.T) {
+func TestCheckEnforceGroupMFA(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    iam.IAM
@@ -89,10 +89,10 @@ func TestCheckEnforceMFA(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
 			testState.AWS.IAM = test.input
-			results := CheckEnforceMFA.Evaluate(&testState)
+			results := CheckEnforceGroupMFA.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() == scan.StatusFailed && result.Rule().LongID() == CheckEnforceMFA.Rule().LongID() {
+				if result.Status() == scan.StatusFailed && result.Rule().LongID() == CheckEnforceGroupMFA.Rule().LongID() {
 					found = true
 				}
 			}

@@ -2,6 +2,7 @@ package iam
 
 import (
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -10,10 +11,14 @@ import (
 
 var CheckSetMaxPasswordAge = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0062",
-		Provider:   providers.AWSProvider,
-		Service:    "iam",
-		ShortCode:  "set-max-password-age",
+		AVDID:     "AVD-AWS-0062",
+		Provider:  providers.AWSProvider,
+		Service:   "iam",
+		ShortCode: "set-max-password-age",
+		Frameworks: map[framework.Framework][]string{
+			framework.Default:     nil,
+			framework.CIS_AWS_1_2: {"1.11"},
+		},
 		Summary:    "IAM Password policy should have expiry less than or equal to 90 days.",
 		Impact:     "Long life password increase the likelihood of a password eventually being compromised",
 		Resolution: "Limit the password duration with an expiry in the policy",
