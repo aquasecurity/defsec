@@ -41,5 +41,6 @@ func adaptTrail(resource *terraform.Block) cloudtrail.Trail {
 		EnableLogFileValidation: enableLogFileValidationVal,
 		IsMultiRegion:           isMultiRegionVal,
 		KMSKeyID:                KMSKeyIDVal,
+		BucketName:              resource.GetAttribute("s3_bucket_name").AsStringValueOrDefault("", resource),
 	}
 }

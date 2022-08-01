@@ -16,6 +16,7 @@ func getCloudTrails(ctx parser.FileContext) (trails []cloudtrail.Trail) {
 			EnableLogFileValidation: r.GetBoolProperty("EnableLogFileValidation"),
 			IsMultiRegion:           r.GetBoolProperty("IsMultiRegionTrail"),
 			KMSKeyID:                r.GetStringProperty("KmsKeyId"),
+			BucketName:              r.GetStringProperty("S3BucketName"),
 		}
 
 		trails = append(trails, ct)
