@@ -23,7 +23,7 @@ get_work_dir[output] {
 	workdir := docker.workdir[_]
 	arg := workdir.Value[0]
 
-	not regex.match("(^/[A-z0-9-_+]*)|(^[A-z0-9-_+]:\\\\.*)|(^\\$[{}A-z0-9-_+].*)", arg)
+	not regex.match("^[\"']?(/[A-z0-9-_+]*)|([A-z0-9-_+]:\\\\.*)|(\\$[{}A-z0-9-_+].*)", arg)
 	output := {
 		"cmd": workdir,
 		"arg": arg,

@@ -102,6 +102,11 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		cloudWatchLogsArn = defsecTypes.String(*response.Trail.CloudWatchLogsLogGroupArn, metadata)
 	}
 
+	var bucketName string
+	if response.Trail.S3BucketName != nil {
+		bucketName = *response.Trail.S3BucketName
+	}
+
 	return &cloudtrail.Trail{
 		Metadata:                  metadata,
 		Name:                      defsecTypes.String(*info.Name, metadata),
@@ -110,5 +115,6 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		CloudWatchLogsLogGroupArn: cloudWatchLogsArn,
 		KMSKeyID:                  defsecTypes.String(kmsKeyId, metadata),
 		IsLogging:                 defsecTypes.Bool(*status.IsLogging, metadata),
+		BucketName:                defsecTypes.String(bucketName, metadata),
 	}, nil
 }
