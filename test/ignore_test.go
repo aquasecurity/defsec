@@ -21,6 +21,7 @@ var exampleRule = scan.Rule{
 	Provider:  providers.AWSProvider,
 	Service:   "service",
 	ShortCode: "abc123",
+	Aliases:   []string{"aws-other-abc123"},
 	Severity:  severity.High,
 	CustomChecks: scan.CustomChecks{
 		Terraform: &scan.TerraformCustomCheck{
@@ -325,4 +326,17 @@ resource "bad" "my-rule" {
 }
 `, "testworkspace")
 	assert.Len(t, results.GetFailed(), 1)
+}
+
+func Test_IgnoreWithAliasCodeStillIgnored(t *testing.T) {
+	reg := rules.Register(exampleRule, nil)
+	defer rules.Deregister(reg)
+
+	results := scanHCLWithWorkspace(t, `
+# tfsec:ignore:aws-other-abc123
+resource "bad" "my-rule" {
+	
+}
+`, "testworkspace")
+	assert.Len(t, results.GetFailed(), 0)
 }

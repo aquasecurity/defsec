@@ -138,6 +138,8 @@ func (e *Executor) Execute(modules terraform.Modules) (scan.Results, Metrics, er
 				result.Rule().LongID(),
 				result.Rule().AVDID,
 			}
+			allIDs = append(allIDs, result.Rule().Aliases...)
+
 			if e.alternativeIDProviderFunc != nil {
 				allIDs = append(allIDs, e.alternativeIDProviderFunc(result.Rule().LongID())...)
 			}
