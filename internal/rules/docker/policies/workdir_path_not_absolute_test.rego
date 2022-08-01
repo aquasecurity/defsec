@@ -54,3 +54,22 @@ test_absolute_work_dir_allowed {
 
 	count(r) == 0
 }
+
+test_absolute_work_dir_with_quotes_allowed {
+	r := deny with input as {"Stages": [{"Name": "alpine:3.3", "Commands": [
+		{
+			"Cmd": "from",
+			"Value": ["alpine:3.3"],
+		},
+		{
+			"Cmd": "run",
+			"Value": ["apk --no-cache add nginx"],
+		},
+		{
+			"Cmd": "workdir",
+			"Value": ["\"/path/to/workdir\""],
+		},
+	]}]}
+
+	count(r) == 0
+}
