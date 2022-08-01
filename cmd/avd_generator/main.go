@@ -8,6 +8,7 @@ import (
 	"text/template"
 
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/pkg/framework"
 	_ "github.com/aquasecurity/defsec/pkg/rego"
 	registered "github.com/aquasecurity/defsec/pkg/rules"
 )
@@ -16,7 +17,7 @@ func main() {
 
 	var generateCount int
 
-	for _, metadata := range registered.GetRegistered() {
+	for _, metadata := range registered.GetRegistered(framework.ALL) {
 		writeDocsFile(metadata)
 		generateCount++
 	}
