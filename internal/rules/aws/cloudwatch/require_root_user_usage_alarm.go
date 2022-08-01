@@ -22,10 +22,10 @@ var requireRootUserUsageAlarm = rules.Register(
 		Resolution: "Create an alarm to alert on root user login",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
-				"3.2",
+				"3.3",
 			},
 			framework.CIS_AWS_1_4: {
-				"4.2",
+				"4.3",
 			},
 		},
 		Explanation: ` You can do real-time monitoring of API calls directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
