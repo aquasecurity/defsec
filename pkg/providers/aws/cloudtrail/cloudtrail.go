@@ -25,4 +25,5 @@ type Trail struct {
 	KMSKeyID                  types.StringValue
 	CloudWatchLogsLogGroupArn types.StringValue
 	IsLogging                 types.BoolValue
+	BucketName                types.StringValue
 }

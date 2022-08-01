@@ -29,6 +29,7 @@ func Test_adaptTrail(t *testing.T) {
 			  
 				enable_log_file_validation = true
 				kms_key_id = "kms-key"
+				s3_bucket_name = "abcdefgh"
 			}
 `,
 			expected: cloudtrail.Trail{
@@ -37,6 +38,7 @@ func Test_adaptTrail(t *testing.T) {
 				EnableLogFileValidation: types.Bool(true, types.NewTestMetadata()),
 				IsMultiRegion:           types.Bool(true, types.NewTestMetadata()),
 				KMSKeyID:                types.String("kms-key", types.NewTestMetadata()),
+				BucketName:              types.String("abcdefgh", types.NewTestMetadata()),
 			},
 		},
 		{
@@ -51,6 +53,7 @@ func Test_adaptTrail(t *testing.T) {
 				EnableLogFileValidation: types.Bool(false, types.NewTestMetadata()),
 				IsMultiRegion:           types.Bool(false, types.NewTestMetadata()),
 				KMSKeyID:                types.String("", types.NewTestMetadata()),
+				BucketName:              types.String("", types.NewTestMetadata()),
 			},
 		},
 	}

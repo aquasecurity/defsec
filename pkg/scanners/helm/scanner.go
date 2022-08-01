@@ -171,7 +171,7 @@ func (s *Scanner) getScanResults(path string, ctx context.Context, target fs.FS)
 			return nil, fmt.Errorf("unmarshal yaml: %w", err)
 		}
 		for _, manifest := range manifests {
-			fileResults, err := regoScanner.ScanInput(context.Background(), rego.Input{
+			fileResults, err := regoScanner.ScanInput(ctx, rego.Input{
 				Path:     file.TemplateFilePath,
 				Contents: manifest,
 				Type:     types.SourceKubernetes,
