@@ -9,7 +9,7 @@ require (
 	github.com/apparentlymart/go-cidr v1.1.0
 	github.com/aquasecurity/go-mock-aws v0.0.0-20220726154943-99847deb62b0
 	github.com/aws/aws-sdk-go-v2 v1.16.7
-	github.com/aws/aws-sdk-go-v2/config v1.15.13
+	github.com/aws/aws-sdk-go-v2/config v1.15.14
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.9
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.10
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8
