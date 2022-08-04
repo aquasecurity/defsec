@@ -11,28 +11,29 @@ import (
 	"github.com/aquasecurity/defsec/pkg/state"
 )
 
-var requireNonMFALoginAlarm = rules.Register(
+var requireVPCChangeAlarm = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0148",
+		AVDID:      "AVD-AWS-0160",
 		Provider:   providers.AWSProvider,
 		Service:    "cloudwatch",
-		ShortCode:  "require-non-mfa-login-alarm",
-		Summary:    "Ensure a log metric filter and alarm exist for AWS Management Console sign-in without MFA",
-		Impact:     "Not alerting on logins with no MFA allows the risk to go un-notified.",
-		Resolution: "Create an alarm to alert on non MFA logins",
+		ShortCode:  "require-vpc-changes-alarm",
+		Summary:    "Ensure a log metric filter and alarm exist for VPC changes",
+		Impact:     "Route tables control the flow of network traffic, changes could be made to maliciously allow egress of data or external ingress. Without alerting, this could go unnoticed.",
+		Resolution: "Create an alarm to alert on route table changes",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
-				"3.2",
+				"3.14",
 			},
 			framework.CIS_AWS_1_4: {
-				"4.2",
+				"4.14",
 			},
 		},
 		Explanation: `You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
+You can have more than one VPC in an account, and you can create a peer connection between two VPCs, enabling network traffic to route between VPCs.
                                                                               
-  CIS recommends that you create a metric filter and alarm console logins that  aren't protected by MFA. Monitoring for single-factor console logins increases visibility into accounts that aren't protected by MFA.`,
+CIS recommends that you create a metric filter and alarm for changes to VPCs. Monitoring these changes helps ensure that authentication and authorization controls remain intact.  `,
 		Links: []string{
-			"https://aws.amazon.com/iam/features/mfa/",
+			"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html",
 		},
 		Terraform:      &scan.EngineMetadata{},
 		CloudFormation: &scan.EngineMetadata{},
@@ -50,10 +51,12 @@ var requireNonMFALoginAlarm = rules.Register(
 			var metricFilter cloudwatch.MetricFilter
 			var found bool
 			for _, filter := range logGroup.MetricFilters {
-				if filter.FilterPattern.Contains(`($.eventName = "ConsoleLogin") && 
-($.additionalEventData.MFAUsed != "Yes") && 
-($.userIdentity.type=="IAMUser") && 
-($.responseElements.ConsoleLogin == "Success")`, types.IgnoreWhitespace) {
+				if filter.FilterPattern.Contains(`{($.eventName=CreateVpc) || 
+					($.eventName=DeleteVpc) || ($.eventName=ModifyVpcAttribute) || 
+					($.eventName=AcceptVpcPeeringConnection) || ($.eventName=CreateVpcPeeringConnection) || 
+					($.eventName=DeleteVpcPeeringConnection) || ($.eventName=RejectVpcPeeringConnection) || 
+					($.eventName=AttachClassicLinkVpc) || ($.eventName=DetachClassicLinkVpc) || 
+					($.eventName=DisableVpcClassicLink) || ($.eventName=EnableVpcClassicLink)}`, types.IgnoreWhitespace) {
 					metricFilter = filter
 					found = true
 					break
@@ -61,12 +64,12 @@ var requireNonMFALoginAlarm = rules.Register(
 			}
 
 			if !found {
-				results.Add("Cloudtrail has no non-MFA login log filter", trail)
+				results.Add("Cloudtrail has no vpc change log filter", trail)
 				continue
 			}
 
 			if metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName(metricFilter.FilterName.Value()); metricAlarm == nil {
-				results.Add("Cloudtrail has no non-MFA login alarm", trail)
+				results.Add("Cloudtrail has no vpc change alarm", trail)
 				continue
 			}
 

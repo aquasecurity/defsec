@@ -74,6 +74,9 @@ func (r *registry) register(rule scan.Rule, f scan.CheckFunc) RegisteredRule {
 	for fw := range rule.Frameworks {
 		r.frameworks[fw] = append(r.frameworks[fw], registeredRule)
 	}
+
+	r.frameworks[framework.ALL] = append(r.frameworks[framework.ALL], registeredRule)
+
 	return registeredRule
 }
 
