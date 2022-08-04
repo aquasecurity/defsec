@@ -11,27 +11,27 @@ import (
 	"github.com/aquasecurity/defsec/pkg/state"
 )
 
-var requireSecurityGroupChangeAlarm = rules.Register(
+var requireNACLChangeAlarm = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0156",
+		AVDID:      "AVD-AWS-0157",
 		Provider:   providers.AWSProvider,
 		Service:    "cloudwatch",
-		ShortCode:  "require-sg-change-alarms",
-		Summary:    "Ensure a log metric filter and alarm exist for security group changes",
-		Impact:     "Security groups control the ingress and egress, changes could be made to maliciously allow egress of data or external ingress. Without alerting, this could go unnoticed.",
-		Resolution: "Create an alarm to alert on security group changes",
+		ShortCode:  "require-nacl-changes-alarm",
+		Summary:    "Ensure a log metric filter and alarm exist for changes to Network Access Control Lists (NACL)",
+		Impact:     "Network ACLs control the ingress and egress, changes could be made to maliciously allow egress of data or external ingress. Without alerting, this could go unnoticed.",
+		Resolution: "Create an alarm to alert on network acl changes",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
-				"3.10",
+				"3.11",
 			},
 			framework.CIS_AWS_1_4: {
-				"4.10",
+				"4.11",
 			},
 		},
 		Explanation: `You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
-Security groups are a stateful packet filter that controls ingress and egress traffic in a VPC.                                                    
+NACLs are used as a stateless packet filter to control ingress and egress traffic for subnets in a VPC.                                               
                                                                               
-CIS recommends that you create a metric filter and alarm for changes to security groups. Monitoring these changes helps ensure that resources and services aren't unintentionally exposed.`,
+CIS recommends that you create a metric filter and alarm for changes to NACLs. Monitoring these changes helps ensure that AWS resources and services aren't unintentionally exposed.`,
 		Links: []string{
 			"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html",
 		},
@@ -51,10 +51,10 @@ CIS recommends that you create a metric filter and alarm for changes to security
 			var metricFilter cloudwatch.MetricFilter
 			var found bool
 			for _, filter := range logGroup.MetricFilters {
-				if filter.FilterPattern.Contains(`{($.eventName=AuthorizeSecurityGroupIngress) || 
-					($.eventName=AuthorizeSecurityGroupEgress) || ($.eventName=RevokeSecurityGroupIngress) ||
-					($.eventName=RevokeSecurityGroupEgress) || ($.eventName=CreateSecurityGroup) || 
-					($.eventName=DeleteSecurityGroup)}`, types.IgnoreWhitespace) {
+				if filter.FilterPattern.Contains(`{($.eventName=CreateNetworkAcl) || 
+					($.eventName=CreateNetworkAclEntry) || ($.eventName=DeleteNetworkAcl) || 
+					($.eventName=DeleteNetworkAclEntry) || ($.eventName=ReplaceNetworkAclEntry) || 
+					($.eventName=ReplaceNetworkAclAssociation)}`, types.IgnoreWhitespace) {
 					metricFilter = filter
 					found = true
 					break
@@ -62,12 +62,12 @@ CIS recommends that you create a metric filter and alarm for changes to security
 			}
 
 			if !found {
-				results.Add("Cloudtrail has no Security Group change log filter", trail)
+				results.Add("Cloudtrail has no network ACL change log filter", trail)
 				continue
 			}
 
 			if metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName(metricFilter.FilterName.Value()); metricAlarm == nil {
-				results.Add("Cloudtrail has no Security Group change alarm", trail)
+				results.Add("Cloudtrail has no network ACL change alarm", trail)
 				continue
 			}
 
