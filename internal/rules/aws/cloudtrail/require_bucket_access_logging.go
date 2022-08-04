@@ -18,6 +18,7 @@ var checkBucketAccessLoggingRequired = rules.Register(
 		Frameworks: map[framework.Framework][]string{
 			framework.Default:     nil,
 			framework.CIS_AWS_1_2: {"2.6"},
+			framework.CIS_AWS_1_4: {"3.6"},
 		},
 		Summary:    "You should enable bucket access logging on the CloudTrail S3 bucket.",
 		Impact:     "There is no way to determine the access to this bucket",
