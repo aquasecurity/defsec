@@ -2,6 +2,7 @@ package iam
 
 import (
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -10,10 +11,15 @@ import (
 
 var CheckNoPasswordReuse = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0056",
-		Provider:   providers.AWSProvider,
-		Service:    "iam",
-		ShortCode:  "no-password-reuse",
+		AVDID:     "AVD-AWS-0056",
+		Provider:  providers.AWSProvider,
+		Service:   "iam",
+		ShortCode: "no-password-reuse",
+		Frameworks: map[framework.Framework][]string{
+			framework.Default:     nil,
+			framework.CIS_AWS_1_2: {"1.10"},
+			framework.CIS_AWS_1_4: {"1.9"},
+		},
 		Summary:    "IAM Password policy should prevent password reuse.",
 		Impact:     "Password reuse increase the risk of compromised passwords being abused",
 		Resolution: "Prevent password reuse in the policy",

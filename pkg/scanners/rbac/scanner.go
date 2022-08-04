@@ -26,7 +26,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/scanners"
 )
 
-var _ scanners.Scanner = (*Scanner)(nil)
+var _ scanners.FSScanner = (*Scanner)(nil)
 var _ options.ConfigurableScanner = (*Scanner)(nil)
 
 type Scanner struct {

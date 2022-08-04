@@ -2,6 +2,7 @@ package iam
 
 import (
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -10,10 +11,14 @@ import (
 
 var CheckRequireSymbolsInPasswords = rules.Register(
 	scan.Rule{
-		AVDID:       "AVD-AWS-0060",
-		Provider:    providers.AWSProvider,
-		Service:     "iam",
-		ShortCode:   "require-symbols-in-passwords",
+		AVDID:     "AVD-AWS-0060",
+		Provider:  providers.AWSProvider,
+		Service:   "iam",
+		ShortCode: "require-symbols-in-passwords",
+		Frameworks: map[framework.Framework][]string{
+			framework.Default:     nil,
+			framework.CIS_AWS_1_2: {"1.7"},
+		},
 		Summary:     "IAM Password policy should have requirement for at least one symbol in the password.",
 		Impact:      "Short, simple passwords are easier to compromise",
 		Resolution:  "Enforce longer, more complex passwords in the policy",

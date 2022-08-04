@@ -3,7 +3,7 @@ package apigateway
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
 
@@ -14,7 +14,7 @@ func Test_adaptAPIMethodsV1(t *testing.T) {
 	tests := []struct {
 		name      string
 		terraform string
-		expected  []apigateway.RESTMethod
+		expected  []v1.Method
 	}{
 		{
 			name: "defaults",
@@ -24,13 +24,18 @@ resource "aws_api_gateway_rest_api" "MyDemoAPI" {
   description = "This is my API for demonstration purposes"
 }
 
+resource "aws_api_gateway_resource" "example" {
+    rest_api_id = aws_api_gateway_rest_api.MyDemoAPI.id
+}
+
 resource "aws_api_gateway_method" "example" {
     rest_api_id = aws_api_gateway_rest_api.MyDemoAPI.id
+	resource_id = aws_api_gateway_resource.example.id
     http_method      = "GET"
     authorization    = "NONE"
 }
 `,
-			expected: []apigateway.RESTMethod{
+			expected: []v1.Method{
 				{
 					HTTPMethod:        String("GET"),
 					AuthorizationType: String("NONE"),
@@ -46,14 +51,19 @@ resource "aws_api_gateway_rest_api" "MyDemoAPI" {
   description = "This is my API for demonstration purposes"
 }
 
+resource "aws_api_gateway_resource" "example" {
+    rest_api_id = aws_api_gateway_rest_api.MyDemoAPI.id
+}
+
 resource "aws_api_gateway_method" "example" {
     rest_api_id = aws_api_gateway_rest_api.MyDemoAPI.id
+	resource_id = aws_api_gateway_resource.example.id
     http_method      = "GET"
     authorization    = "NONE"
     api_key_required = true
 }
 `,
-			expected: []apigateway.RESTMethod{
+			expected: []v1.Method{
 				{
 					HTTPMethod:        String("GET"),
 					AuthorizationType: String("NONE"),
@@ -77,7 +87,7 @@ func Test_adaptAPIsV1(t *testing.T) {
 	tests := []struct {
 		name      string
 		terraform string
-		expected  []apigateway.API
+		expected  []v1.API
 	}{
 		{
 			name: "defaults",
@@ -86,11 +96,9 @@ resource "aws_api_gateway_rest_api" "example" {
     
 }
 `,
-			expected: []apigateway.API{
+			expected: []v1.API{
 				{
-					Name:         String(""),
-					Version:      Int(1),
-					ProtocolType: String("REST"),
+					Name: String(""),
 				},
 			},
 		},
@@ -101,11 +109,9 @@ resource "aws_api_gateway_rest_api" "example" {
    name = "tfsec" 
 }
 `,
-			expected: []apigateway.API{
+			expected: []v1.API{
 				{
-					Name:         String("tfsec"),
-					Version:      Int(1),
-					ProtocolType: String("REST"),
+					Name: String("tfsec"),
 				},
 			},
 		},

@@ -8,6 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
+	"github.com/aquasecurity/defsec/pkg/scanners"
+
 	"github.com/aquasecurity/defsec/pkg/debug"
 
 	"github.com/aquasecurity/defsec/pkg/detection"
@@ -22,6 +25,9 @@ import (
 	"github.com/aquasecurity/defsec/pkg/rego"
 )
 
+var _ scanners.FSScanner = (*Scanner)(nil)
+var _ options.ConfigurableScanner = (*Scanner)(nil)
+
 type Scanner struct {
 	policyDirs    []string
 	dataDirs      []string
@@ -31,6 +37,11 @@ type Scanner struct {
 	loadEmbedded  bool
 	policyFS      fs.FS
 	skipRequired  bool
+	frameworks    []framework.Framework
+}
+
+func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
+	s.frameworks = frameworks
 }
 
 // New creates a new Scanner
@@ -160,7 +171,7 @@ func (s *Scanner) getScanResults(path string, ctx context.Context, target fs.FS)
 			return nil, fmt.Errorf("unmarshal yaml: %w", err)
 		}
 		for _, manifest := range manifests {
-			fileResults, err := regoScanner.ScanInput(context.Background(), rego.Input{
+			fileResults, err := regoScanner.ScanInput(ctx, rego.Input{
 				Path:     file.TemplateFilePath,
 				Contents: manifest,
 				Type:     types.SourceKubernetes,

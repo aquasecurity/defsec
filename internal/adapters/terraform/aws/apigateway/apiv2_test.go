@@ -3,7 +3,7 @@ package apigateway
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
+	v2 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v2"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
 
@@ -14,7 +14,7 @@ func Test_adaptAPIsV2(t *testing.T) {
 	tests := []struct {
 		name      string
 		terraform string
-		expected  []apigateway.API
+		expected  []v2.API
 	}{
 		{
 			name: "defaults",
@@ -23,10 +23,9 @@ resource "aws_apigatewayv2_api" "example" {
     protocol_type = "HTTP"
 }
 `,
-			expected: []apigateway.API{
+			expected: []v2.API{
 				{
 					Name:         String(""),
-					Version:      Int(2),
 					ProtocolType: String("HTTP"),
 				},
 			},
@@ -39,10 +38,9 @@ resource "aws_apigatewayv2_api" "example" {
     protocol_type = "HTTP"
 }
 `,
-			expected: []apigateway.API{
+			expected: []v2.API{
 				{
 					Name:         String("tfsec"),
-					Version:      Int(2),
 					ProtocolType: String("HTTP"),
 				},
 			},
@@ -62,7 +60,7 @@ func Test_adaptStageV2(t *testing.T) {
 	tests := []struct {
 		name      string
 		terraform string
-		expected  apigateway.Stage
+		expected  v2.Stage
 	}{
 		{
 			name: "defaults",
@@ -71,15 +69,10 @@ resource "aws_apigatewayv2_stage" "example" {
     
 }
 `,
-			expected: apigateway.Stage{
-				Name:    String(""),
-				Version: Int(2),
-				AccessLogging: apigateway.AccessLogging{
+			expected: v2.Stage{
+				Name: String(""),
+				AccessLogging: v2.AccessLogging{
 					CloudwatchLogGroupARN: String(""),
-				},
-				RESTMethodSettings: apigateway.RESTMethodSettings{
-					CacheDataEncrypted: Bool(true),
-					CacheEnabled:       Bool(false),
 				},
 			},
 		},
@@ -93,15 +86,10 @@ resource "aws_apigatewayv2_stage" "example" {
     }
 }
 `,
-			expected: apigateway.Stage{
-				Name:    String("tfsec"),
-				Version: Int(2),
-				AccessLogging: apigateway.AccessLogging{
+			expected: v2.Stage{
+				Name: String("tfsec"),
+				AccessLogging: v2.AccessLogging{
 					CloudwatchLogGroupARN: String("arn:123"),
-				},
-				RESTMethodSettings: apigateway.RESTMethodSettings{
-					CacheDataEncrypted: Bool(true),
-					CacheEnabled:       Bool(false),
 				},
 			},
 		},

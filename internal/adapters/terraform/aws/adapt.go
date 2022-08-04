@@ -3,7 +3,6 @@ package aws
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/apigateway"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/athena"
-	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/autoscaling"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/cloudfront"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/cloudwatch"
@@ -11,7 +10,6 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/config"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/documentdb"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/dynamodb"
-	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/ebs"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/ec2"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/ecr"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/ecs"
@@ -34,7 +32,6 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/sns"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/sqs"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/ssm"
-	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/vpc"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/workspaces"
 	"github.com/aquasecurity/defsec/pkg/providers/aws"
 	"github.com/aquasecurity/defsec/pkg/terraform"
@@ -44,7 +41,6 @@ func Adapt(modules terraform.Modules) aws.AWS {
 	return aws.AWS{
 		APIGateway:    apigateway.Adapt(modules),
 		Athena:        athena.Adapt(modules),
-		Autoscaling:   autoscaling.Adapt(modules),
 		Cloudfront:    cloudfront.Adapt(modules),
 		CloudTrail:    cloudtrail.Adapt(modules),
 		CloudWatch:    cloudwatch.Adapt(modules),
@@ -52,7 +48,6 @@ func Adapt(modules terraform.Modules) aws.AWS {
 		Config:        config.Adapt(modules),
 		DocumentDB:    documentdb.Adapt(modules),
 		DynamoDB:      dynamodb.Adapt(modules),
-		EBS:           ebs.Adapt(modules),
 		EC2:           ec2.Adapt(modules),
 		ECR:           ecr.Adapt(modules),
 		ECS:           ecs.Adapt(modules),
@@ -75,7 +70,6 @@ func Adapt(modules terraform.Modules) aws.AWS {
 		SNS:           sns.Adapt(modules),
 		SQS:           sqs.Adapt(modules),
 		SSM:           ssm.Adapt(modules),
-		VPC:           vpc.Adapt(modules),
 		WorkSpaces:    workspaces.Adapt(modules),
 	}
 }

@@ -1,7 +1,10 @@
 .PHONY: test
 test:
-	which gotestsum || go install gotest.tools/gotestsum@latest
 	go test -race ./...
+
+.PHONY: test-no-localstack
+test-no-localstack:
+	go test $$(go list ./... | grep -v internal/adapters/cloud/aws | awk -F'github.com/aquasecurity/defsec/' '{print "./"$$2}')
 
 .PHONY: rego
 rego:
@@ -20,7 +23,7 @@ fix-typos:
 
 .PHONY: quality
 quality:
-	which golangci-lint || go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
+	which golangci-lint || go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.47.2
 	golangci-lint run --timeout 3m --verbose
 
 .PHONY: update-loader

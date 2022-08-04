@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -271,7 +272,7 @@ deny[res] {
 	rule := results.GetFailed()[0].Rule()
 	assert.Equal(t, scan.Rule{
 		AVDID:          "AVD-KSV-0041",
-		LegacyID:       "KSV041",
+		Aliases:        []string{"KSV041"},
 		ShortCode:      "manage-secrets",
 		Summary:        "manage secrets",
 		Explanation:    "check weather Role permit managing secrets",
@@ -284,7 +285,9 @@ deny[res] {
 		Terraform:      (*scan.EngineMetadata)(nil),
 		CloudFormation: (*scan.EngineMetadata)(nil),
 		CustomChecks:   scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)},
-		RegoPackage:    "data.builtin.kubernetes.KSV041"}, rule)
+		RegoPackage:    "data.builtin.kubernetes.KSV041",
+		Frameworks:     map[framework.Framework][]string{},
+	}, rule)
 
 	failure := results.GetFailed()[0]
 	actualCode, err := failure.GetCode()
@@ -374,7 +377,7 @@ rules:
 
 func Test_FileScanWithPolicyReader(t *testing.T) {
 
-	results, err := NewScanner(options.OptionWithPolicyReaders(strings.NewReader(`package defsec
+	results, err := NewScanner(options.ScannerWithPolicyReader(strings.NewReader(`package defsec
 
 deny[msg] {
   msg = "fail"
@@ -400,7 +403,7 @@ rules:
 
 func Test_FileScanJSON(t *testing.T) {
 
-	results, err := NewScanner(options.OptionWithPolicyReaders(strings.NewReader(`package defsec
+	results, err := NewScanner(options.ScannerWithPolicyReader(strings.NewReader(`package defsec
 
 deny[msg] {
   input.kind == "Role"
@@ -439,7 +442,7 @@ func Test_FileScanWithMetadata(t *testing.T) {
 	results, err := NewScanner(
 		options.ScannerWithDebug(os.Stdout),
 		options.ScannerWithTrace(os.Stdout),
-		options.OptionWithPolicyReaders(strings.NewReader(`package defsec
+		options.ScannerWithPolicyReader(strings.NewReader(`package defsec
 
 deny[msg] {
   input.kind == "Role"
@@ -486,7 +489,7 @@ func Test_FileScanExampleWithResultFunction(t *testing.T) {
 		options.ScannerWithTrace(os.Stdout),
 		options.ScannerWithPolicyFilesystem(os.DirFS("../../../internal/rules")),
 		options.ScannerWithPolicyDirs("defsec/lib", "kubernetes/lib"),
-		options.OptionWithPolicyReaders(strings.NewReader(`package defsec
+		options.ScannerWithPolicyReader(strings.NewReader(`package defsec
 
 import data.lib.kubernetes
 import data.lib.result

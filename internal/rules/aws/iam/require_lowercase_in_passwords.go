@@ -2,6 +2,7 @@ package iam
 
 import (
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -10,10 +11,14 @@ import (
 
 var CheckRequireLowercaseInPasswords = rules.Register(
 	scan.Rule{
-		AVDID:       "AVD-AWS-0058",
-		Provider:    providers.AWSProvider,
-		Service:     "iam",
-		ShortCode:   "require-lowercase-in-passwords",
+		AVDID:     "AVD-AWS-0058",
+		Provider:  providers.AWSProvider,
+		Service:   "iam",
+		ShortCode: "require-lowercase-in-passwords",
+		Frameworks: map[framework.Framework][]string{
+			framework.Default:     nil,
+			framework.CIS_AWS_1_2: {"1.6"},
+		},
 		Summary:     "IAM Password policy should have requirement for at least one lowercase character.",
 		Impact:      "Short, simple passwords are easier to compromise",
 		Resolution:  "Enforce longer, more complex passwords in the policy",

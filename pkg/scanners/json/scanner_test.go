@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -58,16 +59,23 @@ deny[res] {
 	require.Len(t, results.GetFailed(), 1)
 
 	assert.Equal(t, scan.Rule{
-		AVDID:       "AVD-AB-0123",
-		LegacyID:    "ABC123",
-		ShortCode:   "short",
-		Summary:     "title",
-		Explanation: "description",
-		Impact:      "",
-		Resolution:  "actions",
-		Provider:    "json",
-		Service:     "general",
-		Links:       []string{"https://example.com"},
-		Severity:    "CRITICAL",
-		Terraform:   (*scan.EngineMetadata)(nil), CloudFormation: (*scan.EngineMetadata)(nil), CustomChecks: scan.CustomChecks{Terraform: (*scan.TerraformCustomCheck)(nil)}, RegoPackage: "data.builtin.json.lol"}, results.GetFailed()[0].Rule())
+		AVDID:          "AVD-AB-0123",
+		Aliases:        []string{"ABC123"},
+		ShortCode:      "short",
+		Summary:        "title",
+		Explanation:    "description",
+		Impact:         "",
+		Resolution:     "actions",
+		Provider:       "json",
+		Service:        "general",
+		Links:          []string{"https://example.com"},
+		Severity:       "CRITICAL",
+		Terraform:      (*scan.EngineMetadata)(nil),
+		CloudFormation: (*scan.EngineMetadata)(nil),
+		CustomChecks: scan.CustomChecks{
+			Terraform: (*scan.TerraformCustomCheck)(nil),
+		},
+		RegoPackage: "data.builtin.json.lol",
+		Frameworks:  map[framework.Framework][]string{},
+	}, results.GetFailed()[0].Rule())
 }

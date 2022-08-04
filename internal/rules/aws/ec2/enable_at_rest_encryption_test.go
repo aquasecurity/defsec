@@ -3,9 +3,9 @@ package ec2
 import (
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 	"github.com/aquasecurity/defsec/pkg/state"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/autoscaling"
 	"github.com/aquasecurity/defsec/pkg/scan"
 
 	"github.com/stretchr/testify/assert"
@@ -15,24 +15,24 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 	t.SkipNow()
 	tests := []struct {
 		name     string
-		input    autoscaling.Autoscaling
+		input    ec2.EC2
 		expected bool
 	}{
 		{
 			name:     "positive result",
-			input:    autoscaling.Autoscaling{},
+			input:    ec2.EC2{},
 			expected: true,
 		},
 		{
 			name:     "negative result",
-			input:    autoscaling.Autoscaling{},
+			input:    ec2.EC2{},
 			expected: false,
 		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
-			testState.AWS.Autoscaling = test.input
+			testState.AWS.EC2 = test.input
 			results := CheckEnableAtRestEncryption.Evaluate(&testState)
 			var found bool
 			for _, result := range results {

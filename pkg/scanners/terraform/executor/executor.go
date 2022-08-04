@@ -5,6 +5,8 @@ import (
 	"sort"
 	"time"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
+
 	"github.com/aquasecurity/defsec/pkg/debug"
 
 	"github.com/aquasecurity/defsec/pkg/terraform"
@@ -26,6 +28,7 @@ import (
 type Executor struct {
 	enableIgnores             bool
 	excludedRuleIDs           []string
+	excludeIgnoresIDs         []string
 	includedRuleIDs           []string
 	ignoreCheckErrors         bool
 	workspaceName             string
@@ -37,6 +40,7 @@ type Executor struct {
 	regoScanner               *rego.Scanner
 	regoOnly                  bool
 	stateFuncs                []func(*state.State)
+	frameworks                []framework.Framework
 }
 
 type Metrics struct {
@@ -108,7 +112,7 @@ func (e *Executor) Execute(modules terraform.Modules) (scan.Results, Metrics, er
 	}
 
 	checksTime := time.Now()
-	registeredRules := rules.GetRegistered()
+	registeredRules := rules.GetRegistered(e.frameworks...)
 	e.debug.Log("Initialised %d rule(s).", len(registeredRules))
 
 	pool := NewPool(threads, registeredRules, modules, infra, e.ignoreCheckErrors, e.regoScanner, e.regoOnly)
@@ -127,11 +131,15 @@ func (e *Executor) Execute(modules terraform.Modules) (scan.Results, Metrics, er
 			ignores = append(ignores, module.Ignores()...)
 		}
 
+		ignores = e.removeExcludedIgnores(ignores)
+
 		for i, result := range results {
 			allIDs := []string{
 				result.Rule().LongID(),
 				result.Rule().AVDID,
 			}
+			allIDs = append(allIDs, result.Rule().Aliases...)
+
 			if e.alternativeIDProviderFunc != nil {
 				allIDs = append(allIDs, e.alternativeIDProviderFunc(result.Rule().LongID())...)
 			}
@@ -170,6 +178,25 @@ func (e *Executor) Execute(modules terraform.Modules) (scan.Results, Metrics, er
 
 	e.sortResults(results)
 	return results, metrics, nil
+}
+
+func (e *Executor) removeExcludedIgnores(ignores terraform.Ignores) terraform.Ignores {
+	var filteredIgnores terraform.Ignores
+	for _, ignore := range ignores {
+		if !contains(e.excludeIgnoresIDs, ignore.RuleID) {
+			filteredIgnores = append(filteredIgnores, ignore)
+		}
+	}
+	return filteredIgnores
+}
+
+func contains(arr []string, s string) bool {
+	for _, elem := range arr {
+		if elem == s {
+			return true
+		}
+	}
+	return false
 }
 
 func (e *Executor) updateSeverity(results []scan.Result) scan.Results {

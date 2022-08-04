@@ -2,6 +2,7 @@ package iam
 
 import (
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -10,10 +11,15 @@ import (
 
 var CheckSetMinimumPasswordLength = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0063",
-		Provider:   providers.AWSProvider,
-		Service:    "iam",
-		ShortCode:  "set-minimum-password-length",
+		AVDID:     "AVD-AWS-0063",
+		Provider:  providers.AWSProvider,
+		Service:   "iam",
+		ShortCode: "set-minimum-password-length",
+		Frameworks: map[framework.Framework][]string{
+			framework.Default:     nil,
+			framework.CIS_AWS_1_2: {"1.9"},
+			framework.CIS_AWS_1_4: {"1.8"},
+		},
 		Summary:    "IAM Password policy should have minimum password length of 14 or more characters.",
 		Impact:     "Short, simple passwords are easier to compromise",
 		Resolution: "Enforce longer, more complex passwords in the policy",

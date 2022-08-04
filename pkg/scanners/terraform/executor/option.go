@@ -3,6 +3,8 @@ package executor
 import (
 	"io"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
+
 	"github.com/aquasecurity/defsec/pkg/debug"
 
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -13,6 +15,12 @@ import (
 )
 
 type Option func(s *Executor)
+
+func OptionWithFrameworks(frameworks ...framework.Framework) Option {
+	return func(s *Executor) {
+		s.frameworks = frameworks
+	}
+}
 
 func OptionWithAlternativeIDProvider(f func(string) []string) Option {
 	return func(s *Executor) {
@@ -47,6 +55,12 @@ func OptionNoIgnores() Option {
 func OptionExcludeRules(ruleIDs []string) Option {
 	return func(s *Executor) {
 		s.excludedRuleIDs = ruleIDs
+	}
+}
+
+func OptionExcludeIgnores(ruleIDs []string) Option {
+	return func(s *Executor) {
+		s.excludeIgnoresIDs = ruleIDs
 	}
 }
 

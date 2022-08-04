@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -71,7 +72,7 @@ deny[res] {
 		t,
 		scan.Rule{
 			AVDID:          "AVD-DS-0006",
-			LegacyID:       "DS006",
+			Aliases:        []string{"DS006"},
 			ShortCode:      "no-self-referencing-copy-from",
 			Summary:        "COPY '--from' referring to the current image",
 			Explanation:    "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself.",
@@ -86,6 +87,7 @@ deny[res] {
 			CustomChecks: scan.CustomChecks{
 				Terraform: (*scan.TerraformCustomCheck)(nil)},
 			RegoPackage: "data.builtin.dockerfile.DS006",
+			Frameworks:  map[framework.Framework][]string{},
 		},
 		results.GetFailed()[0].Rule(),
 	)

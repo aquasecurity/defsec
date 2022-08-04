@@ -3,9 +3,8 @@ package apigateway
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
-
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
+	v2 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v2"
 
 	"github.com/aquasecurity/defsec/test/testutil"
 )
@@ -14,7 +13,7 @@ func Test_adaptDomainNamesV2(t *testing.T) {
 	tests := []struct {
 		name      string
 		terraform string
-		expected  []apigateway.DomainName
+		expected  []v2.DomainName
 	}{
 		{
 			name: "defaults",
@@ -22,10 +21,9 @@ func Test_adaptDomainNamesV2(t *testing.T) {
 resource "aws_apigatewayv2_domain_name" "example" {
 }
 `,
-			expected: []apigateway.DomainName{
+			expected: []v2.DomainName{
 				{
 					Name:           String(""),
-					Version:        Int(2),
 					SecurityPolicy: String("TLS_1_0"),
 				},
 			},
@@ -40,10 +38,9 @@ resource "aws_apigatewayv2_domain_name" "example" {
                 }
 }
 `,
-			expected: []apigateway.DomainName{
+			expected: []v2.DomainName{
 				{
 					Name:           String("testing.com"),
-					Version:        Int(2),
 					SecurityPolicy: String("TLS_1_2"),
 				},
 			},

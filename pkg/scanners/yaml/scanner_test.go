@@ -4,6 +4,8 @@ import (
 	"context"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -66,7 +68,7 @@ deny[res] {
 
 	assert.Equal(t, scan.Rule{
 		AVDID:          "AVD-AB-0123",
-		LegacyID:       "ABC123",
+		Aliases:        []string{"ABC123"},
 		ShortCode:      "short",
 		Summary:        "title",
 		Explanation:    "description",
@@ -81,6 +83,7 @@ deny[res] {
 		CustomChecks: scan.CustomChecks{
 			Terraform: (*scan.TerraformCustomCheck)(nil)},
 		RegoPackage: "data.builtin.yaml.lol",
+		Frameworks:  map[framework.Framework][]string{},
 	},
 		results.GetFailed()[0].Rule(),
 	)

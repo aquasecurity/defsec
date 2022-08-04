@@ -1,6 +1,7 @@
 package iam
 
 import (
+	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 	"github.com/liamg/iamgo"
@@ -48,12 +49,36 @@ func getUsers(ctx parser.FileContext) (users []iam.User) {
 		userName := userResource.GetStringProperty("GroupName")
 
 		users = append(users, iam.User{
-			Metadata: userResource.Metadata(),
-			Name:     userName,
-			Policies: getPoliciesDocs(policyProp),
+			Metadata:   userResource.Metadata(),
+			Name:       userName,
+			LastAccess: types.TimeUnresolvable(userResource.Metadata()),
+			Policies:   getPoliciesDocs(policyProp),
+			AccessKeys: getAccessKeys(ctx, userName.Value()),
 		})
 	}
 	return users
+}
+
+func getAccessKeys(ctx parser.FileContext, username string) (accessKeys []iam.AccessKey) {
+	for _, keyResource := range ctx.GetResourcesByType("AWS::IAM::AccessKey") {
+		keyUsername := keyResource.GetStringProperty("UserName")
+		if !keyUsername.EqualTo(username) {
+			continue
+		}
+		active := types.BoolDefault(false, keyResource.Metadata())
+		if statusProp := keyResource.GetProperty("Status"); statusProp.IsString() {
+			active = types.Bool(statusProp.AsString() == "Active", statusProp.Metadata())
+		}
+
+		accessKeys = append(accessKeys, iam.AccessKey{
+			Metadata:     keyResource.Metadata(),
+			AccessKeyId:  types.StringUnresolvable(keyResource.Metadata()),
+			CreationDate: types.TimeUnresolvable(keyResource.Metadata()),
+			LastAccess:   types.TimeUnresolvable(keyResource.Metadata()),
+			Active:       active,
+		})
+	}
+	return accessKeys
 }
 
 func getGroups(ctx parser.FileContext) (groups []iam.Group) {

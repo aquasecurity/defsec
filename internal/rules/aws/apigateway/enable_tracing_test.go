@@ -3,11 +3,12 @@ package apigateway
 import (
 	"testing"
 
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
+
 	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/pkg/scan"
 
 	"github.com/stretchr/testify/assert"
@@ -16,20 +17,18 @@ import (
 func TestCheckEnableTracing(t *testing.T) {
 	tests := []struct {
 		name     string
-		input    apigateway.APIGateway
+		input    v1.APIGateway
 		expected bool
 	}{
 		{
 			name: "API Gateway stage with X-Ray tracing disabled",
-			input: apigateway.APIGateway{
-				APIs: []apigateway.API{
+			input: v1.APIGateway{
+				APIs: []v1.API{
 					{
-						Metadata:     types.NewTestMetadata(),
-						ProtocolType: types.String(apigateway.ProtocolTypeREST, types.NewTestMetadata()),
-						Stages: []apigateway.Stage{
+						Metadata: types.NewTestMetadata(),
+						Stages: []v1.Stage{
 							{
 								Metadata:           types.NewTestMetadata(),
-								Version:            types.Int(1, types.NewTestMetadata()),
 								XRayTracingEnabled: types.Bool(false, types.NewTestMetadata()),
 							},
 						},
@@ -40,15 +39,13 @@ func TestCheckEnableTracing(t *testing.T) {
 		},
 		{
 			name: "API Gateway stage with X-Ray tracing enabled",
-			input: apigateway.APIGateway{
-				APIs: []apigateway.API{
+			input: v1.APIGateway{
+				APIs: []v1.API{
 					{
-						Metadata:     types.NewTestMetadata(),
-						ProtocolType: types.String(apigateway.ProtocolTypeREST, types.NewTestMetadata()),
-						Stages: []apigateway.Stage{
+						Metadata: types.NewTestMetadata(),
+						Stages: []v1.Stage{
 							{
 								Metadata:           types.NewTestMetadata(),
-								Version:            types.Int(1, types.NewTestMetadata()),
 								XRayTracingEnabled: types.Bool(true, types.NewTestMetadata()),
 							},
 						},
@@ -61,7 +58,7 @@ func TestCheckEnableTracing(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
-			testState.AWS.APIGateway = test.input
+			testState.AWS.APIGateway.V1 = test.input
 			results := CheckEnableTracing.Evaluate(&testState)
 			var found bool
 			for _, result := range results {

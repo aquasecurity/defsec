@@ -407,7 +407,7 @@ deny[cause] {
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
 	require.NoError(t, err)
 
-	require.Len(t, results, 1)
+	require.Len(t, results.GetFailed(), 1)
 	assert.Equal(t, "AVD-TEST-0123", results[0].Rule().AVDID)
 
 	if t.Failed() {
@@ -464,7 +464,7 @@ deny[res] {
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
 	require.NoError(t, err)
 
-	require.Len(t, results, 1)
+	require.Len(t, results.GetFailed(), 1)
 	assert.Equal(t, "AVD-TEST-0123", results[0].Rule().AVDID)
 	assert.NotNil(t, results[0].Metadata().Range().GetFS())
 
@@ -535,7 +535,7 @@ deny[res] {
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
 	require.NoError(t, err)
 
-	require.Len(t, results, 1)
+	require.Len(t, results.GetFailed(), 1)
 	assert.Equal(t, "AVD-TEST-0123", results[0].Rule().AVDID)
 	assert.NotNil(t, results[0].Metadata().Range().GetFS())
 
@@ -607,12 +607,9 @@ __rego_input__ := {
 }
 
 deny[res] {
-	definitionsAttr := input.aws.ecs.taskdefinitions[_].containerdefinitions
-	definitionsJSON := definitionsAttr.value
-	taskDefinitions := json.unmarshal(definitionsJSON)
-	taskDefinition := taskDefinitions[_]
-	taskDefinition.privileged == true
-	res := result.new("Privileged container detected", definitionsAttr)
+	definition := input.aws.ecs.taskdefinitions[_].containerdefinitions[_]
+	definition.privileged.value == true
+	res := result.new("Privileged container detected", definition.privileged)
 }
 `,
 	})
@@ -628,7 +625,7 @@ deny[res] {
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
 	require.NoError(t, err)
 
-	require.Len(t, results, 1)
+	require.Len(t, results.GetFailed(), 1)
 	assert.Equal(t, "AVD-TEST-0123", results[0].Rule().AVDID)
 	assert.NotNil(t, results[0].Metadata().Range().GetFS())
 

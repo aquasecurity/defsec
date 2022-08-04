@@ -634,6 +634,6 @@ data "aws_iam_policy_document" "policy" {
 	modules, _, err := p.EvaluateAll(context.TODO())
 	require.NoError(t, err)
 	results, _, _ := executor.New().Execute(modules)
-	testutil.AssertRuleNotFound(t, iam.CheckEnforceMFA.Rule().LongID(), results, "")
+	testutil.AssertRuleNotFound(t, iam.CheckEnforceGroupMFA.Rule().LongID(), results, "")
 
 }

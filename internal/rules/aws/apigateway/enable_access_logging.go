@@ -36,7 +36,22 @@ var CheckEnableAccessLogging = rules.Register(
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results scan.Results) {
-		for _, api := range s.AWS.APIGateway.APIs {
+		for _, api := range s.AWS.APIGateway.V1.APIs {
+			for _, stage := range api.Stages {
+				if stage.IsUnmanaged() {
+					continue
+				}
+				if stage.AccessLogging.CloudwatchLogGroupARN.IsEmpty() {
+					results.Add(
+						"Access logging is not configured.",
+						stage.AccessLogging.CloudwatchLogGroupARN,
+					)
+				} else {
+					results.AddPassed(&api)
+				}
+			}
+		}
+		for _, api := range s.AWS.APIGateway.V2.APIs {
 			for _, stage := range api.Stages {
 				if stage.IsUnmanaged() {
 					continue

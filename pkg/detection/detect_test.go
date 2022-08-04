@@ -225,6 +225,50 @@ spec:
 				FileTypeJSON,
 			},
 		},
+		{
+			name: "kubernetes, configmap",
+			path: "k8s.yml",
+			r: strings.NewReader(`apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test
+  namespace: default
+data:
+  AWS_ACCESS_KEY_ID: "XXX"
+  AWS_SECRET_ACCESS_KEY: "XXX"`),
+			expected: []FileType{
+				FileTypeKubernetes,
+				FileTypeYAML,
+			},
+		},
+		{
+			name: "rbac, reader",
+			path: "rbac.yml",
+			r: strings.NewReader(`apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+  name: view
+rules:
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  - ingresses/status
+  - networkpolicies
+  verbs:
+  - get
+  - list
+  - watch`),
+			expected: []FileType{
+				FileTypeRbac,
+				FileTypeYAML,
+			},
+		},
 	}
 
 	for _, test := range tests {

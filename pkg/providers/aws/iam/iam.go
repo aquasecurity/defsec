@@ -54,9 +54,28 @@ type Group struct {
 
 type User struct {
 	types.Metadata
-	Name     types.StringValue
-	Groups   []Group
-	Policies []Policy
+	Name       types.StringValue
+	Groups     []Group
+	Policies   []Policy
+	AccessKeys []AccessKey
+	MFADevices []MFADevice
+	LastAccess types.TimeValue
+}
+
+func (u *User) HasLoggedIn() bool {
+	return u.LastAccess != nil && u.LastAccess.GetMetadata().IsResolvable() && !u.LastAccess.IsNever()
+}
+
+type MFADevice struct {
+	types.Metadata
+}
+
+type AccessKey struct {
+	types.Metadata
+	AccessKeyId  types.StringValue
+	Active       types.BoolValue
+	CreationDate types.TimeValue
+	LastAccess   types.TimeValue
 }
 
 type Role struct {

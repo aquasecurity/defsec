@@ -2,21 +2,19 @@ package apigateway
 
 import (
 	"github.com/aquasecurity/defsec/internal/types"
-	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
+	v2 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v2"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 )
 
-func getApis(cfFile parser.FileContext) (apis []apigateway.API) {
+func getApis(cfFile parser.FileContext) (apis []v2.API) {
 
 	apiResources := cfFile.GetResourcesByType("AWS::ApiGatewayV2::Api")
 	for _, apiRes := range apiResources {
-		api := apigateway.API{
+		api := v2.API{
 			Metadata:     apiRes.Metadata(),
 			Name:         types.StringDefault("", apiRes.Metadata()),
-			Version:      types.Int(2, apiRes.Metadata()),
 			ProtocolType: types.StringDefault("", apiRes.Metadata()),
 			Stages:       getStages(apiRes.ID(), cfFile),
-			RESTMethods:  nil,
 		}
 		apis = append(apis, api)
 	}
@@ -24,8 +22,8 @@ func getApis(cfFile parser.FileContext) (apis []apigateway.API) {
 	return apis
 }
 
-func getStages(apiId string, cfFile parser.FileContext) []apigateway.Stage {
-	var apiStages []apigateway.Stage
+func getStages(apiId string, cfFile parser.FileContext) []v2.Stage {
+	var apiStages []v2.Stage
 
 	stageResources := cfFile.GetResourcesByType("AWS::ApiGatewayV2::Stage")
 	for _, r := range stageResources {
@@ -34,17 +32,10 @@ func getStages(apiId string, cfFile parser.FileContext) []apigateway.Stage {
 			continue
 		}
 
-		s := apigateway.Stage{
+		s := v2.Stage{
 			Metadata:      r.Metadata(),
 			Name:          r.GetStringProperty("StageName"),
-			Version:       types.Int(2, r.Metadata()),
 			AccessLogging: getAccessLogging(r),
-			RESTMethodSettings: apigateway.RESTMethodSettings{
-				Metadata:           r.Metadata(),
-				CacheDataEncrypted: types.BoolUnresolvable(r.Metadata()),
-				CacheEnabled:       types.BoolDefault(false, r.Metadata()),
-			},
-			XRayTracingEnabled: types.BoolUnresolvable(r.Metadata()),
 		}
 		apiStages = append(apiStages, s)
 	}
@@ -52,11 +43,11 @@ func getStages(apiId string, cfFile parser.FileContext) []apigateway.Stage {
 	return apiStages
 }
 
-func getAccessLogging(r *parser.Resource) apigateway.AccessLogging {
+func getAccessLogging(r *parser.Resource) v2.AccessLogging {
 
 	loggingProp := r.GetProperty("AccessLogSettings")
 	if loggingProp.IsNil() {
-		return apigateway.AccessLogging{
+		return v2.AccessLogging{
 			Metadata:              r.Metadata(),
 			CloudwatchLogGroupARN: types.StringDefault("", r.Metadata()),
 		}
@@ -65,12 +56,13 @@ func getAccessLogging(r *parser.Resource) apigateway.AccessLogging {
 	destinationProp := r.GetProperty("AccessLogSettings.DestinationArn")
 
 	if destinationProp.IsNil() {
-		return apigateway.AccessLogging{
+		return v2.AccessLogging{
 			Metadata:              loggingProp.Metadata(),
 			CloudwatchLogGroupARN: types.StringDefault("", r.Metadata()),
 		}
 	}
-	return apigateway.AccessLogging{
+	return v2.AccessLogging{
+		Metadata:              destinationProp.Metadata(),
 		CloudwatchLogGroupARN: destinationProp.AsStringValue(),
 	}
 }

@@ -174,13 +174,19 @@ func init() {
 			return false
 		}
 
-		expectedProperties := []string{"apiVersion", "kind", "metadata", "spec"}
+		expectedProperties := []string{"apiVersion", "kind", "metadata"}
 
 		if IsType(name, r, FileTypeJSON) {
 			var result map[string]interface{}
 			if err := json.Unmarshal(contents, &result); err != nil {
 				return false
 			}
+
+			// ignoring rbac because it has its own scanner
+			if _, ok := result["rules"]; ok {
+				return false
+			}
+
 			for _, expected := range expectedProperties {
 				if _, ok := result[expected]; !ok {
 					return false
@@ -199,6 +205,10 @@ func init() {
 			var result map[string]interface{}
 			if err := yaml.Unmarshal([]byte(partial), &result); err != nil {
 				continue
+			}
+			// ignoring rbac because it has its own scanner
+			if _, ok := result["rules"]; ok {
+				return false
 			}
 			match := true
 			for _, expected := range expectedProperties {
