@@ -266,8 +266,8 @@ github.com/aws/aws-sdk-go-v2/service/neptune v1.17.2 h1:QXjkcE4SOKz2m4PKhepdWq2Q
 github.com/aws/aws-sdk-go-v2/service/neptune v1.17.2/go.mod h1:FAUkAz+fHcnAr9RnAJzEvuQxsUo0lNypz5RFgaN1wMw=
 github.com/aws/aws-sdk-go-v2/service/rds v1.23.2 h1:PiW9+dKNwnRCfpln8UukyBBOHhOGfS4NV0qkZQg+uPM=
 github.com/aws/aws-sdk-go-v2/service/rds v1.23.2/go.mod h1:OiFKbn0c0/8hLpOLFg4P8Pw9bofLnuweWWqZPY7chBM=
-github.com/aws/aws-sdk-go-v2/service/redshift v1.26.0 h1:YRXG5DNSPfxjsrMHizfUWPqNYUdjnL5Jg/ACXrQ7uF8=
-github.com/aws/aws-sdk-go-v2/service/redshift v1.26.0/go.mod h1:hgLGp4dYNy9qnfzFNC9VhgV77pJwTmTuLklRF29Uv3E=
+github.com/aws/aws-sdk-go-v2/service/redshift v1.26.1 h1:PXlUX4ErwlY1u7lZoMt3fuWSWebdSLMxsBDd0DqnpiA=
+github.com/aws/aws-sdk-go-v2/service/redshift v1.26.1/go.mod h1:XTvP5x9LIIgImxvUtXUHXdi3R56P+8BsSI7UeXCPz2U=
 github.com/aws/aws-sdk-go-v2/service/s3 v1.26.11 h1:Wt0512f6GfLiMd6a+NuOCC9r3/trmzHMTB697CBDUwg=
 github.com/aws/aws-sdk-go-v2/service/s3 v1.26.11/go.mod h1:VMTprbiZWqW44viXgPSQhWdeZ8JTAeJwhO7OXpC/Rsg=
 github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.15.13 h1:9hFlfWKP1+u3js8IhRGf3M+S4MSoDK2v3bqIndGEpxU=
