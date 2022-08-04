@@ -11,26 +11,26 @@ import (
 	"github.com/aquasecurity/defsec/pkg/state"
 )
 
-var requireCMKDisabledAlarm = rules.Register(
+var requireS3BucketPolicyChangeAlarm = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0153",
+		AVDID:      "AVD-AWS-0154",
 		Provider:   providers.AWSProvider,
 		Service:    "cloudwatch",
-		ShortCode:  "require-cmk-disabled-alarm",
-		Summary:    "Ensure a log metric filter and alarm exist for disabling or scheduled deletion of customer managed keys",
-		Impact:     "CloudTrail tracks all changes through the API, attempts to change the configuration may indicate malicious activity. Without alerting on changes, visibility of this activity is reduced.",
-		Resolution: "Create an alarm to alert on CMKs being disabled or scheduled for deletion",
+		ShortCode:  "require-s3-bucket-policy-change-alarm",
+		Summary:    "Ensure a log metric filter and alarm exist for S3 bucket policy changes",
+		Impact:     "Misconfigured policies on S3 buckets could lead to data leakage, without alerting visibility of this is reduced.",
+		Resolution: "Create an alarm to alert on S3 Bucket policy changes",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
-				"3.7",
+				"3.8",
 			},
 			framework.CIS_AWS_1_4: {
-				"4.7",
+				"4.8",
 			},
 		},
 		Explanation: `You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
                                                                               
-  CIS recommends that you create a metric filter and alarm for customer managed keys that have changed state to disabled or scheduled deletion. Data encrypted with disabled or deleted keys is no longer accessible. `,
+CIS recommends that you create a metric filter and alarm for changes to S3 bucket policies. Monitoring these changes might reduce time to detect and correct permissive policies on sensitive S3 buckets.`,
 		Links: []string{
 			"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html",
 		},
@@ -50,7 +50,10 @@ var requireCMKDisabledAlarm = rules.Register(
 			var metricFilter cloudwatch.MetricFilter
 			var found bool
 			for _, filter := range logGroup.MetricFilters {
-				if filter.FilterPattern.Contains(`{($.eventSource=kms.amazonaws.com) && (($.eventName=DisableKey) || ($.eventName=ScheduleKeyDeletion))}`, types.IgnoreWhitespace) {
+				if filter.FilterPattern.Contains(`{($.eventSource=s3.amazonaws.com) && (($.eventName=PutBucketAcl) || 
+					($.eventName=PutBucketPolicy) || ($.eventName=PutBucketCors) || ($.eventName=PutBucketLifecycle) || 
+					($.eventName=PutBucketReplication) || ($.eventName=DeleteBucketPolicy) || ($.eventName=DeleteBucketCors) ||
+					 ($.eventName=DeleteBucketLifecycle) || ($.eventName=DeleteBucketReplication))}`, types.IgnoreWhitespace) {
 					metricFilter = filter
 					found = true
 					break
@@ -58,12 +61,12 @@ var requireCMKDisabledAlarm = rules.Register(
 			}
 
 			if !found {
-				results.Add("Cloudtrail has no CMK disabling or deletion log filter", trail)
+				results.Add("Cloudtrail has no S3 bucket policy change log filter", trail)
 				continue
 			}
 
 			if metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName(metricFilter.FilterName.Value()); metricAlarm == nil {
-				results.Add("Cloudtrail has no CMK disabled of scheduled deletion alarm", trail)
+				results.Add("Cloudtrail has no S3 bucket policy change alarm", trail)
 				continue
 			}
 

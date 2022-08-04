@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckRequireCloudTrailChangeAlarm(t *testing.T) {
+func TestCheckRequireS3BucketPolicyChangeAlarm(t *testing.T) {
 	tests := []struct {
 		name       string
 		cloudtrail cloudtrail.CloudTrail
@@ -19,7 +19,7 @@ func TestCheckRequireCloudTrailChangeAlarm(t *testing.T) {
 		expected   bool
 	}{
 		{
-			name: "Multi-region CloudTrail alarms on CloudTrail configuration change",
+			name: "Multi-region CloudTrail alarms on S3 bucket policy change",
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
@@ -37,9 +37,12 @@ func TestCheckRequireCloudTrailChangeAlarm(t *testing.T) {
 						Arn:      types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
 						MetricFilters: []cloudwatch.MetricFilter{
 							{
-								Metadata:      types.NewTestMetadata(),
-								FilterName:    types.String("CloudTrailConfigurationChange", types.NewTestMetadata()),
-								FilterPattern: types.String(`   {($.eventName=CreateTrail) || ($.eventName=UpdateTrail) || ($.eventName=DeleteTrail) || ($.eventName=StartLogging) || ($.eventName=StopLogging)}`, types.NewTestMetadata()),
+								Metadata:   types.NewTestMetadata(),
+								FilterName: types.String("BucketPolicyChange", types.NewTestMetadata()),
+								FilterPattern: types.String(`{($.eventSource=s3.amazonaws.com) && (($.eventName=PutBucketAcl) || 
+					($.eventName=PutBucketPolicy) || ($.eventName=PutBucketCors) || ($.eventName=PutBucketLifecycle) || 
+					($.eventName=PutBucketReplication) || ($.eventName=DeleteBucketPolicy) || ($.eventName=DeleteBucketCors) ||
+					 ($.eventName=DeleteBucketLifecycle) || ($.eventName=DeleteBucketReplication))}`, types.NewTestMetadata()),
 							},
 						},
 					},
@@ -47,12 +50,12 @@ func TestCheckRequireCloudTrailChangeAlarm(t *testing.T) {
 				Alarms: []cloudwatch.Alarm{
 					{
 						Metadata:   types.NewTestMetadata(),
-						AlarmName:  types.String("CloudTrailConfigurationChange", types.NewTestMetadata()),
-						MetricName: types.String("CloudTrailConfigurationChange", types.NewTestMetadata()),
+						AlarmName:  types.String("BucketPolicyChange", types.NewTestMetadata()),
+						MetricName: types.String("BucketPolicyChange", types.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{
 								Metadata: types.NewTestMetadata(),
-								ID:       types.String("CloudTrailConfigurationChange", types.NewTestMetadata()),
+								ID:       types.String("BucketPolicyChange", types.NewTestMetadata()),
 							},
 						},
 					},
@@ -61,7 +64,7 @@ func TestCheckRequireCloudTrailChangeAlarm(t *testing.T) {
 			expected: false,
 		},
 		{
-			name: "Multi-region CloudTrail has no filter for CloudTrail configuration change",
+			name: "Multi-region CloudTrail has no filter for S3 bucket policy change",
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
@@ -83,7 +86,7 @@ func TestCheckRequireCloudTrailChangeAlarm(t *testing.T) {
 				Alarms: []cloudwatch.Alarm{
 					{
 						Metadata:  types.NewTestMetadata(),
-						AlarmName: types.String("CloudTrailConfigurationChange", types.NewTestMetadata()),
+						AlarmName: types.String("BucketPolicyChange", types.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{},
 						},
@@ -98,10 +101,10 @@ func TestCheckRequireCloudTrailChangeAlarm(t *testing.T) {
 			var testState state.State
 			testState.AWS.CloudWatch = test.cloudwatch
 			testState.AWS.CloudTrail = test.cloudtrail
-			results := requireCloudTrailChangeAlarm.Evaluate(&testState)
+			results := requireS3BucketPolicyChangeAlarm.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() == scan.StatusFailed && result.Rule().LongID() == requireCloudTrailChangeAlarm.Rule().LongID() {
+				if result.Status() == scan.StatusFailed && result.Rule().LongID() == requireS3BucketPolicyChangeAlarm.Rule().LongID() {
 					found = true
 				}
 			}
