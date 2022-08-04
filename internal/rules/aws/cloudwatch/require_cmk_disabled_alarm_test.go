@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckRequireConsoleLoginFailureAlarm(t *testing.T) {
+func TestCheckCMKDisabledAlarm(t *testing.T) {
 	tests := []struct {
 		name       string
 		cloudtrail cloudtrail.CloudTrail
@@ -19,7 +19,7 @@ func TestCheckRequireConsoleLoginFailureAlarm(t *testing.T) {
 		expected   bool
 	}{
 		{
-			name: "Multi-region CloudTrail alarms on Console login failure",
+			name: "Multi-region CloudTrail alarms on CMK disabled or scheduled deletion",
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
@@ -38,8 +38,8 @@ func TestCheckRequireConsoleLoginFailureAlarm(t *testing.T) {
 						MetricFilters: []cloudwatch.MetricFilter{
 							{
 								Metadata:      types.NewTestMetadata(),
-								FilterName:    types.String("ConsoleLoginFailure", types.NewTestMetadata()),
-								FilterPattern: types.String(`{($.eventName=ConsoleLogin) && ($.errorMessage="Failed authentication")}`, types.NewTestMetadata()),
+								FilterName:    types.String("CMKDisbledOrScheduledDelete", types.NewTestMetadata()),
+								FilterPattern: types.String(`{($.eventSource=kms.amazonaws.com) && (($.eventName=DisableKey) || ($.eventName=ScheduleKeyDeletion))}`, types.NewTestMetadata()),
 							},
 						},
 					},
@@ -47,12 +47,12 @@ func TestCheckRequireConsoleLoginFailureAlarm(t *testing.T) {
 				Alarms: []cloudwatch.Alarm{
 					{
 						Metadata:   types.NewTestMetadata(),
-						AlarmName:  types.String("ConsoleLoginFailure", types.NewTestMetadata()),
-						MetricName: types.String("ConsoleLoginFailure", types.NewTestMetadata()),
+						AlarmName:  types.String("CMKDisbledOrScheduledDelete", types.NewTestMetadata()),
+						MetricName: types.String("CMKDisbledOrScheduledDelete", types.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{
 								Metadata: types.NewTestMetadata(),
-								ID:       types.String("ConsoleLoginFailure", types.NewTestMetadata()),
+								ID:       types.String("CMKDisbledOrScheduledDelete", types.NewTestMetadata()),
 							},
 						},
 					},
@@ -61,7 +61,7 @@ func TestCheckRequireConsoleLoginFailureAlarm(t *testing.T) {
 			expected: false,
 		},
 		{
-			name: "Multi-region CloudTrail has no filter for console login failure",
+			name: "Multi-region CloudTrail has no filter for CMK Disabled or scheduled deletion",
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
@@ -83,7 +83,7 @@ func TestCheckRequireConsoleLoginFailureAlarm(t *testing.T) {
 				Alarms: []cloudwatch.Alarm{
 					{
 						Metadata:  types.NewTestMetadata(),
-						AlarmName: types.String("ConsoleLoginFailure", types.NewTestMetadata()),
+						AlarmName: types.String("CMKDisbledOrScheduledDelete", types.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{},
 						},
@@ -98,10 +98,10 @@ func TestCheckRequireConsoleLoginFailureAlarm(t *testing.T) {
 			var testState state.State
 			testState.AWS.CloudWatch = test.cloudwatch
 			testState.AWS.CloudTrail = test.cloudtrail
-			results := requireConsoleLoginFailureAlarm.Evaluate(&testState)
+			results := requireCloudTrailChangeAlarm.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() == scan.StatusFailed && result.Rule().LongID() == requireConsoleLoginFailureAlarm.Rule().LongID() {
+				if result.Status() == scan.StatusFailed && result.Rule().LongID() == requireCloudTrailChangeAlarm.Rule().LongID() {
 					found = true
 				}
 			}

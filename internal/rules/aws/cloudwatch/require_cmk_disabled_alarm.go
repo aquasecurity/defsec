@@ -11,26 +11,26 @@ import (
 	"github.com/aquasecurity/defsec/pkg/state"
 )
 
-var requireCloudTrailChangeAlarm = rules.Register(
+var requireCMKDisabledAlarm = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0151",
+		AVDID:      "AVD-AWS-0153",
 		Provider:   providers.AWSProvider,
 		Service:    "cloudwatch",
-		ShortCode:  "require-cloud-trail-change-alarm",
-		Summary:    "Ensure a log metric filter and alarm exist for CloudTrail configuration changes",
+		ShortCode:  "require-cmk-disabled-alarm",
+		Summary:    "Ensure a log metric filter and alarm exist for disabling or scheduled deletion of customer managed keys",
 		Impact:     "CloudTrail tracks all changes through the API, attempts to change the configuration may indicate malicious activity. Without alerting on changes, visibility of this activity is reduced.",
 		Resolution: "Create an alarm to alert on CloudTrail configuration changes",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
-				"3.5",
+				"3.7",
 			},
 			framework.CIS_AWS_1_4: {
-				"4.5",
+				"4.7",
 			},
 		},
 		Explanation: `You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
                                                                               
-CIS recommends that you create a metric filter and alarm for changes to CloudTrail configuration settings. Monitoring these changes helps ensure sustained visibility to activities in the account.`,
+  CIS recommends that you create a metric filter and alarm for customer managed keys that have changed state to disabled or scheduled deletion. Data encrypted with disabled or deleted keys is no longer accessible. `,
 		Links: []string{
 			"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html",
 		},
@@ -50,7 +50,7 @@ CIS recommends that you create a metric filter and alarm for changes to CloudTra
 			var metricFilter cloudwatch.MetricFilter
 			var found bool
 			for _, filter := range logGroup.MetricFilters {
-				if filter.FilterPattern.Contains(`{($.eventName=CreateTrail) || ($.eventName=UpdateTrail) || ($.eventName=DeleteTrail) || ($.eventName=StartLogging) || ($.eventName=StopLogging)}`, types.IgnoreWhitespace) {
+				if filter.FilterPattern.Contains(`{($.eventSource=kms.amazonaws.com) && (($.eventName=DisableKey) || ($.eventName=ScheduleKeyDeletion))}`, types.IgnoreWhitespace) {
 					metricFilter = filter
 					found = true
 					break
@@ -58,12 +58,12 @@ CIS recommends that you create a metric filter and alarm for changes to CloudTra
 			}
 
 			if !found {
-				results.Add("Cloudtrail has no IAM policy change log filter", trail)
+				results.Add("Cloudtrail has no CMK disabling or deletion log filter", trail)
 				continue
 			}
 
 			if metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName(metricFilter.FilterName.Value()); metricAlarm == nil {
-				results.Add("Cloudtrail has no IAM Policy change alarm", trail)
+				results.Add("Cloudtrail has no v alarm", trail)
 				continue
 			}
 

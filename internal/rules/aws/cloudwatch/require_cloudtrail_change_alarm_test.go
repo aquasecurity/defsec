@@ -19,7 +19,7 @@ func TestCheckRequireCloudTrailChangeAlarm(t *testing.T) {
 		expected   bool
 	}{
 		{
-			name: "Multi-region CloudTrail alarms on IAM Policy change",
+			name: "Multi-region CloudTrail alarms on CloudTrail configuration change",
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
@@ -47,12 +47,12 @@ func TestCheckRequireCloudTrailChangeAlarm(t *testing.T) {
 				Alarms: []cloudwatch.Alarm{
 					{
 						Metadata:   types.NewTestMetadata(),
-						AlarmName:  types.String("ConsoleLoginFailure", types.NewTestMetadata()),
-						MetricName: types.String("ConsoleLoginFailure", types.NewTestMetadata()),
+						AlarmName:  types.String("CloudTrailConfigurationChange", types.NewTestMetadata()),
+						MetricName: types.String("CloudTrailConfigurationChange", types.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{
 								Metadata: types.NewTestMetadata(),
-								ID:       types.String("ConsoleLoginFailure", types.NewTestMetadata()),
+								ID:       types.String("CloudTrailConfigurationChange", types.NewTestMetadata()),
 							},
 						},
 					},
@@ -61,7 +61,7 @@ func TestCheckRequireCloudTrailChangeAlarm(t *testing.T) {
 			expected: false,
 		},
 		{
-			name: "Multi-region CloudTrail has no filter for IAM Policy change",
+			name: "Multi-region CloudTrail has no filter for CloudTrail configuration change",
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
@@ -83,7 +83,7 @@ func TestCheckRequireCloudTrailChangeAlarm(t *testing.T) {
 				Alarms: []cloudwatch.Alarm{
 					{
 						Metadata:  types.NewTestMetadata(),
-						AlarmName: types.String("ConsoleLoginFailure", types.NewTestMetadata()),
+						AlarmName: types.String("CloudTrailConfigurationChange", types.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{},
 						},
