@@ -11,26 +11,26 @@ import (
 	"github.com/aquasecurity/defsec/pkg/state"
 )
 
-var requireIAMPolicyChangeAlarm = rules.Register(
+var requireConfigConfigurationChangeAlarm = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0150",
+		AVDID:      "AVD-AWS-0155",
 		Provider:   providers.AWSProvider,
 		Service:    "cloudwatch",
-		ShortCode:  "require-iam-policy-change-alarm",
-		Summary:    "Ensure a log metric filter and alarm exist for IAM policy changes",
-		Impact:     "IAM Policy changes could lead to excessive permissions and may have been performed maliciously.",
-		Resolution: "Create an alarm to alert on IAM Policy changes",
+		ShortCode:  "require-config-configuration-changes-alarm",
+		Summary:    "Ensure a log metric filter and alarm exist for AWS Config configuration changes",
+		Impact:     "Changes to the configuration of AWS Config may indicate malicious activity. Without alerting on changes, visibility of this activity is reduced.",
+		Resolution: "Create an alarm to alert on AWS Config configuration changes",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
-				"3.4",
+				"3.9",
 			},
 			framework.CIS_AWS_1_4: {
-				"4.4",
+				"4.9",
 			},
 		},
-		Explanation: `  You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
+		Explanation: `You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
                                                                               
-CIS recommends that you create a metric filter and alarm for changes made to IAM policies. Monitoring these changes helps ensure that authentication and authorization controls remain intact.`,
+CIS recommends that you create a metric filter and alarm for changes to AWS Config configuration settings. Monitoring these changes helps ensure sustained visibility of configuration items in the account.`,
 		Links: []string{
 			"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html",
 		},
@@ -50,22 +50,7 @@ CIS recommends that you create a metric filter and alarm for changes made to IAM
 			var metricFilter cloudwatch.MetricFilter
 			var found bool
 			for _, filter := range logGroup.MetricFilters {
-				if filter.FilterPattern.Contains(`{($.eventName=DeleteGroupPolicy) || 
-($.eventName=DeleteRolePolicy) || 
-($.eventName=DeleteUserPolicy) || 
-($.eventName=PutGroupPolicy) || 
-($.eventName=PutRolePolicy) || 
-($.eventName=PutUserPolicy) || 
-($.eventName=CreatePolicy) || 
-($.eventName=DeletePolicy) || 
-($.eventName=CreatePolicyVersion) || 
-($.eventName=DeletePolicyVersion) || 
-($.eventName=AttachRolePolicy) ||
-($.eventName=DetachRolePolicy) ||
-($.eventName=AttachUserPolicy) || 
-($.eventName=DetachUserPolicy) || 
-($.eventName=AttachGroupPolicy) || 
-($.eventName=DetachGroupPolicy)}`, types.IgnoreWhitespace) {
+				if filter.FilterPattern.Contains(`{($.eventSource=config.amazonaws.com) && (($.eventName=StopConfigurationRecorder) || ($.eventName=DeleteDeliveryChannel) || ($.eventName=PutDeliveryChannel) || ($.eventName=PutConfigurationRecorder))}`, types.IgnoreWhitespace) {
 					metricFilter = filter
 					found = true
 					break
@@ -73,12 +58,12 @@ CIS recommends that you create a metric filter and alarm for changes made to IAM
 			}
 
 			if !found {
-				results.Add("Cloudtrail has no IAM policy change log filter", trail)
+				results.Add("Cloudtrail has no Config configuration change log filter", trail)
 				continue
 			}
 
 			if metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName(metricFilter.FilterName.Value()); metricAlarm == nil {
-				results.Add("Cloudtrail has no IAM Policy change alarm", trail)
+				results.Add("Cloudtrail has no Config configuration change alarm", trail)
 				continue
 			}
 

@@ -10,6 +10,6 @@ IAM Policy changes could lead to excessive permissions and may have been perform
 {{ remediationActions }}
 
 ### Links
-- https://aws.amazon.com/iam/features/mfa/
+- https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html
 
 

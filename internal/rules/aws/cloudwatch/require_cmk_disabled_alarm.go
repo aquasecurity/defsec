@@ -11,26 +11,26 @@ import (
 	"github.com/aquasecurity/defsec/pkg/state"
 )
 
-var requireIAMPolicyChangeAlarm = rules.Register(
+var requireCMKDisabledAlarm = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0150",
+		AVDID:      "AVD-AWS-0153",
 		Provider:   providers.AWSProvider,
 		Service:    "cloudwatch",
-		ShortCode:  "require-iam-policy-change-alarm",
-		Summary:    "Ensure a log metric filter and alarm exist for IAM policy changes",
-		Impact:     "IAM Policy changes could lead to excessive permissions and may have been performed maliciously.",
-		Resolution: "Create an alarm to alert on IAM Policy changes",
+		ShortCode:  "require-cmk-disabled-alarm",
+		Summary:    "Ensure a log metric filter and alarm exist for disabling or scheduled deletion of customer managed keys",
+		Impact:     "CloudTrail tracks all changes through the API, attempts to change the configuration may indicate malicious activity. Without alerting on changes, visibility of this activity is reduced.",
+		Resolution: "Create an alarm to alert on CMKs being disabled or scheduled for deletion",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
-				"3.4",
+				"3.7",
 			},
 			framework.CIS_AWS_1_4: {
-				"4.4",
+				"4.7",
 			},
 		},
-		Explanation: `  You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
+		Explanation: `You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
                                                                               
-CIS recommends that you create a metric filter and alarm for changes made to IAM policies. Monitoring these changes helps ensure that authentication and authorization controls remain intact.`,
+  CIS recommends that you create a metric filter and alarm for customer managed keys that have changed state to disabled or scheduled deletion. Data encrypted with disabled or deleted keys is no longer accessible. `,
 		Links: []string{
 			"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html",
 		},
@@ -50,22 +50,7 @@ CIS recommends that you create a metric filter and alarm for changes made to IAM
 			var metricFilter cloudwatch.MetricFilter
 			var found bool
 			for _, filter := range logGroup.MetricFilters {
-				if filter.FilterPattern.Contains(`{($.eventName=DeleteGroupPolicy) || 
-($.eventName=DeleteRolePolicy) || 
-($.eventName=DeleteUserPolicy) || 
-($.eventName=PutGroupPolicy) || 
-($.eventName=PutRolePolicy) || 
-($.eventName=PutUserPolicy) || 
-($.eventName=CreatePolicy) || 
-($.eventName=DeletePolicy) || 
-($.eventName=CreatePolicyVersion) || 
-($.eventName=DeletePolicyVersion) || 
-($.eventName=AttachRolePolicy) ||
-($.eventName=DetachRolePolicy) ||
-($.eventName=AttachUserPolicy) || 
-($.eventName=DetachUserPolicy) || 
-($.eventName=AttachGroupPolicy) || 
-($.eventName=DetachGroupPolicy)}`, types.IgnoreWhitespace) {
+				if filter.FilterPattern.Contains(`{($.eventSource=kms.amazonaws.com) && (($.eventName=DisableKey) || ($.eventName=ScheduleKeyDeletion))}`, types.IgnoreWhitespace) {
 					metricFilter = filter
 					found = true
 					break
@@ -73,12 +58,12 @@ CIS recommends that you create a metric filter and alarm for changes made to IAM
 			}
 
 			if !found {
-				results.Add("Cloudtrail has no IAM policy change log filter", trail)
+				results.Add("Cloudtrail has no CMK disabling or deletion log filter", trail)
 				continue
 			}
 
 			if metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName(metricFilter.FilterName.Value()); metricAlarm == nil {
-				results.Add("Cloudtrail has no IAM Policy change alarm", trail)
+				results.Add("Cloudtrail has no CMK disabled of scheduled deletion alarm", trail)
 				continue
 			}
 
