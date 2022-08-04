@@ -20,7 +20,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.15.10
 	github.com/aws/aws-sdk-go-v2/service/codebuild v1.19.8
 	github.com/aws/aws-sdk-go-v2/service/docdb v1.18.5
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.9
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.10
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.47.0
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.17.8
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.18.11
@@ -28,7 +28,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/eks v1.21.4
 	github.com/aws/aws-sdk-go-v2/service/elasticache v1.22.0
 	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.18.8
-	github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.0
+	github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.1
 	github.com/aws/aws-sdk-go-v2/service/emr v1.20.1
 	github.com/aws/aws-sdk-go-v2/service/iam v1.18.9
 	github.com/aws/aws-sdk-go-v2/service/kafka v1.17.9
@@ -49,7 +49,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-getter v1.6.2
 	github.com/hashicorp/go-uuid v1.0.3
-	github.com/hashicorp/hcl/v2 v2.12.0
+	github.com/hashicorp/hcl/v2 v2.13.0
 	github.com/liamg/iamgo v0.0.9
 	github.com/liamg/jfather v0.0.7
 	github.com/liamg/memoryfs v1.4.2
@@ -64,7 +64,7 @@ require (
 	github.com/stretchr/testify v1.8.0
 	github.com/zclconf/go-cty v1.10.0
 	github.com/zclconf/go-cty-yaml v1.0.2
-	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd
+	golang.org/x/crypto v0.0.0-20220517005047-85d78b3ac167
 	golang.org/x/text v0.3.7
 	gopkg.in/yaml.v3 v3.0.1
 	helm.sh/helm/v3 v3.9.0
@@ -98,7 +98,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.7 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.8 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.9 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.9 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.6 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.11.12 // indirect
