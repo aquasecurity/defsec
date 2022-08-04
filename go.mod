@@ -14,7 +14,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.10
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8
 	github.com/aws/aws-sdk-go-v2/service/athena v1.18.0
-	github.com/aws/aws-sdk-go-v2/service/cloudfront v1.18.4
+	github.com/aws/aws-sdk-go-v2/service/cloudfront v1.18.5
 	github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.16.4
 	github.com/aws/aws-sdk-go-v2/service/cloudwatch v1.19.0
 	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.15.10
@@ -28,7 +28,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/eks v1.21.4
 	github.com/aws/aws-sdk-go-v2/service/elasticache v1.22.0
 	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.18.8
-	github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.0
+	github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.1
 	github.com/aws/aws-sdk-go-v2/service/emr v1.20.1
 	github.com/aws/aws-sdk-go-v2/service/iam v1.18.9
 	github.com/aws/aws-sdk-go-v2/service/kafka v1.17.9
