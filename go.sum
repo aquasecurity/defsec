@@ -233,8 +233,8 @@ github.com/aws/aws-sdk-go-v2/service/elasticache v1.22.0 h1:6YCx0vgSZnAn62IjKWLU
 github.com/aws/aws-sdk-go-v2/service/elasticache v1.22.0/go.mod h1:pOgs/FgJKLk9UzOV22TvCbaCpWT+IOg7OAi2tEJYwLo=
 github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.18.8 h1:D6Sc+XyjK++NhkJJLvZNcf0xyzNhhC+GVn/MYDeONS4=
 github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.18.8/go.mod h1:8OyausC7+VUBNJFOEDjvSrowuefSkEoJaUzsGLNRXZQ=
-github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.0 h1:zZh0T+d+hodSrTCCb25gsM2k7xkcaZtmwCpLIYJXu2g=
-github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.0/go.mod h1:f2plxFOQBoXluwnSrOSgnw7MsvWPGdidVqzCPEXihOk=
+github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.1 h1:x6/McT+Lxlr1hcADHu3dFzG2jRZope4BeBNTaCF2kYM=
+github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.1/go.mod h1:A4rBOsc7JmoqJI0QlhMVmaeBA1gY504A9Pt/Z1vVDPc=
 github.com/aws/aws-sdk-go-v2/service/emr v1.20.1 h1:bq9MR1m4jjsmjJokZDt8ud7dlp0W+vvBdmyREwFSqmk=
 github.com/aws/aws-sdk-go-v2/service/emr v1.20.1/go.mod h1:jzI2/dCm9QI4ggJz3VsZmGMhgr6dJ7u32Wodsb07mn8=
 github.com/aws/aws-sdk-go-v2/service/iam v1.18.9 h1:pVHvEz+KIsTwRKufwvGZr90X/YJ7swVshaBZNY4ESIY=
@@ -278,8 +278,9 @@ github.com/aws/aws-sdk-go-v2/service/sqs v1.19.0 h1:DIfxowLm7VUMqipBd/3y7EGiQTHe
 github.com/aws/aws-sdk-go-v2/service/sqs v1.19.0/go.mod h1:p2Kn1XCPZLA5Z+dE859RGRCuP3TUC3pTgU7j1bcj5bY=
 github.com/aws/aws-sdk-go-v2/service/sso v1.11.12 h1:760bUnTX/+d693FT6T6Oa7PZHfEQT9XMFZeM5IQIB0A=
 github.com/aws/aws-sdk-go-v2/service/sso v1.11.12/go.mod h1:MO4qguFjs3wPGcCSpQ7kOFTwRvb+eu+fn+1vKleGHUk=
-github.com/aws/aws-sdk-go-v2/service/sts v1.16.9 h1:yOfILxyjmtr2ubRkRJldlHDFBhf5vw4CzhbwWIBmimQ=
 github.com/aws/aws-sdk-go-v2/service/sts v1.16.9/go.mod h1:O1IvkYxr+39hRf960Us6j0x1P8pDqhTX+oXM5kQNl/Y=
+github.com/aws/aws-sdk-go-v2/service/sts v1.16.10 h1:7tquJrhjYz2EsCBvA9VTl+sBAAh1bv7h/sGASdZOGGo=
+github.com/aws/aws-sdk-go-v2/service/sts v1.16.10/go.mod h1:cftkHYN6tCDNfkSasAmclSfl4l7cySoay8vz7p/ce0E=
 github.com/aws/aws-sdk-go-v2/service/workspaces v1.20.0 h1:M70UoaHnKma//a6eXbf4Anqd/NbzmaliPaJYN7F0T40=
 github.com/aws/aws-sdk-go-v2/service/workspaces v1.20.0/go.mod h1:zGav7roMiT2mcGcXGH+7Npbkfi8GTy+04vEds8t8S5Q=
 github.com/aws/smithy-go v1.11.3/go.mod h1:Tg+OJXh4MB2R/uN61Ko2f6hTZwB/ZYGOtib8J3gBHzA=
