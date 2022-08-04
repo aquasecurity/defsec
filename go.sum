@@ -206,8 +206,8 @@ github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.10 h1:ECUkYfucRYCdxewYfnBA
 github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.10/go.mod h1:AcRUtiDXHcF542IVjLDSsNnmEkhi089SnyRmrarZakg=
 github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8 h1:OQZODVKX58BBVtiGHdQ+l60k2HDf2q8D9Rzd6t6mFN4=
 github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8/go.mod h1:YXBCG4l+2VBAd1a634Pz/iJvlTwKaTkdkj/BmtdS4X4=
-github.com/aws/aws-sdk-go-v2/service/athena v1.17.0 h1:/Brmq8Xom1f9NcIUhrjh5EQzJod0kAgMQfSQ3HF3AHE=
-github.com/aws/aws-sdk-go-v2/service/athena v1.17.0/go.mod h1:vzZmGw8nWpyH/JA5W2YjExtJ9OUPPXCaKhEgc+7RSTs=
+github.com/aws/aws-sdk-go-v2/service/athena v1.18.0 h1:9YutJ/6ZSeqL9bv9FYrjM+gL7wqGvHsVfLQRoE4TCD8=
+github.com/aws/aws-sdk-go-v2/service/athena v1.18.0/go.mod h1:vzZmGw8nWpyH/JA5W2YjExtJ9OUPPXCaKhEgc+7RSTs=
 github.com/aws/aws-sdk-go-v2/service/cloudfront v1.18.4 h1:azoeSOZ1j20DyZ49G2m6ySXxAePhTu2AWlRBOJZ2kZU=
 github.com/aws/aws-sdk-go-v2/service/cloudfront v1.18.4/go.mod h1:TmvpVdgguHUOzw99+hZlfZWXM/eXvT8wB0Q7Rt7bV0E=
 github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.16.4 h1:2u/QhW/f9KLH0QPDXX+1MvZmSfM5QKsr1gCXCe+AIZI=
