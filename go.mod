@@ -31,14 +31,14 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.1
 	github.com/aws/aws-sdk-go-v2/service/emr v1.20.1
 	github.com/aws/aws-sdk-go-v2/service/iam v1.18.9
-	github.com/aws/aws-sdk-go-v2/service/kafka v1.17.9
+	github.com/aws/aws-sdk-go-v2/service/kafka v1.17.10
 	github.com/aws/aws-sdk-go-v2/service/kinesis v1.15.9
 	github.com/aws/aws-sdk-go-v2/service/kms v1.18.0
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.23.4
-	github.com/aws/aws-sdk-go-v2/service/mq v1.13.4
+	github.com/aws/aws-sdk-go-v2/service/mq v1.13.5
 	github.com/aws/aws-sdk-go-v2/service/neptune v1.17.2
 	github.com/aws/aws-sdk-go-v2/service/rds v1.23.2
-	github.com/aws/aws-sdk-go-v2/service/redshift v1.26.0
+	github.com/aws/aws-sdk-go-v2/service/redshift v1.26.1
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.26.11
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.15.13
 	github.com/aws/aws-sdk-go-v2/service/sns v1.17.9
