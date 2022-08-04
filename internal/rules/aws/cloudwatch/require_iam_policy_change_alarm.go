@@ -32,7 +32,7 @@ var requireIAMPolicyChangeAlarm = rules.Register(
                                                                               
 CIS recommends that you create a metric filter and alarm for changes made to IAM policies. Monitoring these changes helps ensure that authentication and authorization controls remain intact.`,
 		Links: []string{
-			"https://aws.amazon.com/iam/features/mfa/",
+			"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html",
 		},
 		Terraform:      &scan.EngineMetadata{},
 		CloudFormation: &scan.EngineMetadata{},

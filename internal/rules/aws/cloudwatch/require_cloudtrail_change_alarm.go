@@ -11,28 +11,28 @@ import (
 	"github.com/aquasecurity/defsec/pkg/state"
 )
 
-var requireConsoleLoginFailureAlarm = rules.Register(
+var requireCloudTrailChangeAlarm = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0152",
+		AVDID:      "AVD-AWS-0151",
 		Provider:   providers.AWSProvider,
 		Service:    "cloudwatch",
-		ShortCode:  "require-console-login-failures-alarm",
-		Summary:    "Ensure a log metric filter and alarm exist for AWS Management Console authentication failures",
-		Impact:     "Failed attempts to log into the Management console may indicate an attempt to maliciously access an account. Failure to alert reduces visibility of this activity.",
-		Resolution: "Create an alarm to alert on console login failures",
+		ShortCode:  "require-cloud-trail-change-logging",
+		Summary:    "Ensure a log metric filter and alarm exist for CloudTrail configuration changes",
+		Impact:     "CloudTrail tracks all changes through the API, attempts to change the configuration may indicate malicious activity. Without alerting on changes, visibility of this activity is reduced.",
+		Resolution: "Create an alarm to alert on CloudTrail configuration changes",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
-				"3.6",
+				"3.5",
 			},
 			framework.CIS_AWS_1_4: {
-				"4.6",
+				"4.5",
 			},
 		},
 		Explanation: `You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
                                                                               
-CIS recommends that you create a metric filter and alarm for failed console authentication attempts. Monitoring failed console logins might decrease lead time to detect an attempt to brute-force a credential, which might provide an indicator, such as source IP, that you can use in other event correlations.`,
+CIS recommends that you create a metric filter and alarm for changes to CloudTrail configuration settings. Monitoring these changes helps ensure sustained visibility to activities in the account.`,
 		Links: []string{
-			"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-aws-console-sign-in-events.html",
+			"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html",
 		},
 		Terraform:      &scan.EngineMetadata{},
 		CloudFormation: &scan.EngineMetadata{},
@@ -50,7 +50,7 @@ CIS recommends that you create a metric filter and alarm for failed console auth
 			var metricFilter cloudwatch.MetricFilter
 			var found bool
 			for _, filter := range logGroup.MetricFilters {
-				if filter.FilterPattern.Contains(`{($.eventName=ConsoleLogin) && ($.errorMessage="Failed authentication")}`, types.IgnoreWhitespace) {
+				if filter.FilterPattern.Contains(`{($.eventName=CreateTrail) || ($.eventName=UpdateTrail) || ($.eventName=DeleteTrail) || ($.eventName=StartLogging) || ($.eventName=StopLogging)}`, types.IgnoreWhitespace) {
 					metricFilter = filter
 					found = true
 					break
@@ -58,12 +58,12 @@ CIS recommends that you create a metric filter and alarm for failed console auth
 			}
 
 			if !found {
-				results.Add("Cloudtrail has no console login failure log filter", trail)
+				results.Add("Cloudtrail has no IAM policy change log filter", trail)
 				continue
 			}
 
 			if metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName(metricFilter.FilterName.Value()); metricAlarm == nil {
-				results.Add("Cloudtrail has no console login failure alarm", trail)
+				results.Add("Cloudtrail has no IAM Policy change alarm", trail)
 				continue
 			}
 
