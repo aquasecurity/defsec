@@ -11,26 +11,26 @@ import (
 	"github.com/aquasecurity/defsec/pkg/state"
 )
 
-var requireIAMPolicyChangeAlarm = rules.Register(
+var requireConsoleLoginFailureAlarm = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0150",
+		AVDID:      "AVD-AWS-0152",
 		Provider:   providers.AWSProvider,
 		Service:    "cloudwatch",
-		ShortCode:  "require-iam-policy-change-alarm",
-		Summary:    "Ensure a log metric filter and alarm exist for IAM policy changes",
+		ShortCode:  "require-console-login-failures-alarm",
+		Summary:    "Ensure a log metric filter and alarm exist for AWS Management Console authentication failures",
 		Impact:     "IAM Policy changes could lead to excessive permissions and may have been performed maliciously.",
 		Resolution: "Create an alarm to alert on IAM Policy changes",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
-				"3.4",
+				"3.6",
 			},
 			framework.CIS_AWS_1_4: {
-				"4.4",
+				"4.6",
 			},
 		},
-		Explanation: `  You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
+		Explanation: `You can do real-time monitoring of API calls by directing CloudTrail logs to CloudWatch Logs and establishing corresponding metric filters and alarms.   
                                                                               
-CIS recommends that you create a metric filter and alarm for changes made to IAM policies. Monitoring these changes helps ensure that authentication and authorization controls remain intact.`,
+CIS recommends that you create a metric filter and alarm for failed console authentication attempts. Monitoring failed console logins might decrease lead time to detect an attempt to brute-force a credential, which might provide an indicator, such as source IP, that you can use in other event correlations.`,
 		Links: []string{
 			"https://aws.amazon.com/iam/features/mfa/",
 		},
@@ -50,22 +50,7 @@ CIS recommends that you create a metric filter and alarm for changes made to IAM
 			var metricFilter cloudwatch.MetricFilter
 			var found bool
 			for _, filter := range logGroup.MetricFilters {
-				if filter.FilterPattern.Contains(`{($.eventName=DeleteGroupPolicy) || 
-($.eventName=DeleteRolePolicy) || 
-($.eventName=DeleteUserPolicy) || 
-($.eventName=PutGroupPolicy) || 
-($.eventName=PutRolePolicy) || 
-($.eventName=PutUserPolicy) || 
-($.eventName=CreatePolicy) || 
-($.eventName=DeletePolicy) || 
-($.eventName=CreatePolicyVersion) || 
-($.eventName=DeletePolicyVersion) || 
-($.eventName=AttachRolePolicy) ||
-($.eventName=DetachRolePolicy) ||
-($.eventName=AttachUserPolicy) || 
-($.eventName=DetachUserPolicy) || 
-($.eventName=AttachGroupPolicy) || 
-($.eventName=DetachGroupPolicy)}`, types.IgnoreWhitespace) {
+				if filter.FilterPattern.Contains(`{($.eventName=ConsoleLogin) && ($.errorMessage="Failed authentication")}`, types.IgnoreWhitespace) {
 					metricFilter = filter
 					found = true
 					break
