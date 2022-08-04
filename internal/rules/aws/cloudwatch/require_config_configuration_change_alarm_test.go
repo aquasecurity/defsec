@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckCMKDisabledAlarm(t *testing.T) {
+func TestCheckConfigConfigurationChangeAlarm(t *testing.T) {
 	tests := []struct {
 		name       string
 		cloudtrail cloudtrail.CloudTrail
@@ -19,7 +19,7 @@ func TestCheckCMKDisabledAlarm(t *testing.T) {
 		expected   bool
 	}{
 		{
-			name: "Multi-region CloudTrail alarms on CMK disabled or scheduled deletion",
+			name: "Multi-region CloudTrail alarms on Config configuration change",
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
@@ -38,8 +38,8 @@ func TestCheckCMKDisabledAlarm(t *testing.T) {
 						MetricFilters: []cloudwatch.MetricFilter{
 							{
 								Metadata:      types.NewTestMetadata(),
-								FilterName:    types.String("CMKDisbledOrScheduledDelete", types.NewTestMetadata()),
-								FilterPattern: types.String(`{($.eventSource=kms.amazonaws.com) && (($.eventName=DisableKey) || ($.eventName=ScheduleKeyDeletion))}`, types.NewTestMetadata()),
+								FilterName:    types.String("ConfigConfigurationChange", types.NewTestMetadata()),
+								FilterPattern: types.String(`{($.eventSource=config.amazonaws.com) && (($.eventName=StopConfigurationRecorder) || ($.eventName=DeleteDeliveryChannel) || ($.eventName=PutDeliveryChannel) || ($.eventName=PutConfigurationRecorder))}`, types.NewTestMetadata()),
 							},
 						},
 					},
@@ -47,12 +47,12 @@ func TestCheckCMKDisabledAlarm(t *testing.T) {
 				Alarms: []cloudwatch.Alarm{
 					{
 						Metadata:   types.NewTestMetadata(),
-						AlarmName:  types.String("CMKDisbledOrScheduledDelete", types.NewTestMetadata()),
-						MetricName: types.String("CMKDisbledOrScheduledDelete", types.NewTestMetadata()),
+						AlarmName:  types.String("ConfigConfigurationChange", types.NewTestMetadata()),
+						MetricName: types.String("ConfigConfigurationChange", types.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{
 								Metadata: types.NewTestMetadata(),
-								ID:       types.String("CMKDisbledOrScheduledDelete", types.NewTestMetadata()),
+								ID:       types.String("ConfigConfigurationChange", types.NewTestMetadata()),
 							},
 						},
 					},
@@ -61,7 +61,7 @@ func TestCheckCMKDisabledAlarm(t *testing.T) {
 			expected: false,
 		},
 		{
-			name: "Multi-region CloudTrail has no filter for CMK Disabled or scheduled deletion",
+			name: "Multi-region CloudTrail has no filter for Config configuration change",
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
@@ -83,7 +83,7 @@ func TestCheckCMKDisabledAlarm(t *testing.T) {
 				Alarms: []cloudwatch.Alarm{
 					{
 						Metadata:  types.NewTestMetadata(),
-						AlarmName: types.String("CMKDisbledOrScheduledDelete", types.NewTestMetadata()),
+						AlarmName: types.String("ConfigConfigurationChange", types.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{},
 						},
@@ -98,10 +98,10 @@ func TestCheckCMKDisabledAlarm(t *testing.T) {
 			var testState state.State
 			testState.AWS.CloudWatch = test.cloudwatch
 			testState.AWS.CloudTrail = test.cloudtrail
-			results := requireCMKDisabledAlarm.Evaluate(&testState)
+			results := requireConfigConfigurationChangeAlarm.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() == scan.StatusFailed && result.Rule().LongID() == requireCMKDisabledAlarm.Rule().LongID() {
+				if result.Status() == scan.StatusFailed && result.Rule().LongID() == requireConfigConfigurationChangeAlarm.Rule().LongID() {
 					found = true
 				}
 			}
