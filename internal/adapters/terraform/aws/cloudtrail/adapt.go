@@ -36,11 +36,13 @@ func adaptTrail(resource *terraform.Block) cloudtrail.Trail {
 	KMSKeyIDVal := KMSKeyIDAttr.AsStringValueOrDefault("", resource)
 
 	return cloudtrail.Trail{
-		Metadata:                resource.GetMetadata(),
-		Name:                    nameVal,
-		EnableLogFileValidation: enableLogFileValidationVal,
-		IsMultiRegion:           isMultiRegionVal,
-		KMSKeyID:                KMSKeyIDVal,
-		BucketName:              resource.GetAttribute("s3_bucket_name").AsStringValueOrDefault("", resource),
+		Metadata:                  resource.GetMetadata(),
+		Name:                      nameVal,
+		EnableLogFileValidation:   enableLogFileValidationVal,
+		IsMultiRegion:             isMultiRegionVal,
+		KMSKeyID:                  KMSKeyIDVal,
+		CloudWatchLogsLogGroupArn: resource.GetAttribute("cloud_watch_logs_group_arn").AsStringValueOrDefault("", resource),
+		IsLogging:                 resource.GetAttribute("enable_logging").AsBoolValueOrDefault(true, resource),
+		BucketName:                resource.GetAttribute("s3_bucket_name").AsStringValueOrDefault("", resource),
 	}
 }
