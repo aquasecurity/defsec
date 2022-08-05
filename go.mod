@@ -13,12 +13,12 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.9
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.10
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8
-	github.com/aws/aws-sdk-go-v2/service/athena v1.18.0
+	github.com/aws/aws-sdk-go-v2/service/athena v1.18.1
 	github.com/aws/aws-sdk-go-v2/service/cloudfront v1.18.5
 	github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.16.5
 	github.com/aws/aws-sdk-go-v2/service/cloudwatch v1.19.1
 	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.15.11
-	github.com/aws/aws-sdk-go-v2/service/codebuild v1.19.8
+	github.com/aws/aws-sdk-go-v2/service/codebuild v1.19.9
 	github.com/aws/aws-sdk-go-v2/service/docdb v1.18.5
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.10
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.47.0
