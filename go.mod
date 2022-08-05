@@ -21,7 +21,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/codebuild v1.19.9
 	github.com/aws/aws-sdk-go-v2/service/docdb v1.18.5
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.10
-	github.com/aws/aws-sdk-go-v2/service/ec2 v1.47.0
+	github.com/aws/aws-sdk-go-v2/service/ec2 v1.51.1
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.17.8
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.18.12
 	github.com/aws/aws-sdk-go-v2/service/efs v1.17.6
