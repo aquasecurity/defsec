@@ -201,8 +201,8 @@ github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.3 h1:m1vDVDoNK4tZAoWtcetHopEdIeUl
 github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.3/go.mod h1:annFthsb7FiHQd5X9wKDNst9OJvVFY0l0LjQ8zQniJA=
 github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.10 h1:ECUkYfucRYCdxewYfnBAhKNfwSLLjLWtnN1hHEDaGR8=
 github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.10/go.mod h1:AcRUtiDXHcF542IVjLDSsNnmEkhi089SnyRmrarZakg=
-github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8 h1:OQZODVKX58BBVtiGHdQ+l60k2HDf2q8D9Rzd6t6mFN4=
-github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8/go.mod h1:YXBCG4l+2VBAd1a634Pz/iJvlTwKaTkdkj/BmtdS4X4=
+github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.9 h1:MkWoCyvIqAhaMO+LTSFag8s0wd6zV6Pd+X0urDKn2I8=
+github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.9/go.mod h1:Va1mvuuqN0pejuszzc1nMPAsqGbIqIxBowdXzPYR9Gw=
 github.com/aws/aws-sdk-go-v2/service/athena v1.18.1 h1:RzNtlZanMLTYe3dcq7cZEEv40YvHY6hYylHz32jwEbk=
 github.com/aws/aws-sdk-go-v2/service/athena v1.18.1/go.mod h1:JBXnq5zXBUeQo+bbMrsg1Fx3+7+vxxwYLB+EDJiLP94=
 github.com/aws/aws-sdk-go-v2/service/cloudfront v1.18.5 h1:MWmwy+Py1HXLNILagezUP9JPEV4CS33tU8xTJR65vMY=
