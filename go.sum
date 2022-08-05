@@ -316,8 +316,6 @@ github.com/aws/aws-sdk-go-v2/service/sso v1.11.13/go.mod h1:d7ptRksDDgvXaUvxyHZ9
 github.com/aws/aws-sdk-go-v2/service/sts v1.16.9/go.mod h1:O1IvkYxr+39hRf960Us6j0x1P8pDqhTX+oXM5kQNl/Y=
 github.com/aws/aws-sdk-go-v2/service/sts v1.16.10 h1:7tquJrhjYz2EsCBvA9VTl+sBAAh1bv7h/sGASdZOGGo=
 github.com/aws/aws-sdk-go-v2/service/sts v1.16.10/go.mod h1:cftkHYN6tCDNfkSasAmclSfl4l7cySoay8vz7p/ce0E=
-github.com/aws/aws-sdk-go-v2/service/workspaces v1.20.0 h1:M70UoaHnKma//a6eXbf4Anqd/NbzmaliPaJYN7F0T40=
-github.com/aws/aws-sdk-go-v2/service/workspaces v1.20.0/go.mod h1:zGav7roMiT2mcGcXGH+7Npbkfi8GTy+04vEds8t8S5Q=
 github.com/aws/aws-sdk-go-v2/service/workspaces v1.22.0 h1:6CPEYECdt2tRdtGObCxYN+NXFc46vC0tYpwY4mf2tS4=
 github.com/aws/aws-sdk-go-v2/service/workspaces v1.22.0/go.mod h1:ziCHySWl+3sgDxO+9lXeXZOmKtiUqXf1RPqcbYDlsb8=
 github.com/aws/smithy-go v1.11.3/go.mod h1:Tg+OJXh4MB2R/uN61Ko2f6hTZwB/ZYGOtib8J3gBHzA=
