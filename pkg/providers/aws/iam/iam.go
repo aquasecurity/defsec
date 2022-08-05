@@ -68,6 +68,7 @@ func (u *User) HasLoggedIn() bool {
 
 type MFADevice struct {
 	types.Metadata
+	IsVirtual types.BoolValue
 }
 
 type AccessKey struct {

@@ -52,7 +52,8 @@ func TestCheckRootMFAEnabled(t *testing.T) {
 						Name:     types.String("root", types.NewTestMetadata()),
 						MFADevices: []iam.MFADevice{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata:  types.NewTestMetadata(),
+								IsVirtual: types.Bool(true, types.NewTestMetadata()),
 							},
 						},
 					},
