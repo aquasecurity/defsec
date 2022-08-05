@@ -12,7 +12,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.15.14
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.9
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.10
-	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.8
+	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.9
 	github.com/aws/aws-sdk-go-v2/service/athena v1.18.1
 	github.com/aws/aws-sdk-go-v2/service/cloudfront v1.18.5
 	github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.16.5
@@ -44,7 +44,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sns v1.17.9
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.19.0
 	github.com/aws/aws-sdk-go-v2/service/sts v1.16.10
-	github.com/aws/aws-sdk-go-v2/service/workspaces v1.20.0
+	github.com/aws/aws-sdk-go-v2/service/workspaces v1.22.0
 	github.com/bmatcuk/doublestar v1.3.4
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-getter v1.6.2
