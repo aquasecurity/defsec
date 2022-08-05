@@ -237,8 +237,8 @@ github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.1 h1:x6/McT+Lxlr
 github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.1/go.mod h1:A4rBOsc7JmoqJI0QlhMVmaeBA1gY504A9Pt/Z1vVDPc=
 github.com/aws/aws-sdk-go-v2/service/emr v1.20.1 h1:bq9MR1m4jjsmjJokZDt8ud7dlp0W+vvBdmyREwFSqmk=
 github.com/aws/aws-sdk-go-v2/service/emr v1.20.1/go.mod h1:jzI2/dCm9QI4ggJz3VsZmGMhgr6dJ7u32Wodsb07mn8=
-github.com/aws/aws-sdk-go-v2/service/iam v1.18.9 h1:pVHvEz+KIsTwRKufwvGZr90X/YJ7swVshaBZNY4ESIY=
-github.com/aws/aws-sdk-go-v2/service/iam v1.18.9/go.mod h1:ARVuo+lYC2ibYxny/PKC3maaWKLAg25KSq0dkSkE2WE=
+github.com/aws/aws-sdk-go-v2/service/iam v1.18.10 h1:lB6TiFIJR0sZNWC2rGZ9+7OMtGpUEh/u/wYAn6HfbKk=
+github.com/aws/aws-sdk-go-v2/service/iam v1.18.10/go.mod h1:fhDORN+qPbMYyu98/RaDDiV60LXb9gvJ5UNZXY2hBNs=
 github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.2/go.mod h1:RnloUnyZ4KN9JStGY1LuQ7Wzqh7V0f8FinmRdHYtuaA=
 github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.3 h1:4n4KCtv5SUoT5Er5XV41huuzrCqepxlW3SDI9qHQebc=
 github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.3/go.mod h1:gkb2qADY+OHaGLKNTYxMaQNacfeyQpZ4csDTQMeFmcw=
