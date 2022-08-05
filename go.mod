@@ -25,7 +25,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.17.8
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.18.12
 	github.com/aws/aws-sdk-go-v2/service/efs v1.17.6
-	github.com/aws/aws-sdk-go-v2/service/eks v1.21.4
+	github.com/aws/aws-sdk-go-v2/service/eks v1.21.5
 	github.com/aws/aws-sdk-go-v2/service/elasticache v1.22.1
 	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.18.9
 	github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.1
@@ -44,7 +44,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sns v1.17.9
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.19.0
 	github.com/aws/aws-sdk-go-v2/service/sts v1.16.10
-	github.com/aws/aws-sdk-go-v2/service/workspaces v1.20.0
+	github.com/aws/aws-sdk-go-v2/service/workspaces v1.22.0
 	github.com/bmatcuk/doublestar v1.3.4
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-getter v1.6.2
