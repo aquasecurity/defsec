@@ -18,7 +18,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.16.5
 	github.com/aws/aws-sdk-go-v2/service/cloudwatch v1.19.1
 	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.15.11
-	github.com/aws/aws-sdk-go-v2/service/codebuild v1.19.8
+	github.com/aws/aws-sdk-go-v2/service/codebuild v1.19.9
 	github.com/aws/aws-sdk-go-v2/service/docdb v1.18.5
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.10
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.47.0
@@ -30,7 +30,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.18.9
 	github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.1
 	github.com/aws/aws-sdk-go-v2/service/emr v1.20.1
-	github.com/aws/aws-sdk-go-v2/service/iam v1.18.9
+	github.com/aws/aws-sdk-go-v2/service/iam v1.18.10
 	github.com/aws/aws-sdk-go-v2/service/kafka v1.17.10
 	github.com/aws/aws-sdk-go-v2/service/kinesis v1.15.9
 	github.com/aws/aws-sdk-go-v2/service/kms v1.18.0
