@@ -258,8 +258,8 @@ github.com/aws/aws-sdk-go-v2/service/kafka v1.17.10 h1:ZsFXMWeNEkUjLEuVZY0jZb1uv
 github.com/aws/aws-sdk-go-v2/service/kafka v1.17.10/go.mod h1:j3dSazeOhP6nWt7C3FAnYAwEGhYeLfneaapKIFJSlPk=
 github.com/aws/aws-sdk-go-v2/service/kinesis v1.15.9 h1:eaELb1vnxNsycqR+HQTz77MKxHAGqypKT3jeAWO3fCs=
 github.com/aws/aws-sdk-go-v2/service/kinesis v1.15.9/go.mod h1:+aOem7gsXvQM0RmNhF+kR0PLgfR/vKoeJWxmCn19ZC8=
-github.com/aws/aws-sdk-go-v2/service/kms v1.18.0 h1:WPOVki9/1OcFay1mIC/Zukf6NU2+TYzQcWCmE2qRGOA=
-github.com/aws/aws-sdk-go-v2/service/kms v1.18.0/go.mod h1:ubAtMGRUMVv5kX8lpbeDguxZ64pR4kXTGApY4sCM0io=
+github.com/aws/aws-sdk-go-v2/service/kms v1.18.1 h1:y07kzPdcjuuyDVYWf1CCsQQ6kcAWMbFy+yIJ71xQBS0=
+github.com/aws/aws-sdk-go-v2/service/kms v1.18.1/go.mod h1:4PZMUkc9rXHWGVB5J9vKaZy3D7Nai79ORworQ3ASMiM=
 github.com/aws/aws-sdk-go-v2/service/lambda v1.23.5 h1:/tq5WZODNF3juZkpTIIMfzeJx6c8kLk73SjTTvOAphY=
 github.com/aws/aws-sdk-go-v2/service/lambda v1.23.5/go.mod h1:7YjiELsNgxpiMMG2KapRbAnOF1O+e1UnoLwARPNHKYc=
 github.com/aws/aws-sdk-go-v2/service/mq v1.13.5 h1:ztNwJLLJxGWc140Ixh+5316UxJd2N4sSCViA6lT1UUk=
@@ -284,8 +284,8 @@ github.com/aws/aws-sdk-go-v2/service/sso v1.11.13/go.mod h1:d7ptRksDDgvXaUvxyHZ9
 github.com/aws/aws-sdk-go-v2/service/sts v1.16.9/go.mod h1:O1IvkYxr+39hRf960Us6j0x1P8pDqhTX+oXM5kQNl/Y=
 github.com/aws/aws-sdk-go-v2/service/sts v1.16.10 h1:7tquJrhjYz2EsCBvA9VTl+sBAAh1bv7h/sGASdZOGGo=
 github.com/aws/aws-sdk-go-v2/service/sts v1.16.10/go.mod h1:cftkHYN6tCDNfkSasAmclSfl4l7cySoay8vz7p/ce0E=
-github.com/aws/aws-sdk-go-v2/service/workspaces v1.20.0 h1:M70UoaHnKma//a6eXbf4Anqd/NbzmaliPaJYN7F0T40=
-github.com/aws/aws-sdk-go-v2/service/workspaces v1.20.0/go.mod h1:zGav7roMiT2mcGcXGH+7Npbkfi8GTy+04vEds8t8S5Q=
+github.com/aws/aws-sdk-go-v2/service/workspaces v1.22.0 h1:6CPEYECdt2tRdtGObCxYN+NXFc46vC0tYpwY4mf2tS4=
+github.com/aws/aws-sdk-go-v2/service/workspaces v1.22.0/go.mod h1:ziCHySWl+3sgDxO+9lXeXZOmKtiUqXf1RPqcbYDlsb8=
 github.com/aws/smithy-go v1.11.3/go.mod h1:Tg+OJXh4MB2R/uN61Ko2f6hTZwB/ZYGOtib8J3gBHzA=
 github.com/aws/smithy-go v1.12.0 h1:gXpeZel/jPoWQ7OEmLIgCUnhkFftqNfwWUwAHSlp1v0=
 github.com/aws/smithy-go v1.12.0/go.mod h1:Tg+OJXh4MB2R/uN61Ko2f6hTZwB/ZYGOtib8J3gBHzA=
