@@ -34,8 +34,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/kafka v1.17.10
 	github.com/aws/aws-sdk-go-v2/service/kinesis v1.15.9
 	github.com/aws/aws-sdk-go-v2/service/kms v1.18.0
-	github.com/aws/aws-sdk-go-v2/service/lambda v1.23.4
-	github.com/aws/aws-sdk-go-v2/service/mq v1.13.4
+	github.com/aws/aws-sdk-go-v2/service/lambda v1.23.5
+	github.com/aws/aws-sdk-go-v2/service/mq v1.13.5
 	github.com/aws/aws-sdk-go-v2/service/neptune v1.17.2
 	github.com/aws/aws-sdk-go-v2/service/rds v1.23.2
 	github.com/aws/aws-sdk-go-v2/service/redshift v1.26.1
