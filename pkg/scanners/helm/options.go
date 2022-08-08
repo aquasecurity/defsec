@@ -18,7 +18,7 @@ func ScannerWithValuesFile(paths ...string) options.ScannerOption {
 	}
 }
 
-func ScannerWithValues(values []string) options.ScannerOption {
+func ScannerWithValues(values ...string) options.ScannerOption {
 	return func(s options.ConfigurableScanner) {
 		if helmScanner, ok := s.(ConfigurableHelmScanner); ok {
 			helmScanner.AddParserOptions(parser.OptionWithValues(values...))
@@ -26,7 +26,7 @@ func ScannerWithValues(values []string) options.ScannerOption {
 	}
 }
 
-func ScannerWithFileValues(values []string) options.ScannerOption {
+func ScannerWithFileValues(values ...string) options.ScannerOption {
 	return func(s options.ConfigurableScanner) {
 		if helmScanner, ok := s.(ConfigurableHelmScanner); ok {
 			helmScanner.AddParserOptions(parser.OptionWithFileValues(values...))
@@ -34,7 +34,7 @@ func ScannerWithFileValues(values []string) options.ScannerOption {
 	}
 }
 
-func ScannerWithStringValues(values []string) options.ScannerOption {
+func ScannerWithStringValues(values ...string) options.ScannerOption {
 	return func(s options.ConfigurableScanner) {
 		if helmScanner, ok := s.(ConfigurableHelmScanner); ok {
 			helmScanner.AddParserOptions(parser.OptionWithStringValues(values...))
