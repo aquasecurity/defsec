@@ -196,7 +196,7 @@ func Test_adaptLoadBalancers(t *testing.T) {
 			expected: []compute.LoadBalancer{
 				{
 					Metadata:        types.NewTestMetadata(),
-					ForwardingRules: []compute.ForwardingRule{},
+					ForwardingRules: nil,
 				},
 			},
 		},

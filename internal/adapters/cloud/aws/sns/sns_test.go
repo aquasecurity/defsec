@@ -62,13 +62,13 @@ func Test_SNSTopicEncryption(t *testing.T) {
 			assert.Len(t, testState.AWS.SNS.Topics, 1)
 			var got sns.Topic
 			for _, q := range testState.AWS.SNS.Topics {
-				if q.TopicARN.EqualTo(tt.details.TopicARN()) {
+				if q.ARN.EqualTo(tt.details.TopicARN()) {
 					got = q
 					break
 				}
 			}
 
-			assert.Equal(t, tt.details.TopicARN(), got.TopicARN.Value())
+			assert.Equal(t, tt.details.TopicARN(), got.ARN.Value())
 			assert.Equal(t, tt.details.kmsKeyID, got.Encryption.KMSKeyID.Value())
 			removeTopic(t, ra, tt.details.TopicARN())
 		})

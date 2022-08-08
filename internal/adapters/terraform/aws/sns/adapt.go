@@ -25,7 +25,7 @@ func adaptTopics(modules terraform.Modules) []sns.Topic {
 func adaptTopic(resourceBlock *terraform.Block) sns.Topic {
 	return sns.Topic{
 		Metadata:   resourceBlock.GetMetadata(),
-		TopicARN:   types.StringDefault("", resourceBlock.GetMetadata()),
+		ARN:        types.StringDefault("", resourceBlock.GetMetadata()),
 		Encryption: adaptEncryption(resourceBlock),
 	}
 }

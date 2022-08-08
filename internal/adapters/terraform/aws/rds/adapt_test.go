@@ -110,6 +110,7 @@ func Test_Adapt(t *testing.T) {
 								ClusterIdentifier: types.String("aws_rds_cluster.example", types.NewTestMetadata()),
 							},
 						},
+						PublicAccess: types.Bool(false, types.NewTestMetadata()),
 					},
 				},
 				Classic: rds.Classic{
@@ -198,6 +199,7 @@ func Test_adaptCluster(t *testing.T) {
 					EncryptStorage: types.Bool(false, types.NewTestMetadata()),
 					KMSKeyID:       types.String("", types.NewTestMetadata()),
 				},
+				PublicAccess: types.Bool(false, types.NewTestMetadata()),
 			},
 		},
 	}

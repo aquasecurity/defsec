@@ -23,7 +23,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			name: "Firewall rule missing destination address",
 			input: openstack.Compute{
 				Firewall: openstack.Firewall{
-					Metadata: types.NewTestMetadata(),
 					AllowRules: []openstack.FirewallRule{
 						{
 							Metadata:    types.NewTestMetadata(),
@@ -40,7 +39,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			name: "Firewall rule missing source address",
 			input: openstack.Compute{
 				Firewall: openstack.Firewall{
-					Metadata: types.NewTestMetadata(),
 					AllowRules: []openstack.FirewallRule{
 						{
 							Metadata:    types.NewTestMetadata(),
@@ -57,7 +55,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			name: "Firewall rule with public destination and source addresses",
 			input: openstack.Compute{
 				Firewall: openstack.Firewall{
-					Metadata: types.NewTestMetadata(),
 					AllowRules: []openstack.FirewallRule{
 						{
 							Metadata:    types.NewTestMetadata(),
@@ -74,7 +71,6 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			name: "Firewall rule with private destination and source addresses",
 			input: openstack.Compute{
 				Firewall: openstack.Firewall{
-					Metadata: types.NewTestMetadata(),
 					AllowRules: []openstack.FirewallRule{
 						{
 							Metadata:    types.NewTestMetadata(),

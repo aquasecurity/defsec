@@ -34,9 +34,11 @@ func Test_adaptLogGroups(t *testing.T) {
 			expected: []cloudwatch.LogGroup{
 				{
 					Metadata:        types.NewTestMetadata(),
+					Arn:             types.String("", types.NewTestMetadata()),
 					Name:            types.String("my-group", types.NewTestMetadata()),
 					KMSKeyID:        types.String("aws_kms_key.log_key", types.NewTestMetadata()),
 					RetentionInDays: types.Int(0, types.NewTestMetadata()),
+					MetricFilters:   nil,
 				},
 			},
 		},
@@ -51,6 +53,7 @@ func Test_adaptLogGroups(t *testing.T) {
 			expected: []cloudwatch.LogGroup{
 				{
 					Metadata:        types.NewTestMetadata(),
+					Arn:             types.String("", types.NewTestMetadata()),
 					Name:            types.String("my-group", types.NewTestMetadata()),
 					KMSKeyID:        types.String("key-as-string", types.NewTestMetadata()),
 					RetentionInDays: types.Int(0, types.NewTestMetadata()),
@@ -68,6 +71,7 @@ func Test_adaptLogGroups(t *testing.T) {
 			expected: []cloudwatch.LogGroup{
 				{
 					Metadata:        types.NewTestMetadata(),
+					Arn:             types.String("", types.NewTestMetadata()),
 					Name:            types.String("my-group", types.NewTestMetadata()),
 					KMSKeyID:        types.String("", types.NewTestMetadata()),
 					RetentionInDays: types.Int(3, types.NewTestMetadata()),

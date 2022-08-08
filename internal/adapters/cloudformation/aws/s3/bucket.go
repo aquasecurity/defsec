@@ -65,7 +65,7 @@ func getLogging(r *parser.Resource) s3.Logging {
 
 	if config := r.GetProperty("LoggingConfiguration"); config.IsNotNil() {
 		logging.TargetBucket = config.GetStringProperty("DestinationBucketName")
-		if logging.TargetBucket.IsNotEmpty() {
+		if logging.TargetBucket.IsNotEmpty() || !logging.TargetBucket.GetMetadata().IsResolvable() {
 			logging.Enabled = types.Bool(true, config.Metadata())
 		}
 	}
