@@ -66,6 +66,7 @@ func setStateMachinePolicies(r *parser.Resource, stateMachine *sam.StateMachine)
 				}
 				policy := iam.Policy{
 					Metadata: property.Metadata(),
+					Name:     types.StringDefault("", property.Metadata()),
 					Document: iam.Document{
 						Metadata: property.Metadata(),
 						Parsed:   *parsed,

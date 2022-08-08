@@ -13,8 +13,9 @@ import (
 func getNetworkACLs(ctx parser.FileContext) (acls []ec2.NetworkACL) {
 	for _, aclResource := range ctx.GetResourcesByType("AWS::EC2::NetworkAcl") {
 		acl := ec2.NetworkACL{
-			Metadata: aclResource.Metadata(),
-			Rules:    getRules(aclResource.ID(), ctx),
+			Metadata:      aclResource.Metadata(),
+			Rules:         getRules(aclResource.ID(), ctx),
+			IsDefaultRule: types.BoolDefault(false, aclResource.Metadata()),
 		}
 		acls = append(acls, acl)
 	}

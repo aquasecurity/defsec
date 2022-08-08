@@ -5,7 +5,6 @@ import (
 )
 
 type Classic struct {
-	types.Metadata
 	DBSecurityGroups []DBSecurityGroup
 }
 

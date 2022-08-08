@@ -94,10 +94,10 @@ func (a adapter) getClusters() (clusters []rds.Cluster, err error) {
 	return clusters, nil
 }
 
-func (a adapter) getClassic() (classic rds.Classic, err error) {
+func (a adapter) getClassic() (rds.Classic, error) {
 
-	classic = rds.Classic{
-		Metadata: a.CreateMetadata("classicRDS"),
+	classic := rds.Classic{
+		DBSecurityGroups: nil,
 	}
 
 	a.Tracker().SetServiceLabel("Scanning RDS classic instances...")
@@ -234,6 +234,7 @@ func getInstanceEncryption(storageEncrypted bool, kmsKeyID *string, metadata typ
 
 func getPerformanceInsights(enabled *bool, kmsKeyID *string, metadata types.Metadata) rds.PerformanceInsights {
 	performanceInsights := rds.PerformanceInsights{
+		Metadata: metadata,
 		Enabled:  types.BoolDefault(false, metadata),
 		KMSKeyID: types.StringDefault("", metadata),
 	}

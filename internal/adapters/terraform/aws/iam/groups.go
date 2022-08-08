@@ -70,9 +70,12 @@ func mapGroups(modules terraform.Modules) (map[string]iam.Group, map[string]stru
 	groupMap := make(map[string]iam.Group)
 	policyMap := make(map[string]struct{})
 	for _, groupBlock := range modules.GetResourcesByType("aws_iam_group") {
-		var group iam.Group
-		group.Metadata = groupBlock.GetMetadata()
-		group.Name = groupBlock.GetAttribute("name").AsStringValueOrDefault("", groupBlock)
+		group := iam.Group{
+			Metadata: groupBlock.GetMetadata(),
+			Name:     groupBlock.GetAttribute("name").AsStringValueOrDefault("", groupBlock),
+			Users:    nil,
+			Policies: nil,
+		}
 
 		for _, block := range modules.GetResourcesByType("aws_iam_group_policy") {
 			if !sameProvider(groupBlock, block) {

@@ -42,13 +42,15 @@ func getContainerDefinitions(r *parser.Resource) ([]ecs.ContainerDefinition, err
 			}
 		}
 		definition := ecs.ContainerDefinition{
-			Metadata:    containerDef.Metadata(),
-			Name:        containerDef.GetStringProperty("Name", ""),
-			Image:       containerDef.GetStringProperty("Image", ""),
-			Memory:      containerDef.GetIntProperty("Memory", 128),
-			CPU:         containerDef.GetIntProperty("CPU", 1),
-			Environment: envVars,
-			Essential:   containerDef.GetBoolProperty("Essential", false),
+			Metadata:     containerDef.Metadata(),
+			Name:         containerDef.GetStringProperty("Name", ""),
+			Image:        containerDef.GetStringProperty("Image", ""),
+			CPU:          containerDef.GetIntProperty("CPU", 1),
+			Memory:       containerDef.GetIntProperty("Memory", 128),
+			Essential:    containerDef.GetBoolProperty("Essential", false),
+			Privileged:   containerDef.GetBoolProperty("Privileged", false),
+			Environment:  envVars,
+			PortMappings: nil,
 		}
 		definitions = append(definitions, definition)
 	}

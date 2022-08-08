@@ -6,9 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result cloudfront.Cloudfront) {
-
-	result.Distributions = getDistributions(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) cloudfront.Cloudfront {
+	return cloudfront.Cloudfront{
+		Distributions: getDistributions(cfFile),
+	}
 }

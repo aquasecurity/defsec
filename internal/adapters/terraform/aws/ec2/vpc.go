@@ -63,8 +63,9 @@ func (a *naclAdapter) adaptNetworkACLs(modules terraform.Modules) []ec2.NetworkA
 	orphanResources := modules.GetResourceByIDs(a.naclRuleIDs.Orphans()...)
 	if len(orphanResources) > 0 {
 		orphanage := ec2.NetworkACL{
-			Metadata: types.NewUnmanagedMetadata(),
-			Rules:    nil,
+			Metadata:      types.NewUnmanagedMetadata(),
+			Rules:         nil,
+			IsDefaultRule: types.BoolDefault(false, types.NewUnmanagedMetadata()),
 		}
 		for _, naclRule := range orphanResources {
 			orphanage.Rules = append(orphanage.Rules, adaptNetworkACLRule(naclRule))
@@ -152,8 +153,9 @@ func (a *naclAdapter) adaptNetworkACL(resource *terraform.Block, module *terrafo
 		networkRules = append(networkRules, adaptNetworkACLRule(ruleBlock))
 	}
 	return ec2.NetworkACL{
-		Metadata: resource.GetMetadata(),
-		Rules:    networkRules,
+		Metadata:      resource.GetMetadata(),
+		Rules:         networkRules,
+		IsDefaultRule: types.BoolDefault(false, resource.GetMetadata()),
 	}
 }
 

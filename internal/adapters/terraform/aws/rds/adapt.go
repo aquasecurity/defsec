@@ -51,6 +51,7 @@ func getClusters(modules terraform.Modules) (clusters []rds.Cluster) {
 				EncryptStorage: types.BoolDefault(false, types.NewUnmanagedMetadata()),
 				KMSKeyID:       types.StringDefault("", types.NewUnmanagedMetadata()),
 			},
+			PublicAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
 		}
 		for _, orphan := range orphanResources {
 			orphanage.Instances = append(orphanage.Instances, adaptClusterInstance(orphan, modules))
@@ -61,15 +62,13 @@ func getClusters(modules terraform.Modules) (clusters []rds.Cluster) {
 	return clusters
 }
 
-func getClassic(modules terraform.Modules) (classic rds.Classic) {
-
-	var classicSecurityGroups []rds.DBSecurityGroup
-
-	for _, resource := range modules.GetResourcesByType("aws_db_security_group", "aws_redshift_security_group", "aws_elasticache_security_group") {
-		classicSecurityGroups = append(classicSecurityGroups, adaptClassicDBSecurityGroup(resource))
+func getClassic(modules terraform.Modules) rds.Classic {
+	classic := rds.Classic{
+		DBSecurityGroups: nil,
 	}
-
-	classic.DBSecurityGroups = classicSecurityGroups
+	for _, resource := range modules.GetResourcesByType("aws_db_security_group", "aws_redshift_security_group", "aws_elasticache_security_group") {
+		classic.DBSecurityGroups = append(classic.DBSecurityGroups, adaptClassicDBSecurityGroup(resource))
+	}
 	return classic
 }
 
@@ -118,6 +117,14 @@ func adaptCluster(resource *terraform.Block, modules terraform.Modules) (rds.Clu
 
 	clusterInstances, ids := getClusterInstances(resource, modules)
 
+	var public bool
+	for _, instance := range clusterInstances {
+		if instance.PublicAccess.IsTrue() {
+			public = true
+			break
+		}
+	}
+
 	return rds.Cluster{
 		Metadata:                  resource.GetMetadata(),
 		BackupRetentionPeriodDays: resource.GetAttribute("backup_retention_period").AsIntValueOrDefault(1, resource),
@@ -125,6 +132,7 @@ func adaptCluster(resource *terraform.Block, modules terraform.Modules) (rds.Clu
 		PerformanceInsights:       adaptPerformanceInsights(resource),
 		Instances:                 clusterInstances,
 		Encryption:                adaptEncryption(resource),
+		PublicAccess:              types.Bool(public, resource.GetMetadata()),
 	}, ids
 }
 

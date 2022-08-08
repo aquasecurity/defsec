@@ -6,8 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result elasticsearch.Elasticsearch) {
-
-	result.Domains = getDomains(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) elasticsearch.Elasticsearch {
+	return elasticsearch.Elasticsearch{
+		Domains: getDomains(cfFile),
+	}
 }

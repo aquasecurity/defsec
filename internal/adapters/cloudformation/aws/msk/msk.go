@@ -6,9 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result msk.MSK) {
-
-	result.Clusters = getClusters(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) msk.MSK {
+	return msk.MSK{
+		Clusters: getClusters(cfFile),
+	}
 }

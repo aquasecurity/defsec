@@ -221,6 +221,52 @@ func (a *adapter) adaptNodePool(resource *terraform.Block) {
 	a.clusterMap[uuid.NewString()] = gke.Cluster{
 		Metadata:  types.NewUnmanagedMetadata(),
 		NodePools: []gke.NodePool{nodePool},
+		IPAllocationPolicy: gke.IPAllocationPolicy{
+			Metadata: types.NewUnmanagedMetadata(),
+			Enabled:  types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		},
+		MasterAuthorizedNetworks: gke.MasterAuthorizedNetworks{
+			Metadata: types.NewUnmanagedMetadata(),
+			Enabled:  types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			CIDRs:    nil,
+		},
+		NetworkPolicy: gke.NetworkPolicy{
+			Metadata: types.NewUnmanagedMetadata(),
+			Enabled:  types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		},
+		PrivateCluster: gke.PrivateCluster{
+			Metadata:           types.NewUnmanagedMetadata(),
+			EnablePrivateNodes: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		},
+		LoggingService:    types.StringDefault("", types.NewUnmanagedMetadata()),
+		MonitoringService: types.StringDefault("", types.NewUnmanagedMetadata()),
+		PodSecurityPolicy: gke.PodSecurityPolicy{
+			Metadata: types.NewUnmanagedMetadata(),
+			Enabled:  types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		},
+		MasterAuth: gke.MasterAuth{
+			Metadata: types.NewUnmanagedMetadata(),
+			ClientCertificate: gke.ClientCertificate{
+				Metadata:         types.NewUnmanagedMetadata(),
+				IssueCertificate: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			},
+			Username: types.StringDefault("", types.NewUnmanagedMetadata()),
+			Password: types.StringDefault("", types.NewUnmanagedMetadata()),
+		},
+		NodeConfig: gke.NodeConfig{
+			Metadata:  types.NewUnmanagedMetadata(),
+			ImageType: types.StringDefault("", types.NewUnmanagedMetadata()),
+			WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
+				Metadata:     types.NewUnmanagedMetadata(),
+				NodeMetadata: types.StringDefault("", types.NewUnmanagedMetadata()),
+			},
+			ServiceAccount:        types.StringDefault("", types.NewUnmanagedMetadata()),
+			EnableLegacyEndpoints: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		},
+		EnableShieldedNodes:   types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		EnableLegacyABAC:      types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		ResourceLabels:        types.MapDefault(nil, types.NewUnmanagedMetadata()),
+		RemoveDefaultNodePool: types.BoolDefault(false, types.NewUnmanagedMetadata()),
 	}
 }
 

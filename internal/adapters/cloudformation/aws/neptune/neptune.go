@@ -6,8 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result neptune.Neptune) {
-
-	result.Clusters = getClusters(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) neptune.Neptune {
+	return neptune.Neptune{
+		Clusters: getClusters(cfFile),
+	}
 }

@@ -6,9 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result sns.SNS) {
-
-	result.Topics = getTopics(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) sns.SNS {
+	return sns.SNS{
+		Topics: getTopics(cfFile),
+	}
 }

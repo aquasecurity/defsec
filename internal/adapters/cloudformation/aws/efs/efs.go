@@ -6,8 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result efs.EFS) {
-
-	result.FileSystems = getFileSystems(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) efs.EFS {
+	return efs.EFS{
+		FileSystems: getFileSystems(cfFile),
+	}
 }

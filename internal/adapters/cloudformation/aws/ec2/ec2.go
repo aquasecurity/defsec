@@ -6,13 +6,14 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result ec2.EC2) {
-	result.LaunchConfigurations = getLaunchConfigurations(cfFile)
-	result.LaunchTemplates = getLaunchTemplates(cfFile)
-	result.Instances = getInstances(cfFile)
-	result.DefaultVPCs = nil
-	result.NetworkACLs = getNetworkACLs(cfFile)
-	result.SecurityGroups = getSecurityGroups(cfFile)
-	result.Volumes = getVolumes(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) ec2.EC2 {
+	return ec2.EC2{
+		LaunchConfigurations: getLaunchConfigurations(cfFile),
+		LaunchTemplates:      getLaunchTemplates(cfFile),
+		Instances:            getInstances(cfFile),
+		DefaultVPCs:          nil,
+		NetworkACLs:          getNetworkACLs(cfFile),
+		SecurityGroups:       getSecurityGroups(cfFile),
+		Volumes:              getVolumes(cfFile),
+	}
 }

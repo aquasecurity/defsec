@@ -22,7 +22,7 @@ var requireIAMPolicyChangeAlarm = rules.Register(
 		Resolution: "Create an alarm to alert on IAM Policy changes",
 		Frameworks: map[framework.Framework][]string{
 			framework.CIS_AWS_1_2: {
-				"4.4",
+				"3.4",
 			},
 			framework.CIS_AWS_1_4: {
 				"4.4",
@@ -32,7 +32,7 @@ var requireIAMPolicyChangeAlarm = rules.Register(
                                                                               
 CIS recommends that you create a metric filter and alarm for changes made to IAM policies. Monitoring these changes helps ensure that authentication and authorization controls remain intact.`,
 		Links: []string{
-			"https://aws.amazon.com/iam/features/mfa/",
+			"https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudwatch-alarms-for-cloudtrail.html",
 		},
 		Terraform:      &scan.EngineMetadata{},
 		CloudFormation: &scan.EngineMetadata{},
@@ -73,7 +73,7 @@ CIS recommends that you create a metric filter and alarm for changes made to IAM
 			}
 
 			if !found {
-				results.Add("Cloudtrail has IAM policy change log filter", trail)
+				results.Add("Cloudtrail has no IAM policy change log filter", trail)
 				continue
 			}
 

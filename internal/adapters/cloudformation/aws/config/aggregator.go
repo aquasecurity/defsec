@@ -6,22 +6,22 @@ import (
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 )
 
-func getConfiguraionAggregator(ctx parser.FileContext) (aggregator config.ConfigurationAggregrator) {
+func getConfigurationAggregator(ctx parser.FileContext) config.ConfigurationAggregrator {
+
+	aggregator := config.ConfigurationAggregrator{
+		Metadata:         types.NewUnmanagedMetadata(),
+		SourceAllRegions: types.BoolDefault(false, ctx.Metadata()),
+	}
 
 	aggregatorResources := ctx.GetResourcesByType("AWS::Config::ConfigurationAggregator")
 
 	if len(aggregatorResources) == 0 {
-		return config.ConfigurationAggregrator{
-			Metadata:         types.NewUnmanagedMetadata(),
-			SourceAllRegions: types.BoolDefault(false, ctx.Metadata()),
-			IsDefined:        false,
-		}
+		return aggregator
 	}
 
 	return config.ConfigurationAggregrator{
 		Metadata:         aggregatorResources[0].Metadata(),
 		SourceAllRegions: isSourcingAllRegions(aggregatorResources[0]),
-		IsDefined:        true,
 	}
 }
 

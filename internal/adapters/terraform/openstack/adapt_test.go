@@ -68,7 +68,6 @@ func TestFields(t *testing.T) {
 			expected: openstack.OpenStack{
 				Compute: openstack.Compute{
 					Firewall: openstack.Firewall{
-						Metadata: types.NewTestMetadata(),
 						AllowRules: []openstack.FirewallRule{
 							{
 								Metadata:        types.NewTestMetadata(),

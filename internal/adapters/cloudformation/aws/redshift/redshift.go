@@ -6,10 +6,9 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result redshift.Redshift) {
-
-	result.Clusters = getClusters(cfFile)
-	result.SecurityGroups = getSecurityGroups(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) redshift.Redshift {
+	return redshift.Redshift{
+		Clusters:       getClusters(cfFile),
+		SecurityGroups: getSecurityGroups(cfFile),
+	}
 }

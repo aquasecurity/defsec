@@ -6,9 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result ssm.SSM) {
-
-	result.Secrets = getSecrets(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) ssm.SSM {
+	return ssm.SSM{
+		Secrets: getSecrets(cfFile),
+	}
 }

@@ -29,6 +29,7 @@ func Test_adaptTopic(t *testing.T) {
 `,
 			expected: sns.Topic{
 				Metadata: types.NewTestMetadata(),
+				ARN:      types.String("", types.NewTestMetadata()),
 				Encryption: sns.Encryption{
 					Metadata: types.NewTestMetadata(),
 					KMSKeyID: types.String("/blah", types.NewTestMetadata()),
@@ -43,6 +44,7 @@ func Test_adaptTopic(t *testing.T) {
 `,
 			expected: sns.Topic{
 				Metadata: types.NewTestMetadata(),
+				ARN:      types.String("", types.NewTestMetadata()),
 				Encryption: sns.Encryption{
 					Metadata: types.NewTestMetadata(),
 					KMSKeyID: types.String("", types.NewTestMetadata()),
