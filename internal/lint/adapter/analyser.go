@@ -26,11 +26,11 @@ func CreateAnalyzer(providerPackage, typesPackage string) *analysis.Analyzer {
 		Requires: []*analysis.Analyzer{inspect.Analyzer},
 		Run: func(pass *analysis.Pass) (interface{}, error) {
 
-			if err := detectNamedFunctionReturns(pass, providerPackage, typesPackage); err != nil {
+			if err := detectNamedFunctionReturns(pass, providerPackage); err != nil {
 				return nil, err
 			}
 
-			if err := detectEmptyStructInit(pass, providerPackage, typesPackage); err != nil {
+			if err := detectEmptyStructInit(pass, providerPackage); err != nil {
 				return nil, err
 			}
 
@@ -43,8 +43,7 @@ func CreateAnalyzer(providerPackage, typesPackage string) *analysis.Analyzer {
 	}
 }
 
-func detectNamedFunctionReturns(pass *analysis.Pass, providerPackage, typesPackage string) error {
-	// detect provider struct being created by a named function return type
+func detectNamedFunctionReturns(pass *analysis.Pass, providerPackage string) error {
 	for _, f := range pass.Files {
 		for _, d := range f.Decls {
 			switch fnc := d.(type) {
@@ -78,10 +77,8 @@ func detectNamedFunctionReturns(pass *analysis.Pass, providerPackage, typesPacka
 	return nil
 }
 
-func detectEmptyStructInit(pass *analysis.Pass, providerPackage, typesPackage string) error {
+func detectEmptyStructInit(pass *analysis.Pass, providerPackage string) error {
 	insp := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
-
-	// detect provider struct being initialised empty e.g. 'var x provider.MyType'
 	insp.Preorder([]ast.Node{
 		(*ast.DeclStmt)(nil),
 	}, func(n ast.Node) {
@@ -116,7 +113,6 @@ func detectEmptyStructInit(pass *analysis.Pass, providerPackage, typesPackage st
 }
 func detectMissingTypesFields(pass *analysis.Pass, providerPackage, typesPackage string) error {
 	insp := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
-	// detect struct literal with missing types fields
 	insp.Preorder([]ast.Node{
 		(*ast.CompositeLit)(nil),
 	}, func(n ast.Node) {
