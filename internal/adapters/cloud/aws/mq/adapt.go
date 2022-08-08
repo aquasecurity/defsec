@@ -86,7 +86,7 @@ func (a *adapter) adaptBroker(apiBroker types.BrokerSummary) (*mq.Broker, error)
 	}
 
 	return &mq.Broker{
-		//Metadata:     metadata,
+		Metadata:     metadata,
 		PublicAccess: defsecTypes.Bool(output.PubliclyAccessible, metadata),
 		Logging: mq.Logging{
 			Metadata: metadata,

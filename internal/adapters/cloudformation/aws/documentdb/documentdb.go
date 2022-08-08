@@ -6,9 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result documentdb.DocumentDB) {
-
-	result.Clusters = getClusters(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) documentdb.DocumentDB {
+	return documentdb.DocumentDB{
+		Clusters: getClusters(cfFile),
+	}
 }

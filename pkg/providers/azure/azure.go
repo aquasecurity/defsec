@@ -1,7 +1,6 @@
 package azure
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/appservice"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/authorization"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/compute"
@@ -18,7 +17,6 @@ import (
 )
 
 type Azure struct {
-	types.Metadata
 	AppService     appservice.AppService
 	Authorization  authorization.Authorization
 	Compute        compute.Compute

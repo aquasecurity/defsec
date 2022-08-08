@@ -5,8 +5,6 @@ import (
 )
 
 type Compute struct {
-	Name                   types.StringValue
-	Region                 types.StringValue
 	LinuxVirtualMachines   []LinuxVirtualMachine
 	WindowsVirtualMachines []WindowsVirtualMachine
 	ManagedDisks           []ManagedDisk

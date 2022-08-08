@@ -6,10 +6,9 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result ecs.ECS) {
-
-	result.Clusters = getClusters(cfFile)
-	result.TaskDefinitions = getTaskDefinitions(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) ecs.ECS {
+	return ecs.ECS{
+		Clusters:        getClusters(cfFile),
+		TaskDefinitions: getTaskDefinitions(cfFile),
+	}
 }

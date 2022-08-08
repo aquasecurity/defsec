@@ -6,11 +6,12 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (sam sam.SAM) {
-	sam.APIs = getApis(cfFile)
-	sam.HttpAPIs = getHttpApis(cfFile)
-	sam.Functions = getFunctions(cfFile)
-	sam.StateMachines = getStateMachines(cfFile)
-	sam.SimpleTables = getSimpleTables(cfFile)
-	return sam
+func Adapt(cfFile parser.FileContext) sam.SAM {
+	return sam.SAM{
+		APIs:          getApis(cfFile),
+		HttpAPIs:      getHttpApis(cfFile),
+		Functions:     getFunctions(cfFile),
+		StateMachines: getStateMachines(cfFile),
+		SimpleTables:  getSimpleTables(cfFile),
+	}
 }

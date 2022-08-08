@@ -15,11 +15,13 @@ func getDistributions(ctx parser.FileContext) (distributions []cloudfront.Distri
 			Metadata: r.Metadata(),
 			WAFID:    r.GetStringProperty("DistributionConfig.WebACLId"),
 			Logging: cloudfront.Logging{
-				Bucket: r.GetStringProperty("DistributionConfig.Logging.Bucket"),
+				Metadata: r.Metadata(),
+				Bucket:   r.GetStringProperty("DistributionConfig.Logging.Bucket"),
 			},
 			DefaultCacheBehaviour:  getDefaultCacheBehaviour(r),
 			OrdererCacheBehaviours: nil,
 			ViewerCertificate: cloudfront.ViewerCertificate{
+				Metadata:               r.Metadata(),
 				MinimumProtocolVersion: r.GetStringProperty("DistributionConfig.ViewerCertificate.MinimumProtocolVersion"),
 			},
 		}

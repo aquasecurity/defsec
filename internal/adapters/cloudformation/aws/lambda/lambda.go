@@ -6,9 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result lambda.Lambda) {
-
-	result.Functions = getFunctions(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) lambda.Lambda {
+	return lambda.Lambda{
+		Functions: getFunctions(cfFile),
+	}
 }

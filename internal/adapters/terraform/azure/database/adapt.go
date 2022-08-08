@@ -330,6 +330,7 @@ func (a *mariaDBAdapter) adaptMariaDBServer(resource *terraform.Block, module *t
 		Server: database.Server{
 			Metadata:                  resource.GetMetadata(),
 			EnableSSLEnforcement:      enableSSLEnforcementVal,
+			MinimumTLSVersion:         types.StringDefault("", resource.GetMetadata()),
 			EnablePublicNetworkAccess: publicAccessVal,
 			FirewallRules:             firewallRules,
 		},

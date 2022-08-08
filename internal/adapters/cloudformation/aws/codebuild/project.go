@@ -30,29 +30,34 @@ func getSecondaryArtifactSettings(r *parser.Resource) (secondaryArtifacts []code
 	}
 
 	for _, a := range secondaryArtifactsList.AsList() {
-		secondaryArtifacts = append(secondaryArtifacts, getSetting(a))
+		settings := codebuild.ArtifactSettings{
+			Metadata:          secondaryArtifactsList.Metadata(),
+			EncryptionEnabled: types.BoolDefault(true, secondaryArtifactsList.Metadata()),
+		}
+		encryptionDisabled := a.GetProperty("EncryptionDisabled")
+		if encryptionDisabled.IsBool() {
+			settings.EncryptionEnabled = types.Bool(!encryptionDisabled.AsBool(), encryptionDisabled.Metadata())
+		}
+		secondaryArtifacts = append(secondaryArtifacts, settings)
 	}
 
 	return secondaryArtifacts
 }
 
-func getArtifactSettings(r *parser.Resource) (artifactSettings codebuild.ArtifactSettings) {
+func getArtifactSettings(r *parser.Resource) codebuild.ArtifactSettings {
+
+	settings := codebuild.ArtifactSettings{
+		Metadata:          r.Metadata(),
+		EncryptionEnabled: types.BoolDefault(true, r.Metadata()),
+	}
+
 	artifactsProperty := r.GetProperty("Artifacts")
-	if artifactsProperty.IsNil() {
-		return
-	}
-	return getSetting(artifactsProperty)
-}
-
-func getSetting(property *parser.Property) codebuild.ArtifactSettings {
-	result := types.BoolDefault(true, property.Metadata())
-	encryptionDisabled := property.GetProperty("EncryptionDisabled")
-	if encryptionDisabled.IsBool() {
-		result = types.Bool(!encryptionDisabled.AsBool(), encryptionDisabled.Metadata())
+	if artifactsProperty.IsNotNil() {
+		encryptionDisabled := artifactsProperty.GetProperty("EncryptionDisabled")
+		if encryptionDisabled.IsBool() {
+			settings.EncryptionEnabled = types.Bool(!encryptionDisabled.AsBool(), encryptionDisabled.Metadata())
+		}
 	}
 
-	return codebuild.ArtifactSettings{
-		Metadata:          property.Metadata(),
-		EncryptionEnabled: result,
-	}
+	return settings
 }

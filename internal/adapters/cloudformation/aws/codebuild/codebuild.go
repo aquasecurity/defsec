@@ -6,9 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result codebuild.CodeBuild) {
-
-	result.Projects = getProjects(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) codebuild.CodeBuild {
+	return codebuild.CodeBuild{
+		Projects: getProjects(cfFile),
+	}
 }

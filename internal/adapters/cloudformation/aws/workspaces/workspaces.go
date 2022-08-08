@@ -6,8 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result workspaces.WorkSpaces) {
-
-	result.WorkSpaces = getWorkSpaces(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) workspaces.WorkSpaces {
+	return workspaces.WorkSpaces{
+		WorkSpaces: getWorkSpaces(cfFile),
+	}
 }

@@ -118,6 +118,7 @@ func (a *adapter) getQueueBatch(token *string) (queues []sqs.Queue, nextToken *s
 
 				queue.Policies = append(queue.Policies, iam.Policy{
 					Metadata: queueMetadata,
+					Name:     types.StringDefault("", queueMetadata),
 					Document: iam.Document{
 						Metadata: queueMetadata,
 						Parsed:   *policy,

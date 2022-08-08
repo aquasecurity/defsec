@@ -106,6 +106,7 @@ func (a *adapter) adaptTaskDefinition(arn string) (*ecs.TaskDefinition, error) {
 			Essential:    types.Bool(essential, metadata),
 			PortMappings: portMappings,
 			Environment:  envVars,
+			Privileged:   types.Bool(apiContainer.Privileged != nil && *apiContainer.Privileged, metadata),
 		})
 	}
 

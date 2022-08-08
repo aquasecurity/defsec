@@ -6,12 +6,11 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result rds.RDS) {
-
+func Adapt(cfFile parser.FileContext) rds.RDS {
 	clusters, orphans := getClustersAndInstances(cfFile)
-
-	result.Instances = orphans
-	result.Clusters = clusters
-	result.Classic = getClassic(cfFile)
-	return result
+	return rds.RDS{
+		Instances: orphans,
+		Clusters:  clusters,
+		Classic:   getClassic(cfFile),
+	}
 }

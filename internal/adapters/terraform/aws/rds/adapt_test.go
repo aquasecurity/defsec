@@ -113,7 +113,6 @@ func Test_Adapt(t *testing.T) {
 					},
 				},
 				Classic: rds.Classic{
-					Metadata: types.NewTestMetadata(),
 					DBSecurityGroups: []rds.DBSecurityGroup{
 						{
 							Metadata: types.NewTestMetadata(),

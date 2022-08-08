@@ -58,9 +58,10 @@ PROJECT:
 			}
 		}
 
-		var org iam.Organization
-		org.Metadata = types.NewUnmanagedMetadata()
-		org.Projects = append(org.Projects, project.project)
+		org := iam.Organization{
+			Metadata: types.NewUnmanagedMetadata(),
+			Projects: []iam.Project{project.project},
+		}
 		a.orgs[uuid.NewString()] = org
 	}
 
@@ -86,14 +87,17 @@ FOLDER_ORG:
 			}
 		} else {
 			// add to placeholder?
-			var org iam.Organization
-			org.Metadata = types.NewUnmanagedMetadata()
-			org.Folders = append(org.Folders, folder.folder)
+			org := iam.Organization{
+				Metadata: types.NewUnmanagedMetadata(),
+				Folders:  []iam.Folder{folder.folder},
+			}
 			a.orgs[uuid.NewString()] = org
 		}
 	}
 
-	var output iam.IAM
+	output := iam.IAM{
+		Organizations: nil,
+	}
 	for _, org := range a.orgs {
 		output.Organizations = append(output.Organizations, org)
 	}

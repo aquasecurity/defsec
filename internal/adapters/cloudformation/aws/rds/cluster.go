@@ -24,6 +24,7 @@ func getClusters(ctx parser.FileContext) (clusters map[string]rds.Cluster) {
 				EncryptStorage: types.BoolDefault(false, clusterResource.Metadata()),
 				KMSKeyID:       types.StringDefault("", clusterResource.Metadata()),
 			},
+			PublicAccess: types.BoolDefault(false, clusterResource.Metadata()),
 		}
 
 		if backupProp := clusterResource.GetProperty("BackupRetentionPeriod"); backupProp.IsInt() {
@@ -63,8 +64,9 @@ func getClassic(ctx parser.FileContext) rds.Classic {
 
 func getClassicSecurityGroups(ctx parser.FileContext) (groups []rds.DBSecurityGroup) {
 	for _, dbsgResource := range ctx.GetResourcesByType("AWS::RDS::DBSecurityGroup") {
-		var group rds.DBSecurityGroup
-		group.Metadata = dbsgResource.Metadata()
+		group := rds.DBSecurityGroup{
+			Metadata: dbsgResource.Metadata(),
+		}
 		groups = append(groups, group)
 	}
 	return groups

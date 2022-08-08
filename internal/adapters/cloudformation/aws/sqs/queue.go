@@ -5,6 +5,7 @@ import (
 
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 
+	"github.com/aquasecurity/defsec/internal/types"
 	defsecTypes "github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
@@ -16,6 +17,7 @@ func getQueues(ctx parser.FileContext) (queues []sqs.Queue) {
 	for _, r := range ctx.GetResourcesByType("AWS::SQS::Queue") {
 		queue := sqs.Queue{
 			Metadata: r.Metadata(),
+			QueueURL: types.StringDefault("", r.Metadata()),
 			Encryption: sqs.Encryption{
 				Metadata:          r.Metadata(),
 				ManagedEncryption: defsecTypes.Bool(false, r.Metadata()),
@@ -50,6 +52,7 @@ func getPolicy(id string, ctx parser.FileContext) (*iam.Policy, error) {
 				}
 				return &iam.Policy{
 					Metadata: documentProp.Metadata(),
+					Name:     types.StringDefault("", documentProp.Metadata()),
 					Document: iam.Document{
 						Metadata: documentProp.Metadata(),
 						Parsed:   *parsed,

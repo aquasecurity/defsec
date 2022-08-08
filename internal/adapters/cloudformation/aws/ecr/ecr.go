@@ -6,9 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result ecr.ECR) {
-
-	result.Repositories = getRepositories(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) ecr.ECR {
+	return ecr.ECR{
+		Repositories: getRepositories(cfFile),
+	}
 }

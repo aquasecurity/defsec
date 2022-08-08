@@ -205,6 +205,7 @@ func (a *adapter) getMetricFilters(name *string, metadata defsecTypes.Metadata) 
 	var metricFilters []cloudwatch.MetricFilter
 	for _, mf := range apiMetricFilters {
 		metricFilters = append(metricFilters, cloudwatch.MetricFilter{
+			Metadata:      metadata,
 			FilterName:    defsecTypes.String(*mf.FilterName, metadata),
 			FilterPattern: defsecTypes.String(*mf.FilterPattern, metadata),
 		})

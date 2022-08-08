@@ -6,8 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result cloudtrail.CloudTrail) {
-
-	result.Trails = getCloudTrails(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) cloudtrail.CloudTrail {
+	return cloudtrail.CloudTrail{
+		Trails: getCloudTrails(cfFile),
+	}
 }

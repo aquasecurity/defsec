@@ -6,8 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result eks.EKS) {
-
-	result.Clusters = getClusters(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) eks.EKS {
+	return eks.EKS{
+		Clusters: getClusters(cfFile),
+	}
 }

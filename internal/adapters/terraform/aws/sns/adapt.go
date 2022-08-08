@@ -1,6 +1,7 @@
 package sns
 
 import (
+	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sns"
 	"github.com/aquasecurity/defsec/pkg/terraform"
 )
@@ -24,6 +25,7 @@ func adaptTopics(modules terraform.Modules) []sns.Topic {
 func adaptTopic(resourceBlock *terraform.Block) sns.Topic {
 	return sns.Topic{
 		Metadata:   resourceBlock.GetMetadata(),
+		TopicARN:   types.StringDefault("", resourceBlock.GetMetadata()),
 		Encryption: adaptEncryption(resourceBlock),
 	}
 }

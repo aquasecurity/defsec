@@ -6,7 +6,9 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result athena.Athena) {
-	result.Workgroups = getWorkGroups(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) athena.Athena {
+	return athena.Athena{
+		Databases:  nil,
+		Workgroups: getWorkGroups(cfFile),
+	}
 }
