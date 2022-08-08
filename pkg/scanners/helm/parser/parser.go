@@ -38,6 +38,10 @@ type Parser struct {
 	debug        debug.Logger
 	skipRequired bool
 	workingFS    fs.FS
+	valuesFiles  []string
+	values       []string
+	fileValues   []string
+	stringValues []string
 }
 
 type ChartFile struct {
@@ -51,6 +55,22 @@ func (p *Parser) SetDebugWriter(writer io.Writer) {
 
 func (p *Parser) SetSkipRequiredCheck(b bool) {
 	p.skipRequired = b
+}
+
+func (p *Parser) SetValuesFile(s ...string) {
+	p.valuesFiles = s
+}
+
+func (p *Parser) SetValues(values ...string) {
+	p.values = values
+}
+
+func (p *Parser) SetFileValues(values ...string) {
+	p.fileValues = values
+}
+
+func (p *Parser) SetStringValues(values ...string) {
+	p.stringValues = values
 }
 
 func New(path string, options ...options.ParserOption) *Parser {
@@ -188,7 +208,18 @@ func (p *Parser) RenderedChartFiles() ([]ChartFile, error) {
 
 func (p *Parser) getRelease(chart *chart.Chart) (*release.Release, error) {
 
-	r, err := p.helmClient.RunWithContext(context.Background(), chart, nil)
+	opts := &ValueOptions{
+		ValueFiles:   p.valuesFiles,
+		Values:       p.values,
+		FileValues:   p.fileValues,
+		StringValues: p.stringValues,
+	}
+
+	vals, err := opts.MergeValues()
+	if err != nil {
+		return nil, err
+	}
+	r, err := p.helmClient.RunWithContext(context.Background(), chart, vals)
 	if err != nil {
 		return nil, err
 	}
@@ -210,6 +241,7 @@ func loadChart(tempFs string) (*chart.Chart, error) {
 			return nil, err
 		}
 	}
+
 	return loadedChart, nil
 }
 
