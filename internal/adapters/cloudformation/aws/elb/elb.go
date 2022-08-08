@@ -6,8 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result elb.ELB) {
-
-	result.LoadBalancers = getLoadBalancers(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) elb.ELB {
+	return elb.ELB{
+		LoadBalancers: getLoadBalancers(cfFile),
+	}
 }

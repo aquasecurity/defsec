@@ -110,6 +110,7 @@ func Test_Adapt(t *testing.T) {
 						Server: database.Server{
 							Metadata:                  types.NewTestMetadata(),
 							EnableSSLEnforcement:      types.Bool(true, types.NewTestMetadata()),
+							MinimumTLSVersion:         types.String("", types.NewTestMetadata()),
 							EnablePublicNetworkAccess: types.Bool(false, types.NewTestMetadata()),
 							FirewallRules: []database.FirewallRule{
 								{

@@ -6,9 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result config.Config) {
-
-	result.ConfigurationAggregrator = getConfiguraionAggregator(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) config.Config {
+	return config.Config{
+		ConfigurationAggregrator: getConfigurationAggregator(cfFile),
+	}
 }

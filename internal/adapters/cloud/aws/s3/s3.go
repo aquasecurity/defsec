@@ -116,6 +116,7 @@ func (a *adapter) getBucketPolicies(bucketName *string, metadata types.Metadata)
 
 		bucketPolicies = append(bucketPolicies, iam.Policy{
 			Metadata: metadata,
+			Name:     types.StringDefault("", metadata),
 			Document: iam.Document{
 				Metadata: metadata,
 				Parsed:   *policyDocument,

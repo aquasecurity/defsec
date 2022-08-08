@@ -6,9 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result sqs.SQS) {
-
-	result.Queues = getQueues(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) sqs.SQS {
+	return sqs.SQS{
+		Queues: getQueues(cfFile),
+	}
 }

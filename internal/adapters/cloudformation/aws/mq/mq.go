@@ -6,8 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result mq.MQ) {
-
-	result.Brokers = getBrokers(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) mq.MQ {
+	return mq.MQ{
+		Brokers: getBrokers(cfFile),
+	}
 }

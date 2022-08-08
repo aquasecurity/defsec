@@ -6,9 +6,9 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result cloudwatch.CloudWatch) {
-
-	result.LogGroups = getLogGroups(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) cloudwatch.CloudWatch {
+	return cloudwatch.CloudWatch{
+		LogGroups: getLogGroups(cfFile),
+		Alarms:    nil,
+	}
 }

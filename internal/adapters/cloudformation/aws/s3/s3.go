@@ -6,8 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result s3.S3) {
-
-	result.Buckets = getBuckets(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) s3.S3 {
+	return s3.S3{
+		Buckets: getBuckets(cfFile),
+	}
 }

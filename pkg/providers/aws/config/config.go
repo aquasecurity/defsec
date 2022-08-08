@@ -11,5 +11,4 @@ type Config struct {
 type ConfigurationAggregrator struct {
 	types.Metadata
 	SourceAllRegions types.BoolValue
-	IsDefined        bool
 }

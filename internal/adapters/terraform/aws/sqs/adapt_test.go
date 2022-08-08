@@ -42,6 +42,7 @@ func Test_Adapt(t *testing.T) {
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),
+						QueueURL: types.String("", types.NewTestMetadata()),
 						Encryption: sqs.Encryption{
 							Metadata:          types.NewTestMetadata(),
 							ManagedEncryption: types.Bool(false, types.NewTestMetadata()),
@@ -82,11 +83,13 @@ func Test_Adapt(t *testing.T) {
 				Queues: []sqs.Queue{
 					{
 						Metadata: types.NewTestMetadata(),
+						QueueURL: types.String("", types.NewTestMetadata()),
 						Encryption: sqs.Encryption{
 							Metadata:          types.NewTestMetadata(),
 							ManagedEncryption: types.Bool(false, types.NewTestMetadata()),
 							KMSKeyID:          types.String("/blah", types.NewTestMetadata()),
 						},
+						Policies: nil,
 					},
 				},
 			},

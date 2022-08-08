@@ -76,12 +76,13 @@ func adaptLoadBalancers(module terraform.Modules) (loadBalancers []compute.LoadB
 
 	for _, block := range module.GetResourcesByType("digitalocean_loadbalancer") {
 		forwardingRules := block.GetBlocks("forwarding_rule")
-		fRules := []compute.ForwardingRule{}
+		var fRules []compute.ForwardingRule
 
 		for _, fRule := range forwardingRules {
-			rule := compute.ForwardingRule{}
-			rule.Metadata = fRule.GetMetadata()
-			rule.EntryProtocol = fRule.GetAttribute("entry_protocol").AsStringValueOrDefault("", fRule)
+			rule := compute.ForwardingRule{
+				Metadata:      fRule.GetMetadata(),
+				EntryProtocol: fRule.GetAttribute("entry_protocol").AsStringValueOrDefault("", fRule),
+			}
 			fRules = append(fRules, rule)
 		}
 		loadBalancers = append(loadBalancers, compute.LoadBalancer{

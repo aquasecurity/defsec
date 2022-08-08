@@ -25,7 +25,6 @@ func TestCheckAggregateAllRegions(t *testing.T) {
 				ConfigurationAggregrator: config.ConfigurationAggregrator{
 					Metadata:         types.NewTestMetadata(),
 					SourceAllRegions: types.Bool(false, types.NewTestMetadata()),
-					IsDefined:        true,
 				},
 			},
 			expected: true,
@@ -36,7 +35,6 @@ func TestCheckAggregateAllRegions(t *testing.T) {
 				ConfigurationAggregrator: config.ConfigurationAggregrator{
 					Metadata:         types.NewTestMetadata(),
 					SourceAllRegions: types.Bool(true, types.NewTestMetadata()),
-					IsDefined:        true,
 				},
 			},
 			expected: false,

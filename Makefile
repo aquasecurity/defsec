@@ -47,3 +47,7 @@ id:
 update-aws-deps:
 	@grep aws-sdk-go-v2 go.mod | grep -v '// indirect' | awk '{print $1}' | xargs -I {} go get {}
 	@go mod tidy
+
+.PHONY: adapter-lint
+adapter-lint:
+	go run ./cmd/adapter-lint/main.go ./internal/adapters/...

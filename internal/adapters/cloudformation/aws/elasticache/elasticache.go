@@ -6,9 +6,10 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result elasticache.ElastiCache) {
-	result.Clusters = getClusterGroups(cfFile)
-	result.ReplicationGroups = getReplicationGroups(cfFile)
-	result.SecurityGroups = getSecurityGroups(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) elasticache.ElastiCache {
+	return elasticache.ElastiCache{
+		Clusters:          getClusterGroups(cfFile),
+		ReplicationGroups: getReplicationGroups(cfFile),
+		SecurityGroups:    getSecurityGroups(cfFile),
+	}
 }

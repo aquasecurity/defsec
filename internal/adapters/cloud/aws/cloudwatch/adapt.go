@@ -158,7 +158,7 @@ func (a *adapter) adaptAlarm(alarm cwTypes.MetricAlarm) (*cloudwatch.Alarm, erro
 	var dimensions []cloudwatch.AlarmDimension
 	for _, dimension := range alarm.Dimensions {
 		dimensions = append(dimensions, cloudwatch.AlarmDimension{
-			Metadata: defsecTypes.Metadata{},
+			Metadata: metadata,
 			Name:     defsecTypes.String(*dimension.Name, metadata),
 			Value:    defsecTypes.String(*dimension.Value, metadata),
 		})
@@ -205,6 +205,7 @@ func (a *adapter) getMetricFilters(name *string, metadata defsecTypes.Metadata) 
 	var metricFilters []cloudwatch.MetricFilter
 	for _, mf := range apiMetricFilters {
 		metricFilters = append(metricFilters, cloudwatch.MetricFilter{
+			Metadata:      metadata,
 			FilterName:    defsecTypes.String(*mf.FilterName, metadata),
 			FilterPattern: defsecTypes.String(*mf.FilterPattern, metadata),
 		})

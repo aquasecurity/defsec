@@ -67,6 +67,7 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 
 		a.queues[uuid.NewString()] = sqs.Queue{
 			Metadata: types.NewUnmanagedMetadata(),
+			QueueURL: types.StringDefault("", types.NewUnmanagedMetadata()),
 			Encryption: sqs.Encryption{
 				Metadata:          types.NewUnmanagedMetadata(),
 				ManagedEncryption: types.BoolDefault(false, types.NewUnmanagedMetadata()),
@@ -108,9 +109,14 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 	} else if refBlock, err := a.modules.GetReferencedBlock(attr, resource); err == nil {
 		if refBlock.Type() == "data" && refBlock.TypeLabel() == "aws_iam_policy_document" {
 			if doc, err := iam.ConvertTerraformDocument(a.modules, refBlock); err == nil {
-				var policy iamp.Policy
-				policy.Document.Parsed = doc.Document
-				policy.Document.Metadata = doc.Source.GetMetadata()
+				policy := iamp.Policy{
+					Metadata: doc.Source.GetMetadata(),
+					Name:     types.StringDefault("", doc.Source.GetMetadata()),
+					Document: iamp.Document{
+						Metadata: doc.Source.GetMetadata(),
+						Parsed:   doc.Document,
+					},
+				}
 				policies = append(policies, policy)
 			}
 		}
@@ -118,6 +124,7 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 
 	a.queues[resource.ID()] = sqs.Queue{
 		Metadata: resource.GetMetadata(),
+		QueueURL: types.StringDefault("", resource.GetMetadata()),
 		Encryption: sqs.Encryption{
 			Metadata:          resource.GetMetadata(),
 			ManagedEncryption: managedEncryption.AsBoolValueOrDefault(false, resource),

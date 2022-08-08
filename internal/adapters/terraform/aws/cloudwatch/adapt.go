@@ -38,8 +38,10 @@ func adaptLogGroup(resource *terraform.Block, module *terraform.Module) cloudwat
 
 	return cloudwatch.LogGroup{
 		Metadata:        resource.GetMetadata(),
+		Arn:             types.StringDefault("", resource.GetMetadata()),
 		Name:            nameVal,
 		KMSKeyID:        KMSKeyIDVal,
 		RetentionInDays: retentionInDaysVal,
+		MetricFilters:   nil,
 	}
 }

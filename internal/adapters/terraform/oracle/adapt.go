@@ -12,11 +12,12 @@ func Adapt(modules terraform.Modules) oracle.Oracle {
 }
 
 func adaptCompute(modules terraform.Modules) oracle.Compute {
-	var compute oracle.Compute
+	compute := oracle.Compute{
+		AddressReservations: nil,
+	}
 
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("opc_compute_ip_address_reservation") {
-
 			addressPoolAttr := resource.GetAttribute("ip_address_pool")
 			addressPoolVal := addressPoolAttr.AsStringValueOrDefault("", resource)
 			compute.AddressReservations = append(compute.AddressReservations, oracle.AddressReservation{

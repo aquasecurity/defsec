@@ -15,7 +15,6 @@ type Compute struct {
 }
 
 type Firewall struct {
-	types.Metadata
 	AllowRules []FirewallRule
 	DenyRules  []FirewallRule
 }

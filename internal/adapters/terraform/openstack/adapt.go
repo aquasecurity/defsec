@@ -13,15 +13,15 @@ func Adapt(modules terraform.Modules) openstack.OpenStack {
 }
 
 func adaptCompute(modules terraform.Modules) openstack.Compute {
-	var compute openstack.Compute
-
+	compute := openstack.Compute{
+		Instances: nil,
+		Firewall:  adaptFirewall(modules),
+	}
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("openstack_compute_instance_v2") {
 			compute.Instances = append(compute.Instances, adaptInstance(resource))
 		}
 	}
-	compute.Firewall = adaptFirewall(modules)
-
 	return compute
 }
 
@@ -36,7 +36,10 @@ func adaptInstance(resourceBlock *terraform.Block) openstack.Instance {
 }
 
 func adaptFirewall(modules terraform.Modules) openstack.Firewall {
-	var firewall openstack.Firewall
+	firewall := openstack.Firewall{
+		AllowRules: nil,
+		DenyRules:  nil,
+	}
 
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("openstack_fw_rule_v1") {

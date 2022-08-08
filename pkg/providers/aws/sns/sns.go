@@ -11,7 +11,7 @@ type SNS struct {
 func NewTopic(arn string, metadata types.Metadata) Topic {
 	return Topic{
 		Metadata: metadata,
-		TopicARN: types.String(arn, metadata),
+		ARN:      types.String(arn, metadata),
 		Encryption: Encryption{
 			Metadata: metadata,
 			KMSKeyID: types.StringDefault("", metadata),
@@ -21,7 +21,7 @@ func NewTopic(arn string, metadata types.Metadata) Topic {
 
 type Topic struct {
 	types.Metadata
-	TopicARN   types.StringValue
+	ARN        types.StringValue
 	Encryption Encryption
 }
 

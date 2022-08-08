@@ -6,9 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result dynamodb.DynamoDB) {
-
-	result.DAXClusters = getClusters(cfFile)
-	return result
-
+func Adapt(cfFile parser.FileContext) dynamodb.DynamoDB {
+	return dynamodb.DynamoDB{
+		DAXClusters: getClusters(cfFile),
+	}
 }

@@ -52,12 +52,12 @@ func adaptAPIsV2(modules terraform.Modules) []v2.API {
 func adaptStageV2(stageBlock *terraform.Block) v2.Stage {
 	stage := v2.Stage{
 		Metadata: stageBlock.GetMetadata(),
+		Name:     stageBlock.GetAttribute("name").AsStringValueOrDefault("", stageBlock),
 		AccessLogging: v2.AccessLogging{
 			Metadata:              stageBlock.GetMetadata(),
 			CloudwatchLogGroupARN: types.StringDefault("", stageBlock.GetMetadata()),
 		},
 	}
-	stage.Name = stageBlock.GetAttribute("name").AsStringValueOrDefault("", stageBlock)
 	if accessLogging := stageBlock.GetBlock("access_log_settings"); accessLogging.IsNotNil() {
 		stage.AccessLogging.Metadata = accessLogging.GetMetadata()
 		stage.AccessLogging.CloudwatchLogGroupARN = accessLogging.GetAttribute("destination_arn").AsStringValueOrDefault("", accessLogging)

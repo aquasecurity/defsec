@@ -26,11 +26,8 @@ func getBuckets(cfFile parser.FileContext) []s3.Bucket {
 				Metadata: r.Metadata(),
 				Enabled:  hasVersioning(r),
 			},
-			Logging: s3.Logging{
-				Metadata: r.Metadata(),
-				Enabled:  hasLogging(r),
-			},
-			ACL: convertAclValue(r.GetStringProperty("AccessControl", "private")),
+			Logging: getLogging(r),
+			ACL:     convertAclValue(r.GetStringProperty("AccessControl", "private")),
 		}
 
 		buckets = append(buckets, s3b)
@@ -58,16 +55,21 @@ func convertAclValue(aclValue types.StringValue) types.StringValue {
 	return types.String(strings.ToLower(strings.Join(matches, "-")), aclValue.GetMetadata())
 }
 
-func hasLogging(r *parser.Resource) types.BoolValue {
+func getLogging(r *parser.Resource) s3.Logging {
 
-	loggingProps := r.GetProperty("LoggingConfiguration.DestinationBucketName")
-
-	if loggingProps.IsNil() || loggingProps.IsEmpty() {
-
-		return types.BoolDefault(false, r.Metadata())
+	logging := s3.Logging{
+		Metadata:     r.Metadata(),
+		Enabled:      types.BoolDefault(false, r.Metadata()),
+		TargetBucket: types.StringDefault("", r.Metadata()),
 	}
 
-	return types.Bool(true, loggingProps.Metadata())
+	if config := r.GetProperty("LoggingConfiguration"); config.IsNotNil() {
+		logging.TargetBucket = config.GetStringProperty("DestinationBucketName")
+		if logging.TargetBucket.IsNotEmpty() || !logging.TargetBucket.GetMetadata().IsResolvable() {
+			logging.Enabled = types.Bool(true, config.Metadata())
+		}
+	}
+	return logging
 }
 
 func hasVersioning(r *parser.Resource) types.BoolValue {

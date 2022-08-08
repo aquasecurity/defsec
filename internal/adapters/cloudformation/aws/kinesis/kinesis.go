@@ -6,8 +6,8 @@ import (
 )
 
 // Adapt ...
-func Adapt(cfFile parser.FileContext) (result kinesis.Kinesis) {
-
-	result.Streams = getStreams(cfFile)
-	return result
+func Adapt(cfFile parser.FileContext) kinesis.Kinesis {
+	return kinesis.Kinesis{
+		Streams: getStreams(cfFile),
+	}
 }

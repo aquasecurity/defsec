@@ -34,7 +34,6 @@ func Test_adaptConfigurationAggregrator(t *testing.T) {
 			expected: config.ConfigurationAggregrator{
 				Metadata:         types.NewTestMetadata(),
 				SourceAllRegions: types.Bool(true, types.NewTestMetadata()),
-				IsDefined:        true,
 			},
 		},
 		{
@@ -46,7 +45,6 @@ func Test_adaptConfigurationAggregrator(t *testing.T) {
 			expected: config.ConfigurationAggregrator{
 				Metadata:         types.NewTestMetadata(),
 				SourceAllRegions: types.Bool(false, types.NewTestMetadata()),
-				IsDefined:        true,
 			},
 		},
 	}

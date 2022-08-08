@@ -59,9 +59,12 @@ func adaptSecurityGroups(modules terraform.Modules) []openstack.SecurityGroup {
 			}
 		}
 
-		var group openstack.SecurityGroup
-		group.Metadata = types.NewUnmanagedMetadata()
-		group.Rules = append(group.Rules, rule)
+		group := openstack.SecurityGroup{
+			Metadata:    types.NewUnmanagedMetadata(),
+			Name:        types.StringDefault("", types.NewUnmanagedMetadata()),
+			Description: types.StringDefault("", types.NewUnmanagedMetadata()),
+			Rules:       []openstack.SecurityGroupRule{rule},
+		}
 		groupMap[uuid.NewString()] = group
 
 	}
