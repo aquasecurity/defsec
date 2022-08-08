@@ -1,6 +1,7 @@
 package adapter
 
 import (
+	"fmt"
 	"go/ast"
 	"go/types"
 	"strings"
@@ -38,9 +39,50 @@ func CreateAnalyzer(providerPackage, typesPackage string) *analysis.Analyzer {
 				return nil, err
 			}
 
+			if err := detectMetadataLiterals(pass, typesPackage); err != nil {
+				return nil, err
+			}
+
 			return nil, nil
 		},
 	}
+}
+
+func detectMetadataLiterals(pass *analysis.Pass, typesPackage string) error {
+	insp := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
+	insp.Preorder([]ast.Node{
+		(*ast.CompositeLit)(nil),
+	}, func(n ast.Node) {
+
+		if strings.HasSuffix(pass.Fset.File(n.Pos()).Name(), "_test.go") {
+			return
+		}
+
+		lit := n.(*ast.CompositeLit)
+		if lit.Type == nil {
+			return
+		}
+
+		tx := pass.TypesInfo.TypeOf(lit.Type)
+		if tx == nil {
+			return
+		}
+
+		if !strings.HasPrefix(tx.String(), typesPackage) {
+			return
+		}
+
+		named, ok := tx.(*types.Named)
+		if !ok {
+			return
+		}
+
+		if named.String() == fmt.Sprintf("%s.Metadata", typesPackage) {
+			pass.Reportf(lit.Pos(), "Metadata instances should not be initialised using literals")
+		}
+	})
+	return nil
+
 }
 
 func detectNamedFunctionReturns(pass *analysis.Pass, providerPackage string) error {

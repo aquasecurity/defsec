@@ -158,7 +158,7 @@ func (a *adapter) adaptAlarm(alarm cwTypes.MetricAlarm) (*cloudwatch.Alarm, erro
 	var dimensions []cloudwatch.AlarmDimension
 	for _, dimension := range alarm.Dimensions {
 		dimensions = append(dimensions, cloudwatch.AlarmDimension{
-			Metadata: defsecTypes.Metadata{},
+			Metadata: metadata,
 			Name:     defsecTypes.String(*dimension.Name, metadata),
 			Value:    defsecTypes.String(*dimension.Value, metadata),
 		})

@@ -57,3 +57,7 @@ func DoThing8() provider.Thing {
 		Name: types.String{Value: "a name"},
 	}
 }
+
+func DoThing9() types.Metadata {
+	return types.Metadata{} // want "Metadata instances should not be initialised using literals"
+}
