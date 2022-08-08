@@ -33,6 +33,7 @@ type Scanner struct {
 	dataDirs      []string
 	debug         debug.Logger
 	options       []options.ScannerOption
+	parserOptions []options.ParserOption
 	policyReaders []io.Reader
 	loadEmbedded  bool
 	policyFS      fs.FS
@@ -54,6 +55,10 @@ func New(options ...options.ScannerOption) *Scanner {
 		option(s)
 	}
 	return s
+}
+
+func (s *Scanner) AddParserOptions(options ...options.ParserOption) {
+	s.parserOptions = append(s.parserOptions, options...)
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
@@ -144,7 +149,7 @@ func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, path string) (scan.R
 }
 
 func (s *Scanner) getScanResults(path string, ctx context.Context, target fs.FS) (results []scan.Result, err error) {
-	helmParser := parser.New(path)
+	helmParser := parser.New(path, s.parserOptions...)
 
 	if err := helmParser.ParseFS(ctx, target, path); err != nil {
 		return nil, err
