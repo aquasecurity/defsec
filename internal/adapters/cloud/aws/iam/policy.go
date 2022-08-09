@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aquasecurity/defsec/internal/adapters/rapido"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/liamg/iamgo"
@@ -38,15 +39,7 @@ func (a *adapter) adaptPolicies(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting policies...")
 
-	for _, apiPolicy := range nativePolicies {
-		policy, err := a.adaptPolicy(apiPolicy)
-		if err != nil {
-			a.Debug("Failed to adapt policy '%s': %s", *apiPolicy.Arn, err)
-			continue
-		}
-		state.AWS.IAM.Policies = append(state.AWS.IAM.Policies, *policy)
-		a.Tracker().IncrementResource()
-	}
+	state.AWS.IAM.Policies = rapido.ConcurrentAdapt(rapido.DefaultConcurrency, nativePolicies, a.RootAdapter.Logger(), a.adaptPolicy)
 	return nil
 }
 
@@ -73,7 +66,7 @@ func (a *adapter) adaptPolicy(apiPolicy iamtypes.Policy) (*iam.Policy, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	a.Tracker().IncrementResource()
 	return &iam.Policy{
 		Metadata: metadata,
 		Name:     defsecTypes.String(*apiPolicy.PolicyName, metadata),

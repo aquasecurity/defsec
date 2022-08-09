@@ -3,6 +3,7 @@ package iam
 import (
 	"fmt"
 
+	"github.com/aquasecurity/defsec/internal/adapters/rapido"
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -33,16 +34,7 @@ func (a *adapter) adaptGroups(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting groups...")
 
-	for _, apiGroup := range nativeGroups {
-		group, err := a.adaptGroup(apiGroup, state)
-		if err != nil {
-			a.Debug("Failed to adapt group '%s': %s", *apiGroup.Arn, err)
-			continue
-		}
-		state.AWS.IAM.Groups = append(state.AWS.IAM.Groups, *group)
-		a.Tracker().IncrementResource()
-	}
-
+	state.AWS.IAM.Groups = rapido.ConcurrentAdaptWithState(rapido.DefaultConcurrency, nativeGroups, state, a.RootAdapter.Logger(), a.adaptGroup)
 	return nil
 }
 
@@ -95,7 +87,7 @@ func (a *adapter) adaptGroup(apiGroup iamtypes.Group, state *state.State) (*iam.
 			}
 		}
 	}
-
+	a.Tracker().IncrementResource()
 	return &iam.Group{
 		Metadata: metadata,
 		Name:     types.String(*apiGroup.GroupName, metadata),

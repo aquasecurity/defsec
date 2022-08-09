@@ -3,6 +3,7 @@ package iam
 import (
 	"fmt"
 
+	"github.com/aquasecurity/defsec/internal/adapters/rapido"
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -33,15 +34,7 @@ func (a *adapter) adaptRoles(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting roles...")
 
-	for _, apiRole := range nativeRoles {
-		user, err := a.adaptRole(apiRole)
-		if err != nil {
-			a.Debug("Failed to adapt role '%s': %s", *apiRole.Arn, err)
-			continue
-		}
-		state.AWS.IAM.Roles = append(state.AWS.IAM.Roles, *user)
-		a.Tracker().IncrementResource()
-	}
+	state.AWS.IAM.Roles = rapido.ConcurrentAdapt(rapido.DefaultConcurrency, nativeRoles, a.RootAdapter.Logger(), a.adaptRole)
 
 	return nil
 }
@@ -83,7 +76,7 @@ func (a *adapter) adaptRole(apiRole iamtypes.Role) (*iam.Role, error) {
 	}
 
 	metadata := a.CreateMetadataFromARN(*apiRole.Arn)
-
+	a.Tracker().IncrementResource()
 	return &iam.Role{
 		Metadata: metadata,
 		Name:     types.String(*apiRole.RoleName, metadata),

@@ -7,6 +7,7 @@ import (
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/internal/adapters/rapido"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -56,54 +57,43 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 	a.Tracker().SetServiceLabel("Scanning buckets...")
 	a.Tracker().SetTotalResources(len(apiBuckets.Buckets))
 
-	wg := sync.WaitGroup{}
-	wg.Add(len(apiBuckets.Buckets))
+	buckets = rapido.ConcurrentAdapt(rapido.DefaultConcurrency, apiBuckets.Buckets, a.RootAdapter.Logger(), func(bucket s3types.Bucket) (*s3.Bucket, error) {
 
-	sem := make(chan interface{}, len(apiBuckets.Buckets))
+		if bucket.Name == nil {
+			return nil, nil
+		}
 
-	for _, bucket := range apiBuckets.Buckets {
-		go func(bucket s3types.Bucket) {
-			defer wg.Done()
-			if bucket.Name == nil {
-				return
-			}
+		location, err := a.api.GetBucketLocation(a.Context(), &s3api.GetBucketLocationInput{
+			Bucket: bucket.Name,
+		})
+		if err != nil {
+			a.Debug("Error getting bucket location: %s", err)
+			return nil, nil
+		}
+		region := string(location.LocationConstraint)
+		if region == "" { // Region us-east-1 have a LocationConstraint of null (???)
+			region = "us-east-1"
+		}
+		if region != a.Region() {
+			return nil, nil
+		}
 
-			location, err := a.api.GetBucketLocation(a.Context(), &s3api.GetBucketLocationInput{
-				Bucket: bucket.Name,
-			})
-			if err != nil {
-				a.Debug("Error getting bucket location: %s", err)
-				return
-			}
-			region := string(location.LocationConstraint)
-			if region == "" { // Region us-east-1 have a LocationConstraint of null (???)
-				region = "us-east-1"
-			}
-			if region != a.Region() {
-				return
-			}
+		bucketMetadata := a.CreateMetadata(*bucket.Name)
 
-			bucketMetadata := a.CreateMetadata(*bucket.Name)
+		b := s3.Bucket{
+			Metadata:          bucketMetadata,
+			Name:              defsecTypes.String(*bucket.Name, bucketMetadata),
+			PublicAccessBlock: a.getPublicAccessBlock(bucket.Name, bucketMetadata),
+			BucketPolicies:    a.getBucketPolicies(bucket.Name, bucketMetadata),
+			Encryption:        a.getBucketEncryption(bucket.Name, bucketMetadata),
+			Versioning:        a.getBucketVersioning(bucket.Name, bucketMetadata),
+			Logging:           a.getBucketLogging(bucket.Name, bucketMetadata),
+			ACL:               a.getBucketACL(bucket.Name, bucketMetadata),
+		}
 
-			b := s3.Bucket{
-				Metadata:          bucketMetadata,
-				Name:              defsecTypes.String(*bucket.Name, bucketMetadata),
-				PublicAccessBlock: a.getPublicAccessBlock(bucket.Name, bucketMetadata),
-				BucketPolicies:    a.getBucketPolicies(bucket.Name, bucketMetadata),
-				Encryption:        a.getBucketEncryption(bucket.Name, bucketMetadata),
-				Versioning:        a.getBucketVersioning(bucket.Name, bucketMetadata),
-				Logging:           a.getBucketLogging(bucket.Name, bucketMetadata),
-				ACL:               a.getBucketACL(bucket.Name, bucketMetadata),
-			}
+		return &b, nil
 
-			a.Lock()
-			defer a.Unlock()
-			buckets = append(buckets, b)
-			a.Tracker().IncrementResource()
-		}(bucket)
-	}
-
-	wg.Wait()
+	})
 
 	return buckets, nil
 }
