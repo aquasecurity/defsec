@@ -65,7 +65,8 @@ func (a *adapter) getTrails() ([]cloudtrail.Trail, error) {
 	for _, apiDistribution := range apiTrails {
 		trail, err := a.adaptTrail(apiDistribution)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt trail '%s': %s", *apiDistribution.TrailARN, err)
+			continue
 		}
 		trails = append(trails, *trail)
 		a.Tracker().IncrementResource()
