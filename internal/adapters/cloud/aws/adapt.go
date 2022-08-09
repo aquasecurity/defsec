@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
@@ -36,13 +37,14 @@ type ServiceAdapter interface {
 }
 
 type RootAdapter struct {
-	ctx            context.Context
-	sessionCfg     aws.Config
-	tracker        progress.ServiceTracker
-	accountID      string
-	currentService string
-	region         string
-	debugWriter    debug.Logger
+	ctx                 context.Context
+	sessionCfg          aws.Config
+	tracker             progress.ServiceTracker
+	accountID           string
+	currentService      string
+	region              string
+	debugWriter         debug.Logger
+	concurrencyStrategy concurrency.Strategy
 }
 
 func NewRootAdapter(ctx context.Context, cfg aws.Config, tracker progress.ServiceTracker) *RootAdapter {
@@ -64,6 +66,10 @@ func (a *RootAdapter) Debug(format string, args ...interface{}) {
 
 func (a *RootAdapter) Logger() debug.Logger {
 	return a.debugWriter
+}
+
+func (a *RootAdapter) ConcurrencyStrategy() concurrency.Strategy {
+	return a.concurrencyStrategy
 }
 
 func (a *RootAdapter) SessionConfig() aws.Config {
@@ -131,9 +137,10 @@ func AllServices() []string {
 
 func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 	c := &RootAdapter{
-		ctx:         ctx,
-		tracker:     opt.ProgressTracker,
-		debugWriter: opt.DebugWriter.Extend("adapt", "aws"),
+		ctx:                 ctx,
+		tracker:             opt.ProgressTracker,
+		debugWriter:         opt.DebugWriter.Extend("adapt", "aws"),
+		concurrencyStrategy: opt.ConcurrencyStrategy,
 	}
 
 	cfg, err := config.LoadDefaultConfig(ctx)

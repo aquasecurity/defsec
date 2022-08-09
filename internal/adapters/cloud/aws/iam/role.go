@@ -3,7 +3,7 @@ package iam
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/internal/adapters/rapido"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -34,7 +34,7 @@ func (a *adapter) adaptRoles(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting roles...")
 
-	state.AWS.IAM.Roles = rapido.ConcurrentAdapt(rapido.DefaultConcurrency, nativeRoles, a.RootAdapter.Logger(), a.adaptRole)
+	state.AWS.IAM.Roles = concurrency.Adapt(nativeRoles, a.RootAdapter, a.adaptRole)
 
 	return nil
 }

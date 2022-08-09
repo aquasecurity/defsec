@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/adapters/rapido"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/liamg/iamgo"
@@ -39,7 +39,7 @@ func (a *adapter) adaptPolicies(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting policies...")
 
-	state.AWS.IAM.Policies = rapido.ConcurrentAdapt(rapido.DefaultConcurrency, nativePolicies, a.RootAdapter.Logger(), a.adaptPolicy)
+	state.AWS.IAM.Policies = concurrency.Adapt(nativePolicies, a.RootAdapter, a.adaptPolicy)
 	return nil
 }
 

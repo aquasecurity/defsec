@@ -3,7 +3,7 @@ package iam
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/internal/adapters/rapido"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -34,7 +34,7 @@ func (a *adapter) adaptGroups(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting groups...")
 
-	state.AWS.IAM.Groups = rapido.ConcurrentAdaptWithState(rapido.DefaultConcurrency, nativeGroups, state, a.RootAdapter.Logger(), a.adaptGroup)
+	state.AWS.IAM.Groups = concurrency.AdaptWithStrategy(nativeGroups, state, a.RootAdapter, a.adaptGroup)
 	return nil
 }
 

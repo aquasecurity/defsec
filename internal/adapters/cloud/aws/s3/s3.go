@@ -4,10 +4,10 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	"github.com/aquasecurity/defsec/internal/adapters/rapido"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -57,7 +57,7 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 	a.Tracker().SetServiceLabel("Scanning buckets...")
 	a.Tracker().SetTotalResources(len(apiBuckets.Buckets))
 
-	buckets = rapido.ConcurrentAdapt(rapido.DefaultConcurrency, apiBuckets.Buckets, a.RootAdapter.Logger(), func(bucket s3types.Bucket) (*s3.Bucket, error) {
+	buckets = concurrency.Adapt(apiBuckets.Buckets, a.RootAdapter, func(bucket s3types.Bucket) (*s3.Bucket, error) {
 
 		if bucket.Name == nil {
 			return nil, nil
