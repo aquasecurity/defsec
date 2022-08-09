@@ -50,6 +50,7 @@ func NewRootAdapter(ctx context.Context, cfg aws.Config, tracker progress.Servic
 		ctx:        ctx,
 		tracker:    tracker,
 		sessionCfg: cfg,
+		region:     cfg.Region,
 	}
 }
 
