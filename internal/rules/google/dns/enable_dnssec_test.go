@@ -3,7 +3,7 @@ package dns
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEnableDnssec(t *testing.T) {
 			input: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Visibility: types.String("public", types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Visibility: defsecTypes.String("public", defsecTypes.NewTestMetadata()),
 						DNSSec: dns.DNSSec{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckEnableDnssec(t *testing.T) {
 			input: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Visibility: types.String("public", types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Visibility: defsecTypes.String("public", defsecTypes.NewTestMetadata()),
 						DNSSec: dns.DNSSec{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,11 +56,11 @@ func TestCheckEnableDnssec(t *testing.T) {
 			input: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Visibility: types.String("private", types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Visibility: defsecTypes.String("private", defsecTypes.NewTestMetadata()),
 						DNSSec: dns.DNSSec{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

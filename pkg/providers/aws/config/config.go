@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Config struct {
@@ -9,6 +9,6 @@ type Config struct {
 }
 
 type ConfigurationAggregrator struct {
-	types.Metadata
-	SourceAllRegions types.BoolValue
+	defsecTypes.Metadata
+	SourceAllRegions defsecTypes.BoolValue
 }

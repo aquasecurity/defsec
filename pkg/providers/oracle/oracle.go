@@ -1,7 +1,7 @@
 package oracle
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Oracle struct {
@@ -13,6 +13,6 @@ type Compute struct {
 }
 
 type AddressReservation struct {
-	types.Metadata
-	Pool types.StringValue // e.g. public-pool
+	defsecTypes.Metadata
+	Pool defsecTypes.StringValue // e.g. public-pool
 }

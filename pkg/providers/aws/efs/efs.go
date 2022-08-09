@@ -1,7 +1,7 @@
 package efs
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type EFS struct {
@@ -9,6 +9,6 @@ type EFS struct {
 }
 
 type FileSystem struct {
-	types.Metadata
-	Encrypted types.BoolValue
+	defsecTypes.Metadata
+	Encrypted defsecTypes.BoolValue
 }

@@ -3,8 +3,9 @@ package iam
 import (
 	"testing"
 
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/google/iam"
 	"github.com/aquasecurity/defsec/test/testutil"
 	"github.com/stretchr/testify/assert"
@@ -68,53 +69,53 @@ func Test_Adapt(t *testing.T) {
 			expected: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 
 						Projects: []iam.Project{
 							{
-								Metadata:          types.NewTestMetadata(),
-								AutoCreateNetwork: types.Bool(true, types.NewTestMetadata()),
+								Metadata:          defsecTypes.NewTestMetadata(),
+								AutoCreateNetwork: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata:              types.NewTestMetadata(),
-										Member:                types.String("user:alice@gmail.com", types.NewTestMetadata()),
-										Role:                  types.String("roles/editor", types.NewTestMetadata()),
-										DefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+										Metadata:              defsecTypes.NewTestMetadata(),
+										Member:                defsecTypes.String("user:alice@gmail.com", defsecTypes.NewTestMetadata()),
+										Role:                  defsecTypes.String("roles/editor", defsecTypes.NewTestMetadata()),
+										DefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 									},
 								},
 								Bindings: []iam.Binding{
 									{
-										Metadata: types.NewTestMetadata(),
-										Members: []types.StringValue{
-											types.String("user:not-alice@gmail.com", types.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Members: []defsecTypes.StringValue{
+											defsecTypes.String("user:not-alice@gmail.com", defsecTypes.NewTestMetadata()),
 										},
-										Role:                          types.String("roles/nothing", types.NewTestMetadata()),
-										IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+										Role:                          defsecTypes.String("roles/nothing", defsecTypes.NewTestMetadata()),
+										IncludesDefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
 						},
 						Members: []iam.Member{
 							{
-								Metadata:              types.NewTestMetadata(),
-								Member:                types.String("user:member@gmail.com", types.NewTestMetadata()),
-								Role:                  types.String("roles/whatever", types.NewTestMetadata()),
-								DefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+								Metadata:              defsecTypes.NewTestMetadata(),
+								Member:                defsecTypes.String("user:member@gmail.com", defsecTypes.NewTestMetadata()),
+								Role:                  defsecTypes.String("roles/whatever", defsecTypes.NewTestMetadata()),
+								DefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 						Bindings: []iam.Binding{
 							{
-								Metadata: types.NewTestMetadata(),
-								Members: []types.StringValue{
-									types.String("user:member_2@gmail.com", types.NewTestMetadata())},
-								Role:                          types.String("roles/browser", types.NewTestMetadata()),
-								IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Members: []defsecTypes.StringValue{
+									defsecTypes.String("user:member_2@gmail.com", defsecTypes.NewTestMetadata())},
+								Role:                          defsecTypes.String("roles/browser", defsecTypes.NewTestMetadata()),
+								IncludesDefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

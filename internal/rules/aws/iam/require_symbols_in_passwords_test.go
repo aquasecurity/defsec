@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -23,8 +23,8 @@ func TestCheckRequireSymbolsInPasswords(t *testing.T) {
 			name: "IAM password policy symbols not required",
 			input: iam.IAM{
 				PasswordPolicy: iam.PasswordPolicy{
-					Metadata:       types.NewTestMetadata(),
-					RequireSymbols: types.Bool(false, types.NewTestMetadata()),
+					Metadata:       defsecTypes.NewTestMetadata(),
+					RequireSymbols: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 			},
 			expected: true,
@@ -33,8 +33,8 @@ func TestCheckRequireSymbolsInPasswords(t *testing.T) {
 			name: "IAM password policy symbols required",
 			input: iam.IAM{
 				PasswordPolicy: iam.PasswordPolicy{
-					Metadata:       types.NewTestMetadata(),
-					RequireSymbols: types.Bool(true, types.NewTestMetadata()),
+					Metadata:       defsecTypes.NewTestMetadata(),
+					RequireSymbols: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 			},
 			expected: false,

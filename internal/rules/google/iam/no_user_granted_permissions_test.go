@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,24 +24,24 @@ func TestCheckNoUserGrantedPermissions(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Projects: []iam.Project{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata: types.NewTestMetadata(),
-										Member:   types.String("user:test@example.com", types.NewTestMetadata()),
-										Role:     types.String("some-role", types.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Member:   defsecTypes.String("user:test@example.com", defsecTypes.NewTestMetadata()),
+										Role:     defsecTypes.String("some-role", defsecTypes.NewTestMetadata()),
 									},
 								},
 								Bindings: []iam.Binding{
 									{
-										Metadata: types.NewTestMetadata(),
-										Members: []types.StringValue{
-											types.String("user:test@example.com", types.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Members: []defsecTypes.StringValue{
+											defsecTypes.String("user:test@example.com", defsecTypes.NewTestMetadata()),
 										},
-										Role: types.String("some-role", types.NewTestMetadata()),
+										Role: defsecTypes.String("some-role", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -56,12 +56,12 @@ func TestCheckNoUserGrantedPermissions(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Members: []iam.Member{
 							{
-								Metadata: types.NewTestMetadata(),
-								Member:   types.String("user:test@example.com", types.NewTestMetadata()),
-								Role:     types.String("some-role", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Member:   defsecTypes.String("user:test@example.com", defsecTypes.NewTestMetadata()),
+								Role:     defsecTypes.String("some-role", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -74,15 +74,15 @@ func TestCheckNoUserGrantedPermissions(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata: types.NewTestMetadata(),
-										Member:   types.String("user:test@example.com", types.NewTestMetadata()),
-										Role:     types.String("some-role", types.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Member:   defsecTypes.String("user:test@example.com", defsecTypes.NewTestMetadata()),
+										Role:     defsecTypes.String("some-role", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -97,17 +97,17 @@ func TestCheckNoUserGrantedPermissions(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Bindings: []iam.Binding{
 									{
-										Metadata: types.NewTestMetadata(),
-										Members: []types.StringValue{
-											types.String("user:test@example.com", types.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Members: []defsecTypes.StringValue{
+											defsecTypes.String("user:test@example.com", defsecTypes.NewTestMetadata()),
 										},
-										Role: types.String("some-role", types.NewTestMetadata()),
+										Role: defsecTypes.String("some-role", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -122,33 +122,33 @@ func TestCheckNoUserGrantedPermissions(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Members: []iam.Member{
 							{
-								Metadata: types.NewTestMetadata(),
-								Member:   types.String("group:test@example.com", types.NewTestMetadata()),
-								Role:     types.String("some-role", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Member:   defsecTypes.String("group:test@example.com", defsecTypes.NewTestMetadata()),
+								Role:     defsecTypes.String("some-role", defsecTypes.NewTestMetadata()),
 							},
 						},
 						Bindings: []iam.Binding{
 							{
-								Metadata: types.NewTestMetadata(),
-								Members: []types.StringValue{
-									types.String("group:test@example.com", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Members: []defsecTypes.StringValue{
+									defsecTypes.String("group:test@example.com", defsecTypes.NewTestMetadata()),
 								},
-								Role: types.String("some-role", types.NewTestMetadata()),
+								Role: defsecTypes.String("some-role", defsecTypes.NewTestMetadata()),
 							},
 						},
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Bindings: []iam.Binding{
 									{
-										Metadata: types.NewTestMetadata(),
-										Members: []types.StringValue{
-											types.String("group:test@example.com", types.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Members: []defsecTypes.StringValue{
+											defsecTypes.String("group:test@example.com", defsecTypes.NewTestMetadata()),
 										},
-										Role: types.String("some-role", types.NewTestMetadata()),
+										Role: defsecTypes.String("some-role", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},

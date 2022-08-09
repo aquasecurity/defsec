@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableShieldedVMVTPM(t *testing.T) {
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ShieldedVM: compute.ShieldedVMConfig{
-							Metadata:    types.NewTestMetadata(),
-							VTPMEnabled: types.Bool(false, types.NewTestMetadata()),
+							Metadata:    defsecTypes.NewTestMetadata(),
+							VTPMEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableShieldedVMVTPM(t *testing.T) {
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ShieldedVM: compute.ShieldedVMConfig{
-							Metadata:    types.NewTestMetadata(),
-							VTPMEnabled: types.Bool(true, types.NewTestMetadata()),
+							Metadata:    defsecTypes.NewTestMetadata(),
+							VTPMEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

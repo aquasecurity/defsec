@@ -1,7 +1,7 @@
 package openstack
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type OpenStack struct {
@@ -20,15 +20,15 @@ type Firewall struct {
 }
 
 type FirewallRule struct {
-	types.Metadata
-	Source          types.StringValue
-	Destination     types.StringValue
-	SourcePort      types.StringValue
-	DestinationPort types.StringValue
-	Enabled         types.BoolValue
+	defsecTypes.Metadata
+	Source          defsecTypes.StringValue
+	Destination     defsecTypes.StringValue
+	SourcePort      defsecTypes.StringValue
+	DestinationPort defsecTypes.StringValue
+	Enabled         defsecTypes.BoolValue
 }
 
 type Instance struct {
-	types.Metadata
-	AdminPassword types.StringValue
+	defsecTypes.Metadata
+	AdminPassword defsecTypes.StringValue
 }

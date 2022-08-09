@@ -3,7 +3,7 @@ package securitycenter
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckAlertOnSevereNotifications(t *testing.T) {
 			input: securitycenter.SecurityCenter{
 				Contacts: []securitycenter.Contact{
 					{
-						Metadata:                 types.NewTestMetadata(),
-						EnableAlertNotifications: types.Bool(false, types.NewTestMetadata()),
+						Metadata:                 defsecTypes.NewTestMetadata(),
+						EnableAlertNotifications: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckAlertOnSevereNotifications(t *testing.T) {
 			input: securitycenter.SecurityCenter{
 				Contacts: []securitycenter.Contact{
 					{
-						Metadata:                 types.NewTestMetadata(),
-						EnableAlertNotifications: types.Bool(true, types.NewTestMetadata()),
+						Metadata:                 defsecTypes.NewTestMetadata(),
+						EnableAlertNotifications: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

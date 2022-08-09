@@ -3,7 +3,7 @@ package ecr
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckRepositoryCustomerKey(t *testing.T) {
 			input: ecr.ECR{
 				Repositories: []ecr.Repository{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: ecr.Encryption{
-							Metadata: types.NewTestMetadata(),
-							Type:     types.String(ecr.EncryptionTypeAES256, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Type:     defsecTypes.String(ecr.EncryptionTypeAES256, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,11 +39,11 @@ func TestCheckRepositoryCustomerKey(t *testing.T) {
 			input: ecr.ECR{
 				Repositories: []ecr.Repository{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: ecr.Encryption{
-							Metadata: types.NewTestMetadata(),
-							Type:     types.String(ecr.EncryptionTypeKMS, types.NewTestMetadata()),
-							KMSKeyID: types.String("", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Type:     defsecTypes.String(ecr.EncryptionTypeKMS, defsecTypes.NewTestMetadata()),
+							KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -55,11 +55,11 @@ func TestCheckRepositoryCustomerKey(t *testing.T) {
 			input: ecr.ECR{
 				Repositories: []ecr.Repository{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: ecr.Encryption{
-							Metadata: types.NewTestMetadata(),
-							Type:     types.String(ecr.EncryptionTypeKMS, types.NewTestMetadata()),
-							KMSKeyID: types.String("some-kms-key", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Type:     defsecTypes.String(ecr.EncryptionTypeKMS, defsecTypes.NewTestMetadata()),
+							KMSKeyID: defsecTypes.String("some-kms-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

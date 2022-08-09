@@ -3,7 +3,7 @@ package ssm
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckSecretUseCustomerKey(t *testing.T) {
 			input: ssm.SSM{
 				Secrets: []ssm.Secret{
 					{
-						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckSecretUseCustomerKey(t *testing.T) {
 			input: ssm.SSM{
 				Secrets: []ssm.Secret{
 					{
-						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String(ssm.DefaultKMSKeyID, types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						KMSKeyID: defsecTypes.String(ssm.DefaultKMSKeyID, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -48,8 +48,8 @@ func TestCheckSecretUseCustomerKey(t *testing.T) {
 			input: ssm.SSM{
 				Secrets: []ssm.Secret{
 					{
-						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("some-ok-key", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						KMSKeyID: defsecTypes.String("some-ok-key", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

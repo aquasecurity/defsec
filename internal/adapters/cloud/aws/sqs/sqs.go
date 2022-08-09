@@ -2,10 +2,10 @@ package sqs
 
 import (
 	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	sqsApi "github.com/aws/aws-sdk-go-v2/service/sqs"
 	sqsTypes "github.com/aws/aws-sdk-go-v2/service/sqs/types"
@@ -98,18 +98,18 @@ func (a *adapter) getQueueBatch(token *string) (queues []sqs.Queue, nextToken *s
 		}
 
 		queue := sqs.NewQueue(queueMetadata, queueUrl)
-		queue.QueueURL = types.String(queueUrl, queueMetadata)
+		queue.QueueURL = defsecTypes.String(queueUrl, queueMetadata)
 
 		sseEncrypted := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameSqsManagedSseEnabled)]
 		kmsEncryption := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameKmsMasterKeyId)]
 		queuePolicy := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNamePolicy)]
 
 		if sseEncrypted == "SSE-SQS" || sseEncrypted == "SSE-KMS" {
-			queue.Encryption.ManagedEncryption = types.Bool(true, queueMetadata)
+			queue.Encryption.ManagedEncryption = defsecTypes.Bool(true, queueMetadata)
 		}
 
 		if kmsEncryption != "" {
-			queue.Encryption.KMSKeyID = types.String(kmsEncryption, queueMetadata)
+			queue.Encryption.KMSKeyID = defsecTypes.String(kmsEncryption, queueMetadata)
 		}
 
 		if queuePolicy != "" {
@@ -118,12 +118,12 @@ func (a *adapter) getQueueBatch(token *string) (queues []sqs.Queue, nextToken *s
 
 				queue.Policies = append(queue.Policies, iam.Policy{
 					Metadata: queueMetadata,
-					Name:     types.StringDefault("", queueMetadata),
+					Name:     defsecTypes.StringDefault("", queueMetadata),
 					Document: iam.Document{
 						Metadata: queueMetadata,
 						Parsed:   *policy,
 					},
-					Builtin: types.Bool(false, queueMetadata),
+					Builtin: defsecTypes.Bool(false, queueMetadata),
 				})
 
 			}

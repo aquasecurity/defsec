@@ -3,7 +3,7 @@ package msk
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 			input: msk.MSK{
 				Clusters: []msk.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						EncryptionInTransit: msk.EncryptionInTransit{
-							Metadata:     types.NewTestMetadata(),
-							ClientBroker: types.String(msk.ClientBrokerEncryptionPlaintext, types.NewTestMetadata()),
+							Metadata:     defsecTypes.NewTestMetadata(),
+							ClientBroker: defsecTypes.String(msk.ClientBrokerEncryptionPlaintext, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 			input: msk.MSK{
 				Clusters: []msk.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						EncryptionInTransit: msk.EncryptionInTransit{
-							Metadata:     types.NewTestMetadata(),
-							ClientBroker: types.String(msk.ClientBrokerEncryptionTLSOrPlaintext, types.NewTestMetadata()),
+							Metadata:     defsecTypes.NewTestMetadata(),
+							ClientBroker: defsecTypes.String(msk.ClientBrokerEncryptionTLSOrPlaintext, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -54,10 +54,10 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 			input: msk.MSK{
 				Clusters: []msk.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						EncryptionInTransit: msk.EncryptionInTransit{
-							Metadata:     types.NewTestMetadata(),
-							ClientBroker: types.String(msk.ClientBrokerEncryptionTLS, types.NewTestMetadata()),
+							Metadata:     defsecTypes.NewTestMetadata(),
+							ClientBroker: defsecTypes.String(msk.ClientBrokerEncryptionTLS, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

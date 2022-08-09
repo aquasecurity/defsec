@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,11 +25,11 @@ func TestCheckEnsureSecretExpiry(t *testing.T) {
 			input: keyvault.KeyVault{
 				Vaults: []keyvault.Vault{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Secrets: []keyvault.Secret{
 							{
-								Metadata:   types.NewTestMetadata(),
-								ExpiryDate: types.Time(time.Time{}, types.NewTestMetadata().GetMetadata()),
+								Metadata:   defsecTypes.NewTestMetadata(),
+								ExpiryDate: defsecTypes.Time(time.Time{}, defsecTypes.NewTestMetadata().GetMetadata()),
 							},
 						},
 					},
@@ -42,11 +42,11 @@ func TestCheckEnsureSecretExpiry(t *testing.T) {
 			input: keyvault.KeyVault{
 				Vaults: []keyvault.Vault{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Secrets: []keyvault.Secret{
 							{
-								Metadata:   types.NewTestMetadata(),
-								ExpiryDate: types.Time(time.Now(), types.NewTestMetadata().GetMetadata()),
+								Metadata:   defsecTypes.NewTestMetadata(),
+								ExpiryDate: defsecTypes.Time(time.Now(), defsecTypes.NewTestMetadata().GetMetadata()),
 							},
 						},
 					},

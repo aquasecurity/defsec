@@ -3,9 +3,9 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,14 +25,14 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: ec2.EC2{
 				NetworkACLs: []ec2.NetworkACL{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []ec2.NetworkACLRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Type:     types.String(ec2.TypeIngress, types.NewTestMetadata()),
-								Action:   types.String(ec2.ActionAllow, types.NewTestMetadata()),
-								CIDRs: []types.StringValue{
-									types.String("0.0.0.0/0", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Type:     defsecTypes.String(ec2.TypeIngress, defsecTypes.NewTestMetadata()),
+								Action:   defsecTypes.String(ec2.ActionAllow, defsecTypes.NewTestMetadata()),
+								CIDRs: []defsecTypes.StringValue{
+									defsecTypes.String("0.0.0.0/0", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -46,14 +46,14 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: ec2.EC2{
 				NetworkACLs: []ec2.NetworkACL{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []ec2.NetworkACLRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Type:     types.String(ec2.TypeIngress, types.NewTestMetadata()),
-								Action:   types.String(ec2.ActionAllow, types.NewTestMetadata()),
-								CIDRs: []types.StringValue{
-									types.String("10.0.0.0/16", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Type:     defsecTypes.String(ec2.TypeIngress, defsecTypes.NewTestMetadata()),
+								Action:   defsecTypes.String(ec2.ActionAllow, defsecTypes.NewTestMetadata()),
+								CIDRs: []defsecTypes.StringValue{
+									defsecTypes.String("10.0.0.0/16", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

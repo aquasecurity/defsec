@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckDisablePasswordAuthentication(t *testing.T) {
 			input: compute.Compute{
 				LinuxVirtualMachines: []compute.LinuxVirtualMachine{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						OSProfileLinuxConfig: compute.OSProfileLinuxConfig{
-							Metadata:                      types.NewTestMetadata(),
-							DisablePasswordAuthentication: types.Bool(false, types.NewTestMetadata()),
+							Metadata:                      defsecTypes.NewTestMetadata(),
+							DisablePasswordAuthentication: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckDisablePasswordAuthentication(t *testing.T) {
 			input: compute.Compute{
 				LinuxVirtualMachines: []compute.LinuxVirtualMachine{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						OSProfileLinuxConfig: compute.OSProfileLinuxConfig{
-							Metadata:                      types.NewTestMetadata(),
-							DisablePasswordAuthentication: types.Bool(true, types.NewTestMetadata()),
+							Metadata:                      defsecTypes.NewTestMetadata(),
+							DisablePasswordAuthentication: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

@@ -3,7 +3,7 @@ package codebuild
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableEncryption(t *testing.T) {
 			input: codebuild.CodeBuild{
 				Projects: []codebuild.Project{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ArtifactSettings: codebuild.ArtifactSettings{
-							Metadata:          types.NewTestMetadata(),
-							EncryptionEnabled: types.Bool(false, types.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							EncryptionEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,15 +39,15 @@ func TestCheckEnableEncryption(t *testing.T) {
 			input: codebuild.CodeBuild{
 				Projects: []codebuild.Project{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ArtifactSettings: codebuild.ArtifactSettings{
-							Metadata:          types.NewTestMetadata(),
-							EncryptionEnabled: types.Bool(true, types.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							EncryptionEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 						SecondaryArtifactSettings: []codebuild.ArtifactSettings{
 							{
-								Metadata:          types.NewTestMetadata(),
-								EncryptionEnabled: types.Bool(false, types.NewTestMetadata()),
+								Metadata:          defsecTypes.NewTestMetadata(),
+								EncryptionEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -60,15 +60,15 @@ func TestCheckEnableEncryption(t *testing.T) {
 			input: codebuild.CodeBuild{
 				Projects: []codebuild.Project{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ArtifactSettings: codebuild.ArtifactSettings{
-							Metadata:          types.NewTestMetadata(),
-							EncryptionEnabled: types.Bool(true, types.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							EncryptionEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 						SecondaryArtifactSettings: []codebuild.ArtifactSettings{
 							{
-								Metadata:          types.NewTestMetadata(),
-								EncryptionEnabled: types.Bool(true, types.NewTestMetadata()),
+								Metadata:          defsecTypes.NewTestMetadata(),
+								EncryptionEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

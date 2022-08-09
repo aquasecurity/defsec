@@ -3,7 +3,7 @@ package dns
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,18 +24,18 @@ func TestCheckNoRsaSha1(t *testing.T) {
 			input: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						DNSSec: dns.DNSSec{
-							Metadata: types.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							DefaultKeySpecs: dns.KeySpecs{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								KeySigningKey: dns.Key{
-									Metadata:  types.NewTestMetadata(),
-									Algorithm: types.String("rsasha1", types.NewTestMetadata()),
+									Metadata:  defsecTypes.NewTestMetadata(),
+									Algorithm: defsecTypes.String("rsasha1", defsecTypes.NewTestMetadata()),
 								},
 								ZoneSigningKey: dns.Key{
-									Metadata:  types.NewTestMetadata(),
-									Algorithm: types.String("rsasha1", types.NewTestMetadata()),
+									Metadata:  defsecTypes.NewTestMetadata(),
+									Algorithm: defsecTypes.String("rsasha1", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -49,18 +49,18 @@ func TestCheckNoRsaSha1(t *testing.T) {
 			input: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						DNSSec: dns.DNSSec{
-							Metadata: types.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							DefaultKeySpecs: dns.KeySpecs{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								KeySigningKey: dns.Key{
-									Metadata:  types.NewTestMetadata(),
-									Algorithm: types.String("rsasha512", types.NewTestMetadata()),
+									Metadata:  defsecTypes.NewTestMetadata(),
+									Algorithm: defsecTypes.String("rsasha512", defsecTypes.NewTestMetadata()),
 								},
 								ZoneSigningKey: dns.Key{
-									Metadata:  types.NewTestMetadata(),
-									Algorithm: types.String("rsasha512", types.NewTestMetadata()),
+									Metadata:  defsecTypes.NewTestMetadata(),
+									Algorithm: defsecTypes.String("rsasha512", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

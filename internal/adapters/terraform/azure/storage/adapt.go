@@ -3,7 +3,8 @@ package storage
 import (
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/azure/storage"
 	"github.com/aquasecurity/defsec/pkg/terraform"
 )
@@ -12,15 +13,15 @@ func Adapt(modules terraform.Modules) storage.Storage {
 	accounts, containers, networkRules := adaptAccounts(modules)
 
 	orphanAccount := storage.Account{
-		Metadata:     types.NewUnmanagedMetadata(),
+		Metadata:     defsecTypes.NewUnmanagedMetadata(),
 		NetworkRules: adaptOrphanNetworkRules(modules, networkRules),
-		EnforceHTTPS: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		EnforceHTTPS: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 		Containers:   adaptOrphanContainers(modules, containers),
 		QueueProperties: storage.QueueProperties{
-			Metadata:      types.NewUnmanagedMetadata(),
-			EnableLogging: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			Metadata:      defsecTypes.NewUnmanagedMetadata(),
+			EnableLogging: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 		},
-		MinimumTLSVersion: types.StringDefault("", types.NewUnmanagedMetadata()),
+		MinimumTLSVersion: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 	}
 
 	accounts = append(accounts, orphanAccount)
@@ -95,13 +96,13 @@ func adaptAccount(resource *terraform.Block) storage.Account {
 	account := storage.Account{
 		Metadata:     resource.GetMetadata(),
 		NetworkRules: nil,
-		EnforceHTTPS: types.BoolDefault(true, resource.GetMetadata()),
+		EnforceHTTPS: defsecTypes.BoolDefault(true, resource.GetMetadata()),
 		Containers:   nil,
 		QueueProperties: storage.QueueProperties{
 			Metadata:      resource.GetMetadata(),
-			EnableLogging: types.BoolDefault(false, resource.GetMetadata()),
+			EnableLogging: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		},
-		MinimumTLSVersion: types.StringDefault("TLS1_0", resource.GetMetadata()),
+		MinimumTLSVersion: defsecTypes.StringDefault("TLS1_0", resource.GetMetadata()),
 	}
 
 	networkRulesBlocks := resource.GetBlocks("network_rules")
@@ -117,7 +118,7 @@ func adaptAccount(resource *terraform.Block) storage.Account {
 		account.QueueProperties.Metadata = queuePropertiesBlock.GetMetadata()
 		loggingBlock := queuePropertiesBlock.GetBlock("logging")
 		if loggingBlock.IsNotNil() {
-			account.QueueProperties.EnableLogging = types.Bool(true, loggingBlock.GetMetadata())
+			account.QueueProperties.EnableLogging = defsecTypes.Bool(true, loggingBlock.GetMetadata())
 		}
 	}
 
@@ -128,12 +129,12 @@ func adaptAccount(resource *terraform.Block) storage.Account {
 
 func adaptContainer(resource *terraform.Block) storage.Container {
 	accessTypeAttr := resource.GetAttribute("container_access_type")
-	publicAccess := types.StringDefault(storage.PublicAccessOff, resource.GetMetadata())
+	publicAccess := defsecTypes.StringDefault(storage.PublicAccessOff, resource.GetMetadata())
 
 	if accessTypeAttr.Equals("blob") {
-		publicAccess = types.String(storage.PublicAccessBlob, accessTypeAttr.GetMetadata())
+		publicAccess = defsecTypes.String(storage.PublicAccessBlob, accessTypeAttr.GetMetadata())
 	} else if accessTypeAttr.Equals("container") {
-		publicAccess = types.String(storage.PublicAccessContainer, accessTypeAttr.GetMetadata())
+		publicAccess = defsecTypes.String(storage.PublicAccessContainer, accessTypeAttr.GetMetadata())
 	}
 
 	return storage.Container{
@@ -143,20 +144,20 @@ func adaptContainer(resource *terraform.Block) storage.Container {
 }
 
 func adaptNetworkRule(resource *terraform.Block) storage.NetworkRule {
-	var allowByDefault types.BoolValue
-	var bypass []types.StringValue
+	var allowByDefault defsecTypes.BoolValue
+	var bypass []defsecTypes.StringValue
 
 	defaultActionAttr := resource.GetAttribute("default_action")
 
 	if defaultActionAttr.IsNotNil() {
 		switch strings.ToLower(defaultActionAttr.Value().AsString()) {
 		case "allow":
-			allowByDefault = types.Bool(true, defaultActionAttr.GetMetadata())
+			allowByDefault = defsecTypes.Bool(true, defaultActionAttr.GetMetadata())
 		case "deny":
-			allowByDefault = types.Bool(false, defaultActionAttr.GetMetadata())
+			allowByDefault = defsecTypes.Bool(false, defaultActionAttr.GetMetadata())
 		}
 	} else {
-		allowByDefault = types.BoolDefault(false, resource.GetMetadata())
+		allowByDefault = defsecTypes.BoolDefault(false, resource.GetMetadata())
 	}
 
 	if resource.HasChild("bypass") {

@@ -1,9 +1,9 @@
 package redshift
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/redshift"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) redshift.Redshift {
@@ -38,10 +38,10 @@ func adaptCluster(resource *terraform.Block, module *terraform.Module) redshift.
 		Metadata: resource.GetMetadata(),
 		Encryption: redshift.Encryption{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
-			KMSKeyID: types.StringDefault("", resource.GetMetadata()),
+			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
+			KMSKeyID: defsecTypes.StringDefault("", resource.GetMetadata()),
 		},
-		SubnetGroupName: types.StringDefault("", resource.GetMetadata()),
+		SubnetGroupName: defsecTypes.StringDefault("", resource.GetMetadata()),
 	}
 
 	encryptedAttr := resource.GetAttribute("encrypted")
@@ -51,7 +51,7 @@ func adaptCluster(resource *terraform.Block, module *terraform.Module) redshift.
 	cluster.Encryption.KMSKeyID = KMSKeyIDAttr.AsStringValueOrDefault("", resource)
 	if KMSKeyIDAttr.IsResourceBlockReference("aws_kms_key") {
 		if kmsKeyBlock, err := module.GetReferencedBlock(KMSKeyIDAttr, resource); err == nil {
-			cluster.Encryption.KMSKeyID = types.String(kmsKeyBlock.FullName(), kmsKeyBlock.GetMetadata())
+			cluster.Encryption.KMSKeyID = defsecTypes.String(kmsKeyBlock.FullName(), kmsKeyBlock.GetMetadata())
 		}
 	}
 

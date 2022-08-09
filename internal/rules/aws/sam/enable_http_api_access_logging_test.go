@@ -3,7 +3,7 @@ package sam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableHttpApiAccessLogging(t *testing.T) {
 			input: sam.SAM{
 				HttpAPIs: []sam.HttpAPI{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						AccessLogging: sam.AccessLogging{
-							Metadata:              types.NewTestMetadata(),
-							CloudwatchLogGroupARN: types.String("", types.NewTestMetadata()),
+							Metadata:              defsecTypes.NewTestMetadata(),
+							CloudwatchLogGroupARN: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableHttpApiAccessLogging(t *testing.T) {
 			input: sam.SAM{
 				HttpAPIs: []sam.HttpAPI{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						AccessLogging: sam.AccessLogging{
-							Metadata:              types.NewTestMetadata(),
-							CloudwatchLogGroupARN: types.String("log-group-arn", types.NewTestMetadata()),
+							Metadata:              defsecTypes.NewTestMetadata(),
+							CloudwatchLogGroupARN: defsecTypes.String("log-group-arn", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

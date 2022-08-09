@@ -3,9 +3,9 @@ package apigateway
 import (
 	"testing"
 
-	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,15 +25,15 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: v1.APIGateway{
 				APIs: []v1.API{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Resources: []v1.Resource{
 							{
 								Methods: []v1.Method{
 									{
-										Metadata:          types.NewTestMetadata(),
-										HTTPMethod:        types.String("GET", types.NewTestMetadata()),
-										APIKeyRequired:    types.Bool(false, types.NewTestMetadata()),
-										AuthorizationType: types.String(v1.AuthorizationNone, types.NewTestMetadata()),
+										Metadata:          defsecTypes.NewTestMetadata(),
+										HTTPMethod:        defsecTypes.String("GET", defsecTypes.NewTestMetadata()),
+										APIKeyRequired:    defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+										AuthorizationType: defsecTypes.String(v1.AuthorizationNone, defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -48,15 +48,15 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: v1.APIGateway{
 				APIs: []v1.API{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Resources: []v1.Resource{
 							{
 								Methods: []v1.Method{
 									{
-										Metadata:          types.NewTestMetadata(),
-										HTTPMethod:        types.String("OPTION", types.NewTestMetadata()),
-										APIKeyRequired:    types.Bool(true, types.NewTestMetadata()),
-										AuthorizationType: types.String(v1.AuthorizationNone, types.NewTestMetadata()),
+										Metadata:          defsecTypes.NewTestMetadata(),
+										HTTPMethod:        defsecTypes.String("OPTION", defsecTypes.NewTestMetadata()),
+										APIKeyRequired:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+										AuthorizationType: defsecTypes.String(v1.AuthorizationNone, defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -71,15 +71,15 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: v1.APIGateway{
 				APIs: []v1.API{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Resources: []v1.Resource{
 							{
 								Methods: []v1.Method{
 									{
-										Metadata:          types.NewTestMetadata(),
-										HTTPMethod:        types.String("GET", types.NewTestMetadata()),
-										APIKeyRequired:    types.Bool(false, types.NewTestMetadata()),
-										AuthorizationType: types.String(v1.AuthorizationIAM, types.NewTestMetadata()),
+										Metadata:          defsecTypes.NewTestMetadata(),
+										HTTPMethod:        defsecTypes.String("GET", defsecTypes.NewTestMetadata()),
+										APIKeyRequired:    defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+										AuthorizationType: defsecTypes.String(v1.AuthorizationIAM, defsecTypes.NewTestMetadata()),
 									},
 								},
 							},

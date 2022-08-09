@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,14 +24,14 @@ func TestCheckNoFolderLevelServiceAccountImpersonation(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata: types.NewTestMetadata(),
-										Role:     types.String("roles/iam.serviceAccountUser", types.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Role:     defsecTypes.String("roles/iam.serviceAccountUser", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -46,15 +46,15 @@ func TestCheckNoFolderLevelServiceAccountImpersonation(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Bindings: []iam.Binding{
 									{
-										Metadata:                      types.NewTestMetadata(),
-										IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
-										Role:                          types.String("roles/iam.serviceAccountTokenCreator", types.NewTestMetadata()),
+										Metadata:                      defsecTypes.NewTestMetadata(),
+										IncludesDefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+										Role:                          defsecTypes.String("roles/iam.serviceAccountTokenCreator", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -69,21 +69,21 @@ func TestCheckNoFolderLevelServiceAccountImpersonation(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata: types.NewTestMetadata(),
-										Role:     types.String("roles/nothingInParticular", types.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Role:     defsecTypes.String("roles/nothingInParticular", defsecTypes.NewTestMetadata()),
 									},
 								},
 								Bindings: []iam.Binding{
 									{
-										Metadata:                      types.NewTestMetadata(),
-										IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
-										Role:                          types.String("roles/nothingInParticular", types.NewTestMetadata()),
+										Metadata:                      defsecTypes.NewTestMetadata(),
+										IncludesDefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+										Role:                          defsecTypes.String("roles/nothingInParticular", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},

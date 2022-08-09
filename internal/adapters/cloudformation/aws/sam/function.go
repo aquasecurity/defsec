@@ -1,10 +1,10 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sam"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/liamg/iamgo"
 )
 
@@ -41,12 +41,12 @@ func setFunctionPolicies(r *parser.Resource, function *sam.Function) {
 					}
 					policy := iam.Policy{
 						Metadata: property.Metadata(),
-						Name:     types.StringDefault("", property.Metadata()),
+						Name:     defsecTypes.StringDefault("", property.Metadata()),
 						Document: iam.Document{
 							Metadata: property.Metadata(),
 							Parsed:   *parsed,
 						},
-						Builtin: types.Bool(false, property.Metadata()),
+						Builtin: defsecTypes.Bool(false, property.Metadata()),
 					}
 					function.Policies = append(function.Policies, policy)
 				} else if property.IsString() {

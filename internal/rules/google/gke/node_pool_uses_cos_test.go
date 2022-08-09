@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckNodePoolUsesCos(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata:  types.NewTestMetadata(),
-							ImageType: types.String("UBUNTU", types.NewTestMetadata()),
+							Metadata:  defsecTypes.NewTestMetadata(),
+							ImageType: defsecTypes.String("UBUNTU", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,17 +39,17 @@ func TestCheckNodePoolUsesCos(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata:  types.NewTestMetadata(),
-							ImageType: types.String("COS", types.NewTestMetadata()),
+							Metadata:  defsecTypes.NewTestMetadata(),
+							ImageType: defsecTypes.String("COS", defsecTypes.NewTestMetadata()),
 						},
 						NodePools: []gke.NodePool{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								NodeConfig: gke.NodeConfig{
-									Metadata:  types.NewTestMetadata(),
-									ImageType: types.String("UBUNTU", types.NewTestMetadata()),
+									Metadata:  defsecTypes.NewTestMetadata(),
+									ImageType: defsecTypes.String("UBUNTU", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -63,10 +63,10 @@ func TestCheckNodePoolUsesCos(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata:  types.NewTestMetadata(),
-							ImageType: types.String("COS_CONTAINERD", types.NewTestMetadata()),
+							Metadata:  defsecTypes.NewTestMetadata(),
+							ImageType: defsecTypes.String("COS_CONTAINERD", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,16 +24,16 @@ func TestCheckNoFolderLevelDefaultServiceAccountAssignment(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata:              types.NewTestMetadata(),
-										DefaultServiceAccount: types.Bool(true, types.NewTestMetadata()),
-										Member:                types.String("proper@email.com", types.NewTestMetadata()),
+										Metadata:              defsecTypes.NewTestMetadata(),
+										DefaultServiceAccount: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+										Member:                defsecTypes.String("proper@email.com", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -48,15 +48,15 @@ func TestCheckNoFolderLevelDefaultServiceAccountAssignment(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata:              types.NewTestMetadata(),
-										DefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
-										Member:                types.String("123-compute@developer.gserviceaccount.com", types.NewTestMetadata()),
+										Metadata:              defsecTypes.NewTestMetadata(),
+										DefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+										Member:                defsecTypes.String("123-compute@developer.gserviceaccount.com", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -71,17 +71,17 @@ func TestCheckNoFolderLevelDefaultServiceAccountAssignment(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Bindings: []iam.Binding{
 									{
-										Metadata:                      types.NewTestMetadata(),
-										IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
-										Members: []types.StringValue{
-											types.String("123-compute@developer.gserviceaccount.com", types.NewTestMetadata())},
+										Metadata:                      defsecTypes.NewTestMetadata(),
+										IncludesDefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+										Members: []defsecTypes.StringValue{
+											defsecTypes.String("123-compute@developer.gserviceaccount.com", defsecTypes.NewTestMetadata())},
 									},
 								},
 							},
@@ -96,24 +96,24 @@ func TestCheckNoFolderLevelDefaultServiceAccountAssignment(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata:              types.NewTestMetadata(),
-										DefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
-										Member:                types.String("proper@email.com", types.NewTestMetadata()),
+										Metadata:              defsecTypes.NewTestMetadata(),
+										DefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+										Member:                defsecTypes.String("proper@email.com", defsecTypes.NewTestMetadata()),
 									},
 								},
 								Bindings: []iam.Binding{
 									{
-										Metadata:                      types.NewTestMetadata(),
-										IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
-										Members: []types.StringValue{
-											types.String("proper@account.com", types.NewTestMetadata()),
+										Metadata:                      defsecTypes.NewTestMetadata(),
+										IncludesDefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+										Members: []defsecTypes.StringValue{
+											defsecTypes.String("proper@account.com", defsecTypes.NewTestMetadata()),
 										},
 									},
 								},

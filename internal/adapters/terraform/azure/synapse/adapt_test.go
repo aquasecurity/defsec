@@ -3,7 +3,7 @@ package synapse
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/azure/synapse"
 
@@ -28,8 +28,8 @@ func Test_adaptWorkspace(t *testing.T) {
 			}
 `,
 			expected: synapse.Workspace{
-				Metadata:                    types.NewTestMetadata(),
-				EnableManagedVirtualNetwork: types.Bool(true, types.NewTestMetadata()),
+				Metadata:                    defsecTypes.NewTestMetadata(),
+				EnableManagedVirtualNetwork: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -40,8 +40,8 @@ func Test_adaptWorkspace(t *testing.T) {
 			}
 `,
 			expected: synapse.Workspace{
-				Metadata:                    types.NewTestMetadata(),
-				EnableManagedVirtualNetwork: types.Bool(false, types.NewTestMetadata()),
+				Metadata:                    defsecTypes.NewTestMetadata(),
+				EnableManagedVirtualNetwork: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -51,8 +51,8 @@ func Test_adaptWorkspace(t *testing.T) {
 			}
 `,
 			expected: synapse.Workspace{
-				Metadata:                    types.NewTestMetadata(),
-				EnableManagedVirtualNetwork: types.Bool(false, types.NewTestMetadata()),
+				Metadata:                    defsecTypes.NewTestMetadata(),
+				EnableManagedVirtualNetwork: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

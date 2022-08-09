@@ -3,7 +3,7 @@ package ec2
 import (
 	"fmt"
 
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 

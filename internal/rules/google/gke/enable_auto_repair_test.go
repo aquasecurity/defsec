@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,13 +24,13 @@ func TestCheckEnableAutoRepair(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NodePools: []gke.NodePool{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Management: gke.Management{
-									Metadata:         types.NewTestMetadata(),
-									EnableAutoRepair: types.Bool(false, types.NewTestMetadata()),
+									Metadata:         defsecTypes.NewTestMetadata(),
+									EnableAutoRepair: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -44,13 +44,13 @@ func TestCheckEnableAutoRepair(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NodePools: []gke.NodePool{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Management: gke.Management{
-									Metadata:         types.NewTestMetadata(),
-									EnableAutoRepair: types.Bool(true, types.NewTestMetadata()),
+									Metadata:         defsecTypes.NewTestMetadata(),
+									EnableAutoRepair: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

@@ -1,7 +1,7 @@
 package kinesis
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Kinesis struct {
@@ -9,7 +9,7 @@ type Kinesis struct {
 }
 
 type Stream struct {
-	types.Metadata
+	defsecTypes.Metadata
 	Encryption Encryption
 }
 
@@ -18,7 +18,7 @@ const (
 )
 
 type Encryption struct {
-	types.Metadata
-	Type     types.StringValue
-	KMSKeyID types.StringValue
+	defsecTypes.Metadata
+	Type     defsecTypes.StringValue
+	KMSKeyID defsecTypes.StringValue
 }

@@ -1,9 +1,9 @@
 package gke
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/google/gke"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/google/uuid"
 	"github.com/zclconf/go-cty/cty"
 )
@@ -52,55 +52,55 @@ func (a *adapter) adaptCluster(resource *terraform.Block, module *terraform.Modu
 		NodePools: nil,
 		IPAllocationPolicy: gke.IPAllocationPolicy{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
+			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		},
 		MasterAuthorizedNetworks: gke.MasterAuthorizedNetworks{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
-			CIDRs:    []types.StringValue{},
+			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
+			CIDRs:    []defsecTypes.StringValue{},
 		},
 		NetworkPolicy: gke.NetworkPolicy{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
+			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		},
 		PrivateCluster: gke.PrivateCluster{
 			Metadata:           resource.GetMetadata(),
-			EnablePrivateNodes: types.BoolDefault(false, resource.GetMetadata()),
+			EnablePrivateNodes: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		},
-		LoggingService:    types.StringDefault("logging.googleapis.com/kubernetes", resource.GetMetadata()),
-		MonitoringService: types.StringDefault("monitoring.googleapis.com/kubernetes", resource.GetMetadata()),
+		LoggingService:    defsecTypes.StringDefault("logging.googleapis.com/kubernetes", resource.GetMetadata()),
+		MonitoringService: defsecTypes.StringDefault("monitoring.googleapis.com/kubernetes", resource.GetMetadata()),
 		PodSecurityPolicy: gke.PodSecurityPolicy{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
+			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		},
 		MasterAuth: gke.MasterAuth{
 			Metadata: resource.GetMetadata(),
 			ClientCertificate: gke.ClientCertificate{
 				Metadata:         resource.GetMetadata(),
-				IssueCertificate: types.BoolDefault(false, resource.GetMetadata()),
+				IssueCertificate: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 			},
-			Username: types.StringDefault("", resource.GetMetadata()),
-			Password: types.StringDefault("", resource.GetMetadata()),
+			Username: defsecTypes.StringDefault("", resource.GetMetadata()),
+			Password: defsecTypes.StringDefault("", resource.GetMetadata()),
 		},
 		NodeConfig: gke.NodeConfig{
 			Metadata:  resource.GetMetadata(),
-			ImageType: types.StringDefault("", resource.GetMetadata()),
+			ImageType: defsecTypes.StringDefault("", resource.GetMetadata()),
 			WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
 				Metadata:     resource.GetMetadata(),
-				NodeMetadata: types.StringDefault("", resource.GetMetadata()),
+				NodeMetadata: defsecTypes.StringDefault("", resource.GetMetadata()),
 			},
-			ServiceAccount:        types.StringDefault("", resource.GetMetadata()),
-			EnableLegacyEndpoints: types.BoolDefault(true, resource.GetMetadata()),
+			ServiceAccount:        defsecTypes.StringDefault("", resource.GetMetadata()),
+			EnableLegacyEndpoints: defsecTypes.BoolDefault(true, resource.GetMetadata()),
 		},
-		EnableShieldedNodes:   types.BoolDefault(true, resource.GetMetadata()),
-		EnableLegacyABAC:      types.BoolDefault(false, resource.GetMetadata()),
-		ResourceLabels:        types.MapDefault(make(map[string]string), resource.GetMetadata()),
-		RemoveDefaultNodePool: types.BoolDefault(false, resource.GetMetadata()),
+		EnableShieldedNodes:   defsecTypes.BoolDefault(true, resource.GetMetadata()),
+		EnableLegacyABAC:      defsecTypes.BoolDefault(false, resource.GetMetadata()),
+		ResourceLabels:        defsecTypes.MapDefault(make(map[string]string), resource.GetMetadata()),
+		RemoveDefaultNodePool: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 	}
 
 	if allocBlock := resource.GetBlock("ip_allocation_policy"); allocBlock.IsNotNil() {
 		cluster.IPAllocationPolicy.Metadata = allocBlock.GetMetadata()
-		cluster.IPAllocationPolicy.Enabled = types.Bool(true, allocBlock.GetMetadata())
+		cluster.IPAllocationPolicy.Enabled = defsecTypes.Bool(true, allocBlock.GetMetadata())
 	}
 
 	if blocks := resource.GetBlocks("master_authorized_networks_config"); len(blocks) > 0 {
@@ -154,7 +154,7 @@ func (a *adapter) adaptCluster(resource *terraform.Block, module *terraform.Modu
 				resourceLabels[key.AsString()] = val.AsString()
 			}
 		})
-		cluster.ResourceLabels = types.Map(resourceLabels, resourceLabelsAttr.GetMetadata())
+		cluster.ResourceLabels = defsecTypes.Map(resourceLabels, resourceLabelsAttr.GetMetadata())
 	}
 
 	cluster.RemoveDefaultNodePool = resource.GetAttribute("remove_default_node_pool").AsBoolValueOrDefault(false, resource)
@@ -171,19 +171,19 @@ func (a *adapter) adaptNodePools() {
 func (a *adapter) adaptNodePool(resource *terraform.Block) {
 	nodeConfig := gke.NodeConfig{
 		Metadata:  resource.GetMetadata(),
-		ImageType: types.StringDefault("", resource.GetMetadata()),
+		ImageType: defsecTypes.StringDefault("", resource.GetMetadata()),
 		WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
 			Metadata:     resource.GetMetadata(),
-			NodeMetadata: types.StringDefault("", resource.GetMetadata()),
+			NodeMetadata: defsecTypes.StringDefault("", resource.GetMetadata()),
 		},
-		ServiceAccount:        types.StringDefault("", resource.GetMetadata()),
-		EnableLegacyEndpoints: types.BoolDefault(true, resource.GetMetadata()),
+		ServiceAccount:        defsecTypes.StringDefault("", resource.GetMetadata()),
+		EnableLegacyEndpoints: defsecTypes.BoolDefault(true, resource.GetMetadata()),
 	}
 
 	management := gke.Management{
 		Metadata:          resource.GetMetadata(),
-		EnableAutoRepair:  types.BoolDefault(false, resource.GetMetadata()),
-		EnableAutoUpgrade: types.BoolDefault(false, resource.GetMetadata()),
+		EnableAutoRepair:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
+		EnableAutoUpgrade: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 	}
 
 	if resource.HasChild("management") {
@@ -219,54 +219,54 @@ func (a *adapter) adaptNodePool(resource *terraform.Block) {
 
 	// we didn't find a cluster to put the nodepool in, so create a placeholder
 	a.clusterMap[uuid.NewString()] = gke.Cluster{
-		Metadata:  types.NewUnmanagedMetadata(),
+		Metadata:  defsecTypes.NewUnmanagedMetadata(),
 		NodePools: []gke.NodePool{nodePool},
 		IPAllocationPolicy: gke.IPAllocationPolicy{
-			Metadata: types.NewUnmanagedMetadata(),
-			Enabled:  types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			Metadata: defsecTypes.NewUnmanagedMetadata(),
+			Enabled:  defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 		},
 		MasterAuthorizedNetworks: gke.MasterAuthorizedNetworks{
-			Metadata: types.NewUnmanagedMetadata(),
-			Enabled:  types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			Metadata: defsecTypes.NewUnmanagedMetadata(),
+			Enabled:  defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 			CIDRs:    nil,
 		},
 		NetworkPolicy: gke.NetworkPolicy{
-			Metadata: types.NewUnmanagedMetadata(),
-			Enabled:  types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			Metadata: defsecTypes.NewUnmanagedMetadata(),
+			Enabled:  defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 		},
 		PrivateCluster: gke.PrivateCluster{
-			Metadata:           types.NewUnmanagedMetadata(),
-			EnablePrivateNodes: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			Metadata:           defsecTypes.NewUnmanagedMetadata(),
+			EnablePrivateNodes: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 		},
-		LoggingService:    types.StringDefault("", types.NewUnmanagedMetadata()),
-		MonitoringService: types.StringDefault("", types.NewUnmanagedMetadata()),
+		LoggingService:    defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+		MonitoringService: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 		PodSecurityPolicy: gke.PodSecurityPolicy{
-			Metadata: types.NewUnmanagedMetadata(),
-			Enabled:  types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			Metadata: defsecTypes.NewUnmanagedMetadata(),
+			Enabled:  defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 		},
 		MasterAuth: gke.MasterAuth{
-			Metadata: types.NewUnmanagedMetadata(),
+			Metadata: defsecTypes.NewUnmanagedMetadata(),
 			ClientCertificate: gke.ClientCertificate{
-				Metadata:         types.NewUnmanagedMetadata(),
-				IssueCertificate: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				Metadata:         defsecTypes.NewUnmanagedMetadata(),
+				IssueCertificate: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 			},
-			Username: types.StringDefault("", types.NewUnmanagedMetadata()),
-			Password: types.StringDefault("", types.NewUnmanagedMetadata()),
+			Username: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			Password: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 		},
 		NodeConfig: gke.NodeConfig{
-			Metadata:  types.NewUnmanagedMetadata(),
-			ImageType: types.StringDefault("", types.NewUnmanagedMetadata()),
+			Metadata:  defsecTypes.NewUnmanagedMetadata(),
+			ImageType: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
-				Metadata:     types.NewUnmanagedMetadata(),
-				NodeMetadata: types.StringDefault("", types.NewUnmanagedMetadata()),
+				Metadata:     defsecTypes.NewUnmanagedMetadata(),
+				NodeMetadata: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			},
-			ServiceAccount:        types.StringDefault("", types.NewUnmanagedMetadata()),
-			EnableLegacyEndpoints: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			ServiceAccount:        defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			EnableLegacyEndpoints: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 		},
-		EnableShieldedNodes:   types.BoolDefault(false, types.NewUnmanagedMetadata()),
-		EnableLegacyABAC:      types.BoolDefault(false, types.NewUnmanagedMetadata()),
-		ResourceLabels:        types.MapDefault(nil, types.NewUnmanagedMetadata()),
-		RemoveDefaultNodePool: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+		EnableShieldedNodes:   defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+		EnableLegacyABAC:      defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+		ResourceLabels:        defsecTypes.MapDefault(nil, defsecTypes.NewUnmanagedMetadata()),
+		RemoveDefaultNodePool: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 	}
 }
 
@@ -277,16 +277,16 @@ func adaptNodeConfig(resource *terraform.Block) gke.NodeConfig {
 		ImageType: resource.GetAttribute("image_type").AsStringValueOrDefault("", resource),
 		WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
 			Metadata:     resource.GetMetadata(),
-			NodeMetadata: types.StringDefault("UNSPECIFIED", resource.GetMetadata()),
+			NodeMetadata: defsecTypes.StringDefault("UNSPECIFIED", resource.GetMetadata()),
 		},
 		ServiceAccount:        resource.GetAttribute("service_account").AsStringValueOrDefault("", resource),
-		EnableLegacyEndpoints: types.BoolDefault(true, resource.GetMetadata()),
+		EnableLegacyEndpoints: defsecTypes.BoolDefault(true, resource.GetMetadata()),
 	}
 
 	if metadata := resource.GetAttribute("metadata"); metadata.IsNotNil() {
 		legacyMetadata := metadata.MapValue("disable-legacy-endpoints")
 		if legacyMetadata.IsWhollyKnown() && legacyMetadata.Type() == cty.Bool {
-			config.EnableLegacyEndpoints = types.Bool(legacyMetadata.False(), metadata.GetMetadata())
+			config.EnableLegacyEndpoints = defsecTypes.Bool(legacyMetadata.False(), metadata.GetMetadata())
 		}
 	}
 
@@ -306,7 +306,7 @@ func adaptNodeConfig(resource *terraform.Block) gke.NodeConfig {
 func adaptMasterAuth(resource *terraform.Block) gke.MasterAuth {
 	clientCert := gke.ClientCertificate{
 		Metadata:         resource.GetMetadata(),
-		IssueCertificate: types.BoolDefault(false, resource.GetMetadata()),
+		IssueCertificate: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 	}
 
 	if resource.HasChild("client_certificate_config") {
@@ -327,7 +327,7 @@ func adaptMasterAuth(resource *terraform.Block) gke.MasterAuth {
 }
 
 func adaptMasterAuthNetworksAsBlocks(parent *terraform.Block, blocks terraform.Blocks) gke.MasterAuthorizedNetworks {
-	var cidrs []types.StringValue
+	var cidrs []defsecTypes.StringValue
 	for _, block := range blocks {
 		for _, cidrBlock := range block.GetBlocks("cidr_blocks") {
 			if cidrAttr := cidrBlock.GetAttribute("cidr_block"); cidrAttr.IsNotNil() {
@@ -335,7 +335,7 @@ func adaptMasterAuthNetworksAsBlocks(parent *terraform.Block, blocks terraform.B
 			}
 		}
 	}
-	enabled := types.Bool(true, blocks[0].GetMetadata())
+	enabled := defsecTypes.Bool(true, blocks[0].GetMetadata())
 	return gke.MasterAuthorizedNetworks{
 		Metadata: blocks[0].GetMetadata(),
 		Enabled:  enabled,

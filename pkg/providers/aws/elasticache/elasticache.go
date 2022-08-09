@@ -1,7 +1,7 @@
 package elasticache
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type ElastiCache struct {
@@ -11,19 +11,19 @@ type ElastiCache struct {
 }
 
 type Cluster struct {
-	types.Metadata
-	Engine                 types.StringValue
-	NodeType               types.StringValue
-	SnapshotRetentionLimit types.IntValue // days
+	defsecTypes.Metadata
+	Engine                 defsecTypes.StringValue
+	NodeType               defsecTypes.StringValue
+	SnapshotRetentionLimit defsecTypes.IntValue // days
 }
 
 type ReplicationGroup struct {
-	types.Metadata
-	TransitEncryptionEnabled types.BoolValue
-	AtRestEncryptionEnabled  types.BoolValue
+	defsecTypes.Metadata
+	TransitEncryptionEnabled defsecTypes.BoolValue
+	AtRestEncryptionEnabled  defsecTypes.BoolValue
 }
 
 type SecurityGroup struct {
-	types.Metadata
-	Description types.StringValue
+	defsecTypes.Metadata
+	Description defsecTypes.StringValue
 }

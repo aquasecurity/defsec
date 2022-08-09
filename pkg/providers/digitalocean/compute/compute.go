@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Compute struct {
@@ -12,38 +12,38 @@ type Compute struct {
 }
 
 type Firewall struct {
-	types.Metadata
+	defsecTypes.Metadata
 	OutboundRules []OutboundFirewallRule
 	InboundRules  []InboundFirewallRule
 }
 
 type KubernetesCluster struct {
-	types.Metadata
-	SurgeUpgrade types.BoolValue
-	AutoUpgrade  types.BoolValue
+	defsecTypes.Metadata
+	SurgeUpgrade defsecTypes.BoolValue
+	AutoUpgrade  defsecTypes.BoolValue
 }
 
 type LoadBalancer struct {
-	types.Metadata
+	defsecTypes.Metadata
 	ForwardingRules []ForwardingRule
 }
 
 type ForwardingRule struct {
-	types.Metadata
-	EntryProtocol types.StringValue
+	defsecTypes.Metadata
+	EntryProtocol defsecTypes.StringValue
 }
 
 type OutboundFirewallRule struct {
-	types.Metadata
-	DestinationAddresses []types.StringValue
+	defsecTypes.Metadata
+	DestinationAddresses []defsecTypes.StringValue
 }
 
 type InboundFirewallRule struct {
-	types.Metadata
-	SourceAddresses []types.StringValue
+	defsecTypes.Metadata
+	SourceAddresses []defsecTypes.StringValue
 }
 
 type Droplet struct {
-	types.Metadata
-	SSHKeys []types.StringValue
+	defsecTypes.Metadata
+	SSHKeys []defsecTypes.StringValue
 }

@@ -3,7 +3,7 @@ package cloudtrail
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableAllRegions(t *testing.T) {
 			input: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:      types.NewTestMetadata(),
-						IsMultiRegion: types.Bool(false, types.NewTestMetadata()),
+						Metadata:      defsecTypes.NewTestMetadata(),
+						IsMultiRegion: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableAllRegions(t *testing.T) {
 			input: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:      types.NewTestMetadata(),
-						IsMultiRegion: types.Bool(true, types.NewTestMetadata()),
+						Metadata:      defsecTypes.NewTestMetadata(),
+						IsMultiRegion: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

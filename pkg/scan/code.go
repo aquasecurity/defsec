@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Code struct {
@@ -94,7 +94,7 @@ func OptionCodeWithHighlighted(include bool) CodeOption {
 	}
 }
 
-func validateRange(r types.Range) error {
+func validateRange(r defsecTypes.Range) error {
 	if r.GetStartLine() < 0 || r.GetStartLine() > r.GetEndLine() || r.GetEndLine() < 0 {
 		return fmt.Errorf("invalid range: %s", r.String())
 	}
@@ -151,7 +151,7 @@ func (r *Result) GetCode(opts ...CodeOption) (*Code, error) {
 
 	var highlightedLines []string
 	if settings.includeHighlighted {
-		highlightedLines = highlight(types.CreateFSKey(innerRange.GetFS()), innerRange.GetLocalFilename(), content, settings.theme)
+		highlightedLines = highlight(defsecTypes.CreateFSKey(innerRange.GetFS()), innerRange.GetLocalFilename(), content, settings.theme)
 		if len(highlightedLines) < len(rawLines) {
 			highlightedLines = rawLines
 		}

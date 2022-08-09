@@ -3,7 +3,7 @@ package sam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckApiUseSecureTlsPolicy(t *testing.T) {
 			input: sam.SAM{
 				APIs: []sam.API{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						DomainConfiguration: sam.DomainConfiguration{
-							Metadata:       types.NewTestMetadata(),
-							SecurityPolicy: types.String("TLS_1_0", types.NewTestMetadata()),
+							Metadata:       defsecTypes.NewTestMetadata(),
+							SecurityPolicy: defsecTypes.String("TLS_1_0", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckApiUseSecureTlsPolicy(t *testing.T) {
 			input: sam.SAM{
 				APIs: []sam.API{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						DomainConfiguration: sam.DomainConfiguration{
-							Metadata:       types.NewTestMetadata(),
-							SecurityPolicy: types.String("TLS_1_2", types.NewTestMetadata()),
+							Metadata:       defsecTypes.NewTestMetadata(),
+							SecurityPolicy: defsecTypes.String("TLS_1_2", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

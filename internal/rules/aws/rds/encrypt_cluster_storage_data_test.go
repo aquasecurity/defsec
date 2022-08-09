@@ -3,7 +3,7 @@ package rds
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEncryptClusterStorageData(t *testing.T) {
 			input: rds.RDS{
 				Clusters: []rds.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: rds.Encryption{
-							Metadata:       types.NewTestMetadata(),
-							EncryptStorage: types.Bool(false, types.NewTestMetadata()),
-							KMSKeyID:       types.String("kms-key", types.NewTestMetadata()),
+							Metadata:       defsecTypes.NewTestMetadata(),
+							EncryptStorage: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							KMSKeyID:       defsecTypes.String("kms-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckEncryptClusterStorageData(t *testing.T) {
 			input: rds.RDS{
 				Clusters: []rds.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: rds.Encryption{
-							Metadata:       types.NewTestMetadata(),
-							EncryptStorage: types.Bool(true, types.NewTestMetadata()),
-							KMSKeyID:       types.String("", types.NewTestMetadata()),
+							Metadata:       defsecTypes.NewTestMetadata(),
+							EncryptStorage: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							KMSKeyID:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,11 +56,11 @@ func TestCheckEncryptClusterStorageData(t *testing.T) {
 			input: rds.RDS{
 				Clusters: []rds.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: rds.Encryption{
-							Metadata:       types.NewTestMetadata(),
-							EncryptStorage: types.Bool(true, types.NewTestMetadata()),
-							KMSKeyID:       types.String("kms-key", types.NewTestMetadata()),
+							Metadata:       defsecTypes.NewTestMetadata(),
+							EncryptStorage: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							KMSKeyID:       defsecTypes.String("kms-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/google/iam"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Storage struct {
@@ -10,10 +10,10 @@ type Storage struct {
 }
 
 type Bucket struct {
-	types.Metadata
-	Name                           types.StringValue
-	Location                       types.StringValue
-	EnableUniformBucketLevelAccess types.BoolValue
+	defsecTypes.Metadata
+	Name                           defsecTypes.StringValue
+	Location                       defsecTypes.StringValue
+	EnableUniformBucketLevelAccess defsecTypes.BoolValue
 	Members                        []iam.Member
 	Bindings                       []iam.Binding
 }

@@ -3,13 +3,13 @@ package lambda
 import (
 	"testing"
 
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/lambda"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -44,16 +44,16 @@ func Test_Adapt(t *testing.T) {
 			expected: lambda.Lambda{
 				Functions: []lambda.Function{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Tracing: lambda.Tracing{
-							Metadata: types.NewTestMetadata(),
-							Mode:     types.String("Passthrough", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Mode:     defsecTypes.String("Passthrough", defsecTypes.NewTestMetadata()),
 						},
 						Permissions: []lambda.Permission{
 							{
-								Metadata:  types.NewTestMetadata(),
-								Principal: types.String("sns.amazonaws.com", types.NewTestMetadata()),
-								SourceARN: types.String("default", types.NewTestMetadata()),
+								Metadata:  defsecTypes.NewTestMetadata(),
+								Principal: defsecTypes.String("sns.amazonaws.com", defsecTypes.NewTestMetadata()),
+								SourceARN: defsecTypes.String("default", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -74,23 +74,23 @@ func Test_Adapt(t *testing.T) {
 			expected: lambda.Lambda{
 				Functions: []lambda.Function{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Tracing: lambda.Tracing{
-							Metadata: types.NewTestMetadata(),
-							Mode:     types.String("", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Mode:     defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Tracing: lambda.Tracing{
-							Metadata: types.NewTestMetadata(),
-							Mode:     types.String("", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Mode:     defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 						Permissions: []lambda.Permission{
 							{
-								Metadata:  types.NewTestMetadata(),
-								Principal: types.String("", types.NewTestMetadata()),
-								SourceARN: types.String("", types.NewTestMetadata()),
+								Metadata:  defsecTypes.NewTestMetadata(),
+								Principal: defsecTypes.String("", defsecTypes.NewTestMetadata()),
+								SourceARN: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

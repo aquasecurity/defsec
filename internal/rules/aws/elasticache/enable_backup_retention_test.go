@@ -3,7 +3,7 @@ package elasticache
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableBackupRetention(t *testing.T) {
 			input: elasticache.ElastiCache{
 				Clusters: []elasticache.Cluster{
 					{
-						Metadata:               types.NewTestMetadata(),
-						Engine:                 types.String("redis", types.NewTestMetadata()),
-						NodeType:               types.String("cache.m4.large", types.NewTestMetadata()),
-						SnapshotRetentionLimit: types.Int(0, types.NewTestMetadata()),
+						Metadata:               defsecTypes.NewTestMetadata(),
+						Engine:                 defsecTypes.String("redis", defsecTypes.NewTestMetadata()),
+						NodeType:               defsecTypes.String("cache.m4.large", defsecTypes.NewTestMetadata()),
+						SnapshotRetentionLimit: defsecTypes.Int(0, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -38,10 +38,10 @@ func TestCheckEnableBackupRetention(t *testing.T) {
 			input: elasticache.ElastiCache{
 				Clusters: []elasticache.Cluster{
 					{
-						Metadata:               types.NewTestMetadata(),
-						Engine:                 types.String("redis", types.NewTestMetadata()),
-						NodeType:               types.String("cache.m4.large", types.NewTestMetadata()),
-						SnapshotRetentionLimit: types.Int(5, types.NewTestMetadata()),
+						Metadata:               defsecTypes.NewTestMetadata(),
+						Engine:                 defsecTypes.String("redis", defsecTypes.NewTestMetadata()),
+						NodeType:               defsecTypes.String("cache.m4.large", defsecTypes.NewTestMetadata()),
+						SnapshotRetentionLimit: defsecTypes.Int(5, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

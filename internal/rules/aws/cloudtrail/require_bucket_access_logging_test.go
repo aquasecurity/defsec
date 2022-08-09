@@ -3,7 +3,7 @@ package cloudtrail
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -26,19 +26,19 @@ func TestCheckBucketAccessLoggingRequired(t *testing.T) {
 			inputCT: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:   types.NewTestMetadata(),
-						BucketName: types.String("my-bucket", types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						BucketName: defsecTypes.String("my-bucket", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
 			inputS3: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("my-bucket", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Name:     defsecTypes.String("my-bucket", defsecTypes.NewTestMetadata()),
 						Logging: s3.Logging{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -50,19 +50,19 @@ func TestCheckBucketAccessLoggingRequired(t *testing.T) {
 			inputCT: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:   types.NewTestMetadata(),
-						BucketName: types.String("my-bucket", types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						BucketName: defsecTypes.String("my-bucket", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
 			inputS3: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("my-bucket", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Name:     defsecTypes.String("my-bucket", defsecTypes.NewTestMetadata()),
 						Logging: s3.Logging{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

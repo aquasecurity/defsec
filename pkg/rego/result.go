@@ -5,7 +5,7 @@ import (
 	"io/fs"
 	"strconv"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 
@@ -24,16 +24,16 @@ type regoResult struct {
 	FS        fs.FS
 }
 
-func (r regoResult) GetMetadata() types.Metadata {
+func (r regoResult) GetMetadata() defsecTypes.Metadata {
 	if !r.Managed {
-		return types.NewUnmanagedMetadata()
+		return defsecTypes.NewUnmanagedMetadata()
 	}
-	rng := types.NewRangeWithFSKey(r.Filepath, r.StartLine, r.EndLine, "", r.FSKey, r.FS)
-	ref := types.NewNamedReference(r.Resource)
+	rng := defsecTypes.NewRangeWithFSKey(r.Filepath, r.StartLine, r.EndLine, "", r.FSKey, r.FS)
+	ref := defsecTypes.NewNamedReference(r.Resource)
 	if r.Explicit {
-		return types.NewExplicitMetadata(rng, ref)
+		return defsecTypes.NewExplicitMetadata(rng, ref)
 	}
-	return types.NewMetadata(rng, ref)
+	return defsecTypes.NewMetadata(rng, ref)
 }
 
 func (r regoResult) GetRawValue() interface{} {

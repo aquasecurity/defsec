@@ -3,11 +3,11 @@ package compute
 import (
 	"testing"
 
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/google/compute"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -47,34 +47,34 @@ func Test_adaptNetworks(t *testing.T) {
 `,
 			expected: []compute.Network{
 				{
-					Metadata: types.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					Firewall: &compute.Firewall{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("my-firewall-rule", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Name:     defsecTypes.String("my-firewall-rule", defsecTypes.NewTestMetadata()),
 						IngressRules: []compute.IngressRule{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								FirewallRule: compute.FirewallRule{
-									Metadata: types.NewTestMetadata(),
-									IsAllow:  types.Bool(true, types.NewTestMetadata()),
-									Protocol: types.String("icmp", types.NewTestMetadata()),
-									Enforced: types.Bool(true, types.NewTestMetadata()),
-									Ports: []types.IntValue{
-										types.Int(80, types.NewTestMetadata()),
-										types.Int(8080, types.NewTestMetadata()),
+									Metadata: defsecTypes.NewTestMetadata(),
+									IsAllow:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+									Protocol: defsecTypes.String("icmp", defsecTypes.NewTestMetadata()),
+									Enforced: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+									Ports: []defsecTypes.IntValue{
+										defsecTypes.Int(80, defsecTypes.NewTestMetadata()),
+										defsecTypes.Int(8080, defsecTypes.NewTestMetadata()),
 									},
 								},
-								SourceRanges: []types.StringValue{
-									types.String("1.2.3.4/32", types.NewTestMetadata()),
+								SourceRanges: []defsecTypes.StringValue{
+									defsecTypes.String("1.2.3.4/32", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
 					},
 					Subnetworks: []compute.SubNetwork{
 						{
-							Metadata:       types.NewTestMetadata(),
-							Name:           types.String("test-subnetwork", types.NewTestMetadata()),
-							EnableFlowLogs: types.Bool(true, types.NewTestMetadata()),
+							Metadata:       defsecTypes.NewTestMetadata(),
+							Name:           defsecTypes.String("test-subnetwork", defsecTypes.NewTestMetadata()),
+							EnableFlowLogs: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -96,16 +96,16 @@ func Test_adaptNetworks(t *testing.T) {
 `,
 			expected: []compute.Network{
 				{
-					Metadata: types.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					Firewall: &compute.Firewall{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Name:     defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					},
 					Subnetworks: []compute.SubNetwork{
 						{
-							Metadata:       types.NewTestMetadata(),
-							Name:           types.String("", types.NewTestMetadata()),
-							EnableFlowLogs: types.Bool(false, types.NewTestMetadata()),
+							Metadata:       defsecTypes.NewTestMetadata(),
+							Name:           defsecTypes.String("", defsecTypes.NewTestMetadata()),
+							EnableFlowLogs: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

@@ -3,7 +3,8 @@ package emr
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/emr"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -21,8 +22,8 @@ func TestEnableLocalDiskEncryption(t *testing.T) {
 			input: emr.EMR{
 				SecurityConfiguration: []emr.SecurityConfiguration{
 					{
-						Name: types.String("test", types.NewTestMetadata()),
-						Configuration: types.String(`{
+						Name: defsecTypes.String("test", defsecTypes.NewTestMetadata()),
+						Configuration: defsecTypes.String(`{
 							"EncryptionConfiguration": {
 							  "AtRestEncryptionConfiguration": {
 								"S3EncryptionConfiguration": {
@@ -36,7 +37,7 @@ func TestEnableLocalDiskEncryption(t *testing.T) {
 							  "EnableInTransitEncryption": true,
 							  "EnableAtRestEncryption": true
 							}
-						  }`, types.NewTestMetadata()),
+						  }`, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -47,8 +48,8 @@ func TestEnableLocalDiskEncryption(t *testing.T) {
 			input: emr.EMR{
 				SecurityConfiguration: []emr.SecurityConfiguration{
 					{
-						Name: types.String("test", types.NewTestMetadata()),
-						Configuration: types.String(`{
+						Name: defsecTypes.String("test", defsecTypes.NewTestMetadata()),
+						Configuration: defsecTypes.String(`{
 							"EncryptionConfiguration": {
 							  "AtRestEncryptionConfiguration": {
 								"S3EncryptionConfiguration": {
@@ -62,7 +63,7 @@ func TestEnableLocalDiskEncryption(t *testing.T) {
 							  "EnableInTransitEncryption": true,
 							  "EnableAtRestEncryption": true
 							}
-						  }`, types.NewTestMetadata()),
+						  }`, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

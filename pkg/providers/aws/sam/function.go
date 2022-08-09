@@ -1,15 +1,15 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Function struct {
-	types.Metadata
-	FunctionName    types.StringValue
-	Tracing         types.StringValue
-	ManagedPolicies []types.StringValue
+	defsecTypes.Metadata
+	FunctionName    defsecTypes.StringValue
+	Tracing         defsecTypes.StringValue
+	ManagedPolicies []defsecTypes.StringValue
 	Policies        []iam.Policy
 }
 
@@ -19,7 +19,7 @@ const (
 )
 
 type Permission struct {
-	types.Metadata
-	Principal types.StringValue
-	SourceARN types.StringValue
+	defsecTypes.Metadata
+	Principal defsecTypes.StringValue
+	SourceARN defsecTypes.StringValue
 }

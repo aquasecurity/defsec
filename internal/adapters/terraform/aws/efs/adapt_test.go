@@ -3,7 +3,7 @@ package efs
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/efs"
 
@@ -30,8 +30,8 @@ func Test_adaptFileSystem(t *testing.T) {
 			  }
 `,
 			expected: efs.FileSystem{
-				Metadata:  types.NewTestMetadata(),
-				Encrypted: types.Bool(true, types.NewTestMetadata()),
+				Metadata:  defsecTypes.NewTestMetadata(),
+				Encrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -41,8 +41,8 @@ func Test_adaptFileSystem(t *testing.T) {
 			  }
 `,
 			expected: efs.FileSystem{
-				Metadata:  types.NewTestMetadata(),
-				Encrypted: types.Bool(false, types.NewTestMetadata()),
+				Metadata:  defsecTypes.NewTestMetadata(),
+				Encrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

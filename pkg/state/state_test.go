@@ -3,7 +3,7 @@ package state
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
@@ -17,13 +17,13 @@ func Test_RegoConversion(t *testing.T) {
 			S3: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewMetadata(
-							types.NewRange("main.tf", 2, 4, "", nil),
-							types.NewNamedReference("aws_s3_bucket.example"),
+						Metadata: defsecTypes.NewMetadata(
+							defsecTypes.NewRange("main.tf", 2, 4, "", nil),
+							defsecTypes.NewNamedReference("aws_s3_bucket.example"),
 						),
-						Name: types.String("my-bucket", types.NewMetadata(
-							types.NewRange("main.tf", 3, 3, "", nil),
-							types.NewNamedReference("aws_s3_bucket.example.bucket"),
+						Name: defsecTypes.String("my-bucket", defsecTypes.NewMetadata(
+							defsecTypes.NewRange("main.tf", 3, 3, "", nil),
+							defsecTypes.NewNamedReference("aws_s3_bucket.example.bucket"),
 						)),
 					},
 				},

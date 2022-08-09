@@ -1,9 +1,9 @@
 package dynamodb
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/dynamodb"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) dynamodb.DynamoDB {
@@ -39,10 +39,10 @@ func adaptCluster(resource *terraform.Block, module *terraform.Module) dynamodb.
 		Metadata: resource.GetMetadata(),
 		ServerSideEncryption: dynamodb.ServerSideEncryption{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
-			KMSKeyID: types.StringDefault("", resource.GetMetadata()),
+			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
+			KMSKeyID: defsecTypes.StringDefault("", resource.GetMetadata()),
 		},
-		PointInTimeRecovery: types.BoolDefault(false, resource.GetMetadata()),
+		PointInTimeRecovery: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 	}
 
 	if ssEncryptionBlock := resource.GetBlock("server_side_encryption"); ssEncryptionBlock.IsNotNil() {
@@ -65,10 +65,10 @@ func adaptTable(resource *terraform.Block, module *terraform.Module) dynamodb.Ta
 		Metadata: resource.GetMetadata(),
 		ServerSideEncryption: dynamodb.ServerSideEncryption{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
-			KMSKeyID: types.StringDefault("", resource.GetMetadata()),
+			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
+			KMSKeyID: defsecTypes.StringDefault("", resource.GetMetadata()),
 		},
-		PointInTimeRecovery: types.BoolDefault(false, resource.GetMetadata()),
+		PointInTimeRecovery: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 	}
 
 	if ssEncryptionBlock := resource.GetBlock("server_side_encryption"); ssEncryptionBlock.IsNotNil() {
@@ -81,7 +81,7 @@ func adaptTable(resource *terraform.Block, module *terraform.Module) dynamodb.Ta
 
 		kmsBlock, err := module.GetReferencedBlock(kmsKeyIdAttr, resource)
 		if err == nil && kmsBlock.IsNotNil() {
-			table.ServerSideEncryption.KMSKeyID = types.String(kmsBlock.FullName(), kmsBlock.GetMetadata())
+			table.ServerSideEncryption.KMSKeyID = defsecTypes.String(kmsBlock.FullName(), kmsBlock.GetMetadata())
 		}
 	}
 

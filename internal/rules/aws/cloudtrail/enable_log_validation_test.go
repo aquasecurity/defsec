@@ -3,7 +3,7 @@ package cloudtrail
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableLogValidation(t *testing.T) {
 			input: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:                types.NewTestMetadata(),
-						EnableLogFileValidation: types.Bool(false, types.NewTestMetadata()),
+						Metadata:                defsecTypes.NewTestMetadata(),
+						EnableLogFileValidation: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableLogValidation(t *testing.T) {
 			input: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:                types.NewTestMetadata(),
-						EnableLogFileValidation: types.Bool(true, types.NewTestMetadata()),
+						Metadata:                defsecTypes.NewTestMetadata(),
+						EnableLogFileValidation: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

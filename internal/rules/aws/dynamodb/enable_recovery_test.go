@@ -3,7 +3,7 @@ package dynamodb
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableRecovery(t *testing.T) {
 			input: dynamodb.DynamoDB{
 				DAXClusters: []dynamodb.DAXCluster{
 					{
-						Metadata:            types.NewTestMetadata(),
-						PointInTimeRecovery: types.Bool(false, types.NewTestMetadata()),
+						Metadata:            defsecTypes.NewTestMetadata(),
+						PointInTimeRecovery: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableRecovery(t *testing.T) {
 			input: dynamodb.DynamoDB{
 				DAXClusters: []dynamodb.DAXCluster{
 					{
-						Metadata:            types.NewTestMetadata(),
-						PointInTimeRecovery: types.Bool(true, types.NewTestMetadata()),
+						Metadata:            defsecTypes.NewTestMetadata(),
+						PointInTimeRecovery: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

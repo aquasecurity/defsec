@@ -3,7 +3,7 @@ package ecs
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableContainerInsight(t *testing.T) {
 			input: ecs.ECS{
 				Clusters: []ecs.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Settings: ecs.ClusterSettings{
-							Metadata:                 types.NewTestMetadata(),
-							ContainerInsightsEnabled: types.Bool(false, types.NewTestMetadata()),
+							Metadata:                 defsecTypes.NewTestMetadata(),
+							ContainerInsightsEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableContainerInsight(t *testing.T) {
 			input: ecs.ECS{
 				Clusters: []ecs.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Settings: ecs.ClusterSettings{
-							Metadata:                 types.NewTestMetadata(),
-							ContainerInsightsEnabled: types.Bool(true, types.NewTestMetadata()),
+							Metadata:                 defsecTypes.NewTestMetadata(),
+							ContainerInsightsEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

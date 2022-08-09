@@ -3,7 +3,7 @@ package container
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/azure/container"
 
@@ -46,25 +46,25 @@ func Test_adaptCluster(t *testing.T) {
 			}
 `,
 			expected: container.KubernetesCluster{
-				Metadata: types.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				NetworkProfile: container.NetworkProfile{
-					Metadata:      types.NewTestMetadata(),
-					NetworkPolicy: types.String("calico", types.NewTestMetadata()),
+					Metadata:      defsecTypes.NewTestMetadata(),
+					NetworkPolicy: defsecTypes.String("calico", defsecTypes.NewTestMetadata()),
 				},
-				EnablePrivateCluster: types.Bool(true, types.NewTestMetadata()),
-				APIServerAuthorizedIPRanges: []types.StringValue{
-					types.String("1.2.3.4/32", types.NewTestMetadata()),
+				EnablePrivateCluster: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				APIServerAuthorizedIPRanges: []defsecTypes.StringValue{
+					defsecTypes.String("1.2.3.4/32", defsecTypes.NewTestMetadata()),
 				},
 				AddonProfile: container.AddonProfile{
-					Metadata: types.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					OMSAgent: container.OMSAgent{
-						Metadata: types.NewTestMetadata(),
-						Enabled:  types.Bool(true, types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 				RoleBasedAccessControl: container.RoleBasedAccessControl{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -76,22 +76,22 @@ func Test_adaptCluster(t *testing.T) {
 			}
 `,
 			expected: container.KubernetesCluster{
-				Metadata: types.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				NetworkProfile: container.NetworkProfile{
-					Metadata:      types.NewTestMetadata(),
-					NetworkPolicy: types.String("", types.NewTestMetadata()),
+					Metadata:      defsecTypes.NewTestMetadata(),
+					NetworkPolicy: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
-				EnablePrivateCluster: types.Bool(false, types.NewTestMetadata()),
+				EnablePrivateCluster: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				AddonProfile: container.AddonProfile{
-					Metadata: types.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					OMSAgent: container.OMSAgent{
-						Metadata: types.NewTestMetadata(),
-						Enabled:  types.Bool(false, types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 				RoleBasedAccessControl: container.RoleBasedAccessControl{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -102,22 +102,22 @@ func Test_adaptCluster(t *testing.T) {
 			}
 `,
 			expected: container.KubernetesCluster{
-				Metadata: types.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				NetworkProfile: container.NetworkProfile{
-					Metadata:      types.NewTestMetadata(),
-					NetworkPolicy: types.String("", types.NewTestMetadata()),
+					Metadata:      defsecTypes.NewTestMetadata(),
+					NetworkPolicy: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
-				EnablePrivateCluster: types.Bool(false, types.NewTestMetadata()),
+				EnablePrivateCluster: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				AddonProfile: container.AddonProfile{
-					Metadata: types.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					OMSAgent: container.OMSAgent{
-						Metadata: types.NewTestMetadata(),
-						Enabled:  types.Bool(false, types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 				RoleBasedAccessControl: container.RoleBasedAccessControl{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(false, types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

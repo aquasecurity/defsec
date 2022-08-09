@@ -3,8 +3,9 @@ package s3
 import (
 	"strings"
 
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -77,7 +78,7 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 
 		b := s3.Bucket{
 			Metadata:          bucketMetadata,
-			Name:              types.String(*bucket.Name, bucketMetadata),
+			Name:              defsecTypes.String(*bucket.Name, bucketMetadata),
 			PublicAccessBlock: a.getPublicAccessBlock(bucket.Name, bucketMetadata),
 			BucketPolicies:    a.getBucketPolicies(bucket.Name, bucketMetadata),
 			Encryption:        a.getBucketEncryption(bucket.Name, bucketMetadata),
@@ -93,7 +94,7 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 	return buckets, nil
 }
 
-func (a *adapter) getPublicAccessBlock(bucketName *string, metadata types.Metadata) *s3.PublicAccessBlock {
+func (a *adapter) getPublicAccessBlock(bucketName *string, metadata defsecTypes.Metadata) *s3.PublicAccessBlock {
 
 	publicAccessBlocks, err := a.api.GetPublicAccessBlock(a.Context(), &s3api.GetPublicAccessBlockInput{
 		Bucket: bucketName,
@@ -110,15 +111,15 @@ func (a *adapter) getPublicAccessBlock(bucketName *string, metadata types.Metada
 	config := publicAccessBlocks.PublicAccessBlockConfiguration
 	pab := s3.NewPublicAccessBlock(metadata)
 
-	pab.BlockPublicACLs = types.Bool(config.BlockPublicAcls, metadata)
-	pab.BlockPublicPolicy = types.Bool(config.BlockPublicPolicy, metadata)
-	pab.IgnorePublicACLs = types.Bool(config.IgnorePublicAcls, metadata)
-	pab.RestrictPublicBuckets = types.Bool(config.RestrictPublicBuckets, metadata)
+	pab.BlockPublicACLs = defsecTypes.Bool(config.BlockPublicAcls, metadata)
+	pab.BlockPublicPolicy = defsecTypes.Bool(config.BlockPublicPolicy, metadata)
+	pab.IgnorePublicACLs = defsecTypes.Bool(config.IgnorePublicAcls, metadata)
+	pab.RestrictPublicBuckets = defsecTypes.Bool(config.RestrictPublicBuckets, metadata)
 
 	return &pab
 }
 
-func (a *adapter) getBucketPolicies(bucketName *string, metadata types.Metadata) []iam.Policy {
+func (a *adapter) getBucketPolicies(bucketName *string, metadata defsecTypes.Metadata) []iam.Policy {
 	var bucketPolicies []iam.Policy
 
 	bucketPolicy, err := a.api.GetBucketPolicy(a.Context(), &s3api.GetBucketPolicyInput{Bucket: bucketName})
@@ -136,12 +137,12 @@ func (a *adapter) getBucketPolicies(bucketName *string, metadata types.Metadata)
 
 		bucketPolicies = append(bucketPolicies, iam.Policy{
 			Metadata: metadata,
-			Name:     types.StringDefault("", metadata),
+			Name:     defsecTypes.StringDefault("", metadata),
 			Document: iam.Document{
 				Metadata: metadata,
 				Parsed:   *policyDocument,
 			},
-			Builtin: types.Bool(false, metadata),
+			Builtin: defsecTypes.Bool(false, metadata),
 		})
 	}
 
@@ -149,12 +150,12 @@ func (a *adapter) getBucketPolicies(bucketName *string, metadata types.Metadata)
 
 }
 
-func (a *adapter) getBucketEncryption(bucketName *string, metadata types.Metadata) s3.Encryption {
+func (a *adapter) getBucketEncryption(bucketName *string, metadata defsecTypes.Metadata) s3.Encryption {
 	bucketEncryption := s3.Encryption{
 		Metadata:  metadata,
-		Enabled:   types.BoolDefault(false, metadata),
-		Algorithm: types.StringDefault("", metadata),
-		KMSKeyId:  types.StringDefault("", metadata),
+		Enabled:   defsecTypes.BoolDefault(false, metadata),
+		Algorithm: defsecTypes.StringDefault("", metadata),
+		KMSKeyId:  defsecTypes.StringDefault("", metadata),
 	}
 
 	encryption, err := a.api.GetBucketEncryption(a.Context(), &s3api.GetBucketEncryptionInput{Bucket: bucketName})
@@ -165,22 +166,22 @@ func (a *adapter) getBucketEncryption(bucketName *string, metadata types.Metadat
 
 	if encryption.ServerSideEncryptionConfiguration != nil && len(encryption.ServerSideEncryptionConfiguration.Rules) > 0 {
 		defaultEncryption := encryption.ServerSideEncryptionConfiguration.Rules[0]
-		bucketEncryption.Enabled = types.Bool(defaultEncryption.BucketKeyEnabled, metadata)
+		bucketEncryption.Enabled = defsecTypes.Bool(defaultEncryption.BucketKeyEnabled, metadata)
 		algorithm := defaultEncryption.ApplyServerSideEncryptionByDefault.SSEAlgorithm
-		bucketEncryption.Algorithm = types.StringDefault(string(algorithm), metadata)
+		bucketEncryption.Algorithm = defsecTypes.StringDefault(string(algorithm), metadata)
 		kmsKeyId := defaultEncryption.ApplyServerSideEncryptionByDefault.KMSMasterKeyID
 		if kmsKeyId != nil {
-			bucketEncryption.KMSKeyId = types.StringDefault(*kmsKeyId, metadata)
+			bucketEncryption.KMSKeyId = defsecTypes.StringDefault(*kmsKeyId, metadata)
 		}
 	}
 
 	return bucketEncryption
 }
 
-func (a *adapter) getBucketVersioning(bucketName *string, metadata types.Metadata) s3.Versioning {
+func (a *adapter) getBucketVersioning(bucketName *string, metadata defsecTypes.Metadata) s3.Versioning {
 	bucketVersioning := s3.Versioning{
 		Metadata: metadata,
-		Enabled:  types.BoolDefault(false, metadata),
+		Enabled:  defsecTypes.BoolDefault(false, metadata),
 	}
 
 	versioning, err := a.api.GetBucketVersioning(a.Context(), &s3api.GetBucketVersioningInput{Bucket: bucketName})
@@ -190,18 +191,18 @@ func (a *adapter) getBucketVersioning(bucketName *string, metadata types.Metadat
 	}
 
 	if versioning.Status == s3types.BucketVersioningStatusEnabled {
-		bucketVersioning.Enabled = types.Bool(true, metadata)
+		bucketVersioning.Enabled = defsecTypes.Bool(true, metadata)
 	}
 
 	return bucketVersioning
 }
 
-func (a *adapter) getBucketLogging(bucketName *string, metadata types.Metadata) s3.Logging {
+func (a *adapter) getBucketLogging(bucketName *string, metadata defsecTypes.Metadata) s3.Logging {
 
 	bucketLogging := s3.Logging{
 		Metadata:     metadata,
-		Enabled:      types.BoolDefault(false, metadata),
-		TargetBucket: types.StringDefault("", metadata),
+		Enabled:      defsecTypes.BoolDefault(false, metadata),
+		TargetBucket: defsecTypes.StringDefault("", metadata),
 	}
 
 	logging, err := a.api.GetBucketLogging(a.Context(), &s3api.GetBucketLoggingInput{Bucket: bucketName})
@@ -211,18 +212,18 @@ func (a *adapter) getBucketLogging(bucketName *string, metadata types.Metadata) 
 	}
 
 	if logging.LoggingEnabled != nil {
-		bucketLogging.Enabled = types.Bool(true, metadata)
-		bucketLogging.TargetBucket = types.StringDefault(*logging.LoggingEnabled.TargetBucket, metadata)
+		bucketLogging.Enabled = defsecTypes.Bool(true, metadata)
+		bucketLogging.TargetBucket = defsecTypes.StringDefault(*logging.LoggingEnabled.TargetBucket, metadata)
 	}
 
 	return bucketLogging
 }
 
-func (a *adapter) getBucketACL(bucketName *string, metadata types.Metadata) types.StringValue {
+func (a *adapter) getBucketACL(bucketName *string, metadata defsecTypes.Metadata) defsecTypes.StringValue {
 	acl, err := a.api.GetBucketAcl(a.Context(), &s3api.GetBucketAclInput{Bucket: bucketName})
 	if err != nil {
 		a.Debug("Error getting bucket ACL: %s", err)
-		return types.StringDefault("private", metadata)
+		return defsecTypes.StringDefault("private", metadata)
 	}
 
 	aclValue := "private"
@@ -242,5 +243,5 @@ func (a *adapter) getBucketACL(bucketName *string, metadata types.Metadata) type
 		}
 	}
 
-	return types.String(aclValue, metadata)
+	return defsecTypes.String(aclValue, metadata)
 }

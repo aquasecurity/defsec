@@ -3,7 +3,7 @@ package rds
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNoPublicDbAccess(t *testing.T) {
 			input: rds.RDS{
 				Instances: []rds.Instance{
 					{
-						Metadata:     types.NewTestMetadata(),
-						PublicAccess: types.Bool(true, types.NewTestMetadata()),
+						Metadata:     defsecTypes.NewTestMetadata(),
+						PublicAccess: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,13 +36,13 @@ func TestCheckNoPublicDbAccess(t *testing.T) {
 			input: rds.RDS{
 				Clusters: []rds.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Instances: []rds.ClusterInstance{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Instance: rds.Instance{
-									Metadata:     types.NewTestMetadata(),
-									PublicAccess: types.Bool(false, types.NewTestMetadata()),
+									Metadata:     defsecTypes.NewTestMetadata(),
+									PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 
 	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
@@ -122,8 +123,8 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 
 			i := ec2.NewInstance(instanceMetadata)
 			if instance.MetadataOptions != nil {
-				i.MetadataOptions.HttpTokens = types.StringDefault(string(instance.MetadataOptions.HttpTokens), instanceMetadata)
-				i.MetadataOptions.HttpEndpoint = types.StringDefault(string(instance.MetadataOptions.HttpEndpoint), instanceMetadata)
+				i.MetadataOptions.HttpTokens = defsecTypes.StringDefault(string(instance.MetadataOptions.HttpTokens), instanceMetadata)
+				i.MetadataOptions.HttpEndpoint = defsecTypes.StringDefault(string(instance.MetadataOptions.HttpEndpoint), instanceMetadata)
 			}
 
 			if instance.BlockDeviceMappings != nil {
@@ -131,7 +132,7 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 					volumeMetadata := a.CreateMetadata(fmt.Sprintf("volume/%s", *blockMapping.Ebs.VolumeId))
 					ebsDevice := &ec2.BlockDevice{
 						Metadata:  volumeMetadata,
-						Encrypted: types.BoolDefault(false, volumeMetadata),
+						Encrypted: defsecTypes.BoolDefault(false, volumeMetadata),
 					}
 					if strings.EqualFold(*blockMapping.DeviceName, *instance.RootDeviceName) {
 						// is root block device
@@ -159,7 +160,7 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 	for _, v := range volumes.Volumes {
 		block := volumeBlockMap[*v.VolumeId]
 		if block != nil {
-			block.Encrypted = types.Bool(*v.Encrypted, block.Metadata)
+			block.Encrypted = defsecTypes.Bool(*v.Encrypted, block.Metadata)
 		}
 	}
 	return instances, apiInstances.NextToken, nil

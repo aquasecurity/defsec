@@ -3,7 +3,7 @@ package kinesis
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/kinesis"
 
@@ -29,11 +29,11 @@ func Test_adaptStream(t *testing.T) {
 			}
 `,
 			expected: kinesis.Stream{
-				Metadata: types.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				Encryption: kinesis.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Type:     types.String("KMS", types.NewTestMetadata()),
-					KMSKeyID: types.String("my/special/key", types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Type:     defsecTypes.String("KMS", defsecTypes.NewTestMetadata()),
+					KMSKeyID: defsecTypes.String("my/special/key", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -44,11 +44,11 @@ func Test_adaptStream(t *testing.T) {
 			}
 `,
 			expected: kinesis.Stream{
-				Metadata: types.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				Encryption: kinesis.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Type:     types.String("NONE", types.NewTestMetadata()),
-					KMSKeyID: types.String("", types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Type:     defsecTypes.String("NONE", defsecTypes.NewTestMetadata()),
+					KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

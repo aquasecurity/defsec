@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/zclconf/go-cty/cty"
 )
 
 type Ignore struct {
-	Range     types.Range
+	Range     defsecTypes.Range
 	RuleID    string
 	Expiry    *time.Time
 	Workspace string
@@ -20,7 +20,7 @@ type Ignore struct {
 
 type Ignores []Ignore
 
-func (ignores Ignores) Covering(modules Modules, m types.Metadata, workspace string, ids ...string) *Ignore {
+func (ignores Ignores) Covering(modules Modules, m defsecTypes.Metadata, workspace string, ids ...string) *Ignore {
 	for _, ignore := range ignores {
 		if ignore.Covering(modules, m, workspace, ids...) {
 			return &ignore
@@ -29,7 +29,7 @@ func (ignores Ignores) Covering(modules Modules, m types.Metadata, workspace str
 	return nil
 }
 
-func (ignore Ignore) Covering(modules Modules, m types.Metadata, workspace string, ids ...string) bool {
+func (ignore Ignore) Covering(modules Modules, m defsecTypes.Metadata, workspace string, ids ...string) bool {
 	if ignore.Expiry != nil && time.Now().After(*ignore.Expiry) {
 		return false
 	}
@@ -65,7 +65,7 @@ func (ignore Ignore) Covering(modules Modules, m types.Metadata, workspace strin
 
 }
 
-func (ignore Ignore) MatchParams(modules Modules, blockMetadata *types.Metadata) bool {
+func (ignore Ignore) MatchParams(modules Modules, blockMetadata *defsecTypes.Metadata) bool {
 	if len(ignore.Params) == 0 {
 		return true
 	}

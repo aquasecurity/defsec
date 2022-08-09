@@ -1,9 +1,9 @@
 package ec2
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type naclAdapter struct {
@@ -34,8 +34,8 @@ func (a *sgAdapter) adaptSecurityGroups(modules terraform.Modules) []ec2.Securit
 	orphanResources := modules.GetResourceByIDs(a.sgRuleIDs.Orphans()...)
 	if len(orphanResources) > 0 {
 		orphanage := ec2.SecurityGroup{
-			Metadata:     types.NewUnmanagedMetadata(),
-			Description:  types.StringDefault("", types.NewUnmanagedMetadata()),
+			Metadata:     defsecTypes.NewUnmanagedMetadata(),
+			Description:  defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			IngressRules: nil,
 			EgressRules:  nil,
 		}
@@ -63,9 +63,9 @@ func (a *naclAdapter) adaptNetworkACLs(modules terraform.Modules) []ec2.NetworkA
 	orphanResources := modules.GetResourceByIDs(a.naclRuleIDs.Orphans()...)
 	if len(orphanResources) > 0 {
 		orphanage := ec2.NetworkACL{
-			Metadata:      types.NewUnmanagedMetadata(),
+			Metadata:      defsecTypes.NewUnmanagedMetadata(),
 			Rules:         nil,
-			IsDefaultRule: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			IsDefaultRule: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 		}
 		for _, naclRule := range orphanResources {
 			orphanage.Rules = append(orphanage.Rules, adaptNetworkACLRule(naclRule))
@@ -115,7 +115,7 @@ func adaptSGRule(resource *terraform.Block, modules terraform.Modules) ec2.Secur
 	ruleDescAttr := resource.GetAttribute("description")
 	ruleDescVal := ruleDescAttr.AsStringValueOrDefault("", resource)
 
-	var cidrs []types.StringValue
+	var cidrs []defsecTypes.StringValue
 
 	cidrBlocks := resource.GetAttribute("cidr_blocks")
 	ipv6cidrBlocks := resource.GetAttribute("ipv6_cidr_blocks")
@@ -155,20 +155,20 @@ func (a *naclAdapter) adaptNetworkACL(resource *terraform.Block, module *terrafo
 	return ec2.NetworkACL{
 		Metadata:      resource.GetMetadata(),
 		Rules:         networkRules,
-		IsDefaultRule: types.BoolDefault(false, resource.GetMetadata()),
+		IsDefaultRule: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 	}
 }
 
 func adaptNetworkACLRule(resource *terraform.Block) ec2.NetworkACLRule {
-	var cidrs []types.StringValue
+	var cidrs []defsecTypes.StringValue
 
-	typeVal := types.StringDefault("ingress", resource.GetMetadata())
+	typeVal := defsecTypes.StringDefault("ingress", resource.GetMetadata())
 
 	egressAtrr := resource.GetAttribute("egress")
 	if egressAtrr.IsTrue() {
-		typeVal = types.String("egress", egressAtrr.GetMetadata())
+		typeVal = defsecTypes.String("egress", egressAtrr.GetMetadata())
 	} else if egressAtrr.IsNotNil() {
-		typeVal = types.String("ingress", egressAtrr.GetMetadata())
+		typeVal = defsecTypes.String("ingress", egressAtrr.GetMetadata())
 	}
 
 	actionAttr := resource.GetAttribute("rule_action")

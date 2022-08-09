@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type APIGateway struct {
@@ -10,35 +10,35 @@ type APIGateway struct {
 }
 
 type API struct {
-	types.Metadata
-	Name      types.StringValue
+	defsecTypes.Metadata
+	Name      defsecTypes.StringValue
 	Stages    []Stage
 	Resources []Resource
 }
 
 type Stage struct {
-	types.Metadata
-	Name               types.StringValue
+	defsecTypes.Metadata
+	Name               defsecTypes.StringValue
 	AccessLogging      AccessLogging
-	XRayTracingEnabled types.BoolValue
+	XRayTracingEnabled defsecTypes.BoolValue
 	RESTMethodSettings []RESTMethodSettings
 }
 
 type Resource struct {
-	types.Metadata
+	defsecTypes.Metadata
 	Methods []Method
 }
 
 type AccessLogging struct {
-	types.Metadata
-	CloudwatchLogGroupARN types.StringValue
+	defsecTypes.Metadata
+	CloudwatchLogGroupARN defsecTypes.StringValue
 }
 
 type RESTMethodSettings struct {
-	types.Metadata
-	Method             types.StringValue
-	CacheDataEncrypted types.BoolValue
-	CacheEnabled       types.BoolValue
+	defsecTypes.Metadata
+	Method             defsecTypes.StringValue
+	CacheDataEncrypted defsecTypes.BoolValue
+	CacheEnabled       defsecTypes.BoolValue
 }
 
 const (
@@ -49,14 +49,14 @@ const (
 )
 
 type Method struct {
-	types.Metadata
-	HTTPMethod        types.StringValue
-	AuthorizationType types.StringValue
-	APIKeyRequired    types.BoolValue
+	defsecTypes.Metadata
+	HTTPMethod        defsecTypes.StringValue
+	AuthorizationType defsecTypes.StringValue
+	APIKeyRequired    defsecTypes.BoolValue
 }
 
 type DomainName struct {
-	types.Metadata
-	Name           types.StringValue
-	SecurityPolicy types.StringValue
+	defsecTypes.Metadata
+	Name           defsecTypes.StringValue
+	SecurityPolicy defsecTypes.StringValue
 }

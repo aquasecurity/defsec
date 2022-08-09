@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/scanners"
 
@@ -16,7 +18,6 @@ import (
 	"github.com/aquasecurity/defsec/pkg/detection"
 	"github.com/liamg/memoryfs"
 
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/scanners/helm/parser"
 	kparser "github.com/aquasecurity/defsec/pkg/scanners/kubernetes/parser"

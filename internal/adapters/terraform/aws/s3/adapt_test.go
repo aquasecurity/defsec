@@ -3,8 +3,9 @@ package s3
 import (
 	"testing"
 
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
 	"github.com/aquasecurity/defsec/test/testutil"
@@ -197,19 +198,19 @@ func Test_Adapt(t *testing.T) {
 			expected: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("bucket", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Name:     defsecTypes.String("bucket", defsecTypes.NewTestMetadata()),
 						PublicAccessBlock: &s3.PublicAccessBlock{
-							Metadata:              types.NewTestMetadata(),
-							BlockPublicACLs:       types.Bool(true, types.NewTestMetadata()),
-							BlockPublicPolicy:     types.Bool(true, types.NewTestMetadata()),
-							IgnorePublicACLs:      types.Bool(true, types.NewTestMetadata()),
-							RestrictPublicBuckets: types.Bool(true, types.NewTestMetadata()),
+							Metadata:              defsecTypes.NewTestMetadata(),
+							BlockPublicACLs:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							BlockPublicPolicy:     defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							IgnorePublicACLs:      defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							RestrictPublicBuckets: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 						BucketPolicies: []iam.Policy{
 							{
-								Metadata: types.NewTestMetadata(),
-								Name:     types.String("", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Name:     defsecTypes.String("", defsecTypes.NewTestMetadata()),
 								Document: func() iam.Document {
 
 									builder := iamgo.NewPolicyBuilder()
@@ -223,30 +224,30 @@ func Test_Adapt(t *testing.T) {
 
 									return iam.Document{
 										Parsed:   builder.Build(),
-										Metadata: types.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										IsOffset: true,
 										HasRefs:  false,
 									}
 								}(),
-								Builtin: types.Bool(false, types.NewTestMetadata()),
+								Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 						Encryption: s3.Encryption{
-							Metadata:  types.NewTestMetadata(),
-							Enabled:   types.Bool(true, types.NewTestMetadata()),
-							Algorithm: types.String("aws:kms", types.NewTestMetadata()),
-							KMSKeyId:  types.String("string-key", types.NewTestMetadata()),
+							Metadata:  defsecTypes.NewTestMetadata(),
+							Enabled:   defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Algorithm: defsecTypes.String("aws:kms", defsecTypes.NewTestMetadata()),
+							KMSKeyId:  defsecTypes.String("string-key", defsecTypes.NewTestMetadata()),
 						},
 						Versioning: s3.Versioning{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 						Logging: s3.Logging{
-							Metadata:     types.NewTestMetadata(),
-							Enabled:      types.Bool(true, types.NewTestMetadata()),
-							TargetBucket: types.String("aws_s3_bucket.example", types.NewTestMetadata()),
+							Metadata:     defsecTypes.NewTestMetadata(),
+							Enabled:      defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							TargetBucket: defsecTypes.String("aws_s3_bucket.example", defsecTypes.NewTestMetadata()),
 						},
-						ACL: types.String("private", types.NewTestMetadata()),
+						ACL: defsecTypes.String("private", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

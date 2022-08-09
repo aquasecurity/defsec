@@ -1,7 +1,7 @@
 package bigquery
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type BigQuery struct {
@@ -9,8 +9,8 @@ type BigQuery struct {
 }
 
 type Dataset struct {
-	types.Metadata
-	ID           types.StringValue
+	defsecTypes.Metadata
+	ID           defsecTypes.StringValue
 	AccessGrants []AccessGrant
 }
 
@@ -19,8 +19,8 @@ const (
 )
 
 type AccessGrant struct {
-	types.Metadata
-	Role         types.StringValue
-	Domain       types.StringValue
-	SpecialGroup types.StringValue
+	defsecTypes.Metadata
+	Role         defsecTypes.StringValue
+	Domain       defsecTypes.StringValue
+	SpecialGroup defsecTypes.StringValue
 }

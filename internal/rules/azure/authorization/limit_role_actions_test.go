@@ -3,7 +3,7 @@ package authorization
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,17 +24,17 @@ func TestCheckLimitRoleActions(t *testing.T) {
 			input: authorization.Authorization{
 				RoleDefinitions: []authorization.RoleDefinition{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Permissions: []authorization.Permission{
 							{
-								Metadata: types.NewTestMetadata(),
-								Actions: []types.StringValue{
-									types.String("*", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Actions: []defsecTypes.StringValue{
+									defsecTypes.String("*", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
-						AssignableScopes: []types.StringValue{
-							types.String("/", types.NewTestMetadata()),
+						AssignableScopes: []defsecTypes.StringValue{
+							defsecTypes.String("/", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -46,17 +46,17 @@ func TestCheckLimitRoleActions(t *testing.T) {
 			input: authorization.Authorization{
 				RoleDefinitions: []authorization.RoleDefinition{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Permissions: []authorization.Permission{
 							{
-								Metadata: types.NewTestMetadata(),
-								Actions: []types.StringValue{
-									types.String("*", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Actions: []defsecTypes.StringValue{
+									defsecTypes.String("*", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
-						AssignableScopes: []types.StringValue{
-							types.String("proper-scope", types.NewTestMetadata()),
+						AssignableScopes: []defsecTypes.StringValue{
+							defsecTypes.String("proper-scope", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

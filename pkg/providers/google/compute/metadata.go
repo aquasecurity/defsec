@@ -1,10 +1,10 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type ProjectMetadata struct {
-	types.Metadata
-	EnableOSLogin types.BoolValue
+	defsecTypes.Metadata
+	EnableOSLogin defsecTypes.BoolValue
 }

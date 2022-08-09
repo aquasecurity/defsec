@@ -3,7 +3,7 @@ package storage
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata:          types.NewTestMetadata(),
-						MinimumTLSVersion: types.String("TLS1_0", types.NewTestMetadata()),
+						Metadata:          defsecTypes.NewTestMetadata(),
+						MinimumTLSVersion: defsecTypes.String("TLS1_0", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata:          types.NewTestMetadata(),
-						MinimumTLSVersion: types.String("TLS1_2", types.NewTestMetadata()),
+						Metadata:          defsecTypes.NewTestMetadata(),
+						MinimumTLSVersion: defsecTypes.String("TLS1_2", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

@@ -3,7 +3,7 @@ package ecs
 import (
 	"encoding/json"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type ECS struct {
@@ -12,22 +12,22 @@ type ECS struct {
 }
 
 type Cluster struct {
-	types.Metadata
+	defsecTypes.Metadata
 	Settings ClusterSettings
 }
 
 type ClusterSettings struct {
-	types.Metadata
-	ContainerInsightsEnabled types.BoolValue
+	defsecTypes.Metadata
+	ContainerInsightsEnabled defsecTypes.BoolValue
 }
 
 type TaskDefinition struct {
-	types.Metadata
+	defsecTypes.Metadata
 	Volumes              []Volume
 	ContainerDefinitions []ContainerDefinition
 }
 
-func CreateDefinitionsFromString(metadata types.Metadata, str string) ([]ContainerDefinition, error) {
+func CreateDefinitionsFromString(metadata defsecTypes.Metadata, str string) ([]ContainerDefinition, error) {
 	var containerDefinitionsJSON []containerDefinitionJSON
 	if err := json.Unmarshal([]byte(str), &containerDefinitionsJSON); err != nil {
 		return nil, err
@@ -61,12 +61,12 @@ type portMappingJSON struct {
 	HostPort      int `json:"hostPort"`
 }
 
-func (j containerDefinitionJSON) convert(metadata types.Metadata) ContainerDefinition {
+func (j containerDefinitionJSON) convert(metadata defsecTypes.Metadata) ContainerDefinition {
 	var mappings []PortMapping
 	for _, jMapping := range j.PortMappings {
 		mappings = append(mappings, PortMapping{
-			ContainerPort: types.Int(jMapping.ContainerPort, metadata),
-			HostPort:      types.Int(jMapping.HostPort, metadata),
+			ContainerPort: defsecTypes.Int(jMapping.ContainerPort, metadata),
+			HostPort:      defsecTypes.Int(jMapping.HostPort, metadata),
 		})
 	}
 	var envVars []EnvVar
@@ -75,27 +75,27 @@ func (j containerDefinitionJSON) convert(metadata types.Metadata) ContainerDefin
 	}
 	return ContainerDefinition{
 		Metadata:     metadata,
-		Name:         types.String(j.Name, metadata),
-		Image:        types.String(j.Image, metadata),
-		CPU:          types.Int(j.CPU, metadata),
-		Memory:       types.Int(j.Memory, metadata),
-		Essential:    types.Bool(j.Essential, metadata),
+		Name:         defsecTypes.String(j.Name, metadata),
+		Image:        defsecTypes.String(j.Image, metadata),
+		CPU:          defsecTypes.Int(j.CPU, metadata),
+		Memory:       defsecTypes.Int(j.Memory, metadata),
+		Essential:    defsecTypes.Bool(j.Essential, metadata),
 		PortMappings: mappings,
 		Environment:  envVars,
-		Privileged:   types.Bool(j.Privileged, metadata),
+		Privileged:   defsecTypes.Bool(j.Privileged, metadata),
 	}
 }
 
 type ContainerDefinition struct {
-	types.Metadata
-	Name         types.StringValue
-	Image        types.StringValue
-	CPU          types.IntValue
-	Memory       types.IntValue
-	Essential    types.BoolValue
+	defsecTypes.Metadata
+	Name         defsecTypes.StringValue
+	Image        defsecTypes.StringValue
+	CPU          defsecTypes.IntValue
+	Memory       defsecTypes.IntValue
+	Essential    defsecTypes.BoolValue
 	PortMappings []PortMapping
 	Environment  []EnvVar
-	Privileged   types.BoolValue
+	Privileged   defsecTypes.BoolValue
 }
 
 type EnvVar struct {
@@ -104,16 +104,16 @@ type EnvVar struct {
 }
 
 type PortMapping struct {
-	ContainerPort types.IntValue
-	HostPort      types.IntValue
+	ContainerPort defsecTypes.IntValue
+	HostPort      defsecTypes.IntValue
 }
 
 type Volume struct {
-	types.Metadata
+	defsecTypes.Metadata
 	EFSVolumeConfiguration EFSVolumeConfiguration
 }
 
 type EFSVolumeConfiguration struct {
-	types.Metadata
-	TransitEncryptionEnabled types.BoolValue
+	defsecTypes.Metadata
+	TransitEncryptionEnabled defsecTypes.BoolValue
 }

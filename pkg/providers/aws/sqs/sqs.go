@@ -1,8 +1,8 @@
 package sqs
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type SQS struct {
@@ -10,27 +10,27 @@ type SQS struct {
 }
 
 type Queue struct {
-	types.Metadata
-	QueueURL   types.StringValue
+	defsecTypes.Metadata
+	QueueURL   defsecTypes.StringValue
 	Encryption Encryption
 	Policies   []iam.Policy
 }
 
-func NewQueue(metadata types.Metadata, queueUrl string) Queue {
+func NewQueue(metadata defsecTypes.Metadata, queueUrl string) Queue {
 	return Queue{
 		Metadata: metadata,
-		QueueURL: types.StringDefault(queueUrl, metadata),
+		QueueURL: defsecTypes.StringDefault(queueUrl, metadata),
 		Policies: []iam.Policy{},
 		Encryption: Encryption{
 			Metadata:          metadata,
-			KMSKeyID:          types.StringDefault("", metadata),
-			ManagedEncryption: types.BoolDefault(false, metadata),
+			KMSKeyID:          defsecTypes.StringDefault("", metadata),
+			ManagedEncryption: defsecTypes.BoolDefault(false, metadata),
 		},
 	}
 }
 
 type Encryption struct {
-	types.Metadata
-	KMSKeyID          types.StringValue
-	ManagedEncryption types.BoolValue
+	defsecTypes.Metadata
+	KMSKeyID          defsecTypes.StringValue
+	ManagedEncryption defsecTypes.BoolValue
 }

@@ -1,10 +1,10 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sam"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/liamg/iamgo"
 )
 
@@ -17,7 +17,7 @@ func getStateMachines(cfFile parser.FileContext) (stateMachines []sam.StateMachi
 			Name:     r.GetStringProperty("Name"),
 			LoggingConfiguration: sam.LoggingConfiguration{
 				Metadata:       r.Metadata(),
-				LoggingEnabled: types.BoolDefault(false, r.Metadata()),
+				LoggingEnabled: defsecTypes.BoolDefault(false, r.Metadata()),
 			},
 			ManagedPolicies: nil,
 			Policies:        nil,
@@ -27,7 +27,7 @@ func getStateMachines(cfFile parser.FileContext) (stateMachines []sam.StateMachi
 		if logging := r.GetProperty("Logging"); logging.IsNotNil() {
 			stateMachine.LoggingConfiguration.Metadata = logging.Metadata()
 			if level := logging.GetProperty("Level"); level.IsNotNil() {
-				stateMachine.LoggingConfiguration.LoggingEnabled = types.Bool(!level.EqualTo("OFF"), level.Metadata())
+				stateMachine.LoggingConfiguration.LoggingEnabled = defsecTypes.Bool(!level.EqualTo("OFF"), level.Metadata())
 			}
 		}
 
@@ -43,7 +43,7 @@ func getTracingConfiguration(r *parser.Resource) sam.TracingConfiguration {
 	if tracing.IsNil() {
 		return sam.TracingConfiguration{
 			Metadata: r.Metadata(),
-			Enabled:  types.BoolDefault(false, r.Metadata()),
+			Enabled:  defsecTypes.BoolDefault(false, r.Metadata()),
 		}
 	}
 
@@ -66,12 +66,12 @@ func setStateMachinePolicies(r *parser.Resource, stateMachine *sam.StateMachine)
 				}
 				policy := iam.Policy{
 					Metadata: property.Metadata(),
-					Name:     types.StringDefault("", property.Metadata()),
+					Name:     defsecTypes.StringDefault("", property.Metadata()),
 					Document: iam.Document{
 						Metadata: property.Metadata(),
 						Parsed:   *parsed,
 					},
-					Builtin: types.Bool(false, property.Metadata()),
+					Builtin: defsecTypes.Bool(false, property.Metadata()),
 				}
 				stateMachine.Policies = append(stateMachine.Policies, policy)
 			}

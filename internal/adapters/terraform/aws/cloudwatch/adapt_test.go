@@ -3,7 +3,7 @@ package cloudwatch
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
 
@@ -33,11 +33,11 @@ func Test_adaptLogGroups(t *testing.T) {
 `,
 			expected: []cloudwatch.LogGroup{
 				{
-					Metadata:        types.NewTestMetadata(),
-					Arn:             types.String("", types.NewTestMetadata()),
-					Name:            types.String("my-group", types.NewTestMetadata()),
-					KMSKeyID:        types.String("aws_kms_key.log_key", types.NewTestMetadata()),
-					RetentionInDays: types.Int(0, types.NewTestMetadata()),
+					Metadata:        defsecTypes.NewTestMetadata(),
+					Arn:             defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					Name:            defsecTypes.String("my-group", defsecTypes.NewTestMetadata()),
+					KMSKeyID:        defsecTypes.String("aws_kms_key.log_key", defsecTypes.NewTestMetadata()),
+					RetentionInDays: defsecTypes.Int(0, defsecTypes.NewTestMetadata()),
 					MetricFilters:   nil,
 				},
 			},
@@ -52,11 +52,11 @@ func Test_adaptLogGroups(t *testing.T) {
 `,
 			expected: []cloudwatch.LogGroup{
 				{
-					Metadata:        types.NewTestMetadata(),
-					Arn:             types.String("", types.NewTestMetadata()),
-					Name:            types.String("my-group", types.NewTestMetadata()),
-					KMSKeyID:        types.String("key-as-string", types.NewTestMetadata()),
-					RetentionInDays: types.Int(0, types.NewTestMetadata()),
+					Metadata:        defsecTypes.NewTestMetadata(),
+					Arn:             defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					Name:            defsecTypes.String("my-group", defsecTypes.NewTestMetadata()),
+					KMSKeyID:        defsecTypes.String("key-as-string", defsecTypes.NewTestMetadata()),
+					RetentionInDays: defsecTypes.Int(0, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -70,11 +70,11 @@ func Test_adaptLogGroups(t *testing.T) {
 `,
 			expected: []cloudwatch.LogGroup{
 				{
-					Metadata:        types.NewTestMetadata(),
-					Arn:             types.String("", types.NewTestMetadata()),
-					Name:            types.String("my-group", types.NewTestMetadata()),
-					KMSKeyID:        types.String("", types.NewTestMetadata()),
-					RetentionInDays: types.Int(3, types.NewTestMetadata()),
+					Metadata:        defsecTypes.NewTestMetadata(),
+					Arn:             defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					Name:            defsecTypes.String("my-group", defsecTypes.NewTestMetadata()),
+					KMSKeyID:        defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					RetentionInDays: defsecTypes.Int(3, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

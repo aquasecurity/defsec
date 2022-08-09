@@ -3,9 +3,9 @@ package apigateway
 import (
 	"testing"
 
-	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,11 +25,11 @@ func TestCheckEnableTracing(t *testing.T) {
 			input: v1.APIGateway{
 				APIs: []v1.API{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Stages: []v1.Stage{
 							{
-								Metadata:           types.NewTestMetadata(),
-								XRayTracingEnabled: types.Bool(false, types.NewTestMetadata()),
+								Metadata:           defsecTypes.NewTestMetadata(),
+								XRayTracingEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -42,11 +42,11 @@ func TestCheckEnableTracing(t *testing.T) {
 			input: v1.APIGateway{
 				APIs: []v1.API{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Stages: []v1.Stage{
 							{
-								Metadata:           types.NewTestMetadata(),
-								XRayTracingEnabled: types.Bool(true, types.NewTestMetadata()),
+								Metadata:           defsecTypes.NewTestMetadata(),
+								XRayTracingEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

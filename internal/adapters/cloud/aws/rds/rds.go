@@ -2,9 +2,9 @@ package rds
 
 import (
 	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/rds"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	rdsApi "github.com/aws/aws-sdk-go-v2/service/rds"
 )
@@ -140,15 +140,15 @@ func (a *adapter) getInstanceBatch(token *string) (instances []rds.Instance, nex
 
 		instances = append(instances, rds.Instance{
 			Metadata:                  dbInstanceMetadata,
-			BackupRetentionPeriodDays: types.IntFromInt32(dbInstance.BackupRetentionPeriod, dbInstanceMetadata),
-			ReplicationSourceARN:      types.String(aws.ToString(dbInstance.ReadReplicaSourceDBInstanceIdentifier), dbInstanceMetadata),
+			BackupRetentionPeriodDays: defsecTypes.IntFromInt32(dbInstance.BackupRetentionPeriod, dbInstanceMetadata),
+			ReplicationSourceARN:      defsecTypes.String(aws.ToString(dbInstance.ReadReplicaSourceDBInstanceIdentifier), dbInstanceMetadata),
 			PerformanceInsights: getPerformanceInsights(
 				dbInstance.PerformanceInsightsEnabled,
 				dbInstance.PerformanceInsightsKMSKeyId,
 				dbInstanceMetadata,
 			),
 			Encryption:   getInstanceEncryption(dbInstance.StorageEncrypted, dbInstance.KmsKeyId, dbInstanceMetadata),
-			PublicAccess: types.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
+			PublicAccess: defsecTypes.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
 		})
 
 		a.Tracker().IncrementResource()
@@ -176,15 +176,15 @@ func (a *adapter) getClusterBatch(token *string) (clusters []rds.Cluster, nextTo
 
 		clusters = append(clusters, rds.Cluster{
 			Metadata:                  dbClusterMetadata,
-			BackupRetentionPeriodDays: types.IntFromInt32(aws.ToInt32(dbCluster.BackupRetentionPeriod), dbClusterMetadata),
-			ReplicationSourceARN:      types.String(aws.ToString(dbCluster.ReplicationSourceIdentifier), dbClusterMetadata),
+			BackupRetentionPeriodDays: defsecTypes.IntFromInt32(aws.ToInt32(dbCluster.BackupRetentionPeriod), dbClusterMetadata),
+			ReplicationSourceARN:      defsecTypes.String(aws.ToString(dbCluster.ReplicationSourceIdentifier), dbClusterMetadata),
 			PerformanceInsights: getPerformanceInsights(
 				dbCluster.PerformanceInsightsEnabled,
 				dbCluster.PerformanceInsightsKMSKeyId,
 				dbClusterMetadata,
 			),
 			Encryption:   getInstanceEncryption(dbCluster.StorageEncrypted, dbCluster.KmsKeyId, dbClusterMetadata),
-			PublicAccess: types.Bool(aws.ToBool(dbCluster.PubliclyAccessible), dbClusterMetadata),
+			PublicAccess: defsecTypes.Bool(aws.ToBool(dbCluster.PubliclyAccessible), dbClusterMetadata),
 		})
 
 	}
@@ -219,32 +219,32 @@ func (a *adapter) getClassicBatch(token *string) (dbSecurityGroups []rds.DBSecur
 	return dbSecurityGroups, nextToken, nil
 }
 
-func getInstanceEncryption(storageEncrypted bool, kmsKeyID *string, metadata types.Metadata) rds.Encryption {
+func getInstanceEncryption(storageEncrypted bool, kmsKeyID *string, metadata defsecTypes.Metadata) rds.Encryption {
 	encryption := rds.Encryption{
 		Metadata:       metadata,
-		EncryptStorage: types.BoolDefault(storageEncrypted, metadata),
-		KMSKeyID:       types.StringDefault("", metadata),
+		EncryptStorage: defsecTypes.BoolDefault(storageEncrypted, metadata),
+		KMSKeyID:       defsecTypes.StringDefault("", metadata),
 	}
 
 	if kmsKeyID != nil {
-		encryption.KMSKeyID = types.String(*kmsKeyID, metadata)
+		encryption.KMSKeyID = defsecTypes.String(*kmsKeyID, metadata)
 	}
 
 	return encryption
 }
 
-func getPerformanceInsights(enabled *bool, kmsKeyID *string, metadata types.Metadata) rds.PerformanceInsights {
+func getPerformanceInsights(enabled *bool, kmsKeyID *string, metadata defsecTypes.Metadata) rds.PerformanceInsights {
 	performanceInsights := rds.PerformanceInsights{
 		Metadata: metadata,
-		Enabled:  types.BoolDefault(false, metadata),
-		KMSKeyID: types.StringDefault("", metadata),
+		Enabled:  defsecTypes.BoolDefault(false, metadata),
+		KMSKeyID: defsecTypes.StringDefault("", metadata),
 	}
 
 	if enabled != nil {
-		performanceInsights.Enabled = types.Bool(*enabled, metadata)
+		performanceInsights.Enabled = defsecTypes.Bool(*enabled, metadata)
 	}
 	if kmsKeyID != nil {
-		performanceInsights.KMSKeyID = types.String(*kmsKeyID, metadata)
+		performanceInsights.KMSKeyID = defsecTypes.String(*kmsKeyID, metadata)
 	}
 
 	return performanceInsights

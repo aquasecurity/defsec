@@ -3,8 +3,9 @@ package database
 import (
 	"testing"
 
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/database"
 	"github.com/aquasecurity/defsec/test/testutil"
 	"github.com/stretchr/testify/assert"
@@ -60,25 +61,25 @@ func Test_Adapt(t *testing.T) {
 			expected: database.Database{
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnableSSLEnforcement:      types.Bool(true, types.NewTestMetadata()),
-							MinimumTLSVersion:         types.String("TLS1_2", types.NewTestMetadata()),
-							EnablePublicNetworkAccess: types.Bool(true, types.NewTestMetadata()),
+							Metadata:                  defsecTypes.NewTestMetadata(),
+							EnableSSLEnforcement:      defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							MinimumTLSVersion:         defsecTypes.String("TLS1_2", defsecTypes.NewTestMetadata()),
+							EnablePublicNetworkAccess: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("40.112.8.12", types.NewTestMetadata()),
-									EndIP:    types.String("40.112.8.12", types.NewTestMetadata()),
+									Metadata: defsecTypes.NewTestMetadata(),
+									StartIP:  defsecTypes.String("40.112.8.12", defsecTypes.NewTestMetadata()),
+									EndIP:    defsecTypes.String("40.112.8.12", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
 						Config: database.PostgresSQLConfig{
-							Metadata:             types.NewTestMetadata(),
-							LogConnections:       types.Bool(true, types.NewTestMetadata()),
-							LogCheckpoints:       types.Bool(true, types.NewTestMetadata()),
-							ConnectionThrottling: types.Bool(true, types.NewTestMetadata()),
+							Metadata:             defsecTypes.NewTestMetadata(),
+							LogConnections:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							LogCheckpoints:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							ConnectionThrottling: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -106,17 +107,17 @@ func Test_Adapt(t *testing.T) {
 			expected: database.Database{
 				MariaDBServers: []database.MariaDBServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnableSSLEnforcement:      types.Bool(true, types.NewTestMetadata()),
-							MinimumTLSVersion:         types.String("", types.NewTestMetadata()),
-							EnablePublicNetworkAccess: types.Bool(false, types.NewTestMetadata()),
+							Metadata:                  defsecTypes.NewTestMetadata(),
+							EnableSSLEnforcement:      defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							MinimumTLSVersion:         defsecTypes.String("", defsecTypes.NewTestMetadata()),
+							EnablePublicNetworkAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("40.112.0.0", types.NewTestMetadata()),
-									EndIP:    types.String("40.112.255.255", types.NewTestMetadata()),
+									Metadata: defsecTypes.NewTestMetadata(),
+									StartIP:  defsecTypes.String("40.112.0.0", defsecTypes.NewTestMetadata()),
+									EndIP:    defsecTypes.String("40.112.255.255", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -142,17 +143,17 @@ func Test_Adapt(t *testing.T) {
 			expected: database.Database{
 				MySQLServers: []database.MySQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnableSSLEnforcement:      types.Bool(true, types.NewTestMetadata()),
-							MinimumTLSVersion:         types.String("TLS1_2", types.NewTestMetadata()),
-							EnablePublicNetworkAccess: types.Bool(true, types.NewTestMetadata()),
+							Metadata:                  defsecTypes.NewTestMetadata(),
+							EnableSSLEnforcement:      defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							MinimumTLSVersion:         defsecTypes.String("TLS1_2", defsecTypes.NewTestMetadata()),
+							EnablePublicNetworkAccess: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("40.112.8.12", types.NewTestMetadata()),
-									EndIP:    types.String("40.112.8.12", types.NewTestMetadata()),
+									Metadata: defsecTypes.NewTestMetadata(),
+									StartIP:  defsecTypes.String("40.112.8.12", defsecTypes.NewTestMetadata()),
+									EndIP:    defsecTypes.String("40.112.8.12", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -197,37 +198,37 @@ func Test_Adapt(t *testing.T) {
 			expected: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							MinimumTLSVersion:         types.String("1.2", types.NewTestMetadata()),
-							EnablePublicNetworkAccess: types.Bool(false, types.NewTestMetadata()),
-							EnableSSLEnforcement:      types.Bool(false, types.NewTestMetadata()),
+							Metadata:                  defsecTypes.NewTestMetadata(),
+							MinimumTLSVersion:         defsecTypes.String("1.2", defsecTypes.NewTestMetadata()),
+							EnablePublicNetworkAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							EnableSSLEnforcement:      defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("10.0.17.62", types.NewTestMetadata()),
-									EndIP:    types.String("10.0.17.62", types.NewTestMetadata()),
+									Metadata: defsecTypes.NewTestMetadata(),
+									StartIP:  defsecTypes.String("10.0.17.62", defsecTypes.NewTestMetadata()),
+									EndIP:    defsecTypes.String("10.0.17.62", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
 						ExtendedAuditingPolicies: []database.ExtendedAuditingPolicy{
 							{
-								Metadata:        types.NewTestMetadata(),
-								RetentionInDays: types.Int(6, types.NewTestMetadata()),
+								Metadata:        defsecTypes.NewTestMetadata(),
+								RetentionInDays: defsecTypes.Int(6, defsecTypes.NewTestMetadata()),
 							},
 						},
 						SecurityAlertPolicies: []database.SecurityAlertPolicy{
 							{
-								Metadata: types.NewTestMetadata(),
-								EmailAddresses: []types.StringValue{
-									types.String("example@example.com", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								EmailAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("example@example.com", defsecTypes.NewTestMetadata()),
 								},
-								DisabledAlerts: []types.StringValue{
-									types.String("Sql_Injection", types.NewTestMetadata()),
-									types.String("Data_Exfiltration", types.NewTestMetadata()),
+								DisabledAlerts: []defsecTypes.StringValue{
+									defsecTypes.String("Sql_Injection", defsecTypes.NewTestMetadata()),
+									defsecTypes.String("Data_Exfiltration", defsecTypes.NewTestMetadata()),
 								},
-								EmailAccountAdmins: types.Bool(true, types.NewTestMetadata()),
+								EmailAccountAdmins: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

@@ -1,7 +1,7 @@
 package emr
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type EMR struct {
@@ -10,19 +10,19 @@ type EMR struct {
 }
 
 type Cluster struct {
-	types.Metadata
+	defsecTypes.Metadata
 	Settings ClusterSettings
 }
 
 type ClusterSettings struct {
-	types.Metadata
-	Name         types.StringValue
-	ReleaseLabel types.StringValue
-	ServiceRole  types.StringValue
+	defsecTypes.Metadata
+	Name         defsecTypes.StringValue
+	ReleaseLabel defsecTypes.StringValue
+	ServiceRole  defsecTypes.StringValue
 }
 
 type SecurityConfiguration struct {
-	types.Metadata
-	Name          types.StringValue
-	Configuration types.StringValue
+	defsecTypes.Metadata
+	Name          defsecTypes.StringValue
+	Configuration defsecTypes.StringValue
 }

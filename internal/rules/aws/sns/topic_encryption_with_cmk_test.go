@@ -3,7 +3,7 @@ package sns
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckTopicEncryptionUsesCMK(t *testing.T) {
 			input: sns.SNS{
 				Topics: []sns.Topic{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: sns.Encryption{
-							Metadata: types.NewTestMetadata(),
-							KMSKeyID: types.String("", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckTopicEncryptionUsesCMK(t *testing.T) {
 			input: sns.SNS{
 				Topics: []sns.Topic{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: sns.Encryption{
-							Metadata: types.NewTestMetadata(),
-							KMSKeyID: types.String("alias/aws/sns", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							KMSKeyID: defsecTypes.String("alias/aws/sns", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -54,10 +54,10 @@ func TestCheckTopicEncryptionUsesCMK(t *testing.T) {
 			input: sns.SNS{
 				Topics: []sns.Topic{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: sns.Encryption{
-							Metadata: types.NewTestMetadata(),
-							KMSKeyID: types.String("some-ok-key", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							KMSKeyID: defsecTypes.String("some-ok-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

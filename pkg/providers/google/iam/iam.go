@@ -1,7 +1,7 @@
 package iam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type IAM struct {
@@ -9,7 +9,7 @@ type IAM struct {
 }
 
 type Organization struct {
-	types.Metadata
+	defsecTypes.Metadata
 	Folders  []Folder
 	Projects []Project
 	Members  []Member
@@ -17,7 +17,7 @@ type Organization struct {
 }
 
 type Folder struct {
-	types.Metadata
+	defsecTypes.Metadata
 	Folders  []Folder
 	Projects []Project
 	Members  []Member
@@ -25,24 +25,24 @@ type Folder struct {
 }
 
 type Project struct {
-	types.Metadata
-	AutoCreateNetwork types.BoolValue
+	defsecTypes.Metadata
+	AutoCreateNetwork defsecTypes.BoolValue
 	Members           []Member
 	Bindings          []Binding
 }
 
 type Binding struct {
-	types.Metadata
-	Members                       []types.StringValue
-	Role                          types.StringValue
-	IncludesDefaultServiceAccount types.BoolValue
+	defsecTypes.Metadata
+	Members                       []defsecTypes.StringValue
+	Role                          defsecTypes.StringValue
+	IncludesDefaultServiceAccount defsecTypes.BoolValue
 }
 
 type Member struct {
-	types.Metadata
-	Member                types.StringValue
-	Role                  types.StringValue
-	DefaultServiceAccount types.BoolValue
+	defsecTypes.Metadata
+	Member                defsecTypes.StringValue
+	Role                  defsecTypes.StringValue
+	DefaultServiceAccount defsecTypes.BoolValue
 }
 
 func (p *IAM) AllProjects() []Project {

@@ -3,7 +3,7 @@ package lambda
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableTracing(t *testing.T) {
 			input: lambda.Lambda{
 				Functions: []lambda.Function{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Tracing: lambda.Tracing{
-							Metadata: types.NewTestMetadata(),
-							Mode:     types.String("", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Mode:     defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableTracing(t *testing.T) {
 			input: lambda.Lambda{
 				Functions: []lambda.Function{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Tracing: lambda.Tracing{
-							Metadata: types.NewTestMetadata(),
-							Mode:     types.String(lambda.TracingModeActive, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Mode:     defsecTypes.String(lambda.TracingModeActive, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

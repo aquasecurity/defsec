@@ -3,7 +3,7 @@ package sql
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,13 +24,13 @@ func TestCheckPgLogCheckpoints(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:        types.NewTestMetadata(),
-						DatabaseVersion: types.String("POSTGRES_12", types.NewTestMetadata()),
+						Metadata:        defsecTypes.NewTestMetadata(),
+						DatabaseVersion: defsecTypes.String("POSTGRES_12", defsecTypes.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							Flags: sql.Flags{
-								Metadata:       types.NewTestMetadata(),
-								LogCheckpoints: types.Bool(false, types.NewTestMetadata()),
+								Metadata:       defsecTypes.NewTestMetadata(),
+								LogCheckpoints: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -43,13 +43,13 @@ func TestCheckPgLogCheckpoints(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:        types.NewTestMetadata(),
-						DatabaseVersion: types.String("POSTGRES_12", types.NewTestMetadata()),
+						Metadata:        defsecTypes.NewTestMetadata(),
+						DatabaseVersion: defsecTypes.String("POSTGRES_12", defsecTypes.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							Flags: sql.Flags{
-								Metadata:       types.NewTestMetadata(),
-								LogCheckpoints: types.Bool(true, types.NewTestMetadata()),
+								Metadata:       defsecTypes.NewTestMetadata(),
+								LogCheckpoints: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

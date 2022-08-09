@@ -3,7 +3,7 @@ package kms
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/kms"
 
@@ -29,8 +29,8 @@ func Test_adaptKey(t *testing.T) {
 			}
 `,
 			expected: kms.Key{
-				Usage:           types.String(kms.KeyUsageSignAndVerify, types.NewTestMetadata()),
-				RotationEnabled: types.Bool(true, types.NewTestMetadata()),
+				Usage:           defsecTypes.String(kms.KeyUsageSignAndVerify, defsecTypes.NewTestMetadata()),
+				RotationEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -40,8 +40,8 @@ func Test_adaptKey(t *testing.T) {
 			}
 `,
 			expected: kms.Key{
-				Usage:           types.String("ENCRYPT_DECRYPT", types.NewTestMetadata()),
-				RotationEnabled: types.Bool(false, types.NewTestMetadata()),
+				Usage:           defsecTypes.String("ENCRYPT_DECRYPT", defsecTypes.NewTestMetadata()),
+				RotationEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

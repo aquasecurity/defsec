@@ -1,31 +1,31 @@
 package sns
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type SNS struct {
 	Topics []Topic
 }
 
-func NewTopic(arn string, metadata types.Metadata) Topic {
+func NewTopic(arn string, metadata defsecTypes.Metadata) Topic {
 	return Topic{
 		Metadata: metadata,
-		ARN:      types.String(arn, metadata),
+		ARN:      defsecTypes.String(arn, metadata),
 		Encryption: Encryption{
 			Metadata: metadata,
-			KMSKeyID: types.StringDefault("", metadata),
+			KMSKeyID: defsecTypes.StringDefault("", metadata),
 		},
 	}
 }
 
 type Topic struct {
-	types.Metadata
-	ARN        types.StringValue
+	defsecTypes.Metadata
+	ARN        defsecTypes.StringValue
 	Encryption Encryption
 }
 
 type Encryption struct {
-	types.Metadata
-	KMSKeyID types.StringValue
+	defsecTypes.Metadata
+	KMSKeyID defsecTypes.StringValue
 }

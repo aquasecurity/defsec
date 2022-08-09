@@ -3,7 +3,7 @@ package kinesis
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 			input: kinesis.Kinesis{
 				Streams: []kinesis.Stream{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: kinesis.Encryption{
-							Metadata: types.NewTestMetadata(),
-							Type:     types.String("NONE", types.NewTestMetadata()),
-							KMSKeyID: types.String("some-key", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Type:     defsecTypes.String("NONE", defsecTypes.NewTestMetadata()),
+							KMSKeyID: defsecTypes.String("some-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 			input: kinesis.Kinesis{
 				Streams: []kinesis.Stream{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: kinesis.Encryption{
-							Metadata: types.NewTestMetadata(),
-							Type:     types.String(kinesis.EncryptionTypeKMS, types.NewTestMetadata()),
-							KMSKeyID: types.String("", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Type:     defsecTypes.String(kinesis.EncryptionTypeKMS, defsecTypes.NewTestMetadata()),
+							KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,11 +56,11 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 			input: kinesis.Kinesis{
 				Streams: []kinesis.Stream{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: kinesis.Encryption{
-							Metadata: types.NewTestMetadata(),
-							Type:     types.String(kinesis.EncryptionTypeKMS, types.NewTestMetadata()),
-							KMSKeyID: types.String("some-key", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Type:     defsecTypes.String(kinesis.EncryptionTypeKMS, defsecTypes.NewTestMetadata()),
+							KMSKeyID: defsecTypes.String("some-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

@@ -1,23 +1,23 @@
 package iam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 // Adapt ...
 func Adapt(cfFile parser.FileContext) iam.IAM {
 	return iam.IAM{
 		PasswordPolicy: iam.PasswordPolicy{
-			Metadata:             types.NewUnmanagedMetadata(),
-			ReusePreventionCount: types.IntDefault(0, types.NewUnmanagedMetadata()),
-			RequireLowercase:     types.BoolDefault(false, types.NewUnmanagedMetadata()),
-			RequireUppercase:     types.BoolDefault(false, types.NewUnmanagedMetadata()),
-			RequireNumbers:       types.BoolDefault(false, types.NewUnmanagedMetadata()),
-			RequireSymbols:       types.BoolDefault(false, types.NewUnmanagedMetadata()),
-			MaxAgeDays:           types.IntDefault(0, types.NewUnmanagedMetadata()),
-			MinimumLength:        types.IntDefault(0, types.NewUnmanagedMetadata()),
+			Metadata:             defsecTypes.NewUnmanagedMetadata(),
+			ReusePreventionCount: defsecTypes.IntDefault(0, defsecTypes.NewUnmanagedMetadata()),
+			RequireLowercase:     defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+			RequireUppercase:     defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+			RequireNumbers:       defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+			RequireSymbols:       defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+			MaxAgeDays:           defsecTypes.IntDefault(0, defsecTypes.NewUnmanagedMetadata()),
+			MinimumLength:        defsecTypes.IntDefault(0, defsecTypes.NewUnmanagedMetadata()),
 		},
 		Policies: getPolicies(cfFile),
 		Groups:   getGroups(cfFile),

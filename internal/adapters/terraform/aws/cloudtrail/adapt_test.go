@@ -3,7 +3,7 @@ package cloudtrail
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 
@@ -35,14 +35,14 @@ func Test_adaptTrail(t *testing.T) {
 			}
 `,
 			expected: cloudtrail.Trail{
-				Metadata:                  types.NewTestMetadata(),
-				Name:                      types.String("example", types.NewTestMetadata()),
-				EnableLogFileValidation:   types.Bool(true, types.NewTestMetadata()),
-				IsMultiRegion:             types.Bool(true, types.NewTestMetadata()),
-				KMSKeyID:                  types.String("kms-key", types.NewTestMetadata()),
-				CloudWatchLogsLogGroupArn: types.String("abc", types.NewTestMetadata()),
-				IsLogging:                 types.Bool(false, types.NewTestMetadata()),
-				BucketName:                types.String("abcdefgh", types.NewTestMetadata()),
+				Metadata:                  defsecTypes.NewTestMetadata(),
+				Name:                      defsecTypes.String("example", defsecTypes.NewTestMetadata()),
+				EnableLogFileValidation:   defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				IsMultiRegion:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				KMSKeyID:                  defsecTypes.String("kms-key", defsecTypes.NewTestMetadata()),
+				CloudWatchLogsLogGroupArn: defsecTypes.String("abc", defsecTypes.NewTestMetadata()),
+				IsLogging:                 defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				BucketName:                defsecTypes.String("abcdefgh", defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -52,14 +52,14 @@ func Test_adaptTrail(t *testing.T) {
 			}
 `,
 			expected: cloudtrail.Trail{
-				Metadata:                  types.NewTestMetadata(),
-				Name:                      types.String("", types.NewTestMetadata()),
-				EnableLogFileValidation:   types.Bool(false, types.NewTestMetadata()),
-				IsMultiRegion:             types.Bool(false, types.NewTestMetadata()),
-				KMSKeyID:                  types.String("", types.NewTestMetadata()),
-				BucketName:                types.String("", types.NewTestMetadata()),
-				CloudWatchLogsLogGroupArn: types.String("", types.NewTestMetadata()),
-				IsLogging:                 types.Bool(true, types.NewTestMetadata()),
+				Metadata:                  defsecTypes.NewTestMetadata(),
+				Name:                      defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				EnableLogFileValidation:   defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				IsMultiRegion:             defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				KMSKeyID:                  defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				BucketName:                defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				CloudWatchLogsLogGroupArn: defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				IsLogging:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

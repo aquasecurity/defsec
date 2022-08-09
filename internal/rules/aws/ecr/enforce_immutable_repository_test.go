@@ -3,7 +3,7 @@ package ecr
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnforceImmutableRepository(t *testing.T) {
 			input: ecr.ECR{
 				Repositories: []ecr.Repository{
 					{
-						Metadata:           types.NewTestMetadata(),
-						ImageTagsImmutable: types.Bool(false, types.NewTestMetadata()),
+						Metadata:           defsecTypes.NewTestMetadata(),
+						ImageTagsImmutable: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnforceImmutableRepository(t *testing.T) {
 			input: ecr.ECR{
 				Repositories: []ecr.Repository{
 					{
-						Metadata:           types.NewTestMetadata(),
-						ImageTagsImmutable: types.Bool(true, types.NewTestMetadata()),
+						Metadata:           defsecTypes.NewTestMetadata(),
+						ImageTagsImmutable: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

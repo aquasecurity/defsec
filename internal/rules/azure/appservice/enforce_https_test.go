@@ -3,7 +3,7 @@ package appservice
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnforceHttps(t *testing.T) {
 			input: appservice.AppService{
 				FunctionApps: []appservice.FunctionApp{
 					{
-						Metadata:  types.NewTestMetadata(),
-						HTTPSOnly: types.Bool(false, types.NewTestMetadata()),
+						Metadata:  defsecTypes.NewTestMetadata(),
+						HTTPSOnly: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnforceHttps(t *testing.T) {
 			input: appservice.AppService{
 				FunctionApps: []appservice.FunctionApp{
 					{
-						Metadata:  types.NewTestMetadata(),
-						HTTPSOnly: types.Bool(true, types.NewTestMetadata()),
+						Metadata:  defsecTypes.NewTestMetadata(),
+						HTTPSOnly: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

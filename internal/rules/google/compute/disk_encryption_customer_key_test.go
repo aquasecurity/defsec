@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckDiskEncryptionCustomerKey(t *testing.T) {
 			input: compute.Compute{
 				Disks: []compute.Disk{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: compute.DiskEncryption{
-							Metadata:   types.NewTestMetadata(),
-							KMSKeyLink: types.String("", types.NewTestMetadata()),
+							Metadata:   defsecTypes.NewTestMetadata(),
+							KMSKeyLink: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckDiskEncryptionCustomerKey(t *testing.T) {
 			input: compute.Compute{
 				Disks: []compute.Disk{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: compute.DiskEncryption{
-							Metadata:   types.NewTestMetadata(),
-							KMSKeyLink: types.String("kms-key-link", types.NewTestMetadata()),
+							Metadata:   defsecTypes.NewTestMetadata(),
+							KMSKeyLink: defsecTypes.String("kms-key-link", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

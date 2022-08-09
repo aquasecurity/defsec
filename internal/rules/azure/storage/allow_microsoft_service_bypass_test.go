@@ -3,7 +3,7 @@ package storage
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckAllowMicrosoftServiceBypass(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NetworkRules: []storage.NetworkRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Bypass:   []types.StringValue{},
+								Metadata: defsecTypes.NewTestMetadata(),
+								Bypass:   []defsecTypes.StringValue{},
 							},
 						},
 					},
@@ -41,12 +41,12 @@ func TestCheckAllowMicrosoftServiceBypass(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NetworkRules: []storage.NetworkRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Bypass: []types.StringValue{
-									types.String("AzureServices", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Bypass: []defsecTypes.StringValue{
+									defsecTypes.String("AzureServices", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

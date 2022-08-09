@@ -1,7 +1,7 @@
 package container
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Container struct {
@@ -9,30 +9,30 @@ type Container struct {
 }
 
 type KubernetesCluster struct {
-	types.Metadata
+	defsecTypes.Metadata
 	NetworkProfile              NetworkProfile
-	EnablePrivateCluster        types.BoolValue
-	APIServerAuthorizedIPRanges []types.StringValue
+	EnablePrivateCluster        defsecTypes.BoolValue
+	APIServerAuthorizedIPRanges []defsecTypes.StringValue
 	AddonProfile                AddonProfile
 	RoleBasedAccessControl      RoleBasedAccessControl
 }
 
 type RoleBasedAccessControl struct {
-	types.Metadata
-	Enabled types.BoolValue
+	defsecTypes.Metadata
+	Enabled defsecTypes.BoolValue
 }
 
 type AddonProfile struct {
-	types.Metadata
+	defsecTypes.Metadata
 	OMSAgent OMSAgent
 }
 
 type OMSAgent struct {
-	types.Metadata
-	Enabled types.BoolValue
+	defsecTypes.Metadata
+	Enabled defsecTypes.BoolValue
 }
 
 type NetworkProfile struct {
-	types.Metadata
-	NetworkPolicy types.StringValue // "", "calico", "azure"
+	defsecTypes.Metadata
+	NetworkPolicy defsecTypes.StringValue // "", "calico", "azure"
 }

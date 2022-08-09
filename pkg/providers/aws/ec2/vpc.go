@@ -1,28 +1,30 @@
 package ec2
 
-import "github.com/aquasecurity/defsec/internal/types"
+import (
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+)
 
 type NetworkACL struct {
-	types.Metadata
+	defsecTypes.Metadata
 	Rules         []NetworkACLRule
-	IsDefaultRule types.BoolValue
+	IsDefaultRule defsecTypes.BoolValue
 }
 
 type SecurityGroup struct {
-	types.Metadata
-	Description  types.StringValue
+	defsecTypes.Metadata
+	Description  defsecTypes.StringValue
 	IngressRules []SecurityGroupRule
 	EgressRules  []SecurityGroupRule
 }
 
 type SecurityGroupRule struct {
-	types.Metadata
-	Description types.StringValue
-	CIDRs       []types.StringValue
+	defsecTypes.Metadata
+	Description defsecTypes.StringValue
+	CIDRs       []defsecTypes.StringValue
 }
 
 type DefaultVPC struct {
-	types.Metadata
+	defsecTypes.Metadata
 }
 
 const (
@@ -36,9 +38,9 @@ const (
 )
 
 type NetworkACLRule struct {
-	types.Metadata
-	Type     types.StringValue
-	Action   types.StringValue
-	Protocol types.StringValue
-	CIDRs    []types.StringValue
+	defsecTypes.Metadata
+	Type     defsecTypes.StringValue
+	Action   defsecTypes.StringValue
+	Protocol defsecTypes.StringValue
+	CIDRs    []defsecTypes.StringValue
 }
