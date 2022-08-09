@@ -57,8 +57,22 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 		if bucket.Name == nil {
 			continue
 		}
-
 		bucketMetadata := a.CreateMetadata(*bucket.Name)
+
+		location, err := a.api.GetBucketLocation(a.Context(), &s3api.GetBucketLocationInput{
+			Bucket: bucket.Name,
+		})
+		if err != nil {
+			a.Debug("Error getting bucket location: %s", err)
+			continue
+		}
+		region := string(location.LocationConstraint)
+		if region == "" { // Region us-east-1 have a LocationConstraint of null (???)
+			region = "us-east-1"
+		}
+		if region != a.Region() {
+			continue
+		}
 
 		b := s3.Bucket{
 			Metadata:          bucketMetadata,

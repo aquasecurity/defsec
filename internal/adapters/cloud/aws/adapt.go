@@ -53,6 +53,10 @@ func NewRootAdapter(ctx context.Context, cfg aws.Config, tracker progress.Servic
 	}
 }
 
+func (a *RootAdapter) Region() string {
+	return a.region
+}
+
 func (a *RootAdapter) Debug(format string, args ...interface{}) {
 	a.debugWriter.Log(format, args...)
 }
