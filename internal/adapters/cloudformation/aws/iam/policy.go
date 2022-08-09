@@ -9,22 +9,25 @@ import (
 
 func getPolicies(ctx parser.FileContext) (policies []iam.Policy) {
 	for _, policyResource := range ctx.GetResourcesByType("AWS::IAM::Policy") {
-		policyProp := policyResource.GetProperty("PolicyDocument")
-		policyName := policyResource.GetStringProperty("PolicyName")
 
-		doc, err := iamgo.Parse(policyProp.GetJsonBytes())
-		if err != nil {
-			continue
+		policy := iam.Policy{
+			Metadata: policyResource.Metadata(),
+			Name:     policyResource.GetStringProperty("PolicyName"),
+			Document: iam.Document{
+				Metadata: policyResource.Metadata(),
+				Parsed:   iamgo.Document{},
+			},
 		}
 
-		policies = append(policies, iam.Policy{
-			Metadata: policyProp.Metadata(),
-			Name:     policyName,
-			Document: iam.Document{
-				Metadata: policyProp.Metadata(),
-				Parsed:   *doc,
-			},
-		})
+		if policyProp := policyResource.GetProperty("PolicyDocument"); policyProp.IsNotNil() {
+			doc, err := iamgo.Parse(policyProp.GetJsonBytes())
+			if err != nil {
+				continue
+			}
+			policy.Document.Parsed = *doc
+		}
+
+		policies = append(policies, policy)
 	}
 	return policies
 }
