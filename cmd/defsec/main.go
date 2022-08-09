@@ -35,14 +35,6 @@ func main() {
 		panic(err)
 	}
 
-	// Execute the API scanners //TODO do we even want this here?
-	apiScanResults, err := s.Scan(context.TODO())
-	if err != nil {
-		panic(err)
-	}
-
-	results = append(results, apiScanResults...)
-
 	if err := formatters.New().WithBaseDir(abs).AsSARIF().Build().Output(results); err != nil {
 		panic(err)
 	}
