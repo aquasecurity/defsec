@@ -57,7 +57,6 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 		if bucket.Name == nil {
 			continue
 		}
-		bucketMetadata := a.CreateMetadata(*bucket.Name)
 
 		location, err := a.api.GetBucketLocation(a.Context(), &s3api.GetBucketLocationInput{
 			Bucket: bucket.Name,
@@ -73,6 +72,8 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 		if region != a.Region() {
 			continue
 		}
+
+		bucketMetadata := a.CreateMetadata(*bucket.Name)
 
 		b := s3.Bucket{
 			Metadata:          bucketMetadata,
