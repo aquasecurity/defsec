@@ -50,7 +50,12 @@ func NewRootAdapter(ctx context.Context, cfg aws.Config, tracker progress.Servic
 		ctx:        ctx,
 		tracker:    tracker,
 		sessionCfg: cfg,
+		region:     cfg.Region,
 	}
+}
+
+func (a *RootAdapter) Region() string {
+	return a.region
 }
 
 func (a *RootAdapter) Debug(format string, args ...interface{}) {
