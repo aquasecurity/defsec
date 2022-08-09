@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -26,10 +26,10 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 			input: iam.IAM{
 				Roles: []iam.Role{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Policies: []iam.Policy{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Document: func() iam.Document {
 
 									builder := iamgo.NewPolicyBuilder()
@@ -46,10 +46,10 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 
 									return iam.Document{
 										Parsed:   builder.Build(),
-										Metadata: types2.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 									}
 								}(),
-								Builtin: types2.Bool(false, types2.NewTestMetadata()),
+								Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -62,10 +62,10 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 			input: iam.IAM{
 				Roles: []iam.Role{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Policies: []iam.Policy{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Document: func() iam.Document {
 
 									builder := iamgo.NewPolicyBuilder()
@@ -82,10 +82,10 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 
 									return iam.Document{
 										Parsed:   builder.Build(),
-										Metadata: types2.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 									}
 								}(),
-								Builtin: types2.Bool(true, types2.NewTestMetadata()),
+								Builtin: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -98,7 +98,7 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 			input: iam.IAM{
 				Policies: []iam.Policy{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Document: func() iam.Document {
 
 							builder := iamgo.NewPolicyBuilder()
@@ -115,10 +115,10 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 
 							return iam.Document{
 								Parsed:   builder.Build(),
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 							}
 						}(),
-						Builtin: types2.Bool(false, types2.NewTestMetadata()),
+						Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -129,7 +129,7 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 			input: iam.IAM{
 				Policies: []iam.Policy{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Document: func() iam.Document {
 
 							builder := iamgo.NewPolicyBuilder()
@@ -145,18 +145,18 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 
 							return iam.Document{
 								Parsed:   builder.Build(),
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 							}
 						}(),
-						Builtin: types2.Bool(false, types2.NewTestMetadata()),
+						Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 				Roles: []iam.Role{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Policies: []iam.Policy{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Document: func() iam.Document {
 
 									builder := iamgo.NewPolicyBuilder()
@@ -171,10 +171,10 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 
 									return iam.Document{
 										Parsed:   builder.Build(),
-										Metadata: types2.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 									}
 								}(),
-								Builtin: types2.Bool(false, types2.NewTestMetadata()),
+								Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

@@ -3,7 +3,7 @@ package ecs
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,13 +24,13 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 			input: ecs.ECS{
 				TaskDefinitions: []ecs.TaskDefinition{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Volumes: []ecs.Volume{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								EFSVolumeConfiguration: ecs.EFSVolumeConfiguration{
-									Metadata:                 types2.NewTestMetadata(),
-									TransitEncryptionEnabled: types2.Bool(false, types2.NewTestMetadata()),
+									Metadata:                 defsecTypes.NewTestMetadata(),
+									TransitEncryptionEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -44,13 +44,13 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 			input: ecs.ECS{
 				TaskDefinitions: []ecs.TaskDefinition{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Volumes: []ecs.Volume{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								EFSVolumeConfiguration: ecs.EFSVolumeConfiguration{
-									Metadata:                 types2.NewTestMetadata(),
-									TransitEncryptionEnabled: types2.Bool(true, types2.NewTestMetadata()),
+									Metadata:                 defsecTypes.NewTestMetadata(),
+									TransitEncryptionEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

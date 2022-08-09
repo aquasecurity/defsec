@@ -1,7 +1,7 @@
 package kubernetes
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Kubernetes struct {
@@ -9,30 +9,30 @@ type Kubernetes struct {
 }
 
 type NetworkPolicy struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Spec Spec
 }
 
 type Spec struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Egress  Egress
 	Ingress Ingress
 }
 
 type Egress struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Ports            []Port
-	DestinationCIDRs []types2.StringValue
+	DestinationCIDRs []defsecTypes.StringValue
 }
 
 type Ingress struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Ports       []Port
-	SourceCIDRs []types2.StringValue
+	SourceCIDRs []defsecTypes.StringValue
 }
 
 type Port struct {
-	types2.Metadata
-	Number   types2.StringValue // e.g. "http" or "80"
-	Protocol types2.StringValue
+	defsecTypes.Metadata
+	Number   defsecTypes.StringValue // e.g. "http" or "80"
+	Protocol defsecTypes.StringValue
 }

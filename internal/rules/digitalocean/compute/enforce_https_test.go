@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEnforceHttps(t *testing.T) {
 			input: compute.Compute{
 				LoadBalancers: []compute.LoadBalancer{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ForwardingRules: []compute.ForwardingRule{
 							{
-								Metadata:      types2.NewTestMetadata(),
-								EntryProtocol: types2.String("http", types2.NewTestMetadata()),
+								Metadata:      defsecTypes.NewTestMetadata(),
+								EntryProtocol: defsecTypes.String("http", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,11 +41,11 @@ func TestCheckEnforceHttps(t *testing.T) {
 			input: compute.Compute{
 				LoadBalancers: []compute.LoadBalancer{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ForwardingRules: []compute.ForwardingRule{
 							{
-								Metadata:      types2.NewTestMetadata(),
-								EntryProtocol: types2.String("https", types2.NewTestMetadata()),
+								Metadata:      defsecTypes.NewTestMetadata(),
+								EntryProtocol: defsecTypes.String("https", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

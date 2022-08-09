@@ -3,7 +3,7 @@ package codebuild
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/codebuild"
 
@@ -38,19 +38,19 @@ func Test_adaptProject(t *testing.T) {
 			}
 `,
 			expected: codebuild.Project{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				ArtifactSettings: codebuild.ArtifactSettings{
-					Metadata:          types2.NewTestMetadata(),
-					EncryptionEnabled: types2.Bool(true, types2.NewTestMetadata()),
+					Metadata:          defsecTypes.NewTestMetadata(),
+					EncryptionEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 				SecondaryArtifactSettings: []codebuild.ArtifactSettings{
 					{
-						Metadata:          types2.NewTestMetadata(),
-						EncryptionEnabled: types2.Bool(true, types2.NewTestMetadata()),
+						Metadata:          defsecTypes.NewTestMetadata(),
+						EncryptionEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 					{
-						Metadata:          types2.NewTestMetadata(),
-						EncryptionEnabled: types2.Bool(false, types2.NewTestMetadata()),
+						Metadata:          defsecTypes.NewTestMetadata(),
+						EncryptionEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -62,10 +62,10 @@ func Test_adaptProject(t *testing.T) {
 			}
 `,
 			expected: codebuild.Project{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				ArtifactSettings: codebuild.ArtifactSettings{
-					Metadata:          types2.NewTestMetadata(),
-					EncryptionEnabled: types2.Bool(true, types2.NewTestMetadata()),
+					Metadata:          defsecTypes.NewTestMetadata(),
+					EncryptionEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

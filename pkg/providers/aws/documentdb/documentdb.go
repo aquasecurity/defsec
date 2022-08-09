@@ -1,7 +1,7 @@
 package documentdb
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type DocumentDB struct {
@@ -14,15 +14,15 @@ const (
 )
 
 type Cluster struct {
-	types2.Metadata
-	Identifier        types2.StringValue
-	EnabledLogExports []types2.StringValue
+	defsecTypes.Metadata
+	Identifier        defsecTypes.StringValue
+	EnabledLogExports []defsecTypes.StringValue
 	Instances         []Instance
-	StorageEncrypted  types2.BoolValue
-	KMSKeyID          types2.StringValue
+	StorageEncrypted  defsecTypes.BoolValue
+	KMSKeyID          defsecTypes.StringValue
 }
 
 type Instance struct {
-	types2.Metadata
-	KMSKeyID types2.StringValue
+	defsecTypes.Metadata
+	KMSKeyID defsecTypes.StringValue
 }

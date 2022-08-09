@@ -3,7 +3,7 @@ package appservice
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckRequireClientCert(t *testing.T) {
 			input: appservice.AppService{
 				Services: []appservice.Service{
 					{
-						Metadata:         types2.NewTestMetadata(),
-						EnableClientCert: types2.Bool(false, types2.NewTestMetadata()),
+						Metadata:         defsecTypes.NewTestMetadata(),
+						EnableClientCert: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckRequireClientCert(t *testing.T) {
 			input: appservice.AppService{
 				Services: []appservice.Service{
 					{
-						Metadata:         types2.NewTestMetadata(),
-						EnableClientCert: types2.Bool(true, types2.NewTestMetadata()),
+						Metadata:         defsecTypes.NewTestMetadata(),
+						EnableClientCert: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

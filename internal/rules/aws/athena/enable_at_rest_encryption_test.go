@@ -3,7 +3,7 @@ package athena
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 			input: athena.Athena{
 				Databases: []athena.Database{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: athena.EncryptionConfiguration{
-							Metadata: types2.NewTestMetadata(),
-							Type:     types2.String(athena.EncryptionTypeNone, types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Type:     defsecTypes.String(athena.EncryptionTypeNone, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 			input: athena.Athena{
 				Workgroups: []athena.Workgroup{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: athena.EncryptionConfiguration{
-							Metadata: types2.NewTestMetadata(),
-							Type:     types2.String(athena.EncryptionTypeNone, types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Type:     defsecTypes.String(athena.EncryptionTypeNone, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -54,19 +54,19 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 			input: athena.Athena{
 				Databases: []athena.Database{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: athena.EncryptionConfiguration{
-							Metadata: types2.NewTestMetadata(),
-							Type:     types2.String(athena.EncryptionTypeSSEKMS, types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Type:     defsecTypes.String(athena.EncryptionTypeSSEKMS, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
 				Workgroups: []athena.Workgroup{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: athena.EncryptionConfiguration{
-							Metadata: types2.NewTestMetadata(),
-							Type:     types2.String(athena.EncryptionTypeSSEKMS, types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Type:     defsecTypes.String(athena.EncryptionTypeSSEKMS, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

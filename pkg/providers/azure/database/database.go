@@ -1,7 +1,7 @@
 package database
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Database struct {
@@ -12,57 +12,57 @@ type Database struct {
 }
 
 type MariaDBServer struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Server
 }
 
 type MySQLServer struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Server
 }
 
 type PostgreSQLServer struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Server
 	Config PostgresSQLConfig
 }
 
 type PostgresSQLConfig struct {
-	types2.Metadata
-	LogCheckpoints       types2.BoolValue
-	ConnectionThrottling types2.BoolValue
-	LogConnections       types2.BoolValue
+	defsecTypes.Metadata
+	LogCheckpoints       defsecTypes.BoolValue
+	ConnectionThrottling defsecTypes.BoolValue
+	LogConnections       defsecTypes.BoolValue
 }
 
 type Server struct {
-	types2.Metadata
-	EnableSSLEnforcement      types2.BoolValue
-	MinimumTLSVersion         types2.StringValue
-	EnablePublicNetworkAccess types2.BoolValue
+	defsecTypes.Metadata
+	EnableSSLEnforcement      defsecTypes.BoolValue
+	MinimumTLSVersion         defsecTypes.StringValue
+	EnablePublicNetworkAccess defsecTypes.BoolValue
 	FirewallRules             []FirewallRule
 }
 
 type MSSQLServer struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Server
 	ExtendedAuditingPolicies []ExtendedAuditingPolicy
 	SecurityAlertPolicies    []SecurityAlertPolicy
 }
 
 type SecurityAlertPolicy struct {
-	types2.Metadata
-	EmailAddresses     []types2.StringValue
-	DisabledAlerts     []types2.StringValue
-	EmailAccountAdmins types2.BoolValue
+	defsecTypes.Metadata
+	EmailAddresses     []defsecTypes.StringValue
+	DisabledAlerts     []defsecTypes.StringValue
+	EmailAccountAdmins defsecTypes.BoolValue
 }
 
 type ExtendedAuditingPolicy struct {
-	types2.Metadata
-	RetentionInDays types2.IntValue
+	defsecTypes.Metadata
+	RetentionInDays defsecTypes.IntValue
 }
 
 type FirewallRule struct {
-	types2.Metadata
-	StartIP types2.StringValue
-	EndIP   types2.StringValue
+	defsecTypes.Metadata
+	StartIP defsecTypes.StringValue
+	EndIP   defsecTypes.StringValue
 }

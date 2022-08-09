@@ -3,7 +3,7 @@ package iam
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/terraform"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/liamg/iamgo"
 )
 
@@ -53,12 +53,12 @@ func mapRoles(modules terraform.Modules) (map[string]iam.Role, map[string]struct
 				Metadata: inlineBlock.GetMetadata(),
 				Name:     inlineBlock.GetAttribute("name").AsStringValueOrDefault("", inlineBlock),
 				Document: iam.Document{
-					Metadata: types2.NewUnmanagedMetadata(),
+					Metadata: defsecTypes.NewUnmanagedMetadata(),
 					Parsed:   iamgo.Document{},
 					IsOffset: false,
 					HasRefs:  false,
 				},
-				Builtin: types2.Bool(false, inlineBlock.GetMetadata()),
+				Builtin: defsecTypes.Bool(false, inlineBlock.GetMetadata()),
 			}
 			doc, err := ParsePolicyFromAttr(inlineBlock.GetAttribute("policy"), inlineBlock, modules)
 			if err != nil {

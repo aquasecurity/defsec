@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,9 +25,9 @@ func TestCheckEnforceUserMFA(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types2.NewTestMetadata(),
-						Name:       types2.String("other", types2.NewTestMetadata()),
-						LastAccess: types2.Time(time.Now(), types2.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Name:       defsecTypes.String("other", defsecTypes.NewTestMetadata()),
+						LastAccess: defsecTypes.Time(time.Now(), defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -38,9 +38,9 @@ func TestCheckEnforceUserMFA(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types2.NewTestMetadata(),
-						Name:       types2.String("other", types2.NewTestMetadata()),
-						LastAccess: types2.TimeUnresolvable(types2.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Name:       defsecTypes.String("other", defsecTypes.NewTestMetadata()),
+						LastAccess: defsecTypes.TimeUnresolvable(defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -51,11 +51,11 @@ func TestCheckEnforceUserMFA(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Name:     types2.String("root", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Name:     defsecTypes.String("root", defsecTypes.NewTestMetadata()),
 						MFADevices: []iam.MFADevice{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 							},
 						},
 					},

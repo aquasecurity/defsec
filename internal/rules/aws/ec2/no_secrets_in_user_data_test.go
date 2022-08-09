@@ -3,7 +3,7 @@ package ec2
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckNoSecretsInUserData(t *testing.T) {
 			input: ec2.EC2{
 				Instances: []ec2.Instance{
 					{
-						Metadata: types2.NewTestMetadata(),
-						UserData: types2.String(`<<EOF
+						Metadata: defsecTypes.NewTestMetadata(),
+						UserData: defsecTypes.String(`<<EOF
 						export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 						export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 						export AWS_DEFAULT_REGION=us-west-2
-						EOF`, types2.NewTestMetadata()),
+						EOF`, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -40,10 +40,10 @@ func TestCheckNoSecretsInUserData(t *testing.T) {
 			input: ec2.EC2{
 				Instances: []ec2.Instance{
 					{
-						Metadata: types2.NewTestMetadata(),
-						UserData: types2.String(`<<EOF
+						Metadata: defsecTypes.NewTestMetadata(),
+						UserData: defsecTypes.String(`<<EOF
 						export GREETING=hello
-						EOF`, types2.NewTestMetadata()),
+						EOF`, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

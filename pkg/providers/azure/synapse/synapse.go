@@ -1,7 +1,7 @@
 package synapse
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Synapse struct {
@@ -9,6 +9,6 @@ type Synapse struct {
 }
 
 type Workspace struct {
-	types2.Metadata
-	EnableManagedVirtualNetwork types2.BoolValue
+	defsecTypes.Metadata
+	EnableManagedVirtualNetwork defsecTypes.BoolValue
 }

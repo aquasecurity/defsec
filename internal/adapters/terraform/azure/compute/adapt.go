@@ -3,7 +3,7 @@ package compute
 import (
 	"encoding/base64"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
@@ -54,7 +54,7 @@ func adaptManagedDisk(resource *terraform.Block) compute.ManagedDisk {
 		Encryption: compute.Encryption{
 			Metadata: resource.GetMetadata(),
 			// encryption is enabled by default - https://github.com/hashicorp/terraform-provider-azurerm/blob/baf55926fe813011003ee4fb0e8e6134fcfcca87/internal/services/compute/managed_disk_resource.go#L288
-			Enabled: types2.BoolDefault(true, resource.GetMetadata()),
+			Enabled: defsecTypes.BoolDefault(true, resource.GetMetadata()),
 		},
 	}
 
@@ -77,13 +77,13 @@ func adaptLinuxVM(resource *terraform.Block) compute.LinuxVirtualMachine {
 		}
 	}
 	customDataAttr := workingBlock.GetAttribute("custom_data")
-	customDataVal := types2.StringDefault("", workingBlock.GetMetadata())
+	customDataVal := defsecTypes.StringDefault("", workingBlock.GetMetadata())
 	if customDataAttr.IsResolvable() && customDataAttr.IsString() {
 		encoded, err := base64.StdEncoding.DecodeString(customDataAttr.Value().AsString())
 		if err != nil {
 			encoded = []byte(customDataAttr.Value().AsString())
 		}
-		customDataVal = types2.String(string(encoded), customDataAttr.GetMetadata())
+		customDataVal = defsecTypes.String(string(encoded), customDataAttr.GetMetadata())
 	}
 
 	if resource.TypeLabel() == "azurerm_virtual_machine" {
@@ -115,14 +115,14 @@ func adaptWindowsVM(resource *terraform.Block) compute.WindowsVirtualMachine {
 	}
 
 	customDataAttr := workingBlock.GetAttribute("custom_data")
-	customDataVal := types2.StringDefault("", workingBlock.GetMetadata())
+	customDataVal := defsecTypes.StringDefault("", workingBlock.GetMetadata())
 
 	if customDataAttr.IsResolvable() && customDataAttr.IsString() {
 		encoded, err := base64.StdEncoding.DecodeString(customDataAttr.Value().AsString())
 		if err != nil {
 			encoded = []byte(customDataAttr.Value().AsString())
 		}
-		customDataVal = types2.String(string(encoded), customDataAttr.GetMetadata())
+		customDataVal = defsecTypes.String(string(encoded), customDataAttr.GetMetadata())
 	}
 
 	return compute.WindowsVirtualMachine{

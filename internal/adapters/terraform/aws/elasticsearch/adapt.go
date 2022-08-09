@@ -3,7 +3,7 @@ package elasticsearch
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/pkg/terraform"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) elasticsearch.Elasticsearch {
@@ -25,23 +25,23 @@ func adaptDomains(modules terraform.Modules) []elasticsearch.Domain {
 func adaptDomain(resource *terraform.Block) elasticsearch.Domain {
 	domain := elasticsearch.Domain{
 		Metadata:   resource.GetMetadata(),
-		DomainName: types2.StringDefault("", resource.GetMetadata()),
+		DomainName: defsecTypes.StringDefault("", resource.GetMetadata()),
 		LogPublishing: elasticsearch.LogPublishing{
 			Metadata:     resource.GetMetadata(),
-			AuditEnabled: types2.BoolDefault(false, resource.GetMetadata()),
+			AuditEnabled: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		},
 		TransitEncryption: elasticsearch.TransitEncryption{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types2.BoolDefault(false, resource.GetMetadata()),
+			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		},
 		AtRestEncryption: elasticsearch.AtRestEncryption{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types2.BoolDefault(false, resource.GetMetadata()),
+			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		},
 		Endpoint: elasticsearch.Endpoint{
 			Metadata:     resource.GetMetadata(),
-			EnforceHTTPS: types2.BoolDefault(false, resource.GetMetadata()),
-			TLSPolicy:    types2.StringDefault("", resource.GetMetadata()),
+			EnforceHTTPS: defsecTypes.BoolDefault(false, resource.GetMetadata()),
+			TLSPolicy:    defsecTypes.StringDefault("", resource.GetMetadata()),
 		},
 	}
 

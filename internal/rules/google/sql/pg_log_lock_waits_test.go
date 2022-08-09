@@ -3,7 +3,7 @@ package sql
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,13 +24,13 @@ func TestCheckPgLogLockWaits(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:        types2.NewTestMetadata(),
-						DatabaseVersion: types2.String("POSTGRES_12", types2.NewTestMetadata()),
+						Metadata:        defsecTypes.NewTestMetadata(),
+						DatabaseVersion: defsecTypes.String("POSTGRES_12", defsecTypes.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types2.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							Flags: sql.Flags{
-								Metadata:     types2.NewTestMetadata(),
-								LogLockWaits: types2.Bool(false, types2.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								LogLockWaits: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -43,13 +43,13 @@ func TestCheckPgLogLockWaits(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:        types2.NewTestMetadata(),
-						DatabaseVersion: types2.String("POSTGRES_12", types2.NewTestMetadata()),
+						Metadata:        defsecTypes.NewTestMetadata(),
+						DatabaseVersion: defsecTypes.String("POSTGRES_12", defsecTypes.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types2.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							Flags: sql.Flags{
-								Metadata:     types2.NewTestMetadata(),
-								LogLockWaits: types2.Bool(true, types2.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								LogLockWaits: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

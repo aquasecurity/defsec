@@ -3,7 +3,7 @@ package sql
 import (
 	"strconv"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
@@ -31,37 +31,37 @@ func adaptInstance(resource *terraform.Block) sql.DatabaseInstance {
 	instance := sql.DatabaseInstance{
 		Metadata:        resource.GetMetadata(),
 		DatabaseVersion: resource.GetAttribute("database_version").AsStringValueOrDefault("", resource),
-		IsReplica:       types2.BoolDefault(false, resource.GetMetadata()),
+		IsReplica:       defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		Settings: sql.Settings{
 			Metadata: resource.GetMetadata(),
 			Flags: sql.Flags{
 				Metadata:                        resource.GetMetadata(),
-				LogTempFileSize:                 types2.IntDefault(-1, resource.GetMetadata()),
-				LocalInFile:                     types2.BoolDefault(false, resource.GetMetadata()),
-				ContainedDatabaseAuthentication: types2.BoolDefault(true, resource.GetMetadata()),
-				CrossDBOwnershipChaining:        types2.BoolDefault(true, resource.GetMetadata()),
-				LogCheckpoints:                  types2.BoolDefault(false, resource.GetMetadata()),
-				LogConnections:                  types2.BoolDefault(false, resource.GetMetadata()),
-				LogDisconnections:               types2.BoolDefault(false, resource.GetMetadata()),
-				LogLockWaits:                    types2.BoolDefault(false, resource.GetMetadata()),
-				LogMinMessages:                  types2.StringDefault("", resource.GetMetadata()),
-				LogMinDurationStatement:         types2.IntDefault(-1, resource.GetMetadata()),
+				LogTempFileSize:                 defsecTypes.IntDefault(-1, resource.GetMetadata()),
+				LocalInFile:                     defsecTypes.BoolDefault(false, resource.GetMetadata()),
+				ContainedDatabaseAuthentication: defsecTypes.BoolDefault(true, resource.GetMetadata()),
+				CrossDBOwnershipChaining:        defsecTypes.BoolDefault(true, resource.GetMetadata()),
+				LogCheckpoints:                  defsecTypes.BoolDefault(false, resource.GetMetadata()),
+				LogConnections:                  defsecTypes.BoolDefault(false, resource.GetMetadata()),
+				LogDisconnections:               defsecTypes.BoolDefault(false, resource.GetMetadata()),
+				LogLockWaits:                    defsecTypes.BoolDefault(false, resource.GetMetadata()),
+				LogMinMessages:                  defsecTypes.StringDefault("", resource.GetMetadata()),
+				LogMinDurationStatement:         defsecTypes.IntDefault(-1, resource.GetMetadata()),
 			},
 			Backups: sql.Backups{
 				Metadata: resource.GetMetadata(),
-				Enabled:  types2.BoolDefault(false, resource.GetMetadata()),
+				Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 			},
 			IPConfiguration: sql.IPConfiguration{
 				Metadata:           resource.GetMetadata(),
-				RequireTLS:         types2.BoolDefault(false, resource.GetMetadata()),
-				EnableIPv4:         types2.BoolDefault(true, resource.GetMetadata()),
+				RequireTLS:         defsecTypes.BoolDefault(false, resource.GetMetadata()),
+				EnableIPv4:         defsecTypes.BoolDefault(true, resource.GetMetadata()),
 				AuthorizedNetworks: nil,
 			},
 		},
 	}
 
 	if attr := resource.GetAttribute("master_instance_name"); attr.IsNotNil() {
-		instance.IsReplica = types2.Bool(true, attr.GetMetadata())
+		instance.IsReplica = defsecTypes.Bool(true, attr.GetMetadata())
 	}
 
 	if settingsBlock := resource.GetBlock("settings"); settingsBlock.IsNotNil() {
@@ -95,36 +95,36 @@ func adaptFlags(resources terraform.Blocks, flags *sql.Flags) {
 		switch nameAttr.Value().AsString() {
 		case "log_temp_files":
 			if logTempInt, err := strconv.Atoi(valueAttr.Value().AsString()); err == nil {
-				flags.LogTempFileSize = types2.Int(logTempInt, nameAttr.GetMetadata())
+				flags.LogTempFileSize = defsecTypes.Int(logTempInt, nameAttr.GetMetadata())
 			}
 		case "log_min_messages":
 			flags.LogMinMessages = valueAttr.AsStringValueOrDefault("", resource)
 		case "log_min_duration_statement":
 			if logMinDS, err := strconv.Atoi(valueAttr.Value().AsString()); err == nil {
-				flags.LogMinDurationStatement = types2.Int(logMinDS, nameAttr.GetMetadata())
+				flags.LogMinDurationStatement = defsecTypes.Int(logMinDS, nameAttr.GetMetadata())
 			}
 		case "local_infile":
-			flags.LocalInFile = types2.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
+			flags.LocalInFile = defsecTypes.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
 		case "log_checkpoints":
-			flags.LogCheckpoints = types2.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
+			flags.LogCheckpoints = defsecTypes.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
 		case "log_connections":
-			flags.LogConnections = types2.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
+			flags.LogConnections = defsecTypes.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
 		case "log_disconnections":
-			flags.LogDisconnections = types2.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
+			flags.LogDisconnections = defsecTypes.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
 		case "log_lock_waits":
-			flags.LogLockWaits = types2.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
+			flags.LogLockWaits = defsecTypes.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
 		case "contained database authentication":
-			flags.ContainedDatabaseAuthentication = types2.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
+			flags.ContainedDatabaseAuthentication = defsecTypes.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
 		case "cross db ownership chaining":
-			flags.CrossDBOwnershipChaining = types2.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
+			flags.CrossDBOwnershipChaining = defsecTypes.Bool(valueAttr.Equals("on"), valueAttr.GetMetadata())
 		}
 	}
 }
 
 func adaptIPConfig(resource *terraform.Block) sql.IPConfiguration {
 	var authorizedNetworks []struct {
-		Name types2.StringValue
-		CIDR types2.StringValue
+		Name defsecTypes.StringValue
+		CIDR defsecTypes.StringValue
 	}
 
 	tlsRequiredAttr := resource.GetAttribute("require_ssl")
@@ -139,8 +139,8 @@ func adaptIPConfig(resource *terraform.Block) sql.IPConfiguration {
 		cidrVal := authBlock.GetAttribute("value").AsStringValueOrDefault("", authBlock)
 
 		authorizedNetworks = append(authorizedNetworks, struct {
-			Name types2.StringValue
-			CIDR types2.StringValue
+			Name defsecTypes.StringValue
+			CIDR defsecTypes.StringValue
 		}{
 			Name: nameVal,
 			CIDR: cidrVal,

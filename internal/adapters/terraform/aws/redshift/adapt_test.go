@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/redshift"
 	"github.com/stretchr/testify/assert"
@@ -42,19 +42,19 @@ func Test_Adapt(t *testing.T) {
 			expected: redshift.Redshift{
 				Clusters: []redshift.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: redshift.Encryption{
-							Metadata: types2.NewTestMetadata(),
-							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
-							KMSKeyID: types2.String("aws_kms_key.redshift", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							KMSKeyID: defsecTypes.String("aws_kms_key.redshift", defsecTypes.NewTestMetadata()),
 						},
-						SubnetGroupName: types2.String("redshift_subnet", types2.NewTestMetadata()),
+						SubnetGroupName: defsecTypes.String("redshift_subnet", defsecTypes.NewTestMetadata()),
 					},
 				},
 				SecurityGroups: []redshift.SecurityGroup{
 					{
-						Metadata:    types2.NewTestMetadata(),
-						Description: types2.String("some description", types2.NewTestMetadata()),
+						Metadata:    defsecTypes.NewTestMetadata(),
+						Description: defsecTypes.String("some description", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -88,13 +88,13 @@ func Test_adaptCluster(t *testing.T) {
 			}
 `,
 			expected: redshift.Cluster{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				Encryption: redshift.Encryption{
-					Metadata: types2.NewTestMetadata(),
-					Enabled:  types2.Bool(true, types2.NewTestMetadata()),
-					KMSKeyID: types2.String("key-id", types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					KMSKeyID: defsecTypes.String("key-id", defsecTypes.NewTestMetadata()),
 				},
-				SubnetGroupName: types2.String("redshift_subnet", types2.NewTestMetadata()),
+				SubnetGroupName: defsecTypes.String("redshift_subnet", defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -104,13 +104,13 @@ func Test_adaptCluster(t *testing.T) {
 			}
 `,
 			expected: redshift.Cluster{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				Encryption: redshift.Encryption{
-					Metadata: types2.NewTestMetadata(),
-					Enabled:  types2.Bool(false, types2.NewTestMetadata()),
-					KMSKeyID: types2.String("", types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
-				SubnetGroupName: types2.String("", types2.NewTestMetadata()),
+				SubnetGroupName: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 			},
 		},
 	}
@@ -137,8 +137,8 @@ resource "" "example" {
 }
 `,
 			expected: redshift.SecurityGroup{
-				Metadata:    types2.NewTestMetadata(),
-				Description: types2.String("Managed by Terraform", types2.NewTestMetadata()),
+				Metadata:    defsecTypes.NewTestMetadata(),
+				Description: defsecTypes.String("Managed by Terraform", defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

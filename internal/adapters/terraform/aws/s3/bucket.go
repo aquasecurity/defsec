@@ -3,7 +3,7 @@ package s3
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
 	"github.com/aquasecurity/defsec/pkg/terraform"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type adapter struct {
@@ -63,9 +63,9 @@ func getEncryption(block *terraform.Block, a *adapter) s3.Encryption {
 	}
 	return s3.Encryption{
 		Metadata:  block.GetMetadata(),
-		Enabled:   types2.BoolDefault(false, block.GetMetadata()),
-		KMSKeyId:  types2.StringDefault("", block.GetMetadata()),
-		Algorithm: types2.StringDefault("", block.GetMetadata()),
+		Enabled:   defsecTypes.BoolDefault(false, block.GetMetadata()),
+		KMSKeyId:  defsecTypes.StringDefault("", block.GetMetadata()),
+		Algorithm: defsecTypes.StringDefault("", block.GetMetadata()),
 	}
 }
 
@@ -92,7 +92,7 @@ func getVersioning(block *terraform.Block, a *adapter) s3.Versioning {
 
 	return s3.Versioning{
 		Metadata: block.GetMetadata(),
-		Enabled:  types2.BoolDefault(false, block.GetMetadata()),
+		Enabled:  defsecTypes.BoolDefault(false, block.GetMetadata()),
 	}
 }
 
@@ -100,11 +100,11 @@ func getLogging(block *terraform.Block, a *adapter) s3.Logging {
 	if loggingBlock := block.GetBlock("logging"); loggingBlock.IsNotNil() {
 		targetBucket := loggingBlock.GetAttribute("target_bucket").AsStringValueOrDefault("", loggingBlock)
 		if referencedBlock, err := a.modules.GetReferencedBlock(loggingBlock.GetAttribute("target_bucket"), loggingBlock); err == nil {
-			targetBucket = types2.String(referencedBlock.FullName(), loggingBlock.GetAttribute("target_bucket").GetMetadata())
+			targetBucket = defsecTypes.String(referencedBlock.FullName(), loggingBlock.GetAttribute("target_bucket").GetMetadata())
 		}
 		return s3.Logging{
 			Metadata:     loggingBlock.GetMetadata(),
-			Enabled:      types2.Bool(true, loggingBlock.GetMetadata()),
+			Enabled:      defsecTypes.Bool(true, loggingBlock.GetMetadata()),
 			TargetBucket: targetBucket,
 		}
 	}
@@ -114,7 +114,7 @@ func getLogging(block *terraform.Block, a *adapter) s3.Logging {
 		if bucketAttr.IsNotNil() {
 			targetBucket := loggingResource.GetAttribute("target-bucket").AsStringValueOrDefault("", loggingResource)
 			if referencedBlock, err := a.modules.GetReferencedBlock(loggingResource.GetAttribute("target_bucket"), loggingResource); err == nil {
-				targetBucket = types2.String(referencedBlock.FullName(), loggingResource.GetAttribute("target_bucket").GetMetadata())
+				targetBucket = defsecTypes.String(referencedBlock.FullName(), loggingResource.GetAttribute("target_bucket").GetMetadata())
 			}
 			if referencedBlock, err := a.modules.GetReferencedBlock(bucketAttr, loggingResource); err == nil {
 				if referencedBlock.ID() == block.ID() {
@@ -130,12 +130,12 @@ func getLogging(block *terraform.Block, a *adapter) s3.Logging {
 
 	return s3.Logging{
 		Metadata:     block.GetMetadata(),
-		Enabled:      types2.Bool(false, block.GetMetadata()),
-		TargetBucket: types2.StringDefault("", block.GetMetadata()),
+		Enabled:      defsecTypes.Bool(false, block.GetMetadata()),
+		TargetBucket: defsecTypes.StringDefault("", block.GetMetadata()),
 	}
 }
 
-func getBucketAcl(block *terraform.Block, a *adapter) types2.StringValue {
+func getBucketAcl(block *terraform.Block, a *adapter) defsecTypes.StringValue {
 	aclAttr := block.GetAttribute("acl")
 	if aclAttr.IsString() {
 		return aclAttr.AsStringValueOrDefault("private", block)
@@ -152,54 +152,54 @@ func getBucketAcl(block *terraform.Block, a *adapter) types2.StringValue {
 			}
 		}
 	}
-	return types2.StringDefault("private", block.GetMetadata())
+	return defsecTypes.StringDefault("private", block.GetMetadata())
 }
 
-func isEncrypted(encryptionBlock *terraform.Block) types2.BoolValue {
+func isEncrypted(encryptionBlock *terraform.Block) defsecTypes.BoolValue {
 	ruleBlock := encryptionBlock.GetBlock("rule")
 	if ruleBlock.IsNil() {
-		return types2.BoolDefault(false, encryptionBlock.GetMetadata())
+		return defsecTypes.BoolDefault(false, encryptionBlock.GetMetadata())
 	}
 	defaultBlock := ruleBlock.GetBlock("apply_server_side_encryption_by_default")
 	if defaultBlock.IsNil() {
-		return types2.BoolDefault(false, ruleBlock.GetMetadata())
+		return defsecTypes.BoolDefault(false, ruleBlock.GetMetadata())
 	}
 	sseAlgorithm := defaultBlock.GetAttribute("sse_algorithm")
 	if sseAlgorithm.IsNil() {
-		return types2.BoolDefault(false, defaultBlock.GetMetadata())
+		return defsecTypes.BoolDefault(false, defaultBlock.GetMetadata())
 	}
-	return types2.Bool(
+	return defsecTypes.Bool(
 		true,
 		sseAlgorithm.GetMetadata(),
 	)
 }
 
-func hasLogging(b *terraform.Block) types2.BoolValue {
+func hasLogging(b *terraform.Block) defsecTypes.BoolValue {
 	if loggingBlock := b.GetBlock("logging"); loggingBlock.IsNotNil() {
 		if targetAttr := loggingBlock.GetAttribute("target_bucket"); targetAttr.IsNotNil() && targetAttr.IsNotEmpty() {
-			return types2.Bool(true, targetAttr.GetMetadata())
+			return defsecTypes.Bool(true, targetAttr.GetMetadata())
 		}
-		return types2.BoolDefault(false, loggingBlock.GetMetadata())
+		return defsecTypes.BoolDefault(false, loggingBlock.GetMetadata())
 	}
 	if targetBucket := b.GetAttribute("target_bucket"); targetBucket.IsNotNil() {
-		return types2.Bool(true, targetBucket.GetMetadata())
+		return defsecTypes.Bool(true, targetBucket.GetMetadata())
 	}
-	return types2.BoolDefault(false, b.GetMetadata())
+	return defsecTypes.BoolDefault(false, b.GetMetadata())
 }
 
-func isVersioned(b *terraform.Block) types2.BoolValue {
+func isVersioned(b *terraform.Block) defsecTypes.BoolValue {
 	if versioningBlock := b.GetBlock("versioning"); versioningBlock.IsNotNil() {
 		return versioningBlock.GetAttribute("enabled").AsBoolValueOrDefault(true, versioningBlock)
 	}
 	if versioningBlock := b.GetBlock("versioning_configuration"); versioningBlock.IsNotNil() {
 		status := versioningBlock.GetAttribute("status")
 		if status.Equals("Enabled", terraform.IgnoreCase) {
-			return types2.Bool(true, status.GetMetadata())
+			return defsecTypes.Bool(true, status.GetMetadata())
 		} else {
-			return types2.Bool(false, b.GetMetadata())
+			return defsecTypes.Bool(false, b.GetMetadata())
 		}
 	}
-	return types2.BoolDefault(
+	return defsecTypes.BoolDefault(
 		false,
 		b.GetMetadata(),
 	)

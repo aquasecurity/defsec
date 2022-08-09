@@ -3,7 +3,7 @@ package apigateway
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 
@@ -25,15 +25,15 @@ func TestCheckEnableCacheEncryption(t *testing.T) {
 			input: v1.APIGateway{
 				APIs: []v1.API{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Stages: []v1.Stage{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								RESTMethodSettings: []v1.RESTMethodSettings{
 									{
-										Metadata:           types2.NewTestMetadata(),
-										CacheDataEncrypted: types2.Bool(false, types2.NewTestMetadata()),
-										CacheEnabled:       types2.Bool(true, types2.NewTestMetadata()),
+										Metadata:           defsecTypes.NewTestMetadata(),
+										CacheDataEncrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+										CacheEnabled:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -48,15 +48,15 @@ func TestCheckEnableCacheEncryption(t *testing.T) {
 			input: v1.APIGateway{
 				APIs: []v1.API{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Stages: []v1.Stage{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								RESTMethodSettings: []v1.RESTMethodSettings{
 									{
-										Metadata:           types2.NewTestMetadata(),
-										CacheDataEncrypted: types2.Bool(true, types2.NewTestMetadata()),
-										CacheEnabled:       types2.Bool(true, types2.NewTestMetadata()),
+										Metadata:           defsecTypes.NewTestMetadata(),
+										CacheDataEncrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+										CacheEnabled:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -71,15 +71,15 @@ func TestCheckEnableCacheEncryption(t *testing.T) {
 			input: v1.APIGateway{
 				APIs: []v1.API{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Stages: []v1.Stage{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								RESTMethodSettings: []v1.RESTMethodSettings{
 									{
-										Metadata:           types2.NewTestMetadata(),
-										CacheDataEncrypted: types2.Bool(false, types2.NewTestMetadata()),
-										CacheEnabled:       types2.Bool(false, types2.NewTestMetadata()),
+										Metadata:           defsecTypes.NewTestMetadata(),
+										CacheDataEncrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+										CacheEnabled:       defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 									},
 								},
 							},

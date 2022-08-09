@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/digitalocean/compute"
 	"github.com/stretchr/testify/assert"
@@ -32,9 +32,9 @@ func Test_adaptDroplets(t *testing.T) {
 `,
 			expected: []compute.Droplet{
 				{
-					Metadata: types2.NewTestMetadata(),
-					SSHKeys: []types2.StringValue{
-						types2.String("", types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					SSHKeys: []defsecTypes.StringValue{
+						defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -52,9 +52,9 @@ func Test_adaptDroplets(t *testing.T) {
 `,
 			expected: []compute.Droplet{
 				{
-					Metadata: types2.NewTestMetadata(),
-					SSHKeys: []types2.StringValue{
-						types2.String("my-ssh-key", types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					SSHKeys: []defsecTypes.StringValue{
+						defsecTypes.String("my-ssh-key", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -67,7 +67,7 @@ func Test_adaptDroplets(t *testing.T) {
 `,
 			expected: []compute.Droplet{
 				{
-					Metadata: types2.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 				},
 			},
 		},
@@ -109,21 +109,21 @@ func Test_adaptFirewalls(t *testing.T) {
 `,
 			expected: []compute.Firewall{
 				{
-					Metadata: types2.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					OutboundRules: []compute.OutboundFirewallRule{
 						{
-							Metadata: types2.NewTestMetadata(),
-							DestinationAddresses: []types2.StringValue{
-								types2.String("192.168.1.0/24", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							DestinationAddresses: []defsecTypes.StringValue{
+								defsecTypes.String("192.168.1.0/24", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
 					InboundRules: []compute.InboundFirewallRule{
 						{
-							Metadata: types2.NewTestMetadata(),
-							SourceAddresses: []types2.StringValue{
-								types2.String("192.168.1.0/24", types2.NewTestMetadata()),
-								types2.String("fc00::/7", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							SourceAddresses: []defsecTypes.StringValue{
+								defsecTypes.String("192.168.1.0/24", defsecTypes.NewTestMetadata()),
+								defsecTypes.String("fc00::/7", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -138,7 +138,7 @@ func Test_adaptFirewalls(t *testing.T) {
 `,
 			expected: []compute.Firewall{
 				{
-					Metadata:      types2.NewTestMetadata(),
+					Metadata:      defsecTypes.NewTestMetadata(),
 					OutboundRules: []compute.OutboundFirewallRule{},
 					InboundRules:  []compute.InboundFirewallRule{},
 				},
@@ -177,11 +177,11 @@ func Test_adaptLoadBalancers(t *testing.T) {
 `,
 			expected: []compute.LoadBalancer{
 				{
-					Metadata: types2.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					ForwardingRules: []compute.ForwardingRule{
 						{
-							Metadata:      types2.NewTestMetadata(),
-							EntryProtocol: types2.String("https", types2.NewTestMetadata()),
+							Metadata:      defsecTypes.NewTestMetadata(),
+							EntryProtocol: defsecTypes.String("https", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -195,7 +195,7 @@ func Test_adaptLoadBalancers(t *testing.T) {
 `,
 			expected: []compute.LoadBalancer{
 				{
-					Metadata:        types2.NewTestMetadata(),
+					Metadata:        defsecTypes.NewTestMetadata(),
 					ForwardingRules: nil,
 				},
 			},
@@ -230,9 +230,9 @@ func Test_adaptKubernetesClusters(t *testing.T) {
 `,
 			expected: []compute.KubernetesCluster{
 				{
-					Metadata:     types2.NewTestMetadata(),
-					SurgeUpgrade: types2.Bool(true, types2.NewTestMetadata()),
-					AutoUpgrade:  types2.Bool(true, types2.NewTestMetadata()),
+					Metadata:     defsecTypes.NewTestMetadata(),
+					SurgeUpgrade: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					AutoUpgrade:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -244,9 +244,9 @@ func Test_adaptKubernetesClusters(t *testing.T) {
 `,
 			expected: []compute.KubernetesCluster{
 				{
-					Metadata:     types2.NewTestMetadata(),
-					SurgeUpgrade: types2.Bool(false, types2.NewTestMetadata()),
-					AutoUpgrade:  types2.Bool(false, types2.NewTestMetadata()),
+					Metadata:     defsecTypes.NewTestMetadata(),
+					SurgeUpgrade: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					AutoUpgrade:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNoUserAttachedPolicies(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Name:     types2.String("example", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Name:     defsecTypes.String("example", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,14 +36,14 @@ func TestCheckNoUserAttachedPolicies(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Name:     types2.String("example", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Name:     defsecTypes.String("example", defsecTypes.NewTestMetadata()),
 						Policies: []iam.Policy{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Name:     types2.String("another.policy", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Name:     defsecTypes.String("another.policy", defsecTypes.NewTestMetadata()),
 								Document: iam.Document{
-									Metadata: types2.NewTestMetadata(),
+									Metadata: defsecTypes.NewTestMetadata(),
 								},
 							},
 						},

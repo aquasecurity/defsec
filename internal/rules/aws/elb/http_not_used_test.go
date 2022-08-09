@@ -3,7 +3,7 @@ package elb
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,16 +24,16 @@ func TestCheckHttpNotUsed(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Type:     types2.String(elb.TypeApplication, types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Type:     defsecTypes.String(elb.TypeApplication, defsecTypes.NewTestMetadata()),
 						Listeners: []elb.Listener{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Protocol: types2.String("HTTP", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Protocol: defsecTypes.String("HTTP", defsecTypes.NewTestMetadata()),
 								DefaultActions: []elb.Action{
 									{
-										Metadata: types2.NewTestMetadata(),
-										Type:     types2.String("forward", types2.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Type:     defsecTypes.String("forward", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -48,16 +48,16 @@ func TestCheckHttpNotUsed(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Type:     types2.String(elb.TypeApplication, types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Type:     defsecTypes.String(elb.TypeApplication, defsecTypes.NewTestMetadata()),
 						Listeners: []elb.Listener{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Protocol: types2.String("HTTP", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Protocol: defsecTypes.String("HTTP", defsecTypes.NewTestMetadata()),
 								DefaultActions: []elb.Action{
 									{
-										Metadata: types2.NewTestMetadata(),
-										Type:     types2.String("redirect", types2.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Type:     defsecTypes.String("redirect", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -72,20 +72,20 @@ func TestCheckHttpNotUsed(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Type:     types2.String(elb.TypeApplication, types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Type:     defsecTypes.String(elb.TypeApplication, defsecTypes.NewTestMetadata()),
 						Listeners: []elb.Listener{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Protocol: types2.String("HTTP", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Protocol: defsecTypes.String("HTTP", defsecTypes.NewTestMetadata()),
 								DefaultActions: []elb.Action{
 									{
-										Metadata: types2.NewTestMetadata(),
-										Type:     types2.String("forward", types2.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Type:     defsecTypes.String("forward", defsecTypes.NewTestMetadata()),
 									},
 									{
-										Metadata: types2.NewTestMetadata(),
-										Type:     types2.String("redirect", types2.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Type:     defsecTypes.String("redirect", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -100,16 +100,16 @@ func TestCheckHttpNotUsed(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Type:     types2.String(elb.TypeApplication, types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Type:     defsecTypes.String(elb.TypeApplication, defsecTypes.NewTestMetadata()),
 						Listeners: []elb.Listener{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Protocol: types2.String("HTTPS", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Protocol: defsecTypes.String("HTTPS", defsecTypes.NewTestMetadata()),
 								DefaultActions: []elb.Action{
 									{
-										Metadata: types2.NewTestMetadata(),
-										Type:     types2.String("forward", types2.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Type:     defsecTypes.String("forward", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},

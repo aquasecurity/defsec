@@ -3,7 +3,7 @@ package bigquery
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: bigquery.BigQuery{
 				Datasets: []bigquery.Dataset{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						AccessGrants: []bigquery.AccessGrant{
 							{
-								SpecialGroup: types2.String(
+								SpecialGroup: defsecTypes.String(
 									bigquery.SpecialGroupAllAuthenticatedUsers,
-									types2.NewTestMetadata(),
+									defsecTypes.NewTestMetadata(),
 								),
 							},
 						},
@@ -43,12 +43,12 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: bigquery.BigQuery{
 				Datasets: []bigquery.Dataset{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						AccessGrants: []bigquery.AccessGrant{
 							{
-								SpecialGroup: types2.String(
+								SpecialGroup: defsecTypes.String(
 									"anotherGroup",
-									types2.NewTestMetadata(),
+									defsecTypes.NewTestMetadata(),
 								),
 							},
 						},

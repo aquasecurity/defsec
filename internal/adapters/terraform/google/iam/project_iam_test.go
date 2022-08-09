@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/google/iam"
 
@@ -56,11 +56,11 @@ func Test_AdaptBinding(t *testing.T) {
 			]
 		}`,
 			expected: iam.Binding{
-				Metadata: types2.NewTestMetadata(),
-				Members: []types2.StringValue{
-					types2.String("user:alice@gmail.com", types2.NewTestMetadata())},
-				Role:                          types2.String("roles/browser", types2.NewTestMetadata()),
-				IncludesDefaultServiceAccount: types2.Bool(false, types2.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				Members: []defsecTypes.StringValue{
+					defsecTypes.String("user:alice@gmail.com", defsecTypes.NewTestMetadata())},
+				Role:                          defsecTypes.String("roles/browser", defsecTypes.NewTestMetadata()),
+				IncludesDefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -69,9 +69,9 @@ func Test_AdaptBinding(t *testing.T) {
 		resource "google_organization_iam_binding" "binding" {
 		}`,
 			expected: iam.Binding{
-				Metadata:                      types2.NewTestMetadata(),
-				Role:                          types2.String("", types2.NewTestMetadata()),
-				IncludesDefaultServiceAccount: types2.Bool(false, types2.NewTestMetadata()),
+				Metadata:                      defsecTypes.NewTestMetadata(),
+				Role:                          defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				IncludesDefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

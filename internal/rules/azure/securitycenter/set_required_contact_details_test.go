@@ -3,7 +3,7 @@ package securitycenter
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckSetRequiredContactDetails(t *testing.T) {
 			input: securitycenter.SecurityCenter{
 				Contacts: []securitycenter.Contact{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Phone:    types2.String("", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Phone:    defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckSetRequiredContactDetails(t *testing.T) {
 			input: securitycenter.SecurityCenter{
 				Contacts: []securitycenter.Contact{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Phone:    types2.String("+1-555-555-5555", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Phone:    defsecTypes.String("+1-555-555-5555", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

@@ -3,7 +3,7 @@ package apigateway
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	v2 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v2"
 	"github.com/stretchr/testify/assert"
@@ -70,7 +70,7 @@ resource "aws_apigatewayv2_domain_name" "example" {
 				V1: v1.APIGateway{
 					APIs: []v1.API{
 						{
-							Metadata: types2.Metadata{},
+							Metadata: defsecTypes.Metadata{},
 							Name:     String("MyDemoAPI"),
 							Resources: []v1.Resource{
 								{
@@ -127,16 +127,16 @@ resource "aws_apigatewayv2_domain_name" "example" {
 	}
 }
 
-func Int(i int) types2.IntValue {
-	return types2.Int(i, types2.NewTestMetadata())
+func Int(i int) defsecTypes.IntValue {
+	return defsecTypes.Int(i, defsecTypes.NewTestMetadata())
 }
 
-func Bool(b bool) types2.BoolValue {
-	return types2.Bool(b, types2.NewTestMetadata())
+func Bool(b bool) defsecTypes.BoolValue {
+	return defsecTypes.Bool(b, defsecTypes.NewTestMetadata())
 }
 
-func String(s string) types2.StringValue {
-	return types2.String(s, types2.NewTestMetadata())
+func String(s string) defsecTypes.StringValue {
+	return defsecTypes.String(s, defsecTypes.NewTestMetadata())
 }
 func TestLines(t *testing.T) {
 	src := `

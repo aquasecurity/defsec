@@ -3,7 +3,7 @@ package ec2
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
@@ -25,12 +25,12 @@ func TestCheckNoPublicEgressSgr(t *testing.T) {
 			input: ec2.EC2{
 				SecurityGroups: []ec2.SecurityGroup{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						EgressRules: []ec2.SecurityGroupRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								CIDRs: []types2.StringValue{
-									types2.String("0.0.0.0/0", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								CIDRs: []defsecTypes.StringValue{
+									defsecTypes.String("0.0.0.0/0", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -44,12 +44,12 @@ func TestCheckNoPublicEgressSgr(t *testing.T) {
 			input: ec2.EC2{
 				SecurityGroups: []ec2.SecurityGroup{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						EgressRules: []ec2.SecurityGroupRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								CIDRs: []types2.StringValue{
-									types2.String("10.0.0.0/16", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								CIDRs: []defsecTypes.StringValue{
+									defsecTypes.String("10.0.0.0/16", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

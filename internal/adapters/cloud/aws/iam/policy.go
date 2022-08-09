@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/liamg/iamgo"
 
@@ -76,12 +76,12 @@ func (a *adapter) adaptPolicy(apiPolicy iamtypes.Policy) (*iam.Policy, error) {
 
 	return &iam.Policy{
 		Metadata: metadata,
-		Name:     types2.String(*apiPolicy.PolicyName, metadata),
+		Name:     defsecTypes.String(*apiPolicy.PolicyName, metadata),
 		Document: iam.Document{
 			Metadata: metadata,
 			Parsed:   *document,
 		},
-		Builtin: types2.Bool(strings.HasPrefix(*apiPolicy.Arn, "arn:aws:iam::aws:"), metadata),
+		Builtin: defsecTypes.Bool(strings.HasPrefix(*apiPolicy.Arn, "arn:aws:iam::aws:"), metadata),
 	}, nil
 }
 

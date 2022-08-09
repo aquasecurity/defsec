@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 
@@ -32,14 +32,14 @@ func Test_adaptPasswordPolicy(t *testing.T) {
 			  }
 `,
 			expected: iam.PasswordPolicy{
-				Metadata:             types2.NewTestMetadata(),
-				ReusePreventionCount: types2.Int(3, types2.NewTestMetadata()),
-				RequireLowercase:     types2.Bool(true, types2.NewTestMetadata()),
-				RequireUppercase:     types2.Bool(true, types2.NewTestMetadata()),
-				RequireNumbers:       types2.Bool(true, types2.NewTestMetadata()),
-				RequireSymbols:       types2.Bool(true, types2.NewTestMetadata()),
-				MaxAgeDays:           types2.Int(90, types2.NewTestMetadata()),
-				MinimumLength:        types2.Int(8, types2.NewTestMetadata()),
+				Metadata:             defsecTypes.NewTestMetadata(),
+				ReusePreventionCount: defsecTypes.Int(3, defsecTypes.NewTestMetadata()),
+				RequireLowercase:     defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				RequireUppercase:     defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				RequireNumbers:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				RequireSymbols:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				MaxAgeDays:           defsecTypes.Int(90, defsecTypes.NewTestMetadata()),
+				MinimumLength:        defsecTypes.Int(8, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

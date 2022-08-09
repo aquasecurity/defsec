@@ -4,7 +4,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/neptune"
 	"github.com/aquasecurity/defsec/pkg/state"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/neptune"
 	"github.com/aws/aws-sdk-go-v2/service/neptune/types"
 )
@@ -96,9 +96,9 @@ func (a *adapter) adaptCluster(apiCluster types.DBCluster) (*neptune.Cluster, er
 		Metadata: metadata,
 		Logging: neptune.Logging{
 			Metadata: metadata,
-			Audit:    types2.Bool(auditLogging, metadata),
+			Audit:    defsecTypes.Bool(auditLogging, metadata),
 		},
-		StorageEncrypted: types2.Bool(apiCluster.StorageEncrypted, metadata),
-		KMSKeyID:         types2.String(kmsKeyId, metadata),
+		StorageEncrypted: defsecTypes.Bool(apiCluster.StorageEncrypted, metadata),
+		KMSKeyID:         defsecTypes.String(kmsKeyId, metadata),
 	}, nil
 }

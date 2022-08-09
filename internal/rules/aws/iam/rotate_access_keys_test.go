@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,16 +25,16 @@ func TestCheckAccessKeysRotated(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types2.NewTestMetadata(),
-						Name:       types2.String("user", types2.NewTestMetadata()),
-						LastAccess: types2.TimeUnresolvable(types2.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Name:       defsecTypes.String("user", defsecTypes.NewTestMetadata()),
+						LastAccess: defsecTypes.TimeUnresolvable(defsecTypes.NewTestMetadata()),
 						AccessKeys: []iam.AccessKey{
 							{
-								Metadata:     types2.NewTestMetadata(),
-								AccessKeyId:  types2.String("AKIACKCEVSQ6C2EXAMPLE", types2.NewTestMetadata()),
-								Active:       types2.Bool(true, types2.NewTestMetadata()),
-								CreationDate: types2.Time(time.Now().Add(-time.Hour*24*30), types2.NewTestMetadata()),
-								LastAccess:   types2.Time(time.Now(), types2.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								AccessKeyId:  defsecTypes.String("AKIACKCEVSQ6C2EXAMPLE", defsecTypes.NewTestMetadata()),
+								Active:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								CreationDate: defsecTypes.Time(time.Now().Add(-time.Hour*24*30), defsecTypes.NewTestMetadata()),
+								LastAccess:   defsecTypes.Time(time.Now(), defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -47,16 +47,16 @@ func TestCheckAccessKeysRotated(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types2.NewTestMetadata(),
-						Name:       types2.String("user", types2.NewTestMetadata()),
-						LastAccess: types2.TimeUnresolvable(types2.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Name:       defsecTypes.String("user", defsecTypes.NewTestMetadata()),
+						LastAccess: defsecTypes.TimeUnresolvable(defsecTypes.NewTestMetadata()),
 						AccessKeys: []iam.AccessKey{
 							{
-								Metadata:     types2.NewTestMetadata(),
-								AccessKeyId:  types2.String("AKIACKCEVSQ6C2EXAMPLE", types2.NewTestMetadata()),
-								Active:       types2.Bool(true, types2.NewTestMetadata()),
-								CreationDate: types2.Time(time.Now().Add(-time.Hour*24*30*4), types2.NewTestMetadata()),
-								LastAccess:   types2.Time(time.Now(), types2.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								AccessKeyId:  defsecTypes.String("AKIACKCEVSQ6C2EXAMPLE", defsecTypes.NewTestMetadata()),
+								Active:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								CreationDate: defsecTypes.Time(time.Now().Add(-time.Hour*24*30*4), defsecTypes.NewTestMetadata()),
+								LastAccess:   defsecTypes.Time(time.Now(), defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

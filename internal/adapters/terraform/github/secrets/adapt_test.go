@@ -3,7 +3,7 @@ package secrets
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/github"
 
@@ -26,12 +26,12 @@ resource "github_actions_environment_secret" "example" {
 `,
 			expected: []github.EnvironmentSecret{
 				{
-					Metadata:       types2.NewTestMetadata(),
-					Environment:    types2.String("", types2.NewTestMetadata()),
-					SecretName:     types2.String("", types2.NewTestMetadata()),
-					PlainTextValue: types2.String("", types2.NewTestMetadata()),
-					EncryptedValue: types2.String("", types2.NewTestMetadata()),
-					Repository:     types2.String("", types2.NewTestMetadata()),
+					Metadata:       defsecTypes.NewTestMetadata(),
+					Environment:    defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					SecretName:     defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					PlainTextValue: defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					EncryptedValue: defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					Repository:     defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -48,12 +48,12 @@ resource "github_actions_environment_secret" "example" {
 `,
 			expected: []github.EnvironmentSecret{
 				{
-					Metadata:       types2.NewTestMetadata(),
-					SecretName:     types2.String("a", types2.NewTestMetadata()),
-					PlainTextValue: types2.String("b", types2.NewTestMetadata()),
-					Environment:    types2.String("c", types2.NewTestMetadata()),
-					EncryptedValue: types2.String("d", types2.NewTestMetadata()),
-					Repository:     types2.String("e", types2.NewTestMetadata()),
+					Metadata:       defsecTypes.NewTestMetadata(),
+					SecretName:     defsecTypes.String("a", defsecTypes.NewTestMetadata()),
+					PlainTextValue: defsecTypes.String("b", defsecTypes.NewTestMetadata()),
+					Environment:    defsecTypes.String("c", defsecTypes.NewTestMetadata()),
+					EncryptedValue: defsecTypes.String("d", defsecTypes.NewTestMetadata()),
+					Repository:     defsecTypes.String("e", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

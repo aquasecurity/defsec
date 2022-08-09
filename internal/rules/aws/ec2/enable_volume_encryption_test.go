@@ -3,7 +3,7 @@ package ec2
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableVolumeEncryption(t *testing.T) {
 			input: ec2.EC2{
 				Volumes: []ec2.Volume{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: ec2.Encryption{
-							Metadata: types2.NewTestMetadata(),
-							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableVolumeEncryption(t *testing.T) {
 			input: ec2.EC2{
 				Volumes: []ec2.Volume{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: ec2.Encryption{
-							Metadata: types2.NewTestMetadata(),
-							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

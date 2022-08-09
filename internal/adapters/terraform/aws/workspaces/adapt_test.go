@@ -3,7 +3,7 @@ package workspaces
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/workspaces"
 
@@ -29,19 +29,19 @@ func Test_adaptWorkspace(t *testing.T) {
 		}
 `,
 			expected: workspaces.WorkSpace{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				RootVolume: workspaces.Volume{
-					Metadata: types2.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					Encryption: workspaces.Encryption{
-						Metadata: types2.NewTestMetadata(),
-						Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 				UserVolume: workspaces.Volume{
-					Metadata: types2.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					Encryption: workspaces.Encryption{
-						Metadata: types2.NewTestMetadata(),
-						Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -53,19 +53,19 @@ func Test_adaptWorkspace(t *testing.T) {
 		}
 `,
 			expected: workspaces.WorkSpace{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				RootVolume: workspaces.Volume{
-					Metadata: types2.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					Encryption: workspaces.Encryption{
-						Metadata: types2.NewTestMetadata(),
-						Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 				UserVolume: workspaces.Volume{
-					Metadata: types2.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					Encryption: workspaces.Encryption{
-						Metadata: types2.NewTestMetadata(),
-						Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

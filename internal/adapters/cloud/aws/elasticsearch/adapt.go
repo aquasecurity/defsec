@@ -4,7 +4,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/pkg/state"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
 	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice/types"
 )
@@ -108,23 +108,23 @@ func (a *adapter) adaptDomain(apiDomain types.DomainInfo) (*elasticsearch.Domain
 
 	return &elasticsearch.Domain{
 		Metadata:   metadata,
-		DomainName: types2.String(*apiDomain.DomainName, metadata),
+		DomainName: defsecTypes.String(*apiDomain.DomainName, metadata),
 		LogPublishing: elasticsearch.LogPublishing{
 			Metadata:     metadata,
-			AuditEnabled: types2.Bool(auditEnabled, metadata),
+			AuditEnabled: defsecTypes.Bool(auditEnabled, metadata),
 		},
 		TransitEncryption: elasticsearch.TransitEncryption{
 			Metadata: metadata,
-			Enabled:  types2.Bool(transitEncryption, metadata),
+			Enabled:  defsecTypes.Bool(transitEncryption, metadata),
 		},
 		AtRestEncryption: elasticsearch.AtRestEncryption{
 			Metadata: metadata,
-			Enabled:  types2.Bool(atRestEncryption, metadata),
+			Enabled:  defsecTypes.Bool(atRestEncryption, metadata),
 		},
 		Endpoint: elasticsearch.Endpoint{
 			Metadata:     metadata,
-			EnforceHTTPS: types2.Bool(enforceHTTPS, metadata),
-			TLSPolicy:    types2.String(tlsPolicy, metadata),
+			EnforceHTTPS: defsecTypes.Bool(enforceHTTPS, metadata),
+			TLSPolicy:    defsecTypes.String(tlsPolicy, metadata),
 		},
 	}, nil
 }

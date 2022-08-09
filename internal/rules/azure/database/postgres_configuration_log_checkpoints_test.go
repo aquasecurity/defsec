@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckPostgresConfigurationLogCheckpoints(t *testing.T) {
 			input: database.Database{
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Config: database.PostgresSQLConfig{
-							Metadata:       types2.NewTestMetadata(),
-							LogCheckpoints: types2.Bool(false, types2.NewTestMetadata()),
+							Metadata:       defsecTypes.NewTestMetadata(),
+							LogCheckpoints: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckPostgresConfigurationLogCheckpoints(t *testing.T) {
 			input: database.Database{
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Config: database.PostgresSQLConfig{
-							Metadata:       types2.NewTestMetadata(),
-							LogCheckpoints: types2.Bool(true, types2.NewTestMetadata()),
+							Metadata:       defsecTypes.NewTestMetadata(),
+							LogCheckpoints: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

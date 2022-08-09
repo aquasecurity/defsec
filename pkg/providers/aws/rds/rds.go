@@ -1,7 +1,7 @@
 package rds
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type RDS struct {
@@ -11,38 +11,38 @@ type RDS struct {
 }
 
 type Cluster struct {
-	types2.Metadata
-	BackupRetentionPeriodDays types2.IntValue
-	ReplicationSourceARN      types2.StringValue
+	defsecTypes.Metadata
+	BackupRetentionPeriodDays defsecTypes.IntValue
+	ReplicationSourceARN      defsecTypes.StringValue
 	PerformanceInsights       PerformanceInsights
 	Instances                 []ClusterInstance
 	Encryption                Encryption
-	PublicAccess              types2.BoolValue
+	PublicAccess              defsecTypes.BoolValue
 }
 
 type Encryption struct {
-	types2.Metadata
-	EncryptStorage types2.BoolValue
-	KMSKeyID       types2.StringValue
+	defsecTypes.Metadata
+	EncryptStorage defsecTypes.BoolValue
+	KMSKeyID       defsecTypes.StringValue
 }
 
 type Instance struct {
-	types2.Metadata
-	BackupRetentionPeriodDays types2.IntValue
-	ReplicationSourceARN      types2.StringValue
+	defsecTypes.Metadata
+	BackupRetentionPeriodDays defsecTypes.IntValue
+	ReplicationSourceARN      defsecTypes.StringValue
 	PerformanceInsights       PerformanceInsights
 	Encryption                Encryption
-	PublicAccess              types2.BoolValue
+	PublicAccess              defsecTypes.BoolValue
 }
 
 type ClusterInstance struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Instance
-	ClusterIdentifier types2.StringValue
+	ClusterIdentifier defsecTypes.StringValue
 }
 
 type PerformanceInsights struct {
-	types2.Metadata
-	Enabled  types2.BoolValue
-	KMSKeyID types2.StringValue
+	defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
+	KMSKeyID defsecTypes.StringValue
 }

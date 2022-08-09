@@ -3,7 +3,7 @@ package eks
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEncryptSecrets(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: eks.Encryption{
-							Metadata: types2.NewTestMetadata(),
-							Secrets:  types2.Bool(false, types2.NewTestMetadata()),
-							KMSKeyID: types2.String("", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Secrets:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckEncryptSecrets(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: eks.Encryption{
-							Metadata: types2.NewTestMetadata(),
-							Secrets:  types2.Bool(true, types2.NewTestMetadata()),
-							KMSKeyID: types2.String("", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Secrets:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,11 +56,11 @@ func TestCheckEncryptSecrets(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: eks.Encryption{
-							Metadata: types2.NewTestMetadata(),
-							Secrets:  types2.Bool(true, types2.NewTestMetadata()),
-							KMSKeyID: types2.String("some-arn", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Secrets:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							KMSKeyID: defsecTypes.String("some-arn", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

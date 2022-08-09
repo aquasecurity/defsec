@@ -3,7 +3,7 @@ package api_gateway
 import (
 	"fmt"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 
@@ -84,7 +84,7 @@ func (a *adapter) adaptRestAPIV1(restAPI agTypes.RestApi) (*v1.API, error) {
 
 	return &v1.API{
 		Metadata:  metadata,
-		Name:      types2.String(*restAPI.Name, metadata),
+		Name:      defsecTypes.String(*restAPI.Name, metadata),
 		Stages:    stages,
 		Resources: resources,
 	}, nil
@@ -102,21 +102,21 @@ func (a *adapter) adaptStageV1(restAPI agTypes.RestApi, stage agTypes.Stage) v1.
 	for method, setting := range stage.MethodSettings {
 		methodSettings = append(methodSettings, v1.RESTMethodSettings{
 			Metadata:           metadata,
-			Method:             types2.String(method, metadata),
-			CacheDataEncrypted: types2.Bool(setting.CacheDataEncrypted, metadata),
-			CacheEnabled:       types2.Bool(setting.CachingEnabled, metadata),
+			Method:             defsecTypes.String(method, metadata),
+			CacheDataEncrypted: defsecTypes.Bool(setting.CacheDataEncrypted, metadata),
+			CacheEnabled:       defsecTypes.Bool(setting.CachingEnabled, metadata),
 		})
 	}
 
 	return v1.Stage{
 		Metadata: metadata,
-		Name:     types2.String(*stage.StageName, metadata),
+		Name:     defsecTypes.String(*stage.StageName, metadata),
 		AccessLogging: v1.AccessLogging{
 			Metadata:              metadata,
-			CloudwatchLogGroupARN: types2.String(logARN, metadata),
+			CloudwatchLogGroupARN: defsecTypes.String(logARN, metadata),
 		},
 		RESTMethodSettings: methodSettings,
-		XRayTracingEnabled: types2.Bool(stage.TracingEnabled, metadata),
+		XRayTracingEnabled: defsecTypes.Bool(stage.TracingEnabled, metadata),
 	}
 }
 
@@ -133,9 +133,9 @@ func (a *adapter) adaptResourceV1(restAPI agTypes.RestApi, apiResource agTypes.R
 		metadata := a.CreateMetadata(fmt.Sprintf("/restapis/%s/resources/%s/methods/%s", *restAPI.Id, *apiResource.Id, *method.HttpMethod))
 		resource.Methods = append(resource.Methods, v1.Method{
 			Metadata:          metadata,
-			HTTPMethod:        types2.String(*method.HttpMethod, metadata),
-			AuthorizationType: types2.String(*method.AuthorizationType, metadata),
-			APIKeyRequired:    types2.Bool(*method.ApiKeyRequired, metadata),
+			HTTPMethod:        defsecTypes.String(*method.HttpMethod, metadata),
+			AuthorizationType: defsecTypes.String(*method.AuthorizationType, metadata),
+			APIKeyRequired:    defsecTypes.Bool(*method.ApiKeyRequired, metadata),
 		})
 	}
 

@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: compute.Compute{
 				SSLPolicies: []compute.SSLPolicy{
 					{
-						Metadata:          types2.NewTestMetadata(),
-						MinimumTLSVersion: types2.String("TLS_1_0", types2.NewTestMetadata()),
+						Metadata:          defsecTypes.NewTestMetadata(),
+						MinimumTLSVersion: defsecTypes.String("TLS_1_0", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: compute.Compute{
 				SSLPolicies: []compute.SSLPolicy{
 					{
-						Metadata:          types2.NewTestMetadata(),
-						MinimumTLSVersion: types2.String("TLS_1_2", types2.NewTestMetadata()),
+						Metadata:          defsecTypes.NewTestMetadata(),
+						MinimumTLSVersion: defsecTypes.String("TLS_1_2", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

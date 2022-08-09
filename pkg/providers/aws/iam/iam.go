@@ -3,7 +3,7 @@ package iam
 import (
 	"encoding/json"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/liamg/iamgo"
 )
@@ -17,14 +17,14 @@ type IAM struct {
 }
 
 type Policy struct {
-	types2.Metadata
-	Name     types2.StringValue
+	defsecTypes.Metadata
+	Name     defsecTypes.StringValue
 	Document Document
-	Builtin  types2.BoolValue
+	Builtin  defsecTypes.BoolValue
 }
 
 type Document struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Parsed   iamgo.Document
 	IsOffset bool
 	HasRefs  bool
@@ -43,25 +43,25 @@ func (d Document) ToRego() interface{} {
 		"managed":   m.IsManaged(),
 		"explicit":  m.IsExplicit(),
 		"value":     value,
-		"fskey":     types2.CreateFSKey(m.Range().GetFS()),
+		"fskey":     defsecTypes.CreateFSKey(m.Range().GetFS()),
 	}
 }
 
 type Group struct {
-	types2.Metadata
-	Name     types2.StringValue
+	defsecTypes.Metadata
+	Name     defsecTypes.StringValue
 	Users    []User
 	Policies []Policy
 }
 
 type User struct {
-	types2.Metadata
-	Name       types2.StringValue
+	defsecTypes.Metadata
+	Name       defsecTypes.StringValue
 	Groups     []Group
 	Policies   []Policy
 	AccessKeys []AccessKey
 	MFADevices []MFADevice
-	LastAccess types2.TimeValue
+	LastAccess defsecTypes.TimeValue
 }
 
 func (u *User) HasLoggedIn() bool {
@@ -69,24 +69,24 @@ func (u *User) HasLoggedIn() bool {
 }
 
 type MFADevice struct {
-	types2.Metadata
+	defsecTypes.Metadata
 }
 
 type AccessKey struct {
-	types2.Metadata
-	AccessKeyId  types2.StringValue
-	Active       types2.BoolValue
-	CreationDate types2.TimeValue
-	LastAccess   types2.TimeValue
+	defsecTypes.Metadata
+	AccessKeyId  defsecTypes.StringValue
+	Active       defsecTypes.BoolValue
+	CreationDate defsecTypes.TimeValue
+	LastAccess   defsecTypes.TimeValue
 }
 
 type Role struct {
-	types2.Metadata
-	Name     types2.StringValue
+	defsecTypes.Metadata
+	Name     defsecTypes.StringValue
 	Policies []Policy
 }
 
-func (d Document) MetadataFromIamGo(r ...iamgo.Range) types2.Metadata {
+func (d Document) MetadataFromIamGo(r ...iamgo.Range) defsecTypes.Metadata {
 	m := d.GetMetadata()
 	if d.HasRefs {
 		return m
@@ -97,14 +97,14 @@ func (d Document) MetadataFromIamGo(r ...iamgo.Range) types2.Metadata {
 		start = newRange.GetStartLine()
 	}
 	for _, rng := range r {
-		newRange := types2.NewRange(
+		newRange := defsecTypes.NewRange(
 			newRange.GetLocalFilename(),
 			start+rng.StartLine,
 			start+rng.EndLine,
 			newRange.GetSourcePrefix(),
 			newRange.GetFS(),
 		)
-		m = types2.NewMetadata(newRange, m.Reference()).WithParent(m)
+		m = defsecTypes.NewMetadata(newRange, m.Reference()).WithParent(m)
 	}
 	return m
 }

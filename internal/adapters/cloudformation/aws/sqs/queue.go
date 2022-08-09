@@ -3,7 +3,7 @@ package sqs
 import (
 	"fmt"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 
@@ -17,10 +17,10 @@ func getQueues(ctx parser.FileContext) (queues []sqs.Queue) {
 	for _, r := range ctx.GetResourcesByType("AWS::SQS::Queue") {
 		queue := sqs.Queue{
 			Metadata: r.Metadata(),
-			QueueURL: types2.StringDefault("", r.Metadata()),
+			QueueURL: defsecTypes.StringDefault("", r.Metadata()),
 			Encryption: sqs.Encryption{
 				Metadata:          r.Metadata(),
-				ManagedEncryption: types2.Bool(false, r.Metadata()),
+				ManagedEncryption: defsecTypes.Bool(false, r.Metadata()),
 				KMSKeyID:          r.GetStringProperty("KmsMasterKeyId"),
 			},
 			Policies: []iam.Policy{},
@@ -52,12 +52,12 @@ func getPolicy(id string, ctx parser.FileContext) (*iam.Policy, error) {
 				}
 				return &iam.Policy{
 					Metadata: documentProp.Metadata(),
-					Name:     types2.StringDefault("", documentProp.Metadata()),
+					Name:     defsecTypes.StringDefault("", documentProp.Metadata()),
 					Document: iam.Document{
 						Metadata: documentProp.Metadata(),
 						Parsed:   *parsed,
 					},
-					Builtin: types2.Bool(false, documentProp.Metadata()),
+					Builtin: defsecTypes.Bool(false, documentProp.Metadata()),
 				}, nil
 			}
 		}

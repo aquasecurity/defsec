@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -23,8 +23,8 @@ func TestCheckNoPasswordReuse(t *testing.T) {
 			name: "IAM with 1 password that can't be reused (min)",
 			input: iam.IAM{
 				PasswordPolicy: iam.PasswordPolicy{
-					Metadata:             types2.NewTestMetadata(),
-					ReusePreventionCount: types2.Int(1, types2.NewTestMetadata()),
+					Metadata:             defsecTypes.NewTestMetadata(),
+					ReusePreventionCount: defsecTypes.Int(1, defsecTypes.NewTestMetadata()),
 				},
 			},
 			expected: true,
@@ -33,8 +33,8 @@ func TestCheckNoPasswordReuse(t *testing.T) {
 			name: "IAM with 5 passwords that can't be reused",
 			input: iam.IAM{
 				PasswordPolicy: iam.PasswordPolicy{
-					Metadata:             types2.NewTestMetadata(),
-					ReusePreventionCount: types2.Int(5, types2.NewTestMetadata()),
+					Metadata:             defsecTypes.NewTestMetadata(),
+					ReusePreventionCount: defsecTypes.Int(5, defsecTypes.NewTestMetadata()),
 				},
 			},
 			expected: false,

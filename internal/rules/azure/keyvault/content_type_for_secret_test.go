@@ -3,7 +3,7 @@ package keyvault
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckContentTypeForSecret(t *testing.T) {
 			input: keyvault.KeyVault{
 				Vaults: []keyvault.Vault{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Secrets: []keyvault.Secret{
 							{
-								Metadata:    types2.NewTestMetadata(),
-								ContentType: types2.String("", types2.NewTestMetadata()),
+								Metadata:    defsecTypes.NewTestMetadata(),
+								ContentType: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,11 +41,11 @@ func TestCheckContentTypeForSecret(t *testing.T) {
 			input: keyvault.KeyVault{
 				Vaults: []keyvault.Vault{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Secrets: []keyvault.Secret{
 							{
-								Metadata:    types2.NewTestMetadata(),
-								ContentType: types2.String("password", types2.NewTestMetadata()),
+								Metadata:    defsecTypes.NewTestMetadata(),
+								ContentType: defsecTypes.String("password", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

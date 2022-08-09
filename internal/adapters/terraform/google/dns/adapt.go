@@ -3,7 +3,7 @@ package dns
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/google/dns"
 	"github.com/aquasecurity/defsec/pkg/terraform"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) dns.DNS {
@@ -30,19 +30,19 @@ func adaptManagedZone(resource *terraform.Block) dns.ManagedZone {
 
 	zone := dns.ManagedZone{
 		Metadata:   resource.GetMetadata(),
-		Visibility: types2.StringDefault("public", resource.GetMetadata()),
+		Visibility: defsecTypes.StringDefault("public", resource.GetMetadata()),
 		DNSSec: dns.DNSSec{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types2.BoolDefault(false, resource.GetMetadata()),
+			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 			DefaultKeySpecs: dns.KeySpecs{
 				Metadata: resource.GetMetadata(),
 				KeySigningKey: dns.Key{
 					Metadata:  resource.GetMetadata(),
-					Algorithm: types2.StringDefault("", resource.GetMetadata()),
+					Algorithm: defsecTypes.StringDefault("", resource.GetMetadata()),
 				},
 				ZoneSigningKey: dns.Key{
 					Metadata:  resource.GetMetadata(),
-					Algorithm: types2.StringDefault("", resource.GetMetadata()),
+					Algorithm: defsecTypes.StringDefault("", resource.GetMetadata()),
 				},
 			},
 		},
@@ -58,9 +58,9 @@ func adaptManagedZone(resource *terraform.Block) dns.ManagedZone {
 
 		stateAttr := DNSSecBlock.GetAttribute("state")
 		if stateAttr.Equals("on") {
-			zone.DNSSec.Enabled = types2.Bool(true, stateAttr.GetMetadata())
+			zone.DNSSec.Enabled = defsecTypes.Bool(true, stateAttr.GetMetadata())
 		} else if stateAttr.Equals("off") || stateAttr.Equals("transfer") {
-			zone.DNSSec.Enabled = types2.Bool(false, stateAttr.GetMetadata())
+			zone.DNSSec.Enabled = defsecTypes.Bool(false, stateAttr.GetMetadata())
 		}
 
 		if DNSSecBlock.HasChild("default_key_specs") {
@@ -88,11 +88,11 @@ func adaptKeySpecs(resource *terraform.Block) dns.KeySpecs {
 		Metadata: resource.GetMetadata(),
 		KeySigningKey: dns.Key{
 			Metadata:  resource.GetMetadata(),
-			Algorithm: types2.String("", resource.GetMetadata()),
+			Algorithm: defsecTypes.String("", resource.GetMetadata()),
 		},
 		ZoneSigningKey: dns.Key{
 			Metadata:  resource.GetMetadata(),
-			Algorithm: types2.String("", resource.GetMetadata()),
+			Algorithm: defsecTypes.String("", resource.GetMetadata()),
 		},
 	}
 	KeySigningKeysBlock := resource.GetBlock("key_signing_keys")

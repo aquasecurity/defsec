@@ -3,7 +3,7 @@ package monitor
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckActivityLogRetentionSet(t *testing.T) {
 			input: monitor.Monitor{
 				LogProfiles: []monitor.LogProfile{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						RetentionPolicy: monitor.RetentionPolicy{
-							Metadata: types2.NewTestMetadata(),
-							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
-							Days:     types2.Int(365, types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							Days:     defsecTypes.Int(365, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckActivityLogRetentionSet(t *testing.T) {
 			input: monitor.Monitor{
 				LogProfiles: []monitor.LogProfile{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						RetentionPolicy: monitor.RetentionPolicy{
-							Metadata: types2.NewTestMetadata(),
-							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
-							Days:     types2.Int(90, types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Days:     defsecTypes.Int(90, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,11 +56,11 @@ func TestCheckActivityLogRetentionSet(t *testing.T) {
 			input: monitor.Monitor{
 				LogProfiles: []monitor.LogProfile{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						RetentionPolicy: monitor.RetentionPolicy{
-							Metadata: types2.NewTestMetadata(),
-							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
-							Days:     types2.Int(365, types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Days:     defsecTypes.Int(365, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

@@ -3,7 +3,7 @@ package ecs
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecs"
 
@@ -33,8 +33,8 @@ func Test_adaptClusterSettings(t *testing.T) {
 			}
 `,
 			expected: ecs.ClusterSettings{
-				Metadata:                 types2.NewTestMetadata(),
-				ContainerInsightsEnabled: types2.Bool(true, types2.NewTestMetadata()),
+				Metadata:                 defsecTypes.NewTestMetadata(),
+				ContainerInsightsEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -50,8 +50,8 @@ func Test_adaptClusterSettings(t *testing.T) {
 			}
 `,
 			expected: ecs.ClusterSettings{
-				Metadata:                 types2.NewTestMetadata(),
-				ContainerInsightsEnabled: types2.Bool(false, types2.NewTestMetadata()),
+				Metadata:                 defsecTypes.NewTestMetadata(),
+				ContainerInsightsEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -61,8 +61,8 @@ func Test_adaptClusterSettings(t *testing.T) {
 			}
 `,
 			expected: ecs.ClusterSettings{
-				Metadata:                 types2.NewTestMetadata(),
-				ContainerInsightsEnabled: types2.Bool(false, types2.NewTestMetadata()),
+				Metadata:                 defsecTypes.NewTestMetadata(),
+				ContainerInsightsEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}
@@ -112,25 +112,25 @@ func Test_adaptTaskDefinitionResource(t *testing.T) {
 			  }
 `,
 			expected: ecs.TaskDefinition{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				Volumes: []ecs.Volume{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						EFSVolumeConfiguration: ecs.EFSVolumeConfiguration{
-							Metadata:                 types2.NewTestMetadata(),
-							TransitEncryptionEnabled: types2.Bool(true, types2.NewTestMetadata()),
+							Metadata:                 defsecTypes.NewTestMetadata(),
+							TransitEncryptionEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
 				ContainerDefinitions: []ecs.ContainerDefinition{
 					{
-						Metadata:   types2.NewTestMetadata(),
-						Name:       types2.String("my_service", types2.NewTestMetadata()),
-						Image:      types2.String("my_image", types2.NewTestMetadata()),
-						CPU:        types2.Int(2, types2.NewTestMetadata()),
-						Memory:     types2.Int(256, types2.NewTestMetadata()),
-						Essential:  types2.Bool(true, types2.NewTestMetadata()),
-						Privileged: types2.Bool(false, types2.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Name:       defsecTypes.String("my_service", defsecTypes.NewTestMetadata()),
+						Image:      defsecTypes.String("my_image", defsecTypes.NewTestMetadata()),
+						CPU:        defsecTypes.Int(2, defsecTypes.NewTestMetadata()),
+						Memory:     defsecTypes.Int(256, defsecTypes.NewTestMetadata()),
+						Essential:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						Privileged: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						Environment: []ecs.EnvVar{
 							{
 								Name:  "ENVIRONMENT",
@@ -154,14 +154,14 @@ func Test_adaptTaskDefinitionResource(t *testing.T) {
 			  }
 `,
 			expected: ecs.TaskDefinition{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				Volumes: []ecs.Volume{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						EFSVolumeConfiguration: ecs.EFSVolumeConfiguration{
 
-							Metadata:                 types2.NewTestMetadata(),
-							TransitEncryptionEnabled: types2.Bool(false, types2.NewTestMetadata()),
+							Metadata:                 defsecTypes.NewTestMetadata(),
+							TransitEncryptionEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/azure/keyvault"
 
@@ -39,12 +39,12 @@ func Test_Adapt(t *testing.T) {
 			expected: keyvault.KeyVault{
 				Vaults: []keyvault.Vault{
 					{
-						Metadata:                types2.NewTestMetadata(),
-						EnablePurgeProtection:   types2.Bool(true, types2.NewTestMetadata()),
-						SoftDeleteRetentionDays: types2.Int(7, types2.NewTestMetadata()),
+						Metadata:                defsecTypes.NewTestMetadata(),
+						EnablePurgeProtection:   defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						SoftDeleteRetentionDays: defsecTypes.Int(7, defsecTypes.NewTestMetadata()),
 						NetworkACLs: keyvault.NetworkACLs{
-							Metadata:      types2.NewTestMetadata(),
-							DefaultAction: types2.String("Deny", types2.NewTestMetadata()),
+							Metadata:      defsecTypes.NewTestMetadata(),
+							DefaultAction: defsecTypes.String("Deny", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -59,12 +59,12 @@ func Test_Adapt(t *testing.T) {
 			expected: keyvault.KeyVault{
 				Vaults: []keyvault.Vault{
 					{
-						Metadata:                types2.NewTestMetadata(),
-						EnablePurgeProtection:   types2.Bool(false, types2.NewTestMetadata()),
-						SoftDeleteRetentionDays: types2.Int(0, types2.NewTestMetadata()),
+						Metadata:                defsecTypes.NewTestMetadata(),
+						EnablePurgeProtection:   defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						SoftDeleteRetentionDays: defsecTypes.Int(0, defsecTypes.NewTestMetadata()),
 						NetworkACLs: keyvault.NetworkACLs{
-							Metadata:      types2.NewTestMetadata(),
-							DefaultAction: types2.String("", types2.NewTestMetadata()),
+							Metadata:      defsecTypes.NewTestMetadata(),
+							DefaultAction: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -94,9 +94,9 @@ func Test_adaptSecret(t *testing.T) {
 			}
 `,
 			expected: keyvault.Secret{
-				Metadata:    types2.NewTestMetadata(),
-				ContentType: types2.String("", types2.NewTestMetadata()),
-				ExpiryDate:  types2.Time(time.Time{}, types2.NewTestMetadata()),
+				Metadata:    defsecTypes.NewTestMetadata(),
+				ContentType: defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				ExpiryDate:  defsecTypes.Time(time.Time{}, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -108,12 +108,12 @@ func Test_adaptSecret(t *testing.T) {
 			}
 `,
 			expected: keyvault.Secret{
-				Metadata:    types2.NewTestMetadata(),
-				ContentType: types2.String("password", types2.NewTestMetadata()),
-				ExpiryDate: types2.Time(func(timeVal string) time.Time {
+				Metadata:    defsecTypes.NewTestMetadata(),
+				ContentType: defsecTypes.String("password", defsecTypes.NewTestMetadata()),
+				ExpiryDate: defsecTypes.Time(func(timeVal string) time.Time {
 					parsed, _ := time.Parse(time.RFC3339, timeVal)
 					return parsed
-				}("1982-12-31T00:00:00Z"), types2.NewTestMetadata())},
+				}("1982-12-31T00:00:00Z"), defsecTypes.NewTestMetadata())},
 		},
 	}
 
@@ -141,11 +141,11 @@ func Test_adaptKey(t *testing.T) {
 			}
 `,
 			expected: keyvault.Key{
-				Metadata: types2.NewTestMetadata(),
-				ExpiryDate: types2.Time(func(timeVal string) time.Time {
+				Metadata: defsecTypes.NewTestMetadata(),
+				ExpiryDate: defsecTypes.Time(func(timeVal string) time.Time {
 					parsed, _ := time.Parse(time.RFC3339, timeVal)
 					return parsed
-				}("1982-12-31T00:00:00Z"), types2.NewTestMetadata()),
+				}("1982-12-31T00:00:00Z"), defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -155,8 +155,8 @@ func Test_adaptKey(t *testing.T) {
 			}
 `,
 			expected: keyvault.Key{
-				Metadata:   types2.NewTestMetadata(),
-				ExpiryDate: types2.Time(time.Time{}, types2.NewTestMetadata()),
+				Metadata:   defsecTypes.NewTestMetadata(),
+				ExpiryDate: defsecTypes.Time(time.Time{}, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

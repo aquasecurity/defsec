@@ -5,7 +5,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecr"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/state"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	ecrapi "github.com/aws/aws-sdk-go-v2/service/ecr"
 	"github.com/aws/aws-sdk-go-v2/service/ecr/types"
 	"github.com/liamg/iamgo"
@@ -105,12 +105,12 @@ func (a *adapter) adaptRepository(apiRepository types.Repository) (*ecr.Reposito
 		}
 		policies = append(policies, iam.Policy{
 			Metadata: metadata,
-			Name:     types2.String(*output.RepositoryName, metadata),
+			Name:     defsecTypes.String(*output.RepositoryName, metadata),
 			Document: iam.Document{
 				Metadata: metadata,
 				Parsed:   *parsed,
 			},
-			Builtin: types2.Bool(false, metadata),
+			Builtin: defsecTypes.Bool(false, metadata),
 		})
 	}
 
@@ -118,14 +118,14 @@ func (a *adapter) adaptRepository(apiRepository types.Repository) (*ecr.Reposito
 		Metadata: metadata,
 		ImageScanning: ecr.ImageScanning{
 			Metadata:   metadata,
-			ScanOnPush: types2.Bool(scanOnPush, metadata),
+			ScanOnPush: defsecTypes.Bool(scanOnPush, metadata),
 		},
-		ImageTagsImmutable: types2.Bool(immutable, metadata),
+		ImageTagsImmutable: defsecTypes.Bool(immutable, metadata),
 		Policies:           policies,
 		Encryption: ecr.Encryption{
 			Metadata: metadata,
-			Type:     types2.String(encType, metadata),
-			KMSKeyID: types2.String(encKey, metadata),
+			Type:     defsecTypes.String(encType, metadata),
+			KMSKeyID: defsecTypes.String(encKey, metadata),
 		},
 	}, nil
 }

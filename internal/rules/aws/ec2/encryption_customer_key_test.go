@@ -3,7 +3,7 @@ package ec2
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 			input: ec2.EC2{
 				Volumes: []ec2.Volume{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: ec2.Encryption{
-							Metadata: types2.NewTestMetadata(),
-							KMSKeyID: types2.String("", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 			input: ec2.EC2{
 				Volumes: []ec2.Volume{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: ec2.Encryption{
-							Metadata: types2.NewTestMetadata(),
-							KMSKeyID: types2.String("some-kms-key", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							KMSKeyID: defsecTypes.String("some-kms-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

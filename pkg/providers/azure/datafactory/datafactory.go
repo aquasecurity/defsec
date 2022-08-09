@@ -1,7 +1,7 @@
 package datafactory
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type DataFactory struct {
@@ -9,6 +9,6 @@ type DataFactory struct {
 }
 
 type Factory struct {
-	types2.Metadata
-	EnablePublicNetwork types2.BoolValue
+	defsecTypes.Metadata
+	EnablePublicNetwork defsecTypes.BoolValue
 }

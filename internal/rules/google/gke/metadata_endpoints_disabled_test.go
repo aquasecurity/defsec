@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckMetadataEndpointsDisabled(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata:              types2.NewTestMetadata(),
-							EnableLegacyEndpoints: types2.Bool(true, types2.NewTestMetadata()),
+							Metadata:              defsecTypes.NewTestMetadata(),
+							EnableLegacyEndpoints: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
-						RemoveDefaultNodePool: types2.Bool(false, types2.NewTestMetadata()),
+						RemoveDefaultNodePool: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -40,12 +40,12 @@ func TestCheckMetadataEndpointsDisabled(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata:              types2.NewTestMetadata(),
-							EnableLegacyEndpoints: types2.Bool(false, types2.NewTestMetadata()),
+							Metadata:              defsecTypes.NewTestMetadata(),
+							EnableLegacyEndpoints: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
-						RemoveDefaultNodePool: types2.Bool(false, types2.NewTestMetadata()),
+						RemoveDefaultNodePool: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -56,17 +56,17 @@ func TestCheckMetadataEndpointsDisabled(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata:              types2.NewTestMetadata(),
-							EnableLegacyEndpoints: types2.Bool(true, types2.NewTestMetadata()),
+							Metadata:              defsecTypes.NewTestMetadata(),
+							EnableLegacyEndpoints: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
-						RemoveDefaultNodePool: types2.Bool(true, types2.NewTestMetadata()),
+						RemoveDefaultNodePool: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						NodePools: []gke.NodePool{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								NodeConfig: gke.NodeConfig{
-									EnableLegacyEndpoints: types2.Bool(false, types2.NewTestMetadata()),
+									EnableLegacyEndpoints: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -80,17 +80,17 @@ func TestCheckMetadataEndpointsDisabled(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata:              types2.NewTestMetadata(),
-							EnableLegacyEndpoints: types2.Bool(true, types2.NewTestMetadata()),
+							Metadata:              defsecTypes.NewTestMetadata(),
+							EnableLegacyEndpoints: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
-						RemoveDefaultNodePool: types2.Bool(true, types2.NewTestMetadata()),
+						RemoveDefaultNodePool: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						NodePools: []gke.NodePool{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								NodeConfig: gke.NodeConfig{
-									EnableLegacyEndpoints: types2.Bool(true, types2.NewTestMetadata()),
+									EnableLegacyEndpoints: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

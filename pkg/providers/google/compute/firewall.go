@@ -1,34 +1,34 @@
 package compute
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Firewall struct {
-	types2.Metadata
-	Name         types2.StringValue
+	defsecTypes.Metadata
+	Name         defsecTypes.StringValue
 	IngressRules []IngressRule
 	EgressRules  []EgressRule
-	SourceTags   []types2.StringValue
-	TargetTags   []types2.StringValue
+	SourceTags   []defsecTypes.StringValue
+	TargetTags   []defsecTypes.StringValue
 }
 
 type FirewallRule struct {
-	types2.Metadata
-	Enforced types2.BoolValue
-	IsAllow  types2.BoolValue
-	Protocol types2.StringValue
-	Ports    []types2.IntValue
+	defsecTypes.Metadata
+	Enforced defsecTypes.BoolValue
+	IsAllow  defsecTypes.BoolValue
+	Protocol defsecTypes.StringValue
+	Ports    []defsecTypes.IntValue
 }
 
 type IngressRule struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	FirewallRule
-	SourceRanges []types2.StringValue
+	SourceRanges []defsecTypes.StringValue
 }
 
 type EgressRule struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	FirewallRule
-	DestinationRanges []types2.StringValue
+	DestinationRanges []defsecTypes.StringValue
 }

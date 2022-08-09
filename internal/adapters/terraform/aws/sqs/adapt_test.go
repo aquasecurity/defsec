@@ -3,7 +3,7 @@ package sqs
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
@@ -41,12 +41,12 @@ func Test_Adapt(t *testing.T) {
 			expected: sqs.SQS{
 				Queues: []sqs.Queue{
 					{
-						Metadata: types2.NewTestMetadata(),
-						QueueURL: types2.String("", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						QueueURL: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						Encryption: sqs.Encryption{
-							Metadata:          types2.NewTestMetadata(),
-							ManagedEncryption: types2.Bool(false, types2.NewTestMetadata()),
-							KMSKeyID:          types2.String("", types2.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							ManagedEncryption: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							KMSKeyID:          defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 						Policies: func() []iam.Policy {
 							sb := iamgo.NewStatementBuilder()
@@ -60,13 +60,13 @@ func Test_Adapt(t *testing.T) {
 
 							return []iam.Policy{
 								{
-									Metadata: types2.NewTestMetadata(),
-									Name:     types2.StringDefault("", types2.NewTestMetadata()),
+									Metadata: defsecTypes.NewTestMetadata(),
+									Name:     defsecTypes.StringDefault("", defsecTypes.NewTestMetadata()),
 									Document: iam.Document{
-										Metadata: types2.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Parsed:   builder.Build(),
 									},
-									Builtin: types2.Bool(false, types2.NewTestMetadata()),
+									Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								},
 							}
 						}(),
@@ -83,12 +83,12 @@ func Test_Adapt(t *testing.T) {
 			expected: sqs.SQS{
 				Queues: []sqs.Queue{
 					{
-						Metadata: types2.NewTestMetadata(),
-						QueueURL: types2.String("", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						QueueURL: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						Encryption: sqs.Encryption{
-							Metadata:          types2.NewTestMetadata(),
-							ManagedEncryption: types2.Bool(false, types2.NewTestMetadata()),
-							KMSKeyID:          types2.String("/blah", types2.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							ManagedEncryption: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							KMSKeyID:          defsecTypes.String("/blah", defsecTypes.NewTestMetadata()),
 						},
 						Policies: nil,
 					},

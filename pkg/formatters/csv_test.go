@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
 
@@ -27,8 +27,8 @@ test.test,123,123,aws-dynamodb-enable-at-rest-encryption,HIGH,Cluster encryption
 	var results scan.Results
 	results.Add("Cluster encryption is not enabled.",
 		dynamodb.ServerSideEncryption{
-			Metadata: types2.NewTestMetadata(),
-			Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+			Metadata: defsecTypes.NewTestMetadata(),
+			Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 		})
 	results.SetRule(scan.Rule{Severity: severity.High, Provider: providers.AWSProvider, Service: "dynamodb", ShortCode: "enable-at-rest-encryption"})
 	require.NoError(t, formatter.Output(results))
@@ -44,10 +44,10 @@ test.test,123,123,aws-dynamodb-enable-at-rest-encryption,HIGH,Cluster encryption
 	var results scan.Results
 	results.Add("Cluster encryption is not enabled.",
 		dynamodb.ServerSideEncryption{
-			Metadata: types2.NewTestMetadata(),
-			Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+			Metadata: defsecTypes.NewTestMetadata(),
+			Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 		})
-	results.AddPassed(types2.NewTestMetadata(), "Everything is fine.")
+	results.AddPassed(defsecTypes.NewTestMetadata(), "Everything is fine.")
 	results.SetRule(scan.Rule{Severity: severity.High, Provider: providers.AWSProvider, Service: "dynamodb", ShortCode: "enable-at-rest-encryption"})
 	require.NoError(t, formatter.Output(results))
 	assert.Equal(t, want, buffer.String())
@@ -63,10 +63,10 @@ test.test,123,123,aws-dynamodb-enable-at-rest-encryption,HIGH,Everything is fine
 	var results scan.Results
 	results.Add("Cluster encryption is not enabled.",
 		dynamodb.ServerSideEncryption{
-			Metadata: types2.NewTestMetadata(),
-			Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+			Metadata: defsecTypes.NewTestMetadata(),
+			Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 		})
-	results.AddPassed(types2.NewTestMetadata(), "Everything is fine.")
+	results.AddPassed(defsecTypes.NewTestMetadata(), "Everything is fine.")
 	results.SetRule(scan.Rule{Severity: severity.High, Provider: providers.AWSProvider, Service: "dynamodb", ShortCode: "enable-at-rest-encryption"})
 	require.NoError(t, formatter.Output(results))
 	assert.Equal(t, want, buffer.String())

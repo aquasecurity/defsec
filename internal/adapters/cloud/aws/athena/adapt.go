@@ -3,7 +3,7 @@ package athena
 import (
 	"fmt"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/athena"
@@ -108,12 +108,12 @@ func (a *adapter) adaptWorkgroup(workgroup types.WorkGroupSummary) (*athena.Work
 
 	return &athena.Workgroup{
 		Metadata: metadata,
-		Name:     types2.String(*workgroup.Name, metadata),
+		Name:     defsecTypes.String(*workgroup.Name, metadata),
 		Encryption: athena.EncryptionConfiguration{
 			Metadata: metadata,
-			Type:     types2.String(encType, metadata),
+			Type:     defsecTypes.String(encType, metadata),
 		},
-		EnforceConfiguration: types2.Bool(enforce, metadata),
+		EnforceConfiguration: defsecTypes.Bool(enforce, metadata),
 	}, nil
 }
 
@@ -185,11 +185,11 @@ func (a *adapter) adaptDatabase(database types.Database) (*athena.Database, erro
 	metadata := a.CreateMetadata("database/" + *database.Name)
 	return &athena.Database{
 		Metadata: metadata,
-		Name:     types2.String(*database.Name, metadata),
+		Name:     defsecTypes.String(*database.Name, metadata),
 		Encryption: athena.EncryptionConfiguration{
 			Metadata: metadata,
 			// see https://stackoverflow.com/questions/72456689/what-does-encryption-configuration-in-terraform-aws-athena-database-resource
-			Type: types2.String("", types2.NewUnmanagedMetadata()),
+			Type: defsecTypes.String("", defsecTypes.NewUnmanagedMetadata()),
 		},
 	}, nil
 }

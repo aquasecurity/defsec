@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,10 +25,10 @@ func TestCheckNoPublicAccess(t *testing.T) {
 				Firewall: openstack.Firewall{
 					AllowRules: []openstack.FirewallRule{
 						{
-							Metadata:    types2.NewTestMetadata(),
-							Enabled:     types2.Bool(true, types2.NewTestMetadata()),
-							Destination: types2.String("", types2.NewTestMetadata()),
-							Source:      types2.String("10.10.10.1", types2.NewTestMetadata()),
+							Metadata:    defsecTypes.NewTestMetadata(),
+							Enabled:     defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Destination: defsecTypes.String("", defsecTypes.NewTestMetadata()),
+							Source:      defsecTypes.String("10.10.10.1", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -41,10 +41,10 @@ func TestCheckNoPublicAccess(t *testing.T) {
 				Firewall: openstack.Firewall{
 					AllowRules: []openstack.FirewallRule{
 						{
-							Metadata:    types2.NewTestMetadata(),
-							Enabled:     types2.Bool(true, types2.NewTestMetadata()),
-							Destination: types2.String("10.10.10.2", types2.NewTestMetadata()),
-							Source:      types2.String("", types2.NewTestMetadata()),
+							Metadata:    defsecTypes.NewTestMetadata(),
+							Enabled:     defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Destination: defsecTypes.String("10.10.10.2", defsecTypes.NewTestMetadata()),
+							Source:      defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -57,10 +57,10 @@ func TestCheckNoPublicAccess(t *testing.T) {
 				Firewall: openstack.Firewall{
 					AllowRules: []openstack.FirewallRule{
 						{
-							Metadata:    types2.NewTestMetadata(),
-							Enabled:     types2.Bool(true, types2.NewTestMetadata()),
-							Destination: types2.String("0.0.0.0", types2.NewTestMetadata()),
-							Source:      types2.String("0.0.0.0", types2.NewTestMetadata()),
+							Metadata:    defsecTypes.NewTestMetadata(),
+							Enabled:     defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Destination: defsecTypes.String("0.0.0.0", defsecTypes.NewTestMetadata()),
+							Source:      defsecTypes.String("0.0.0.0", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -73,10 +73,10 @@ func TestCheckNoPublicAccess(t *testing.T) {
 				Firewall: openstack.Firewall{
 					AllowRules: []openstack.FirewallRule{
 						{
-							Metadata:    types2.NewTestMetadata(),
-							Enabled:     types2.Bool(true, types2.NewTestMetadata()),
-							Destination: types2.String("10.10.10.1", types2.NewTestMetadata()),
-							Source:      types2.String("10.10.10.2", types2.NewTestMetadata()),
+							Metadata:    defsecTypes.NewTestMetadata(),
+							Enabled:     defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Destination: defsecTypes.String("10.10.10.1", defsecTypes.NewTestMetadata()),
+							Source:      defsecTypes.String("10.10.10.2", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

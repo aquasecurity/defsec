@@ -3,7 +3,7 @@ package container
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,9 +24,9 @@ func TestCheckLimitAuthorizedIps(t *testing.T) {
 			input: container.Container{
 				KubernetesClusters: []container.KubernetesCluster{
 					{
-						Metadata:                    types2.NewTestMetadata(),
-						EnablePrivateCluster:        types2.Bool(false, types2.NewTestMetadata()),
-						APIServerAuthorizedIPRanges: []types2.StringValue{},
+						Metadata:                    defsecTypes.NewTestMetadata(),
+						EnablePrivateCluster:        defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						APIServerAuthorizedIPRanges: []defsecTypes.StringValue{},
 					},
 				},
 			},
@@ -37,10 +37,10 @@ func TestCheckLimitAuthorizedIps(t *testing.T) {
 			input: container.Container{
 				KubernetesClusters: []container.KubernetesCluster{
 					{
-						Metadata:             types2.NewTestMetadata(),
-						EnablePrivateCluster: types2.Bool(false, types2.NewTestMetadata()),
-						APIServerAuthorizedIPRanges: []types2.StringValue{
-							types2.String("1.2.3.4/32", types2.NewTestMetadata()),
+						Metadata:             defsecTypes.NewTestMetadata(),
+						EnablePrivateCluster: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						APIServerAuthorizedIPRanges: []defsecTypes.StringValue{
+							defsecTypes.String("1.2.3.4/32", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

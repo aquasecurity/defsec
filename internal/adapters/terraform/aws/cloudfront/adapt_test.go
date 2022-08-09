@@ -3,7 +3,7 @@ package cloudfront
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudfront"
 
@@ -45,25 +45,25 @@ func Test_adaptDistribution(t *testing.T) {
 			}
 `,
 			expected: cloudfront.Distribution{
-				Metadata: types2.NewTestMetadata(),
-				WAFID:    types2.String("waf_id", types2.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				WAFID:    defsecTypes.String("waf_id", defsecTypes.NewTestMetadata()),
 				Logging: cloudfront.Logging{
-					Metadata: types2.NewTestMetadata(),
-					Bucket:   types2.String("mylogs.s3.amazonaws.com", types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Bucket:   defsecTypes.String("mylogs.s3.amazonaws.com", defsecTypes.NewTestMetadata()),
 				},
 				DefaultCacheBehaviour: cloudfront.CacheBehaviour{
-					Metadata:             types2.NewTestMetadata(),
-					ViewerProtocolPolicy: types2.String("redirect-to-https", types2.NewTestMetadata()),
+					Metadata:             defsecTypes.NewTestMetadata(),
+					ViewerProtocolPolicy: defsecTypes.String("redirect-to-https", defsecTypes.NewTestMetadata()),
 				},
 				OrdererCacheBehaviours: []cloudfront.CacheBehaviour{
 					{
-						Metadata:             types2.NewTestMetadata(),
-						ViewerProtocolPolicy: types2.String("redirect-to-https", types2.NewTestMetadata()),
+						Metadata:             defsecTypes.NewTestMetadata(),
+						ViewerProtocolPolicy: defsecTypes.String("redirect-to-https", defsecTypes.NewTestMetadata()),
 					},
 				},
 				ViewerCertificate: cloudfront.ViewerCertificate{
-					Metadata:               types2.NewTestMetadata(),
-					MinimumProtocolVersion: types2.String("TLSv1.2_2021", types2.NewTestMetadata()),
+					Metadata:               defsecTypes.NewTestMetadata(),
+					MinimumProtocolVersion: defsecTypes.String("TLSv1.2_2021", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -74,20 +74,20 @@ func Test_adaptDistribution(t *testing.T) {
 			}
 `,
 			expected: cloudfront.Distribution{
-				Metadata: types2.NewTestMetadata(),
-				WAFID:    types2.String("", types2.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				WAFID:    defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				Logging: cloudfront.Logging{
-					Metadata: types2.NewTestMetadata(),
-					Bucket:   types2.String("", types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Bucket:   defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
 				DefaultCacheBehaviour: cloudfront.CacheBehaviour{
-					Metadata:             types2.NewTestMetadata(),
-					ViewerProtocolPolicy: types2.String("allow-all", types2.NewTestMetadata()),
+					Metadata:             defsecTypes.NewTestMetadata(),
+					ViewerProtocolPolicy: defsecTypes.String("allow-all", defsecTypes.NewTestMetadata()),
 				},
 
 				ViewerCertificate: cloudfront.ViewerCertificate{
-					Metadata:               types2.NewTestMetadata(),
-					MinimumProtocolVersion: types2.String("TLSv1", types2.NewTestMetadata()),
+					Metadata:               defsecTypes.NewTestMetadata(),
+					MinimumProtocolVersion: defsecTypes.String("TLSv1", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

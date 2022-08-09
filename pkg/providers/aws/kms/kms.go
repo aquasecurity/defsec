@@ -1,7 +1,7 @@
 package kms
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type KMS struct {
@@ -13,7 +13,7 @@ const (
 )
 
 type Key struct {
-	types2.Metadata
-	Usage           types2.StringValue
-	RotationEnabled types2.BoolValue
+	defsecTypes.Metadata
+	Usage           defsecTypes.StringValue
+	RotationEnabled defsecTypes.BoolValue
 }

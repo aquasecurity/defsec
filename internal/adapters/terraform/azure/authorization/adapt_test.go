@@ -3,7 +3,7 @@ package authorization
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/azure/authorization"
 
@@ -37,17 +37,17 @@ func Test_adaptRoleDefinition(t *testing.T) {
 			}
 `,
 			expected: authorization.RoleDefinition{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				Permissions: []authorization.Permission{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Actions: []types2.StringValue{
-							types2.String("*", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Actions: []defsecTypes.StringValue{
+							defsecTypes.String("*", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
-				AssignableScopes: []types2.StringValue{
-					types2.StringUnresolvable(types2.NewTestMetadata()),
+				AssignableScopes: []defsecTypes.StringValue{
+					defsecTypes.StringUnresolvable(defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -68,14 +68,14 @@ func Test_adaptRoleDefinition(t *testing.T) {
 			}
 `,
 			expected: authorization.RoleDefinition{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				Permissions: []authorization.Permission{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 					},
 				},
-				AssignableScopes: []types2.StringValue{
-					types2.String("/", types2.NewTestMetadata()),
+				AssignableScopes: []defsecTypes.StringValue{
+					defsecTypes.String("/", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

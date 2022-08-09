@@ -4,7 +4,7 @@ import (
 	"io/fs"
 	"strings"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/liamg/jfather"
 	"gopkg.in/yaml.v3"
@@ -12,7 +12,7 @@ import (
 
 type Resource struct {
 	ctx     *FileContext
-	rng     types2.Range
+	rng     defsecTypes.Range
 	id      string
 	comment string
 	Inner   ResourceInner
@@ -38,7 +38,7 @@ func (r *Resource) setId(id string) {
 }
 
 func (r *Resource) setFile(target fs.FS, filepath string) {
-	r.rng = types2.NewRange(filepath, r.rng.GetStartLine(), r.rng.GetEndLine(), r.rng.GetSourcePrefix(), target)
+	r.rng = defsecTypes.NewRange(filepath, r.rng.GetStartLine(), r.rng.GetEndLine(), r.rng.GetSourcePrefix(), target)
 
 	for _, p := range r.Inner.Properties {
 		p.setFileAndParentRange(target, filepath, r.rng)
@@ -55,13 +55,13 @@ func (r *Resource) setContext(ctx *FileContext) {
 }
 
 func (r *Resource) UnmarshalYAML(value *yaml.Node) error {
-	r.rng = types2.NewRange("", value.Line-1, calculateEndLine(value), "", nil)
+	r.rng = defsecTypes.NewRange("", value.Line-1, calculateEndLine(value), "", nil)
 	r.comment = value.LineComment
 	return value.Decode(&r.Inner)
 }
 
 func (r *Resource) UnmarshalJSONWithMetadata(node jfather.Node) error {
-	r.rng = types2.NewRange("", node.Range().Start.Line, node.Range().End.Line, "", nil)
+	r.rng = defsecTypes.NewRange("", node.Range().Start.Line, node.Range().End.Line, "", nil)
 	return node.Decode(&r.Inner)
 }
 
@@ -73,7 +73,7 @@ func (r *Resource) Type() string {
 	return r.Inner.Type
 }
 
-func (r *Resource) Range() types2.Range {
+func (r *Resource) Range() defsecTypes.Range {
 	return r.rng
 }
 
@@ -81,8 +81,8 @@ func (r *Resource) SourceFormat() SourceFormat {
 	return r.ctx.SourceFormat
 }
 
-func (r *Resource) Metadata() types2.Metadata {
-	return types2.NewMetadata(r.Range(), NewCFReference(r.id, r.rng))
+func (r *Resource) Metadata() defsecTypes.Metadata {
+	return defsecTypes.NewMetadata(r.Range(), NewCFReference(r.id, r.rng))
 }
 
 func (r *Resource) properties() map[string]*Property {
@@ -122,7 +122,7 @@ func (r *Resource) GetProperty(path string) *Property {
 	return &Property{}
 }
 
-func (r *Resource) GetStringProperty(path string, defaultValue ...string) types2.StringValue {
+func (r *Resource) GetStringProperty(path string, defaultValue ...string) defsecTypes.StringValue {
 	defVal := ""
 	if len(defaultValue) > 0 {
 		defVal = defaultValue[0]
@@ -136,7 +136,7 @@ func (r *Resource) GetStringProperty(path string, defaultValue ...string) types2
 	return prop.AsStringValue()
 }
 
-func (r *Resource) GetBoolProperty(path string, defaultValue ...bool) types2.BoolValue {
+func (r *Resource) GetBoolProperty(path string, defaultValue ...bool) defsecTypes.BoolValue {
 	defVal := false
 	if len(defaultValue) > 0 {
 		defVal = defaultValue[0]
@@ -150,7 +150,7 @@ func (r *Resource) GetBoolProperty(path string, defaultValue ...bool) types2.Boo
 	return prop.AsBoolValue()
 }
 
-func (r *Resource) GetIntProperty(path string, defaultValue ...int) types2.IntValue {
+func (r *Resource) GetIntProperty(path string, defaultValue ...int) defsecTypes.IntValue {
 	defVal := 0
 	if len(defaultValue) > 0 {
 		defVal = defaultValue[0]
@@ -164,46 +164,46 @@ func (r *Resource) GetIntProperty(path string, defaultValue ...int) types2.IntVa
 	return prop.AsIntValue()
 }
 
-func (r *Resource) StringDefault(defaultValue string) types2.StringValue {
-	return types2.StringDefault(defaultValue, r.Metadata())
+func (r *Resource) StringDefault(defaultValue string) defsecTypes.StringValue {
+	return defsecTypes.StringDefault(defaultValue, r.Metadata())
 }
 
-func (r *Resource) BoolDefault(defaultValue bool) types2.BoolValue {
-	return types2.BoolDefault(defaultValue, r.Metadata())
+func (r *Resource) BoolDefault(defaultValue bool) defsecTypes.BoolValue {
+	return defsecTypes.BoolDefault(defaultValue, r.Metadata())
 }
 
-func (r *Resource) IntDefault(defaultValue int) types2.IntValue {
-	return types2.IntDefault(defaultValue, r.Metadata())
+func (r *Resource) IntDefault(defaultValue int) defsecTypes.IntValue {
+	return defsecTypes.IntDefault(defaultValue, r.Metadata())
 }
 
-func (r *Resource) inferBool(prop *Property, defaultValue bool) types2.BoolValue {
+func (r *Resource) inferBool(prop *Property, defaultValue bool) defsecTypes.BoolValue {
 	if prop.IsString() {
 		if prop.EqualTo("true", IgnoreCase) {
-			return types2.Bool(true, prop.Metadata())
+			return defsecTypes.Bool(true, prop.Metadata())
 		}
 		if prop.EqualTo("yes", IgnoreCase) {
-			return types2.Bool(true, prop.Metadata())
+			return defsecTypes.Bool(true, prop.Metadata())
 		}
 		if prop.EqualTo("1", IgnoreCase) {
-			return types2.Bool(true, prop.Metadata())
+			return defsecTypes.Bool(true, prop.Metadata())
 		}
 		if prop.EqualTo("false", IgnoreCase) {
-			return types2.Bool(false, prop.Metadata())
+			return defsecTypes.Bool(false, prop.Metadata())
 		}
 		if prop.EqualTo("no", IgnoreCase) {
-			return types2.Bool(false, prop.Metadata())
+			return defsecTypes.Bool(false, prop.Metadata())
 		}
 		if prop.EqualTo("0", IgnoreCase) {
-			return types2.Bool(false, prop.Metadata())
+			return defsecTypes.Bool(false, prop.Metadata())
 		}
 	}
 
 	if prop.IsInt() {
 		if prop.EqualTo(0) {
-			return types2.Bool(false, prop.Metadata())
+			return defsecTypes.Bool(false, prop.Metadata())
 		}
 		if prop.EqualTo(1) {
-			return types2.Bool(true, prop.Metadata())
+			return defsecTypes.Bool(true, prop.Metadata())
 		}
 	}
 

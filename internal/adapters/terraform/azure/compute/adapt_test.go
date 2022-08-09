@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/azure/compute"
 
@@ -29,10 +29,10 @@ resource "azurerm_managed_disk" "example" {
 	}
 }`,
 			expected: compute.ManagedDisk{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				Encryption: compute.Encryption{
-					Metadata: types2.NewTestMetadata(),
-					Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -42,10 +42,10 @@ resource "azurerm_managed_disk" "example" {
 resource "azurerm_managed_disk" "example" {
 }`,
 			expected: compute.ManagedDisk{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				Encryption: compute.Encryption{
-					Metadata: types2.NewTestMetadata(),
-					Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -86,14 +86,14 @@ resource "azurerm_virtual_machine" "example" {
 }
 `,
 			expected: compute.LinuxVirtualMachine{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				VirtualMachine: compute.VirtualMachine{
-					Metadata:   types2.NewTestMetadata(),
-					CustomData: types2.String("", types2.NewTestMetadata()),
+					Metadata:   defsecTypes.NewTestMetadata(),
+					CustomData: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
 				OSProfileLinuxConfig: compute.OSProfileLinuxConfig{
-					Metadata:                      types2.NewTestMetadata(),
-					DisablePasswordAuthentication: types2.Bool(true, types2.NewTestMetadata()),
+					Metadata:                      defsecTypes.NewTestMetadata(),
+					DisablePasswordAuthentication: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -112,16 +112,16 @@ export DATABASE_PASSWORD=\"SomeSortOfPassword\"
 	}
 }`,
 			expected: compute.LinuxVirtualMachine{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				VirtualMachine: compute.VirtualMachine{
-					Metadata: types2.NewTestMetadata(),
-					CustomData: types2.String(
+					Metadata: defsecTypes.NewTestMetadata(),
+					CustomData: defsecTypes.String(
 						`export DATABASE_PASSWORD=\"SomeSortOfPassword\"
-`, types2.NewTestMetadata()),
+`, defsecTypes.NewTestMetadata()),
 				},
 				OSProfileLinuxConfig: compute.OSProfileLinuxConfig{
-					Metadata:                      types2.NewTestMetadata(),
-					DisablePasswordAuthentication: types2.Bool(false, types2.NewTestMetadata()),
+					Metadata:                      defsecTypes.NewTestMetadata(),
+					DisablePasswordAuthentication: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -156,11 +156,11 @@ export DATABASE_PASSWORD=\"SomeSortOfPassword\"
 	}
 }`,
 			expected: compute.WindowsVirtualMachine{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				VirtualMachine: compute.VirtualMachine{
-					Metadata: types2.NewTestMetadata(),
-					CustomData: types2.String(`export DATABASE_PASSWORD=\"SomeSortOfPassword\"
-`, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					CustomData: defsecTypes.String(`export DATABASE_PASSWORD=\"SomeSortOfPassword\"
+`, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -174,11 +174,11 @@ export GREETING="Hello there"
 	EOF
 	}`,
 			expected: compute.WindowsVirtualMachine{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				VirtualMachine: compute.VirtualMachine{
-					Metadata: types2.NewTestMetadata(),
-					CustomData: types2.String(`export GREETING="Hello there"
-`, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					CustomData: defsecTypes.String(`export GREETING="Hello there"
+`, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

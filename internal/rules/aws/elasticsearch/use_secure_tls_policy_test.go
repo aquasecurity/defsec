@@ -3,7 +3,7 @@ package elasticsearch
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: elasticsearch.Elasticsearch{
 				Domains: []elasticsearch.Domain{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Endpoint: elasticsearch.Endpoint{
-							Metadata:  types2.NewTestMetadata(),
-							TLSPolicy: types2.String("Policy-Min-TLS-1-0-2019-07", types2.NewTestMetadata()),
+							Metadata:  defsecTypes.NewTestMetadata(),
+							TLSPolicy: defsecTypes.String("Policy-Min-TLS-1-0-2019-07", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: elasticsearch.Elasticsearch{
 				Domains: []elasticsearch.Domain{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Endpoint: elasticsearch.Endpoint{
-							Metadata:  types2.NewTestMetadata(),
-							TLSPolicy: types2.String("Policy-Min-TLS-1-2-2019-07", types2.NewTestMetadata()),
+							Metadata:  defsecTypes.NewTestMetadata(),
+							TLSPolicy: defsecTypes.String("Policy-Min-TLS-1-2-2019-07", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

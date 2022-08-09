@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckKubernetesSurgeUpgrades(t *testing.T) {
 			input: compute.Compute{
 				KubernetesClusters: []compute.KubernetesCluster{
 					{
-						Metadata:     types2.NewTestMetadata(),
-						SurgeUpgrade: types2.Bool(false, types2.NewTestMetadata()),
+						Metadata:     defsecTypes.NewTestMetadata(),
+						SurgeUpgrade: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckKubernetesSurgeUpgrades(t *testing.T) {
 			input: compute.Compute{
 				KubernetesClusters: []compute.KubernetesCluster{
 					{
-						Metadata:     types2.NewTestMetadata(),
-						SurgeUpgrade: types2.Bool(true, types2.NewTestMetadata()),
+						Metadata:     defsecTypes.NewTestMetadata(),
+						SurgeUpgrade: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

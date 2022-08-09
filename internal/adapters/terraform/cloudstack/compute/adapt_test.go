@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/cloudstack/compute"
 
@@ -31,9 +31,9 @@ export DATABASE_PASSWORD=\"SomeSortOfPassword\"
 			}
 `,
 			expected: compute.Instance{
-				Metadata: types2.NewTestMetadata(),
-				UserData: types2.String(`export DATABASE_PASSWORD=\"SomeSortOfPassword\"
-`, types2.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				UserData: defsecTypes.String(`export DATABASE_PASSWORD=\"SomeSortOfPassword\"
+`, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -45,8 +45,8 @@ export DATABASE_PASSWORD=\"SomeSortOfPassword\"
 			}
 `,
 			expected: compute.Instance{
-				Metadata: types2.NewTestMetadata(),
-				UserData: types2.String(`export DATABASE_PASSWORD="SomeSortOfPassword"`, types2.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				UserData: defsecTypes.String(`export DATABASE_PASSWORD="SomeSortOfPassword"`, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -56,8 +56,8 @@ export DATABASE_PASSWORD=\"SomeSortOfPassword\"
 			}
 `,
 			expected: compute.Instance{
-				Metadata: types2.NewTestMetadata(),
-				UserData: types2.String("", types2.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				UserData: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

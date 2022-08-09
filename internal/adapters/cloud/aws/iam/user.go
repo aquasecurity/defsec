@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -150,20 +150,20 @@ func (a *adapter) getUserKeys(apiUser iamtypes.User) ([]iam.AccessKey, error) {
 		}
 		for _, apiAccessKey := range output.AccessKeyMetadata {
 
-			lastUsed := types2.TimeUnresolvable(metadata)
+			lastUsed := defsecTypes.TimeUnresolvable(metadata)
 			if output, err := a.api.GetAccessKeyLastUsed(a.Context(), &iamapi.GetAccessKeyLastUsedInput{
 				AccessKeyId: apiAccessKey.AccessKeyId,
 			}); err == nil {
 				if output.AccessKeyLastUsed != nil && output.AccessKeyLastUsed.LastUsedDate != nil {
-					lastUsed = types2.Time(*output.AccessKeyLastUsed.LastUsedDate, metadata)
+					lastUsed = defsecTypes.Time(*output.AccessKeyLastUsed.LastUsedDate, metadata)
 				}
 			}
 
 			keys = append(keys, iam.AccessKey{
 				Metadata:     metadata,
-				AccessKeyId:  types2.String(*apiAccessKey.AccessKeyId, metadata),
-				Active:       types2.Bool(apiAccessKey.Status == iamtypes.StatusTypeActive, metadata),
-				CreationDate: types2.Time(*apiAccessKey.CreateDate, metadata),
+				AccessKeyId:  defsecTypes.String(*apiAccessKey.AccessKeyId, metadata),
+				Active:       defsecTypes.Bool(apiAccessKey.Status == iamtypes.StatusTypeActive, metadata),
+				CreationDate: defsecTypes.Time(*apiAccessKey.CreateDate, metadata),
 				LastAccess:   lastUsed,
 			})
 		}
@@ -200,14 +200,14 @@ func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 		return nil, err
 	}
 
-	lastAccess := types2.TimeUnresolvable(metadata)
+	lastAccess := defsecTypes.TimeUnresolvable(metadata)
 	if apiUser.PasswordLastUsed != nil {
-		lastAccess = types2.Time(*apiUser.PasswordLastUsed, metadata)
+		lastAccess = defsecTypes.Time(*apiUser.PasswordLastUsed, metadata)
 	}
 
 	return &iam.User{
 		Metadata:   metadata,
-		Name:       types2.String(*apiUser.UserName, metadata),
+		Name:       defsecTypes.String(*apiUser.UserName, metadata),
 		Groups:     groups,
 		Policies:   policies,
 		AccessKeys: keys,

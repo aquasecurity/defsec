@@ -3,7 +3,7 @@ package network
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,23 +24,23 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Allow:    types2.Bool(true, types2.NewTestMetadata()),
-								Outbound: types2.Bool(false, types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Allow:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								Outbound: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								DestinationPorts: []network.PortRange{
 									{
-										Metadata: types2.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Start:    22,
 										End:      22,
 									},
 								},
-								SourceAddresses: []types2.StringValue{
-									types2.String("*", types2.NewTestMetadata()),
+								SourceAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("*", defsecTypes.NewTestMetadata()),
 								},
-								Protocol: types2.String("Tcp", types2.NewTestMetadata()),
+								Protocol: defsecTypes.String("Tcp", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -53,23 +53,23 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Allow:    types2.Bool(true, types2.NewTestMetadata()),
-								Outbound: types2.Bool(false, types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Allow:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								Outbound: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								DestinationPorts: []network.PortRange{
 									{
-										Metadata: types2.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Start:    22,
 										End:      22,
 									},
 								},
-								SourceAddresses: []types2.StringValue{
-									types2.String("*", types2.NewTestMetadata()),
+								SourceAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("*", defsecTypes.NewTestMetadata()),
 								},
-								Protocol: types2.String("Icmp", types2.NewTestMetadata()),
+								Protocol: defsecTypes.String("Icmp", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -82,23 +82,23 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Allow:    types2.Bool(true, types2.NewTestMetadata()),
-								Outbound: types2.Bool(false, types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Allow:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								Outbound: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								DestinationPorts: []network.PortRange{
 									{
-										Metadata: types2.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Start:    22,
 										End:      22,
 									},
 								},
-								SourceAddresses: []types2.StringValue{
-									types2.String("82.102.23.23", types2.NewTestMetadata()),
+								SourceAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("82.102.23.23", defsecTypes.NewTestMetadata()),
 								},
-								Protocol: types2.String("Tcp", types2.NewTestMetadata()),
+								Protocol: defsecTypes.String("Tcp", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

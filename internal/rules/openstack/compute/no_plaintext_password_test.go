@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNoPlaintextPassword(t *testing.T) {
 			input: openstack.Compute{
 				Instances: []openstack.Instance{
 					{
-						Metadata:      types2.NewTestMetadata(),
-						AdminPassword: types2.String("very-secret", types2.NewTestMetadata()),
+						Metadata:      defsecTypes.NewTestMetadata(),
+						AdminPassword: defsecTypes.String("very-secret", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckNoPlaintextPassword(t *testing.T) {
 			input: openstack.Compute{
 				Instances: []openstack.Instance{
 					{
-						Metadata:      types2.NewTestMetadata(),
-						AdminPassword: types2.String("", types2.NewTestMetadata()),
+						Metadata:      defsecTypes.NewTestMetadata(),
+						AdminPassword: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

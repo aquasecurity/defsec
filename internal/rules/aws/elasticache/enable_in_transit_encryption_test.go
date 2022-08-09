@@ -3,7 +3,7 @@ package elasticache
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 			input: elasticache.ElastiCache{
 				ReplicationGroups: []elasticache.ReplicationGroup{
 					{
-						Metadata:                 types2.NewTestMetadata(),
-						TransitEncryptionEnabled: types2.Bool(false, types2.NewTestMetadata()),
+						Metadata:                 defsecTypes.NewTestMetadata(),
+						TransitEncryptionEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableInTransitEncryption(t *testing.T) {
 			input: elasticache.ElastiCache{
 				ReplicationGroups: []elasticache.ReplicationGroup{
 					{
-						Metadata:                 types2.NewTestMetadata(),
-						TransitEncryptionEnabled: types2.Bool(true, types2.NewTestMetadata()),
+						Metadata:                 defsecTypes.NewTestMetadata(),
+						TransitEncryptionEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

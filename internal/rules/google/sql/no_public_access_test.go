@@ -3,7 +3,7 @@ package sql
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Settings: sql.Settings{
-							Metadata: types2.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							IPConfiguration: sql.IPConfiguration{
-								Metadata:   types2.NewTestMetadata(),
-								EnableIPv4: types2.Bool(true, types2.NewTestMetadata()),
+								Metadata:   defsecTypes.NewTestMetadata(),
+								EnableIPv4: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -42,18 +42,18 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Settings: sql.Settings{
-							Metadata: types2.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							IPConfiguration: sql.IPConfiguration{
-								Metadata:   types2.NewTestMetadata(),
-								EnableIPv4: types2.Bool(false, types2.NewTestMetadata()),
+								Metadata:   defsecTypes.NewTestMetadata(),
+								EnableIPv4: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								AuthorizedNetworks: []struct {
-									Name types2.StringValue
-									CIDR types2.StringValue
+									Name defsecTypes.StringValue
+									CIDR defsecTypes.StringValue
 								}{
 									{
-										CIDR: types2.String("0.0.0.0/0", types2.NewTestMetadata()),
+										CIDR: defsecTypes.String("0.0.0.0/0", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -68,18 +68,18 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Settings: sql.Settings{
-							Metadata: types2.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							IPConfiguration: sql.IPConfiguration{
-								Metadata:   types2.NewTestMetadata(),
-								EnableIPv4: types2.Bool(false, types2.NewTestMetadata()),
+								Metadata:   defsecTypes.NewTestMetadata(),
+								EnableIPv4: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								AuthorizedNetworks: []struct {
-									Name types2.StringValue
-									CIDR types2.StringValue
+									Name defsecTypes.StringValue
+									CIDR defsecTypes.StringValue
 								}{
 									{
-										CIDR: types2.String("10.0.0.1/24", types2.NewTestMetadata()),
+										CIDR: defsecTypes.String("10.0.0.1/24", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},

@@ -3,7 +3,7 @@ package network
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,14 +24,14 @@ func TestCheckNoPublicEgress(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Allow:    types2.Bool(true, types2.NewTestMetadata()),
-								Outbound: types2.Bool(true, types2.NewTestMetadata()),
-								DestinationAddresses: []types2.StringValue{
-									types2.String("*", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Allow:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								Outbound: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								DestinationAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("*", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -45,14 +45,14 @@ func TestCheckNoPublicEgress(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Allow:    types2.Bool(true, types2.NewTestMetadata()),
-								Outbound: types2.Bool(true, types2.NewTestMetadata()),
-								DestinationAddresses: []types2.StringValue{
-									types2.String("10.0.0.0/16", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Allow:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								Outbound: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								DestinationAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("10.0.0.0/16", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

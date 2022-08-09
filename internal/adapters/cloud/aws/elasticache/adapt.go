@@ -4,7 +4,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticache"
 	"github.com/aquasecurity/defsec/pkg/state"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/elasticache"
 	"github.com/aws/aws-sdk-go-v2/service/elasticache/types"
 )
@@ -87,9 +87,9 @@ func (a *adapter) adaptCluster(apiCluster types.CacheCluster) (*elasticache.Clus
 	metadata := a.CreateMetadataFromARN(*apiCluster.ARN)
 	return &elasticache.Cluster{
 		Metadata:               metadata,
-		Engine:                 types2.String(*apiCluster.Engine, metadata),
-		NodeType:               types2.String(*apiCluster.CacheNodeType, metadata),
-		SnapshotRetentionLimit: types2.Int(int(*apiCluster.SnapshotRetentionLimit), metadata),
+		Engine:                 defsecTypes.String(*apiCluster.Engine, metadata),
+		NodeType:               defsecTypes.String(*apiCluster.CacheNodeType, metadata),
+		SnapshotRetentionLimit: defsecTypes.Int(int(*apiCluster.SnapshotRetentionLimit), metadata),
 	}, nil
 }
 
@@ -132,8 +132,8 @@ func (a *adapter) adaptReplicationGroup(apiGroup types.ReplicationGroup) (*elast
 	metadata := a.CreateMetadataFromARN(*apiGroup.ARN)
 	return &elasticache.ReplicationGroup{
 		Metadata:                 metadata,
-		TransitEncryptionEnabled: types2.Bool(*apiGroup.TransitEncryptionEnabled, metadata),
-		AtRestEncryptionEnabled:  types2.Bool(*apiGroup.AtRestEncryptionEnabled, metadata),
+		TransitEncryptionEnabled: defsecTypes.Bool(*apiGroup.TransitEncryptionEnabled, metadata),
+		AtRestEncryptionEnabled:  defsecTypes.Bool(*apiGroup.AtRestEncryptionEnabled, metadata),
 	}, nil
 }
 
@@ -176,6 +176,6 @@ func (a *adapter) adaptSecurityGroup(apiGroup types.CacheSecurityGroup) (*elasti
 	metadata := a.CreateMetadataFromARN(*apiGroup.ARN)
 	return &elasticache.SecurityGroup{
 		Metadata:    metadata,
-		Description: types2.String(*apiGroup.Description, metadata),
+		Description: defsecTypes.String(*apiGroup.Description, metadata),
 	}, nil
 }

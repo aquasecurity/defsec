@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,13 +24,13 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: compute.Compute{
 				Firewalls: []compute.Firewall{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						InboundRules: []compute.InboundFirewallRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								SourceAddresses: []types2.StringValue{
-									types2.String("0.0.0.0/0", types2.NewTestMetadata()),
-									types2.String("::/0", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								SourceAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("0.0.0.0/0", defsecTypes.NewTestMetadata()),
+									defsecTypes.String("::/0", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -44,12 +44,12 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: compute.Compute{
 				Firewalls: []compute.Firewall{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						InboundRules: []compute.InboundFirewallRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								SourceAddresses: []types2.StringValue{
-									types2.String("192.168.1.0/24", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								SourceAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("192.168.1.0/24", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

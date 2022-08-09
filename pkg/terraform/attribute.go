@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/context"
 
@@ -22,18 +22,18 @@ type Attribute struct {
 	hclAttribute *hcl.Attribute
 	module       string
 	ctx          *context.Context
-	metadata     types2.Metadata
+	metadata     defsecTypes.Metadata
 }
 
-func NewAttribute(attr *hcl.Attribute, ctx *context.Context, module string, parent types2.Metadata, parentRef *Reference, moduleSource string, moduleFS fs.FS) *Attribute {
-	rng := types2.NewRange(
+func NewAttribute(attr *hcl.Attribute, ctx *context.Context, module string, parent defsecTypes.Metadata, parentRef *Reference, moduleSource string, moduleFS fs.FS) *Attribute {
+	rng := defsecTypes.NewRange(
 		attr.Range.Filename,
 		attr.Range.Start.Line,
 		attr.Range.End.Line,
 		moduleSource,
 		moduleFS,
 	)
-	metadata := types2.NewMetadata(rng, extendReference(parentRef, attr.Name))
+	metadata := defsecTypes.NewMetadata(rng, extendReference(parentRef, attr.Name))
 	return &Attribute{
 		hclAttribute: attr,
 		ctx:          ctx,
@@ -42,7 +42,7 @@ func NewAttribute(attr *hcl.Attribute, ctx *context.Context, module string, pare
 	}
 }
 
-func (a *Attribute) GetMetadata() types2.Metadata {
+func (a *Attribute) GetMetadata() defsecTypes.Metadata {
 	return a.metadata
 }
 
@@ -89,61 +89,61 @@ func (a *Attribute) GetRawValue() interface{} {
 	return nil
 }
 
-func (a *Attribute) AsBytesValueOrDefault(defaultValue []byte, parent *Block) types2.BytesValue {
+func (a *Attribute) AsBytesValueOrDefault(defaultValue []byte, parent *Block) defsecTypes.BytesValue {
 	if a.IsNil() {
-		return types2.BytesDefault(defaultValue, parent.GetMetadata())
+		return defsecTypes.BytesDefault(defaultValue, parent.GetMetadata())
 	}
 	if a.IsNotResolvable() || !a.IsString() {
-		return types2.BytesUnresolvable(a.GetMetadata())
+		return defsecTypes.BytesUnresolvable(a.GetMetadata())
 	}
-	return types2.BytesExplicit(
+	return defsecTypes.BytesExplicit(
 		[]byte(a.Value().AsString()),
 		a.GetMetadata(),
 	)
 }
 
-func (a *Attribute) AsStringValueOrDefault(defaultValue string, parent *Block) types2.StringValue {
+func (a *Attribute) AsStringValueOrDefault(defaultValue string, parent *Block) defsecTypes.StringValue {
 	if a.IsNil() {
-		return types2.StringDefault(defaultValue, parent.GetMetadata())
+		return defsecTypes.StringDefault(defaultValue, parent.GetMetadata())
 	}
 	if a.IsNotResolvable() || !a.IsString() {
-		return types2.StringUnresolvable(a.GetMetadata())
+		return defsecTypes.StringUnresolvable(a.GetMetadata())
 	}
-	return types2.StringExplicit(
+	return defsecTypes.StringExplicit(
 		a.Value().AsString(),
 		a.GetMetadata(),
 	)
 }
 
-func (a *Attribute) AsStringValueSliceOrEmpty(parent *Block) (stringValues []types2.StringValue) {
+func (a *Attribute) AsStringValueSliceOrEmpty(parent *Block) (stringValues []defsecTypes.StringValue) {
 	if a.IsNil() {
 		return stringValues
 	}
 	return a.AsStringValues()
 }
 
-func (a *Attribute) AsBoolValueOrDefault(defaultValue bool, parent *Block) types2.BoolValue {
+func (a *Attribute) AsBoolValueOrDefault(defaultValue bool, parent *Block) defsecTypes.BoolValue {
 	if a.IsNil() {
-		return types2.BoolDefault(defaultValue, parent.GetMetadata())
+		return defsecTypes.BoolDefault(defaultValue, parent.GetMetadata())
 	}
 	if a.IsNotResolvable() || !a.IsBool() {
-		return types2.BoolUnresolvable(a.GetMetadata())
+		return defsecTypes.BoolUnresolvable(a.GetMetadata())
 	}
-	return types2.BoolExplicit(
+	return defsecTypes.BoolExplicit(
 		a.IsTrue(),
 		a.GetMetadata(),
 	)
 }
 
-func (a *Attribute) AsIntValueOrDefault(defaultValue int, parent *Block) types2.IntValue {
+func (a *Attribute) AsIntValueOrDefault(defaultValue int, parent *Block) defsecTypes.IntValue {
 	if a.IsNil() {
-		return types2.IntDefault(defaultValue, parent.GetMetadata())
+		return defsecTypes.IntDefault(defaultValue, parent.GetMetadata())
 	}
 	if a.IsNotResolvable() || !a.IsNumber() {
-		return types2.IntUnresolvable(a.GetMetadata())
+		return defsecTypes.IntUnresolvable(a.GetMetadata())
 	}
 	flt := a.AsNumber()
-	return types2.IntExplicit(
+	return defsecTypes.IntExplicit(
 		int(flt),
 		a.GetMetadata(),
 	)
@@ -258,7 +258,7 @@ func (a *Attribute) Name() string {
 	return a.hclAttribute.Name
 }
 
-func (a *Attribute) AsStringValues() types2.StringValueList {
+func (a *Attribute) AsStringValues() defsecTypes.StringValueList {
 	if a == nil {
 		return nil
 	}
@@ -266,11 +266,11 @@ func (a *Attribute) AsStringValues() types2.StringValueList {
 }
 
 // nolint
-func (a *Attribute) getStringValues(expr hcl.Expression, ctx *hcl.EvalContext) (results []types2.StringValue) {
+func (a *Attribute) getStringValues(expr hcl.Expression, ctx *hcl.EvalContext) (results []defsecTypes.StringValue) {
 
 	defer func() {
 		if err := recover(); err != nil {
-			results = []types2.StringValue{types2.StringUnresolvable(a.metadata)}
+			results = []defsecTypes.StringValue{defsecTypes.StringUnresolvable(a.metadata)}
 		}
 	}()
 
@@ -279,7 +279,7 @@ func (a *Attribute) getStringValues(expr hcl.Expression, ctx *hcl.EvalContext) (
 		for _, expr := range t.Exprs {
 			val, err := expr.Value(a.ctx.Inner())
 			if err != nil {
-				results = append(results, types2.StringUnresolvable(a.metadata))
+				results = append(results, defsecTypes.StringUnresolvable(a.metadata))
 				continue
 			}
 			results = append(results, a.valueToString(val))
@@ -287,7 +287,7 @@ func (a *Attribute) getStringValues(expr hcl.Expression, ctx *hcl.EvalContext) (
 	case *hclsyntax.FunctionCallExpr, *hclsyntax.ConditionalExpr:
 		subVal, err := t.Value(ctx)
 		if err != nil {
-			return append(results, types2.StringUnresolvable(a.metadata))
+			return append(results, defsecTypes.StringUnresolvable(a.metadata))
 		}
 		return a.valueToStrings(subVal)
 	case *hclsyntax.LiteralValueExpr:
@@ -297,7 +297,7 @@ func (a *Attribute) getStringValues(expr hcl.Expression, ctx *hcl.EvalContext) (
 		for _, p := range t.Parts {
 			val, err := p.Value(a.ctx.Inner())
 			if err != nil {
-				results = append(results, types2.StringUnresolvable(a.metadata))
+				results = append(results, defsecTypes.StringUnresolvable(a.metadata))
 				continue
 			}
 			value := a.valueToString(val)
@@ -308,35 +308,35 @@ func (a *Attribute) getStringValues(expr hcl.Expression, ctx *hcl.EvalContext) (
 		if len(t.Variables()) > 0 {
 			if t.Variables()[0].RootName() == "data" {
 				// we can't resolve data lookups at this time, so make unresolvable
-				return append(results, types2.StringUnresolvable(a.metadata))
+				return append(results, defsecTypes.StringUnresolvable(a.metadata))
 			}
 		}
 		subVal, err := t.Value(ctx)
 		if err != nil {
-			return append(results, types2.StringUnresolvable(a.metadata))
+			return append(results, defsecTypes.StringUnresolvable(a.metadata))
 		}
 		return a.valueToStrings(subVal)
 	default:
 		val, err := t.Value(a.ctx.Inner())
 		if err != nil {
-			return append(results, types2.StringUnresolvable(a.metadata))
+			return append(results, defsecTypes.StringUnresolvable(a.metadata))
 		}
 		results = a.valueToStrings(val)
 	}
 	return results
 }
 
-func (a *Attribute) valueToStrings(value cty.Value) (results []types2.StringValue) {
+func (a *Attribute) valueToStrings(value cty.Value) (results []defsecTypes.StringValue) {
 	defer func() {
 		if err := recover(); err != nil {
-			results = []types2.StringValue{types2.StringUnresolvable(a.metadata)}
+			results = []defsecTypes.StringValue{defsecTypes.StringUnresolvable(a.metadata)}
 		}
 	}()
 	if value.IsNull() {
-		return []types2.StringValue{types2.StringUnresolvable(a.metadata)}
+		return []defsecTypes.StringValue{defsecTypes.StringUnresolvable(a.metadata)}
 	}
 	if !value.IsKnown() {
-		return []types2.StringValue{types2.StringUnresolvable(a.metadata)}
+		return []defsecTypes.StringValue{defsecTypes.StringUnresolvable(a.metadata)}
 	}
 	if value.Type().IsListType() || value.Type().IsTupleType() || value.Type().IsSetType() {
 		for _, val := range value.AsValueSlice() {
@@ -346,14 +346,14 @@ func (a *Attribute) valueToStrings(value cty.Value) (results []types2.StringValu
 	return results
 }
 
-func (a *Attribute) valueToString(value cty.Value) (result types2.StringValue) {
+func (a *Attribute) valueToString(value cty.Value) (result defsecTypes.StringValue) {
 	defer func() {
 		if err := recover(); err != nil {
-			result = types2.StringUnresolvable(a.metadata)
+			result = defsecTypes.StringUnresolvable(a.metadata)
 		}
 	}()
 
-	result = types2.StringUnresolvable(a.metadata)
+	result = defsecTypes.StringUnresolvable(a.metadata)
 
 	if value.IsNull() || !value.IsKnown() {
 		return result
@@ -361,7 +361,7 @@ func (a *Attribute) valueToString(value cty.Value) (result types2.StringValue) {
 
 	switch value.Type() {
 	case cty.String:
-		return types2.String(value.AsString(), a.metadata)
+		return defsecTypes.String(value.AsString(), a.metadata)
 	default:
 		return result
 	}
@@ -915,7 +915,7 @@ func (a *Attribute) IsResourceBlockReference(resourceType string) bool {
 	return false
 }
 
-func (a *Attribute) References(r types2.Reference) bool {
+func (a *Attribute) References(r defsecTypes.Reference) bool {
 	if a == nil {
 		return false
 	}

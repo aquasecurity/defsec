@@ -3,7 +3,7 @@ package documentdb
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,9 +24,9 @@ func TestCheckEnableLogExport(t *testing.T) {
 			input: documentdb.DocumentDB{
 				Clusters: []documentdb.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
-						EnabledLogExports: []types2.StringValue{
-							types2.String("", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						EnabledLogExports: []defsecTypes.StringValue{
+							defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -38,9 +38,9 @@ func TestCheckEnableLogExport(t *testing.T) {
 			input: documentdb.DocumentDB{
 				Clusters: []documentdb.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
-						EnabledLogExports: []types2.StringValue{
-							types2.String(documentdb.LogExportAudit, types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						EnabledLogExports: []defsecTypes.StringValue{
+							defsecTypes.String(documentdb.LogExportAudit, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -52,9 +52,9 @@ func TestCheckEnableLogExport(t *testing.T) {
 			input: documentdb.DocumentDB{
 				Clusters: []documentdb.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
-						EnabledLogExports: []types2.StringValue{
-							types2.String(documentdb.LogExportProfiler, types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						EnabledLogExports: []defsecTypes.StringValue{
+							defsecTypes.String(documentdb.LogExportProfiler, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

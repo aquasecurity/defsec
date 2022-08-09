@@ -1,16 +1,16 @@
 package iam
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type PasswordPolicy struct {
-	types2.Metadata
-	ReusePreventionCount types2.IntValue
-	RequireLowercase     types2.BoolValue
-	RequireUppercase     types2.BoolValue
-	RequireNumbers       types2.BoolValue
-	RequireSymbols       types2.BoolValue
-	MaxAgeDays           types2.IntValue
-	MinimumLength        types2.IntValue
+	defsecTypes.Metadata
+	ReusePreventionCount defsecTypes.IntValue
+	RequireLowercase     defsecTypes.BoolValue
+	RequireUppercase     defsecTypes.BoolValue
+	RequireNumbers       defsecTypes.BoolValue
+	RequireSymbols       defsecTypes.BoolValue
+	MaxAgeDays           defsecTypes.IntValue
+	MinimumLength        defsecTypes.IntValue
 }

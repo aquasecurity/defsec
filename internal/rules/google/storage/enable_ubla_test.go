@@ -3,7 +3,7 @@ package storage
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableUbla(t *testing.T) {
 			input: storage.Storage{
 				Buckets: []storage.Bucket{
 					{
-						Metadata:                       types2.NewTestMetadata(),
-						EnableUniformBucketLevelAccess: types2.Bool(false, types2.NewTestMetadata()),
+						Metadata:                       defsecTypes.NewTestMetadata(),
+						EnableUniformBucketLevelAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableUbla(t *testing.T) {
 			input: storage.Storage{
 				Buckets: []storage.Bucket{
 					{
-						Metadata:                       types2.NewTestMetadata(),
-						EnableUniformBucketLevelAccess: types2.Bool(true, types2.NewTestMetadata()),
+						Metadata:                       defsecTypes.NewTestMetadata(),
+						EnableUniformBucketLevelAccess: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

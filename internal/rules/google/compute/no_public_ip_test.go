@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NetworkInterfaces: []compute.NetworkInterface{
 							{
-								Metadata:    types2.NewTestMetadata(),
-								HasPublicIP: types2.Bool(true, types2.NewTestMetadata()),
+								Metadata:    defsecTypes.NewTestMetadata(),
+								HasPublicIP: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,11 +41,11 @@ func TestCheckInstancesDoNotHavePublicIPs(t *testing.T) {
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NetworkInterfaces: []compute.NetworkInterface{
 							{
-								Metadata:    types2.NewTestMetadata(),
-								HasPublicIP: types2.Bool(false, types2.NewTestMetadata()),
+								Metadata:    defsecTypes.NewTestMetadata(),
+								HasPublicIP: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

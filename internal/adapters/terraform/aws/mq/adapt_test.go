@@ -3,7 +3,7 @@ package mq
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/mq"
 
@@ -32,12 +32,12 @@ func Test_adaptBroker(t *testing.T) {
 			  }
 `,
 			expected: mq.Broker{
-				Metadata:     types2.NewTestMetadata(),
-				PublicAccess: types2.Bool(false, types2.NewTestMetadata()),
+				Metadata:     defsecTypes.NewTestMetadata(),
+				PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				Logging: mq.Logging{
-					Metadata: types2.NewTestMetadata(),
-					General:  types2.Bool(false, types2.NewTestMetadata()),
-					Audit:    types2.Bool(true, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					General:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					Audit:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -53,12 +53,12 @@ func Test_adaptBroker(t *testing.T) {
 			  }
 `,
 			expected: mq.Broker{
-				Metadata:     types2.NewTestMetadata(),
-				PublicAccess: types2.Bool(true, types2.NewTestMetadata()),
+				Metadata:     defsecTypes.NewTestMetadata(),
+				PublicAccess: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				Logging: mq.Logging{
-					Metadata: types2.NewTestMetadata(),
-					General:  types2.Bool(true, types2.NewTestMetadata()),
-					Audit:    types2.Bool(false, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					General:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					Audit:    defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -69,12 +69,12 @@ func Test_adaptBroker(t *testing.T) {
 			  }
 `,
 			expected: mq.Broker{
-				Metadata:     types2.NewTestMetadata(),
-				PublicAccess: types2.Bool(false, types2.NewTestMetadata()),
+				Metadata:     defsecTypes.NewTestMetadata(),
+				PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				Logging: mq.Logging{
-					Metadata: types2.NewTestMetadata(),
-					General:  types2.Bool(false, types2.NewTestMetadata()),
-					Audit:    types2.Bool(false, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					General:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					Audit:    defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

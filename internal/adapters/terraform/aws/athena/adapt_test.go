@@ -3,7 +3,7 @@ package athena
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/athena"
 
@@ -32,11 +32,11 @@ func Test_adaptDatabase(t *testing.T) {
 			}
 `,
 			expected: athena.Database{
-				Metadata: types2.NewTestMetadata(),
-				Name:     types2.String("database_name", types2.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				Name:     defsecTypes.String("database_name", defsecTypes.NewTestMetadata()),
 				Encryption: athena.EncryptionConfiguration{
-					Metadata: types2.NewTestMetadata(),
-					Type:     types2.String(athena.EncryptionTypeSSEKMS, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Type:     defsecTypes.String(athena.EncryptionTypeSSEKMS, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -75,13 +75,13 @@ func Test_adaptWorkgroup(t *testing.T) {
 			  }
 `,
 			expected: athena.Workgroup{
-				Metadata: types2.NewTestMetadata(),
-				Name:     types2.String("example", types2.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				Name:     defsecTypes.String("example", defsecTypes.NewTestMetadata()),
 				Encryption: athena.EncryptionConfiguration{
-					Metadata: types2.NewTestMetadata(),
-					Type:     types2.String(athena.EncryptionTypeSSEKMS, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Type:     defsecTypes.String(athena.EncryptionTypeSSEKMS, defsecTypes.NewTestMetadata()),
 				},
-				EnforceConfiguration: types2.Bool(true, types2.NewTestMetadata()),
+				EnforceConfiguration: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -102,13 +102,13 @@ func Test_adaptWorkgroup(t *testing.T) {
 			}
 `,
 			expected: athena.Workgroup{
-				Metadata: types2.NewTestMetadata(),
-				Name:     types2.String("example", types2.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				Name:     defsecTypes.String("example", defsecTypes.NewTestMetadata()),
 				Encryption: athena.EncryptionConfiguration{
-					Metadata: types2.NewTestMetadata(),
-					Type:     types2.String(athena.EncryptionTypeSSEKMS, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Type:     defsecTypes.String(athena.EncryptionTypeSSEKMS, defsecTypes.NewTestMetadata()),
 				},
-				EnforceConfiguration: types2.Bool(false, types2.NewTestMetadata()),
+				EnforceConfiguration: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -127,13 +127,13 @@ func Test_adaptWorkgroup(t *testing.T) {
 			}
 `,
 			expected: athena.Workgroup{
-				Metadata: types2.NewTestMetadata(),
-				Name:     types2.String("example", types2.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				Name:     defsecTypes.String("example", defsecTypes.NewTestMetadata()),
 				Encryption: athena.EncryptionConfiguration{
-					Metadata: types2.NewTestMetadata(),
-					Type:     types2.String(athena.EncryptionTypeNone, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Type:     defsecTypes.String(athena.EncryptionTypeNone, defsecTypes.NewTestMetadata()),
 				},
-				EnforceConfiguration: types2.Bool(true, types2.NewTestMetadata()),
+				EnforceConfiguration: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -144,13 +144,13 @@ func Test_adaptWorkgroup(t *testing.T) {
 			}
 `,
 			expected: athena.Workgroup{
-				Metadata: types2.NewTestMetadata(),
-				Name:     types2.String("example", types2.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				Name:     defsecTypes.String("example", defsecTypes.NewTestMetadata()),
 				Encryption: athena.EncryptionConfiguration{
-					Metadata: types2.NewTestMetadata(),
-					Type:     types2.String(athena.EncryptionTypeNone, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Type:     defsecTypes.String(athena.EncryptionTypeNone, defsecTypes.NewTestMetadata()),
 				},
-				EnforceConfiguration: types2.Bool(false, types2.NewTestMetadata()),
+				EnforceConfiguration: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

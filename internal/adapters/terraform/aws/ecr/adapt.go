@@ -4,7 +4,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecr"
 	iamp "github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/terraform"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/liamg/iamgo"
 )
 
@@ -29,14 +29,14 @@ func adaptRepository(resource *terraform.Block, module *terraform.Module) ecr.Re
 		Metadata: resource.GetMetadata(),
 		ImageScanning: ecr.ImageScanning{
 			Metadata:   resource.GetMetadata(),
-			ScanOnPush: types2.BoolDefault(false, resource.GetMetadata()),
+			ScanOnPush: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		},
-		ImageTagsImmutable: types2.BoolDefault(false, resource.GetMetadata()),
+		ImageTagsImmutable: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		Policies:           nil,
 		Encryption: ecr.Encryption{
 			Metadata: resource.GetMetadata(),
-			Type:     types2.StringDefault("AES256", resource.GetMetadata()),
-			KMSKeyID: types2.StringDefault("", resource.GetMetadata()),
+			Type:     defsecTypes.StringDefault("AES256", resource.GetMetadata()),
+			KMSKeyID: defsecTypes.StringDefault("", resource.GetMetadata()),
 		},
 	}
 
@@ -48,9 +48,9 @@ func adaptRepository(resource *terraform.Block, module *terraform.Module) ecr.Re
 
 	mutabilityAttr := resource.GetAttribute("image_tag_mutability")
 	if mutabilityAttr.Equals("IMMUTABLE") {
-		repo.ImageTagsImmutable = types2.Bool(true, mutabilityAttr.GetMetadata())
+		repo.ImageTagsImmutable = defsecTypes.Bool(true, mutabilityAttr.GetMetadata())
 	} else if mutabilityAttr.Equals("MUTABLE") {
-		repo.ImageTagsImmutable = types2.Bool(false, mutabilityAttr.GetMetadata())
+		repo.ImageTagsImmutable = defsecTypes.Bool(false, mutabilityAttr.GetMetadata())
 	}
 
 	policyBlocks := module.GetReferencingResources(resource, "aws_ecr_repository_policy", "repository")
@@ -64,12 +64,12 @@ func adaptRepository(resource *terraform.Block, module *terraform.Module) ecr.Re
 
 			policy := iamp.Policy{
 				Metadata: policyRes.GetMetadata(),
-				Name:     types2.StringDefault("", policyRes.GetMetadata()),
+				Name:     defsecTypes.StringDefault("", policyRes.GetMetadata()),
 				Document: iamp.Document{
 					Parsed:   *parsed,
 					Metadata: policyAttr.GetMetadata(),
 				},
-				Builtin: types2.Bool(false, policyRes.GetMetadata()),
+				Builtin: defsecTypes.Bool(false, policyRes.GetMetadata()),
 			}
 
 			repo.Policies = append(repo.Policies, policy)
@@ -85,7 +85,7 @@ func adaptRepository(resource *terraform.Block, module *terraform.Module) ecr.Re
 		repo.Encryption.KMSKeyID = kmsKeyAttr.AsStringValueOrDefault("", encryptBlock)
 		if kmsKeyAttr.IsResourceBlockReference("aws_kms_key") {
 			if keyBlock, err := module.GetReferencedBlock(kmsKeyAttr, encryptBlock); err == nil {
-				repo.Encryption.KMSKeyID = types2.String(keyBlock.FullName(), keyBlock.GetMetadata())
+				repo.Encryption.KMSKeyID = defsecTypes.String(keyBlock.FullName(), keyBlock.GetMetadata())
 			}
 		}
 	}

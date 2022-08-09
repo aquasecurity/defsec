@@ -1,7 +1,7 @@
 package network
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Network struct {
@@ -10,23 +10,23 @@ type Network struct {
 }
 
 type SecurityGroup struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Rules []SecurityGroupRule
 }
 
 type SecurityGroupRule struct {
-	types2.Metadata
-	Outbound             types2.BoolValue
-	Allow                types2.BoolValue
-	SourceAddresses      []types2.StringValue
+	defsecTypes.Metadata
+	Outbound             defsecTypes.BoolValue
+	Allow                defsecTypes.BoolValue
+	SourceAddresses      []defsecTypes.StringValue
 	SourcePorts          []PortRange
-	DestinationAddresses []types2.StringValue
+	DestinationAddresses []defsecTypes.StringValue
 	DestinationPorts     []PortRange
-	Protocol             types2.StringValue
+	Protocol             defsecTypes.StringValue
 }
 
 type PortRange struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Start int
 	End   int
 }
@@ -36,12 +36,12 @@ func (r PortRange) Includes(port int) bool {
 }
 
 type NetworkWatcherFlowLog struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	RetentionPolicy RetentionPolicy
 }
 
 type RetentionPolicy struct {
-	types2.Metadata
-	Enabled types2.BoolValue
-	Days    types2.IntValue
+	defsecTypes.Metadata
+	Enabled defsecTypes.BoolValue
+	Days    defsecTypes.IntValue
 }

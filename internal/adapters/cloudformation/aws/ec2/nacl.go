@@ -3,7 +3,7 @@ package ec2
 import (
 	"strconv"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
@@ -15,7 +15,7 @@ func getNetworkACLs(ctx parser.FileContext) (acls []ec2.NetworkACL) {
 		acl := ec2.NetworkACL{
 			Metadata:      aclResource.Metadata(),
 			Rules:         getRules(aclResource.ID(), ctx),
-			IsDefaultRule: types2.BoolDefault(false, aclResource.Metadata()),
+			IsDefaultRule: defsecTypes.BoolDefault(false, aclResource.Metadata()),
 		}
 		acls = append(acls, acl)
 	}
@@ -29,31 +29,31 @@ func getRules(id string, ctx parser.FileContext) (rules []ec2.NetworkACLRule) {
 
 			rule := ec2.NetworkACLRule{
 				Metadata: ruleResource.Metadata(),
-				Type:     types2.StringDefault(ec2.TypeIngress, ruleResource.Metadata()),
-				Action:   types2.StringDefault(ec2.ActionAllow, ruleResource.Metadata()),
-				Protocol: types2.String("-1", ruleResource.Metadata()),
+				Type:     defsecTypes.StringDefault(ec2.TypeIngress, ruleResource.Metadata()),
+				Action:   defsecTypes.StringDefault(ec2.ActionAllow, ruleResource.Metadata()),
+				Protocol: defsecTypes.String("-1", ruleResource.Metadata()),
 				CIDRs:    nil,
 			}
 
 			if egressProperty := ruleResource.GetProperty("Egress"); egressProperty.IsBool() {
 				if egressProperty.AsBool() {
-					rule.Type = types2.String(ec2.TypeEgress, egressProperty.Metadata())
+					rule.Type = defsecTypes.String(ec2.TypeEgress, egressProperty.Metadata())
 				} else {
-					rule.Type = types2.String(ec2.TypeIngress, egressProperty.Metadata())
+					rule.Type = defsecTypes.String(ec2.TypeIngress, egressProperty.Metadata())
 				}
 			}
 
 			if actionProperty := ruleResource.GetProperty("RuleAction"); actionProperty.IsString() {
 				if actionProperty.AsString() == ec2.ActionAllow {
-					rule.Action = types2.String(ec2.ActionAllow, actionProperty.Metadata())
+					rule.Action = defsecTypes.String(ec2.ActionAllow, actionProperty.Metadata())
 				} else {
-					rule.Action = types2.String(ec2.ActionDeny, actionProperty.Metadata())
+					rule.Action = defsecTypes.String(ec2.ActionDeny, actionProperty.Metadata())
 				}
 			}
 
 			if protocolProperty := ruleResource.GetProperty("Protocol"); protocolProperty.IsInt() {
 				protocol := protocolProperty.AsIntValue().Value()
-				rule.Protocol = types2.String(strconv.Itoa(protocol), protocolProperty.Metadata())
+				rule.Protocol = defsecTypes.String(strconv.Itoa(protocol), protocolProperty.Metadata())
 			}
 
 			if ipv4Cidr := ruleResource.GetProperty("CidrBlock"); ipv4Cidr.IsString() {

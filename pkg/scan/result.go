@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
 )
@@ -24,7 +24,7 @@ type Result struct {
 	description      string
 	annotation       string
 	status           Status
-	metadata         types2.Metadata
+	metadata         defsecTypes.Metadata
 	severityOverride *severity.Severity
 	regoNamespace    string
 	regoRule         string
@@ -60,7 +60,7 @@ func (r *Result) OverrideDescription(description string) {
 	r.description = description
 }
 
-func (r *Result) OverrideMetadata(metadata types2.Metadata) {
+func (r *Result) OverrideMetadata(metadata defsecTypes.Metadata) {
 	r.metadata = metadata
 }
 
@@ -92,11 +92,11 @@ func (r Result) Annotation() string {
 	return r.annotation
 }
 
-func (r Result) Metadata() types2.Metadata {
+func (r Result) Metadata() defsecTypes.Metadata {
 	return r.metadata
 }
 
-func (r Result) Range() types2.Range {
+func (r Result) Range() defsecTypes.Range {
 	return r.metadata.Range()
 }
 
@@ -149,7 +149,7 @@ func (r *Result) RelativePathTo(fsRoot string, to string) string {
 type Results []Result
 
 type MetadataProvider interface {
-	GetMetadata() types2.Metadata
+	GetMetadata() defsecTypes.Metadata
 	GetRawValue() interface{}
 }
 
@@ -259,16 +259,16 @@ func (r *Results) SetSourceAndFilesystem(source string, f fs.FS, logicalSource b
 		}
 		rng := m.Range()
 
-		newrng := types2.NewRange(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(), source, f)
+		newrng := defsecTypes.NewRange(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(), source, f)
 		if logicalSource {
-			newrng = types2.NewRangeWithLogicalSource(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(),
+			newrng = defsecTypes.NewRangeWithLogicalSource(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(),
 				source, f)
 		}
 		switch {
 		case m.IsExplicit():
-			m = types2.NewExplicitMetadata(newrng, m.Reference())
+			m = defsecTypes.NewExplicitMetadata(newrng, m.Reference())
 		default:
-			m = types2.NewMetadata(newrng, m.Reference())
+			m = defsecTypes.NewMetadata(newrng, m.Reference())
 		}
 		(*r)[i].OverrideMetadata(m)
 	}

@@ -3,7 +3,7 @@ package appservice
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/azure/appservice"
 
@@ -42,20 +42,20 @@ func Test_adaptService(t *testing.T) {
 			}
 `,
 			expected: appservice.Service{
-				Metadata:         types2.NewTestMetadata(),
-				EnableClientCert: types2.Bool(true, types2.NewTestMetadata()),
-				Identity: struct{ Type types2.StringValue }{
-					Type: types2.String("UserAssigned", types2.NewTestMetadata()),
+				Metadata:         defsecTypes.NewTestMetadata(),
+				EnableClientCert: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				Identity: struct{ Type defsecTypes.StringValue }{
+					Type: defsecTypes.String("UserAssigned", defsecTypes.NewTestMetadata()),
 				},
-				Authentication: struct{ Enabled types2.BoolValue }{
-					Enabled: types2.Bool(true, types2.NewTestMetadata()),
+				Authentication: struct{ Enabled defsecTypes.BoolValue }{
+					Enabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 				Site: struct {
-					EnableHTTP2       types2.BoolValue
-					MinimumTLSVersion types2.StringValue
+					EnableHTTP2       defsecTypes.BoolValue
+					MinimumTLSVersion defsecTypes.StringValue
 				}{
-					EnableHTTP2:       types2.Bool(true, types2.NewTestMetadata()),
-					MinimumTLSVersion: types2.String("1.0", types2.NewTestMetadata()),
+					EnableHTTP2:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					MinimumTLSVersion: defsecTypes.String("1.0", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -66,20 +66,20 @@ func Test_adaptService(t *testing.T) {
 			}
 `,
 			expected: appservice.Service{
-				Metadata:         types2.NewTestMetadata(),
-				EnableClientCert: types2.Bool(false, types2.NewTestMetadata()),
-				Identity: struct{ Type types2.StringValue }{
-					Type: types2.String("", types2.NewTestMetadata()),
+				Metadata:         defsecTypes.NewTestMetadata(),
+				EnableClientCert: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				Identity: struct{ Type defsecTypes.StringValue }{
+					Type: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
-				Authentication: struct{ Enabled types2.BoolValue }{
-					Enabled: types2.Bool(false, types2.NewTestMetadata()),
+				Authentication: struct{ Enabled defsecTypes.BoolValue }{
+					Enabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 				Site: struct {
-					EnableHTTP2       types2.BoolValue
-					MinimumTLSVersion types2.StringValue
+					EnableHTTP2       defsecTypes.BoolValue
+					MinimumTLSVersion defsecTypes.StringValue
 				}{
-					EnableHTTP2:       types2.Bool(false, types2.NewTestMetadata()),
-					MinimumTLSVersion: types2.String("1.2", types2.NewTestMetadata()),
+					EnableHTTP2:       defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					MinimumTLSVersion: defsecTypes.String("1.2", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -109,8 +109,8 @@ func Test_adaptFunctionApp(t *testing.T) {
 			}
 `,
 			expected: appservice.FunctionApp{
-				Metadata:  types2.NewTestMetadata(),
-				HTTPSOnly: types2.Bool(true, types2.NewTestMetadata()),
+				Metadata:  defsecTypes.NewTestMetadata(),
+				HTTPSOnly: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -120,8 +120,8 @@ func Test_adaptFunctionApp(t *testing.T) {
 			}
 `,
 			expected: appservice.FunctionApp{
-				Metadata:  types2.NewTestMetadata(),
-				HTTPSOnly: types2.Bool(false, types2.NewTestMetadata()),
+				Metadata:  defsecTypes.NewTestMetadata(),
+				HTTPSOnly: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

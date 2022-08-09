@@ -3,7 +3,7 @@ package documentdb
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 			input: documentdb.DocumentDB{
 				Clusters: []documentdb.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
-						KMSKeyID: types2.String("", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,12 +36,12 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 			input: documentdb.DocumentDB{
 				Clusters: []documentdb.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
-						KMSKeyID: types2.String("kms-key", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						KMSKeyID: defsecTypes.String("kms-key", defsecTypes.NewTestMetadata()),
 						Instances: []documentdb.Instance{
 							{
-								Metadata: types2.NewTestMetadata(),
-								KMSKeyID: types2.String("", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -54,12 +54,12 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 			input: documentdb.DocumentDB{
 				Clusters: []documentdb.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
-						KMSKeyID: types2.String("kms-key", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						KMSKeyID: defsecTypes.String("kms-key", defsecTypes.NewTestMetadata()),
 						Instances: []documentdb.Instance{
 							{
-								Metadata: types2.NewTestMetadata(),
-								KMSKeyID: types2.String("kms-key", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								KMSKeyID: defsecTypes.String("kms-key", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

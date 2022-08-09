@@ -3,7 +3,7 @@ package datafactory
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: datafactory.DataFactory{
 				DataFactories: []datafactory.Factory{
 					{
-						Metadata:            types2.NewTestMetadata(),
-						EnablePublicNetwork: types2.Bool(true, types2.NewTestMetadata()),
+						Metadata:            defsecTypes.NewTestMetadata(),
+						EnablePublicNetwork: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: datafactory.DataFactory{
 				DataFactories: []datafactory.Factory{
 					{
-						Metadata:            types2.NewTestMetadata(),
-						EnablePublicNetwork: types2.Bool(false, types2.NewTestMetadata()),
+						Metadata:            defsecTypes.NewTestMetadata(),
+						EnablePublicNetwork: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

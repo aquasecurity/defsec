@@ -3,7 +3,7 @@ package ec2
 import (
 	"fmt"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 
@@ -60,8 +60,8 @@ func (a *adapter) adaptVolume(volume types.Volume) (*ec2.Volume, error) {
 		Metadata: metadata,
 		Encryption: ec2.Encryption{
 			Metadata: metadata,
-			Enabled:  types2.Bool(encrypted, metadata),
-			KMSKeyID: types2.String(kmsKeyId, metadata),
+			Enabled:  defsecTypes.Bool(encrypted, metadata),
+			KMSKeyID: defsecTypes.String(kmsKeyId, metadata),
 		},
 	}, nil
 }

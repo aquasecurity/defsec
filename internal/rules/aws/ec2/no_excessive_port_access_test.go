@@ -3,7 +3,7 @@ package ec2
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
@@ -25,11 +25,11 @@ func TestCheckNoExcessivePortAccess(t *testing.T) {
 			input: ec2.EC2{
 				NetworkACLs: []ec2.NetworkACL{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []ec2.NetworkACLRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Protocol: types2.String("-1", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Protocol: defsecTypes.String("-1", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -42,11 +42,11 @@ func TestCheckNoExcessivePortAccess(t *testing.T) {
 			input: ec2.EC2{
 				NetworkACLs: []ec2.NetworkACL{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []ec2.NetworkACLRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Protocol: types2.String("all", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Protocol: defsecTypes.String("all", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -59,11 +59,11 @@ func TestCheckNoExcessivePortAccess(t *testing.T) {
 			input: ec2.EC2{
 				NetworkACLs: []ec2.NetworkACL{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []ec2.NetworkACLRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Protocol: types2.String("tcp", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Protocol: defsecTypes.String("tcp", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

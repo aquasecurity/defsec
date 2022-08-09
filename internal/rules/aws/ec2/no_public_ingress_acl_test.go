@@ -3,7 +3,7 @@ package ec2
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
@@ -25,14 +25,14 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: ec2.EC2{
 				NetworkACLs: []ec2.NetworkACL{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []ec2.NetworkACLRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Type:     types2.String(ec2.TypeIngress, types2.NewTestMetadata()),
-								Action:   types2.String(ec2.ActionAllow, types2.NewTestMetadata()),
-								CIDRs: []types2.StringValue{
-									types2.String("0.0.0.0/0", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Type:     defsecTypes.String(ec2.TypeIngress, defsecTypes.NewTestMetadata()),
+								Action:   defsecTypes.String(ec2.ActionAllow, defsecTypes.NewTestMetadata()),
+								CIDRs: []defsecTypes.StringValue{
+									defsecTypes.String("0.0.0.0/0", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -46,14 +46,14 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: ec2.EC2{
 				NetworkACLs: []ec2.NetworkACL{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []ec2.NetworkACLRule{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Type:     types2.String(ec2.TypeIngress, types2.NewTestMetadata()),
-								Action:   types2.String(ec2.ActionAllow, types2.NewTestMetadata()),
-								CIDRs: []types2.StringValue{
-									types2.String("10.0.0.0/16", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Type:     defsecTypes.String(ec2.TypeIngress, defsecTypes.NewTestMetadata()),
+								Action:   defsecTypes.String(ec2.ActionAllow, defsecTypes.NewTestMetadata()),
+								CIDRs: []defsecTypes.StringValue{
+									defsecTypes.String("10.0.0.0/16", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

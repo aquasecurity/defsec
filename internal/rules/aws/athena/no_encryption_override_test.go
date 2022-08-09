@@ -3,7 +3,7 @@ package athena
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNoEncryptionOverride(t *testing.T) {
 			input: athena.Athena{
 				Workgroups: []athena.Workgroup{
 					{
-						Metadata:             types2.NewTestMetadata(),
-						EnforceConfiguration: types2.Bool(false, types2.NewTestMetadata()),
+						Metadata:             defsecTypes.NewTestMetadata(),
+						EnforceConfiguration: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckNoEncryptionOverride(t *testing.T) {
 			input: athena.Athena{
 				Workgroups: []athena.Workgroup{
 					{
-						Metadata:             types2.NewTestMetadata(),
-						EnforceConfiguration: types2.Bool(true, types2.NewTestMetadata()),
+						Metadata:             defsecTypes.NewTestMetadata(),
+						EnforceConfiguration: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

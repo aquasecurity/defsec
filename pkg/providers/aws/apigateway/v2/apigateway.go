@@ -1,7 +1,7 @@
 package v2
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type APIGateway struct {
@@ -17,25 +17,25 @@ const (
 )
 
 type API struct {
-	types2.Metadata
-	Name         types2.StringValue
-	ProtocolType types2.StringValue
+	defsecTypes.Metadata
+	Name         defsecTypes.StringValue
+	ProtocolType defsecTypes.StringValue
 	Stages       []Stage
 }
 
 type Stage struct {
-	types2.Metadata
-	Name          types2.StringValue
+	defsecTypes.Metadata
+	Name          defsecTypes.StringValue
 	AccessLogging AccessLogging
 }
 
 type AccessLogging struct {
-	types2.Metadata
-	CloudwatchLogGroupARN types2.StringValue
+	defsecTypes.Metadata
+	CloudwatchLogGroupARN defsecTypes.StringValue
 }
 
 type DomainName struct {
-	types2.Metadata
-	Name           types2.StringValue
-	SecurityPolicy types2.StringValue
+	defsecTypes.Metadata
+	Name           defsecTypes.StringValue
+	SecurityPolicy defsecTypes.StringValue
 }

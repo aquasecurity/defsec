@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNoRootAccessKeys(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types2.NewTestMetadata(),
-						Name:       types2.String("root", types2.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Name:       defsecTypes.String("root", defsecTypes.NewTestMetadata()),
 						AccessKeys: nil,
 					},
 				},
@@ -37,8 +37,8 @@ func TestCheckNoRootAccessKeys(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types2.NewTestMetadata(),
-						Name:       types2.String("other", types2.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Name:       defsecTypes.String("other", defsecTypes.NewTestMetadata()),
 						AccessKeys: nil,
 					},
 				},
@@ -50,15 +50,15 @@ func TestCheckNoRootAccessKeys(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Name:     types2.String("other", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Name:     defsecTypes.String("other", defsecTypes.NewTestMetadata()),
 						AccessKeys: []iam.AccessKey{
 							{
-								Metadata:     types2.NewTestMetadata(),
-								AccessKeyId:  types2.String("BLAH", types2.NewTestMetadata()),
-								Active:       types2.Bool(true, types2.NewTestMetadata()),
-								CreationDate: types2.TimeUnresolvable(types2.NewTestMetadata()),
-								LastAccess:   types2.TimeUnresolvable(types2.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								AccessKeyId:  defsecTypes.String("BLAH", defsecTypes.NewTestMetadata()),
+								Active:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								CreationDate: defsecTypes.TimeUnresolvable(defsecTypes.NewTestMetadata()),
+								LastAccess:   defsecTypes.TimeUnresolvable(defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -71,15 +71,15 @@ func TestCheckNoRootAccessKeys(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Name:     types2.String("root", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Name:     defsecTypes.String("root", defsecTypes.NewTestMetadata()),
 						AccessKeys: []iam.AccessKey{
 							{
-								Metadata:     types2.NewTestMetadata(),
-								AccessKeyId:  types2.String("BLAH", types2.NewTestMetadata()),
-								Active:       types2.Bool(false, types2.NewTestMetadata()),
-								CreationDate: types2.TimeUnresolvable(types2.NewTestMetadata()),
-								LastAccess:   types2.TimeUnresolvable(types2.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								AccessKeyId:  defsecTypes.String("BLAH", defsecTypes.NewTestMetadata()),
+								Active:       defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+								CreationDate: defsecTypes.TimeUnresolvable(defsecTypes.NewTestMetadata()),
+								LastAccess:   defsecTypes.TimeUnresolvable(defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -92,15 +92,15 @@ func TestCheckNoRootAccessKeys(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Name:     types2.String("root", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Name:     defsecTypes.String("root", defsecTypes.NewTestMetadata()),
 						AccessKeys: []iam.AccessKey{
 							{
-								Metadata:     types2.NewTestMetadata(),
-								AccessKeyId:  types2.String("BLAH", types2.NewTestMetadata()),
-								Active:       types2.Bool(true, types2.NewTestMetadata()),
-								CreationDate: types2.TimeUnresolvable(types2.NewTestMetadata()),
-								LastAccess:   types2.TimeUnresolvable(types2.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								AccessKeyId:  defsecTypes.String("BLAH", defsecTypes.NewTestMetadata()),
+								Active:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								CreationDate: defsecTypes.TimeUnresolvable(defsecTypes.NewTestMetadata()),
+								LastAccess:   defsecTypes.TimeUnresolvable(defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

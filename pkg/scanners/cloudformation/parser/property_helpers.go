@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/cftypes"
 )
@@ -113,11 +113,11 @@ func (p *Property) AsString() string {
 	return p.Inner.Value.(string)
 }
 
-func (p *Property) AsStringValue() types2.StringValue {
+func (p *Property) AsStringValue() defsecTypes.StringValue {
 	if p.unresolved {
-		return types2.StringUnresolvable(p.Metadata())
+		return defsecTypes.StringUnresolvable(p.Metadata())
 	}
-	return types2.StringExplicit(p.AsString(), p.Metadata())
+	return defsecTypes.StringExplicit(p.AsString(), p.Metadata())
 }
 
 func (p *Property) AsInt() int {
@@ -137,11 +137,11 @@ func (p *Property) AsInt() int {
 	return p.Inner.Value.(int)
 }
 
-func (p *Property) AsIntValue() types2.IntValue {
+func (p *Property) AsIntValue() defsecTypes.IntValue {
 	if p.unresolved {
-		return types2.IntUnresolvable(p.Metadata())
+		return defsecTypes.IntUnresolvable(p.Metadata())
 	}
-	return types2.IntExplicit(p.AsInt(), p.Metadata())
+	return defsecTypes.IntExplicit(p.AsInt(), p.Metadata())
 }
 
 func (p *Property) AsBool() bool {
@@ -157,11 +157,11 @@ func (p *Property) AsBool() bool {
 	return p.Inner.Value.(bool)
 }
 
-func (p *Property) AsBoolValue() types2.BoolValue {
+func (p *Property) AsBoolValue() defsecTypes.BoolValue {
 	if p.unresolved {
-		return types2.BoolUnresolvable(p.Metadata())
+		return defsecTypes.BoolUnresolvable(p.Metadata())
 	}
-	return types2.Bool(p.AsBool(), p.Metadata())
+	return defsecTypes.Bool(p.AsBool(), p.Metadata())
 }
 
 func (p *Property) AsMap() map[string]*Property {

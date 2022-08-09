@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/google/compute"
 
@@ -28,10 +28,10 @@ func Test_adaptSSLPolicies(t *testing.T) {
 `,
 			expected: []compute.SSLPolicy{
 				{
-					Metadata:          types2.NewTestMetadata(),
-					Name:              types2.String("production-ssl-policy", types2.NewTestMetadata()),
-					Profile:           types2.String("MODERN", types2.NewTestMetadata()),
-					MinimumTLSVersion: types2.String("TLS_1_2", types2.NewTestMetadata()),
+					Metadata:          defsecTypes.NewTestMetadata(),
+					Name:              defsecTypes.String("production-ssl-policy", defsecTypes.NewTestMetadata()),
+					Profile:           defsecTypes.String("MODERN", defsecTypes.NewTestMetadata()),
+					MinimumTLSVersion: defsecTypes.String("TLS_1_2", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -43,10 +43,10 @@ func Test_adaptSSLPolicies(t *testing.T) {
 `,
 			expected: []compute.SSLPolicy{
 				{
-					Metadata:          types2.NewTestMetadata(),
-					Name:              types2.String("", types2.NewTestMetadata()),
-					Profile:           types2.String("", types2.NewTestMetadata()),
-					MinimumTLSVersion: types2.String("TLS_1_0", types2.NewTestMetadata()),
+					Metadata:          defsecTypes.NewTestMetadata(),
+					Name:              defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					Profile:           defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					MinimumTLSVersion: defsecTypes.String("TLS_1_0", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

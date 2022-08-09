@@ -3,7 +3,7 @@ package s3
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 			input: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: s3.Encryption{
-							Metadata: types2.Metadata{},
-							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
-							KMSKeyId: types2.String("", types2.NewTestMetadata()),
+							Metadata: defsecTypes.Metadata{},
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							KMSKeyId: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 			input: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: s3.Encryption{
-							Metadata: types2.Metadata{},
-							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
-							KMSKeyId: types2.String("some-sort-of-key", types2.NewTestMetadata()),
+							Metadata: defsecTypes.Metadata{},
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							KMSKeyId: defsecTypes.String("some-sort-of-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

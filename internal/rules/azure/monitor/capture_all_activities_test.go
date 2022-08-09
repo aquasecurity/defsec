@@ -3,7 +3,7 @@ package monitor
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,9 +24,9 @@ func TestCheckCaptureAllActivities(t *testing.T) {
 			input: monitor.Monitor{
 				LogProfiles: []monitor.LogProfile{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Categories: []types2.StringValue{
-							types2.String("Write", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Categories: []defsecTypes.StringValue{
+							defsecTypes.String("Write", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -38,11 +38,11 @@ func TestCheckCaptureAllActivities(t *testing.T) {
 			input: monitor.Monitor{
 				LogProfiles: []monitor.LogProfile{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Categories: []types2.StringValue{
-							types2.String("Action", types2.NewTestMetadata()),
-							types2.String("Write", types2.NewTestMetadata()),
-							types2.String("Delete", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Categories: []defsecTypes.StringValue{
+							defsecTypes.String("Action", defsecTypes.NewTestMetadata()),
+							defsecTypes.String("Write", defsecTypes.NewTestMetadata()),
+							defsecTypes.String("Delete", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

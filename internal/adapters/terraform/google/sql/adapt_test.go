@@ -3,7 +3,7 @@ package sql
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/google/sql"
 
@@ -43,39 +43,39 @@ func Test_Adapt(t *testing.T) {
 			expected: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:        types2.NewTestMetadata(),
-						IsReplica:       types2.Bool(false, types2.NewTestMetadata()),
-						DatabaseVersion: types2.String("POSTGRES_12", types2.NewTestMetadata()),
+						Metadata:        defsecTypes.NewTestMetadata(),
+						IsReplica:       defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						DatabaseVersion: defsecTypes.String("POSTGRES_12", defsecTypes.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types2.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							Backups: sql.Backups{
-								Metadata: types2.NewTestMetadata(),
-								Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 							Flags: sql.Flags{
-								Metadata:                        types2.NewTestMetadata(),
-								LogMinDurationStatement:         types2.Int(-1, types2.NewTestMetadata()),
-								ContainedDatabaseAuthentication: types2.Bool(true, types2.NewTestMetadata()),
-								CrossDBOwnershipChaining:        types2.Bool(true, types2.NewTestMetadata()),
-								LocalInFile:                     types2.Bool(false, types2.NewTestMetadata()),
-								LogCheckpoints:                  types2.Bool(false, types2.NewTestMetadata()),
-								LogConnections:                  types2.Bool(false, types2.NewTestMetadata()),
-								LogDisconnections:               types2.Bool(false, types2.NewTestMetadata()),
-								LogLockWaits:                    types2.Bool(false, types2.NewTestMetadata()),
-								LogMinMessages:                  types2.String("", types2.NewTestMetadata()),
-								LogTempFileSize:                 types2.Int(-1, types2.NewTestMetadata()),
+								Metadata:                        defsecTypes.NewTestMetadata(),
+								LogMinDurationStatement:         defsecTypes.Int(-1, defsecTypes.NewTestMetadata()),
+								ContainedDatabaseAuthentication: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								CrossDBOwnershipChaining:        defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								LocalInFile:                     defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+								LogCheckpoints:                  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+								LogConnections:                  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+								LogDisconnections:               defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+								LogLockWaits:                    defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+								LogMinMessages:                  defsecTypes.String("", defsecTypes.NewTestMetadata()),
+								LogTempFileSize:                 defsecTypes.Int(-1, defsecTypes.NewTestMetadata()),
 							},
 							IPConfiguration: sql.IPConfiguration{
-								Metadata:   types2.NewTestMetadata(),
-								RequireTLS: types2.Bool(true, types2.NewTestMetadata()),
-								EnableIPv4: types2.Bool(false, types2.NewTestMetadata()),
+								Metadata:   defsecTypes.NewTestMetadata(),
+								RequireTLS: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								EnableIPv4: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								AuthorizedNetworks: []struct {
-									Name types2.StringValue
-									CIDR types2.StringValue
+									Name defsecTypes.StringValue
+									CIDR defsecTypes.StringValue
 								}{
 									{
-										Name: types2.String("internal", types2.NewTestMetadata()),
-										CIDR: types2.String("108.12.12.0/24", types2.NewTestMetadata()),
+										Name: defsecTypes.String("internal", defsecTypes.NewTestMetadata()),
+										CIDR: defsecTypes.String("108.12.12.0/24", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -146,28 +146,28 @@ resource "google_sql_database_instance" "backup_source_instance" {
                 `,
 			expected: []sql.DatabaseInstance{
 				{
-					Metadata:        types2.NewTestMetadata(),
-					DatabaseVersion: types2.String("POSTGRES_11", types2.NewTestMetadata()),
-					IsReplica:       types2.Bool(false, types2.NewTestMetadata()),
+					Metadata:        defsecTypes.NewTestMetadata(),
+					DatabaseVersion: defsecTypes.String("POSTGRES_11", defsecTypes.NewTestMetadata()),
+					IsReplica:       defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					Settings: sql.Settings{
 						Backups: sql.Backups{
-							Enabled: types2.Bool(true, types2.NewTestMetadata()),
+							Enabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 						Flags: sql.Flags{
-							LogConnections:                  types2.Bool(true, types2.NewTestMetadata()),
-							LogTempFileSize:                 types2.Int(0, types2.NewTestMetadata()),
-							LogCheckpoints:                  types2.Bool(true, types2.NewTestMetadata()),
-							LogDisconnections:               types2.Bool(true, types2.NewTestMetadata()),
-							LogLockWaits:                    types2.Bool(true, types2.NewTestMetadata()),
-							ContainedDatabaseAuthentication: types2.Bool(true, types2.NewTestMetadata()),
-							CrossDBOwnershipChaining:        types2.Bool(true, types2.NewTestMetadata()),
-							LocalInFile:                     types2.Bool(false, types2.NewTestMetadata()),
-							LogMinDurationStatement:         types2.Int(-1, types2.NewTestMetadata()),
-							LogMinMessages:                  types2.String("", types2.NewTestMetadata()),
+							LogConnections:                  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							LogTempFileSize:                 defsecTypes.Int(0, defsecTypes.NewTestMetadata()),
+							LogCheckpoints:                  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							LogDisconnections:               defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							LogLockWaits:                    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							ContainedDatabaseAuthentication: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							CrossDBOwnershipChaining:        defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							LocalInFile:                     defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							LogMinDurationStatement:         defsecTypes.Int(-1, defsecTypes.NewTestMetadata()),
+							LogMinMessages:                  defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 						IPConfiguration: sql.IPConfiguration{
-							EnableIPv4: types2.Bool(false, types2.NewTestMetadata()),
-							RequireTLS: types2.Bool(true, types2.NewTestMetadata()),
+							EnableIPv4: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							RequireTLS: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

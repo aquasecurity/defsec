@@ -3,7 +3,7 @@ package bigquery
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/google/bigquery"
 
@@ -38,20 +38,20 @@ func Test_Adapt(t *testing.T) {
 			expected: bigquery.BigQuery{
 				Datasets: []bigquery.Dataset{
 					{
-						Metadata: types2.NewTestMetadata(),
-						ID:       types2.String("", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						ID:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						AccessGrants: []bigquery.AccessGrant{
 							{
-								Metadata:     types2.NewTestMetadata(),
-								Role:         types2.String("OWNER", types2.NewTestMetadata()),
-								Domain:       types2.String("", types2.NewTestMetadata()),
-								SpecialGroup: types2.String(bigquery.SpecialGroupAllAuthenticatedUsers, types2.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								Role:         defsecTypes.String("OWNER", defsecTypes.NewTestMetadata()),
+								Domain:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
+								SpecialGroup: defsecTypes.String(bigquery.SpecialGroupAllAuthenticatedUsers, defsecTypes.NewTestMetadata()),
 							},
 							{
-								Metadata:     types2.NewTestMetadata(),
-								Role:         types2.String("READER", types2.NewTestMetadata()),
-								Domain:       types2.String("hashicorp.com", types2.NewTestMetadata()),
-								SpecialGroup: types2.String("", types2.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								Role:         defsecTypes.String("READER", defsecTypes.NewTestMetadata()),
+								Domain:       defsecTypes.String("hashicorp.com", defsecTypes.NewTestMetadata()),
+								SpecialGroup: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -68,8 +68,8 @@ func Test_Adapt(t *testing.T) {
 			expected: bigquery.BigQuery{
 				Datasets: []bigquery.Dataset{
 					{
-						Metadata: types2.NewTestMetadata(),
-						ID:       types2.String("example_dataset", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						ID:       defsecTypes.String("example_dataset", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -85,14 +85,14 @@ func Test_Adapt(t *testing.T) {
 			expected: bigquery.BigQuery{
 				Datasets: []bigquery.Dataset{
 					{
-						Metadata: types2.NewTestMetadata(),
-						ID:       types2.String("", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						ID:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						AccessGrants: []bigquery.AccessGrant{
 							{
-								Metadata:     types2.NewTestMetadata(),
-								Role:         types2.String("", types2.NewTestMetadata()),
-								Domain:       types2.String("", types2.NewTestMetadata()),
-								SpecialGroup: types2.String("", types2.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								Role:         defsecTypes.String("", defsecTypes.NewTestMetadata()),
+								Domain:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
+								SpecialGroup: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

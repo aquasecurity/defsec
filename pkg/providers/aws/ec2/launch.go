@@ -1,21 +1,21 @@
 package ec2
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type LaunchConfiguration struct {
-	types2.Metadata
-	Name              types2.StringValue
-	AssociatePublicIP types2.BoolValue
+	defsecTypes.Metadata
+	Name              defsecTypes.StringValue
+	AssociatePublicIP defsecTypes.BoolValue
 	RootBlockDevice   *BlockDevice
 	EBSBlockDevices   []*BlockDevice
 	MetadataOptions   MetadataOptions
-	UserData          types2.StringValue
+	UserData          defsecTypes.StringValue
 }
 
 type LaunchTemplate struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Instance
 }
 

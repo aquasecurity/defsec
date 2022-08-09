@@ -1,7 +1,7 @@
 package dynamodb
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type DynamoDB struct {
@@ -10,21 +10,21 @@ type DynamoDB struct {
 }
 
 type DAXCluster struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	ServerSideEncryption ServerSideEncryption
-	PointInTimeRecovery  types2.BoolValue
+	PointInTimeRecovery  defsecTypes.BoolValue
 }
 
 type Table struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	ServerSideEncryption ServerSideEncryption
-	PointInTimeRecovery  types2.BoolValue
+	PointInTimeRecovery  defsecTypes.BoolValue
 }
 
 type ServerSideEncryption struct {
-	types2.Metadata
-	Enabled  types2.BoolValue
-	KMSKeyID types2.StringValue
+	defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
+	KMSKeyID defsecTypes.StringValue
 }
 
 const DefaultKMSKeyID = "alias/aws/dynamodb"

@@ -3,7 +3,7 @@ package s3
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,7 +24,7 @@ func TestCheckPublicACLsAreIgnored(t *testing.T) {
 			input: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 					},
 				},
 			},
@@ -35,10 +35,10 @@ func TestCheckPublicACLsAreIgnored(t *testing.T) {
 			input: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						PublicAccessBlock: &s3.PublicAccessBlock{
-							Metadata:         types2.NewTestMetadata(),
-							IgnorePublicACLs: types2.Bool(true, types2.NewTestMetadata()),
+							Metadata:         defsecTypes.NewTestMetadata(),
+							IgnorePublicACLs: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

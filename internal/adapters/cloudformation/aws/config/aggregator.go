@@ -3,14 +3,14 @@ package config
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/config"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getConfigurationAggregator(ctx parser.FileContext) config.ConfigurationAggregrator {
 
 	aggregator := config.ConfigurationAggregrator{
-		Metadata:         types2.NewUnmanagedMetadata(),
-		SourceAllRegions: types2.BoolDefault(false, ctx.Metadata()),
+		Metadata:         defsecTypes.NewUnmanagedMetadata(),
+		SourceAllRegions: defsecTypes.BoolDefault(false, ctx.Metadata()),
 	}
 
 	aggregatorResources := ctx.GetResourcesByType("AWS::Config::ConfigurationAggregator")
@@ -25,7 +25,7 @@ func getConfigurationAggregator(ctx parser.FileContext) config.ConfigurationAggr
 	}
 }
 
-func isSourcingAllRegions(r *parser.Resource) types2.BoolValue {
+func isSourcingAllRegions(r *parser.Resource) defsecTypes.BoolValue {
 	accountProp := r.GetProperty("AccountAggregationSources")
 	orgProp := r.GetProperty("OrganizationAggregationSource")
 
@@ -46,5 +46,5 @@ func isSourcingAllRegions(r *parser.Resource) types2.BoolValue {
 	}
 
 	// nothing is set or resolvable so its got to be false
-	return types2.BoolDefault(false, r.Metadata())
+	return defsecTypes.BoolDefault(false, r.Metadata())
 }

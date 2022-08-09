@@ -3,7 +3,7 @@ package efs
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 			input: efs.EFS{
 				FileSystems: []efs.FileSystem{
 					{
-						Metadata:  types2.NewTestMetadata(),
-						Encrypted: types2.Bool(false, types2.NewTestMetadata()),
+						Metadata:  defsecTypes.NewTestMetadata(),
+						Encrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					}},
 			},
 			expected: true,
@@ -35,8 +35,8 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 			input: efs.EFS{
 				FileSystems: []efs.FileSystem{
 					{
-						Metadata:  types2.NewTestMetadata(),
-						Encrypted: types2.Bool(true, types2.NewTestMetadata()),
+						Metadata:  defsecTypes.NewTestMetadata(),
+						Encrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					}},
 			},
 			expected: false,

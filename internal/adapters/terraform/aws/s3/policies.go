@@ -3,7 +3,7 @@ package s3
 import (
 	iamAdapter "github.com/aquasecurity/defsec/internal/adapters/terraform/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func (a *adapter) adaptBucketPolicies() {
@@ -21,9 +21,9 @@ func (a *adapter) adaptBucketPolicies() {
 
 		policy := iam.Policy{
 			Metadata: policyAttr.GetMetadata(),
-			Name:     types2.StringDefault("", b.GetMetadata()),
+			Name:     defsecTypes.StringDefault("", b.GetMetadata()),
 			Document: *doc,
-			Builtin:  types2.Bool(false, b.GetMetadata()),
+			Builtin:  defsecTypes.Bool(false, b.GetMetadata()),
 		}
 
 		var bucketName string

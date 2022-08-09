@@ -1,18 +1,18 @@
 package sam
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type SimpleTable struct {
-	types2.Metadata
-	TableName        types2.StringValue
+	defsecTypes.Metadata
+	TableName        defsecTypes.StringValue
 	SSESpecification SSESpecification
 }
 
 type SSESpecification struct {
-	types2.Metadata
+	defsecTypes.Metadata
 
-	Enabled        types2.BoolValue
-	KMSMasterKeyID types2.StringValue
+	Enabled        defsecTypes.BoolValue
+	KMSMasterKeyID defsecTypes.StringValue
 }

@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckNoLegacyAuthentication(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						MasterAuth: gke.MasterAuth{
-							Metadata: types2.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							ClientCertificate: gke.ClientCertificate{
-								Metadata:         types2.NewTestMetadata(),
-								IssueCertificate: types2.Bool(true, types2.NewTestMetadata()),
+								Metadata:         defsecTypes.NewTestMetadata(),
+								IssueCertificate: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -42,14 +42,14 @@ func TestCheckNoLegacyAuthentication(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						MasterAuth: gke.MasterAuth{
-							Metadata: types2.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							ClientCertificate: gke.ClientCertificate{
-								Metadata:         types2.NewTestMetadata(),
-								IssueCertificate: types2.Bool(false, types2.NewTestMetadata()),
+								Metadata:         defsecTypes.NewTestMetadata(),
+								IssueCertificate: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
-							Username: types2.String("username", types2.NewTestMetadata()),
+							Username: defsecTypes.String("username", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -61,14 +61,14 @@ func TestCheckNoLegacyAuthentication(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						MasterAuth: gke.MasterAuth{
-							Metadata: types2.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							ClientCertificate: gke.ClientCertificate{
-								Metadata:         types2.NewTestMetadata(),
-								IssueCertificate: types2.Bool(false, types2.NewTestMetadata()),
+								Metadata:         defsecTypes.NewTestMetadata(),
+								IssueCertificate: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
-							Username: types2.String("", types2.NewTestMetadata()),
+							Username: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

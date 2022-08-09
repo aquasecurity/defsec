@@ -3,7 +3,7 @@ package storage
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,12 +25,12 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: storage.Storage{
 				Buckets: []storage.Bucket{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Bindings: []iam.Binding{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Members: []types2.StringValue{
-									types2.String("allAuthenticatedUsers", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Members: []defsecTypes.StringValue{
+									defsecTypes.String("allAuthenticatedUsers", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -44,11 +44,11 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: storage.Storage{
 				Buckets: []storage.Bucket{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Members: []iam.Member{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Member:   types2.String("allUsers", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Member:   defsecTypes.String("allUsers", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -61,19 +61,19 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: storage.Storage{
 				Buckets: []storage.Bucket{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Bindings: []iam.Binding{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Members: []types2.StringValue{
-									types2.String("user:jane@example.com", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Members: []defsecTypes.StringValue{
+									defsecTypes.String("user:jane@example.com", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
 						Members: []iam.Member{
 							{
-								Metadata: types2.NewTestMetadata(),
-								Member:   types2.String("user:john@example.com", types2.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Member:   defsecTypes.String("user:john@example.com", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

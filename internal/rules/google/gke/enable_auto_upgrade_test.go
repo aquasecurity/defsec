@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,13 +24,13 @@ func TestCheckEnableAutoUpgrade(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NodePools: []gke.NodePool{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Management: gke.Management{
-									Metadata:          types2.NewTestMetadata(),
-									EnableAutoUpgrade: types2.Bool(false, types2.NewTestMetadata()),
+									Metadata:          defsecTypes.NewTestMetadata(),
+									EnableAutoUpgrade: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -44,13 +44,13 @@ func TestCheckEnableAutoUpgrade(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NodePools: []gke.NodePool{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Management: gke.Management{
-									Metadata:          types2.NewTestMetadata(),
-									EnableAutoUpgrade: types2.Bool(true, types2.NewTestMetadata()),
+									Metadata:          defsecTypes.NewTestMetadata(),
+									EnableAutoUpgrade: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

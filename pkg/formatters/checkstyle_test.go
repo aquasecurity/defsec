@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
 
@@ -23,8 +23,8 @@ func TestOutputCheckStyle(t *testing.T) {
 	results := scan.Results{}
 	results.Add("Cluster encryption is not enabled.",
 		dynamodb.ServerSideEncryption{
-			Metadata: types2.NewTestMetadata(),
-			Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+			Metadata: defsecTypes.NewTestMetadata(),
+			Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 		})
 	results.SetRule(scan.Rule{Severity: severity.High, Provider: providers.AWSProvider, Service: "dynamodb", ShortCode: "enable-at-rest-encryption"})
 

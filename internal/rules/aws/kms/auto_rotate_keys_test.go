@@ -3,7 +3,7 @@ package kms
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckAutoRotateKeys(t *testing.T) {
 			input: kms.KMS{
 				Keys: []kms.Key{
 					{
-						Usage:           types2.String("ENCRYPT_DECRYPT", types2.NewTestMetadata()),
-						RotationEnabled: types2.Bool(false, types2.NewTestMetadata()),
+						Usage:           defsecTypes.String("ENCRYPT_DECRYPT", defsecTypes.NewTestMetadata()),
+						RotationEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckAutoRotateKeys(t *testing.T) {
 			input: kms.KMS{
 				Keys: []kms.Key{
 					{
-						Usage:           types2.String("ENCRYPT_DECRYPT", types2.NewTestMetadata()),
-						RotationEnabled: types2.Bool(true, types2.NewTestMetadata()),
+						Usage:           defsecTypes.String("ENCRYPT_DECRYPT", defsecTypes.NewTestMetadata()),
+						RotationEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -48,8 +48,8 @@ func TestCheckAutoRotateKeys(t *testing.T) {
 			input: kms.KMS{
 				Keys: []kms.Key{
 					{
-						Usage:           types2.String(kms.KeyUsageSignAndVerify, types2.NewTestMetadata()),
-						RotationEnabled: types2.Bool(false, types2.NewTestMetadata()),
+						Usage:           defsecTypes.String(kms.KeyUsageSignAndVerify, defsecTypes.NewTestMetadata()),
+						RotationEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

@@ -3,23 +3,23 @@ package parser
 import (
 	"fmt"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type CFReference struct {
 	logicalId     string
-	resourceRange types2.Range
+	resourceRange defsecTypes.Range
 	resolvedValue Property
 }
 
-func NewCFReference(id string, resourceRange types2.Range) types2.Reference {
+func NewCFReference(id string, resourceRange defsecTypes.Range) defsecTypes.Reference {
 	return &CFReference{
 		logicalId:     id,
 		resourceRange: resourceRange,
 	}
 }
 
-func NewCFReferenceWithValue(resourceRange types2.Range, resolvedValue Property, logicalId string) types2.Reference {
+func NewCFReferenceWithValue(resourceRange defsecTypes.Range, resolvedValue Property, logicalId string) defsecTypes.Reference {
 	return &CFReference{
 		resourceRange: resourceRange,
 		resolvedValue: resolvedValue,
@@ -35,15 +35,15 @@ func (cf *CFReference) LogicalID() string {
 	return cf.logicalId
 }
 
-func (cf *CFReference) RefersTo(r types2.Reference) bool {
+func (cf *CFReference) RefersTo(r defsecTypes.Reference) bool {
 	return false
 }
 
-func (cf *CFReference) ResourceRange() types2.Range {
+func (cf *CFReference) ResourceRange() defsecTypes.Range {
 	return cf.resourceRange
 }
 
-func (cf *CFReference) PropertyRange() types2.Range {
+func (cf *CFReference) PropertyRange() defsecTypes.Range {
 	if cf.resolvedValue.IsNotNil() {
 		return cf.resolvedValue.Range()
 	}

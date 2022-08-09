@@ -3,7 +3,7 @@ package sql
 import (
 	"strings"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type SQL struct {
@@ -32,44 +32,44 @@ const (
 )
 
 type DatabaseInstance struct {
-	types2.Metadata
-	DatabaseVersion types2.StringValue
+	defsecTypes.Metadata
+	DatabaseVersion defsecTypes.StringValue
 	Settings        Settings
-	IsReplica       types2.BoolValue
+	IsReplica       defsecTypes.BoolValue
 }
 
 type Settings struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Flags           Flags
 	Backups         Backups
 	IPConfiguration IPConfiguration
 }
 type Flags struct {
-	types2.Metadata
-	LogTempFileSize                 types2.IntValue
-	LocalInFile                     types2.BoolValue
-	ContainedDatabaseAuthentication types2.BoolValue
-	CrossDBOwnershipChaining        types2.BoolValue
-	LogCheckpoints                  types2.BoolValue
-	LogConnections                  types2.BoolValue
-	LogDisconnections               types2.BoolValue
-	LogLockWaits                    types2.BoolValue
-	LogMinMessages                  types2.StringValue // FATAL, PANIC, LOG, ERROR, WARN
-	LogMinDurationStatement         types2.IntValue
+	defsecTypes.Metadata
+	LogTempFileSize                 defsecTypes.IntValue
+	LocalInFile                     defsecTypes.BoolValue
+	ContainedDatabaseAuthentication defsecTypes.BoolValue
+	CrossDBOwnershipChaining        defsecTypes.BoolValue
+	LogCheckpoints                  defsecTypes.BoolValue
+	LogConnections                  defsecTypes.BoolValue
+	LogDisconnections               defsecTypes.BoolValue
+	LogLockWaits                    defsecTypes.BoolValue
+	LogMinMessages                  defsecTypes.StringValue // FATAL, PANIC, LOG, ERROR, WARN
+	LogMinDurationStatement         defsecTypes.IntValue
 }
 
 type Backups struct {
-	types2.Metadata
-	Enabled types2.BoolValue
+	defsecTypes.Metadata
+	Enabled defsecTypes.BoolValue
 }
 
 type IPConfiguration struct {
-	types2.Metadata
-	RequireTLS         types2.BoolValue
-	EnableIPv4         types2.BoolValue
+	defsecTypes.Metadata
+	RequireTLS         defsecTypes.BoolValue
+	EnableIPv4         defsecTypes.BoolValue
 	AuthorizedNetworks []struct {
-		Name types2.StringValue
-		CIDR types2.StringValue
+		Name defsecTypes.StringValue
+		CIDR defsecTypes.StringValue
 	}
 }
 

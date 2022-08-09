@@ -4,7 +4,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/eks"
 	"github.com/aquasecurity/defsec/pkg/state"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	eksapi "github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/eks/types"
 )
@@ -89,11 +89,11 @@ func (a *adapter) adaptCluster(name string) (*eks.Cluster, error) {
 	metadata := a.CreateMetadataFromARN(*output.Cluster.Arn)
 
 	var publicAccess bool
-	var publicCidrs []types2.StringValue
+	var publicCidrs []defsecTypes.StringValue
 	if output.Cluster.ResourcesVpcConfig != nil {
 		publicAccess = output.Cluster.ResourcesVpcConfig.EndpointPublicAccess
 		for _, cidr := range output.Cluster.ResourcesVpcConfig.PublicAccessCidrs {
-			publicCidrs = append(publicCidrs, types2.String(cidr, metadata))
+			publicCidrs = append(publicCidrs, defsecTypes.String(cidr, metadata))
 		}
 	}
 
@@ -139,18 +139,18 @@ func (a *adapter) adaptCluster(name string) (*eks.Cluster, error) {
 		Metadata: metadata,
 		Logging: eks.Logging{
 			Metadata:          metadata,
-			API:               types2.Bool(logAPI, metadata),
-			Audit:             types2.Bool(logAudit, metadata),
-			Authenticator:     types2.Bool(logAuth, metadata),
-			ControllerManager: types2.Bool(logCM, metadata),
-			Scheduler:         types2.Bool(logSched, metadata),
+			API:               defsecTypes.Bool(logAPI, metadata),
+			Audit:             defsecTypes.Bool(logAudit, metadata),
+			Authenticator:     defsecTypes.Bool(logAuth, metadata),
+			ControllerManager: defsecTypes.Bool(logCM, metadata),
+			Scheduler:         defsecTypes.Bool(logSched, metadata),
 		},
 		Encryption: eks.Encryption{
 			Metadata: metadata,
-			Secrets:  types2.Bool(secretsEncrypted, metadata),
-			KMSKeyID: types2.String(encryptionKeyARN, metadata),
+			Secrets:  defsecTypes.Bool(secretsEncrypted, metadata),
+			KMSKeyID: defsecTypes.String(encryptionKeyARN, metadata),
 		},
-		PublicAccessEnabled: types2.Bool(publicAccess, metadata),
+		PublicAccessEnabled: defsecTypes.Bool(publicAccess, metadata),
 		PublicAccessCIDRs:   publicCidrs,
 	}, nil
 }

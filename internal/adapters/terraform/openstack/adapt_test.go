@@ -3,7 +3,7 @@ package openstack
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/openstack"
 
@@ -31,8 +31,8 @@ func TestFields(t *testing.T) {
 				Compute: openstack.Compute{
 					Instances: []openstack.Instance{
 						{
-							Metadata:      types2.NewTestMetadata(),
-							AdminPassword: types2.String("N0tSoS3cretP4ssw0rd", types2.NewTestMetadata()),
+							Metadata:      defsecTypes.NewTestMetadata(),
+							AdminPassword: defsecTypes.String("N0tSoS3cretP4ssw0rd", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -47,8 +47,8 @@ func TestFields(t *testing.T) {
 				Compute: openstack.Compute{
 					Instances: []openstack.Instance{
 						{
-							Metadata:      types2.NewTestMetadata(),
-							AdminPassword: types2.String("", types2.NewTestMetadata()),
+							Metadata:      defsecTypes.NewTestMetadata(),
+							AdminPassword: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -70,12 +70,12 @@ func TestFields(t *testing.T) {
 					Firewall: openstack.Firewall{
 						AllowRules: []openstack.FirewallRule{
 							{
-								Metadata:        types2.NewTestMetadata(),
-								Enabled:         types2.Bool(true, types2.NewTestMetadata()),
-								Destination:     types2.String("10.10.10.1", types2.NewTestMetadata()),
-								Source:          types2.String("10.10.10.2", types2.NewTestMetadata()),
-								DestinationPort: types2.String("22", types2.NewTestMetadata()),
-								SourcePort:      types2.String("", types2.NewTestMetadata()),
+								Metadata:        defsecTypes.NewTestMetadata(),
+								Enabled:         defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								Destination:     defsecTypes.String("10.10.10.1", defsecTypes.NewTestMetadata()),
+								Source:          defsecTypes.String("10.10.10.2", defsecTypes.NewTestMetadata()),
+								DestinationPort: defsecTypes.String("22", defsecTypes.NewTestMetadata()),
+								SourcePort:      defsecTypes.String("", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

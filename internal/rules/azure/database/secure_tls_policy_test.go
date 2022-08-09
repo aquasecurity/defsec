@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckSecureTlsPolicy(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:          types2.NewTestMetadata(),
-							MinimumTLSVersion: types2.String("1.0", types2.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							MinimumTLSVersion: defsecTypes.String("1.0", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckSecureTlsPolicy(t *testing.T) {
 			input: database.Database{
 				MySQLServers: []database.MySQLServer{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:          types2.NewTestMetadata(),
-							MinimumTLSVersion: types2.String("TLS1_0", types2.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							MinimumTLSVersion: defsecTypes.String("TLS1_0", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -54,10 +54,10 @@ func TestCheckSecureTlsPolicy(t *testing.T) {
 			input: database.Database{
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:          types2.NewTestMetadata(),
-							MinimumTLSVersion: types2.String("TLS1_0", types2.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							MinimumTLSVersion: defsecTypes.String("TLS1_0", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -69,10 +69,10 @@ func TestCheckSecureTlsPolicy(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:          types2.NewTestMetadata(),
-							MinimumTLSVersion: types2.String("1.2", types2.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							MinimumTLSVersion: defsecTypes.String("1.2", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -84,10 +84,10 @@ func TestCheckSecureTlsPolicy(t *testing.T) {
 			input: database.Database{
 				MySQLServers: []database.MySQLServer{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:          types2.NewTestMetadata(),
-							MinimumTLSVersion: types2.String("TLS1_2", types2.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							MinimumTLSVersion: defsecTypes.String("TLS1_2", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -99,10 +99,10 @@ func TestCheckSecureTlsPolicy(t *testing.T) {
 			input: database.Database{
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:          types2.NewTestMetadata(),
-							MinimumTLSVersion: types2.String("TLS1_2", types2.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							MinimumTLSVersion: defsecTypes.String("TLS1_2", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

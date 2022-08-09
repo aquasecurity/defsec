@@ -4,7 +4,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/state"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail/types"
 )
@@ -98,9 +98,9 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		return nil, err
 	}
 
-	cloudWatchLogsArn := types2.StringDefault("", metadata)
+	cloudWatchLogsArn := defsecTypes.StringDefault("", metadata)
 	if response.Trail.CloudWatchLogsLogGroupArn != nil {
-		cloudWatchLogsArn = types2.String(*response.Trail.CloudWatchLogsLogGroupArn, metadata)
+		cloudWatchLogsArn = defsecTypes.String(*response.Trail.CloudWatchLogsLogGroupArn, metadata)
 	}
 
 	var bucketName string
@@ -110,12 +110,12 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 
 	return &cloudtrail.Trail{
 		Metadata:                  metadata,
-		Name:                      types2.String(*info.Name, metadata),
-		EnableLogFileValidation:   types2.Bool(response.Trail.LogFileValidationEnabled != nil && *response.Trail.LogFileValidationEnabled, metadata),
-		IsMultiRegion:             types2.Bool(response.Trail.IsMultiRegionTrail != nil && *response.Trail.IsMultiRegionTrail, metadata),
+		Name:                      defsecTypes.String(*info.Name, metadata),
+		EnableLogFileValidation:   defsecTypes.Bool(response.Trail.LogFileValidationEnabled != nil && *response.Trail.LogFileValidationEnabled, metadata),
+		IsMultiRegion:             defsecTypes.Bool(response.Trail.IsMultiRegionTrail != nil && *response.Trail.IsMultiRegionTrail, metadata),
 		CloudWatchLogsLogGroupArn: cloudWatchLogsArn,
-		KMSKeyID:                  types2.String(kmsKeyId, metadata),
-		IsLogging:                 types2.Bool(*status.IsLogging, metadata),
-		BucketName:                types2.String(bucketName, metadata),
+		KMSKeyID:                  defsecTypes.String(kmsKeyId, metadata),
+		IsLogging:                 defsecTypes.Bool(*status.IsLogging, metadata),
+		BucketName:                defsecTypes.String(bucketName, metadata),
 	}, nil
 }

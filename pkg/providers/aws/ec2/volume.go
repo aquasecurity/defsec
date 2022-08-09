@@ -1,16 +1,16 @@
 package ec2
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Volume struct {
-	types2.Metadata
+	defsecTypes.Metadata
 	Encryption Encryption
 }
 
 type Encryption struct {
-	types2.Metadata
-	Enabled  types2.BoolValue
-	KMSKeyID types2.StringValue
+	defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
+	KMSKeyID defsecTypes.StringValue
 }

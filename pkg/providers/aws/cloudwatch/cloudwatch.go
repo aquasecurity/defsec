@@ -1,7 +1,7 @@
 package cloudwatch
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type CloudWatch struct {
@@ -28,36 +28,36 @@ func (w CloudWatch) GetAlarmByMetricName(metricName string) (alarm *Alarm) {
 }
 
 type Alarm struct {
-	types2.Metadata
-	AlarmName  types2.StringValue
-	MetricName types2.StringValue
+	defsecTypes.Metadata
+	AlarmName  defsecTypes.StringValue
+	MetricName defsecTypes.StringValue
 	Dimensions []AlarmDimension
 	Metrics    []MetricDataQuery
 }
 
 type AlarmDimension struct {
-	types2.Metadata
-	Name  types2.StringValue
-	Value types2.StringValue
+	defsecTypes.Metadata
+	Name  defsecTypes.StringValue
+	Value defsecTypes.StringValue
 }
 
 type MetricFilter struct {
-	types2.Metadata
-	FilterName    types2.StringValue
-	FilterPattern types2.StringValue
+	defsecTypes.Metadata
+	FilterName    defsecTypes.StringValue
+	FilterPattern defsecTypes.StringValue
 }
 
 type MetricDataQuery struct {
-	types2.Metadata
-	Expression types2.StringValue
-	ID         types2.StringValue
+	defsecTypes.Metadata
+	Expression defsecTypes.StringValue
+	ID         defsecTypes.StringValue
 }
 
 type LogGroup struct {
-	types2.Metadata
-	Arn             types2.StringValue
-	Name            types2.StringValue
-	KMSKeyID        types2.StringValue
-	RetentionInDays types2.IntValue
+	defsecTypes.Metadata
+	Arn             defsecTypes.StringValue
+	Name            defsecTypes.StringValue
+	KMSKeyID        defsecTypes.StringValue
+	RetentionInDays defsecTypes.IntValue
 	MetricFilters   []MetricFilter
 }

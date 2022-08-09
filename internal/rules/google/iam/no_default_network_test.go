@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckNoDefaultNetwork(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Projects: []iam.Project{
 							{
-								Metadata:          types2.NewTestMetadata(),
-								AutoCreateNetwork: types2.Bool(true, types2.NewTestMetadata()),
+								Metadata:          defsecTypes.NewTestMetadata(),
+								AutoCreateNetwork: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,24 +41,24 @@ func TestCheckNoDefaultNetwork(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 
 						Folders: []iam.Folder{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Projects: []iam.Project{
 									{
-										Metadata:          types2.NewTestMetadata(),
-										AutoCreateNetwork: types2.Bool(false, types2.NewTestMetadata()),
+										Metadata:          defsecTypes.NewTestMetadata(),
+										AutoCreateNetwork: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 									},
 								},
 								Folders: []iam.Folder{
 									{
-										Metadata: types2.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Projects: []iam.Project{
 											{
-												Metadata:          types2.NewTestMetadata(),
-												AutoCreateNetwork: types2.Bool(true, types2.NewTestMetadata()),
+												Metadata:          defsecTypes.NewTestMetadata(),
+												AutoCreateNetwork: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 											},
 										},
 									},
@@ -75,11 +75,11 @@ func TestCheckNoDefaultNetwork(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Projects: []iam.Project{
 							{
-								Metadata:          types2.NewTestMetadata(),
-								AutoCreateNetwork: types2.Bool(false, types2.NewTestMetadata()),
+								Metadata:          defsecTypes.NewTestMetadata(),
+								AutoCreateNetwork: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

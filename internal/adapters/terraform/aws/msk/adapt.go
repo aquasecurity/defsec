@@ -3,7 +3,7 @@ package msk
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/msk"
 	"github.com/aquasecurity/defsec/pkg/terraform"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) msk.MSK {
@@ -27,7 +27,7 @@ func adaptCluster(resource *terraform.Block) msk.Cluster {
 		Metadata: resource.GetMetadata(),
 		EncryptionInTransit: msk.EncryptionInTransit{
 			Metadata:     resource.GetMetadata(),
-			ClientBroker: types2.StringDefault("TLS_PLAINTEXT", resource.GetMetadata()),
+			ClientBroker: defsecTypes.StringDefault("TLS_PLAINTEXT", resource.GetMetadata()),
 		},
 		Logging: msk.Logging{
 			Metadata: resource.GetMetadata(),
@@ -35,15 +35,15 @@ func adaptCluster(resource *terraform.Block) msk.Cluster {
 				Metadata: resource.GetMetadata(),
 				S3: msk.S3Logging{
 					Metadata: resource.GetMetadata(),
-					Enabled:  types2.BoolDefault(false, resource.GetMetadata()),
+					Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 				},
 				Cloudwatch: msk.CloudwatchLogging{
 					Metadata: resource.GetMetadata(),
-					Enabled:  types2.BoolDefault(false, resource.GetMetadata()),
+					Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 				},
 				Firehose: msk.FirehoseLogging{
 					Metadata: resource.GetMetadata(),
-					Enabled:  types2.BoolDefault(false, resource.GetMetadata()),
+					Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 				},
 			},
 		},

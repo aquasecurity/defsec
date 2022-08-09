@@ -3,7 +3,7 @@ package cloudwatch
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
 
@@ -33,11 +33,11 @@ func Test_adaptLogGroups(t *testing.T) {
 `,
 			expected: []cloudwatch.LogGroup{
 				{
-					Metadata:        types2.NewTestMetadata(),
-					Arn:             types2.String("", types2.NewTestMetadata()),
-					Name:            types2.String("my-group", types2.NewTestMetadata()),
-					KMSKeyID:        types2.String("aws_kms_key.log_key", types2.NewTestMetadata()),
-					RetentionInDays: types2.Int(0, types2.NewTestMetadata()),
+					Metadata:        defsecTypes.NewTestMetadata(),
+					Arn:             defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					Name:            defsecTypes.String("my-group", defsecTypes.NewTestMetadata()),
+					KMSKeyID:        defsecTypes.String("aws_kms_key.log_key", defsecTypes.NewTestMetadata()),
+					RetentionInDays: defsecTypes.Int(0, defsecTypes.NewTestMetadata()),
 					MetricFilters:   nil,
 				},
 			},
@@ -52,11 +52,11 @@ func Test_adaptLogGroups(t *testing.T) {
 `,
 			expected: []cloudwatch.LogGroup{
 				{
-					Metadata:        types2.NewTestMetadata(),
-					Arn:             types2.String("", types2.NewTestMetadata()),
-					Name:            types2.String("my-group", types2.NewTestMetadata()),
-					KMSKeyID:        types2.String("key-as-string", types2.NewTestMetadata()),
-					RetentionInDays: types2.Int(0, types2.NewTestMetadata()),
+					Metadata:        defsecTypes.NewTestMetadata(),
+					Arn:             defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					Name:            defsecTypes.String("my-group", defsecTypes.NewTestMetadata()),
+					KMSKeyID:        defsecTypes.String("key-as-string", defsecTypes.NewTestMetadata()),
+					RetentionInDays: defsecTypes.Int(0, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -70,11 +70,11 @@ func Test_adaptLogGroups(t *testing.T) {
 `,
 			expected: []cloudwatch.LogGroup{
 				{
-					Metadata:        types2.NewTestMetadata(),
-					Arn:             types2.String("", types2.NewTestMetadata()),
-					Name:            types2.String("my-group", types2.NewTestMetadata()),
-					KMSKeyID:        types2.String("", types2.NewTestMetadata()),
-					RetentionInDays: types2.Int(3, types2.NewTestMetadata()),
+					Metadata:        defsecTypes.NewTestMetadata(),
+					Arn:             defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					Name:            defsecTypes.String("my-group", defsecTypes.NewTestMetadata()),
+					KMSKeyID:        defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					RetentionInDays: defsecTypes.Int(3, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

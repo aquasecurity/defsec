@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/liamg/iamgo"
@@ -40,8 +40,8 @@ func Test_adaptPolicies(t *testing.T) {
 `,
 			expected: []iam.Policy{
 				{
-					Metadata: types2.NewTestMetadata(),
-					Name:     types2.String("test", types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Name:     defsecTypes.String("test", defsecTypes.NewTestMetadata()),
 					Document: func() iam.Document {
 
 						builder := iamgo.NewPolicyBuilder()
@@ -57,12 +57,12 @@ func Test_adaptPolicies(t *testing.T) {
 
 						return iam.Document{
 							Parsed:   builder.Build(),
-							Metadata: types2.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							IsOffset: false,
 							HasRefs:  false,
 						}
 					}(),
-					Builtin: types2.Bool(false, types2.NewTestMetadata()),
+					Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

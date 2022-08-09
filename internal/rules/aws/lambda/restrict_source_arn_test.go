@@ -3,7 +3,7 @@ package lambda
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckRestrictSourceArn(t *testing.T) {
 			input: lambda.Lambda{
 				Functions: []lambda.Function{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Permissions: []lambda.Permission{
 							{
-								Metadata:  types2.NewTestMetadata(),
-								Principal: types2.String("sns.amazonaws.com", types2.NewTestMetadata()),
-								SourceARN: types2.String("", types2.NewTestMetadata()),
+								Metadata:  defsecTypes.NewTestMetadata(),
+								Principal: defsecTypes.String("sns.amazonaws.com", defsecTypes.NewTestMetadata()),
+								SourceARN: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -42,12 +42,12 @@ func TestCheckRestrictSourceArn(t *testing.T) {
 			input: lambda.Lambda{
 				Functions: []lambda.Function{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Permissions: []lambda.Permission{
 							{
-								Metadata:  types2.NewTestMetadata(),
-								Principal: types2.String("sns.amazonaws.com", types2.NewTestMetadata()),
-								SourceARN: types2.String("source-arn", types2.NewTestMetadata()),
+								Metadata:  defsecTypes.NewTestMetadata(),
+								Principal: defsecTypes.String("sns.amazonaws.com", defsecTypes.NewTestMetadata()),
+								SourceARN: defsecTypes.String("source-arn", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

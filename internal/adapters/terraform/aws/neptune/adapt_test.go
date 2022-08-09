@@ -3,7 +3,7 @@ package neptune
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/neptune"
 
@@ -30,13 +30,13 @@ func Test_adaptCluster(t *testing.T) {
 			  }
 `,
 			expected: neptune.Cluster{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				Logging: neptune.Logging{
-					Metadata: types2.NewTestMetadata(),
-					Audit:    types2.Bool(true, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Audit:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
-				StorageEncrypted: types2.Bool(true, types2.NewTestMetadata()),
-				KMSKeyID:         types2.String("kms-key", types2.NewTestMetadata()),
+				StorageEncrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				KMSKeyID:         defsecTypes.String("kms-key", defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -46,13 +46,13 @@ func Test_adaptCluster(t *testing.T) {
 			  }
 `,
 			expected: neptune.Cluster{
-				Metadata: types2.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				Logging: neptune.Logging{
-					Metadata: types2.NewTestMetadata(),
-					Audit:    types2.Bool(false, types2.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Audit:    defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
-				StorageEncrypted: types2.Bool(false, types2.NewTestMetadata()),
-				KMSKeyID:         types2.String("", types2.NewTestMetadata()),
+				StorageEncrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				KMSKeyID:         defsecTypes.String("", defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

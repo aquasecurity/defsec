@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckUseRbacPermissions(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata:         types2.NewTestMetadata(),
-						EnableLegacyABAC: types2.Bool(true, types2.NewTestMetadata()),
+						Metadata:         defsecTypes.NewTestMetadata(),
+						EnableLegacyABAC: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckUseRbacPermissions(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata:         types2.NewTestMetadata(),
-						EnableLegacyABAC: types2.Bool(false, types2.NewTestMetadata()),
+						Metadata:         defsecTypes.NewTestMetadata(),
+						EnableLegacyABAC: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

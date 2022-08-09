@@ -3,7 +3,7 @@ package sqs
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckQueueEncryptionUsesCMK(t *testing.T) {
 			input: sqs.SQS{
 				Queues: []sqs.Queue{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: sqs.Encryption{
-							Metadata: types2.NewTestMetadata(),
-							KMSKeyID: types2.String("", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckQueueEncryptionUsesCMK(t *testing.T) {
 			input: sqs.SQS{
 				Queues: []sqs.Queue{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: sqs.Encryption{
-							Metadata: types2.NewTestMetadata(),
-							KMSKeyID: types2.String("alias/aws/sqs", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							KMSKeyID: defsecTypes.String("alias/aws/sqs", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -54,10 +54,10 @@ func TestCheckQueueEncryptionUsesCMK(t *testing.T) {
 			input: sqs.SQS{
 				Queues: []sqs.Queue{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: sqs.Encryption{
-							Metadata: types2.NewTestMetadata(),
-							KMSKeyID: types2.String("some-ok-key", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							KMSKeyID: defsecTypes.String("some-ok-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

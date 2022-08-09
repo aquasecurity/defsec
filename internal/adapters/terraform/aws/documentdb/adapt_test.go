@@ -3,7 +3,7 @@ package documentdb
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/documentdb"
 
@@ -38,19 +38,19 @@ func Test_adaptCluster(t *testing.T) {
 			  }
 `,
 			expected: documentdb.Cluster{
-				Metadata:   types2.NewTestMetadata(),
-				Identifier: types2.String("my-docdb-cluster", types2.NewTestMetadata()),
-				KMSKeyID:   types2.String("kms-key", types2.NewTestMetadata()),
-				EnabledLogExports: []types2.StringValue{
-					types2.String("audit", types2.NewTestMetadata()),
+				Metadata:   defsecTypes.NewTestMetadata(),
+				Identifier: defsecTypes.String("my-docdb-cluster", defsecTypes.NewTestMetadata()),
+				KMSKeyID:   defsecTypes.String("kms-key", defsecTypes.NewTestMetadata()),
+				EnabledLogExports: []defsecTypes.StringValue{
+					defsecTypes.String("audit", defsecTypes.NewTestMetadata()),
 				},
 				Instances: []documentdb.Instance{
 					{
-						Metadata: types2.NewTestMetadata(),
-						KMSKeyID: types2.String("kms-key#1", types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						KMSKeyID: defsecTypes.String("kms-key#1", defsecTypes.NewTestMetadata()),
 					},
 				},
-				StorageEncrypted: types2.Bool(true, types2.NewTestMetadata()),
+				StorageEncrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -60,10 +60,10 @@ func Test_adaptCluster(t *testing.T) {
 			}
 `,
 			expected: documentdb.Cluster{
-				Metadata:         types2.NewTestMetadata(),
-				Identifier:       types2.String("", types2.NewTestMetadata()),
-				StorageEncrypted: types2.Bool(false, types2.NewTestMetadata()),
-				KMSKeyID:         types2.String("", types2.NewTestMetadata()),
+				Metadata:         defsecTypes.NewTestMetadata(),
+				Identifier:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				StorageEncrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				KMSKeyID:         defsecTypes.String("", defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

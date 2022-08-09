@@ -3,7 +3,7 @@ package kms
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckRotateKmsKeys(t *testing.T) {
 			input: kms.KMS{
 				KeyRings: []kms.KeyRing{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Keys: []kms.Key{
 							{
-								Metadata:              types2.NewTestMetadata(),
-								RotationPeriodSeconds: types2.Int(7862400, types2.NewTestMetadata()),
+								Metadata:              defsecTypes.NewTestMetadata(),
+								RotationPeriodSeconds: defsecTypes.Int(7862400, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,11 +41,11 @@ func TestCheckRotateKmsKeys(t *testing.T) {
 			input: kms.KMS{
 				KeyRings: []kms.KeyRing{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Keys: []kms.Key{
 							{
-								Metadata:              types2.NewTestMetadata(),
-								RotationPeriodSeconds: types2.Int(2592000, types2.NewTestMetadata()),
+								Metadata:              defsecTypes.NewTestMetadata(),
+								RotationPeriodSeconds: defsecTypes.Int(2592000, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

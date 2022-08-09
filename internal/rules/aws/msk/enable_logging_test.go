@@ -3,7 +3,7 @@ package msk
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,22 +24,22 @@ func TestCheckEnableLogging(t *testing.T) {
 			input: msk.MSK{
 				Clusters: []msk.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Logging: msk.Logging{
-							Metadata: types2.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							Broker: msk.BrokerLogging{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								S3: msk.S3Logging{
-									Metadata: types2.NewTestMetadata(),
-									Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+									Metadata: defsecTypes.NewTestMetadata(),
+									Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								},
 								Cloudwatch: msk.CloudwatchLogging{
-									Metadata: types2.NewTestMetadata(),
-									Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+									Metadata: defsecTypes.NewTestMetadata(),
+									Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								},
 								Firehose: msk.FirehoseLogging{
-									Metadata: types2.NewTestMetadata(),
-									Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+									Metadata: defsecTypes.NewTestMetadata(),
+									Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -53,22 +53,22 @@ func TestCheckEnableLogging(t *testing.T) {
 			input: msk.MSK{
 				Clusters: []msk.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Logging: msk.Logging{
-							Metadata: types2.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							Broker: msk.BrokerLogging{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								S3: msk.S3Logging{
-									Metadata: types2.NewTestMetadata(),
-									Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+									Metadata: defsecTypes.NewTestMetadata(),
+									Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 								},
 								Cloudwatch: msk.CloudwatchLogging{
-									Metadata: types2.NewTestMetadata(),
-									Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+									Metadata: defsecTypes.NewTestMetadata(),
+									Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								},
 								Firehose: msk.FirehoseLogging{
-									Metadata: types2.NewTestMetadata(),
-									Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+									Metadata: defsecTypes.NewTestMetadata(),
+									Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								},
 							},
 						},

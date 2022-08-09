@@ -4,7 +4,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elb"
 	"github.com/aquasecurity/defsec/pkg/state"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2/types"
 )
@@ -112,14 +112,14 @@ func (a *adapter) adaptLoadBalancer(apiLoadBalancer types.LoadBalancer) (*elb.Lo
 				for _, action := range listener.DefaultActions {
 					actions = append(actions, elb.Action{
 						Metadata: metadata,
-						Type:     types2.String(string(action.Type), metadata),
+						Type:     defsecTypes.String(string(action.Type), metadata),
 					})
 				}
 
 				listeners = append(listeners, elb.Listener{
 					Metadata:       metadata,
-					Protocol:       types2.String(string(listener.Protocol), metadata),
-					TLSPolicy:      types2.String(*listener.SslPolicy, metadata),
+					Protocol:       defsecTypes.String(string(listener.Protocol), metadata),
+					TLSPolicy:      defsecTypes.String(*listener.SslPolicy, metadata),
 					DefaultActions: actions,
 				})
 			}
@@ -132,9 +132,9 @@ func (a *adapter) adaptLoadBalancer(apiLoadBalancer types.LoadBalancer) (*elb.Lo
 
 	return &elb.LoadBalancer{
 		Metadata:                metadata,
-		Type:                    types2.String(string(apiLoadBalancer.Type), metadata),
-		DropInvalidHeaderFields: types2.Bool(dropInvalidHeaders, metadata),
-		Internal:                types2.Bool(apiLoadBalancer.Scheme == types.LoadBalancerSchemeEnumInternal, metadata),
+		Type:                    defsecTypes.String(string(apiLoadBalancer.Type), metadata),
+		DropInvalidHeaderFields: defsecTypes.Bool(dropInvalidHeaders, metadata),
+		Internal:                defsecTypes.Bool(apiLoadBalancer.Scheme == types.LoadBalancerSchemeEnumInternal, metadata),
 		Listeners:               listeners,
 	}, nil
 }

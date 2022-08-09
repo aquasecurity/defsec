@@ -3,7 +3,7 @@ package storage
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/google/storage"
 	"github.com/aquasecurity/defsec/pkg/terraform"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) storage.Storage {
@@ -36,10 +36,10 @@ func (a *adapter) adaptBuckets() []storage.Bucket {
 	}
 
 	orphanage := storage.Bucket{
-		Metadata:                       types2.NewUnmanagedMetadata(),
-		Name:                           types2.StringDefault("", types2.NewUnmanagedMetadata()),
-		Location:                       types2.StringDefault("", types2.NewUnmanagedMetadata()),
-		EnableUniformBucketLevelAccess: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+		Metadata:                       defsecTypes.NewUnmanagedMetadata(),
+		Name:                           defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+		Location:                       defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+		EnableUniformBucketLevelAccess: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 		Members:                        nil,
 		Bindings:                       nil,
 	}

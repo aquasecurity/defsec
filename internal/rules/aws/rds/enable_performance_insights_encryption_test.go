@@ -3,7 +3,7 @@ package rds
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEnablePerformanceInsightsEncryption(t *testing.T) {
 			input: rds.RDS{
 				Instances: []rds.Instance{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						PerformanceInsights: rds.PerformanceInsights{
-							Metadata: types2.NewTestMetadata(),
-							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
-							KMSKeyID: types2.String("some-kms-key", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							KMSKeyID: defsecTypes.String("some-kms-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,16 +40,16 @@ func TestCheckEnablePerformanceInsightsEncryption(t *testing.T) {
 			input: rds.RDS{
 				Clusters: []rds.Cluster{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Instances: []rds.ClusterInstance{
 							{
-								Metadata: types2.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Instance: rds.Instance{
-									Metadata: types2.NewTestMetadata(),
+									Metadata: defsecTypes.NewTestMetadata(),
 									PerformanceInsights: rds.PerformanceInsights{
-										Metadata: types2.NewTestMetadata(),
-										Enabled:  types2.Bool(true, types2.NewTestMetadata()),
-										KMSKeyID: types2.String("", types2.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+										KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -64,11 +64,11 @@ func TestCheckEnablePerformanceInsightsEncryption(t *testing.T) {
 			input: rds.RDS{
 				Instances: []rds.Instance{
 					{
-						Metadata: types2.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						PerformanceInsights: rds.PerformanceInsights{
-							Metadata: types2.NewTestMetadata(),
-							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
-							KMSKeyID: types2.String("some-kms-key", types2.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							KMSKeyID: defsecTypes.String("some-kms-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

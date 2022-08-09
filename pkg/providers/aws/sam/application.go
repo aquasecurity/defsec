@@ -1,17 +1,17 @@
 package sam
 
 import (
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Application struct {
-	types2.Metadata
-	LocationPath types2.StringValue
+	defsecTypes.Metadata
+	LocationPath defsecTypes.StringValue
 	Location     Location
 }
 
 type Location struct {
-	types2.Metadata
-	ApplicationID   types2.StringValue
-	SemanticVersion types2.StringValue
+	defsecTypes.Metadata
+	ApplicationID   defsecTypes.StringValue
+	SemanticVersion defsecTypes.StringValue
 }

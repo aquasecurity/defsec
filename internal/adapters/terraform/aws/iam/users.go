@@ -3,7 +3,7 @@ package iam
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/terraform"
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/google/uuid"
 )
 
@@ -49,7 +49,7 @@ func adaptUsers(modules terraform.Modules) []iam.User {
 				Metadata:   block.GetMetadata(),
 				Name:       userAttr.AsStringValueOrDefault("", block),
 				AccessKeys: []iam.AccessKey{*key},
-				LastAccess: types2.TimeUnresolvable(block.GetMetadata()),
+				LastAccess: defsecTypes.TimeUnresolvable(block.GetMetadata()),
 			}
 		}
 	}
@@ -69,7 +69,7 @@ func mapUsers(modules terraform.Modules) (map[string]iam.User, map[string]struct
 		user := iam.User{
 			Metadata:   userBlock.GetMetadata(),
 			Name:       userBlock.GetAttribute("name").AsStringValueOrDefault("", userBlock),
-			LastAccess: types2.TimeUnresolvable(userBlock.GetMetadata()),
+			LastAccess: defsecTypes.TimeUnresolvable(userBlock.GetMetadata()),
 		}
 
 		for _, block := range modules.GetResourcesByType("aws_iam_user_policy") {
@@ -131,16 +131,16 @@ func mapUsers(modules terraform.Modules) (map[string]iam.User, map[string]struct
 
 func adaptAccessKey(block *terraform.Block) (*iam.AccessKey, error) {
 
-	active := types2.BoolDefault(true, block.GetMetadata())
+	active := defsecTypes.BoolDefault(true, block.GetMetadata())
 	if activeAttr := block.GetAttribute("status"); activeAttr.IsString() {
-		active = types2.Bool(activeAttr.Equals("Inactive"), activeAttr.GetMetadata())
+		active = defsecTypes.Bool(activeAttr.Equals("Inactive"), activeAttr.GetMetadata())
 	}
 
 	key := iam.AccessKey{
 		Metadata:     block.GetMetadata(),
-		AccessKeyId:  types2.StringUnresolvable(block.GetMetadata()),
-		CreationDate: types2.TimeUnresolvable(block.GetMetadata()),
-		LastAccess:   types2.TimeUnresolvable(block.GetMetadata()),
+		AccessKeyId:  defsecTypes.StringUnresolvable(block.GetMetadata()),
+		CreationDate: defsecTypes.TimeUnresolvable(block.GetMetadata()),
+		LastAccess:   defsecTypes.TimeUnresolvable(block.GetMetadata()),
 		Active:       active,
 	}
 	return &key, nil

@@ -3,7 +3,7 @@ package mq
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: mq.MQ{
 				Brokers: []mq.Broker{
 					{
-						Metadata:     types2.NewTestMetadata(),
-						PublicAccess: types2.Bool(true, types2.NewTestMetadata()),
+						Metadata:     defsecTypes.NewTestMetadata(),
+						PublicAccess: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: mq.MQ{
 				Brokers: []mq.Broker{
 					{
-						Metadata:     types2.NewTestMetadata(),
-						PublicAccess: types2.Bool(false, types2.NewTestMetadata()),
+						Metadata:     defsecTypes.NewTestMetadata(),
+						PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

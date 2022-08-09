@@ -3,7 +3,7 @@ package securitycenter
 import (
 	"testing"
 
-	types2 "github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableStandardSubscription(t *testing.T) {
 			input: securitycenter.SecurityCenter{
 				Subscriptions: []securitycenter.SubscriptionPricing{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Tier:     types2.String(securitycenter.TierFree, types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Tier:     defsecTypes.String(securitycenter.TierFree, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableStandardSubscription(t *testing.T) {
 			input: securitycenter.SecurityCenter{
 				Subscriptions: []securitycenter.SubscriptionPricing{
 					{
-						Metadata: types2.NewTestMetadata(),
-						Tier:     types2.String(securitycenter.TierStandard, types2.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Tier:     defsecTypes.String(securitycenter.TierStandard, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
