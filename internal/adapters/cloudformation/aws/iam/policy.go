@@ -17,6 +17,7 @@ func getPolicies(ctx parser.FileContext) (policies []iam.Policy) {
 				Metadata: policyResource.Metadata(),
 				Parsed:   iamgo.Document{},
 			},
+			Builtin: types.Bool(false, policyResource.Metadata()),
 		}
 
 		if policyProp := policyResource.GetProperty("PolicyDocument"); policyProp.IsNotNil() {
@@ -117,6 +118,7 @@ func getPoliciesDocs(policiesProp *parser.Property) []iam.Policy {
 				Metadata: policyProp.Metadata(),
 				Parsed:   *doc,
 			},
+			Builtin: types.Bool(false, policyProp.Metadata()),
 		})
 	}
 	return policies

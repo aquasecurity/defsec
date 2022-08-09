@@ -62,10 +62,11 @@ func (a *adapter) getWorkspaces() ([]workspaces.WorkSpace, error) {
 	a.Tracker().SetServiceLabel("Adapting workspaces...")
 
 	var spaces []workspaces.WorkSpace
-	for _, apiCluster := range apiSecrets {
-		workspace, err := a.adaptWorkspace(apiCluster)
+	for _, apiWorkspace := range apiSecrets {
+		workspace, err := a.adaptWorkspace(apiWorkspace)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt workspace '%s': %s", *apiWorkspace.WorkspaceId, err)
+			continue
 		}
 		spaces = append(spaces, *workspace)
 		a.Tracker().IncrementResource()

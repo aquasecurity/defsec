@@ -77,6 +77,7 @@ func getPolicy(r *parser.Resource) (*iam.Policy, error) {
 			Metadata: policyProp.Metadata(),
 			Parsed:   *parsed,
 		},
+		Builtin: types.Bool(false, policyProp.Metadata()),
 	}, nil
 }
 

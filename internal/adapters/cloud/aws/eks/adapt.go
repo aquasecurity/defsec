@@ -63,10 +63,11 @@ func (a *adapter) getClusters() ([]eks.Cluster, error) {
 
 	var clusters []eks.Cluster
 
-	for _, arn := range clusterNames {
-		cluster, err := a.adaptCluster(arn)
+	for _, clusterName := range clusterNames {
+		cluster, err := a.adaptCluster(clusterName)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt cluster '%s': %s", clusterName, err)
+			continue
 		}
 		clusters = append(clusters, *cluster)
 		a.Tracker().IncrementResource()

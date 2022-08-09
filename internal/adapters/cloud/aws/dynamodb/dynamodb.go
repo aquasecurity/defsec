@@ -82,6 +82,7 @@ func (a *adapter) getTableBatch(token *string) (tables []dynamodb.Table, nextTok
 			TableName: aws.String(apiTable),
 		})
 		if err != nil {
+			a.Debug("Failed to adapt table '%s': %s", apiTable, err)
 			continue
 		}
 

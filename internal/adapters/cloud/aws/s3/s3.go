@@ -60,14 +60,16 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 
 		bucketMetadata := a.CreateMetadata(*bucket.Name)
 
-		b := s3.NewBucket(bucketMetadata)
-		b.Name = types.String(*bucket.Name, bucketMetadata)
-		b.PublicAccessBlock = a.getPublicAccessBlock(bucket.Name, bucketMetadata)
-		b.BucketPolicies = a.getBucketPolicies(bucket.Name, bucketMetadata)
-		b.Encryption = a.getBucketEncryption(bucket.Name, bucketMetadata)
-		b.Versioning = a.getBucketVersioning(bucket.Name, bucketMetadata)
-		b.Logging = a.getBucketLogging(bucket.Name, bucketMetadata)
-		b.ACL = a.getBucketACL(bucket.Name, bucketMetadata)
+		b := s3.Bucket{
+			Metadata:          bucketMetadata,
+			Name:              types.String(*bucket.Name, bucketMetadata),
+			PublicAccessBlock: a.getPublicAccessBlock(bucket.Name, bucketMetadata),
+			BucketPolicies:    a.getBucketPolicies(bucket.Name, bucketMetadata),
+			Encryption:        a.getBucketEncryption(bucket.Name, bucketMetadata),
+			Versioning:        a.getBucketVersioning(bucket.Name, bucketMetadata),
+			Logging:           a.getBucketLogging(bucket.Name, bucketMetadata),
+			ACL:               a.getBucketACL(bucket.Name, bucketMetadata),
+		}
 
 		buckets = append(buckets, b)
 		a.Tracker().IncrementResource()
@@ -82,6 +84,7 @@ func (a *adapter) getPublicAccessBlock(bucketName *string, metadata types.Metada
 		Bucket: bucketName,
 	})
 	if err != nil {
+		a.Debug("Error getting public access block: %s", err)
 		return nil
 	}
 
@@ -105,12 +108,14 @@ func (a *adapter) getBucketPolicies(bucketName *string, metadata types.Metadata)
 
 	bucketPolicy, err := a.api.GetBucketPolicy(a.Context(), &s3api.GetBucketPolicyInput{Bucket: bucketName})
 	if err != nil {
+		a.Debug("Error getting bucket policy: %s", err)
 		return bucketPolicies
 	}
 
 	if bucketPolicy.Policy != nil {
 		policyDocument, err := iamgo.ParseString(*bucketPolicy.Policy)
 		if err != nil {
+			a.Debug("Error parsing bucket policy: %s", err)
 			return bucketPolicies
 		}
 
@@ -121,6 +126,7 @@ func (a *adapter) getBucketPolicies(bucketName *string, metadata types.Metadata)
 				Metadata: metadata,
 				Parsed:   *policyDocument,
 			},
+			Builtin: types.Bool(false, metadata),
 		})
 	}
 
@@ -138,6 +144,7 @@ func (a *adapter) getBucketEncryption(bucketName *string, metadata types.Metadat
 
 	encryption, err := a.api.GetBucketEncryption(a.Context(), &s3api.GetBucketEncryptionInput{Bucket: bucketName})
 	if err != nil {
+		a.Debug("Error getting bucket encryption: %s", err)
 		return bucketEncryption
 	}
 
@@ -163,6 +170,7 @@ func (a *adapter) getBucketVersioning(bucketName *string, metadata types.Metadat
 
 	versioning, err := a.api.GetBucketVersioning(a.Context(), &s3api.GetBucketVersioningInput{Bucket: bucketName})
 	if err != nil {
+		a.Debug("Error getting bucket versioning: %s", err)
 		return bucketVersioning
 	}
 
@@ -183,6 +191,7 @@ func (a *adapter) getBucketLogging(bucketName *string, metadata types.Metadata) 
 
 	logging, err := a.api.GetBucketLogging(a.Context(), &s3api.GetBucketLoggingInput{Bucket: bucketName})
 	if err != nil {
+		a.Debug("Error getting bucket logging: %s", err)
 		return bucketLogging
 	}
 
@@ -197,6 +206,7 @@ func (a *adapter) getBucketLogging(bucketName *string, metadata types.Metadata) 
 func (a *adapter) getBucketACL(bucketName *string, metadata types.Metadata) types.StringValue {
 	acl, err := a.api.GetBucketAcl(a.Context(), &s3api.GetBucketAclInput{Bucket: bucketName})
 	if err != nil {
+		a.Debug("Error getting bucket ACL: %s", err)
 		return types.StringDefault("private", metadata)
 	}
 

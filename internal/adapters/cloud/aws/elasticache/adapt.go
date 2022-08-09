@@ -73,7 +73,8 @@ func (a *adapter) getClusters() ([]elasticache.Cluster, error) {
 	for _, apiCluster := range apiClusters {
 		cluster, err := a.adaptCluster(apiCluster)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt cluster '%s': %s", *apiCluster.ARN, err)
+			continue
 		}
 		clusters = append(clusters, *cluster)
 		a.Tracker().IncrementResource()
@@ -117,7 +118,8 @@ func (a *adapter) getReplicationGroups() ([]elasticache.ReplicationGroup, error)
 	for _, apiGroup := range apiGroups {
 		group, err := a.adaptReplicationGroup(apiGroup)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt replication group '%s': %s", *apiGroup.ARN, err)
+			continue
 		}
 		groups = append(groups, *group)
 		a.Tracker().IncrementResource()
@@ -160,7 +162,8 @@ func (a *adapter) getSecurityGroups() ([]elasticache.SecurityGroup, error) {
 	for _, apiGroup := range apiGroups {
 		group, err := a.adaptSecurityGroup(apiGroup)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt security group '%s': %s", *apiGroup.ARN, err)
+			continue
 		}
 		groups = append(groups, *group)
 		a.Tracker().IncrementResource()

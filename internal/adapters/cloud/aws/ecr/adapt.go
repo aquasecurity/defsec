@@ -68,7 +68,8 @@ func (a *adapter) getRepositories() ([]ecr.Repository, error) {
 	for _, apiRepository := range apiRepositories {
 		repository, err := a.adaptRepository(apiRepository)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt repository '%s': %s", *apiRepository.RepositoryArn, err)
+			continue
 		}
 		repositories = append(repositories, *repository)
 		a.Tracker().IncrementResource()
@@ -109,6 +110,7 @@ func (a *adapter) adaptRepository(apiRepository types.Repository) (*ecr.Reposito
 				Metadata: metadata,
 				Parsed:   *parsed,
 			},
+			Builtin: defsecTypes.Bool(false, metadata),
 		})
 	}
 

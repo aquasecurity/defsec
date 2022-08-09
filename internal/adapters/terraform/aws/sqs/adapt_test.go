@@ -66,6 +66,7 @@ func Test_Adapt(t *testing.T) {
 										Metadata: types.NewTestMetadata(),
 										Parsed:   builder.Build(),
 									},
+									Builtin: types.Bool(false, types.NewTestMetadata()),
 								},
 							}
 						}(),

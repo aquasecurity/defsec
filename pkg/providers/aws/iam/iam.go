@@ -19,6 +19,7 @@ type Policy struct {
 	types.Metadata
 	Name     types.StringValue
 	Document Document
+	Builtin  types.BoolValue
 }
 
 type Document struct {

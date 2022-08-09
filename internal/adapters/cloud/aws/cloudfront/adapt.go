@@ -65,7 +65,8 @@ func (a *adapter) getDistributions() ([]cloudfront.Distribution, error) {
 	for _, apiDistribution := range apiDistributions {
 		distribution, err := a.adaptDistribution(apiDistribution)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt distribution '%s': %s", *apiDistribution.ARN, err)
+			continue
 		}
 		distributions = append(distributions, *distribution)
 		a.Tracker().IncrementResource()

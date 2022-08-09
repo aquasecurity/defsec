@@ -37,7 +37,8 @@ func (a *adapter) adaptUsers(state *state.State) error {
 	for _, apiUser := range nativeUsers {
 		user, err := a.adaptUser(apiUser)
 		if err != nil {
-			return err
+			a.Debug("Failed to adapt user '%s': %s", *apiUser.Arn, err)
+			continue
 		}
 		state.AWS.IAM.Users = append(state.AWS.IAM.Users, *user)
 		a.Tracker().IncrementResource()

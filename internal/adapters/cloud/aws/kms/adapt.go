@@ -65,7 +65,8 @@ func (a *adapter) getKeys() ([]kms.Key, error) {
 	for _, apiKey := range apiKeys {
 		key, err := a.adaptKey(apiKey)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt key '%s': %s", *apiKey.KeyArn, err)
+			continue
 		}
 		keys = append(keys, *key)
 		a.Tracker().IncrementResource()

@@ -23,6 +23,7 @@ func (a *adapter) adaptBucketPolicies() {
 			Metadata: policyAttr.GetMetadata(),
 			Name:     types.StringDefault("", b.GetMetadata()),
 			Document: *doc,
+			Builtin:  types.Bool(false, b.GetMetadata()),
 		}
 
 		var bucketName string

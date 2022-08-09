@@ -69,6 +69,7 @@ func adaptRepository(resource *terraform.Block, module *terraform.Module) ecr.Re
 					Parsed:   *parsed,
 					Metadata: policyAttr.GetMetadata(),
 				},
+				Builtin: types.Bool(false, policyRes.GetMetadata()),
 			}
 
 			repo.Policies = append(repo.Policies, policy)

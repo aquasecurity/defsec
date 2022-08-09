@@ -36,7 +36,8 @@ func (a *adapter) adaptRoles(state *state.State) error {
 	for _, apiRole := range nativeRoles {
 		user, err := a.adaptRole(apiRole)
 		if err != nil {
-			return err
+			a.Debug("Failed to adapt role '%s': %s", *apiRole.Arn, err)
+			continue
 		}
 		state.AWS.IAM.Roles = append(state.AWS.IAM.Roles, *user)
 		a.Tracker().IncrementResource()

@@ -65,7 +65,8 @@ func (a *adapter) getFilesystems() ([]efs.FileSystem, error) {
 	for _, apiFilesystem := range apiFilesystems {
 		filesystem, err := a.adaptFilesystem(apiFilesystem)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt filesystem '%s': %s", *apiFilesystem.FileSystemArn, err)
+			continue
 		}
 		filesystems = append(filesystems, *filesystem)
 		a.Tracker().IncrementResource()

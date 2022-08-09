@@ -58,7 +58,8 @@ func (a *adapter) getDomains() ([]elasticsearch.Domain, error) {
 	for _, apiDomain := range apiDomains {
 		domain, err := a.adaptDomain(apiDomain)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt domain '%s': %s", *apiDomain.DomainName, err)
+			continue
 		}
 		domains = append(domains, *domain)
 		a.Tracker().IncrementResource()

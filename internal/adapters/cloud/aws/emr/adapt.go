@@ -125,7 +125,8 @@ func (a *adapter) getSecurityConfigurations() ([]emr.SecurityConfiguration, erro
 	for _, apiConfig := range apiConfigs {
 		config, err := a.adaptConfig(apiConfig)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt security configuration '%s': %s", *apiConfig.Name, err)
+			continue
 		}
 		configs = append(configs, *config)
 		a.Tracker().IncrementResource()

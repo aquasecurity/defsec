@@ -123,6 +123,7 @@ func (a *adapter) getQueueBatch(token *string) (queues []sqs.Queue, nextToken *s
 						Metadata: queueMetadata,
 						Parsed:   *policy,
 					},
+					Builtin: types.Bool(false, queueMetadata),
 				})
 
 			}

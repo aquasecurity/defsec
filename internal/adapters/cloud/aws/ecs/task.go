@@ -31,7 +31,8 @@ func (a *adapter) getTaskDefinitions() ([]ecs.TaskDefinition, error) {
 	for _, definitionARN := range definitionARNs {
 		definition, err := a.adaptTaskDefinition(definitionARN)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt task definition '%s': %s", definitionARN, err)
+			continue
 		}
 		definitions = append(definitions, *definition)
 		a.Tracker().IncrementResource()

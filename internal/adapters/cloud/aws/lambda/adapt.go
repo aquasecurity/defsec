@@ -72,7 +72,8 @@ func (a *adapter) getFunctions() ([]lambda.Function, error) {
 	for _, apiFunction := range apiFunctions {
 		function, err := a.adaptFunction(apiFunction)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt function '%s': %s", *apiFunction.FunctionArn, err)
+			continue
 		}
 		functions = append(functions, *function)
 		a.Tracker().IncrementResource()

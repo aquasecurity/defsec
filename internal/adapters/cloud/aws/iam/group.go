@@ -36,7 +36,8 @@ func (a *adapter) adaptGroups(state *state.State) error {
 	for _, apiGroup := range nativeGroups {
 		group, err := a.adaptGroup(apiGroup, state)
 		if err != nil {
-			return err
+			a.Debug("Failed to adapt group '%s': %s", *apiGroup.Arn, err)
+			continue
 		}
 		state.AWS.IAM.Groups = append(state.AWS.IAM.Groups, *group)
 		a.Tracker().IncrementResource()

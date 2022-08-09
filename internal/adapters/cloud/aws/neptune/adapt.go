@@ -65,7 +65,8 @@ func (a *adapter) getClusters() ([]neptune.Cluster, error) {
 	for _, apiCluster := range apiClusters {
 		cluster, err := a.adaptCluster(apiCluster)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt cluster '%s': %s", *apiCluster.DBClusterArn, err)
+			continue
 		}
 		clusters = append(clusters, *cluster)
 		a.Tracker().IncrementResource()

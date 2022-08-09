@@ -124,6 +124,7 @@ func Test_adaptRepository(t *testing.T) {
 								Metadata: types.NewTestMetadata(),
 							}
 						}(),
+						Builtin: types.Bool(false, types.NewTestMetadata()),
 					},
 				},
 			},
