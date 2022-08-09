@@ -1,9 +1,9 @@
 package ec2
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getInstances(ctx parser.FileContext) (instances []ec2.Instance) {
@@ -17,8 +17,8 @@ func getInstances(ctx parser.FileContext) (instances []ec2.Instance) {
 			// https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/655
 			MetadataOptions: ec2.MetadataOptions{
 				Metadata:     r.Metadata(),
-				HttpTokens:   types.StringDefault("optional", r.Metadata()),
-				HttpEndpoint: types.StringDefault("enabled", r.Metadata()),
+				HttpTokens:   types2.StringDefault("optional", r.Metadata()),
+				HttpEndpoint: types2.StringDefault("enabled", r.Metadata()),
 			},
 			UserData:        r.GetStringProperty("UserData"),
 			SecurityGroups:  nil,
@@ -51,9 +51,9 @@ func getBlockDevices(r *parser.Resource) []*ec2.BlockDevice {
 
 	for _, d := range devicesProp.AsList() {
 		encrypted := d.GetProperty("Ebs.Encrypted")
-		var result types.BoolValue
+		var result types2.BoolValue
 		if encrypted.IsNil() {
-			result = types.BoolDefault(false, d.Metadata())
+			result = types2.BoolDefault(false, d.Metadata())
 		} else {
 			result = encrypted.AsBoolValue()
 		}

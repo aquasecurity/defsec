@@ -1,9 +1,9 @@
 package spaces
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/digitalocean/spaces"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/google/uuid"
 )
 
@@ -27,7 +27,7 @@ func adaptBuckets(modules terraform.Modules) []spaces.Bucket {
 				ForceDestroy: block.GetAttribute("force_destroy").AsBoolValueOrDefault(false, block),
 				Versioning: spaces.Versioning{
 					Metadata: block.GetMetadata(),
-					Enabled:  types.BoolDefault(false, block.GetMetadata()),
+					Enabled:  types2.BoolDefault(false, block.GetMetadata()),
 				},
 			}
 
@@ -68,16 +68,16 @@ func adaptBuckets(modules terraform.Modules) []spaces.Bucket {
 				}
 			}
 			bucketMap[uuid.NewString()] = spaces.Bucket{
-				Metadata: types.NewUnmanagedMetadata(),
-				Name:     types.StringDefault("", types.NewUnmanagedMetadata()),
+				Metadata: types2.NewUnmanagedMetadata(),
+				Name:     types2.StringDefault("", types2.NewUnmanagedMetadata()),
 				Objects: []spaces.Object{
 					object,
 				},
-				ACL:          types.StringDefault("private", types.NewUnmanagedMetadata()),
-				ForceDestroy: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				ACL:          types2.StringDefault("private", types2.NewUnmanagedMetadata()),
+				ForceDestroy: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
 				Versioning: spaces.Versioning{
 					Metadata: block.GetMetadata(),
-					Enabled:  types.BoolDefault(false, block.GetMetadata()),
+					Enabled:  types2.BoolDefault(false, block.GetMetadata()),
 				},
 			}
 		}

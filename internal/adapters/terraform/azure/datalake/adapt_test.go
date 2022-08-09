@@ -3,7 +3,7 @@ package datalake
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/azure/datalake"
 
@@ -28,8 +28,8 @@ func Test_adaptStore(t *testing.T) {
 			}
 `,
 			expected: datalake.Store{
-				Metadata:         types.NewTestMetadata(),
-				EnableEncryption: types.Bool(true, types.NewTestMetadata()),
+				Metadata:         types2.NewTestMetadata(),
+				EnableEncryption: types2.Bool(true, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -40,8 +40,8 @@ func Test_adaptStore(t *testing.T) {
 			}
 `,
 			expected: datalake.Store{
-				Metadata:         types.NewTestMetadata(),
-				EnableEncryption: types.Bool(false, types.NewTestMetadata()),
+				Metadata:         types2.NewTestMetadata(),
+				EnableEncryption: types2.Bool(false, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -51,8 +51,8 @@ func Test_adaptStore(t *testing.T) {
 			}
 `,
 			expected: datalake.Store{
-				Metadata:         types.NewTestMetadata(),
-				EnableEncryption: types.Bool(true, types.NewTestMetadata()),
+				Metadata:         types2.NewTestMetadata(),
+				EnableEncryption: types2.Bool(true, types2.NewTestMetadata()),
 			},
 		},
 	}

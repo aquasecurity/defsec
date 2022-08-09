@@ -3,7 +3,7 @@ package s3
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckForPublicACL(t *testing.T) {
 			input: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						ACL:      types.String("public-read", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						ACL:      types2.String("public-read", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckForPublicACL(t *testing.T) {
 			input: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						ACL:      types.String("private", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						ACL:      types2.String("private", types2.NewTestMetadata()),
 					},
 				},
 			},

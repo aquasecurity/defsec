@@ -3,7 +3,7 @@ package repositories
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -23,8 +23,8 @@ func TestCheckPrivate(t *testing.T) {
 			name: "Public repository",
 			input: []github.Repository{
 				{
-					Metadata: types.NewTestMetadata(),
-					Public:   types.Bool(true, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Public:   types2.Bool(true, types2.NewTestMetadata()),
 				},
 			},
 			expected: true,
@@ -33,8 +33,8 @@ func TestCheckPrivate(t *testing.T) {
 			name: "Private repository",
 			input: []github.Repository{
 				{
-					Metadata: types.NewTestMetadata(),
-					Public:   types.Bool(false, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Public:   types2.Bool(false, types2.NewTestMetadata()),
 				},
 			},
 			expected: false,

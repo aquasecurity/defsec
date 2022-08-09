@@ -3,7 +3,8 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
@@ -40,23 +41,23 @@ func Test_AdaptAutoscaling(t *testing.T) {
 			expected: ec2.EC2{
 				LaunchConfigurations: []ec2.LaunchConfiguration{
 					{
-						Metadata:          types.NewTestMetadata(),
-						Name:              types.String("web_config", types.NewTestMetadata()),
-						AssociatePublicIP: types.Bool(false, types.NewTestMetadata()),
-						UserData:          types.String("export EDITOR=vimacs", types.NewTestMetadata()),
+						Metadata:          types2.NewTestMetadata(),
+						Name:              types2.String("web_config", types2.NewTestMetadata()),
+						AssociatePublicIP: types2.Bool(false, types2.NewTestMetadata()),
+						UserData:          types2.String("export EDITOR=vimacs", types2.NewTestMetadata()),
 						MetadataOptions: ec2.MetadataOptions{
-							Metadata:     types.NewTestMetadata(),
-							HttpTokens:   types.String("", types.NewTestMetadata()),
-							HttpEndpoint: types.String("", types.NewTestMetadata()),
+							Metadata:     types2.NewTestMetadata(),
+							HttpTokens:   types2.String("", types2.NewTestMetadata()),
+							HttpEndpoint: types2.String("", types2.NewTestMetadata()),
 						},
 						RootBlockDevice: &ec2.BlockDevice{
-							Metadata:  types.NewTestMetadata(),
-							Encrypted: types.Bool(true, types.NewTestMetadata()),
+							Metadata:  types2.NewTestMetadata(),
+							Encrypted: types2.Bool(true, types2.NewTestMetadata()),
 						},
 						EBSBlockDevices: []*ec2.BlockDevice{
 							{
-								Metadata:  types.NewTestMetadata(),
-								Encrypted: types.Bool(true, types.NewTestMetadata()),
+								Metadata:  types2.NewTestMetadata(),
+								Encrypted: types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -87,21 +88,21 @@ export AWS_DEFAULT_REGION=us-west-2
 			expected: ec2.EC2{
 				LaunchConfigurations: []ec2.LaunchConfiguration{
 					{
-						Metadata:          types.NewTestMetadata(),
-						Name:              types.String("web_config", types.NewTestMetadata()),
-						AssociatePublicIP: types.Bool(false, types.NewTestMetadata()),
-						UserData: types.String(`export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+						Metadata:          types2.NewTestMetadata(),
+						Name:              types2.String("web_config", types2.NewTestMetadata()),
+						AssociatePublicIP: types2.Bool(false, types2.NewTestMetadata()),
+						UserData: types2.String(`export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 export AWS_DEFAULT_REGION=us-west-2 
-`, types.NewTestMetadata()),
+`, types2.NewTestMetadata()),
 						MetadataOptions: ec2.MetadataOptions{
-							Metadata:     types.NewTestMetadata(),
-							HttpTokens:   types.String("", types.NewTestMetadata()),
-							HttpEndpoint: types.String("", types.NewTestMetadata()),
+							Metadata:     types2.NewTestMetadata(),
+							HttpTokens:   types2.String("", types2.NewTestMetadata()),
+							HttpEndpoint: types2.String("", types2.NewTestMetadata()),
 						},
 						RootBlockDevice: &ec2.BlockDevice{
-							Metadata:  types.NewTestMetadata(),
-							Encrypted: types.Bool(true, types.NewTestMetadata()),
+							Metadata:  types2.NewTestMetadata(),
+							Encrypted: types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -124,14 +125,14 @@ export AWS_DEFAULT_REGION=us-west-2
 			expected: ec2.EC2{
 				LaunchTemplates: []ec2.LaunchTemplate{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Instance: ec2.Instance{
-							Metadata: types.NewTestMetadata(),
-							UserData: types.String("", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							UserData: types2.String("", types2.NewTestMetadata()),
 							MetadataOptions: ec2.MetadataOptions{
-								Metadata:     types.NewTestMetadata(),
-								HttpTokens:   types.String("required", types.NewTestMetadata()),
-								HttpEndpoint: types.String("", types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								HttpTokens:   types2.String("required", types2.NewTestMetadata()),
+								HttpEndpoint: types2.String("", types2.NewTestMetadata()),
 							},
 						},
 					},

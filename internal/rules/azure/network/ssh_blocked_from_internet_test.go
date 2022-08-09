@@ -3,7 +3,7 @@ package network
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,23 +24,23 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Allow:    types.Bool(true, types.NewTestMetadata()),
-								Outbound: types.Bool(false, types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Allow:    types2.Bool(true, types2.NewTestMetadata()),
+								Outbound: types2.Bool(false, types2.NewTestMetadata()),
 								DestinationPorts: []network.PortRange{
 									{
-										Metadata: types.NewTestMetadata(),
+										Metadata: types2.NewTestMetadata(),
 										Start:    22,
 										End:      22,
 									},
 								},
-								SourceAddresses: []types.StringValue{
-									types.String("*", types.NewTestMetadata()),
+								SourceAddresses: []types2.StringValue{
+									types2.String("*", types2.NewTestMetadata()),
 								},
-								Protocol: types.String("Tcp", types.NewTestMetadata()),
+								Protocol: types2.String("Tcp", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -53,23 +53,23 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Allow:    types.Bool(true, types.NewTestMetadata()),
-								Outbound: types.Bool(false, types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Allow:    types2.Bool(true, types2.NewTestMetadata()),
+								Outbound: types2.Bool(false, types2.NewTestMetadata()),
 								DestinationPorts: []network.PortRange{
 									{
-										Metadata: types.NewTestMetadata(),
+										Metadata: types2.NewTestMetadata(),
 										Start:    22,
 										End:      22,
 									},
 								},
-								SourceAddresses: []types.StringValue{
-									types.String("*", types.NewTestMetadata()),
+								SourceAddresses: []types2.StringValue{
+									types2.String("*", types2.NewTestMetadata()),
 								},
-								Protocol: types.String("Icmp", types.NewTestMetadata()),
+								Protocol: types2.String("Icmp", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -82,23 +82,23 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Allow:    types.Bool(true, types.NewTestMetadata()),
-								Outbound: types.Bool(false, types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Allow:    types2.Bool(true, types2.NewTestMetadata()),
+								Outbound: types2.Bool(false, types2.NewTestMetadata()),
 								DestinationPorts: []network.PortRange{
 									{
-										Metadata: types.NewTestMetadata(),
+										Metadata: types2.NewTestMetadata(),
 										Start:    22,
 										End:      22,
 									},
 								},
-								SourceAddresses: []types.StringValue{
-									types.String("82.102.23.23", types.NewTestMetadata()),
+								SourceAddresses: []types2.StringValue{
+									types2.String("82.102.23.23", types2.NewTestMetadata()),
 								},
-								Protocol: types.String("Tcp", types.NewTestMetadata()),
+								Protocol: types2.String("Tcp", types2.NewTestMetadata()),
 							},
 						},
 					},

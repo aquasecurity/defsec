@@ -3,7 +3,7 @@ package redshift
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckAddDescriptionToSecurityGroup(t *testing.T) {
 			input: redshift.Redshift{
 				SecurityGroups: []redshift.SecurityGroup{
 					{
-						Metadata:    types.NewTestMetadata(),
-						Description: types.String("", types.NewTestMetadata()),
+						Metadata:    types2.NewTestMetadata(),
+						Description: types2.String("", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckAddDescriptionToSecurityGroup(t *testing.T) {
 			input: redshift.Redshift{
 				SecurityGroups: []redshift.SecurityGroup{
 					{
-						Metadata:    types.NewTestMetadata(),
-						Description: types.String("security group description", types.NewTestMetadata()),
+						Metadata:    types2.NewTestMetadata(),
+						Description: types2.String("security group description", types2.NewTestMetadata()),
 					},
 				},
 			},

@@ -3,9 +3,9 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,12 +25,12 @@ func TestCheckNoSensitiveInfo(t *testing.T) {
 			input: ec2.EC2{
 				LaunchConfigurations: []ec2.LaunchConfiguration{
 					{
-						Metadata: types.NewTestMetadata(),
-						UserData: types.String(`
+						Metadata: types2.NewTestMetadata(),
+						UserData: types2.String(`
 						export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 						export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 						export AWS_DEFAULT_REGION=us-west-2
-						`, types.NewTestMetadata()),
+						`, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -41,10 +41,10 @@ func TestCheckNoSensitiveInfo(t *testing.T) {
 			input: ec2.EC2{
 				LaunchConfigurations: []ec2.LaunchConfiguration{
 					{
-						Metadata: types.NewTestMetadata(),
-						UserData: types.String(`
+						Metadata: types2.NewTestMetadata(),
+						UserData: types2.String(`
 						export GREETING=hello
-						`, types.NewTestMetadata()),
+						`, types2.NewTestMetadata()),
 					},
 				},
 			},

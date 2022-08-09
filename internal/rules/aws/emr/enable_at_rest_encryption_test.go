@@ -3,7 +3,8 @@ package emr
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/emr"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -21,8 +22,8 @@ func TestEnableAtRestEncryption(t *testing.T) {
 			input: emr.EMR{
 				SecurityConfiguration: []emr.SecurityConfiguration{
 					{
-						Name: types.String("test", types.NewTestMetadata()),
-						Configuration: types.String(`{
+						Name: types2.String("test", types2.NewTestMetadata()),
+						Configuration: types2.String(`{
 							"EncryptionConfiguration": {
 							  "AtRestEncryptionConfiguration": {
 								"S3EncryptionConfiguration": {
@@ -35,7 +36,7 @@ func TestEnableAtRestEncryption(t *testing.T) {
 							  },
 							  "EnableAtRestEncryption": false
 							}
-						  }`, types.NewTestMetadata()),
+						  }`, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -46,8 +47,8 @@ func TestEnableAtRestEncryption(t *testing.T) {
 			input: emr.EMR{
 				SecurityConfiguration: []emr.SecurityConfiguration{
 					{
-						Name: types.String("test", types.NewTestMetadata()),
-						Configuration: types.String(`{
+						Name: types2.String("test", types2.NewTestMetadata()),
+						Configuration: types2.String(`{
 							"EncryptionConfiguration": {
 							  "AtRestEncryptionConfiguration": {
 								"S3EncryptionConfiguration": {
@@ -60,7 +61,7 @@ func TestEnableAtRestEncryption(t *testing.T) {
 							  },
 							  "EnableAtRestEncryption": true
 							}
-						  }`, types.NewTestMetadata()),
+						  }`, types2.NewTestMetadata()),
 					},
 				},
 			},

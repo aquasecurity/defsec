@@ -2,9 +2,9 @@ package documentdb
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/documentdb"
 	"github.com/aquasecurity/defsec/pkg/state"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/docdb"
 	"github.com/aws/aws-sdk-go-v2/service/docdb/types"
 )
@@ -79,9 +79,9 @@ func (a *adapter) adaptCluster(cluster types.DBCluster) (*documentdb.Cluster, er
 
 	metadata := a.CreateMetadataFromARN(*cluster.DBClusterArn)
 
-	var logExports []defsecTypes.StringValue
+	var logExports []types2.StringValue
 	for _, export := range cluster.EnabledCloudwatchLogsExports {
-		logExports = append(logExports, defsecTypes.String(export, metadata))
+		logExports = append(logExports, types2.String(export, metadata))
 	}
 
 	var kmsKeyId string
@@ -108,16 +108,16 @@ func (a *adapter) adaptCluster(cluster types.DBCluster) (*documentdb.Cluster, er
 		}
 		instances = append(instances, documentdb.Instance{
 			Metadata: metadata,
-			KMSKeyID: defsecTypes.String(kmsKeyId, metadata),
+			KMSKeyID: types2.String(kmsKeyId, metadata),
 		})
 	}
 
 	return &documentdb.Cluster{
 		Metadata:          metadata,
-		Identifier:        defsecTypes.String(identifier, metadata),
+		Identifier:        types2.String(identifier, metadata),
 		EnabledLogExports: logExports,
 		Instances:         instances,
-		StorageEncrypted:  defsecTypes.Bool(cluster.StorageEncrypted, metadata),
-		KMSKeyID:          defsecTypes.String(kmsKeyId, metadata),
+		StorageEncrypted:  types2.Bool(cluster.StorageEncrypted, metadata),
+		KMSKeyID:          types2.String(kmsKeyId, metadata),
 	}, nil
 }

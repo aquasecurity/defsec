@@ -3,9 +3,10 @@ package api_gateway
 import (
 	"fmt"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 
-	"github.com/aquasecurity/defsec/internal/types"
 	api "github.com/aws/aws-sdk-go-v2/service/apigateway"
 	agTypes "github.com/aws/aws-sdk-go-v2/service/apigateway/types"
 )
@@ -83,7 +84,7 @@ func (a *adapter) adaptRestAPIV1(restAPI agTypes.RestApi) (*v1.API, error) {
 
 	return &v1.API{
 		Metadata:  metadata,
-		Name:      types.String(*restAPI.Name, metadata),
+		Name:      types2.String(*restAPI.Name, metadata),
 		Stages:    stages,
 		Resources: resources,
 	}, nil
@@ -101,21 +102,21 @@ func (a *adapter) adaptStageV1(restAPI agTypes.RestApi, stage agTypes.Stage) v1.
 	for method, setting := range stage.MethodSettings {
 		methodSettings = append(methodSettings, v1.RESTMethodSettings{
 			Metadata:           metadata,
-			Method:             types.String(method, metadata),
-			CacheDataEncrypted: types.Bool(setting.CacheDataEncrypted, metadata),
-			CacheEnabled:       types.Bool(setting.CachingEnabled, metadata),
+			Method:             types2.String(method, metadata),
+			CacheDataEncrypted: types2.Bool(setting.CacheDataEncrypted, metadata),
+			CacheEnabled:       types2.Bool(setting.CachingEnabled, metadata),
 		})
 	}
 
 	return v1.Stage{
 		Metadata: metadata,
-		Name:     types.String(*stage.StageName, metadata),
+		Name:     types2.String(*stage.StageName, metadata),
 		AccessLogging: v1.AccessLogging{
 			Metadata:              metadata,
-			CloudwatchLogGroupARN: types.String(logARN, metadata),
+			CloudwatchLogGroupARN: types2.String(logARN, metadata),
 		},
 		RESTMethodSettings: methodSettings,
-		XRayTracingEnabled: types.Bool(stage.TracingEnabled, metadata),
+		XRayTracingEnabled: types2.Bool(stage.TracingEnabled, metadata),
 	}
 }
 
@@ -132,9 +133,9 @@ func (a *adapter) adaptResourceV1(restAPI agTypes.RestApi, apiResource agTypes.R
 		metadata := a.CreateMetadata(fmt.Sprintf("/restapis/%s/resources/%s/methods/%s", *restAPI.Id, *apiResource.Id, *method.HttpMethod))
 		resource.Methods = append(resource.Methods, v1.Method{
 			Metadata:          metadata,
-			HTTPMethod:        types.String(*method.HttpMethod, metadata),
-			AuthorizationType: types.String(*method.AuthorizationType, metadata),
-			APIKeyRequired:    types.Bool(*method.ApiKeyRequired, metadata),
+			HTTPMethod:        types2.String(*method.HttpMethod, metadata),
+			AuthorizationType: types2.String(*method.AuthorizationType, metadata),
+			APIKeyRequired:    types2.Bool(*method.ApiKeyRequired, metadata),
 		})
 	}
 

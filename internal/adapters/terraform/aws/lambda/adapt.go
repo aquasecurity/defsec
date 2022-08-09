@@ -1,9 +1,9 @@
 package lambda
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/lambda"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) lambda.Lambda {
@@ -34,10 +34,10 @@ func (a *adapter) adaptFunctions(modules terraform.Modules) []lambda.Function {
 
 	if len(orphanResources) > 0 {
 		orphanage := lambda.Function{
-			Metadata: types.NewUnmanagedMetadata(),
+			Metadata: types2.NewUnmanagedMetadata(),
 			Tracing: lambda.Tracing{
-				Metadata: types.NewUnmanagedMetadata(),
-				Mode:     types.StringDefault("", types.NewUnmanagedMetadata()),
+				Metadata: types2.NewUnmanagedMetadata(),
+				Mode:     types2.StringDefault("", types2.NewUnmanagedMetadata()),
 			},
 			Permissions: nil,
 		}
@@ -78,7 +78,7 @@ func (a *adapter) adaptTracing(function *terraform.Block) lambda.Tracing {
 
 	return lambda.Tracing{
 		Metadata: function.GetMetadata(),
-		Mode:     types.StringDefault("", function.GetMetadata()),
+		Mode:     types2.StringDefault("", function.GetMetadata()),
 	}
 }
 
@@ -87,7 +87,7 @@ func (a *adapter) adaptPermission(permission *terraform.Block) lambda.Permission
 	sourceARN := sourceARNAttr.AsStringValueOrDefault("", permission)
 
 	if len(sourceARNAttr.AllReferences()) > 0 {
-		sourceARN = types.String(sourceARNAttr.AllReferences()[0].NameLabel(), sourceARNAttr.GetMetadata())
+		sourceARN = types2.String(sourceARNAttr.AllReferences()[0].NameLabel(), sourceARNAttr.GetMetadata())
 	}
 
 	return lambda.Permission{

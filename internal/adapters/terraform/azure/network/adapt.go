@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
@@ -52,7 +52,7 @@ func (a *adapter) adaptSecurityGroups() []network.SecurityGroup {
 		}
 
 		a.groups[uuid.NewString()] = network.SecurityGroup{
-			Metadata: types.NewUnmanagedMetadata(),
+			Metadata: types2.NewUnmanagedMetadata(),
 			Rules:    []network.SecurityGroupRule{rule},
 		}
 	}
@@ -91,8 +91,8 @@ func (a *adapter) adaptSGRule(ruleBlock *terraform.Block) network.SecurityGroupR
 
 	rule := network.SecurityGroupRule{
 		Metadata:             ruleBlock.GetMetadata(),
-		Outbound:             types.BoolDefault(false, ruleBlock.GetMetadata()),
-		Allow:                types.BoolDefault(true, ruleBlock.GetMetadata()),
+		Outbound:             types2.BoolDefault(false, ruleBlock.GetMetadata()),
+		Allow:                types2.BoolDefault(true, ruleBlock.GetMetadata()),
 		SourceAddresses:      nil,
 		SourcePorts:          nil,
 		DestinationAddresses: nil,
@@ -102,16 +102,16 @@ func (a *adapter) adaptSGRule(ruleBlock *terraform.Block) network.SecurityGroupR
 
 	accessAttr := ruleBlock.GetAttribute("access")
 	if accessAttr.Equals("Allow") {
-		rule.Allow = types.Bool(true, accessAttr.GetMetadata())
+		rule.Allow = types2.Bool(true, accessAttr.GetMetadata())
 	} else if accessAttr.Equals("Deny") {
-		rule.Allow = types.Bool(false, accessAttr.GetMetadata())
+		rule.Allow = types2.Bool(false, accessAttr.GetMetadata())
 	}
 
 	directionAttr := ruleBlock.GetAttribute("direction")
 	if directionAttr.Equals("Inbound") {
-		rule.Outbound = types.Bool(false, directionAttr.GetMetadata())
+		rule.Outbound = types2.Bool(false, directionAttr.GetMetadata())
 	} else if directionAttr.Equals("Outbound") {
-		rule.Outbound = types.Bool(true, directionAttr.GetMetadata())
+		rule.Outbound = types2.Bool(true, directionAttr.GetMetadata())
 	}
 
 	a.adaptSource(ruleBlock, &rule)
@@ -168,7 +168,7 @@ func (a *adapter) adaptDestination(ruleBlock *terraform.Block, rule *network.Sec
 	}
 }
 
-func expandRange(r string, m types.Metadata) network.PortRange {
+func expandRange(r string, m types2.Metadata) network.PortRange {
 	start := 0
 	end := 65535
 	switch {
@@ -201,8 +201,8 @@ func adaptWatcherLog(resource *terraform.Block) network.NetworkWatcherFlowLog {
 		Metadata: resource.GetMetadata(),
 		RetentionPolicy: network.RetentionPolicy{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
-			Days:     types.IntDefault(0, resource.GetMetadata()),
+			Enabled:  types2.BoolDefault(false, resource.GetMetadata()),
+			Days:     types2.IntDefault(0, resource.GetMetadata()),
 		},
 	}
 

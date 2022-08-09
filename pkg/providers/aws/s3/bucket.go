@@ -1,19 +1,19 @@
 package s3
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Bucket struct {
-	types.Metadata
-	Name              types.StringValue
+	types2.Metadata
+	Name              types2.StringValue
 	PublicAccessBlock *PublicAccessBlock
 	BucketPolicies    []iam.Policy
 	Encryption        Encryption
 	Versioning        Versioning
 	Logging           Logging
-	ACL               types.StringValue
+	ACL               types2.StringValue
 }
 
 func (b *Bucket) HasPublicExposureACL() bool {
@@ -30,19 +30,19 @@ func (b *Bucket) HasPublicExposureACL() bool {
 }
 
 type Logging struct {
-	types.Metadata
-	Enabled      types.BoolValue
-	TargetBucket types.StringValue
+	types2.Metadata
+	Enabled      types2.BoolValue
+	TargetBucket types2.StringValue
 }
 
 type Versioning struct {
-	types.Metadata
-	Enabled types.BoolValue
+	types2.Metadata
+	Enabled types2.BoolValue
 }
 
 type Encryption struct {
-	types.Metadata
-	Enabled   types.BoolValue
-	Algorithm types.StringValue
-	KMSKeyId  types.StringValue
+	types2.Metadata
+	Enabled   types2.BoolValue
+	Algorithm types2.StringValue
+	KMSKeyId  types2.StringValue
 }

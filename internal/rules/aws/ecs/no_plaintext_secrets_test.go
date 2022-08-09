@@ -3,7 +3,7 @@ package ecs
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,15 +24,15 @@ func TestCheckNoPlaintextSecrets(t *testing.T) {
 			input: ecs.ECS{
 				TaskDefinitions: []ecs.TaskDefinition{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						ContainerDefinitions: []ecs.ContainerDefinition{
 							{
-								Metadata:  types.NewTestMetadata(),
-								Name:      types.String("my_service", types.NewTestMetadata()),
-								Image:     types.String("my_image", types.NewTestMetadata()),
-								CPU:       types.Int(2, types.NewTestMetadata()),
-								Memory:    types.Int(256, types.NewTestMetadata()),
-								Essential: types.Bool(true, types.NewTestMetadata()),
+								Metadata:  types2.NewTestMetadata(),
+								Name:      types2.String("my_service", types2.NewTestMetadata()),
+								Image:     types2.String("my_image", types2.NewTestMetadata()),
+								CPU:       types2.Int(2, types2.NewTestMetadata()),
+								Memory:    types2.Int(256, types2.NewTestMetadata()),
+								Essential: types2.Bool(true, types2.NewTestMetadata()),
 								Environment: []ecs.EnvVar{
 									{
 										Name:  "ENVIRONMENT",
@@ -55,15 +55,15 @@ func TestCheckNoPlaintextSecrets(t *testing.T) {
 			input: ecs.ECS{
 				TaskDefinitions: []ecs.TaskDefinition{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						ContainerDefinitions: []ecs.ContainerDefinition{
 							{
-								Metadata:  types.NewTestMetadata(),
-								Name:      types.String("my_service", types.NewTestMetadata()),
-								Image:     types.String("my_image", types.NewTestMetadata()),
-								CPU:       types.Int(2, types.NewTestMetadata()),
-								Memory:    types.Int(256, types.NewTestMetadata()),
-								Essential: types.Bool(true, types.NewTestMetadata()),
+								Metadata:  types2.NewTestMetadata(),
+								Name:      types2.String("my_service", types2.NewTestMetadata()),
+								Image:     types2.String("my_image", types2.NewTestMetadata()),
+								CPU:       types2.Int(2, types2.NewTestMetadata()),
+								Memory:    types2.Int(256, types2.NewTestMetadata()),
+								Essential: types2.Bool(true, types2.NewTestMetadata()),
 								Environment: []ecs.EnvVar{
 									{
 										Name:  "ENVIRONMENT",

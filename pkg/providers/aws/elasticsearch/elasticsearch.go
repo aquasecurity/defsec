@@ -1,7 +1,7 @@
 package elasticsearch
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Elasticsearch struct {
@@ -9,8 +9,8 @@ type Elasticsearch struct {
 }
 
 type Domain struct {
-	types.Metadata
-	DomainName        types.StringValue
+	types2.Metadata
+	DomainName        types2.StringValue
 	LogPublishing     LogPublishing
 	TransitEncryption TransitEncryption
 	AtRestEncryption  AtRestEncryption
@@ -18,22 +18,22 @@ type Domain struct {
 }
 
 type Endpoint struct {
-	types.Metadata
-	EnforceHTTPS types.BoolValue
-	TLSPolicy    types.StringValue
+	types2.Metadata
+	EnforceHTTPS types2.BoolValue
+	TLSPolicy    types2.StringValue
 }
 
 type LogPublishing struct {
-	types.Metadata
-	AuditEnabled types.BoolValue
+	types2.Metadata
+	AuditEnabled types2.BoolValue
 }
 
 type TransitEncryption struct {
-	types.Metadata
-	Enabled types.BoolValue
+	types2.Metadata
+	Enabled types2.BoolValue
 }
 
 type AtRestEncryption struct {
-	types.Metadata
-	Enabled types.BoolValue
+	types2.Metadata
+	Enabled types2.BoolValue
 }

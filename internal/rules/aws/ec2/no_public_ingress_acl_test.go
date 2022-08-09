@@ -3,9 +3,9 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,14 +25,14 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: ec2.EC2{
 				NetworkACLs: []ec2.NetworkACL{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []ec2.NetworkACLRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Type:     types.String(ec2.TypeIngress, types.NewTestMetadata()),
-								Action:   types.String(ec2.ActionAllow, types.NewTestMetadata()),
-								CIDRs: []types.StringValue{
-									types.String("0.0.0.0/0", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Type:     types2.String(ec2.TypeIngress, types2.NewTestMetadata()),
+								Action:   types2.String(ec2.ActionAllow, types2.NewTestMetadata()),
+								CIDRs: []types2.StringValue{
+									types2.String("0.0.0.0/0", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -46,14 +46,14 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: ec2.EC2{
 				NetworkACLs: []ec2.NetworkACL{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []ec2.NetworkACLRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Type:     types.String(ec2.TypeIngress, types.NewTestMetadata()),
-								Action:   types.String(ec2.ActionAllow, types.NewTestMetadata()),
-								CIDRs: []types.StringValue{
-									types.String("10.0.0.0/16", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Type:     types2.String(ec2.TypeIngress, types2.NewTestMetadata()),
+								Action:   types2.String(ec2.ActionAllow, types2.NewTestMetadata()),
+								CIDRs: []types2.StringValue{
+									types2.String("10.0.0.0/16", types2.NewTestMetadata()),
 								},
 							},
 						},

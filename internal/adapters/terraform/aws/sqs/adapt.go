@@ -2,10 +2,10 @@ package sqs
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/iam"
-	"github.com/aquasecurity/defsec/internal/types"
 	iamp "github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/liamg/iamgo"
 
 	"github.com/google/uuid"
@@ -34,11 +34,11 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 
 		policy := iamp.Policy{
 			Metadata: policyBlock.GetMetadata(),
-			Name:     types.StringDefault("", policyBlock.GetMetadata()),
+			Name:     types2.StringDefault("", policyBlock.GetMetadata()),
 			Document: iamp.Document{
 				Metadata: policyBlock.GetMetadata(),
 			},
-			Builtin: types.Bool(false, policyBlock.GetMetadata()),
+			Builtin: types2.Bool(false, policyBlock.GetMetadata()),
 		}
 		if attr := policyBlock.GetAttribute("policy"); attr.IsString() {
 			parsed, err := iamgo.ParseString(attr.Value().AsString())
@@ -67,12 +67,12 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 		}
 
 		a.queues[uuid.NewString()] = sqs.Queue{
-			Metadata: types.NewUnmanagedMetadata(),
-			QueueURL: types.StringDefault("", types.NewUnmanagedMetadata()),
+			Metadata: types2.NewUnmanagedMetadata(),
+			QueueURL: types2.StringDefault("", types2.NewUnmanagedMetadata()),
 			Encryption: sqs.Encryption{
-				Metadata:          types.NewUnmanagedMetadata(),
-				ManagedEncryption: types.BoolDefault(false, types.NewUnmanagedMetadata()),
-				KMSKeyID:          types.StringDefault("", types.NewUnmanagedMetadata()),
+				Metadata:          types2.NewUnmanagedMetadata(),
+				ManagedEncryption: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+				KMSKeyID:          types2.StringDefault("", types2.NewUnmanagedMetadata()),
 			},
 			Policies: []iamp.Policy{policy},
 		}
@@ -95,11 +95,11 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 	if attr := resource.GetAttribute("policy"); attr.IsString() {
 		policy := iamp.Policy{
 			Metadata: attr.GetMetadata(),
-			Name:     types.StringDefault("", attr.GetMetadata()),
+			Name:     types2.StringDefault("", attr.GetMetadata()),
 			Document: iamp.Document{
 				Metadata: attr.GetMetadata(),
 			},
-			Builtin: types.Bool(false, attr.GetMetadata()),
+			Builtin: types2.Bool(false, attr.GetMetadata()),
 		}
 		parsed, err := iamgo.ParseString(attr.Value().AsString())
 		if err == nil {
@@ -113,12 +113,12 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 			if doc, err := iam.ConvertTerraformDocument(a.modules, refBlock); err == nil {
 				policy := iamp.Policy{
 					Metadata: doc.Source.GetMetadata(),
-					Name:     types.StringDefault("", doc.Source.GetMetadata()),
+					Name:     types2.StringDefault("", doc.Source.GetMetadata()),
 					Document: iamp.Document{
 						Metadata: doc.Source.GetMetadata(),
 						Parsed:   doc.Document,
 					},
-					Builtin: types.Bool(false, refBlock.GetMetadata()),
+					Builtin: types2.Bool(false, refBlock.GetMetadata()),
 				}
 				policies = append(policies, policy)
 			}
@@ -127,7 +127,7 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 
 	a.queues[resource.ID()] = sqs.Queue{
 		Metadata: resource.GetMetadata(),
-		QueueURL: types.StringDefault("", resource.GetMetadata()),
+		QueueURL: types2.StringDefault("", resource.GetMetadata()),
 		Encryption: sqs.Encryption{
 			Metadata:          resource.GetMetadata(),
 			ManagedEncryption: managedEncryption.AsBoolValueOrDefault(false, resource),

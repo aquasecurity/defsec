@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNoPublicIp(t *testing.T) {
 			input: oracle.Compute{
 				AddressReservations: []oracle.AddressReservation{
 					{
-						Metadata: types.NewTestMetadata(),
-						Pool:     types.String("public-ippool", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Pool:     types2.String("public-ippool", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckNoPublicIp(t *testing.T) {
 			input: oracle.Compute{
 				AddressReservations: []oracle.AddressReservation{
 					{
-						Metadata: types.NewTestMetadata(),
-						Pool:     types.String("cloud-ippool", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Pool:     types2.String("cloud-ippool", types2.NewTestMetadata()),
 					},
 				},
 			},

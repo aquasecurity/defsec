@@ -1,11 +1,11 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type SubNetwork struct {
-	types.Metadata
-	Name           types.StringValue
-	EnableFlowLogs types.BoolValue
+	types2.Metadata
+	Name           types2.StringValue
+	EnableFlowLogs types2.BoolValue
 }

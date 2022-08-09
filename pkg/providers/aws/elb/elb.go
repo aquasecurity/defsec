@@ -1,7 +1,7 @@
 package elb
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type ELB struct {
@@ -16,21 +16,21 @@ const (
 )
 
 type LoadBalancer struct {
-	types.Metadata
-	Type                    types.StringValue
-	DropInvalidHeaderFields types.BoolValue
-	Internal                types.BoolValue
+	types2.Metadata
+	Type                    types2.StringValue
+	DropInvalidHeaderFields types2.BoolValue
+	Internal                types2.BoolValue
 	Listeners               []Listener
 }
 
 type Listener struct {
-	types.Metadata
-	Protocol       types.StringValue
-	TLSPolicy      types.StringValue
+	types2.Metadata
+	Protocol       types2.StringValue
+	TLSPolicy      types2.StringValue
 	DefaultActions []Action
 }
 
 type Action struct {
-	types.Metadata
-	Type types.StringValue
+	types2.Metadata
+	Type types2.StringValue
 }

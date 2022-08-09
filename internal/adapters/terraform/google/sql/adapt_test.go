@@ -3,7 +3,8 @@ package sql
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/google/sql"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
@@ -42,39 +43,39 @@ func Test_Adapt(t *testing.T) {
 			expected: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:        types.NewTestMetadata(),
-						IsReplica:       types.Bool(false, types.NewTestMetadata()),
-						DatabaseVersion: types.String("POSTGRES_12", types.NewTestMetadata()),
+						Metadata:        types2.NewTestMetadata(),
+						IsReplica:       types2.Bool(false, types2.NewTestMetadata()),
+						DatabaseVersion: types2.String("POSTGRES_12", types2.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							Backups: sql.Backups{
-								Metadata: types.NewTestMetadata(),
-								Enabled:  types.Bool(true, types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 							},
 							Flags: sql.Flags{
-								Metadata:                        types.NewTestMetadata(),
-								LogMinDurationStatement:         types.Int(-1, types.NewTestMetadata()),
-								ContainedDatabaseAuthentication: types.Bool(true, types.NewTestMetadata()),
-								CrossDBOwnershipChaining:        types.Bool(true, types.NewTestMetadata()),
-								LocalInFile:                     types.Bool(false, types.NewTestMetadata()),
-								LogCheckpoints:                  types.Bool(false, types.NewTestMetadata()),
-								LogConnections:                  types.Bool(false, types.NewTestMetadata()),
-								LogDisconnections:               types.Bool(false, types.NewTestMetadata()),
-								LogLockWaits:                    types.Bool(false, types.NewTestMetadata()),
-								LogMinMessages:                  types.String("", types.NewTestMetadata()),
-								LogTempFileSize:                 types.Int(-1, types.NewTestMetadata()),
+								Metadata:                        types2.NewTestMetadata(),
+								LogMinDurationStatement:         types2.Int(-1, types2.NewTestMetadata()),
+								ContainedDatabaseAuthentication: types2.Bool(true, types2.NewTestMetadata()),
+								CrossDBOwnershipChaining:        types2.Bool(true, types2.NewTestMetadata()),
+								LocalInFile:                     types2.Bool(false, types2.NewTestMetadata()),
+								LogCheckpoints:                  types2.Bool(false, types2.NewTestMetadata()),
+								LogConnections:                  types2.Bool(false, types2.NewTestMetadata()),
+								LogDisconnections:               types2.Bool(false, types2.NewTestMetadata()),
+								LogLockWaits:                    types2.Bool(false, types2.NewTestMetadata()),
+								LogMinMessages:                  types2.String("", types2.NewTestMetadata()),
+								LogTempFileSize:                 types2.Int(-1, types2.NewTestMetadata()),
 							},
 							IPConfiguration: sql.IPConfiguration{
-								Metadata:   types.NewTestMetadata(),
-								RequireTLS: types.Bool(true, types.NewTestMetadata()),
-								EnableIPv4: types.Bool(false, types.NewTestMetadata()),
+								Metadata:   types2.NewTestMetadata(),
+								RequireTLS: types2.Bool(true, types2.NewTestMetadata()),
+								EnableIPv4: types2.Bool(false, types2.NewTestMetadata()),
 								AuthorizedNetworks: []struct {
-									Name types.StringValue
-									CIDR types.StringValue
+									Name types2.StringValue
+									CIDR types2.StringValue
 								}{
 									{
-										Name: types.String("internal", types.NewTestMetadata()),
-										CIDR: types.String("108.12.12.0/24", types.NewTestMetadata()),
+										Name: types2.String("internal", types2.NewTestMetadata()),
+										CIDR: types2.String("108.12.12.0/24", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -145,28 +146,28 @@ resource "google_sql_database_instance" "backup_source_instance" {
                 `,
 			expected: []sql.DatabaseInstance{
 				{
-					Metadata:        types.NewTestMetadata(),
-					DatabaseVersion: types.String("POSTGRES_11", types.NewTestMetadata()),
-					IsReplica:       types.Bool(false, types.NewTestMetadata()),
+					Metadata:        types2.NewTestMetadata(),
+					DatabaseVersion: types2.String("POSTGRES_11", types2.NewTestMetadata()),
+					IsReplica:       types2.Bool(false, types2.NewTestMetadata()),
 					Settings: sql.Settings{
 						Backups: sql.Backups{
-							Enabled: types.Bool(true, types.NewTestMetadata()),
+							Enabled: types2.Bool(true, types2.NewTestMetadata()),
 						},
 						Flags: sql.Flags{
-							LogConnections:                  types.Bool(true, types.NewTestMetadata()),
-							LogTempFileSize:                 types.Int(0, types.NewTestMetadata()),
-							LogCheckpoints:                  types.Bool(true, types.NewTestMetadata()),
-							LogDisconnections:               types.Bool(true, types.NewTestMetadata()),
-							LogLockWaits:                    types.Bool(true, types.NewTestMetadata()),
-							ContainedDatabaseAuthentication: types.Bool(true, types.NewTestMetadata()),
-							CrossDBOwnershipChaining:        types.Bool(true, types.NewTestMetadata()),
-							LocalInFile:                     types.Bool(false, types.NewTestMetadata()),
-							LogMinDurationStatement:         types.Int(-1, types.NewTestMetadata()),
-							LogMinMessages:                  types.String("", types.NewTestMetadata()),
+							LogConnections:                  types2.Bool(true, types2.NewTestMetadata()),
+							LogTempFileSize:                 types2.Int(0, types2.NewTestMetadata()),
+							LogCheckpoints:                  types2.Bool(true, types2.NewTestMetadata()),
+							LogDisconnections:               types2.Bool(true, types2.NewTestMetadata()),
+							LogLockWaits:                    types2.Bool(true, types2.NewTestMetadata()),
+							ContainedDatabaseAuthentication: types2.Bool(true, types2.NewTestMetadata()),
+							CrossDBOwnershipChaining:        types2.Bool(true, types2.NewTestMetadata()),
+							LocalInFile:                     types2.Bool(false, types2.NewTestMetadata()),
+							LogMinDurationStatement:         types2.Int(-1, types2.NewTestMetadata()),
+							LogMinMessages:                  types2.String("", types2.NewTestMetadata()),
 						},
 						IPConfiguration: sql.IPConfiguration{
-							EnableIPv4: types.Bool(false, types.NewTestMetadata()),
-							RequireTLS: types.Bool(true, types.NewTestMetadata()),
+							EnableIPv4: types2.Bool(false, types2.NewTestMetadata()),
+							RequireTLS: types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},

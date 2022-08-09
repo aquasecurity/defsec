@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNoRootAccessKeys(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Name:       types.String("root", types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						Name:       types2.String("root", types2.NewTestMetadata()),
 						AccessKeys: nil,
 					},
 				},
@@ -37,8 +37,8 @@ func TestCheckNoRootAccessKeys(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Name:       types.String("other", types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						Name:       types2.String("other", types2.NewTestMetadata()),
 						AccessKeys: nil,
 					},
 				},
@@ -50,15 +50,15 @@ func TestCheckNoRootAccessKeys(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("other", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Name:     types2.String("other", types2.NewTestMetadata()),
 						AccessKeys: []iam.AccessKey{
 							{
-								Metadata:     types.NewTestMetadata(),
-								AccessKeyId:  types.String("BLAH", types.NewTestMetadata()),
-								Active:       types.Bool(true, types.NewTestMetadata()),
-								CreationDate: types.TimeUnresolvable(types.NewTestMetadata()),
-								LastAccess:   types.TimeUnresolvable(types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								AccessKeyId:  types2.String("BLAH", types2.NewTestMetadata()),
+								Active:       types2.Bool(true, types2.NewTestMetadata()),
+								CreationDate: types2.TimeUnresolvable(types2.NewTestMetadata()),
+								LastAccess:   types2.TimeUnresolvable(types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -71,15 +71,15 @@ func TestCheckNoRootAccessKeys(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("root", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Name:     types2.String("root", types2.NewTestMetadata()),
 						AccessKeys: []iam.AccessKey{
 							{
-								Metadata:     types.NewTestMetadata(),
-								AccessKeyId:  types.String("BLAH", types.NewTestMetadata()),
-								Active:       types.Bool(false, types.NewTestMetadata()),
-								CreationDate: types.TimeUnresolvable(types.NewTestMetadata()),
-								LastAccess:   types.TimeUnresolvable(types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								AccessKeyId:  types2.String("BLAH", types2.NewTestMetadata()),
+								Active:       types2.Bool(false, types2.NewTestMetadata()),
+								CreationDate: types2.TimeUnresolvable(types2.NewTestMetadata()),
+								LastAccess:   types2.TimeUnresolvable(types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -92,15 +92,15 @@ func TestCheckNoRootAccessKeys(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("root", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Name:     types2.String("root", types2.NewTestMetadata()),
 						AccessKeys: []iam.AccessKey{
 							{
-								Metadata:     types.NewTestMetadata(),
-								AccessKeyId:  types.String("BLAH", types.NewTestMetadata()),
-								Active:       types.Bool(true, types.NewTestMetadata()),
-								CreationDate: types.TimeUnresolvable(types.NewTestMetadata()),
-								LastAccess:   types.TimeUnresolvable(types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								AccessKeyId:  types2.String("BLAH", types2.NewTestMetadata()),
+								Active:       types2.Bool(true, types2.NewTestMetadata()),
+								CreationDate: types2.TimeUnresolvable(types2.NewTestMetadata()),
+								LastAccess:   types2.TimeUnresolvable(types2.NewTestMetadata()),
 							},
 						},
 					},

@@ -1,8 +1,8 @@
 package ecr
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type ECR struct {
@@ -10,16 +10,16 @@ type ECR struct {
 }
 
 type Repository struct {
-	types.Metadata
+	types2.Metadata
 	ImageScanning      ImageScanning
-	ImageTagsImmutable types.BoolValue
+	ImageTagsImmutable types2.BoolValue
 	Policies           []iam.Policy
 	Encryption         Encryption
 }
 
 type ImageScanning struct {
-	types.Metadata
-	ScanOnPush types.BoolValue
+	types2.Metadata
+	ScanOnPush types2.BoolValue
 }
 
 const (
@@ -28,7 +28,7 @@ const (
 )
 
 type Encryption struct {
-	types.Metadata
-	Type     types.StringValue
-	KMSKeyID types.StringValue
+	types2.Metadata
+	Type     types2.StringValue
+	KMSKeyID types2.StringValue
 }

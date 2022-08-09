@@ -1,9 +1,9 @@
 package msk
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/msk"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getClusters(ctx parser.FileContext) (clusters []msk.Cluster) {
@@ -13,7 +13,7 @@ func getClusters(ctx parser.FileContext) (clusters []msk.Cluster) {
 			Metadata: r.Metadata(),
 			EncryptionInTransit: msk.EncryptionInTransit{
 				Metadata:     r.Metadata(),
-				ClientBroker: types.StringDefault("TLS", r.Metadata()),
+				ClientBroker: types2.StringDefault("TLS", r.Metadata()),
 			},
 			Logging: msk.Logging{
 				Metadata: r.Metadata(),
@@ -21,15 +21,15 @@ func getClusters(ctx parser.FileContext) (clusters []msk.Cluster) {
 					Metadata: r.Metadata(),
 					S3: msk.S3Logging{
 						Metadata: r.Metadata(),
-						Enabled:  types.BoolDefault(false, r.Metadata()),
+						Enabled:  types2.BoolDefault(false, r.Metadata()),
 					},
 					Cloudwatch: msk.CloudwatchLogging{
 						Metadata: r.Metadata(),
-						Enabled:  types.BoolDefault(false, r.Metadata()),
+						Enabled:  types2.BoolDefault(false, r.Metadata()),
 					},
 					Firehose: msk.FirehoseLogging{
 						Metadata: r.Metadata(),
-						Enabled:  types.BoolDefault(false, r.Metadata()),
+						Enabled:  types2.BoolDefault(false, r.Metadata()),
 					},
 				},
 			},

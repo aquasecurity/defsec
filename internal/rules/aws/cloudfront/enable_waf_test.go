@@ -3,7 +3,7 @@ package cloudfront
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableWaf(t *testing.T) {
 			input: cloudfront.Cloudfront{
 				Distributions: []cloudfront.Distribution{
 					{
-						Metadata: types.NewTestMetadata(),
-						WAFID:    types.String("", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						WAFID:    types2.String("", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableWaf(t *testing.T) {
 			input: cloudfront.Cloudfront{
 				Distributions: []cloudfront.Distribution{
 					{
-						Metadata: types.NewTestMetadata(),
-						WAFID:    types.String("waf_id", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						WAFID:    types2.String("waf_id", types2.NewTestMetadata()),
 					},
 				},
 			},

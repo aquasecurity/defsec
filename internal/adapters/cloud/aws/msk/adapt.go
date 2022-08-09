@@ -2,9 +2,9 @@ package msk
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/msk"
 	"github.com/aquasecurity/defsec/pkg/state"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/kafka"
 	"github.com/aws/aws-sdk-go-v2/service/kafka/types"
 )
@@ -102,7 +102,7 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterInfo) (*msk.Cluster, erro
 		Metadata: metadata,
 		EncryptionInTransit: msk.EncryptionInTransit{
 			Metadata:     metadata,
-			ClientBroker: defsecTypes.String(encInTransitClientBroker, metadata),
+			ClientBroker: types2.String(encInTransitClientBroker, metadata),
 		},
 		Logging: msk.Logging{
 			Metadata: metadata,
@@ -110,15 +110,15 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterInfo) (*msk.Cluster, erro
 				Metadata: metadata,
 				S3: msk.S3Logging{
 					Metadata: metadata,
-					Enabled:  defsecTypes.Bool(logS3, metadata),
+					Enabled:  types2.Bool(logS3, metadata),
 				},
 				Cloudwatch: msk.CloudwatchLogging{
 					Metadata: metadata,
-					Enabled:  defsecTypes.Bool(logCW, metadata),
+					Enabled:  types2.Bool(logCW, metadata),
 				},
 				Firehose: msk.FirehoseLogging{
 					Metadata: metadata,
-					Enabled:  defsecTypes.Bool(logFH, metadata),
+					Enabled:  types2.Bool(logFH, metadata),
 				},
 			},
 		},

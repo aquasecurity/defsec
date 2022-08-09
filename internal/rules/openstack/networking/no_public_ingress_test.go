@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: openstack.Networking{
 				SecurityGroups: []openstack.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []openstack.SecurityGroupRule{
 							{
-								Metadata:  types.NewTestMetadata(),
-								IsIngress: types.Bool(true, types.NewTestMetadata()),
-								CIDR:      types.String("", types.NewTestMetadata()),
+								Metadata:  types2.NewTestMetadata(),
+								IsIngress: types2.Bool(true, types2.NewTestMetadata()),
+								CIDR:      types2.String("", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -42,12 +42,12 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: openstack.Networking{
 				SecurityGroups: []openstack.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []openstack.SecurityGroupRule{
 							{
-								Metadata:  types.NewTestMetadata(),
-								IsIngress: types.Bool(true, types.NewTestMetadata()),
-								CIDR:      types.String("10.10.0.1", types.NewTestMetadata()),
+								Metadata:  types2.NewTestMetadata(),
+								IsIngress: types2.Bool(true, types2.NewTestMetadata()),
+								CIDR:      types2.String("10.10.0.1", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -60,12 +60,12 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: openstack.Networking{
 				SecurityGroups: []openstack.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []openstack.SecurityGroupRule{
 							{
-								Metadata:  types.NewTestMetadata(),
-								IsIngress: types.Bool(true, types.NewTestMetadata()),
-								CIDR:      types.String("8.8.8.8", types.NewTestMetadata()),
+								Metadata:  types2.NewTestMetadata(),
+								IsIngress: types2.Bool(true, types2.NewTestMetadata()),
+								CIDR:      types2.String("8.8.8.8", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -78,12 +78,12 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: openstack.Networking{
 				SecurityGroups: []openstack.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []openstack.SecurityGroupRule{
 							{
-								Metadata:  types.NewTestMetadata(),
-								IsIngress: types.Bool(true, types.NewTestMetadata()),
-								CIDR:      types.String("80.0.0.0/8", types.NewTestMetadata()),
+								Metadata:  types2.NewTestMetadata(),
+								IsIngress: types2.Bool(true, types2.NewTestMetadata()),
+								CIDR:      types2.String("80.0.0.0/8", types2.NewTestMetadata()),
 							},
 						},
 					},

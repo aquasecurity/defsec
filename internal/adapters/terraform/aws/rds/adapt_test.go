@@ -3,8 +3,9 @@ package rds
 import (
 	"testing"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/rds"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -56,67 +57,67 @@ func Test_Adapt(t *testing.T) {
 			expected: rds.RDS{
 				Instances: []rds.Instance{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						BackupRetentionPeriodDays: types.Int(5, types.NewTestMetadata()),
-						ReplicationSourceARN:      types.String("", types.NewTestMetadata()),
+						Metadata:                  types2.NewTestMetadata(),
+						BackupRetentionPeriodDays: types2.Int(5, types2.NewTestMetadata()),
+						ReplicationSourceARN:      types2.String("", types2.NewTestMetadata()),
 						PerformanceInsights: rds.PerformanceInsights{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
-							KMSKeyID: types.String("performance_key_1", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+							KMSKeyID: types2.String("performance_key_1", types2.NewTestMetadata()),
 						},
 						Encryption: rds.Encryption{
-							Metadata:       types.NewTestMetadata(),
-							EncryptStorage: types.Bool(true, types.NewTestMetadata()),
-							KMSKeyID:       types.String("kms_key_2", types.NewTestMetadata()),
+							Metadata:       types2.NewTestMetadata(),
+							EncryptStorage: types2.Bool(true, types2.NewTestMetadata()),
+							KMSKeyID:       types2.String("kms_key_2", types2.NewTestMetadata()),
 						},
-						PublicAccess: types.Bool(true, types.NewTestMetadata()),
+						PublicAccess: types2.Bool(true, types2.NewTestMetadata()),
 					},
 				},
 				Clusters: []rds.Cluster{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						BackupRetentionPeriodDays: types.Int(7, types.NewTestMetadata()),
-						ReplicationSourceARN:      types.String("arn-of-a-source-db-cluster", types.NewTestMetadata()),
+						Metadata:                  types2.NewTestMetadata(),
+						BackupRetentionPeriodDays: types2.Int(7, types2.NewTestMetadata()),
+						ReplicationSourceARN:      types2.String("arn-of-a-source-db-cluster", types2.NewTestMetadata()),
 						PerformanceInsights: rds.PerformanceInsights{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
-							KMSKeyID: types.String("", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+							KMSKeyID: types2.String("", types2.NewTestMetadata()),
 						},
 						Encryption: rds.Encryption{
-							Metadata:       types.NewTestMetadata(),
-							EncryptStorage: types.Bool(true, types.NewTestMetadata()),
-							KMSKeyID:       types.String("kms_key_1", types.NewTestMetadata()),
+							Metadata:       types2.NewTestMetadata(),
+							EncryptStorage: types2.Bool(true, types2.NewTestMetadata()),
+							KMSKeyID:       types2.String("kms_key_1", types2.NewTestMetadata()),
 						},
 						Instances: []rds.ClusterInstance{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Instance: rds.Instance{
 
-									Metadata:                  types.NewTestMetadata(),
-									BackupRetentionPeriodDays: types.Int(0, types.NewTestMetadata()),
-									ReplicationSourceARN:      types.String("", types.NewTestMetadata()),
+									Metadata:                  types2.NewTestMetadata(),
+									BackupRetentionPeriodDays: types2.Int(0, types2.NewTestMetadata()),
+									ReplicationSourceARN:      types2.String("", types2.NewTestMetadata()),
 									PerformanceInsights: rds.PerformanceInsights{
-										Metadata: types.NewTestMetadata(),
-										Enabled:  types.Bool(true, types.NewTestMetadata()),
-										KMSKeyID: types.String("performance_key_0", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+										KMSKeyID: types2.String("performance_key_0", types2.NewTestMetadata()),
 									},
 									Encryption: rds.Encryption{
-										Metadata:       types.NewTestMetadata(),
-										EncryptStorage: types.Bool(true, types.NewTestMetadata()),
-										KMSKeyID:       types.String("kms_key_0", types.NewTestMetadata()),
+										Metadata:       types2.NewTestMetadata(),
+										EncryptStorage: types2.Bool(true, types2.NewTestMetadata()),
+										KMSKeyID:       types2.String("kms_key_0", types2.NewTestMetadata()),
 									},
-									PublicAccess: types.Bool(false, types.NewTestMetadata()),
+									PublicAccess: types2.Bool(false, types2.NewTestMetadata()),
 								},
-								ClusterIdentifier: types.String("aws_rds_cluster.example", types.NewTestMetadata()),
+								ClusterIdentifier: types2.String("aws_rds_cluster.example", types2.NewTestMetadata()),
 							},
 						},
-						PublicAccess: types.Bool(false, types.NewTestMetadata()),
+						PublicAccess: types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 				Classic: rds.Classic{
 					DBSecurityGroups: []rds.DBSecurityGroup{
 						{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 						},
 					},
 				},
@@ -146,20 +147,20 @@ func Test_adaptInstance(t *testing.T) {
 			}
 `,
 			expected: rds.Instance{
-				Metadata:                  types.NewTestMetadata(),
-				BackupRetentionPeriodDays: types.Int(0, types.NewTestMetadata()),
-				ReplicationSourceARN:      types.String("", types.NewTestMetadata()),
+				Metadata:                  types2.NewTestMetadata(),
+				BackupRetentionPeriodDays: types2.Int(0, types2.NewTestMetadata()),
+				ReplicationSourceARN:      types2.String("", types2.NewTestMetadata()),
 				PerformanceInsights: rds.PerformanceInsights{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(false, types.NewTestMetadata()),
-					KMSKeyID: types.String("", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+					KMSKeyID: types2.String("", types2.NewTestMetadata()),
 				},
 				Encryption: rds.Encryption{
-					Metadata:       types.NewTestMetadata(),
-					EncryptStorage: types.Bool(false, types.NewTestMetadata()),
-					KMSKeyID:       types.String("", types.NewTestMetadata()),
+					Metadata:       types2.NewTestMetadata(),
+					EncryptStorage: types2.Bool(false, types2.NewTestMetadata()),
+					KMSKeyID:       types2.String("", types2.NewTestMetadata()),
 				},
-				PublicAccess: types.Bool(false, types.NewTestMetadata()),
+				PublicAccess: types2.Bool(false, types2.NewTestMetadata()),
 			},
 		},
 	}
@@ -186,20 +187,20 @@ func Test_adaptCluster(t *testing.T) {
 			  }
 `,
 			expected: rds.Cluster{
-				Metadata:                  types.NewTestMetadata(),
-				BackupRetentionPeriodDays: types.Int(1, types.NewTestMetadata()),
-				ReplicationSourceARN:      types.String("", types.NewTestMetadata()),
+				Metadata:                  types2.NewTestMetadata(),
+				BackupRetentionPeriodDays: types2.Int(1, types2.NewTestMetadata()),
+				ReplicationSourceARN:      types2.String("", types2.NewTestMetadata()),
 				PerformanceInsights: rds.PerformanceInsights{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(false, types.NewTestMetadata()),
-					KMSKeyID: types.String("", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+					KMSKeyID: types2.String("", types2.NewTestMetadata()),
 				},
 				Encryption: rds.Encryption{
-					Metadata:       types.NewTestMetadata(),
-					EncryptStorage: types.Bool(false, types.NewTestMetadata()),
-					KMSKeyID:       types.String("", types.NewTestMetadata()),
+					Metadata:       types2.NewTestMetadata(),
+					EncryptStorage: types2.Bool(false, types2.NewTestMetadata()),
+					KMSKeyID:       types2.String("", types2.NewTestMetadata()),
 				},
-				PublicAccess: types.Bool(false, types.NewTestMetadata()),
+				PublicAccess: types2.Bool(false, types2.NewTestMetadata()),
 			},
 		},
 	}

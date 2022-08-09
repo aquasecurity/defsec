@@ -1,38 +1,38 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type API struct {
-	types.Metadata
-	Name                types.StringValue
-	TracingEnabled      types.BoolValue
+	types2.Metadata
+	Name                types2.StringValue
+	TracingEnabled      types2.BoolValue
 	DomainConfiguration DomainConfiguration
 	AccessLogging       AccessLogging
 	RESTMethodSettings  RESTMethodSettings
 }
 
 type ApiAuth struct {
-	types.Metadata
-	ApiKeyRequired types.BoolValue
+	types2.Metadata
+	ApiKeyRequired types2.BoolValue
 }
 
 type AccessLogging struct {
-	types.Metadata
-	CloudwatchLogGroupARN types.StringValue
+	types2.Metadata
+	CloudwatchLogGroupARN types2.StringValue
 }
 
 type DomainConfiguration struct {
-	types.Metadata
-	Name           types.StringValue
-	SecurityPolicy types.StringValue
+	types2.Metadata
+	Name           types2.StringValue
+	SecurityPolicy types2.StringValue
 }
 
 type RESTMethodSettings struct {
-	types.Metadata
-	CacheDataEncrypted types.BoolValue
-	LoggingEnabled     types.BoolValue
-	DataTraceEnabled   types.BoolValue
-	MetricsEnabled     types.BoolValue
+	types2.Metadata
+	CacheDataEncrypted types2.BoolValue
+	LoggingEnabled     types2.BoolValue
+	DataTraceEnabled   types2.BoolValue
+	MetricsEnabled     types2.BoolValue
 }

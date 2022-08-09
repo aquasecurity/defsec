@@ -3,7 +3,7 @@ package monitor
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/azure/monitor"
 
@@ -43,21 +43,21 @@ func Test_adaptLogProfile(t *testing.T) {
 			  }
 `,
 			expected: monitor.LogProfile{
-				Metadata: types.NewTestMetadata(),
-				Categories: []types.StringValue{
-					types.String("Action", types.NewTestMetadata()),
-					types.String("Delete", types.NewTestMetadata()),
-					types.String("Write", types.NewTestMetadata()),
+				Metadata: types2.NewTestMetadata(),
+				Categories: []types2.StringValue{
+					types2.String("Action", types2.NewTestMetadata()),
+					types2.String("Delete", types2.NewTestMetadata()),
+					types2.String("Write", types2.NewTestMetadata()),
 				},
 				RetentionPolicy: monitor.RetentionPolicy{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
-					Days:     types.Int(365, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+					Days:     types2.Int(365, types2.NewTestMetadata()),
 				},
-				Locations: []types.StringValue{
-					types.String("eastus", types.NewTestMetadata()),
-					types.String("eastus2", types.NewTestMetadata()),
-					types.String("southcentralus", types.NewTestMetadata()),
+				Locations: []types2.StringValue{
+					types2.String("eastus", types2.NewTestMetadata()),
+					types2.String("eastus2", types2.NewTestMetadata()),
+					types2.String("southcentralus", types2.NewTestMetadata()),
 				},
 			},
 		},
@@ -68,11 +68,11 @@ func Test_adaptLogProfile(t *testing.T) {
 			  }
 `,
 			expected: monitor.LogProfile{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				RetentionPolicy: monitor.RetentionPolicy{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(false, types.NewTestMetadata()),
-					Days:     types.Int(0, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+					Days:     types2.Int(0, types2.NewTestMetadata()),
 				},
 			},
 		},

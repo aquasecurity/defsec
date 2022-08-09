@@ -2,9 +2,9 @@ package kms
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/kms"
 	"github.com/aquasecurity/defsec/pkg/state"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
 )
@@ -88,7 +88,7 @@ func (a *adapter) adaptKey(apiKey types.KeyListEntry) (*kms.Key, error) {
 
 	return &kms.Key{
 		Metadata:        metadata,
-		Usage:           defsecTypes.String(string(output.KeyMetadata.KeyUsage), metadata),
-		RotationEnabled: defsecTypes.Bool(output.KeyMetadata.ValidTo != nil, metadata),
+		Usage:           types2.String(string(output.KeyMetadata.KeyUsage), metadata),
+		RotationEnabled: types2.Bool(output.KeyMetadata.ValidTo != nil, metadata),
 	}, nil
 }

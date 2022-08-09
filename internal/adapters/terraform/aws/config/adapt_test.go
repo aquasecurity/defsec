@@ -3,7 +3,7 @@ package config
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/config"
 
@@ -32,8 +32,8 @@ func Test_adaptConfigurationAggregrator(t *testing.T) {
 			}
 `,
 			expected: config.ConfigurationAggregrator{
-				Metadata:         types.NewTestMetadata(),
-				SourceAllRegions: types.Bool(true, types.NewTestMetadata()),
+				Metadata:         types2.NewTestMetadata(),
+				SourceAllRegions: types2.Bool(true, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -43,8 +43,8 @@ func Test_adaptConfigurationAggregrator(t *testing.T) {
 			}
 `,
 			expected: config.ConfigurationAggregrator{
-				Metadata:         types.NewTestMetadata(),
-				SourceAllRegions: types.Bool(false, types.NewTestMetadata()),
+				Metadata:         types2.NewTestMetadata(),
+				SourceAllRegions: types2.Bool(false, types2.NewTestMetadata()),
 			},
 		},
 	}

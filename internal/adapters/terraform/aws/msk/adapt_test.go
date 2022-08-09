@@ -3,7 +3,7 @@ package msk
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/msk"
 
@@ -53,26 +53,26 @@ func Test_adaptCluster(t *testing.T) {
 			  }
 `,
 			expected: msk.Cluster{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				EncryptionInTransit: msk.EncryptionInTransit{
-					Metadata:     types.NewTestMetadata(),
-					ClientBroker: types.String("TLS", types.NewTestMetadata()),
+					Metadata:     types2.NewTestMetadata(),
+					ClientBroker: types2.String("TLS", types2.NewTestMetadata()),
 				},
 				Logging: msk.Logging{
-					Metadata: types.NewTestMetadata(),
+					Metadata: types2.NewTestMetadata(),
 					Broker: msk.BrokerLogging{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						S3: msk.S3Logging{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 						},
 						Cloudwatch: msk.CloudwatchLogging{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 						},
 						Firehose: msk.FirehoseLogging{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -85,26 +85,26 @@ func Test_adaptCluster(t *testing.T) {
 			  }
 `,
 			expected: msk.Cluster{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				EncryptionInTransit: msk.EncryptionInTransit{
-					Metadata:     types.NewTestMetadata(),
-					ClientBroker: types.String("TLS_PLAINTEXT", types.NewTestMetadata()),
+					Metadata:     types2.NewTestMetadata(),
+					ClientBroker: types2.String("TLS_PLAINTEXT", types2.NewTestMetadata()),
 				},
 				Logging: msk.Logging{
-					Metadata: types.NewTestMetadata(),
+					Metadata: types2.NewTestMetadata(),
 					Broker: msk.BrokerLogging{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						S3: msk.S3Logging{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 						},
 						Cloudwatch: msk.CloudwatchLogging{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 						},
 						Firehose: msk.FirehoseLogging{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},

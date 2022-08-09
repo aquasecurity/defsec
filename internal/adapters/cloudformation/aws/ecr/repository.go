@@ -3,7 +3,7 @@ package ecr
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 
@@ -23,14 +23,14 @@ func getRepositories(ctx parser.FileContext) (repositories []ecr.Repository) {
 			Metadata: r.Metadata(),
 			ImageScanning: ecr.ImageScanning{
 				Metadata:   r.Metadata(),
-				ScanOnPush: types.BoolDefault(false, r.Metadata()),
+				ScanOnPush: types2.BoolDefault(false, r.Metadata()),
 			},
 			ImageTagsImmutable: hasImmutableImageTags(r),
 			Policies:           nil,
 			Encryption: ecr.Encryption{
 				Metadata: r.Metadata(),
-				Type:     types.StringDefault(ecr.EncryptionTypeAES256, r.Metadata()),
-				KMSKeyID: types.StringDefault("", r.Metadata()),
+				Type:     types2.StringDefault(ecr.EncryptionTypeAES256, r.Metadata()),
+				KMSKeyID: types2.StringDefault("", r.Metadata()),
 			},
 		}
 
@@ -72,22 +72,22 @@ func getPolicy(r *parser.Resource) (*iam.Policy, error) {
 
 	return &iam.Policy{
 		Metadata: policyProp.Metadata(),
-		Name:     types.StringDefault("", policyProp.Metadata()),
+		Name:     types2.StringDefault("", policyProp.Metadata()),
 		Document: iam.Document{
 			Metadata: policyProp.Metadata(),
 			Parsed:   *parsed,
 		},
-		Builtin: types.Bool(false, policyProp.Metadata()),
+		Builtin: types2.Bool(false, policyProp.Metadata()),
 	}, nil
 }
 
-func hasImmutableImageTags(r *parser.Resource) types.BoolValue {
+func hasImmutableImageTags(r *parser.Resource) types2.BoolValue {
 	mutabilityProp := r.GetProperty("ImageTagMutability")
 	if mutabilityProp.IsNil() {
-		return types.BoolDefault(false, r.Metadata())
+		return types2.BoolDefault(false, r.Metadata())
 	}
 	if !mutabilityProp.EqualTo("IMMUTABLE") {
-		return types.Bool(false, mutabilityProp.Metadata())
+		return types2.Bool(false, mutabilityProp.Metadata())
 	}
-	return types.Bool(true, mutabilityProp.Metadata())
+	return types2.Bool(true, mutabilityProp.Metadata())
 }

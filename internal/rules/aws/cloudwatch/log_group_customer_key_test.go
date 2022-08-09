@@ -3,7 +3,7 @@ package cloudwatch
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckLogGroupCustomerKey(t *testing.T) {
 			input: cloudwatch.CloudWatch{
 				LogGroups: []cloudwatch.LogGroup{
 					{
-						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						KMSKeyID: types2.String("", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckLogGroupCustomerKey(t *testing.T) {
 			input: cloudwatch.CloudWatch{
 				LogGroups: []cloudwatch.LogGroup{
 					{
-						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("some-kms-key", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						KMSKeyID: types2.String("some-kms-key", types2.NewTestMetadata()),
 					},
 				},
 			},

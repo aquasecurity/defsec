@@ -1,9 +1,9 @@
 package rds
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/rds"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) rds.RDS {
@@ -37,21 +37,21 @@ func getClusters(modules terraform.Modules) (clusters []rds.Cluster) {
 
 	if len(orphanResources) > 0 {
 		orphanage := rds.Cluster{
-			Metadata:                  types.NewUnmanagedMetadata(),
-			BackupRetentionPeriodDays: types.IntDefault(1, types.NewUnmanagedMetadata()),
-			ReplicationSourceARN:      types.StringDefault("", types.NewUnmanagedMetadata()),
+			Metadata:                  types2.NewUnmanagedMetadata(),
+			BackupRetentionPeriodDays: types2.IntDefault(1, types2.NewUnmanagedMetadata()),
+			ReplicationSourceARN:      types2.StringDefault("", types2.NewUnmanagedMetadata()),
 			PerformanceInsights: rds.PerformanceInsights{
-				Metadata: types.NewUnmanagedMetadata(),
-				Enabled:  types.BoolDefault(false, types.NewUnmanagedMetadata()),
-				KMSKeyID: types.StringDefault("", types.NewUnmanagedMetadata()),
+				Metadata: types2.NewUnmanagedMetadata(),
+				Enabled:  types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+				KMSKeyID: types2.StringDefault("", types2.NewUnmanagedMetadata()),
 			},
 			Instances: nil,
 			Encryption: rds.Encryption{
-				Metadata:       types.NewUnmanagedMetadata(),
-				EncryptStorage: types.BoolDefault(false, types.NewUnmanagedMetadata()),
-				KMSKeyID:       types.StringDefault("", types.NewUnmanagedMetadata()),
+				Metadata:       types2.NewUnmanagedMetadata(),
+				EncryptStorage: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+				KMSKeyID:       types2.StringDefault("", types2.NewUnmanagedMetadata()),
 			},
-			PublicAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			PublicAccess: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
 		}
 		for _, orphan := range orphanResources {
 			orphanage.Instances = append(orphanage.Instances, adaptClusterInstance(orphan, modules))
@@ -78,7 +78,7 @@ func adaptClusterInstance(resource *terraform.Block, modules terraform.Modules) 
 
 	if clusterIdAttr.IsResourceBlockReference("aws_rds_cluster") {
 		if referenced, err := modules.GetReferencedBlock(clusterIdAttr, resource); err == nil {
-			clusterId = types.String(referenced.FullName(), referenced.GetMetadata())
+			clusterId = types2.String(referenced.FullName(), referenced.GetMetadata())
 		}
 	}
 
@@ -106,7 +106,7 @@ func adaptInstance(resource *terraform.Block, modules terraform.Modules) rds.Ins
 	return rds.Instance{
 		Metadata:                  resource.GetMetadata(),
 		BackupRetentionPeriodDays: resource.GetAttribute("backup_retention_period").AsIntValueOrDefault(0, resource),
-		ReplicationSourceARN:      types.StringExplicit(replicaSourceValue, resource.GetMetadata()),
+		ReplicationSourceARN:      types2.StringExplicit(replicaSourceValue, resource.GetMetadata()),
 		PerformanceInsights:       adaptPerformanceInsights(resource),
 		Encryption:                adaptEncryption(resource),
 		PublicAccess:              resource.GetAttribute("publicly_accessible").AsBoolValueOrDefault(false, resource),
@@ -132,7 +132,7 @@ func adaptCluster(resource *terraform.Block, modules terraform.Modules) (rds.Clu
 		PerformanceInsights:       adaptPerformanceInsights(resource),
 		Instances:                 clusterInstances,
 		Encryption:                adaptEncryption(resource),
-		PublicAccess:              types.Bool(public, resource.GetMetadata()),
+		PublicAccess:              types2.Bool(public, resource.GetMetadata()),
 	}, ids
 }
 

@@ -1,7 +1,7 @@
 package codebuild
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type CodeBuild struct {
@@ -9,12 +9,12 @@ type CodeBuild struct {
 }
 
 type Project struct {
-	types.Metadata
+	types2.Metadata
 	ArtifactSettings          ArtifactSettings
 	SecondaryArtifactSettings []ArtifactSettings
 }
 
 type ArtifactSettings struct {
-	types.Metadata
-	EncryptionEnabled types.BoolValue
+	types2.Metadata
+	EncryptionEnabled types2.BoolValue
 }

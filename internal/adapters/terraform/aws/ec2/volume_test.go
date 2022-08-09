@@ -3,7 +3,7 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
@@ -33,11 +33,11 @@ func Test_adaptVolume(t *testing.T) {
 			}
 `,
 			expected: ec2.Volume{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				Encryption: ec2.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
-					KMSKeyID: types.String("aws_kms_key.ebs_encryption", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+					KMSKeyID: types2.String("aws_kms_key.ebs_encryption", types2.NewTestMetadata()),
 				},
 			},
 		},
@@ -50,11 +50,11 @@ func Test_adaptVolume(t *testing.T) {
 			}
 `,
 			expected: ec2.Volume{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				Encryption: ec2.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
-					KMSKeyID: types.String("string-key", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+					KMSKeyID: types2.String("string-key", types2.NewTestMetadata()),
 				},
 			},
 		},
@@ -65,11 +65,11 @@ func Test_adaptVolume(t *testing.T) {
 			}
 `,
 			expected: ec2.Volume{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				Encryption: ec2.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(false, types.NewTestMetadata()),
-					KMSKeyID: types.String("", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+					KMSKeyID: types2.String("", types2.NewTestMetadata()),
 				},
 			},
 		},

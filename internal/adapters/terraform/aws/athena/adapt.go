@@ -1,9 +1,9 @@
 package athena
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/athena"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) athena.Athena {
@@ -39,7 +39,7 @@ func adaptDatabase(resource *terraform.Block) athena.Database {
 		Name:     resource.GetAttribute("name").AsStringValueOrDefault("", resource),
 		Encryption: athena.EncryptionConfiguration{
 			Metadata: resource.GetMetadata(),
-			Type:     types.StringDefault("", resource.GetMetadata()),
+			Type:     types2.StringDefault("", resource.GetMetadata()),
 		},
 	}
 	if encryptionConfigBlock := resource.GetBlock("encryption_configuration"); encryptionConfigBlock.IsNotNil() {
@@ -57,9 +57,9 @@ func adaptWorkgroup(resource *terraform.Block) athena.Workgroup {
 		Name:     resource.GetAttribute("name").AsStringValueOrDefault("", resource),
 		Encryption: athena.EncryptionConfiguration{
 			Metadata: resource.GetMetadata(),
-			Type:     types.StringDefault("", resource.GetMetadata()),
+			Type:     types2.StringDefault("", resource.GetMetadata()),
 		},
-		EnforceConfiguration: types.BoolDefault(false, resource.GetMetadata()),
+		EnforceConfiguration: types2.BoolDefault(false, resource.GetMetadata()),
 	}
 
 	if configBlock := resource.GetBlock("configuration"); configBlock.IsNotNil() {

@@ -3,7 +3,7 @@ package actions
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -23,8 +23,8 @@ func TestCheckNoPlainTextActionEnvironmentSecrets(t *testing.T) {
 			name: "Github actions environment secret has plain text value",
 			input: []github.EnvironmentSecret{
 				{
-					Metadata:       types.NewTestMetadata(),
-					PlainTextValue: types.String("sensitive secret string", types.NewTestMetadata()),
+					Metadata:       types2.NewTestMetadata(),
+					PlainTextValue: types2.String("sensitive secret string", types2.NewTestMetadata()),
 				},
 			},
 			expected: true,
@@ -33,8 +33,8 @@ func TestCheckNoPlainTextActionEnvironmentSecrets(t *testing.T) {
 			name: "Github actions environment secret has no plain text value",
 			input: []github.EnvironmentSecret{
 				{
-					Metadata:       types.NewTestMetadata(),
-					PlainTextValue: types.String("", types.NewTestMetadata()),
+					Metadata:       types2.NewTestMetadata(),
+					PlainTextValue: types2.String("", types2.NewTestMetadata()),
 				},
 			},
 			expected: false,

@@ -1,9 +1,9 @@
 package elasticsearch
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getDomains(ctx parser.FileContext) (domains []elasticsearch.Domain) {
@@ -17,20 +17,20 @@ func getDomains(ctx parser.FileContext) (domains []elasticsearch.Domain) {
 			DomainName: r.GetStringProperty("DomainName"),
 			LogPublishing: elasticsearch.LogPublishing{
 				Metadata:     r.Metadata(),
-				AuditEnabled: types.BoolDefault(false, r.Metadata()),
+				AuditEnabled: types2.BoolDefault(false, r.Metadata()),
 			},
 			TransitEncryption: elasticsearch.TransitEncryption{
 				Metadata: r.Metadata(),
-				Enabled:  types.BoolDefault(false, r.Metadata()),
+				Enabled:  types2.BoolDefault(false, r.Metadata()),
 			},
 			AtRestEncryption: elasticsearch.AtRestEncryption{
 				Metadata: r.Metadata(),
-				Enabled:  types.BoolDefault(false, r.Metadata()),
+				Enabled:  types2.BoolDefault(false, r.Metadata()),
 			},
 			Endpoint: elasticsearch.Endpoint{
 				Metadata:     r.Metadata(),
-				EnforceHTTPS: types.BoolDefault(false, r.Metadata()),
-				TLSPolicy:    types.StringDefault("Policy-Min-TLS-1-0-2019-07", r.Metadata()),
+				EnforceHTTPS: types2.BoolDefault(false, r.Metadata()),
+				TLSPolicy:    types2.StringDefault("Policy-Min-TLS-1-0-2019-07", r.Metadata()),
 			},
 		}
 

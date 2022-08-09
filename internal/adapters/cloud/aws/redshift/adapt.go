@@ -2,9 +2,9 @@ package redshift
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/redshift"
 	"github.com/aquasecurity/defsec/pkg/state"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/redshift"
 	"github.com/aws/aws-sdk-go-v2/service/redshift/types"
 )
@@ -100,10 +100,10 @@ func (a *adapter) adaptCluster(apiCluster types.Cluster) (*redshift.Cluster, err
 		Metadata: metadata,
 		Encryption: redshift.Encryption{
 			Metadata: metadata,
-			Enabled:  defsecTypes.Bool(apiCluster.Encrypted, metadata),
-			KMSKeyID: defsecTypes.String(kmsKeyId, metadata),
+			Enabled:  types2.Bool(apiCluster.Encrypted, metadata),
+			KMSKeyID: types2.String(kmsKeyId, metadata),
 		},
-		SubnetGroupName: defsecTypes.String(subnetGroupName, metadata),
+		SubnetGroupName: types2.String(subnetGroupName, metadata),
 	}, nil
 }
 
@@ -147,6 +147,6 @@ func (a *adapter) adaptSecurityGroup(apiSG types.ClusterSecurityGroup) (*redshif
 
 	return &redshift.SecurityGroup{
 		Metadata:    metadata,
-		Description: defsecTypes.String(*apiSG.Description, metadata),
+		Description: types2.String(*apiSG.Description, metadata),
 	}, nil
 }

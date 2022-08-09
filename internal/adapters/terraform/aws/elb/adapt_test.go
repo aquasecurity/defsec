@@ -3,7 +3,7 @@ package elb
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elb"
 
@@ -50,19 +50,19 @@ func Test_Adapt(t *testing.T) {
 			expected: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata:                types.NewTestMetadata(),
-						Type:                    types.String("application", types.NewTestMetadata()),
-						DropInvalidHeaderFields: types.Bool(true, types.NewTestMetadata()),
-						Internal:                types.Bool(true, types.NewTestMetadata()),
+						Metadata:                types2.NewTestMetadata(),
+						Type:                    types2.String("application", types2.NewTestMetadata()),
+						DropInvalidHeaderFields: types2.Bool(true, types2.NewTestMetadata()),
+						Internal:                types2.Bool(true, types2.NewTestMetadata()),
 						Listeners: []elb.Listener{
 							{
-								Metadata:  types.NewTestMetadata(),
-								Protocol:  types.String("HTTPS", types.NewTestMetadata()),
-								TLSPolicy: types.String("ELBSecurityPolicy-TLS-1-1-2017-01", types.NewTestMetadata()),
+								Metadata:  types2.NewTestMetadata(),
+								Protocol:  types2.String("HTTPS", types2.NewTestMetadata()),
+								TLSPolicy: types2.String("ELBSecurityPolicy-TLS-1-1-2017-01", types2.NewTestMetadata()),
 								DefaultActions: []elb.Action{
 									{
-										Metadata: types.NewTestMetadata(),
-										Type:     types.String("forward", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Type:     types2.String("forward", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -80,10 +80,10 @@ func Test_Adapt(t *testing.T) {
 			expected: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata:                types.NewTestMetadata(),
-						Type:                    types.String("application", types.NewTestMetadata()),
-						DropInvalidHeaderFields: types.Bool(false, types.NewTestMetadata()),
-						Internal:                types.Bool(false, types.NewTestMetadata()),
+						Metadata:                types2.NewTestMetadata(),
+						Type:                    types2.String("application", types2.NewTestMetadata()),
+						DropInvalidHeaderFields: types2.Bool(false, types2.NewTestMetadata()),
+						Internal:                types2.Bool(false, types2.NewTestMetadata()),
 						Listeners:               nil,
 					},
 				},

@@ -3,7 +3,7 @@ package spaces
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckAclNoPublicRead(t *testing.T) {
 			input: spaces.Spaces{
 				Buckets: []spaces.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						ACL:      types.String("public-read", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						ACL:      types2.String("public-read", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,12 +36,12 @@ func TestCheckAclNoPublicRead(t *testing.T) {
 			input: spaces.Spaces{
 				Buckets: []spaces.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						ACL:      types.String("private", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						ACL:      types2.String("private", types2.NewTestMetadata()),
 						Objects: []spaces.Object{
 							{
-								Metadata: types.NewTestMetadata(),
-								ACL:      types.String("public-read", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								ACL:      types2.String("public-read", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -54,12 +54,12 @@ func TestCheckAclNoPublicRead(t *testing.T) {
 			input: spaces.Spaces{
 				Buckets: []spaces.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						ACL:      types.String("private", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						ACL:      types2.String("private", types2.NewTestMetadata()),
 						Objects: []spaces.Object{
 							{
-								Metadata: types.NewTestMetadata(),
-								ACL:      types.String("private", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								ACL:      types2.String("private", types2.NewTestMetadata()),
 							},
 						},
 					},

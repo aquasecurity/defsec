@@ -3,14 +3,14 @@ package storage
 import (
 	"testing"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/google/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/google/storage"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -45,26 +45,26 @@ func Test_Adapt(t *testing.T) {
 			expected: storage.Storage{
 				Buckets: []storage.Bucket{
 					{
-						Metadata:                       types.NewTestMetadata(),
-						Name:                           types.String("image-store.com", types.NewTestMetadata()),
-						Location:                       types.String("EU", types.NewTestMetadata()),
-						EnableUniformBucketLevelAccess: types.Bool(true, types.NewTestMetadata()),
+						Metadata:                       types2.NewTestMetadata(),
+						Name:                           types2.String("image-store.com", types2.NewTestMetadata()),
+						Location:                       types2.String("EU", types2.NewTestMetadata()),
+						EnableUniformBucketLevelAccess: types2.Bool(true, types2.NewTestMetadata()),
 						Bindings: []iam.Binding{
 							{
-								Metadata: types.NewTestMetadata(),
-								Members: []types.StringValue{
-									types.String("group:test@example.com", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Members: []types2.StringValue{
+									types2.String("group:test@example.com", types2.NewTestMetadata()),
 								},
-								Role:                          types.String("roles/storage.admin #1", types.NewTestMetadata()),
-								IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+								Role:                          types2.String("roles/storage.admin #1", types2.NewTestMetadata()),
+								IncludesDefaultServiceAccount: types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 						Members: []iam.Member{
 							{
-								Metadata:              types.NewTestMetadata(),
-								Member:                types.String("serviceAccount:test@example.com", types.NewTestMetadata()),
-								Role:                  types.String("roles/storage.admin #2", types.NewTestMetadata()),
-								DefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+								Metadata:              types2.NewTestMetadata(),
+								Member:                types2.String("serviceAccount:test@example.com", types2.NewTestMetadata()),
+								Role:                  types2.String("roles/storage.admin #2", types2.NewTestMetadata()),
+								DefaultServiceAccount: types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -89,23 +89,23 @@ func Test_Adapt(t *testing.T) {
 			expected: storage.Storage{
 				Buckets: []storage.Bucket{
 					{
-						Metadata:                       types.NewTestMetadata(),
-						Name:                           types.String("", types.NewTestMetadata()),
-						Location:                       types.String("", types.NewTestMetadata()),
-						EnableUniformBucketLevelAccess: types.Bool(false, types.NewTestMetadata()),
+						Metadata:                       types2.NewTestMetadata(),
+						Name:                           types2.String("", types2.NewTestMetadata()),
+						Location:                       types2.String("", types2.NewTestMetadata()),
+						EnableUniformBucketLevelAccess: types2.Bool(false, types2.NewTestMetadata()),
 						Bindings: []iam.Binding{
 							{
-								Metadata:                      types.NewTestMetadata(),
-								Role:                          types.String("", types.NewTestMetadata()),
-								IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+								Metadata:                      types2.NewTestMetadata(),
+								Role:                          types2.String("", types2.NewTestMetadata()),
+								IncludesDefaultServiceAccount: types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 						Members: []iam.Member{
 							{
-								Metadata:              types.NewTestMetadata(),
-								Member:                types.String("", types.NewTestMetadata()),
-								Role:                  types.String("", types.NewTestMetadata()),
-								DefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+								Metadata:              types2.NewTestMetadata(),
+								Member:                types2.String("", types2.NewTestMetadata()),
+								Role:                  types2.String("", types2.NewTestMetadata()),
+								DefaultServiceAccount: types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 					},

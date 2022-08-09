@@ -5,13 +5,13 @@ import (
 	"strings"
 	"testing"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/stretchr/testify/assert"
 
 	"github.com/stretchr/testify/require"
 
 	"github.com/liamg/memoryfs"
-
-	"github.com/aquasecurity/defsec/internal/types"
 )
 
 func TestResult_GetCode(t *testing.T) {
@@ -238,14 +238,14 @@ func TestResult_GetCode(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			system := memoryfs.New()
 			require.NoError(t, system.WriteFile(test.filename, []byte(test.source), os.ModePerm))
-			meta := types.NewMetadata(
-				types.NewRange(test.filename, test.start, test.end, "", system),
-				types.NewNamedReference("test"),
+			meta := types2.NewMetadata(
+				types2.NewRange(test.filename, test.start, test.end, "", system),
+				types2.NewNamedReference("test"),
 			)
 			if test.outerStart > 0 {
-				meta = meta.WithParent(types.NewMetadata(
-					types.NewRange(test.filename, test.outerStart, test.outerEnd, "", system),
-					types.NewNamedReference("test"),
+				meta = meta.WithParent(types2.NewMetadata(
+					types2.NewRange(test.filename, test.outerStart, test.outerEnd, "", system),
+					types2.NewNamedReference("test"),
 				))
 			}
 			result := &Result{

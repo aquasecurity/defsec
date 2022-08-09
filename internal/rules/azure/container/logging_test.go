@@ -3,7 +3,7 @@ package container
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckLogging(t *testing.T) {
 			input: container.Container{
 				KubernetesClusters: []container.KubernetesCluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						AddonProfile: container.AddonProfile{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							OMSAgent: container.OMSAgent{
-								Metadata: types.NewTestMetadata(),
-								Enabled:  types.Bool(false, types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -42,12 +42,12 @@ func TestCheckLogging(t *testing.T) {
 			input: container.Container{
 				KubernetesClusters: []container.KubernetesCluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						AddonProfile: container.AddonProfile{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							OMSAgent: container.OMSAgent{
-								Metadata: types.NewTestMetadata(),
-								Enabled:  types.Bool(true, types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 					},

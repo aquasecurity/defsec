@@ -3,7 +3,7 @@ package s3
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckLoggingIsEnabled(t *testing.T) {
 			input: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						ACL:      types.String("private", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						ACL:      types2.String("private", types2.NewTestMetadata()),
 						Logging: s3.Logging{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckLoggingIsEnabled(t *testing.T) {
 			input: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						ACL:      types.String("log-delivery-write", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						ACL:      types2.String("log-delivery-write", types2.NewTestMetadata()),
 						Logging: s3.Logging{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},

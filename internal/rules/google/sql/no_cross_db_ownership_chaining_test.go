@@ -3,7 +3,7 @@ package sql
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,13 +24,13 @@ func TestCheckNoCrossDbOwnershipChaining(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:        types.NewTestMetadata(),
-						DatabaseVersion: types.String("SQLSERVER_2017_STANDARD", types.NewTestMetadata()),
+						Metadata:        types2.NewTestMetadata(),
+						DatabaseVersion: types2.String("SQLSERVER_2017_STANDARD", types2.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							Flags: sql.Flags{
-								Metadata:                 types.NewTestMetadata(),
-								CrossDBOwnershipChaining: types.Bool(true, types.NewTestMetadata()),
+								Metadata:                 types2.NewTestMetadata(),
+								CrossDBOwnershipChaining: types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -43,13 +43,13 @@ func TestCheckNoCrossDbOwnershipChaining(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:        types.NewTestMetadata(),
-						DatabaseVersion: types.String("SQLSERVER_2017_STANDARD", types.NewTestMetadata()),
+						Metadata:        types2.NewTestMetadata(),
+						DatabaseVersion: types2.String("SQLSERVER_2017_STANDARD", types2.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							Flags: sql.Flags{
-								Metadata:                 types.NewTestMetadata(),
-								CrossDBOwnershipChaining: types.Bool(false, types.NewTestMetadata()),
+								Metadata:                 types2.NewTestMetadata(),
+								CrossDBOwnershipChaining: types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 					},

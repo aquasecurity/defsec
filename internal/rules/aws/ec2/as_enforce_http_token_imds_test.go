@@ -3,7 +3,7 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestASCheckIMDSAccessRequiresToken(t *testing.T) {
 			input: ec2.EC2{
 				LaunchConfigurations: []ec2.LaunchConfiguration{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						MetadataOptions: ec2.MetadataOptions{
-							Metadata:     types.NewTestMetadata(),
-							HttpTokens:   types.String("optional", types.NewTestMetadata()),
-							HttpEndpoint: types.String("enabled", types.NewTestMetadata()),
+							Metadata:     types2.NewTestMetadata(),
+							HttpTokens:   types2.String("optional", types2.NewTestMetadata()),
+							HttpEndpoint: types2.String("enabled", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,13 +40,13 @@ func TestASCheckIMDSAccessRequiresToken(t *testing.T) {
 			input: ec2.EC2{
 				LaunchTemplates: []ec2.LaunchTemplate{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Instance: ec2.Instance{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							MetadataOptions: ec2.MetadataOptions{
-								Metadata:     types.NewTestMetadata(),
-								HttpTokens:   types.String("optional", types.NewTestMetadata()),
-								HttpEndpoint: types.String("enabled", types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								HttpTokens:   types2.String("optional", types2.NewTestMetadata()),
+								HttpEndpoint: types2.String("enabled", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -59,11 +59,11 @@ func TestASCheckIMDSAccessRequiresToken(t *testing.T) {
 			input: ec2.EC2{
 				LaunchConfigurations: []ec2.LaunchConfiguration{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						MetadataOptions: ec2.MetadataOptions{
-							Metadata:     types.NewTestMetadata(),
-							HttpTokens:   types.String("required", types.NewTestMetadata()),
-							HttpEndpoint: types.String("enabled", types.NewTestMetadata()),
+							Metadata:     types2.NewTestMetadata(),
+							HttpTokens:   types2.String("required", types2.NewTestMetadata()),
+							HttpEndpoint: types2.String("enabled", types2.NewTestMetadata()),
 						},
 					},
 				},

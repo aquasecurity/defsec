@@ -3,7 +3,7 @@ package workspaces
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/workspaces"
 
@@ -29,19 +29,19 @@ func Test_adaptWorkspace(t *testing.T) {
 		}
 `,
 			expected: workspaces.WorkSpace{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				RootVolume: workspaces.Volume{
-					Metadata: types.NewTestMetadata(),
+					Metadata: types2.NewTestMetadata(),
 					Encryption: workspaces.Encryption{
-						Metadata: types.NewTestMetadata(),
-						Enabled:  types.Bool(true, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 					},
 				},
 				UserVolume: workspaces.Volume{
-					Metadata: types.NewTestMetadata(),
+					Metadata: types2.NewTestMetadata(),
 					Encryption: workspaces.Encryption{
-						Metadata: types.NewTestMetadata(),
-						Enabled:  types.Bool(true, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -53,19 +53,19 @@ func Test_adaptWorkspace(t *testing.T) {
 		}
 `,
 			expected: workspaces.WorkSpace{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				RootVolume: workspaces.Volume{
-					Metadata: types.NewTestMetadata(),
+					Metadata: types2.NewTestMetadata(),
 					Encryption: workspaces.Encryption{
-						Metadata: types.NewTestMetadata(),
-						Enabled:  types.Bool(false, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 				UserVolume: workspaces.Volume{
-					Metadata: types.NewTestMetadata(),
+					Metadata: types2.NewTestMetadata(),
 					Encryption: workspaces.Encryption{
-						Metadata: types.NewTestMetadata(),
-						Enabled:  types.Bool(false, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 			},

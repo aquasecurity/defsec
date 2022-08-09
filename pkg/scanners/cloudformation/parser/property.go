@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/cftypes"
 
@@ -24,8 +24,8 @@ type Property struct {
 	ctx         *FileContext
 	name        string
 	comment     string
-	rng         types.Range
-	parentRange types.Range
+	rng         types2.Range
+	parentRange types2.Range
 	Inner       PropertyInner
 	logicalId   string
 	unresolved  bool
@@ -71,8 +71,8 @@ func (p *Property) setContext(ctx *FileContext) {
 	}
 }
 
-func (p *Property) setFileAndParentRange(target fs.FS, filepath string, parentRange types.Range) {
-	p.rng = types.NewRange(filepath, p.rng.GetStartLine(), p.rng.GetEndLine(), p.rng.GetSourcePrefix(), target)
+func (p *Property) setFileAndParentRange(target fs.FS, filepath string, parentRange types2.Range) {
+	p.rng = types2.NewRange(filepath, p.rng.GetStartLine(), p.rng.GetEndLine(), p.rng.GetSourcePrefix(), target)
 	p.parentRange = parentRange
 
 	switch p.Type() {
@@ -94,14 +94,14 @@ func (p *Property) setFileAndParentRange(target fs.FS, filepath string, parentRa
 }
 
 func (p *Property) UnmarshalYAML(node *yaml.Node) error {
-	p.rng = types.NewRange("", node.Line, calculateEndLine(node), "", nil)
+	p.rng = types2.NewRange("", node.Line, calculateEndLine(node), "", nil)
 
 	p.comment = node.LineComment
 	return setPropertyValueFromYaml(node, &p.Inner)
 }
 
 func (p *Property) UnmarshalJSONWithMetadata(node jfather.Node) error {
-	p.rng = types.NewRange("", node.Range().Start.Line, node.Range().End.Line, "", nil)
+	p.rng = types2.NewRange("", node.Range().Start.Line, node.Range().End.Line, "", nil)
 	return setPropertyValueFromJson(node, &p.Inner)
 }
 
@@ -109,11 +109,11 @@ func (p *Property) Type() cftypes.CfType {
 	return p.Inner.Type
 }
 
-func (p *Property) Range() types.Range {
+func (p *Property) Range() types2.Range {
 	return p.rng
 }
 
-func (p *Property) Metadata() types.Metadata {
+func (p *Property) Metadata() types2.Metadata {
 	base := p
 	if p.isFunction() {
 		if resolved, ok := p.resolveValue(); ok {
@@ -121,12 +121,12 @@ func (p *Property) Metadata() types.Metadata {
 		}
 	}
 	ref := NewCFReferenceWithValue(p.parentRange, *base, p.logicalId)
-	return types.NewMetadata(p.Range(), ref)
+	return types2.NewMetadata(p.Range(), ref)
 }
 
-func (p *Property) MetadataWithValue(resolvedValue *Property) types.Metadata {
+func (p *Property) MetadataWithValue(resolvedValue *Property) types2.Metadata {
 	ref := NewCFReferenceWithValue(p.parentRange, *resolvedValue, p.logicalId)
-	return types.NewMetadata(p.Range(), ref)
+	return types2.NewMetadata(p.Range(), ref)
 }
 
 func (p *Property) isFunction() bool {
@@ -166,14 +166,14 @@ func (p *Property) resolveValue() (*Property, bool) {
 	return p, false
 }
 
-func (p *Property) GetStringProperty(path string, defaultValue ...string) types.StringValue {
+func (p *Property) GetStringProperty(path string, defaultValue ...string) types2.StringValue {
 	defVal := ""
 	if len(defaultValue) > 0 {
 		defVal = defaultValue[0]
 	}
 
 	if p.IsUnresolved() {
-		return types.StringUnresolvable(p.Metadata())
+		return types2.StringUnresolvable(p.Metadata())
 	}
 
 	prop := p.GetProperty(path)
@@ -183,18 +183,18 @@ func (p *Property) GetStringProperty(path string, defaultValue ...string) types.
 	return prop.AsStringValue()
 }
 
-func (p *Property) StringDefault(defaultValue string) types.StringValue {
-	return types.StringDefault(defaultValue, p.Metadata())
+func (p *Property) StringDefault(defaultValue string) types2.StringValue {
+	return types2.StringDefault(defaultValue, p.Metadata())
 }
 
-func (p *Property) GetBoolProperty(path string, defaultValue ...bool) types.BoolValue {
+func (p *Property) GetBoolProperty(path string, defaultValue ...bool) types2.BoolValue {
 	defVal := false
 	if len(defaultValue) > 0 {
 		defVal = defaultValue[0]
 	}
 
 	if p.IsUnresolved() {
-		return types.BoolUnresolvable(p.Metadata())
+		return types2.BoolUnresolvable(p.Metadata())
 	}
 
 	prop := p.GetProperty(path)
@@ -209,14 +209,14 @@ func (p *Property) GetBoolProperty(path string, defaultValue ...bool) types.Bool
 	return prop.AsBoolValue()
 }
 
-func (p *Property) GetIntProperty(path string, defaultValue ...int) types.IntValue {
+func (p *Property) GetIntProperty(path string, defaultValue ...int) types2.IntValue {
 	defVal := 0
 	if len(defaultValue) > 0 {
 		defVal = defaultValue[0]
 	}
 
 	if p.IsUnresolved() {
-		return types.IntUnresolvable(p.Metadata())
+		return types2.IntUnresolvable(p.Metadata())
 	}
 
 	prop := p.GetProperty(path)
@@ -227,12 +227,12 @@ func (p *Property) GetIntProperty(path string, defaultValue ...int) types.IntVal
 	return prop.AsIntValue()
 }
 
-func (p *Property) BoolDefault(defaultValue bool) types.BoolValue {
-	return types.BoolDefault(defaultValue, p.Metadata())
+func (p *Property) BoolDefault(defaultValue bool) types2.BoolValue {
+	return types2.BoolDefault(defaultValue, p.Metadata())
 }
 
-func (p *Property) IntDefault(defaultValue int) types.IntValue {
-	return types.IntDefault(defaultValue, p.Metadata())
+func (p *Property) IntDefault(defaultValue int) types2.IntValue {
+	return types2.IntDefault(defaultValue, p.Metadata())
 }
 
 func (p *Property) GetProperty(path string) *Property {
@@ -284,38 +284,38 @@ func (p *Property) deriveResolved(propType cftypes.CfType, propValue interface{}
 	}
 }
 
-func (p *Property) ParentRange() types.Range {
+func (p *Property) ParentRange() types2.Range {
 	return p.parentRange
 }
 
-func (p *Property) inferBool(prop *Property, defaultValue bool) types.BoolValue {
+func (p *Property) inferBool(prop *Property, defaultValue bool) types2.BoolValue {
 	if prop.IsString() {
 		if prop.EqualTo("true", IgnoreCase) {
-			return types.Bool(true, prop.Metadata())
+			return types2.Bool(true, prop.Metadata())
 		}
 		if prop.EqualTo("yes", IgnoreCase) {
-			return types.Bool(true, prop.Metadata())
+			return types2.Bool(true, prop.Metadata())
 		}
 		if prop.EqualTo("1", IgnoreCase) {
-			return types.Bool(true, prop.Metadata())
+			return types2.Bool(true, prop.Metadata())
 		}
 		if prop.EqualTo("false", IgnoreCase) {
-			return types.Bool(false, prop.Metadata())
+			return types2.Bool(false, prop.Metadata())
 		}
 		if prop.EqualTo("no", IgnoreCase) {
-			return types.Bool(false, prop.Metadata())
+			return types2.Bool(false, prop.Metadata())
 		}
 		if prop.EqualTo("0", IgnoreCase) {
-			return types.Bool(false, prop.Metadata())
+			return types2.Bool(false, prop.Metadata())
 		}
 	}
 
 	if prop.IsInt() {
 		if prop.EqualTo(0) {
-			return types.Bool(false, prop.Metadata())
+			return types2.Bool(false, prop.Metadata())
 		}
 		if prop.EqualTo(1) {
-			return types.Bool(true, prop.Metadata())
+			return types2.Bool(true, prop.Metadata())
 		}
 	}
 

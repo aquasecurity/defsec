@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckNodePoolUsesCos(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata:  types.NewTestMetadata(),
-							ImageType: types.String("UBUNTU", types.NewTestMetadata()),
+							Metadata:  types2.NewTestMetadata(),
+							ImageType: types2.String("UBUNTU", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,17 +39,17 @@ func TestCheckNodePoolUsesCos(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata:  types.NewTestMetadata(),
-							ImageType: types.String("COS", types.NewTestMetadata()),
+							Metadata:  types2.NewTestMetadata(),
+							ImageType: types2.String("COS", types2.NewTestMetadata()),
 						},
 						NodePools: []gke.NodePool{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								NodeConfig: gke.NodeConfig{
-									Metadata:  types.NewTestMetadata(),
-									ImageType: types.String("UBUNTU", types.NewTestMetadata()),
+									Metadata:  types2.NewTestMetadata(),
+									ImageType: types2.String("UBUNTU", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -63,10 +63,10 @@ func TestCheckNodePoolUsesCos(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata:  types.NewTestMetadata(),
-							ImageType: types.String("COS_CONTAINERD", types.NewTestMetadata()),
+							Metadata:  types2.NewTestMetadata(),
+							ImageType: types2.String("COS_CONTAINERD", types2.NewTestMetadata()),
 						},
 					},
 				},

@@ -3,8 +3,9 @@ package iam
 import (
 	"testing"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/google/iam"
 	"github.com/aquasecurity/defsec/test/testutil"
 	"github.com/stretchr/testify/assert"
@@ -68,53 +69,53 @@ func Test_Adapt(t *testing.T) {
 			expected: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 
 						Projects: []iam.Project{
 							{
-								Metadata:          types.NewTestMetadata(),
-								AutoCreateNetwork: types.Bool(true, types.NewTestMetadata()),
+								Metadata:          types2.NewTestMetadata(),
+								AutoCreateNetwork: types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata:              types.NewTestMetadata(),
-										Member:                types.String("user:alice@gmail.com", types.NewTestMetadata()),
-										Role:                  types.String("roles/editor", types.NewTestMetadata()),
-										DefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+										Metadata:              types2.NewTestMetadata(),
+										Member:                types2.String("user:alice@gmail.com", types2.NewTestMetadata()),
+										Role:                  types2.String("roles/editor", types2.NewTestMetadata()),
+										DefaultServiceAccount: types2.Bool(false, types2.NewTestMetadata()),
 									},
 								},
 								Bindings: []iam.Binding{
 									{
-										Metadata: types.NewTestMetadata(),
-										Members: []types.StringValue{
-											types.String("user:not-alice@gmail.com", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Members: []types2.StringValue{
+											types2.String("user:not-alice@gmail.com", types2.NewTestMetadata()),
 										},
-										Role:                          types.String("roles/nothing", types.NewTestMetadata()),
-										IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+										Role:                          types2.String("roles/nothing", types2.NewTestMetadata()),
+										IncludesDefaultServiceAccount: types2.Bool(false, types2.NewTestMetadata()),
 									},
 								},
 							},
 						},
 						Members: []iam.Member{
 							{
-								Metadata:              types.NewTestMetadata(),
-								Member:                types.String("user:member@gmail.com", types.NewTestMetadata()),
-								Role:                  types.String("roles/whatever", types.NewTestMetadata()),
-								DefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+								Metadata:              types2.NewTestMetadata(),
+								Member:                types2.String("user:member@gmail.com", types2.NewTestMetadata()),
+								Role:                  types2.String("roles/whatever", types2.NewTestMetadata()),
+								DefaultServiceAccount: types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 						Bindings: []iam.Binding{
 							{
-								Metadata: types.NewTestMetadata(),
-								Members: []types.StringValue{
-									types.String("user:member_2@gmail.com", types.NewTestMetadata())},
-								Role:                          types.String("roles/browser", types.NewTestMetadata()),
-								IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Members: []types2.StringValue{
+									types2.String("user:member_2@gmail.com", types2.NewTestMetadata())},
+								Role:                          types2.String("roles/browser", types2.NewTestMetadata()),
+								IncludesDefaultServiceAccount: types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 					},

@@ -1,17 +1,17 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Disk struct {
-	types.Metadata
-	Name       types.StringValue
+	types2.Metadata
+	Name       types2.StringValue
 	Encryption DiskEncryption
 }
 
 type DiskEncryption struct {
-	types.Metadata
-	RawKey     types.BytesValue
-	KMSKeyLink types.StringValue
+	types2.Metadata
+	RawKey     types2.BytesValue
+	KMSKeyLink types2.StringValue
 }

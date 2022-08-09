@@ -3,7 +3,7 @@ package storage
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckQueueServicesLoggingEnabled(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						QueueProperties: storage.QueueProperties{
-							Metadata:      types.NewTestMetadata(),
-							EnableLogging: types.Bool(false, types.NewTestMetadata()),
+							Metadata:      types2.NewTestMetadata(),
+							EnableLogging: types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckQueueServicesLoggingEnabled(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						QueueProperties: storage.QueueProperties{
-							Metadata:      types.NewTestMetadata(),
-							EnableLogging: types.Bool(true, types.NewTestMetadata()),
+							Metadata:      types2.NewTestMetadata(),
+							EnableLogging: types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},

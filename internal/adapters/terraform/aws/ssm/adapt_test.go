@@ -3,7 +3,7 @@ package ssm
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ssm"
 
@@ -35,8 +35,8 @@ func Test_Adapt(t *testing.T) {
 			expected: ssm.SSM{
 				Secrets: []ssm.Secret{
 					{
-						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("aws_kms_key.secrets", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						KMSKeyID: types2.String("aws_kms_key.secrets", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -52,8 +52,8 @@ func Test_Adapt(t *testing.T) {
 			expected: ssm.SSM{
 				Secrets: []ssm.Secret{
 					{
-						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("key_id", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						KMSKeyID: types2.String("key_id", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -67,8 +67,8 @@ func Test_Adapt(t *testing.T) {
 			expected: ssm.SSM{
 				Secrets: []ssm.Secret{
 					{
-						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("alias/aws/secretsmanager", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						KMSKeyID: types2.String("alias/aws/secretsmanager", types2.NewTestMetadata()),
 					},
 				},
 			},

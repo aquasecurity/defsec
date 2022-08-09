@@ -3,7 +3,7 @@ package network
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckRetentionPolicySet(t *testing.T) {
 			input: network.Network{
 				NetworkWatcherFlowLogs: []network.NetworkWatcherFlowLog{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						RetentionPolicy: network.RetentionPolicy{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
-							Days:     types.Int(100, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+							Days:     types2.Int(100, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckRetentionPolicySet(t *testing.T) {
 			input: network.Network{
 				NetworkWatcherFlowLogs: []network.NetworkWatcherFlowLog{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						RetentionPolicy: network.RetentionPolicy{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
-							Days:     types.Int(30, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+							Days:     types2.Int(30, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,11 +56,11 @@ func TestCheckRetentionPolicySet(t *testing.T) {
 			input: network.Network{
 				NetworkWatcherFlowLogs: []network.NetworkWatcherFlowLog{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						RetentionPolicy: network.RetentionPolicy{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
-							Days:     types.Int(100, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+							Days:     types2.Int(100, types2.NewTestMetadata()),
 						},
 					},
 				},

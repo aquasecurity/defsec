@@ -1,7 +1,7 @@
 package datalake
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type DataLake struct {
@@ -9,6 +9,6 @@ type DataLake struct {
 }
 
 type Store struct {
-	types.Metadata
-	EnableEncryption types.BoolValue
+	types2.Metadata
+	EnableEncryption types2.BoolValue
 }

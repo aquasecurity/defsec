@@ -3,7 +3,7 @@ package eks
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,9 +24,9 @@ func TestCheckNoPublicClusterAccessToCidr(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						PublicAccessEnabled: types.Bool(true, types.NewTestMetadata()),
-						PublicAccessCIDRs: []types.StringValue{
-							types.String("0.0.0.0/0", types.NewTestMetadata()),
+						PublicAccessEnabled: types2.Bool(true, types2.NewTestMetadata()),
+						PublicAccessCIDRs: []types2.StringValue{
+							types2.String("0.0.0.0/0", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -38,9 +38,9 @@ func TestCheckNoPublicClusterAccessToCidr(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						PublicAccessEnabled: types.Bool(true, types.NewTestMetadata()),
-						PublicAccessCIDRs: []types.StringValue{
-							types.String("10.2.0.0/8", types.NewTestMetadata()),
+						PublicAccessEnabled: types2.Bool(true, types2.NewTestMetadata()),
+						PublicAccessCIDRs: []types2.StringValue{
+							types2.String("10.2.0.0/8", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -52,9 +52,9 @@ func TestCheckNoPublicClusterAccessToCidr(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						PublicAccessEnabled: types.Bool(false, types.NewTestMetadata()),
-						PublicAccessCIDRs: []types.StringValue{
-							types.String("10.2.0.0/8", types.NewTestMetadata()),
+						PublicAccessEnabled: types2.Bool(false, types2.NewTestMetadata()),
+						PublicAccessCIDRs: []types2.StringValue{
+							types2.String("10.2.0.0/8", types2.NewTestMetadata()),
 						},
 					},
 				},

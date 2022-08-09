@@ -3,7 +3,7 @@ package cloudtrail
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -26,19 +26,19 @@ func TestCheckBucketAccessLoggingRequired(t *testing.T) {
 			inputCT: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:   types.NewTestMetadata(),
-						BucketName: types.String("my-bucket", types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						BucketName: types2.String("my-bucket", types2.NewTestMetadata()),
 					},
 				},
 			},
 			inputS3: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("my-bucket", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Name:     types2.String("my-bucket", types2.NewTestMetadata()),
 						Logging: s3.Logging{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -50,19 +50,19 @@ func TestCheckBucketAccessLoggingRequired(t *testing.T) {
 			inputCT: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:   types.NewTestMetadata(),
-						BucketName: types.String("my-bucket", types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						BucketName: types2.String("my-bucket", types2.NewTestMetadata()),
 					},
 				},
 			},
 			inputS3: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("my-bucket", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Name:     types2.String("my-bucket", types2.NewTestMetadata()),
 						Logging: s3.Logging{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},

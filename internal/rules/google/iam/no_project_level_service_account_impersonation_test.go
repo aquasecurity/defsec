@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,14 +24,14 @@ func TestCheckNoProjectLevelServiceAccountImpersonation(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Projects: []iam.Project{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata: types.NewTestMetadata(),
-										Role:     types.String("roles/iam.serviceAccountUser", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Role:     types2.String("roles/iam.serviceAccountUser", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -46,14 +46,14 @@ func TestCheckNoProjectLevelServiceAccountImpersonation(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Projects: []iam.Project{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Bindings: []iam.Binding{
 									{
-										Metadata: types.NewTestMetadata(),
-										Role:     types.String("roles/iam.serviceAccountTokenCreator", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Role:     types2.String("roles/iam.serviceAccountTokenCreator", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -68,20 +68,20 @@ func TestCheckNoProjectLevelServiceAccountImpersonation(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Projects: []iam.Project{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata: types.NewTestMetadata(),
-										Role:     types.String("roles/specific-role", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Role:     types2.String("roles/specific-role", types2.NewTestMetadata()),
 									},
 								},
 								Bindings: []iam.Binding{
 									{
-										Metadata: types.NewTestMetadata(),
-										Role:     types.String("roles/specific-role", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Role:     types2.String("roles/specific-role", types2.NewTestMetadata()),
 									},
 								},
 							},

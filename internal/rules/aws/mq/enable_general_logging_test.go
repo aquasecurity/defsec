@@ -3,7 +3,7 @@ package mq
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableGeneralLogging(t *testing.T) {
 			input: mq.MQ{
 				Brokers: []mq.Broker{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Logging: mq.Logging{
-							Metadata: types.NewTestMetadata(),
-							General:  types.Bool(false, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							General:  types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableGeneralLogging(t *testing.T) {
 			input: mq.MQ{
 				Brokers: []mq.Broker{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Logging: mq.Logging{
-							Metadata: types.NewTestMetadata(),
-							General:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							General:  types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},

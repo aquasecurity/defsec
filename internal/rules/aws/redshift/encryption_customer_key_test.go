@@ -3,7 +3,7 @@ package redshift
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 			input: redshift.Redshift{
 				Clusters: []redshift.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Encryption: redshift.Encryption{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
-							KMSKeyID: types.String("some-key", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+							KMSKeyID: types2.String("some-key", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 			input: redshift.Redshift{
 				Clusters: []redshift.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Encryption: redshift.Encryption{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
-							KMSKeyID: types.String("", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+							KMSKeyID: types2.String("", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,11 +56,11 @@ func TestCheckEncryptionCustomerKey(t *testing.T) {
 			input: redshift.Redshift{
 				Clusters: []redshift.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Encryption: redshift.Encryption{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
-							KMSKeyID: types.String("some-key", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+							KMSKeyID: types2.String("some-key", types2.NewTestMetadata()),
 						},
 					},
 				},

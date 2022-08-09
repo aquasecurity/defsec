@@ -3,7 +3,7 @@ package rds
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEncryptClusterStorageData(t *testing.T) {
 			input: rds.RDS{
 				Clusters: []rds.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Encryption: rds.Encryption{
-							Metadata:       types.NewTestMetadata(),
-							EncryptStorage: types.Bool(false, types.NewTestMetadata()),
-							KMSKeyID:       types.String("kms-key", types.NewTestMetadata()),
+							Metadata:       types2.NewTestMetadata(),
+							EncryptStorage: types2.Bool(false, types2.NewTestMetadata()),
+							KMSKeyID:       types2.String("kms-key", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckEncryptClusterStorageData(t *testing.T) {
 			input: rds.RDS{
 				Clusters: []rds.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Encryption: rds.Encryption{
-							Metadata:       types.NewTestMetadata(),
-							EncryptStorage: types.Bool(true, types.NewTestMetadata()),
-							KMSKeyID:       types.String("", types.NewTestMetadata()),
+							Metadata:       types2.NewTestMetadata(),
+							EncryptStorage: types2.Bool(true, types2.NewTestMetadata()),
+							KMSKeyID:       types2.String("", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,11 +56,11 @@ func TestCheckEncryptClusterStorageData(t *testing.T) {
 			input: rds.RDS{
 				Clusters: []rds.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Encryption: rds.Encryption{
-							Metadata:       types.NewTestMetadata(),
-							EncryptStorage: types.Bool(true, types.NewTestMetadata()),
-							KMSKeyID:       types.String("kms-key", types.NewTestMetadata()),
+							Metadata:       types2.NewTestMetadata(),
+							EncryptStorage: types2.Bool(true, types2.NewTestMetadata()),
+							KMSKeyID:       types2.String("kms-key", types2.NewTestMetadata()),
 						},
 					},
 				},

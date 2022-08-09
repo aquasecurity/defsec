@@ -3,7 +3,8 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
@@ -47,24 +48,24 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 			expected: ec2.EC2{
 				Instances: []ec2.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						MetadataOptions: ec2.MetadataOptions{
-							Metadata:     types.NewTestMetadata(),
-							HttpTokens:   types.String("required", types.NewTestMetadata()),
-							HttpEndpoint: types.String("disabled", types.NewTestMetadata()),
+							Metadata:     types2.NewTestMetadata(),
+							HttpTokens:   types2.String("required", types2.NewTestMetadata()),
+							HttpEndpoint: types2.String("disabled", types2.NewTestMetadata()),
 						},
-						UserData: types.String(
+						UserData: types2.String(
 							`export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 `,
-							types.NewTestMetadata()),
+							types2.NewTestMetadata()),
 						RootBlockDevice: &ec2.BlockDevice{
-							Metadata:  types.NewTestMetadata(),
-							Encrypted: types.Bool(true, types.NewTestMetadata()),
+							Metadata:  types2.NewTestMetadata(),
+							Encrypted: types2.Bool(true, types2.NewTestMetadata()),
 						},
 						EBSBlockDevices: []*ec2.BlockDevice{
 							{
-								Metadata:  types.NewTestMetadata(),
-								Encrypted: types.Bool(true, types.NewTestMetadata()),
+								Metadata:  types2.NewTestMetadata(),
+								Encrypted: types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -80,16 +81,16 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 			expected: ec2.EC2{
 				Instances: []ec2.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						MetadataOptions: ec2.MetadataOptions{
-							Metadata:     types.NewTestMetadata(),
-							HttpTokens:   types.String("", types.NewTestMetadata()),
-							HttpEndpoint: types.String("", types.NewTestMetadata()),
+							Metadata:     types2.NewTestMetadata(),
+							HttpTokens:   types2.String("", types2.NewTestMetadata()),
+							HttpEndpoint: types2.String("", types2.NewTestMetadata()),
 						},
-						UserData: types.String("", types.NewTestMetadata()),
+						UserData: types2.String("", types2.NewTestMetadata()),
 						RootBlockDevice: &ec2.BlockDevice{
-							Metadata:  types.NewTestMetadata(),
-							Encrypted: types.Bool(false, types.NewTestMetadata()),
+							Metadata:  types2.NewTestMetadata(),
+							Encrypted: types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},

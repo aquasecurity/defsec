@@ -3,7 +3,7 @@ package eks
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/eks"
 
@@ -42,23 +42,23 @@ func Test_adaptCluster(t *testing.T) {
 			}
 `,
 			expected: eks.Cluster{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				Logging: eks.Logging{
-					Metadata:          types.NewTestMetadata(),
-					API:               types.Bool(true, types.NewTestMetadata()),
-					Authenticator:     types.Bool(true, types.NewTestMetadata()),
-					Audit:             types.Bool(true, types.NewTestMetadata()),
-					Scheduler:         types.Bool(true, types.NewTestMetadata()),
-					ControllerManager: types.Bool(true, types.NewTestMetadata()),
+					Metadata:          types2.NewTestMetadata(),
+					API:               types2.Bool(true, types2.NewTestMetadata()),
+					Authenticator:     types2.Bool(true, types2.NewTestMetadata()),
+					Audit:             types2.Bool(true, types2.NewTestMetadata()),
+					Scheduler:         types2.Bool(true, types2.NewTestMetadata()),
+					ControllerManager: types2.Bool(true, types2.NewTestMetadata()),
 				},
 				Encryption: eks.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Secrets:  types.Bool(true, types.NewTestMetadata()),
-					KMSKeyID: types.String("key-arn", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Secrets:  types2.Bool(true, types2.NewTestMetadata()),
+					KMSKeyID: types2.String("key-arn", types2.NewTestMetadata()),
 				},
-				PublicAccessEnabled: types.Bool(false, types.NewTestMetadata()),
-				PublicAccessCIDRs: []types.StringValue{
-					types.String("10.2.0.0/8", types.NewTestMetadata()),
+				PublicAccessEnabled: types2.Bool(false, types2.NewTestMetadata()),
+				PublicAccessCIDRs: []types2.StringValue{
+					types2.String("10.2.0.0/8", types2.NewTestMetadata()),
 				},
 			},
 		},
@@ -69,21 +69,21 @@ func Test_adaptCluster(t *testing.T) {
 			}
 `,
 			expected: eks.Cluster{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				Logging: eks.Logging{
-					Metadata:          types.NewTestMetadata(),
-					API:               types.Bool(false, types.NewTestMetadata()),
-					Authenticator:     types.Bool(false, types.NewTestMetadata()),
-					Audit:             types.Bool(false, types.NewTestMetadata()),
-					Scheduler:         types.Bool(false, types.NewTestMetadata()),
-					ControllerManager: types.Bool(false, types.NewTestMetadata()),
+					Metadata:          types2.NewTestMetadata(),
+					API:               types2.Bool(false, types2.NewTestMetadata()),
+					Authenticator:     types2.Bool(false, types2.NewTestMetadata()),
+					Audit:             types2.Bool(false, types2.NewTestMetadata()),
+					Scheduler:         types2.Bool(false, types2.NewTestMetadata()),
+					ControllerManager: types2.Bool(false, types2.NewTestMetadata()),
 				},
 				Encryption: eks.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Secrets:  types.Bool(false, types.NewTestMetadata()),
-					KMSKeyID: types.String("", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Secrets:  types2.Bool(false, types2.NewTestMetadata()),
+					KMSKeyID: types2.String("", types2.NewTestMetadata()),
 				},
-				PublicAccessEnabled: types.Bool(true, types.NewTestMetadata()),
+				PublicAccessEnabled: types2.Bool(true, types2.NewTestMetadata()),
 				PublicAccessCIDRs:   nil,
 			},
 		},

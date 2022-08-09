@@ -1,9 +1,9 @@
 package openstack
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/openstack"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/google/uuid"
 )
 
@@ -28,8 +28,8 @@ func adaptSecurityGroups(modules terraform.Modules) []openstack.SecurityGroup {
 	for _, ruleBlock := range modules.GetResourcesByType("openstack_networking_secgroup_rule_v2") {
 		rule := openstack.SecurityGroupRule{
 			Metadata:  ruleBlock.GetMetadata(),
-			IsIngress: types.Bool(true, ruleBlock.GetMetadata()),
-			EtherType: types.IntDefault(4, ruleBlock.GetMetadata()),
+			IsIngress: types2.Bool(true, ruleBlock.GetMetadata()),
+			EtherType: types2.IntDefault(4, ruleBlock.GetMetadata()),
 			Protocol:  ruleBlock.GetAttribute("protocol").AsStringValueOrDefault("tcp", ruleBlock),
 			PortMin:   ruleBlock.GetAttribute("port_range_min").AsIntValueOrDefault(0, ruleBlock),
 			PortMax:   ruleBlock.GetAttribute("port_range_max").AsIntValueOrDefault(0, ruleBlock),
@@ -38,16 +38,16 @@ func adaptSecurityGroups(modules terraform.Modules) []openstack.SecurityGroup {
 
 		switch etherType := ruleBlock.GetAttribute("ethertype"); {
 		case etherType.Equals("IPv4"):
-			rule.EtherType = types.Int(4, etherType.GetMetadata())
+			rule.EtherType = types2.Int(4, etherType.GetMetadata())
 		case etherType.Equals("IPv6"):
-			rule.EtherType = types.Int(6, etherType.GetMetadata())
+			rule.EtherType = types2.Int(6, etherType.GetMetadata())
 		}
 
 		switch direction := ruleBlock.GetAttribute("direction"); {
 		case direction.Equals("egress"):
-			rule.IsIngress = types.Bool(false, direction.GetMetadata())
+			rule.IsIngress = types2.Bool(false, direction.GetMetadata())
 		case direction.Equals("ingress"):
-			rule.IsIngress = types.Bool(true, direction.GetMetadata())
+			rule.IsIngress = types2.Bool(true, direction.GetMetadata())
 		}
 
 		groupID := ruleBlock.GetAttribute("security_group_id")
@@ -60,9 +60,9 @@ func adaptSecurityGroups(modules terraform.Modules) []openstack.SecurityGroup {
 		}
 
 		group := openstack.SecurityGroup{
-			Metadata:    types.NewUnmanagedMetadata(),
-			Name:        types.StringDefault("", types.NewUnmanagedMetadata()),
-			Description: types.StringDefault("", types.NewUnmanagedMetadata()),
+			Metadata:    types2.NewUnmanagedMetadata(),
+			Name:        types2.StringDefault("", types2.NewUnmanagedMetadata()),
+			Description: types2.StringDefault("", types2.NewUnmanagedMetadata()),
 			Rules:       []openstack.SecurityGroupRule{rule},
 		}
 		groupMap[uuid.NewString()] = group

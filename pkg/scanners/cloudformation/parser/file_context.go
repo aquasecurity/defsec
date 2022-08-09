@@ -1,7 +1,7 @@
 package parser
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type SourceFormat string
@@ -45,8 +45,8 @@ func (t *FileContext) GetResourcesByType(names ...string) []*Resource {
 	return resources
 }
 
-func (t *FileContext) Metadata() types.Metadata {
-	rng := types.NewRange(t.filepath, 1, len(t.lines), "", nil)
+func (t *FileContext) Metadata() types2.Metadata {
+	rng := types2.NewRange(t.filepath, 1, len(t.lines), "", nil)
 
-	return types.NewMetadata(rng, NewCFReference("Template", rng))
+	return types2.NewMetadata(rng, NewCFReference("Template", rng))
 }

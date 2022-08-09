@@ -1,7 +1,7 @@
 package appservice
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type AppService struct {
@@ -10,21 +10,21 @@ type AppService struct {
 }
 
 type Service struct {
-	types.Metadata
-	EnableClientCert types.BoolValue
+	types2.Metadata
+	EnableClientCert types2.BoolValue
 	Identity         struct {
-		Type types.StringValue
+		Type types2.StringValue
 	}
 	Authentication struct {
-		Enabled types.BoolValue
+		Enabled types2.BoolValue
 	}
 	Site struct {
-		EnableHTTP2       types.BoolValue
-		MinimumTLSVersion types.StringValue
+		EnableHTTP2       types2.BoolValue
+		MinimumTLSVersion types2.StringValue
 	}
 }
 
 type FunctionApp struct {
-	types.Metadata
-	HTTPSOnly types.BoolValue
+	types2.Metadata
+	HTTPSOnly types2.BoolValue
 }

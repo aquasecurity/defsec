@@ -3,7 +3,7 @@ package network
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,14 +24,14 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Allow:    types.Bool(true, types.NewTestMetadata()),
-								Outbound: types.Bool(false, types.NewTestMetadata()),
-								SourceAddresses: []types.StringValue{
-									types.String("*", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Allow:    types2.Bool(true, types2.NewTestMetadata()),
+								Outbound: types2.Bool(false, types2.NewTestMetadata()),
+								SourceAddresses: []types2.StringValue{
+									types2.String("*", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -45,14 +45,14 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Allow:    types.Bool(true, types.NewTestMetadata()),
-								Outbound: types.Bool(false, types.NewTestMetadata()),
-								SourceAddresses: []types.StringValue{
-									types.String("10.0.0.0/16", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Allow:    types2.Bool(true, types2.NewTestMetadata()),
+								Outbound: types2.Bool(false, types2.NewTestMetadata()),
+								SourceAddresses: []types2.StringValue{
+									types2.String("10.0.0.0/16", types2.NewTestMetadata()),
 								},
 							},
 						},

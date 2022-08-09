@@ -3,13 +3,13 @@ package emr
 import (
 	"testing"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/emr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -43,9 +43,9 @@ func Test_adaptSecurityConfiguration(t *testing.T) {
 				EOF
 			}`,
 			expected: emr.SecurityConfiguration{
-				Metadata: types.NewTestMetadata(),
-				Name:     types.StringExplicit("emrsc_test", types.NewTestMetadata()),
-				Configuration: types.String(
+				Metadata: types2.NewTestMetadata(),
+				Name:     types2.StringExplicit("emrsc_test", types2.NewTestMetadata()),
+				Configuration: types2.String(
 					`				{
 					"EncryptionConfiguration": {
 					"AtRestEncryptionConfiguration": {
@@ -61,7 +61,7 @@ func Test_adaptSecurityConfiguration(t *testing.T) {
 					"EnableAtRestEncryption": true
 					}
 				}
-`, types.NewTestMetadata()),
+`, types2.NewTestMetadata()),
 			},
 		},
 	}

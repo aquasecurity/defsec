@@ -1,23 +1,23 @@
 package s3
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type PublicAccessBlock struct {
-	types.Metadata
-	BlockPublicACLs       types.BoolValue
-	BlockPublicPolicy     types.BoolValue
-	IgnorePublicACLs      types.BoolValue
-	RestrictPublicBuckets types.BoolValue
+	types2.Metadata
+	BlockPublicACLs       types2.BoolValue
+	BlockPublicPolicy     types2.BoolValue
+	IgnorePublicACLs      types2.BoolValue
+	RestrictPublicBuckets types2.BoolValue
 }
 
-func NewPublicAccessBlock(metadata types.Metadata) PublicAccessBlock {
+func NewPublicAccessBlock(metadata types2.Metadata) PublicAccessBlock {
 	return PublicAccessBlock{
 		Metadata:              metadata,
-		BlockPublicPolicy:     types.BoolDefault(false, metadata),
-		BlockPublicACLs:       types.BoolDefault(false, metadata),
-		IgnorePublicACLs:      types.BoolDefault(false, metadata),
-		RestrictPublicBuckets: types.BoolDefault(false, metadata),
+		BlockPublicPolicy:     types2.BoolDefault(false, metadata),
+		BlockPublicACLs:       types2.BoolDefault(false, metadata),
+		IgnorePublicACLs:      types2.BoolDefault(false, metadata),
+		RestrictPublicBuckets: types2.BoolDefault(false, metadata),
 	}
 }

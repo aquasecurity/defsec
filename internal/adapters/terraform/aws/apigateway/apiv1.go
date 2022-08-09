@@ -1,9 +1,9 @@
 package apigateway
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func adaptAPIResourcesV1(modules terraform.Modules, apiBlock *terraform.Block) []v1.Resource {
@@ -59,8 +59,8 @@ func adaptAPIsV1(modules terraform.Modules) []v1.API {
 
 	if len(orphanResources) > 0 {
 		orphanage := v1.API{
-			Metadata: types.NewUnmanagedMetadata(),
-			Name:     types.StringDefault("", types.NewUnmanagedMetadata()),
+			Metadata: types2.NewUnmanagedMetadata(),
+			Name:     types2.StringDefault("", types2.NewUnmanagedMetadata()),
 		}
 		for _, stage := range orphanResources {
 			orphanage.Stages = append(orphanage.Stages, adaptStageV1(stage, modules))
@@ -77,7 +77,7 @@ func adaptStageV1(stageBlock *terraform.Block, modules terraform.Modules) v1.Sta
 		Name:     stageBlock.GetAttribute("name").AsStringValueOrDefault("", stageBlock),
 		AccessLogging: v1.AccessLogging{
 			Metadata:              stageBlock.GetMetadata(),
-			CloudwatchLogGroupARN: types.StringDefault("", stageBlock.GetMetadata()),
+			CloudwatchLogGroupARN: types2.StringDefault("", stageBlock.GetMetadata()),
 		},
 		XRayTracingEnabled: stageBlock.GetAttribute("xray_tracing_enabled").AsBoolValueOrDefault(false, stageBlock),
 	}
@@ -85,9 +85,9 @@ func adaptStageV1(stageBlock *terraform.Block, modules terraform.Modules) v1.Sta
 
 		restMethodSettings := v1.RESTMethodSettings{
 			Metadata:           methodSettings.GetMetadata(),
-			Method:             types.String("", methodSettings.GetMetadata()),
-			CacheDataEncrypted: types.BoolDefault(false, methodSettings.GetMetadata()),
-			CacheEnabled:       types.BoolDefault(false, methodSettings.GetMetadata()),
+			Method:             types2.String("", methodSettings.GetMetadata()),
+			CacheDataEncrypted: types2.BoolDefault(false, methodSettings.GetMetadata()),
+			CacheEnabled:       types2.BoolDefault(false, methodSettings.GetMetadata()),
 		}
 
 		if settings := methodSettings.GetBlock("settings"); settings.IsNotNil() {
@@ -108,7 +108,7 @@ func adaptStageV1(stageBlock *terraform.Block, modules terraform.Modules) v1.Sta
 		stage.AccessLogging.CloudwatchLogGroupARN = accessLogging.GetAttribute("destination_arn").AsStringValueOrDefault("", accessLogging)
 	} else {
 		stage.AccessLogging.Metadata = stageBlock.GetMetadata()
-		stage.AccessLogging.CloudwatchLogGroupARN = types.StringDefault("", stageBlock.GetMetadata())
+		stage.AccessLogging.CloudwatchLogGroupARN = types2.StringDefault("", stageBlock.GetMetadata())
 	}
 
 	return stage

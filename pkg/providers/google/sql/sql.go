@@ -3,7 +3,7 @@ package sql
 import (
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type SQL struct {
@@ -32,44 +32,44 @@ const (
 )
 
 type DatabaseInstance struct {
-	types.Metadata
-	DatabaseVersion types.StringValue
+	types2.Metadata
+	DatabaseVersion types2.StringValue
 	Settings        Settings
-	IsReplica       types.BoolValue
+	IsReplica       types2.BoolValue
 }
 
 type Settings struct {
-	types.Metadata
+	types2.Metadata
 	Flags           Flags
 	Backups         Backups
 	IPConfiguration IPConfiguration
 }
 type Flags struct {
-	types.Metadata
-	LogTempFileSize                 types.IntValue
-	LocalInFile                     types.BoolValue
-	ContainedDatabaseAuthentication types.BoolValue
-	CrossDBOwnershipChaining        types.BoolValue
-	LogCheckpoints                  types.BoolValue
-	LogConnections                  types.BoolValue
-	LogDisconnections               types.BoolValue
-	LogLockWaits                    types.BoolValue
-	LogMinMessages                  types.StringValue // FATAL, PANIC, LOG, ERROR, WARN
-	LogMinDurationStatement         types.IntValue
+	types2.Metadata
+	LogTempFileSize                 types2.IntValue
+	LocalInFile                     types2.BoolValue
+	ContainedDatabaseAuthentication types2.BoolValue
+	CrossDBOwnershipChaining        types2.BoolValue
+	LogCheckpoints                  types2.BoolValue
+	LogConnections                  types2.BoolValue
+	LogDisconnections               types2.BoolValue
+	LogLockWaits                    types2.BoolValue
+	LogMinMessages                  types2.StringValue // FATAL, PANIC, LOG, ERROR, WARN
+	LogMinDurationStatement         types2.IntValue
 }
 
 type Backups struct {
-	types.Metadata
-	Enabled types.BoolValue
+	types2.Metadata
+	Enabled types2.BoolValue
 }
 
 type IPConfiguration struct {
-	types.Metadata
-	RequireTLS         types.BoolValue
-	EnableIPv4         types.BoolValue
+	types2.Metadata
+	RequireTLS         types2.BoolValue
+	EnableIPv4         types2.BoolValue
 	AuthorizedNetworks []struct {
-		Name types.StringValue
-		CIDR types.StringValue
+		Name types2.StringValue
+		CIDR types2.StringValue
 	}
 }
 

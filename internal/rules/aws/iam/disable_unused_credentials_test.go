@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,9 +25,9 @@ func TestCheckUnusedCredentialsDisabled(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Name:       types.String("user", types.NewTestMetadata()),
-						LastAccess: types.Time(time.Now(), types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						Name:       types2.String("user", types2.NewTestMetadata()),
+						LastAccess: types2.Time(time.Now(), types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -38,16 +38,16 @@ func TestCheckUnusedCredentialsDisabled(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Name:       types.String("user", types.NewTestMetadata()),
-						LastAccess: types.TimeUnresolvable(types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						Name:       types2.String("user", types2.NewTestMetadata()),
+						LastAccess: types2.TimeUnresolvable(types2.NewTestMetadata()),
 						AccessKeys: []iam.AccessKey{
 							{
-								Metadata:     types.NewTestMetadata(),
-								AccessKeyId:  types.String("AKIACKCEVSQ6C2EXAMPLE", types.NewTestMetadata()),
-								Active:       types.Bool(true, types.NewTestMetadata()),
-								CreationDate: types.Time(time.Now().Add(-time.Hour*24*30), types.NewTestMetadata()),
-								LastAccess:   types.Time(time.Now(), types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								AccessKeyId:  types2.String("AKIACKCEVSQ6C2EXAMPLE", types2.NewTestMetadata()),
+								Active:       types2.Bool(true, types2.NewTestMetadata()),
+								CreationDate: types2.Time(time.Now().Add(-time.Hour*24*30), types2.NewTestMetadata()),
+								LastAccess:   types2.Time(time.Now(), types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -60,9 +60,9 @@ func TestCheckUnusedCredentialsDisabled(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Name:       types.String("user", types.NewTestMetadata()),
-						LastAccess: types.Time(time.Now().Add(-time.Hour*24*100), types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						Name:       types2.String("user", types2.NewTestMetadata()),
+						LastAccess: types2.Time(time.Now().Add(-time.Hour*24*100), types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -73,16 +73,16 @@ func TestCheckUnusedCredentialsDisabled(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Name:       types.String("user", types.NewTestMetadata()),
-						LastAccess: types.TimeUnresolvable(types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						Name:       types2.String("user", types2.NewTestMetadata()),
+						LastAccess: types2.TimeUnresolvable(types2.NewTestMetadata()),
 						AccessKeys: []iam.AccessKey{
 							{
-								Metadata:     types.NewTestMetadata(),
-								AccessKeyId:  types.String("AKIACKCEVSQ6C2EXAMPLE", types.NewTestMetadata()),
-								Active:       types.Bool(false, types.NewTestMetadata()),
-								CreationDate: types.Time(time.Now().Add(-time.Hour*24*120), types.NewTestMetadata()),
-								LastAccess:   types.Time(time.Now().Add(-time.Hour*24*100), types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								AccessKeyId:  types2.String("AKIACKCEVSQ6C2EXAMPLE", types2.NewTestMetadata()),
+								Active:       types2.Bool(false, types2.NewTestMetadata()),
+								CreationDate: types2.Time(time.Now().Add(-time.Hour*24*120), types2.NewTestMetadata()),
+								LastAccess:   types2.Time(time.Now().Add(-time.Hour*24*100), types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -95,16 +95,16 @@ func TestCheckUnusedCredentialsDisabled(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Name:       types.String("user", types.NewTestMetadata()),
-						LastAccess: types.TimeUnresolvable(types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						Name:       types2.String("user", types2.NewTestMetadata()),
+						LastAccess: types2.TimeUnresolvable(types2.NewTestMetadata()),
 						AccessKeys: []iam.AccessKey{
 							{
-								Metadata:     types.NewTestMetadata(),
-								AccessKeyId:  types.String("AKIACKCEVSQ6C2EXAMPLE", types.NewTestMetadata()),
-								Active:       types.Bool(true, types.NewTestMetadata()),
-								CreationDate: types.Time(time.Now().Add(-time.Hour*24*120), types.NewTestMetadata()),
-								LastAccess:   types.Time(time.Now().Add(-time.Hour*24*100), types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								AccessKeyId:  types2.String("AKIACKCEVSQ6C2EXAMPLE", types2.NewTestMetadata()),
+								Active:       types2.Bool(true, types2.NewTestMetadata()),
+								CreationDate: types2.Time(time.Now().Add(-time.Hour*24*120), types2.NewTestMetadata()),
+								LastAccess:   types2.Time(time.Now().Add(-time.Hour*24*100), types2.NewTestMetadata()),
 							},
 						},
 					},

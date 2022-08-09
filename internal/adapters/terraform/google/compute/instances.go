@@ -1,9 +1,9 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/google/compute"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -16,19 +16,19 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 			Name:     instanceBlock.GetAttribute("name").AsStringValueOrDefault("", instanceBlock),
 			ShieldedVM: compute.ShieldedVMConfig{
 				Metadata:                   instanceBlock.GetMetadata(),
-				SecureBootEnabled:          types.BoolDefault(false, instanceBlock.GetMetadata()),
-				IntegrityMonitoringEnabled: types.BoolDefault(false, instanceBlock.GetMetadata()),
-				VTPMEnabled:                types.BoolDefault(false, instanceBlock.GetMetadata()),
+				SecureBootEnabled:          types2.BoolDefault(false, instanceBlock.GetMetadata()),
+				IntegrityMonitoringEnabled: types2.BoolDefault(false, instanceBlock.GetMetadata()),
+				VTPMEnabled:                types2.BoolDefault(false, instanceBlock.GetMetadata()),
 			},
 			ServiceAccount: compute.ServiceAccount{
 				Metadata: instanceBlock.GetMetadata(),
-				Email:    types.StringDefault("", instanceBlock.GetMetadata()),
+				Email:    types2.StringDefault("", instanceBlock.GetMetadata()),
 				Scopes:   nil,
 			},
 			CanIPForward:                instanceBlock.GetAttribute("can_ip_forward").AsBoolValueOrDefault(false, instanceBlock),
-			OSLoginEnabled:              types.BoolDefault(true, instanceBlock.GetMetadata()),
-			EnableProjectSSHKeyBlocking: types.BoolDefault(false, instanceBlock.GetMetadata()),
-			EnableSerialPort:            types.BoolDefault(false, instanceBlock.GetMetadata()),
+			OSLoginEnabled:              types2.BoolDefault(true, instanceBlock.GetMetadata()),
+			EnableProjectSSHKeyBlocking: types2.BoolDefault(false, instanceBlock.GetMetadata()),
+			EnableSerialPort:            types2.BoolDefault(false, instanceBlock.GetMetadata()),
 			NetworkInterfaces:           nil,
 			BootDisks:                   nil,
 			AttachedDisks:               nil,
@@ -40,11 +40,11 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 				Metadata:    networkInterfaceBlock.GetMetadata(),
 				Network:     nil,
 				SubNetwork:  nil,
-				HasPublicIP: types.BoolDefault(false, networkInterfaceBlock.GetMetadata()),
-				NATIP:       types.StringDefault("", networkInterfaceBlock.GetMetadata()),
+				HasPublicIP: types2.BoolDefault(false, networkInterfaceBlock.GetMetadata()),
+				NATIP:       types2.StringDefault("", networkInterfaceBlock.GetMetadata()),
 			}
 			if accessConfigBlock := networkInterfaceBlock.GetBlock("access_config"); accessConfigBlock.IsNotNil() {
-				ni.HasPublicIP = types.Bool(true, accessConfigBlock.GetMetadata())
+				ni.HasPublicIP = types2.Bool(true, accessConfigBlock.GetMetadata())
 			}
 			instance.NetworkInterfaces = append(instance.NetworkInterfaces, ni)
 		}
@@ -65,13 +65,13 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 		// metadata
 		if metadataAttr := instanceBlock.GetAttribute("metadata"); metadataAttr.IsNotNil() {
 			if val := metadataAttr.MapValue("enable-oslogin"); val.Type() == cty.Bool {
-				instance.OSLoginEnabled = types.BoolExplicit(val.True(), metadataAttr.GetMetadata())
+				instance.OSLoginEnabled = types2.BoolExplicit(val.True(), metadataAttr.GetMetadata())
 			}
 			if val := metadataAttr.MapValue("block-project-ssh-keys"); val.Type() == cty.Bool {
-				instance.EnableProjectSSHKeyBlocking = types.BoolExplicit(val.True(), metadataAttr.GetMetadata())
+				instance.EnableProjectSSHKeyBlocking = types2.BoolExplicit(val.True(), metadataAttr.GetMetadata())
 			}
 			if val := metadataAttr.MapValue("serial-port-enable"); val.Type() == cty.Bool {
-				instance.EnableSerialPort = types.BoolExplicit(val.True(), metadataAttr.GetMetadata())
+				instance.EnableSerialPort = types2.BoolExplicit(val.True(), metadataAttr.GetMetadata())
 			}
 		}
 
@@ -107,7 +107,7 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 
 			if emailAttr.IsResourceBlockReference("google_service_account") {
 				if accBlock, err := modules.GetReferencedBlock(emailAttr, instanceBlock); err == nil {
-					instance.ServiceAccount.Email = types.String(accBlock.FullName(), emailAttr.GetMetadata())
+					instance.ServiceAccount.Email = types2.String(accBlock.FullName(), emailAttr.GetMetadata())
 				}
 			}
 

@@ -3,7 +3,7 @@ package elasticsearch
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableDomainLogging(t *testing.T) {
 			input: elasticsearch.Elasticsearch{
 				Domains: []elasticsearch.Domain{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						LogPublishing: elasticsearch.LogPublishing{
-							Metadata:     types.NewTestMetadata(),
-							AuditEnabled: types.Bool(false, types.NewTestMetadata()),
+							Metadata:     types2.NewTestMetadata(),
+							AuditEnabled: types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableDomainLogging(t *testing.T) {
 			input: elasticsearch.Elasticsearch{
 				Domains: []elasticsearch.Domain{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						LogPublishing: elasticsearch.LogPublishing{
-							Metadata:     types.NewTestMetadata(),
-							AuditEnabled: types.Bool(true, types.NewTestMetadata()),
+							Metadata:     types2.NewTestMetadata(),
+							AuditEnabled: types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},

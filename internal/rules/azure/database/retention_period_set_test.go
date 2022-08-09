@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckRetentionPeriodSet(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						ExtendedAuditingPolicies: []database.ExtendedAuditingPolicy{
 							{
-								Metadata:        types.NewTestMetadata(),
-								RetentionInDays: types.Int(30, types.NewTestMetadata()),
+								Metadata:        types2.NewTestMetadata(),
+								RetentionInDays: types2.Int(30, types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,11 +41,11 @@ func TestCheckRetentionPeriodSet(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						ExtendedAuditingPolicies: []database.ExtendedAuditingPolicy{
 							{
-								Metadata:        types.NewTestMetadata(),
-								RetentionInDays: types.Int(90, types.NewTestMetadata()),
+								Metadata:        types2.NewTestMetadata(),
+								RetentionInDays: types2.Int(90, types2.NewTestMetadata()),
 							},
 						},
 					},

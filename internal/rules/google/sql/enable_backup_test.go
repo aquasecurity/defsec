@@ -3,7 +3,7 @@ package sql
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,13 +24,13 @@ func TestCheckEnableBackup(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:  types.NewTestMetadata(),
-						IsReplica: types.Bool(false, types.NewTestMetadata()),
+						Metadata:  types2.NewTestMetadata(),
+						IsReplica: types2.Bool(false, types2.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							Backups: sql.Backups{
-								Metadata: types.NewTestMetadata(),
-								Enabled:  types.Bool(false, types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -43,13 +43,13 @@ func TestCheckEnableBackup(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:  types.NewTestMetadata(),
-						IsReplica: types.Bool(false, types.NewTestMetadata()),
+						Metadata:  types2.NewTestMetadata(),
+						IsReplica: types2.Bool(false, types2.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							Backups: sql.Backups{
-								Metadata: types.NewTestMetadata(),
-								Enabled:  types.Bool(true, types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -62,13 +62,13 @@ func TestCheckEnableBackup(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:  types.NewTestMetadata(),
-						IsReplica: types.Bool(true, types.NewTestMetadata()),
+						Metadata:  types2.NewTestMetadata(),
+						IsReplica: types2.Bool(true, types2.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							Backups: sql.Backups{
-								Metadata: types.NewTestMetadata(),
-								Enabled:  types.Bool(false, types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 					},

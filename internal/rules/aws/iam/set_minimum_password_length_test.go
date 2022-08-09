@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -23,8 +23,8 @@ func TestCheckSetMinimumPasswordLength(t *testing.T) {
 			name: "Minimum password length set to 8",
 			input: iam.IAM{
 				PasswordPolicy: iam.PasswordPolicy{
-					Metadata:      types.NewTestMetadata(),
-					MinimumLength: types.Int(8, types.NewTestMetadata()),
+					Metadata:      types2.NewTestMetadata(),
+					MinimumLength: types2.Int(8, types2.NewTestMetadata()),
 				},
 			},
 			expected: true,
@@ -33,8 +33,8 @@ func TestCheckSetMinimumPasswordLength(t *testing.T) {
 			name: "Minimum password length set to 15",
 			input: iam.IAM{
 				PasswordPolicy: iam.PasswordPolicy{
-					Metadata:      types.NewTestMetadata(),
-					MinimumLength: types.Int(15, types.NewTestMetadata()),
+					Metadata:      types2.NewTestMetadata(),
+					MinimumLength: types2.Int(15, types2.NewTestMetadata()),
 				},
 			},
 			expected: false,

@@ -3,7 +3,7 @@ package neptune
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableLogExport(t *testing.T) {
 			input: neptune.Neptune{
 				Clusters: []neptune.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Logging: neptune.Logging{
-							Metadata: types.NewTestMetadata(),
-							Audit:    types.Bool(false, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Audit:    types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableLogExport(t *testing.T) {
 			input: neptune.Neptune{
 				Clusters: []neptune.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Logging: neptune.Logging{
-							Metadata: types.NewTestMetadata(),
-							Audit:    types.Bool(true, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Audit:    types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},

@@ -3,7 +3,7 @@ package secrets
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/github"
 
@@ -26,12 +26,12 @@ resource "github_actions_environment_secret" "example" {
 `,
 			expected: []github.EnvironmentSecret{
 				{
-					Metadata:       types.NewTestMetadata(),
-					Environment:    types.String("", types.NewTestMetadata()),
-					SecretName:     types.String("", types.NewTestMetadata()),
-					PlainTextValue: types.String("", types.NewTestMetadata()),
-					EncryptedValue: types.String("", types.NewTestMetadata()),
-					Repository:     types.String("", types.NewTestMetadata()),
+					Metadata:       types2.NewTestMetadata(),
+					Environment:    types2.String("", types2.NewTestMetadata()),
+					SecretName:     types2.String("", types2.NewTestMetadata()),
+					PlainTextValue: types2.String("", types2.NewTestMetadata()),
+					EncryptedValue: types2.String("", types2.NewTestMetadata()),
+					Repository:     types2.String("", types2.NewTestMetadata()),
 				},
 			},
 		},
@@ -48,12 +48,12 @@ resource "github_actions_environment_secret" "example" {
 `,
 			expected: []github.EnvironmentSecret{
 				{
-					Metadata:       types.NewTestMetadata(),
-					SecretName:     types.String("a", types.NewTestMetadata()),
-					PlainTextValue: types.String("b", types.NewTestMetadata()),
-					Environment:    types.String("c", types.NewTestMetadata()),
-					EncryptedValue: types.String("d", types.NewTestMetadata()),
-					Repository:     types.String("e", types.NewTestMetadata()),
+					Metadata:       types2.NewTestMetadata(),
+					SecretName:     types2.String("a", types2.NewTestMetadata()),
+					PlainTextValue: types2.String("b", types2.NewTestMetadata()),
+					Environment:    types2.String("c", types2.NewTestMetadata()),
+					EncryptedValue: types2.String("d", types2.NewTestMetadata()),
+					Repository:     types2.String("e", types2.NewTestMetadata()),
 				},
 			},
 		},

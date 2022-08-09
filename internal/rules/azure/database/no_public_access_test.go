@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: database.Database{
 				MySQLServers: []database.MySQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnablePublicNetworkAccess: types.Bool(true, types.NewTestMetadata()),
+							Metadata:                  types2.NewTestMetadata(),
+							EnablePublicNetworkAccess: types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: database.Database{
 				MariaDBServers: []database.MariaDBServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnablePublicNetworkAccess: types.Bool(true, types.NewTestMetadata()),
+							Metadata:                  types2.NewTestMetadata(),
+							EnablePublicNetworkAccess: types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -54,10 +54,10 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnablePublicNetworkAccess: types.Bool(true, types.NewTestMetadata()),
+							Metadata:                  types2.NewTestMetadata(),
+							EnablePublicNetworkAccess: types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -69,10 +69,10 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: database.Database{
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnablePublicNetworkAccess: types.Bool(true, types.NewTestMetadata()),
+							Metadata:                  types2.NewTestMetadata(),
+							EnablePublicNetworkAccess: types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -84,10 +84,10 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: database.Database{
 				MySQLServers: []database.MySQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnablePublicNetworkAccess: types.Bool(false, types.NewTestMetadata()),
+							Metadata:                  types2.NewTestMetadata(),
+							EnablePublicNetworkAccess: types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -99,10 +99,10 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: database.Database{
 				MariaDBServers: []database.MariaDBServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnablePublicNetworkAccess: types.Bool(false, types.NewTestMetadata()),
+							Metadata:                  types2.NewTestMetadata(),
+							EnablePublicNetworkAccess: types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -114,10 +114,10 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnablePublicNetworkAccess: types.Bool(false, types.NewTestMetadata()),
+							Metadata:                  types2.NewTestMetadata(),
+							EnablePublicNetworkAccess: types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -129,10 +129,10 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: database.Database{
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnablePublicNetworkAccess: types.Bool(false, types.NewTestMetadata()),
+							Metadata:                  types2.NewTestMetadata(),
+							EnablePublicNetworkAccess: types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},

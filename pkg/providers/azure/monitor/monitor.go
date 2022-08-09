@@ -1,7 +1,7 @@
 package monitor
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Monitor struct {
@@ -9,14 +9,14 @@ type Monitor struct {
 }
 
 type LogProfile struct {
-	types.Metadata
+	types2.Metadata
 	RetentionPolicy RetentionPolicy
-	Categories      []types.StringValue
-	Locations       []types.StringValue
+	Categories      []types2.StringValue
+	Locations       []types2.StringValue
 }
 
 type RetentionPolicy struct {
-	types.Metadata
-	Enabled types.BoolValue
-	Days    types.IntValue
+	types2.Metadata
+	Enabled types2.BoolValue
+	Days    types2.IntValue
 }

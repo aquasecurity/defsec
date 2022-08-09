@@ -3,7 +3,7 @@ package sql
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							IPConfiguration: sql.IPConfiguration{
-								Metadata:   types.NewTestMetadata(),
-								EnableIPv4: types.Bool(true, types.NewTestMetadata()),
+								Metadata:   types2.NewTestMetadata(),
+								EnableIPv4: types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -42,18 +42,18 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							IPConfiguration: sql.IPConfiguration{
-								Metadata:   types.NewTestMetadata(),
-								EnableIPv4: types.Bool(false, types.NewTestMetadata()),
+								Metadata:   types2.NewTestMetadata(),
+								EnableIPv4: types2.Bool(false, types2.NewTestMetadata()),
 								AuthorizedNetworks: []struct {
-									Name types.StringValue
-									CIDR types.StringValue
+									Name types2.StringValue
+									CIDR types2.StringValue
 								}{
 									{
-										CIDR: types.String("0.0.0.0/0", types.NewTestMetadata()),
+										CIDR: types2.String("0.0.0.0/0", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -68,18 +68,18 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							IPConfiguration: sql.IPConfiguration{
-								Metadata:   types.NewTestMetadata(),
-								EnableIPv4: types.Bool(false, types.NewTestMetadata()),
+								Metadata:   types2.NewTestMetadata(),
+								EnableIPv4: types2.Bool(false, types2.NewTestMetadata()),
 								AuthorizedNetworks: []struct {
-									Name types.StringValue
-									CIDR types.StringValue
+									Name types2.StringValue
+									CIDR types2.StringValue
 								}{
 									{
-										CIDR: types.String("10.0.0.1/24", types.NewTestMetadata()),
+										CIDR: types2.String("10.0.0.1/24", types2.NewTestMetadata()),
 									},
 								},
 							},

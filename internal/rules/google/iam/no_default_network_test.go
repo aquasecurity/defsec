@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckNoDefaultNetwork(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Projects: []iam.Project{
 							{
-								Metadata:          types.NewTestMetadata(),
-								AutoCreateNetwork: types.Bool(true, types.NewTestMetadata()),
+								Metadata:          types2.NewTestMetadata(),
+								AutoCreateNetwork: types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,24 +41,24 @@ func TestCheckNoDefaultNetwork(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Projects: []iam.Project{
 									{
-										Metadata:          types.NewTestMetadata(),
-										AutoCreateNetwork: types.Bool(false, types.NewTestMetadata()),
+										Metadata:          types2.NewTestMetadata(),
+										AutoCreateNetwork: types2.Bool(false, types2.NewTestMetadata()),
 									},
 								},
 								Folders: []iam.Folder{
 									{
-										Metadata: types.NewTestMetadata(),
+										Metadata: types2.NewTestMetadata(),
 										Projects: []iam.Project{
 											{
-												Metadata:          types.NewTestMetadata(),
-												AutoCreateNetwork: types.Bool(true, types.NewTestMetadata()),
+												Metadata:          types2.NewTestMetadata(),
+												AutoCreateNetwork: types2.Bool(true, types2.NewTestMetadata()),
 											},
 										},
 									},
@@ -75,11 +75,11 @@ func TestCheckNoDefaultNetwork(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Projects: []iam.Project{
 							{
-								Metadata:          types.NewTestMetadata(),
-								AutoCreateNetwork: types.Bool(false, types.NewTestMetadata()),
+								Metadata:          types2.NewTestMetadata(),
+								AutoCreateNetwork: types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 					},

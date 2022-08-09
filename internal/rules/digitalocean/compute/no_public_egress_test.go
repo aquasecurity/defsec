@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,13 +24,13 @@ func TestCheckNoPublicEgress(t *testing.T) {
 			input: compute.Compute{
 				Firewalls: []compute.Firewall{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						OutboundRules: []compute.OutboundFirewallRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								DestinationAddresses: []types.StringValue{
-									types.String("0.0.0.0/0", types.NewTestMetadata()),
-									types.String("::/0", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								DestinationAddresses: []types2.StringValue{
+									types2.String("0.0.0.0/0", types2.NewTestMetadata()),
+									types2.String("::/0", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -44,12 +44,12 @@ func TestCheckNoPublicEgress(t *testing.T) {
 			input: compute.Compute{
 				Firewalls: []compute.Firewall{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						OutboundRules: []compute.OutboundFirewallRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								DestinationAddresses: []types.StringValue{
-									types.String("192.168.1.0/24", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								DestinationAddresses: []types2.StringValue{
+									types2.String("192.168.1.0/24", types2.NewTestMetadata()),
 								},
 							},
 						},

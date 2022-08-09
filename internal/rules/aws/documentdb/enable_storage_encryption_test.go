@@ -3,7 +3,7 @@ package documentdb
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableStorageEncryption(t *testing.T) {
 			input: documentdb.DocumentDB{
 				Clusters: []documentdb.Cluster{
 					{
-						Metadata:         types.NewTestMetadata(),
-						StorageEncrypted: types.Bool(false, types.NewTestMetadata()),
+						Metadata:         types2.NewTestMetadata(),
+						StorageEncrypted: types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableStorageEncryption(t *testing.T) {
 			input: documentdb.DocumentDB{
 				Clusters: []documentdb.Cluster{
 					{
-						Metadata:         types.NewTestMetadata(),
-						StorageEncrypted: types.Bool(true, types.NewTestMetadata()),
+						Metadata:         types2.NewTestMetadata(),
+						StorageEncrypted: types2.Bool(true, types2.NewTestMetadata()),
 					},
 				},
 			},

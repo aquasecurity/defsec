@@ -3,7 +3,7 @@ package network
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -23,13 +23,13 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			name: "Public source CIDR",
 			input: []kubernetes.NetworkPolicy{
 				{
-					Metadata: types.NewTestMetadata(),
+					Metadata: types2.NewTestMetadata(),
 					Spec: kubernetes.Spec{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Ingress: kubernetes.Ingress{
-							Metadata: types.NewTestMetadata(),
-							SourceCIDRs: []types.StringValue{
-								types.String("0.0.0.0/0", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							SourceCIDRs: []types2.StringValue{
+								types2.String("0.0.0.0/0", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,13 +41,13 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			name: "Private source CIDR",
 			input: []kubernetes.NetworkPolicy{
 				{
-					Metadata: types.NewTestMetadata(),
+					Metadata: types2.NewTestMetadata(),
 					Spec: kubernetes.Spec{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Ingress: kubernetes.Ingress{
-							Metadata: types.NewTestMetadata(),
-							SourceCIDRs: []types.StringValue{
-								types.String("10.0.0.0/16", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							SourceCIDRs: []types2.StringValue{
+								types2.String("10.0.0.0/16", types2.NewTestMetadata()),
 							},
 						},
 					},

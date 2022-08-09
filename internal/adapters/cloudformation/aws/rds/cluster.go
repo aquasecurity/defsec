@@ -1,9 +1,9 @@
 package rds
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/rds"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getClusters(ctx parser.FileContext) (clusters map[string]rds.Cluster) {
@@ -11,20 +11,20 @@ func getClusters(ctx parser.FileContext) (clusters map[string]rds.Cluster) {
 	for _, clusterResource := range ctx.GetResourcesByType("AWS::RDS::DBCluster") {
 		cluster := rds.Cluster{
 			Metadata:                  clusterResource.Metadata(),
-			BackupRetentionPeriodDays: types.IntDefault(1, clusterResource.Metadata()),
-			ReplicationSourceARN:      types.StringDefault("", clusterResource.Metadata()),
+			BackupRetentionPeriodDays: types2.IntDefault(1, clusterResource.Metadata()),
+			ReplicationSourceARN:      types2.StringDefault("", clusterResource.Metadata()),
 			PerformanceInsights: rds.PerformanceInsights{
 				Metadata: clusterResource.Metadata(),
-				Enabled:  types.BoolDefault(false, clusterResource.Metadata()),
-				KMSKeyID: types.StringDefault("", clusterResource.Metadata()),
+				Enabled:  types2.BoolDefault(false, clusterResource.Metadata()),
+				KMSKeyID: types2.StringDefault("", clusterResource.Metadata()),
 			},
 			Instances: nil,
 			Encryption: rds.Encryption{
 				Metadata:       clusterResource.Metadata(),
-				EncryptStorage: types.BoolDefault(false, clusterResource.Metadata()),
-				KMSKeyID:       types.StringDefault("", clusterResource.Metadata()),
+				EncryptStorage: types2.BoolDefault(false, clusterResource.Metadata()),
+				KMSKeyID:       types2.StringDefault("", clusterResource.Metadata()),
 			},
-			PublicAccess: types.BoolDefault(false, clusterResource.Metadata()),
+			PublicAccess: types2.BoolDefault(false, clusterResource.Metadata()),
 		}
 
 		if backupProp := clusterResource.GetProperty("BackupRetentionPeriod"); backupProp.IsInt() {

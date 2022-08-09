@@ -1,9 +1,9 @@
 package eks
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/eks"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) eks.EKS {
@@ -28,18 +28,18 @@ func adaptCluster(resource *terraform.Block) eks.Cluster {
 		Metadata: resource.GetMetadata(),
 		Logging: eks.Logging{
 			Metadata:          resource.GetMetadata(),
-			API:               types.BoolDefault(false, resource.GetMetadata()),
-			Audit:             types.BoolDefault(false, resource.GetMetadata()),
-			Authenticator:     types.BoolDefault(false, resource.GetMetadata()),
-			ControllerManager: types.BoolDefault(false, resource.GetMetadata()),
-			Scheduler:         types.BoolDefault(false, resource.GetMetadata()),
+			API:               types2.BoolDefault(false, resource.GetMetadata()),
+			Audit:             types2.BoolDefault(false, resource.GetMetadata()),
+			Authenticator:     types2.BoolDefault(false, resource.GetMetadata()),
+			ControllerManager: types2.BoolDefault(false, resource.GetMetadata()),
+			Scheduler:         types2.BoolDefault(false, resource.GetMetadata()),
 		},
 		Encryption: eks.Encryption{
 			Metadata: resource.GetMetadata(),
-			Secrets:  types.BoolDefault(false, resource.GetMetadata()),
-			KMSKeyID: types.StringDefault("", resource.GetMetadata()),
+			Secrets:  types2.BoolDefault(false, resource.GetMetadata()),
+			KMSKeyID: types2.StringDefault("", resource.GetMetadata()),
 		},
-		PublicAccessEnabled: types.BoolDefault(true, resource.GetMetadata()),
+		PublicAccessEnabled: types2.BoolDefault(true, resource.GetMetadata()),
 		PublicAccessCIDRs:   nil,
 	}
 
@@ -48,15 +48,15 @@ func adaptCluster(resource *terraform.Block) eks.Cluster {
 		for _, logType := range logTypesAttr.AsStringValues() {
 			switch logType.Value() {
 			case "api":
-				cluster.Logging.API = types.Bool(true, logTypesAttr.GetMetadata())
+				cluster.Logging.API = types2.Bool(true, logTypesAttr.GetMetadata())
 			case "audit":
-				cluster.Logging.Audit = types.Bool(true, logTypesAttr.GetMetadata())
+				cluster.Logging.Audit = types2.Bool(true, logTypesAttr.GetMetadata())
 			case "authenticator":
-				cluster.Logging.Authenticator = types.Bool(true, logTypesAttr.GetMetadata())
+				cluster.Logging.Authenticator = types2.Bool(true, logTypesAttr.GetMetadata())
 			case "controllerManager":
-				cluster.Logging.ControllerManager = types.Bool(true, logTypesAttr.GetMetadata())
+				cluster.Logging.ControllerManager = types2.Bool(true, logTypesAttr.GetMetadata())
 			case "scheduler":
-				cluster.Logging.Scheduler = types.Bool(true, logTypesAttr.GetMetadata())
+				cluster.Logging.Scheduler = types2.Bool(true, logTypesAttr.GetMetadata())
 			}
 		}
 	}
@@ -65,7 +65,7 @@ func adaptCluster(resource *terraform.Block) eks.Cluster {
 		cluster.Encryption.Metadata = encryptBlock.GetMetadata()
 		resourcesAttr := encryptBlock.GetAttribute("resources")
 		if resourcesAttr.Contains("secrets") {
-			cluster.Encryption.Secrets = types.Bool(true, resourcesAttr.GetMetadata())
+			cluster.Encryption.Secrets = types2.Bool(true, resourcesAttr.GetMetadata())
 		}
 		if providerBlock := encryptBlock.GetBlock("provider"); providerBlock.IsNotNil() {
 			keyArnAttr := providerBlock.GetAttribute("key_arn")
@@ -83,7 +83,7 @@ func adaptCluster(resource *terraform.Block) eks.Cluster {
 			cluster.PublicAccessCIDRs = append(cluster.PublicAccessCIDRs, cidr)
 		}
 		if len(cidrList) == 0 {
-			cluster.PublicAccessCIDRs = append(cluster.PublicAccessCIDRs, types.StringDefault("0.0.0.0/0", vpcBlock.GetMetadata()))
+			cluster.PublicAccessCIDRs = append(cluster.PublicAccessCIDRs, types2.StringDefault("0.0.0.0/0", vpcBlock.GetMetadata()))
 		}
 	}
 

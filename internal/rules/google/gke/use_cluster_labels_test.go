@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckUseClusterLabels(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata:       types.NewTestMetadata(),
-						ResourceLabels: types.Map(map[string]string{}, types.NewTestMetadata().GetMetadata()),
+						Metadata:       types2.NewTestMetadata(),
+						ResourceLabels: types2.Map(map[string]string{}, types2.NewTestMetadata().GetMetadata()),
 					},
 				},
 			},
@@ -36,10 +36,10 @@ func TestCheckUseClusterLabels(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
-						ResourceLabels: types.Map(map[string]string{
+						Metadata: types2.NewTestMetadata(),
+						ResourceLabels: types2.Map(map[string]string{
 							"env": "staging",
-						}, types.NewTestMetadata().GetMetadata()),
+						}, types2.NewTestMetadata().GetMetadata()),
 					},
 				},
 			},

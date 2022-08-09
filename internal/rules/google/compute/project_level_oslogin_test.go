@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -23,8 +23,8 @@ func TestCheckProjectLevelOslogin(t *testing.T) {
 			name: "Compute OS login disabled",
 			input: compute.Compute{
 				ProjectMetadata: compute.ProjectMetadata{
-					Metadata:      types.NewTestMetadata(),
-					EnableOSLogin: types.Bool(false, types.NewTestMetadata()),
+					Metadata:      types2.NewTestMetadata(),
+					EnableOSLogin: types2.Bool(false, types2.NewTestMetadata()),
 				},
 			},
 			expected: true,
@@ -33,8 +33,8 @@ func TestCheckProjectLevelOslogin(t *testing.T) {
 			name: "Compute OS login enabled",
 			input: compute.Compute{
 				ProjectMetadata: compute.ProjectMetadata{
-					Metadata:      types.NewTestMetadata(),
-					EnableOSLogin: types.Bool(true, types.NewTestMetadata()),
+					Metadata:      types2.NewTestMetadata(),
+					EnableOSLogin: types2.Bool(true, types2.NewTestMetadata()),
 				},
 			},
 			expected: false,

@@ -3,7 +3,7 @@ package dns
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEnableDnssec(t *testing.T) {
 			input: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Visibility: types.String("public", types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						Visibility: types2.String("public", types2.NewTestMetadata()),
 						DNSSec: dns.DNSSec{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckEnableDnssec(t *testing.T) {
 			input: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Visibility: types.String("public", types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						Visibility: types2.String("public", types2.NewTestMetadata()),
 						DNSSec: dns.DNSSec{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,11 +56,11 @@ func TestCheckEnableDnssec(t *testing.T) {
 			input: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Visibility: types.String("private", types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						Visibility: types2.String("private", types2.NewTestMetadata()),
 						DNSSec: dns.DNSSec{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},

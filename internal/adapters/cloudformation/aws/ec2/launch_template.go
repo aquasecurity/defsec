@@ -1,9 +1,9 @@
 package ec2
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getLaunchTemplates(file parser.FileContext) (templates []ec2.LaunchTemplate) {

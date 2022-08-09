@@ -3,7 +3,7 @@ package securitycenter
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/azure/securitycenter"
 
@@ -29,9 +29,9 @@ func Test_adaptContact(t *testing.T) {
 			}
 `,
 			expected: securitycenter.Contact{
-				Metadata:                 types.NewTestMetadata(),
-				EnableAlertNotifications: types.Bool(true, types.NewTestMetadata()),
-				Phone:                    types.String("+1-555-555-5555", types.NewTestMetadata()),
+				Metadata:                 types2.NewTestMetadata(),
+				EnableAlertNotifications: types2.Bool(true, types2.NewTestMetadata()),
+				Phone:                    types2.String("+1-555-555-5555", types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -41,9 +41,9 @@ func Test_adaptContact(t *testing.T) {
 			}
 `,
 			expected: securitycenter.Contact{
-				Metadata:                 types.NewTestMetadata(),
-				EnableAlertNotifications: types.Bool(false, types.NewTestMetadata()),
-				Phone:                    types.String("", types.NewTestMetadata()),
+				Metadata:                 types2.NewTestMetadata(),
+				EnableAlertNotifications: types2.Bool(false, types2.NewTestMetadata()),
+				Phone:                    types2.String("", types2.NewTestMetadata()),
 			},
 		},
 	}
@@ -70,8 +70,8 @@ func Test_adaptSubscription(t *testing.T) {
 				tier          = "Free"
 			}`,
 			expected: securitycenter.SubscriptionPricing{
-				Metadata: types.NewTestMetadata(),
-				Tier:     types.String("Free", types.NewTestMetadata()),
+				Metadata: types2.NewTestMetadata(),
+				Tier:     types2.String("Free", types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -80,8 +80,8 @@ func Test_adaptSubscription(t *testing.T) {
 			resource "azurerm_security_center_subscription_pricing" "example" {
 			}`,
 			expected: securitycenter.SubscriptionPricing{
-				Metadata: types.NewTestMetadata(),
-				Tier:     types.String("Free", types.NewTestMetadata()),
+				Metadata: types2.NewTestMetadata(),
+				Tier:     types2.String("Free", types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -91,8 +91,8 @@ func Test_adaptSubscription(t *testing.T) {
 				tier          = "Standard"
 			}`,
 			expected: securitycenter.SubscriptionPricing{
-				Metadata: types.NewTestMetadata(),
-				Tier:     types.String("Standard", types.NewTestMetadata()),
+				Metadata: types2.NewTestMetadata(),
+				Tier:     types2.String("Standard", types2.NewTestMetadata()),
 			},
 		},
 	}

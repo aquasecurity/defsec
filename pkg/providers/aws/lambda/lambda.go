@@ -1,7 +1,7 @@
 package lambda
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Lambda struct {
@@ -9,7 +9,7 @@ type Lambda struct {
 }
 
 type Function struct {
-	types.Metadata
+	types2.Metadata
 	Tracing     Tracing
 	Permissions []Permission
 }
@@ -20,12 +20,12 @@ const (
 )
 
 type Tracing struct {
-	types.Metadata
-	Mode types.StringValue
+	types2.Metadata
+	Mode types2.StringValue
 }
 
 type Permission struct {
-	types.Metadata
-	Principal types.StringValue
-	SourceARN types.StringValue
+	types2.Metadata
+	Principal types2.StringValue
+	SourceARN types2.StringValue
 }

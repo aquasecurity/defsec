@@ -3,7 +3,7 @@ package elb
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,16 +24,16 @@ func TestCheckHttpNotUsed(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types.NewTestMetadata(),
-						Type:     types.String(elb.TypeApplication, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Type:     types2.String(elb.TypeApplication, types2.NewTestMetadata()),
 						Listeners: []elb.Listener{
 							{
-								Metadata: types.NewTestMetadata(),
-								Protocol: types.String("HTTP", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Protocol: types2.String("HTTP", types2.NewTestMetadata()),
 								DefaultActions: []elb.Action{
 									{
-										Metadata: types.NewTestMetadata(),
-										Type:     types.String("forward", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Type:     types2.String("forward", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -48,16 +48,16 @@ func TestCheckHttpNotUsed(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types.NewTestMetadata(),
-						Type:     types.String(elb.TypeApplication, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Type:     types2.String(elb.TypeApplication, types2.NewTestMetadata()),
 						Listeners: []elb.Listener{
 							{
-								Metadata: types.NewTestMetadata(),
-								Protocol: types.String("HTTP", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Protocol: types2.String("HTTP", types2.NewTestMetadata()),
 								DefaultActions: []elb.Action{
 									{
-										Metadata: types.NewTestMetadata(),
-										Type:     types.String("redirect", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Type:     types2.String("redirect", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -72,20 +72,20 @@ func TestCheckHttpNotUsed(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types.NewTestMetadata(),
-						Type:     types.String(elb.TypeApplication, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Type:     types2.String(elb.TypeApplication, types2.NewTestMetadata()),
 						Listeners: []elb.Listener{
 							{
-								Metadata: types.NewTestMetadata(),
-								Protocol: types.String("HTTP", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Protocol: types2.String("HTTP", types2.NewTestMetadata()),
 								DefaultActions: []elb.Action{
 									{
-										Metadata: types.NewTestMetadata(),
-										Type:     types.String("forward", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Type:     types2.String("forward", types2.NewTestMetadata()),
 									},
 									{
-										Metadata: types.NewTestMetadata(),
-										Type:     types.String("redirect", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Type:     types2.String("redirect", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -100,16 +100,16 @@ func TestCheckHttpNotUsed(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types.NewTestMetadata(),
-						Type:     types.String(elb.TypeApplication, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Type:     types2.String(elb.TypeApplication, types2.NewTestMetadata()),
 						Listeners: []elb.Listener{
 							{
-								Metadata: types.NewTestMetadata(),
-								Protocol: types.String("HTTPS", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Protocol: types2.String("HTTPS", types2.NewTestMetadata()),
 								DefaultActions: []elb.Action{
 									{
-										Metadata: types.NewTestMetadata(),
-										Type:     types.String("forward", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Type:     types2.String("forward", types2.NewTestMetadata()),
 									},
 								},
 							},

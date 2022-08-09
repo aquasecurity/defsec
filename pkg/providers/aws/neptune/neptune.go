@@ -1,7 +1,7 @@
 package neptune
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Neptune struct {
@@ -9,13 +9,13 @@ type Neptune struct {
 }
 
 type Cluster struct {
-	types.Metadata
+	types2.Metadata
 	Logging          Logging
-	StorageEncrypted types.BoolValue
-	KMSKeyID         types.StringValue
+	StorageEncrypted types2.BoolValue
+	KMSKeyID         types2.StringValue
 }
 
 type Logging struct {
-	types.Metadata
-	Audit types.BoolValue
+	types2.Metadata
+	Audit types2.BoolValue
 }

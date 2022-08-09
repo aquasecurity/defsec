@@ -3,7 +3,7 @@ package sql
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckEncryptInTransitData(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							IPConfiguration: sql.IPConfiguration{
-								Metadata:   types.NewTestMetadata(),
-								RequireTLS: types.Bool(false, types.NewTestMetadata()),
+								Metadata:   types2.NewTestMetadata(),
+								RequireTLS: types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -42,12 +42,12 @@ func TestCheckEncryptInTransitData(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							IPConfiguration: sql.IPConfiguration{
-								Metadata:   types.NewTestMetadata(),
-								RequireTLS: types.Bool(true, types.NewTestMetadata()),
+								Metadata:   types2.NewTestMetadata(),
+								RequireTLS: types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 					},

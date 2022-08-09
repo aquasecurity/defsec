@@ -3,7 +3,7 @@ package sam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableFunctionTracing(t *testing.T) {
 			input: sam.SAM{
 				Functions: []sam.Function{
 					{
-						Metadata: types.NewTestMetadata(),
-						Tracing:  types.String(sam.TracingModePassThrough, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Tracing:  types2.String(sam.TracingModePassThrough, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableFunctionTracing(t *testing.T) {
 			input: sam.SAM{
 				Functions: []sam.Function{
 					{
-						Metadata: types.NewTestMetadata(),
-						Tracing:  types.String(sam.TracingModeActive, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Tracing:  types2.String(sam.TracingModeActive, types2.NewTestMetadata()),
 					},
 				},
 			},

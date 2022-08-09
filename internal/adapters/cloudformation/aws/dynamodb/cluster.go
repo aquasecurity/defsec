@@ -1,9 +1,9 @@
 package dynamodb
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/dynamodb"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getClusters(file parser.FileContext) (clusters []dynamodb.DAXCluster) {
@@ -15,17 +15,17 @@ func getClusters(file parser.FileContext) (clusters []dynamodb.DAXCluster) {
 			Metadata: r.Metadata(),
 			ServerSideEncryption: dynamodb.ServerSideEncryption{
 				Metadata: r.Metadata(),
-				Enabled:  types.BoolDefault(false, r.Metadata()),
-				KMSKeyID: types.StringDefault("", r.Metadata()),
+				Enabled:  types2.BoolDefault(false, r.Metadata()),
+				KMSKeyID: types2.StringDefault("", r.Metadata()),
 			},
-			PointInTimeRecovery: types.BoolUnresolvable(r.Metadata()),
+			PointInTimeRecovery: types2.BoolUnresolvable(r.Metadata()),
 		}
 
 		if sseProp := r.GetProperty("SSESpecification"); sseProp.IsNotNil() {
 			cluster.ServerSideEncryption = dynamodb.ServerSideEncryption{
 				Metadata: sseProp.Metadata(),
 				Enabled:  r.GetBoolProperty("SSESpecification.SSEEnabled"),
-				KMSKeyID: types.StringUnresolvable(sseProp.Metadata()),
+				KMSKeyID: types2.StringUnresolvable(sseProp.Metadata()),
 			}
 		}
 

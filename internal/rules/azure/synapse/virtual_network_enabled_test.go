@@ -3,7 +3,7 @@ package synapse
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckVirtualNetworkEnabled(t *testing.T) {
 			input: synapse.Synapse{
 				Workspaces: []synapse.Workspace{
 					{
-						Metadata:                    types.NewTestMetadata(),
-						EnableManagedVirtualNetwork: types.Bool(false, types.NewTestMetadata()),
+						Metadata:                    types2.NewTestMetadata(),
+						EnableManagedVirtualNetwork: types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckVirtualNetworkEnabled(t *testing.T) {
 			input: synapse.Synapse{
 				Workspaces: []synapse.Workspace{
 					{
-						Metadata:                    types.NewTestMetadata(),
-						EnableManagedVirtualNetwork: types.Bool(true, types.NewTestMetadata()),
+						Metadata:                    types2.NewTestMetadata(),
+						EnableManagedVirtualNetwork: types2.Bool(true, types2.NewTestMetadata()),
 					},
 				},
 			},

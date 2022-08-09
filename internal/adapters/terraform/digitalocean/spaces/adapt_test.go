@@ -3,7 +3,7 @@ package spaces
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/digitalocean/spaces"
 
@@ -42,19 +42,19 @@ func Test_adaptBuckets(t *testing.T) {
 `,
 			expected: []spaces.Bucket{
 				{
-					Metadata: types.NewTestMetadata(),
-					Name:     types.String("public_space", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Name:     types2.String("public_space", types2.NewTestMetadata()),
 					Objects: []spaces.Object{
 						{
-							Metadata: types.NewTestMetadata(),
-							ACL:      types.String("private", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							ACL:      types2.String("private", types2.NewTestMetadata()),
 						},
 					},
-					ACL:          types.String("private", types.NewTestMetadata()),
-					ForceDestroy: types.Bool(true, types.NewTestMetadata()),
+					ACL:          types2.String("private", types2.NewTestMetadata()),
+					ForceDestroy: types2.Bool(true, types2.NewTestMetadata()),
 					Versioning: spaces.Versioning{
-						Metadata: types.NewTestMetadata(),
-						Enabled:  types.Bool(true, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -68,14 +68,14 @@ func Test_adaptBuckets(t *testing.T) {
 `,
 			expected: []spaces.Bucket{
 				{
-					Metadata:     types.NewTestMetadata(),
-					Name:         types.String("", types.NewTestMetadata()),
+					Metadata:     types2.NewTestMetadata(),
+					Name:         types2.String("", types2.NewTestMetadata()),
 					Objects:      nil,
-					ACL:          types.String("public-read", types.NewTestMetadata()),
-					ForceDestroy: types.Bool(false, types.NewTestMetadata()),
+					ACL:          types2.String("public-read", types2.NewTestMetadata()),
+					ForceDestroy: types2.Bool(false, types2.NewTestMetadata()),
 					Versioning: spaces.Versioning{
-						Metadata: types.NewTestMetadata(),
-						Enabled:  types.Bool(false, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 			},

@@ -1,7 +1,7 @@
 package gke
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type GKE struct {
@@ -9,82 +9,82 @@ type GKE struct {
 }
 
 type Cluster struct {
-	types.Metadata
+	types2.Metadata
 	NodePools                []NodePool
 	IPAllocationPolicy       IPAllocationPolicy
 	MasterAuthorizedNetworks MasterAuthorizedNetworks
 	NetworkPolicy            NetworkPolicy
 	PrivateCluster           PrivateCluster
-	LoggingService           types.StringValue
-	MonitoringService        types.StringValue
+	LoggingService           types2.StringValue
+	MonitoringService        types2.StringValue
 	PodSecurityPolicy        PodSecurityPolicy
 	MasterAuth               MasterAuth
 	NodeConfig               NodeConfig
-	EnableShieldedNodes      types.BoolValue
-	EnableLegacyABAC         types.BoolValue
-	ResourceLabels           types.MapValue
-	RemoveDefaultNodePool    types.BoolValue
+	EnableShieldedNodes      types2.BoolValue
+	EnableLegacyABAC         types2.BoolValue
+	ResourceLabels           types2.MapValue
+	RemoveDefaultNodePool    types2.BoolValue
 }
 
 type NodeConfig struct {
-	types.Metadata
-	ImageType              types.StringValue
+	types2.Metadata
+	ImageType              types2.StringValue
 	WorkloadMetadataConfig WorkloadMetadataConfig
-	ServiceAccount         types.StringValue
-	EnableLegacyEndpoints  types.BoolValue
+	ServiceAccount         types2.StringValue
+	EnableLegacyEndpoints  types2.BoolValue
 }
 
 type WorkloadMetadataConfig struct {
-	types.Metadata
-	NodeMetadata types.StringValue
+	types2.Metadata
+	NodeMetadata types2.StringValue
 }
 
 type MasterAuth struct {
-	types.Metadata
+	types2.Metadata
 	ClientCertificate ClientCertificate
-	Username          types.StringValue
-	Password          types.StringValue
+	Username          types2.StringValue
+	Password          types2.StringValue
 }
 
 type ClientCertificate struct {
-	types.Metadata
-	IssueCertificate types.BoolValue
+	types2.Metadata
+	IssueCertificate types2.BoolValue
 }
 
 type PodSecurityPolicy struct {
-	types.Metadata
-	Enabled types.BoolValue
+	types2.Metadata
+	Enabled types2.BoolValue
 }
 
 type PrivateCluster struct {
-	types.Metadata
-	EnablePrivateNodes types.BoolValue
+	types2.Metadata
+	EnablePrivateNodes types2.BoolValue
 }
 
 type NetworkPolicy struct {
-	types.Metadata
-	Enabled types.BoolValue
+	types2.Metadata
+	Enabled types2.BoolValue
 }
 
 type MasterAuthorizedNetworks struct {
-	types.Metadata
-	Enabled types.BoolValue
-	CIDRs   []types.StringValue
+	types2.Metadata
+	Enabled types2.BoolValue
+	CIDRs   []types2.StringValue
 }
 
 type IPAllocationPolicy struct {
-	types.Metadata
-	Enabled types.BoolValue
+	types2.Metadata
+	Enabled types2.BoolValue
 }
 
 type NodePool struct {
-	types.Metadata
+	types2.Metadata
 	Management Management
 	NodeConfig NodeConfig
 }
 
 type Management struct {
-	types.Metadata
-	EnableAutoRepair  types.BoolValue
-	EnableAutoUpgrade types.BoolValue
+	types2.Metadata
+	EnableAutoRepair  types2.BoolValue
+	EnableAutoUpgrade types2.BoolValue
 }

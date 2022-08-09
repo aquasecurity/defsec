@@ -3,7 +3,7 @@ package elb
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,9 +24,9 @@ func TestCheckAlbNotPublic(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types.NewTestMetadata(),
-						Type:     types.String(elb.TypeApplication, types.NewTestMetadata()),
-						Internal: types.Bool(false, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Type:     types2.String(elb.TypeApplication, types2.NewTestMetadata()),
+						Internal: types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -37,9 +37,9 @@ func TestCheckAlbNotPublic(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types.NewTestMetadata(),
-						Type:     types.String(elb.TypeApplication, types.NewTestMetadata()),
-						Internal: types.Bool(true, types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Type:     types2.String(elb.TypeApplication, types2.NewTestMetadata()),
+						Internal: types2.Bool(true, types2.NewTestMetadata()),
 					},
 				},
 			},

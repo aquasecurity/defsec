@@ -1,7 +1,7 @@
 package securitycenter
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type SecurityCenter struct {
@@ -10,9 +10,9 @@ type SecurityCenter struct {
 }
 
 type Contact struct {
-	types.Metadata
-	EnableAlertNotifications types.BoolValue
-	Phone                    types.StringValue
+	types2.Metadata
+	EnableAlertNotifications types2.BoolValue
+	Phone                    types2.StringValue
 }
 
 const (
@@ -21,6 +21,6 @@ const (
 )
 
 type SubscriptionPricing struct {
-	types.Metadata
-	Tier types.StringValue
+	types2.Metadata
+	Tier types2.StringValue
 }

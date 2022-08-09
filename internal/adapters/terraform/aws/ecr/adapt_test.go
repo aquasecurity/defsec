@@ -3,7 +3,7 @@ package ecr
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecr"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -77,21 +77,21 @@ func Test_adaptRepository(t *testing.T) {
 			  }
 `,
 			expected: ecr.Repository{
-				Metadata:           types.NewTestMetadata(),
-				ImageTagsImmutable: types.Bool(false, types.NewTestMetadata()),
+				Metadata:           types2.NewTestMetadata(),
+				ImageTagsImmutable: types2.Bool(false, types2.NewTestMetadata()),
 				ImageScanning: ecr.ImageScanning{
-					Metadata:   types.NewTestMetadata(),
-					ScanOnPush: types.Bool(true, types.NewTestMetadata()),
+					Metadata:   types2.NewTestMetadata(),
+					ScanOnPush: types2.Bool(true, types2.NewTestMetadata()),
 				},
 				Encryption: ecr.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Type:     types.String("KMS", types.NewTestMetadata()),
-					KMSKeyID: types.String("aws_kms_key.ecr_kms", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Type:     types2.String("KMS", types2.NewTestMetadata()),
+					KMSKeyID: types2.String("aws_kms_key.ecr_kms", types2.NewTestMetadata()),
 				},
 				Policies: []iam.Policy{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.StringDefault("", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Name:     types2.StringDefault("", types2.NewTestMetadata()),
 						Document: func() iam.Document {
 
 							builder := iamgo.NewPolicyBuilder()
@@ -121,10 +121,10 @@ func Test_adaptRepository(t *testing.T) {
 
 							return iam.Document{
 								Parsed:   builder.Build(),
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 							}
 						}(),
-						Builtin: types.Bool(false, types.NewTestMetadata()),
+						Builtin: types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -136,16 +136,16 @@ func Test_adaptRepository(t *testing.T) {
 			}
 `,
 			expected: ecr.Repository{
-				Metadata:           types.NewTestMetadata(),
-				ImageTagsImmutable: types.Bool(false, types.NewTestMetadata()),
+				Metadata:           types2.NewTestMetadata(),
+				ImageTagsImmutable: types2.Bool(false, types2.NewTestMetadata()),
 				ImageScanning: ecr.ImageScanning{
-					Metadata:   types.NewTestMetadata(),
-					ScanOnPush: types.Bool(false, types.NewTestMetadata()),
+					Metadata:   types2.NewTestMetadata(),
+					ScanOnPush: types2.Bool(false, types2.NewTestMetadata()),
 				},
 				Encryption: ecr.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Type:     types.String("AES256", types.NewTestMetadata()),
-					KMSKeyID: types.String("", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Type:     types2.String("AES256", types2.NewTestMetadata()),
+					KMSKeyID: types2.String("", types2.NewTestMetadata()),
 				},
 			},
 		},

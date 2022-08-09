@@ -3,11 +3,11 @@ package compute
 import (
 	"testing"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/google/compute"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -27,8 +27,8 @@ func Test_adaptProjectMetadata(t *testing.T) {
 			  }
 `,
 			expected: compute.ProjectMetadata{
-				Metadata:      types.NewTestMetadata(),
-				EnableOSLogin: types.Bool(true, types.NewTestMetadata()),
+				Metadata:      types2.NewTestMetadata(),
+				EnableOSLogin: types2.Bool(true, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -40,8 +40,8 @@ func Test_adaptProjectMetadata(t *testing.T) {
 			  }
 `,
 			expected: compute.ProjectMetadata{
-				Metadata:      types.NewTestMetadata(),
-				EnableOSLogin: types.Bool(false, types.NewTestMetadata()),
+				Metadata:      types2.NewTestMetadata(),
+				EnableOSLogin: types2.Bool(false, types2.NewTestMetadata()),
 			},
 		},
 	}

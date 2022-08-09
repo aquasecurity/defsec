@@ -2,9 +2,9 @@ package cloudwatch
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
 	"github.com/aquasecurity/defsec/pkg/state"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	cwApi "github.com/aws/aws-sdk-go-v2/service/cloudwatch"
 	cwTypes "github.com/aws/aws-sdk-go-v2/service/cloudwatch/types"
 	api "github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
@@ -145,10 +145,10 @@ func (a *adapter) adaptLogGroup(group types.LogGroup) (*cloudwatch.LogGroup, err
 
 	return &cloudwatch.LogGroup{
 		Metadata:        metadata,
-		Arn:             defsecTypes.String(*group.Arn, metadata),
-		Name:            defsecTypes.String(*group.LogGroupName, metadata),
-		KMSKeyID:        defsecTypes.String(kmsKeyId, metadata),
-		RetentionInDays: defsecTypes.Int(retentionInDays, metadata),
+		Arn:             types2.String(*group.Arn, metadata),
+		Name:            types2.String(*group.LogGroupName, metadata),
+		KMSKeyID:        types2.String(kmsKeyId, metadata),
+		RetentionInDays: types2.Int(retentionInDays, metadata),
 		MetricFilters:   metricFilters,
 	}, nil
 }
@@ -161,8 +161,8 @@ func (a *adapter) adaptAlarm(alarm cwTypes.MetricAlarm) (*cloudwatch.Alarm, erro
 	for _, dimension := range alarm.Dimensions {
 		dimensions = append(dimensions, cloudwatch.AlarmDimension{
 			Metadata: metadata,
-			Name:     defsecTypes.String(*dimension.Name, metadata),
-			Value:    defsecTypes.String(*dimension.Value, metadata),
+			Name:     types2.String(*dimension.Name, metadata),
+			Value:    types2.String(*dimension.Value, metadata),
 		})
 	}
 
@@ -171,21 +171,21 @@ func (a *adapter) adaptAlarm(alarm cwTypes.MetricAlarm) (*cloudwatch.Alarm, erro
 
 		metrics = append(metrics, cloudwatch.MetricDataQuery{
 			Metadata:   metadata,
-			ID:         defsecTypes.String(*metric.Id, metadata),
-			Expression: defsecTypes.String(*metric.Expression, metadata),
+			ID:         types2.String(*metric.Id, metadata),
+			Expression: types2.String(*metric.Expression, metadata),
 		})
 	}
 
 	return &cloudwatch.Alarm{
 		Metadata:   metadata,
-		AlarmName:  defsecTypes.String(*alarm.AlarmName, metadata),
-		MetricName: defsecTypes.String(*alarm.MetricName, metadata),
+		AlarmName:  types2.String(*alarm.AlarmName, metadata),
+		MetricName: types2.String(*alarm.MetricName, metadata),
 		Dimensions: dimensions,
 		Metrics:    metrics,
 	}, nil
 }
 
-func (a *adapter) getMetricFilters(name *string, metadata defsecTypes.Metadata) ([]cloudwatch.MetricFilter, error) {
+func (a *adapter) getMetricFilters(name *string, metadata types2.Metadata) ([]cloudwatch.MetricFilter, error) {
 
 	var apiMetricFilters []types.MetricFilter
 	input := api.DescribeMetricFiltersInput{
@@ -208,8 +208,8 @@ func (a *adapter) getMetricFilters(name *string, metadata defsecTypes.Metadata) 
 	for _, mf := range apiMetricFilters {
 		metricFilters = append(metricFilters, cloudwatch.MetricFilter{
 			Metadata:      metadata,
-			FilterName:    defsecTypes.String(*mf.FilterName, metadata),
-			FilterPattern: defsecTypes.String(*mf.FilterPattern, metadata),
+			FilterName:    types2.String(*mf.FilterName, metadata),
+			FilterPattern: types2.String(*mf.FilterPattern, metadata),
 		})
 
 	}

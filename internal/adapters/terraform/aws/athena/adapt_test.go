@@ -3,7 +3,7 @@ package athena
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/athena"
 
@@ -32,11 +32,11 @@ func Test_adaptDatabase(t *testing.T) {
 			}
 `,
 			expected: athena.Database{
-				Metadata: types.NewTestMetadata(),
-				Name:     types.String("database_name", types.NewTestMetadata()),
+				Metadata: types2.NewTestMetadata(),
+				Name:     types2.String("database_name", types2.NewTestMetadata()),
 				Encryption: athena.EncryptionConfiguration{
-					Metadata: types.NewTestMetadata(),
-					Type:     types.String(athena.EncryptionTypeSSEKMS, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Type:     types2.String(athena.EncryptionTypeSSEKMS, types2.NewTestMetadata()),
 				},
 			},
 		},
@@ -75,13 +75,13 @@ func Test_adaptWorkgroup(t *testing.T) {
 			  }
 `,
 			expected: athena.Workgroup{
-				Metadata: types.NewTestMetadata(),
-				Name:     types.String("example", types.NewTestMetadata()),
+				Metadata: types2.NewTestMetadata(),
+				Name:     types2.String("example", types2.NewTestMetadata()),
 				Encryption: athena.EncryptionConfiguration{
-					Metadata: types.NewTestMetadata(),
-					Type:     types.String(athena.EncryptionTypeSSEKMS, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Type:     types2.String(athena.EncryptionTypeSSEKMS, types2.NewTestMetadata()),
 				},
-				EnforceConfiguration: types.Bool(true, types.NewTestMetadata()),
+				EnforceConfiguration: types2.Bool(true, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -102,13 +102,13 @@ func Test_adaptWorkgroup(t *testing.T) {
 			}
 `,
 			expected: athena.Workgroup{
-				Metadata: types.NewTestMetadata(),
-				Name:     types.String("example", types.NewTestMetadata()),
+				Metadata: types2.NewTestMetadata(),
+				Name:     types2.String("example", types2.NewTestMetadata()),
 				Encryption: athena.EncryptionConfiguration{
-					Metadata: types.NewTestMetadata(),
-					Type:     types.String(athena.EncryptionTypeSSEKMS, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Type:     types2.String(athena.EncryptionTypeSSEKMS, types2.NewTestMetadata()),
 				},
-				EnforceConfiguration: types.Bool(false, types.NewTestMetadata()),
+				EnforceConfiguration: types2.Bool(false, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -127,13 +127,13 @@ func Test_adaptWorkgroup(t *testing.T) {
 			}
 `,
 			expected: athena.Workgroup{
-				Metadata: types.NewTestMetadata(),
-				Name:     types.String("example", types.NewTestMetadata()),
+				Metadata: types2.NewTestMetadata(),
+				Name:     types2.String("example", types2.NewTestMetadata()),
 				Encryption: athena.EncryptionConfiguration{
-					Metadata: types.NewTestMetadata(),
-					Type:     types.String(athena.EncryptionTypeNone, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Type:     types2.String(athena.EncryptionTypeNone, types2.NewTestMetadata()),
 				},
-				EnforceConfiguration: types.Bool(true, types.NewTestMetadata()),
+				EnforceConfiguration: types2.Bool(true, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -144,13 +144,13 @@ func Test_adaptWorkgroup(t *testing.T) {
 			}
 `,
 			expected: athena.Workgroup{
-				Metadata: types.NewTestMetadata(),
-				Name:     types.String("example", types.NewTestMetadata()),
+				Metadata: types2.NewTestMetadata(),
+				Name:     types2.String("example", types2.NewTestMetadata()),
 				Encryption: athena.EncryptionConfiguration{
-					Metadata: types.NewTestMetadata(),
-					Type:     types.String(athena.EncryptionTypeNone, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Type:     types2.String(athena.EncryptionTypeNone, types2.NewTestMetadata()),
 				},
-				EnforceConfiguration: types.Bool(false, types.NewTestMetadata()),
+				EnforceConfiguration: types2.Bool(false, types2.NewTestMetadata()),
 			},
 		},
 	}

@@ -3,7 +3,7 @@ package redshift
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckUsesVPC(t *testing.T) {
 			input: redshift.Redshift{
 				Clusters: []redshift.Cluster{
 					{
-						Metadata:        types.NewTestMetadata(),
-						SubnetGroupName: types.String("", types.NewTestMetadata()),
+						Metadata:        types2.NewTestMetadata(),
+						SubnetGroupName: types2.String("", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckUsesVPC(t *testing.T) {
 			input: redshift.Redshift{
 				Clusters: []redshift.Cluster{
 					{
-						Metadata:        types.NewTestMetadata(),
-						SubnetGroupName: types.String("redshift-subnet", types.NewTestMetadata()),
+						Metadata:        types2.NewTestMetadata(),
+						SubnetGroupName: types2.String("redshift-subnet", types2.NewTestMetadata()),
 					},
 				},
 			},

@@ -5,7 +5,7 @@ import (
 	"io/fs"
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/context"
 
@@ -26,7 +26,7 @@ type Block struct {
 	cloneIndex   int
 	childBlocks  []*Block
 	attributes   []*Attribute
-	metadata     types.Metadata
+	metadata     types2.Metadata
 	moduleSource string
 	moduleFS     fs.FS
 }
@@ -49,7 +49,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 	if moduleBlock != nil {
 		moduleName = moduleBlock.FullName()
 	}
-	rng := types.NewRange(
+	rng := types2.NewRange(
 		r.Filename,
 		r.Start.Line,
 		r.End.Line,
@@ -78,7 +78,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 		}
 	}
 
-	metadata := types.NewMetadata(rng, ref)
+	metadata := types2.NewMetadata(rng, ref)
 
 	if parentBlock != nil {
 		metadata = metadata.WithParent(parentBlock.metadata)
@@ -125,7 +125,7 @@ func (b *Block) ID() string {
 	return b.id
 }
 
-func (b *Block) GetMetadata() types.Metadata {
+func (b *Block) GetMetadata() types2.Metadata {
 	return b.metadata
 }
 

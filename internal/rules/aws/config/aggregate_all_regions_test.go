@@ -3,7 +3,7 @@ package config
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -23,8 +23,8 @@ func TestCheckAggregateAllRegions(t *testing.T) {
 			name: "AWS Config aggregator source with all regions set to false",
 			input: config.Config{
 				ConfigurationAggregrator: config.ConfigurationAggregrator{
-					Metadata:         types.NewTestMetadata(),
-					SourceAllRegions: types.Bool(false, types.NewTestMetadata()),
+					Metadata:         types2.NewTestMetadata(),
+					SourceAllRegions: types2.Bool(false, types2.NewTestMetadata()),
 				},
 			},
 			expected: true,
@@ -33,8 +33,8 @@ func TestCheckAggregateAllRegions(t *testing.T) {
 			name: "AWS Config aggregator source with all regions set to true",
 			input: config.Config{
 				ConfigurationAggregrator: config.ConfigurationAggregrator{
-					Metadata:         types.NewTestMetadata(),
-					SourceAllRegions: types.Bool(true, types.NewTestMetadata()),
+					Metadata:         types2.NewTestMetadata(),
+					SourceAllRegions: types2.Bool(true, types2.NewTestMetadata()),
 				},
 			},
 			expected: false,

@@ -3,7 +3,7 @@ package sql
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,13 +24,13 @@ func TestCheckPgLogErrors(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:        types.NewTestMetadata(),
-						DatabaseVersion: types.String("POSTGRES_12", types.NewTestMetadata()),
+						Metadata:        types2.NewTestMetadata(),
+						DatabaseVersion: types2.String("POSTGRES_12", types2.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							Flags: sql.Flags{
-								Metadata:       types.NewTestMetadata(),
-								LogMinMessages: types.String("PANIC", types.NewTestMetadata()),
+								Metadata:       types2.NewTestMetadata(),
+								LogMinMessages: types2.String("PANIC", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -43,13 +43,13 @@ func TestCheckPgLogErrors(t *testing.T) {
 			input: sql.SQL{
 				Instances: []sql.DatabaseInstance{
 					{
-						Metadata:        types.NewTestMetadata(),
-						DatabaseVersion: types.String("POSTGRES_12", types.NewTestMetadata()),
+						Metadata:        types2.NewTestMetadata(),
+						DatabaseVersion: types2.String("POSTGRES_12", types2.NewTestMetadata()),
 						Settings: sql.Settings{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							Flags: sql.Flags{
-								Metadata:       types.NewTestMetadata(),
-								LogMinMessages: types.String("ERROR", types.NewTestMetadata()),
+								Metadata:       types2.NewTestMetadata(),
+								LogMinMessages: types2.String("ERROR", types2.NewTestMetadata()),
 							},
 						},
 					},

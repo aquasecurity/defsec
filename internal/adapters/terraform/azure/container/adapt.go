@@ -1,9 +1,9 @@
 package container
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/container"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) container.Container {
@@ -29,19 +29,19 @@ func adaptCluster(resource *terraform.Block) container.KubernetesCluster {
 		Metadata: resource.GetMetadata(),
 		NetworkProfile: container.NetworkProfile{
 			Metadata:      resource.GetMetadata(),
-			NetworkPolicy: types.StringDefault("", resource.GetMetadata()),
+			NetworkPolicy: types2.StringDefault("", resource.GetMetadata()),
 		},
-		EnablePrivateCluster:        types.BoolDefault(false, resource.GetMetadata()),
+		EnablePrivateCluster:        types2.BoolDefault(false, resource.GetMetadata()),
 		APIServerAuthorizedIPRanges: nil,
 		RoleBasedAccessControl: container.RoleBasedAccessControl{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
+			Enabled:  types2.BoolDefault(false, resource.GetMetadata()),
 		},
 		AddonProfile: container.AddonProfile{
 			Metadata: resource.GetMetadata(),
 			OMSAgent: container.OMSAgent{
 				Metadata: resource.GetMetadata(),
-				Enabled:  types.BoolDefault(false, resource.GetMetadata()),
+				Enabled:  types2.BoolDefault(false, resource.GetMetadata()),
 			},
 		},
 	}
@@ -73,7 +73,7 @@ func adaptCluster(resource *terraform.Block) container.KubernetesCluster {
 	// >= azurerm 2.97.0
 	if omsAgentBlock := resource.GetBlock("oms_agent"); omsAgentBlock.IsNotNil() {
 		cluster.AddonProfile.OMSAgent.Metadata = omsAgentBlock.GetMetadata()
-		cluster.AddonProfile.OMSAgent.Enabled = types.Bool(true, omsAgentBlock.GetMetadata())
+		cluster.AddonProfile.OMSAgent.Enabled = types2.Bool(true, omsAgentBlock.GetMetadata())
 	}
 
 	// azurerm < 2.99.0

@@ -3,7 +3,7 @@ package storage
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnforceHttps(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata:     types.NewTestMetadata(),
-						EnforceHTTPS: types.Bool(false, types.NewTestMetadata()),
+						Metadata:     types2.NewTestMetadata(),
+						EnforceHTTPS: types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnforceHttps(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata:     types.NewTestMetadata(),
-						EnforceHTTPS: types.Bool(true, types.NewTestMetadata()),
+						Metadata:     types2.NewTestMetadata(),
+						EnforceHTTPS: types2.Bool(true, types2.NewTestMetadata()),
 					},
 				},
 			},

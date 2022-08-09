@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckRootMFAEnabled(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("root", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Name:     types2.String("root", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckRootMFAEnabled(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("other", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Name:     types2.String("other", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -48,11 +48,11 @@ func TestCheckRootMFAEnabled(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("root", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Name:     types2.String("root", types2.NewTestMetadata()),
 						MFADevices: []iam.MFADevice{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 							},
 						},
 					},

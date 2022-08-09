@@ -3,8 +3,9 @@ package s3
 import (
 	"testing"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
 	"github.com/aquasecurity/defsec/test/testutil"
@@ -197,19 +198,19 @@ func Test_Adapt(t *testing.T) {
 			expected: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("bucket", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Name:     types2.String("bucket", types2.NewTestMetadata()),
 						PublicAccessBlock: &s3.PublicAccessBlock{
-							Metadata:              types.NewTestMetadata(),
-							BlockPublicACLs:       types.Bool(true, types.NewTestMetadata()),
-							BlockPublicPolicy:     types.Bool(true, types.NewTestMetadata()),
-							IgnorePublicACLs:      types.Bool(true, types.NewTestMetadata()),
-							RestrictPublicBuckets: types.Bool(true, types.NewTestMetadata()),
+							Metadata:              types2.NewTestMetadata(),
+							BlockPublicACLs:       types2.Bool(true, types2.NewTestMetadata()),
+							BlockPublicPolicy:     types2.Bool(true, types2.NewTestMetadata()),
+							IgnorePublicACLs:      types2.Bool(true, types2.NewTestMetadata()),
+							RestrictPublicBuckets: types2.Bool(true, types2.NewTestMetadata()),
 						},
 						BucketPolicies: []iam.Policy{
 							{
-								Metadata: types.NewTestMetadata(),
-								Name:     types.String("", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Name:     types2.String("", types2.NewTestMetadata()),
 								Document: func() iam.Document {
 
 									builder := iamgo.NewPolicyBuilder()
@@ -223,30 +224,30 @@ func Test_Adapt(t *testing.T) {
 
 									return iam.Document{
 										Parsed:   builder.Build(),
-										Metadata: types.NewTestMetadata(),
+										Metadata: types2.NewTestMetadata(),
 										IsOffset: true,
 										HasRefs:  false,
 									}
 								}(),
-								Builtin: types.Bool(false, types.NewTestMetadata()),
+								Builtin: types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 						Encryption: s3.Encryption{
-							Metadata:  types.NewTestMetadata(),
-							Enabled:   types.Bool(true, types.NewTestMetadata()),
-							Algorithm: types.String("aws:kms", types.NewTestMetadata()),
-							KMSKeyId:  types.String("string-key", types.NewTestMetadata()),
+							Metadata:  types2.NewTestMetadata(),
+							Enabled:   types2.Bool(true, types2.NewTestMetadata()),
+							Algorithm: types2.String("aws:kms", types2.NewTestMetadata()),
+							KMSKeyId:  types2.String("string-key", types2.NewTestMetadata()),
 						},
 						Versioning: s3.Versioning{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 						},
 						Logging: s3.Logging{
-							Metadata:     types.NewTestMetadata(),
-							Enabled:      types.Bool(true, types.NewTestMetadata()),
-							TargetBucket: types.String("aws_s3_bucket.example", types.NewTestMetadata()),
+							Metadata:     types2.NewTestMetadata(),
+							Enabled:      types2.Bool(true, types2.NewTestMetadata()),
+							TargetBucket: types2.String("aws_s3_bucket.example", types2.NewTestMetadata()),
 						},
-						ACL: types.String("private", types.NewTestMetadata()),
+						ACL: types2.String("private", types2.NewTestMetadata()),
 					},
 				},
 			},

@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckNoPublicControlPlane(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						MasterAuthorizedNetworks: gke.MasterAuthorizedNetworks{
-							Metadata: types.NewTestMetadata(),
-							CIDRs: []types.StringValue{
-								types.String("0.0.0.0/0", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							CIDRs: []types2.StringValue{
+								types2.String("0.0.0.0/0", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,11 +41,11 @@ func TestCheckNoPublicControlPlane(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						MasterAuthorizedNetworks: gke.MasterAuthorizedNetworks{
-							Metadata: types.NewTestMetadata(),
-							CIDRs: []types.StringValue{
-								types.String("10.10.128.0/24", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							CIDRs: []types2.StringValue{
+								types2.String("10.10.128.0/24", types2.NewTestMetadata()),
 							},
 						},
 					},

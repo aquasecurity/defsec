@@ -1,9 +1,9 @@
 package eks
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/eks"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getClusters(ctx parser.FileContext) (clusters []eks.Cluster) {
@@ -16,15 +16,15 @@ func getClusters(ctx parser.FileContext) (clusters []eks.Cluster) {
 			// Logging not supported for cloudformation https://github.com/aws/containers-roadmap/issues/242
 			Logging: eks.Logging{
 				Metadata:          r.Metadata(),
-				API:               types.BoolUnresolvable(r.Metadata()),
-				Audit:             types.BoolUnresolvable(r.Metadata()),
-				Authenticator:     types.BoolUnresolvable(r.Metadata()),
-				ControllerManager: types.BoolUnresolvable(r.Metadata()),
-				Scheduler:         types.BoolUnresolvable(r.Metadata()),
+				API:               types2.BoolUnresolvable(r.Metadata()),
+				Audit:             types2.BoolUnresolvable(r.Metadata()),
+				Authenticator:     types2.BoolUnresolvable(r.Metadata()),
+				ControllerManager: types2.BoolUnresolvable(r.Metadata()),
+				Scheduler:         types2.BoolUnresolvable(r.Metadata()),
 			},
 			Encryption: getEncryptionConfig(r),
 			// endpoint protection not supported - https://github.com/aws/containers-roadmap/issues/242
-			PublicAccessEnabled: types.BoolUnresolvable(r.Metadata()),
+			PublicAccessEnabled: types2.BoolUnresolvable(r.Metadata()),
 			PublicAccessCIDRs:   nil,
 		}
 
@@ -37,8 +37,8 @@ func getEncryptionConfig(r *parser.Resource) eks.Encryption {
 
 	encryption := eks.Encryption{
 		Metadata: r.Metadata(),
-		Secrets:  types.BoolDefault(false, r.Metadata()),
-		KMSKeyID: types.StringDefault("", r.Metadata()),
+		Secrets:  types2.BoolDefault(false, r.Metadata()),
+		KMSKeyID: types2.StringDefault("", r.Metadata()),
 	}
 
 	if encProp := r.GetProperty("EncryptionConfig"); encProp.IsNotNil() {
@@ -47,7 +47,7 @@ func getEncryptionConfig(r *parser.Resource) eks.Encryption {
 		resourcesProp := encProp.GetProperty("Resources")
 		if resourcesProp.IsList() {
 			if resourcesProp.Contains("secrets") {
-				encryption.Secrets = types.Bool(true, resourcesProp.Metadata())
+				encryption.Secrets = types2.Bool(true, resourcesProp.Metadata())
 			}
 		}
 	}

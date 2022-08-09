@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,14 +24,14 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 			input: database.Database{
 				MySQLServers: []database.MySQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
-									EndIP:    types.String("255.255.255.255", types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									StartIP:  types2.String("0.0.0.0", types2.NewTestMetadata()),
+									EndIP:    types2.String("255.255.255.255", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -45,14 +45,14 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
-									EndIP:    types.String("255.255.255.255", types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									StartIP:  types2.String("0.0.0.0", types2.NewTestMetadata()),
+									EndIP:    types2.String("255.255.255.255", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -66,14 +66,14 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 			input: database.Database{
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
-									EndIP:    types.String("255.255.255.255", types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									StartIP:  types2.String("0.0.0.0", types2.NewTestMetadata()),
+									EndIP:    types2.String("255.255.255.255", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -87,14 +87,14 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 			input: database.Database{
 				MariaDBServers: []database.MariaDBServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
-									EndIP:    types.String("255.255.255.255", types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									StartIP:  types2.String("0.0.0.0", types2.NewTestMetadata()),
+									EndIP:    types2.String("255.255.255.255", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -108,14 +108,14 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 			input: database.Database{
 				MySQLServers: []database.MySQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
-									EndIP:    types.String("0.0.0.0", types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									StartIP:  types2.String("0.0.0.0", types2.NewTestMetadata()),
+									EndIP:    types2.String("0.0.0.0", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -129,14 +129,14 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
-									EndIP:    types.String("0.0.0.0", types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									StartIP:  types2.String("0.0.0.0", types2.NewTestMetadata()),
+									EndIP:    types2.String("0.0.0.0", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -150,14 +150,14 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 			input: database.Database{
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
-									EndIP:    types.String("0.0.0.0", types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									StartIP:  types2.String("0.0.0.0", types2.NewTestMetadata()),
+									EndIP:    types2.String("0.0.0.0", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -171,14 +171,14 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 			input: database.Database{
 				MariaDBServers: []database.MariaDBServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("0.0.0.0", types.NewTestMetadata()),
-									EndIP:    types.String("0.0.0.0", types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									StartIP:  types2.String("0.0.0.0", types2.NewTestMetadata()),
+									EndIP:    types2.String("0.0.0.0", types2.NewTestMetadata()),
 								},
 							},
 						},

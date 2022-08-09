@@ -1,14 +1,14 @@
 package github
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Repository struct {
-	types.Metadata
-	Public              types.BoolValue
-	VulnerabilityAlerts types.BoolValue
-	Archived            types.BoolValue
+	types2.Metadata
+	Public              types2.BoolValue
+	VulnerabilityAlerts types2.BoolValue
+	Archived            types2.BoolValue
 }
 
 func (r Repository) IsArchived() bool {

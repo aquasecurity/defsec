@@ -1,7 +1,7 @@
 package redshift
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Redshift struct {
@@ -10,18 +10,18 @@ type Redshift struct {
 }
 
 type SecurityGroup struct {
-	types.Metadata
-	Description types.StringValue
+	types2.Metadata
+	Description types2.StringValue
 }
 
 type Cluster struct {
-	types.Metadata
+	types2.Metadata
 	Encryption      Encryption
-	SubnetGroupName types.StringValue
+	SubnetGroupName types2.StringValue
 }
 
 type Encryption struct {
-	types.Metadata
-	Enabled  types.BoolValue
-	KMSKeyID types.StringValue
+	types2.Metadata
+	Enabled  types2.BoolValue
+	KMSKeyID types2.StringValue
 }

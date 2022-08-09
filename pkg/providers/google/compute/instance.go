@@ -1,40 +1,40 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Instance struct {
-	types.Metadata
-	Name                        types.StringValue
+	types2.Metadata
+	Name                        types2.StringValue
 	NetworkInterfaces           []NetworkInterface
 	ShieldedVM                  ShieldedVMConfig
 	ServiceAccount              ServiceAccount
-	CanIPForward                types.BoolValue
-	OSLoginEnabled              types.BoolValue
-	EnableProjectSSHKeyBlocking types.BoolValue
-	EnableSerialPort            types.BoolValue
+	CanIPForward                types2.BoolValue
+	OSLoginEnabled              types2.BoolValue
+	EnableProjectSSHKeyBlocking types2.BoolValue
+	EnableSerialPort            types2.BoolValue
 	BootDisks                   []Disk
 	AttachedDisks               []Disk
 }
 
 type ServiceAccount struct {
-	types.Metadata
-	Email  types.StringValue
-	Scopes []types.StringValue
+	types2.Metadata
+	Email  types2.StringValue
+	Scopes []types2.StringValue
 }
 
 type NetworkInterface struct {
-	types.Metadata
+	types2.Metadata
 	Network     *Network
 	SubNetwork  *SubNetwork
-	HasPublicIP types.BoolValue
-	NATIP       types.StringValue
+	HasPublicIP types2.BoolValue
+	NATIP       types2.StringValue
 }
 
 type ShieldedVMConfig struct {
-	types.Metadata
-	SecureBootEnabled          types.BoolValue
-	IntegrityMonitoringEnabled types.BoolValue
-	VTPMEnabled                types.BoolValue
+	types2.Metadata
+	SecureBootEnabled          types2.BoolValue
+	IntegrityMonitoringEnabled types2.BoolValue
+	VTPMEnabled                types2.BoolValue
 }

@@ -1,9 +1,9 @@
 package iam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/liamg/iamgo"
 )
 
@@ -17,7 +17,7 @@ func getPolicies(ctx parser.FileContext) (policies []iam.Policy) {
 				Metadata: policyResource.Metadata(),
 				Parsed:   iamgo.Document{},
 			},
-			Builtin: types.Bool(false, policyResource.Metadata()),
+			Builtin: types2.Bool(false, policyResource.Metadata()),
 		}
 
 		if policyProp := policyResource.GetProperty("PolicyDocument"); policyProp.IsNotNil() {
@@ -55,7 +55,7 @@ func getUsers(ctx parser.FileContext) (users []iam.User) {
 		users = append(users, iam.User{
 			Metadata:   userResource.Metadata(),
 			Name:       userName,
-			LastAccess: types.TimeUnresolvable(userResource.Metadata()),
+			LastAccess: types2.TimeUnresolvable(userResource.Metadata()),
 			Policies:   getPoliciesDocs(policyProp),
 			AccessKeys: getAccessKeys(ctx, userName.Value()),
 		})
@@ -69,16 +69,16 @@ func getAccessKeys(ctx parser.FileContext, username string) (accessKeys []iam.Ac
 		if !keyUsername.EqualTo(username) {
 			continue
 		}
-		active := types.BoolDefault(false, keyResource.Metadata())
+		active := types2.BoolDefault(false, keyResource.Metadata())
 		if statusProp := keyResource.GetProperty("Status"); statusProp.IsString() {
-			active = types.Bool(statusProp.AsString() == "Active", statusProp.Metadata())
+			active = types2.Bool(statusProp.AsString() == "Active", statusProp.Metadata())
 		}
 
 		accessKeys = append(accessKeys, iam.AccessKey{
 			Metadata:     keyResource.Metadata(),
-			AccessKeyId:  types.StringUnresolvable(keyResource.Metadata()),
-			CreationDate: types.TimeUnresolvable(keyResource.Metadata()),
-			LastAccess:   types.TimeUnresolvable(keyResource.Metadata()),
+			AccessKeyId:  types2.StringUnresolvable(keyResource.Metadata()),
+			CreationDate: types2.TimeUnresolvable(keyResource.Metadata()),
+			LastAccess:   types2.TimeUnresolvable(keyResource.Metadata()),
 			Active:       active,
 		})
 	}
@@ -118,7 +118,7 @@ func getPoliciesDocs(policiesProp *parser.Property) []iam.Policy {
 				Metadata: policyProp.Metadata(),
 				Parsed:   *doc,
 			},
-			Builtin: types.Bool(false, policyProp.Metadata()),
+			Builtin: types2.Bool(false, policyProp.Metadata()),
 		})
 	}
 	return policies

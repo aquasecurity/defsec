@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckDiskEncryptionRequired(t *testing.T) {
 			input: compute.Compute{
 				Disks: []compute.Disk{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Encryption: compute.DiskEncryption{
-							Metadata: types.NewTestMetadata(),
-							RawKey:   types.Bytes([]byte("b2ggbm8gdGhpcyBpcyBiYWQ"), types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							RawKey:   types2.Bytes([]byte("b2ggbm8gdGhpcyBpcyBiYWQ"), types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,13 +39,13 @@ func TestCheckDiskEncryptionRequired(t *testing.T) {
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						BootDisks: []compute.Disk{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Encryption: compute.DiskEncryption{
-									Metadata: types.NewTestMetadata(),
-									RawKey:   types.Bytes([]byte("b2ggbm8gdGhpcyBpcyBiYWQ"), types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									RawKey:   types2.Bytes([]byte("b2ggbm8gdGhpcyBpcyBiYWQ"), types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -59,31 +59,31 @@ func TestCheckDiskEncryptionRequired(t *testing.T) {
 			input: compute.Compute{
 				Disks: []compute.Disk{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Encryption: compute.DiskEncryption{
-							Metadata: types.NewTestMetadata(),
-							RawKey:   types.Bytes([]byte(""), types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							RawKey:   types2.Bytes([]byte(""), types2.NewTestMetadata()),
 						},
 					},
 				},
 				Instances: []compute.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						BootDisks: []compute.Disk{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Encryption: compute.DiskEncryption{
-									Metadata: types.NewTestMetadata(),
-									RawKey:   types.Bytes([]byte(""), types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									RawKey:   types2.Bytes([]byte(""), types2.NewTestMetadata()),
 								},
 							},
 						},
 						AttachedDisks: []compute.Disk{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Encryption: compute.DiskEncryption{
-									Metadata: types.NewTestMetadata(),
-									RawKey:   types.Bytes([]byte(""), types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									RawKey:   types2.Bytes([]byte(""), types2.NewTestMetadata()),
 								},
 							},
 						},

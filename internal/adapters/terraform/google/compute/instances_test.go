@@ -3,11 +3,11 @@ package compute
 import (
 	"testing"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/google/compute"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -59,40 +59,40 @@ func Test_adaptInstances(t *testing.T) {
 `,
 			expected: []compute.Instance{
 				{
-					Metadata: types.NewTestMetadata(),
-					Name:     types.String("test", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Name:     types2.String("test", types2.NewTestMetadata()),
 					NetworkInterfaces: []compute.NetworkInterface{
 						{
-							Metadata:    types.NewTestMetadata(),
-							HasPublicIP: types.Bool(true, types.NewTestMetadata()),
-							NATIP:       types.String("", types.NewTestMetadata()),
+							Metadata:    types2.NewTestMetadata(),
+							HasPublicIP: types2.Bool(true, types2.NewTestMetadata()),
+							NATIP:       types2.String("", types2.NewTestMetadata()),
 						},
 					},
 					ShieldedVM: compute.ShieldedVMConfig{
-						Metadata:                   types.NewTestMetadata(),
-						SecureBootEnabled:          types.Bool(true, types.NewTestMetadata()),
-						IntegrityMonitoringEnabled: types.Bool(true, types.NewTestMetadata()),
-						VTPMEnabled:                types.Bool(true, types.NewTestMetadata()),
+						Metadata:                   types2.NewTestMetadata(),
+						SecureBootEnabled:          types2.Bool(true, types2.NewTestMetadata()),
+						IntegrityMonitoringEnabled: types2.Bool(true, types2.NewTestMetadata()),
+						VTPMEnabled:                types2.Bool(true, types2.NewTestMetadata()),
 					},
 					ServiceAccount: compute.ServiceAccount{
-						Metadata: types.NewTestMetadata(),
-						Email:    types.String("google_service_account.default", types.NewTestMetadata()),
-						Scopes: []types.StringValue{
-							types.String("cloud-platform", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Email:    types2.String("google_service_account.default", types2.NewTestMetadata()),
+						Scopes: []types2.StringValue{
+							types2.String("cloud-platform", types2.NewTestMetadata()),
 						},
 					},
-					CanIPForward:                types.Bool(true, types.NewTestMetadata()),
-					OSLoginEnabled:              types.Bool(false, types.NewTestMetadata()),
-					EnableProjectSSHKeyBlocking: types.Bool(true, types.NewTestMetadata()),
-					EnableSerialPort:            types.Bool(true, types.NewTestMetadata()),
+					CanIPForward:                types2.Bool(true, types2.NewTestMetadata()),
+					OSLoginEnabled:              types2.Bool(false, types2.NewTestMetadata()),
+					EnableProjectSSHKeyBlocking: types2.Bool(true, types2.NewTestMetadata()),
+					EnableSerialPort:            types2.Bool(true, types2.NewTestMetadata()),
 
 					BootDisks: []compute.Disk{
 						{
-							Metadata: types.NewTestMetadata(),
-							Name:     types.String("boot-disk", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Name:     types2.String("boot-disk", types2.NewTestMetadata()),
 							Encryption: compute.DiskEncryption{
-								Metadata:   types.NewTestMetadata(),
-								KMSKeyLink: types.String("something", types.NewTestMetadata()),
+								Metadata:   types2.NewTestMetadata(),
+								KMSKeyLink: types2.String("something", types2.NewTestMetadata()),
 								RawKey:     nil,
 							},
 						},
@@ -108,22 +108,22 @@ func Test_adaptInstances(t *testing.T) {
 `,
 			expected: []compute.Instance{
 				{
-					Metadata: types.NewTestMetadata(),
-					Name:     types.String("", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Name:     types2.String("", types2.NewTestMetadata()),
 					ShieldedVM: compute.ShieldedVMConfig{
-						Metadata:                   types.NewTestMetadata(),
-						SecureBootEnabled:          types.Bool(false, types.NewTestMetadata()),
-						IntegrityMonitoringEnabled: types.Bool(false, types.NewTestMetadata()),
-						VTPMEnabled:                types.Bool(false, types.NewTestMetadata()),
+						Metadata:                   types2.NewTestMetadata(),
+						SecureBootEnabled:          types2.Bool(false, types2.NewTestMetadata()),
+						IntegrityMonitoringEnabled: types2.Bool(false, types2.NewTestMetadata()),
+						VTPMEnabled:                types2.Bool(false, types2.NewTestMetadata()),
 					},
 					ServiceAccount: compute.ServiceAccount{
-						Metadata: types.NewTestMetadata(),
-						Email:    types.String("", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Email:    types2.String("", types2.NewTestMetadata()),
 					},
-					CanIPForward:                types.Bool(false, types.NewTestMetadata()),
-					OSLoginEnabled:              types.Bool(true, types.NewTestMetadata()),
-					EnableProjectSSHKeyBlocking: types.Bool(false, types.NewTestMetadata()),
-					EnableSerialPort:            types.Bool(false, types.NewTestMetadata()),
+					CanIPForward:                types2.Bool(false, types2.NewTestMetadata()),
+					OSLoginEnabled:              types2.Bool(true, types2.NewTestMetadata()),
+					EnableProjectSSHKeyBlocking: types2.Bool(false, types2.NewTestMetadata()),
+					EnableSerialPort:            types2.Bool(false, types2.NewTestMetadata()),
 				},
 			},
 		},

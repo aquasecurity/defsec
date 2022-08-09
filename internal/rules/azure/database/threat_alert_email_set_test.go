@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckThreatAlertEmailSet(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						SecurityAlertPolicies: []database.SecurityAlertPolicy{
 							{
-								Metadata:       types.NewTestMetadata(),
-								EmailAddresses: []types.StringValue{},
+								Metadata:       types2.NewTestMetadata(),
+								EmailAddresses: []types2.StringValue{},
 							},
 						},
 					},
@@ -41,12 +41,12 @@ func TestCheckThreatAlertEmailSet(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						SecurityAlertPolicies: []database.SecurityAlertPolicy{
 							{
-								Metadata: types.NewTestMetadata(),
-								EmailAddresses: []types.StringValue{
-									types.String("sample@email.com", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								EmailAddresses: []types2.StringValue{
+									types2.String("sample@email.com", types2.NewTestMetadata()),
 								},
 							},
 						},

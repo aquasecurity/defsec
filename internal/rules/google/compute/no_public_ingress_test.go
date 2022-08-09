@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,20 +24,20 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: compute.Compute{
 				Networks: []compute.Network{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Firewall: &compute.Firewall{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							IngressRules: []compute.IngressRule{
 								{
-									Metadata: types.NewTestMetadata(),
+									Metadata: types2.NewTestMetadata(),
 									FirewallRule: compute.FirewallRule{
-										Metadata: types.NewTestMetadata(),
-										IsAllow:  types.Bool(true, types.NewTestMetadata()),
-										Enforced: types.Bool(true, types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										IsAllow:  types2.Bool(true, types2.NewTestMetadata()),
+										Enforced: types2.Bool(true, types2.NewTestMetadata()),
 									},
-									SourceRanges: []types.StringValue{
-										types.String("0.0.0.0/0", types.NewTestMetadata()),
-										types.String("1.2.3.4/32", types.NewTestMetadata()),
+									SourceRanges: []types2.StringValue{
+										types2.String("0.0.0.0/0", types2.NewTestMetadata()),
+										types2.String("1.2.3.4/32", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -52,19 +52,19 @@ func TestCheckNoPublicIngress(t *testing.T) {
 			input: compute.Compute{
 				Networks: []compute.Network{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Firewall: &compute.Firewall{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							IngressRules: []compute.IngressRule{
 								{
-									Metadata: types.NewTestMetadata(),
+									Metadata: types2.NewTestMetadata(),
 									FirewallRule: compute.FirewallRule{
-										Metadata: types.NewTestMetadata(),
-										IsAllow:  types.Bool(true, types.NewTestMetadata()),
-										Enforced: types.Bool(true, types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										IsAllow:  types2.Bool(true, types2.NewTestMetadata()),
+										Enforced: types2.Bool(true, types2.NewTestMetadata()),
 									},
-									SourceRanges: []types.StringValue{
-										types.String("1.2.3.4/32", types.NewTestMetadata()),
+									SourceRanges: []types2.StringValue{
+										types2.String("1.2.3.4/32", types2.NewTestMetadata()),
 									},
 								},
 							},

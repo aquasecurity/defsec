@@ -1,7 +1,7 @@
 package mq
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type MQ struct {
@@ -9,13 +9,13 @@ type MQ struct {
 }
 
 type Broker struct {
-	types.Metadata
-	PublicAccess types.BoolValue
+	types2.Metadata
+	PublicAccess types2.BoolValue
 	Logging      Logging
 }
 
 type Logging struct {
-	types.Metadata
-	General types.BoolValue
-	Audit   types.BoolValue
+	types2.Metadata
+	General types2.BoolValue
+	Audit   types2.BoolValue
 }

@@ -3,14 +3,14 @@ package ec2
 import (
 	"testing"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -75,39 +75,39 @@ func Test_AdaptVPC(t *testing.T) {
 			expected: ec2.EC2{
 				DefaultVPCs: []ec2.DefaultVPC{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 					},
 				},
 				SecurityGroups: []ec2.SecurityGroup{
 					{
-						Metadata:    types.NewTestMetadata(),
-						Description: types.String("Allow inbound HTTP traffic", types.NewTestMetadata()),
+						Metadata:    types2.NewTestMetadata(),
+						Description: types2.String("Allow inbound HTTP traffic", types2.NewTestMetadata()),
 						IngressRules: []ec2.SecurityGroupRule{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 
-								Description: types.String("Rule #1", types.NewTestMetadata()),
-								CIDRs: []types.StringValue{
-									types.String("4.5.6.7/32", types.NewTestMetadata()),
+								Description: types2.String("Rule #1", types2.NewTestMetadata()),
+								CIDRs: []types2.StringValue{
+									types2.String("4.5.6.7/32", types2.NewTestMetadata()),
 								},
 							},
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 
-								Description: types.String("Rule #2", types.NewTestMetadata()),
-								CIDRs: []types.StringValue{
-									types.String("1.2.3.4/32", types.NewTestMetadata()),
-									types.String("4.5.6.7/32", types.NewTestMetadata()),
+								Description: types2.String("Rule #2", types2.NewTestMetadata()),
+								CIDRs: []types2.StringValue{
+									types2.String("1.2.3.4/32", types2.NewTestMetadata()),
+									types2.String("4.5.6.7/32", types2.NewTestMetadata()),
 								},
 							},
 						},
 
 						EgressRules: []ec2.SecurityGroupRule{
 							{
-								Metadata:    types.NewTestMetadata(),
-								Description: types.String("", types.NewTestMetadata()),
-								CIDRs: []types.StringValue{
-									types.String("1.2.3.4/32", types.NewTestMetadata()),
+								Metadata:    types2.NewTestMetadata(),
+								Description: types2.String("", types2.NewTestMetadata()),
+								CIDRs: []types2.StringValue{
+									types2.String("1.2.3.4/32", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -115,19 +115,19 @@ func Test_AdaptVPC(t *testing.T) {
 				},
 				NetworkACLs: []ec2.NetworkACL{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []ec2.NetworkACLRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Type:     types.String("ingress", types.NewTestMetadata()),
-								Action:   types.String("allow", types.NewTestMetadata()),
-								Protocol: types.String("tcp", types.NewTestMetadata()),
-								CIDRs: []types.StringValue{
-									types.String("10.0.0.0/16", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Type:     types2.String("ingress", types2.NewTestMetadata()),
+								Action:   types2.String("allow", types2.NewTestMetadata()),
+								Protocol: types2.String("tcp", types2.NewTestMetadata()),
+								CIDRs: []types2.StringValue{
+									types2.String("10.0.0.0/16", types2.NewTestMetadata()),
 								},
 							},
 						},
-						IsDefaultRule: types.Bool(false, types.NewTestMetadata()),
+						IsDefaultRule: types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -149,36 +149,36 @@ func Test_AdaptVPC(t *testing.T) {
 			expected: ec2.EC2{
 				SecurityGroups: []ec2.SecurityGroup{
 					{
-						Metadata:    types.NewTestMetadata(),
-						Description: types.String("Managed by Terraform", types.NewTestMetadata()),
+						Metadata:    types2.NewTestMetadata(),
+						Description: types2.String("Managed by Terraform", types2.NewTestMetadata()),
 						IngressRules: []ec2.SecurityGroupRule{
 							{
-								Metadata:    types.NewTestMetadata(),
-								Description: types.String("", types.NewTestMetadata()),
+								Metadata:    types2.NewTestMetadata(),
+								Description: types2.String("", types2.NewTestMetadata()),
 							},
 						},
 
 						EgressRules: []ec2.SecurityGroupRule{
 							{
-								Metadata:    types.NewTestMetadata(),
-								Description: types.String("", types.NewTestMetadata()),
+								Metadata:    types2.NewTestMetadata(),
+								Description: types2.String("", types2.NewTestMetadata()),
 							},
 						},
 					},
 				},
 				NetworkACLs: []ec2.NetworkACL{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Rules: []ec2.NetworkACLRule{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 
-								Type:     types.String("ingress", types.NewTestMetadata()),
-								Action:   types.String("", types.NewTestMetadata()),
-								Protocol: types.String("-1", types.NewTestMetadata()),
+								Type:     types2.String("ingress", types2.NewTestMetadata()),
+								Action:   types2.String("", types2.NewTestMetadata()),
+								Protocol: types2.String("-1", types2.NewTestMetadata()),
 							},
 						},
-						IsDefaultRule: types.Bool(false, types.NewTestMetadata()),
+						IsDefaultRule: types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 			},

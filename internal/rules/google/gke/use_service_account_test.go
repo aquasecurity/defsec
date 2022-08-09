@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckUseServiceAccount(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata:              types.NewTestMetadata(),
-						RemoveDefaultNodePool: types.Bool(false, types.NewTestMetadata()),
+						Metadata:              types2.NewTestMetadata(),
+						RemoveDefaultNodePool: types2.Bool(false, types2.NewTestMetadata()),
 						NodeConfig: gke.NodeConfig{
-							Metadata:       types.NewTestMetadata(),
-							ServiceAccount: types.String("", types.NewTestMetadata()),
+							Metadata:       types2.NewTestMetadata(),
+							ServiceAccount: types2.String("", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckUseServiceAccount(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata:              types.NewTestMetadata(),
-						RemoveDefaultNodePool: types.Bool(false, types.NewTestMetadata()),
+						Metadata:              types2.NewTestMetadata(),
+						RemoveDefaultNodePool: types2.Bool(false, types2.NewTestMetadata()),
 						NodeConfig: gke.NodeConfig{
-							Metadata:       types.NewTestMetadata(),
-							ServiceAccount: types.String("service-account", types.NewTestMetadata()),
+							Metadata:       types2.NewTestMetadata(),
+							ServiceAccount: types2.String("service-account", types2.NewTestMetadata()),
 						},
 					},
 				},

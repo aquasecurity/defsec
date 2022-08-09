@@ -1,8 +1,8 @@
 package ec2
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	ec2api "github.com/aws/aws-sdk-go-v2/service/ec2"
 )
@@ -90,7 +90,7 @@ func (a *adapter) getSecurityGroupBatch(token *string) (securityGroups []ec2.Sec
 
 		sg := ec2.SecurityGroup{
 			Metadata:    sgMetadata,
-			Description: types.String(aws.ToString(apiSecurityGroup.Description), sgMetadata),
+			Description: types2.String(aws.ToString(apiSecurityGroup.Description), sgMetadata),
 		}
 
 		for _, ingress := range apiSecurityGroup.IpPermissions {
@@ -98,8 +98,8 @@ func (a *adapter) getSecurityGroupBatch(token *string) (securityGroups []ec2.Sec
 			for _, ipRange := range ingress.IpRanges {
 				sg.IngressRules = append(sg.IngressRules, ec2.SecurityGroupRule{
 					Metadata:    sgMetadata,
-					Description: types.String(aws.ToString(ipRange.Description), sgMetadata),
-					CIDRs:       []types.StringValue{types.String(aws.ToString(ipRange.CidrIp), sgMetadata)},
+					Description: types2.String(aws.ToString(ipRange.Description), sgMetadata),
+					CIDRs:       []types2.StringValue{types2.String(aws.ToString(ipRange.CidrIp), sgMetadata)},
 				})
 			}
 		}
@@ -109,8 +109,8 @@ func (a *adapter) getSecurityGroupBatch(token *string) (securityGroups []ec2.Sec
 			for _, ipRange := range egress.IpRanges {
 				sg.EgressRules = append(sg.EgressRules, ec2.SecurityGroupRule{
 					Metadata:    sgMetadata,
-					Description: types.String(aws.ToString(ipRange.Description), sgMetadata),
-					CIDRs:       []types.StringValue{types.String(aws.ToString(ipRange.CidrIp), sgMetadata)},
+					Description: types2.String(aws.ToString(ipRange.Description), sgMetadata),
+					CIDRs:       []types2.StringValue{types2.String(aws.ToString(ipRange.CidrIp), sgMetadata)},
 				})
 			}
 		}
@@ -142,7 +142,7 @@ func (a *adapter) getNetworkACLBatch(token *string) (nacls []ec2.NetworkACL, nex
 
 		nacl := ec2.NetworkACL{
 			Metadata:      naclMetadata,
-			IsDefaultRule: types.BoolDefault(false, naclMetadata),
+			IsDefaultRule: types2.BoolDefault(false, naclMetadata),
 		}
 
 		for _, entry := range apiNacl.Entries {
@@ -153,10 +153,10 @@ func (a *adapter) getNetworkACLBatch(token *string) (nacls []ec2.NetworkACL, nex
 
 			nacl.Rules = append(nacl.Rules, ec2.NetworkACLRule{
 				Metadata: naclMetadata,
-				Action:   types.String(string(entry.RuleAction), naclMetadata),
-				Protocol: types.String(aws.ToString(entry.Protocol), naclMetadata),
-				Type:     types.String(naclType, naclMetadata),
-				CIDRs:    []types.StringValue{types.String(aws.ToString(entry.CidrBlock), naclMetadata)},
+				Action:   types2.String(string(entry.RuleAction), naclMetadata),
+				Protocol: types2.String(aws.ToString(entry.Protocol), naclMetadata),
+				Type:     types2.String(naclType, naclMetadata),
+				CIDRs:    []types2.StringValue{types2.String(aws.ToString(entry.CidrBlock), naclMetadata)},
 			})
 		}
 

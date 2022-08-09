@@ -3,7 +3,7 @@ package datalake
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 			input: datalake.DataLake{
 				Stores: []datalake.Store{
 					{
-						Metadata:         types.NewTestMetadata(),
-						EnableEncryption: types.Bool(false, types.NewTestMetadata()),
+						Metadata:         types2.NewTestMetadata(),
+						EnableEncryption: types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 			input: datalake.DataLake{
 				Stores: []datalake.Store{
 					{
-						Metadata:         types.NewTestMetadata(),
-						EnableEncryption: types.Bool(true, types.NewTestMetadata()),
+						Metadata:         types2.NewTestMetadata(),
+						EnableEncryption: types2.Bool(true, types2.NewTestMetadata()),
 					},
 				},
 			},

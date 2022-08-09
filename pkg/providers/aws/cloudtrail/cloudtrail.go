@@ -1,7 +1,7 @@
 package cloudtrail
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type CloudTrail struct {
@@ -18,12 +18,12 @@ func (c CloudTrail) MultiRegionTrails() (multiRegionTrails []Trail) {
 }
 
 type Trail struct {
-	types.Metadata
-	Name                      types.StringValue
-	EnableLogFileValidation   types.BoolValue
-	IsMultiRegion             types.BoolValue
-	KMSKeyID                  types.StringValue
-	CloudWatchLogsLogGroupArn types.StringValue
-	IsLogging                 types.BoolValue
-	BucketName                types.StringValue
+	types2.Metadata
+	Name                      types2.StringValue
+	EnableLogFileValidation   types2.BoolValue
+	IsMultiRegion             types2.BoolValue
+	KMSKeyID                  types2.StringValue
+	CloudWatchLogsLogGroupArn types2.StringValue
+	IsLogging                 types2.BoolValue
+	BucketName                types2.StringValue
 }

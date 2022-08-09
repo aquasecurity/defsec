@@ -1,8 +1,8 @@
 package ecs
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecs"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	ecsapi "github.com/aws/aws-sdk-go-v2/service/ecs"
 )
 
@@ -65,8 +65,8 @@ func (a *adapter) adaptTaskDefinition(arn string) (*ecs.TaskDefinition, error) {
 				hostPort = int(*apiMapping.HostPort)
 			}
 			portMappings = append(portMappings, ecs.PortMapping{
-				ContainerPort: types.Int(containerPort, metadata),
-				HostPort:      types.Int(hostPort, metadata),
+				ContainerPort: types2.Int(containerPort, metadata),
+				HostPort:      types2.Int(hostPort, metadata),
 			})
 		}
 
@@ -100,14 +100,14 @@ func (a *adapter) adaptTaskDefinition(arn string) (*ecs.TaskDefinition, error) {
 
 		containerDefinitions = append(containerDefinitions, ecs.ContainerDefinition{
 			Metadata:     metadata,
-			Name:         types.String(name, metadata),
-			Image:        types.String(image, metadata),
-			CPU:          types.Int(cpu, metadata),
-			Memory:       types.Int(memory, metadata),
-			Essential:    types.Bool(essential, metadata),
+			Name:         types2.String(name, metadata),
+			Image:        types2.String(image, metadata),
+			CPU:          types2.Int(cpu, metadata),
+			Memory:       types2.Int(memory, metadata),
+			Essential:    types2.Bool(essential, metadata),
 			PortMappings: portMappings,
 			Environment:  envVars,
-			Privileged:   types.Bool(apiContainer.Privileged != nil && *apiContainer.Privileged, metadata),
+			Privileged:   types2.Bool(apiContainer.Privileged != nil && *apiContainer.Privileged, metadata),
 		})
 	}
 
@@ -118,7 +118,7 @@ func (a *adapter) adaptTaskDefinition(arn string) (*ecs.TaskDefinition, error) {
 			Metadata: metadata,
 			EFSVolumeConfiguration: ecs.EFSVolumeConfiguration{
 				Metadata:                 metadata,
-				TransitEncryptionEnabled: types.Bool(encrypted, metadata),
+				TransitEncryptionEnabled: types2.Bool(encrypted, metadata),
 			},
 		})
 	}

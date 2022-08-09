@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckNoDefaultServiceAccount(t *testing.T) {
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						ServiceAccount: compute.ServiceAccount{
-							Metadata: types.NewTestMetadata(),
-							Email:    types.String("", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Email:    types2.String("", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckNoDefaultServiceAccount(t *testing.T) {
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						ServiceAccount: compute.ServiceAccount{
-							Metadata: types.NewTestMetadata(),
-							Email:    types.String("1234567890-compute@developer.gserviceaccount.com", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Email:    types2.String("1234567890-compute@developer.gserviceaccount.com", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -54,10 +54,10 @@ func TestCheckNoDefaultServiceAccount(t *testing.T) {
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						ServiceAccount: compute.ServiceAccount{
-							Metadata: types.NewTestMetadata(),
-							Email:    types.String("proper@email.com", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Email:    types2.String("proper@email.com", types2.NewTestMetadata()),
 						},
 					},
 				},

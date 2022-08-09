@@ -3,7 +3,8 @@ package apigateway
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	v2 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -69,7 +70,7 @@ resource "aws_apigatewayv2_domain_name" "example" {
 				V1: v1.APIGateway{
 					APIs: []v1.API{
 						{
-							Metadata: types.Metadata{},
+							Metadata: types2.Metadata{},
 							Name:     String("MyDemoAPI"),
 							Resources: []v1.Resource{
 								{
@@ -126,16 +127,16 @@ resource "aws_apigatewayv2_domain_name" "example" {
 	}
 }
 
-func Int(i int) types.IntValue {
-	return types.Int(i, types.NewTestMetadata())
+func Int(i int) types2.IntValue {
+	return types2.Int(i, types2.NewTestMetadata())
 }
 
-func Bool(b bool) types.BoolValue {
-	return types.Bool(b, types.NewTestMetadata())
+func Bool(b bool) types2.BoolValue {
+	return types2.Bool(b, types2.NewTestMetadata())
 }
 
-func String(s string) types.StringValue {
-	return types.String(s, types.NewTestMetadata())
+func String(s string) types2.StringValue {
+	return types2.String(s, types2.NewTestMetadata())
 }
 func TestLines(t *testing.T) {
 	src := `

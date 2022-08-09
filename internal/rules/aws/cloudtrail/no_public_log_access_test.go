@@ -3,7 +3,7 @@ package cloudtrail
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -26,17 +26,17 @@ func TestCheckNoPublicLogAccess(t *testing.T) {
 			inputCT: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:   types.NewTestMetadata(),
-						BucketName: types.String("my-bucket", types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						BucketName: types2.String("my-bucket", types2.NewTestMetadata()),
 					},
 				},
 			},
 			inputS3: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("my-bucket", types.NewTestMetadata()),
-						ACL:      types.String("private", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Name:     types2.String("my-bucket", types2.NewTestMetadata()),
+						ACL:      types2.String("private", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -47,17 +47,17 @@ func TestCheckNoPublicLogAccess(t *testing.T) {
 			inputCT: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:   types.NewTestMetadata(),
-						BucketName: types.String("my-bucket", types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						BucketName: types2.String("my-bucket", types2.NewTestMetadata()),
 					},
 				},
 			},
 			inputS3: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.String("my-bucket", types.NewTestMetadata()),
-						ACL:      types.String("public-read", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Name:     types2.String("my-bucket", types2.NewTestMetadata()),
+						ACL:      types2.String("public-read", types2.NewTestMetadata()),
 					},
 				},
 			},

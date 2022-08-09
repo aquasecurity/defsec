@@ -3,9 +3,9 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,8 +25,8 @@ func TestCheckAddDescriptionToSecurityGroup(t *testing.T) {
 			input: ec2.EC2{
 				SecurityGroups: []ec2.SecurityGroup{
 					{
-						Metadata:    types.NewTestMetadata(),
-						Description: types.String("", types.NewTestMetadata()),
+						Metadata:    types2.NewTestMetadata(),
+						Description: types2.String("", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -37,8 +37,8 @@ func TestCheckAddDescriptionToSecurityGroup(t *testing.T) {
 			input: ec2.EC2{
 				SecurityGroups: []ec2.SecurityGroup{
 					{
-						Metadata:    types.NewTestMetadata(),
-						Description: types.String("Managed by Terraform", types.NewTestMetadata()),
+						Metadata:    types2.NewTestMetadata(),
+						Description: types2.String("Managed by Terraform", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -49,8 +49,8 @@ func TestCheckAddDescriptionToSecurityGroup(t *testing.T) {
 			input: ec2.EC2{
 				SecurityGroups: []ec2.SecurityGroup{
 					{
-						Metadata:    types.NewTestMetadata(),
-						Description: types.String("some proper description", types.NewTestMetadata()),
+						Metadata:    types2.NewTestMetadata(),
+						Description: types2.String("some proper description", types2.NewTestMetadata()),
 					},
 				},
 			},

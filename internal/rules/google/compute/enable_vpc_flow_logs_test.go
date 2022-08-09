@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEnableVPCFlowLogs(t *testing.T) {
 			input: compute.Compute{
 				Networks: []compute.Network{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Subnetworks: []compute.SubNetwork{
 							{
-								Metadata:       types.NewTestMetadata(),
-								EnableFlowLogs: types.Bool(false, types.NewTestMetadata()),
+								Metadata:       types2.NewTestMetadata(),
+								EnableFlowLogs: types2.Bool(false, types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,11 +41,11 @@ func TestCheckEnableVPCFlowLogs(t *testing.T) {
 			input: compute.Compute{
 				Networks: []compute.Network{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Subnetworks: []compute.SubNetwork{
 							{
-								Metadata:       types.NewTestMetadata(),
-								EnableFlowLogs: types.Bool(true, types.NewTestMetadata()),
+								Metadata:       types2.NewTestMetadata(),
+								EnableFlowLogs: types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 					},

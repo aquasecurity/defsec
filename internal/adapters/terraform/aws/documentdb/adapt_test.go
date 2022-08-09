@@ -3,7 +3,7 @@ package documentdb
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/documentdb"
 
@@ -38,19 +38,19 @@ func Test_adaptCluster(t *testing.T) {
 			  }
 `,
 			expected: documentdb.Cluster{
-				Metadata:   types.NewTestMetadata(),
-				Identifier: types.String("my-docdb-cluster", types.NewTestMetadata()),
-				KMSKeyID:   types.String("kms-key", types.NewTestMetadata()),
-				EnabledLogExports: []types.StringValue{
-					types.String("audit", types.NewTestMetadata()),
+				Metadata:   types2.NewTestMetadata(),
+				Identifier: types2.String("my-docdb-cluster", types2.NewTestMetadata()),
+				KMSKeyID:   types2.String("kms-key", types2.NewTestMetadata()),
+				EnabledLogExports: []types2.StringValue{
+					types2.String("audit", types2.NewTestMetadata()),
 				},
 				Instances: []documentdb.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("kms-key#1", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						KMSKeyID: types2.String("kms-key#1", types2.NewTestMetadata()),
 					},
 				},
-				StorageEncrypted: types.Bool(true, types.NewTestMetadata()),
+				StorageEncrypted: types2.Bool(true, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -60,10 +60,10 @@ func Test_adaptCluster(t *testing.T) {
 			}
 `,
 			expected: documentdb.Cluster{
-				Metadata:         types.NewTestMetadata(),
-				Identifier:       types.String("", types.NewTestMetadata()),
-				StorageEncrypted: types.Bool(false, types.NewTestMetadata()),
-				KMSKeyID:         types.String("", types.NewTestMetadata()),
+				Metadata:         types2.NewTestMetadata(),
+				Identifier:       types2.String("", types2.NewTestMetadata()),
+				StorageEncrypted: types2.Bool(false, types2.NewTestMetadata()),
+				KMSKeyID:         types2.String("", types2.NewTestMetadata()),
 			},
 		},
 	}

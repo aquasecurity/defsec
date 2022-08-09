@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckUseSshKeys(t *testing.T) {
 			input: compute.Compute{
 				Droplets: []compute.Droplet{
 					{
-						Metadata: types.NewTestMetadata(),
-						SSHKeys:  []types.StringValue{},
+						Metadata: types2.NewTestMetadata(),
+						SSHKeys:  []types2.StringValue{},
 					},
 				},
 			},
@@ -36,9 +36,9 @@ func TestCheckUseSshKeys(t *testing.T) {
 			input: compute.Compute{
 				Droplets: []compute.Droplet{
 					{
-						Metadata: types.NewTestMetadata(),
-						SSHKeys: []types.StringValue{
-							types.String("my-ssh-key", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						SSHKeys: []types2.StringValue{
+							types2.String("my-ssh-key", types2.NewTestMetadata()),
 						},
 					},
 				},

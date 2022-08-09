@@ -3,7 +3,7 @@ package datafactory
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/azure/datafactory"
 
@@ -31,8 +31,8 @@ func Test_adaptFactory(t *testing.T) {
 			  }
 `,
 			expected: datafactory.Factory{
-				Metadata:            types.NewTestMetadata(),
-				EnablePublicNetwork: types.Bool(false, types.NewTestMetadata()),
+				Metadata:            types2.NewTestMetadata(),
+				EnablePublicNetwork: types2.Bool(false, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -43,8 +43,8 @@ func Test_adaptFactory(t *testing.T) {
 			  }
 `,
 			expected: datafactory.Factory{
-				Metadata:            types.NewTestMetadata(),
-				EnablePublicNetwork: types.Bool(true, types.NewTestMetadata()),
+				Metadata:            types2.NewTestMetadata(),
+				EnablePublicNetwork: types2.Bool(true, types2.NewTestMetadata()),
 			},
 		},
 	}

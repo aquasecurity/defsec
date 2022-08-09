@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableStackdriverLogging(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata:       types.NewTestMetadata(),
-						LoggingService: types.String("", types.NewTestMetadata()),
+						Metadata:       types2.NewTestMetadata(),
+						LoggingService: types2.String("", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableStackdriverLogging(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata:       types.NewTestMetadata(),
-						LoggingService: types.String("logging.googleapis.com/kubernetes", types.NewTestMetadata()),
+						Metadata:       types2.NewTestMetadata(),
+						LoggingService: types2.String("logging.googleapis.com/kubernetes", types2.NewTestMetadata()),
 					},
 				},
 			},

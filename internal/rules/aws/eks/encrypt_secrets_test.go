@@ -3,7 +3,7 @@ package eks
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEncryptSecrets(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Encryption: eks.Encryption{
-							Metadata: types.NewTestMetadata(),
-							Secrets:  types.Bool(false, types.NewTestMetadata()),
-							KMSKeyID: types.String("", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Secrets:  types2.Bool(false, types2.NewTestMetadata()),
+							KMSKeyID: types2.String("", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckEncryptSecrets(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Encryption: eks.Encryption{
-							Metadata: types.NewTestMetadata(),
-							Secrets:  types.Bool(true, types.NewTestMetadata()),
-							KMSKeyID: types.String("", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Secrets:  types2.Bool(true, types2.NewTestMetadata()),
+							KMSKeyID: types2.String("", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,11 +56,11 @@ func TestCheckEncryptSecrets(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Encryption: eks.Encryption{
-							Metadata: types.NewTestMetadata(),
-							Secrets:  types.Bool(true, types.NewTestMetadata()),
-							KMSKeyID: types.String("some-arn", types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Secrets:  types2.Bool(true, types2.NewTestMetadata()),
+							KMSKeyID: types2.String("some-arn", types2.NewTestMetadata()),
 						},
 					},
 				},

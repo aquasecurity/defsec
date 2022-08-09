@@ -3,7 +3,7 @@ package keyvault
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,9 +24,9 @@ func TestCheckNoPurge(t *testing.T) {
 			input: keyvault.KeyVault{
 				Vaults: []keyvault.Vault{
 					{
-						Metadata:                types.NewTestMetadata(),
-						EnablePurgeProtection:   types.Bool(false, types.NewTestMetadata()),
-						SoftDeleteRetentionDays: types.Int(30, types.NewTestMetadata()),
+						Metadata:                types2.NewTestMetadata(),
+						EnablePurgeProtection:   types2.Bool(false, types2.NewTestMetadata()),
+						SoftDeleteRetentionDays: types2.Int(30, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -37,9 +37,9 @@ func TestCheckNoPurge(t *testing.T) {
 			input: keyvault.KeyVault{
 				Vaults: []keyvault.Vault{
 					{
-						Metadata:                types.NewTestMetadata(),
-						EnablePurgeProtection:   types.Bool(true, types.NewTestMetadata()),
-						SoftDeleteRetentionDays: types.Int(3, types.NewTestMetadata()),
+						Metadata:                types2.NewTestMetadata(),
+						EnablePurgeProtection:   types2.Bool(true, types2.NewTestMetadata()),
+						SoftDeleteRetentionDays: types2.Int(3, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -50,9 +50,9 @@ func TestCheckNoPurge(t *testing.T) {
 			input: keyvault.KeyVault{
 				Vaults: []keyvault.Vault{
 					{
-						Metadata:                types.NewTestMetadata(),
-						EnablePurgeProtection:   types.Bool(true, types.NewTestMetadata()),
-						SoftDeleteRetentionDays: types.Int(30, types.NewTestMetadata()),
+						Metadata:                types2.NewTestMetadata(),
+						EnablePurgeProtection:   types2.Bool(true, types2.NewTestMetadata()),
+						SoftDeleteRetentionDays: types2.Int(30, types2.NewTestMetadata()),
 					},
 				},
 			},

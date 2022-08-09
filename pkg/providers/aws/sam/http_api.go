@@ -1,20 +1,20 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type HttpAPI struct {
-	types.Metadata
-	Name                 types.StringValue
+	types2.Metadata
+	Name                 types2.StringValue
 	AccessLogging        AccessLogging
 	DefaultRouteSettings RouteSettings
 	DomainConfiguration  DomainConfiguration
 }
 
 type RouteSettings struct {
-	types.Metadata
-	LoggingEnabled         types.BoolValue
-	DataTraceEnabled       types.BoolValue
-	DetailedMetricsEnabled types.BoolValue
+	types2.Metadata
+	LoggingEnabled         types2.BoolValue
+	DataTraceEnabled       types2.BoolValue
+	DetailedMetricsEnabled types2.BoolValue
 }

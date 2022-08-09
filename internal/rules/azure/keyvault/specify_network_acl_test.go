@@ -3,7 +3,7 @@ package keyvault
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckSpecifyNetworkAcl(t *testing.T) {
 			input: keyvault.KeyVault{
 				Vaults: []keyvault.Vault{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						NetworkACLs: keyvault.NetworkACLs{
-							Metadata:      types.NewTestMetadata(),
-							DefaultAction: types.String("Allow", types.NewTestMetadata()),
+							Metadata:      types2.NewTestMetadata(),
+							DefaultAction: types2.String("Allow", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckSpecifyNetworkAcl(t *testing.T) {
 			input: keyvault.KeyVault{
 				Vaults: []keyvault.Vault{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						NetworkACLs: keyvault.NetworkACLs{
-							Metadata:      types.NewTestMetadata(),
-							DefaultAction: types.String("Deny", types.NewTestMetadata()),
+							Metadata:      types2.NewTestMetadata(),
+							DefaultAction: types2.String("Deny", types2.NewTestMetadata()),
 						},
 					},
 				},

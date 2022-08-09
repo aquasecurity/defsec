@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,24 +24,24 @@ func TestCheckNoUserGrantedPermissions(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Projects: []iam.Project{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata: types.NewTestMetadata(),
-										Member:   types.String("user:test@example.com", types.NewTestMetadata()),
-										Role:     types.String("some-role", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Member:   types2.String("user:test@example.com", types2.NewTestMetadata()),
+										Role:     types2.String("some-role", types2.NewTestMetadata()),
 									},
 								},
 								Bindings: []iam.Binding{
 									{
-										Metadata: types.NewTestMetadata(),
-										Members: []types.StringValue{
-											types.String("user:test@example.com", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Members: []types2.StringValue{
+											types2.String("user:test@example.com", types2.NewTestMetadata()),
 										},
-										Role: types.String("some-role", types.NewTestMetadata()),
+										Role: types2.String("some-role", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -56,12 +56,12 @@ func TestCheckNoUserGrantedPermissions(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Members: []iam.Member{
 							{
-								Metadata: types.NewTestMetadata(),
-								Member:   types.String("user:test@example.com", types.NewTestMetadata()),
-								Role:     types.String("some-role", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Member:   types2.String("user:test@example.com", types2.NewTestMetadata()),
+								Role:     types2.String("some-role", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -74,15 +74,15 @@ func TestCheckNoUserGrantedPermissions(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata: types.NewTestMetadata(),
-										Member:   types.String("user:test@example.com", types.NewTestMetadata()),
-										Role:     types.String("some-role", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Member:   types2.String("user:test@example.com", types2.NewTestMetadata()),
+										Role:     types2.String("some-role", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -97,17 +97,17 @@ func TestCheckNoUserGrantedPermissions(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Bindings: []iam.Binding{
 									{
-										Metadata: types.NewTestMetadata(),
-										Members: []types.StringValue{
-											types.String("user:test@example.com", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Members: []types2.StringValue{
+											types2.String("user:test@example.com", types2.NewTestMetadata()),
 										},
-										Role: types.String("some-role", types.NewTestMetadata()),
+										Role: types2.String("some-role", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -122,33 +122,33 @@ func TestCheckNoUserGrantedPermissions(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Members: []iam.Member{
 							{
-								Metadata: types.NewTestMetadata(),
-								Member:   types.String("group:test@example.com", types.NewTestMetadata()),
-								Role:     types.String("some-role", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Member:   types2.String("group:test@example.com", types2.NewTestMetadata()),
+								Role:     types2.String("some-role", types2.NewTestMetadata()),
 							},
 						},
 						Bindings: []iam.Binding{
 							{
-								Metadata: types.NewTestMetadata(),
-								Members: []types.StringValue{
-									types.String("group:test@example.com", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Members: []types2.StringValue{
+									types2.String("group:test@example.com", types2.NewTestMetadata()),
 								},
-								Role: types.String("some-role", types.NewTestMetadata()),
+								Role: types2.String("some-role", types2.NewTestMetadata()),
 							},
 						},
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Bindings: []iam.Binding{
 									{
-										Metadata: types.NewTestMetadata(),
-										Members: []types.StringValue{
-											types.String("group:test@example.com", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Members: []types2.StringValue{
+											types2.String("group:test@example.com", types2.NewTestMetadata()),
 										},
-										Role: types.String("some-role", types.NewTestMetadata()),
+										Role: types2.String("some-role", types2.NewTestMetadata()),
 									},
 								},
 							},

@@ -3,23 +3,23 @@ package parser
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type CFReference struct {
 	logicalId     string
-	resourceRange types.Range
+	resourceRange types2.Range
 	resolvedValue Property
 }
 
-func NewCFReference(id string, resourceRange types.Range) types.Reference {
+func NewCFReference(id string, resourceRange types2.Range) types2.Reference {
 	return &CFReference{
 		logicalId:     id,
 		resourceRange: resourceRange,
 	}
 }
 
-func NewCFReferenceWithValue(resourceRange types.Range, resolvedValue Property, logicalId string) types.Reference {
+func NewCFReferenceWithValue(resourceRange types2.Range, resolvedValue Property, logicalId string) types2.Reference {
 	return &CFReference{
 		resourceRange: resourceRange,
 		resolvedValue: resolvedValue,
@@ -35,15 +35,15 @@ func (cf *CFReference) LogicalID() string {
 	return cf.logicalId
 }
 
-func (cf *CFReference) RefersTo(r types.Reference) bool {
+func (cf *CFReference) RefersTo(r types2.Reference) bool {
 	return false
 }
 
-func (cf *CFReference) ResourceRange() types.Range {
+func (cf *CFReference) ResourceRange() types2.Range {
 	return cf.resourceRange
 }
 
-func (cf *CFReference) PropertyRange() types.Range {
+func (cf *CFReference) PropertyRange() types2.Range {
 	if cf.resolvedValue.IsNotNil() {
 		return cf.resolvedValue.Range()
 	}

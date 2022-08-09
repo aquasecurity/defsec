@@ -3,7 +3,7 @@ package iam
 import (
 	"math"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
@@ -13,14 +13,14 @@ import (
 func adaptPasswordPolicy(modules terraform.Modules) iam.PasswordPolicy {
 
 	policy := iam.PasswordPolicy{
-		Metadata:             types.NewUnmanagedMetadata(),
-		ReusePreventionCount: types.IntDefault(0, types.NewUnmanagedMetadata()),
-		RequireLowercase:     types.BoolDefault(false, types.NewUnmanagedMetadata()),
-		RequireUppercase:     types.BoolDefault(false, types.NewUnmanagedMetadata()),
-		RequireNumbers:       types.BoolDefault(false, types.NewUnmanagedMetadata()),
-		RequireSymbols:       types.BoolDefault(false, types.NewUnmanagedMetadata()),
-		MaxAgeDays:           types.IntDefault(math.MaxInt, types.NewUnmanagedMetadata()),
-		MinimumLength:        types.IntDefault(0, types.NewUnmanagedMetadata()),
+		Metadata:             types2.NewUnmanagedMetadata(),
+		ReusePreventionCount: types2.IntDefault(0, types2.NewUnmanagedMetadata()),
+		RequireLowercase:     types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+		RequireUppercase:     types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+		RequireNumbers:       types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+		RequireSymbols:       types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+		MaxAgeDays:           types2.IntDefault(math.MaxInt, types2.NewUnmanagedMetadata()),
+		MinimumLength:        types2.IntDefault(0, types2.NewUnmanagedMetadata()),
 	}
 
 	passwordPolicies := modules.GetResourcesByType("aws_iam_account_password_policy")
@@ -34,42 +34,42 @@ func adaptPasswordPolicy(modules terraform.Modules) iam.PasswordPolicy {
 	policy.Metadata = policyBlock.GetMetadata()
 
 	if attr := policyBlock.GetAttribute("require_lowercase_characters"); attr.IsNotNil() {
-		policy.RequireLowercase = types.BoolExplicit(attr.IsTrue(), attr.GetMetadata())
+		policy.RequireLowercase = types2.BoolExplicit(attr.IsTrue(), attr.GetMetadata())
 	} else {
-		policy.RequireLowercase = types.BoolDefault(false, policyBlock.GetMetadata())
+		policy.RequireLowercase = types2.BoolDefault(false, policyBlock.GetMetadata())
 	}
 	if attr := policyBlock.GetAttribute("require_uppercase_characters"); attr.IsNotNil() {
-		policy.RequireUppercase = types.BoolExplicit(attr.IsTrue(), attr.GetMetadata())
+		policy.RequireUppercase = types2.BoolExplicit(attr.IsTrue(), attr.GetMetadata())
 	} else {
-		policy.RequireUppercase = types.BoolDefault(false, policyBlock.GetMetadata())
+		policy.RequireUppercase = types2.BoolDefault(false, policyBlock.GetMetadata())
 	}
 	if attr := policyBlock.GetAttribute("require_numbers"); attr.IsNotNil() {
-		policy.RequireNumbers = types.BoolExplicit(attr.IsTrue(), attr.GetMetadata())
+		policy.RequireNumbers = types2.BoolExplicit(attr.IsTrue(), attr.GetMetadata())
 	} else {
-		policy.RequireNumbers = types.BoolDefault(false, policyBlock.GetMetadata())
+		policy.RequireNumbers = types2.BoolDefault(false, policyBlock.GetMetadata())
 	}
 	if attr := policyBlock.GetAttribute("require_symbols"); attr.IsNotNil() {
-		policy.RequireSymbols = types.BoolExplicit(attr.IsTrue(), attr.GetMetadata())
+		policy.RequireSymbols = types2.BoolExplicit(attr.IsTrue(), attr.GetMetadata())
 	} else {
-		policy.RequireSymbols = types.BoolDefault(false, policyBlock.GetMetadata())
+		policy.RequireSymbols = types2.BoolDefault(false, policyBlock.GetMetadata())
 	}
 	if attr := policyBlock.GetAttribute("password_reuse_prevention"); attr.IsNumber() {
 		value := attr.AsNumber()
-		policy.ReusePreventionCount = types.IntExplicit(int(value), attr.GetMetadata())
+		policy.ReusePreventionCount = types2.IntExplicit(int(value), attr.GetMetadata())
 	} else {
-		policy.ReusePreventionCount = types.IntDefault(0, policyBlock.GetMetadata())
+		policy.ReusePreventionCount = types2.IntDefault(0, policyBlock.GetMetadata())
 	}
 	if attr := policyBlock.GetAttribute("max_password_age"); attr.IsNumber() {
 		value := attr.AsNumber()
-		policy.MaxAgeDays = types.IntExplicit(int(value), attr.GetMetadata())
+		policy.MaxAgeDays = types2.IntExplicit(int(value), attr.GetMetadata())
 	} else {
-		policy.MaxAgeDays = types.IntDefault(math.MaxInt, policyBlock.GetMetadata())
+		policy.MaxAgeDays = types2.IntDefault(math.MaxInt, policyBlock.GetMetadata())
 	}
 	if attr := policyBlock.GetAttribute("minimum_password_length"); attr.IsNumber() {
 		value := attr.AsNumber()
-		policy.MinimumLength = types.IntExplicit(int(value), attr.GetMetadata())
+		policy.MinimumLength = types2.IntExplicit(int(value), attr.GetMetadata())
 	} else {
-		policy.MinimumLength = types.IntDefault(0, policyBlock.GetMetadata())
+		policy.MinimumLength = types2.IntDefault(0, policyBlock.GetMetadata())
 	}
 
 	return policy

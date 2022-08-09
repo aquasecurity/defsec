@@ -1,7 +1,7 @@
 package kms
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type KMS struct {
@@ -9,11 +9,11 @@ type KMS struct {
 }
 
 type KeyRing struct {
-	types.Metadata
+	types2.Metadata
 	Keys []Key
 }
 
 type Key struct {
-	types.Metadata
-	RotationPeriodSeconds types.IntValue
+	types2.Metadata
+	RotationPeriodSeconds types2.IntValue
 }

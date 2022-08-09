@@ -3,7 +3,7 @@ package dns
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,18 +24,18 @@ func TestCheckNoRsaSha1(t *testing.T) {
 			input: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						DNSSec: dns.DNSSec{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							DefaultKeySpecs: dns.KeySpecs{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								KeySigningKey: dns.Key{
-									Metadata:  types.NewTestMetadata(),
-									Algorithm: types.String("rsasha1", types.NewTestMetadata()),
+									Metadata:  types2.NewTestMetadata(),
+									Algorithm: types2.String("rsasha1", types2.NewTestMetadata()),
 								},
 								ZoneSigningKey: dns.Key{
-									Metadata:  types.NewTestMetadata(),
-									Algorithm: types.String("rsasha1", types.NewTestMetadata()),
+									Metadata:  types2.NewTestMetadata(),
+									Algorithm: types2.String("rsasha1", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -49,18 +49,18 @@ func TestCheckNoRsaSha1(t *testing.T) {
 			input: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						DNSSec: dns.DNSSec{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							DefaultKeySpecs: dns.KeySpecs{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								KeySigningKey: dns.Key{
-									Metadata:  types.NewTestMetadata(),
-									Algorithm: types.String("rsasha512", types.NewTestMetadata()),
+									Metadata:  types2.NewTestMetadata(),
+									Algorithm: types2.String("rsasha512", types2.NewTestMetadata()),
 								},
 								ZoneSigningKey: dns.Key{
-									Metadata:  types.NewTestMetadata(),
-									Algorithm: types.String("rsasha512", types.NewTestMetadata()),
+									Metadata:  types2.NewTestMetadata(),
+									Algorithm: types2.String("rsasha512", types2.NewTestMetadata()),
 								},
 							},
 						},

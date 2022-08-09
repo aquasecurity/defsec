@@ -1,7 +1,7 @@
 package database
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Database struct {
@@ -12,57 +12,57 @@ type Database struct {
 }
 
 type MariaDBServer struct {
-	types.Metadata
+	types2.Metadata
 	Server
 }
 
 type MySQLServer struct {
-	types.Metadata
+	types2.Metadata
 	Server
 }
 
 type PostgreSQLServer struct {
-	types.Metadata
+	types2.Metadata
 	Server
 	Config PostgresSQLConfig
 }
 
 type PostgresSQLConfig struct {
-	types.Metadata
-	LogCheckpoints       types.BoolValue
-	ConnectionThrottling types.BoolValue
-	LogConnections       types.BoolValue
+	types2.Metadata
+	LogCheckpoints       types2.BoolValue
+	ConnectionThrottling types2.BoolValue
+	LogConnections       types2.BoolValue
 }
 
 type Server struct {
-	types.Metadata
-	EnableSSLEnforcement      types.BoolValue
-	MinimumTLSVersion         types.StringValue
-	EnablePublicNetworkAccess types.BoolValue
+	types2.Metadata
+	EnableSSLEnforcement      types2.BoolValue
+	MinimumTLSVersion         types2.StringValue
+	EnablePublicNetworkAccess types2.BoolValue
 	FirewallRules             []FirewallRule
 }
 
 type MSSQLServer struct {
-	types.Metadata
+	types2.Metadata
 	Server
 	ExtendedAuditingPolicies []ExtendedAuditingPolicy
 	SecurityAlertPolicies    []SecurityAlertPolicy
 }
 
 type SecurityAlertPolicy struct {
-	types.Metadata
-	EmailAddresses     []types.StringValue
-	DisabledAlerts     []types.StringValue
-	EmailAccountAdmins types.BoolValue
+	types2.Metadata
+	EmailAddresses     []types2.StringValue
+	DisabledAlerts     []types2.StringValue
+	EmailAccountAdmins types2.BoolValue
 }
 
 type ExtendedAuditingPolicy struct {
-	types.Metadata
-	RetentionInDays types.IntValue
+	types2.Metadata
+	RetentionInDays types2.IntValue
 }
 
 type FirewallRule struct {
-	types.Metadata
-	StartIP types.StringValue
-	EndIP   types.StringValue
+	types2.Metadata
+	StartIP types2.StringValue
+	EndIP   types2.StringValue
 }

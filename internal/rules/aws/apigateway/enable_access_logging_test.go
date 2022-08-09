@@ -3,9 +3,9 @@ package apigateway
 import (
 	"testing"
 
-	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,13 +25,13 @@ func TestCheckEnableAccessLogging(t *testing.T) {
 			input: v1.APIGateway{
 				APIs: []v1.API{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Stages: []v1.Stage{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								AccessLogging: v1.AccessLogging{
-									Metadata:              types.NewTestMetadata(),
-									CloudwatchLogGroupARN: types.String("", types.NewTestMetadata()),
+									Metadata:              types2.NewTestMetadata(),
+									CloudwatchLogGroupARN: types2.String("", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -45,13 +45,13 @@ func TestCheckEnableAccessLogging(t *testing.T) {
 			input: v1.APIGateway{
 				APIs: []v1.API{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Stages: []v1.Stage{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								AccessLogging: v1.AccessLogging{
-									Metadata:              types.NewTestMetadata(),
-									CloudwatchLogGroupARN: types.String("log-group-arn", types.NewTestMetadata()),
+									Metadata:              types2.NewTestMetadata(),
+									CloudwatchLogGroupARN: types2.String("log-group-arn", types2.NewTestMetadata()),
 								},
 							},
 						},

@@ -1,7 +1,7 @@
 package ssm
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type SSM struct {
@@ -9,8 +9,8 @@ type SSM struct {
 }
 
 type Secret struct {
-	types.Metadata
-	KMSKeyID types.StringValue
+	types2.Metadata
+	KMSKeyID types2.StringValue
 }
 
 const DefaultKMSKeyID = "alias/aws/secretsmanager"

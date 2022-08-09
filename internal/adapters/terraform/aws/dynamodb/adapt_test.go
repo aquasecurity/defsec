@@ -3,7 +3,7 @@ package dynamodb
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/dynamodb"
 
@@ -30,13 +30,13 @@ func Test_adaptCluster(t *testing.T) {
 			  }
 `,
 			expected: dynamodb.DAXCluster{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				ServerSideEncryption: dynamodb.ServerSideEncryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
-					KMSKeyID: types.String("", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+					KMSKeyID: types2.String("", types2.NewTestMetadata()),
 				},
-				PointInTimeRecovery: types.Bool(false, types.NewTestMetadata()),
+				PointInTimeRecovery: types2.Bool(false, types2.NewTestMetadata()),
 			},
 		},
 	}
@@ -73,13 +73,13 @@ func Test_adaptTable(t *testing.T) {
 			}
 `,
 			expected: dynamodb.Table{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				ServerSideEncryption: dynamodb.ServerSideEncryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
-					KMSKeyID: types.String("key-string", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+					KMSKeyID: types2.String("key-string", types2.NewTestMetadata()),
 				},
-				PointInTimeRecovery: types.Bool(true, types.NewTestMetadata()),
+				PointInTimeRecovery: types2.Bool(true, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -92,13 +92,13 @@ func Test_adaptTable(t *testing.T) {
 			  }
 `,
 			expected: dynamodb.Table{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				ServerSideEncryption: dynamodb.ServerSideEncryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
-					KMSKeyID: types.String("alias/aws/dynamodb", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+					KMSKeyID: types2.String("alias/aws/dynamodb", types2.NewTestMetadata()),
 				},
-				PointInTimeRecovery: types.Bool(false, types.NewTestMetadata()),
+				PointInTimeRecovery: types2.Bool(false, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -117,13 +117,13 @@ func Test_adaptTable(t *testing.T) {
 			  }
 `,
 			expected: dynamodb.Table{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				ServerSideEncryption: dynamodb.ServerSideEncryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
-					KMSKeyID: types.String("aws_kms_key.a", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+					KMSKeyID: types2.String("aws_kms_key.a", types2.NewTestMetadata()),
 				},
-				PointInTimeRecovery: types.Bool(false, types.NewTestMetadata()),
+				PointInTimeRecovery: types2.Bool(false, types2.NewTestMetadata()),
 			},
 		},
 	}

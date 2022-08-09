@@ -3,7 +3,7 @@ package keyvault
 import (
 	"time"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
@@ -40,14 +40,14 @@ func (a *adapter) adaptVaults(modules terraform.Modules) []keyvault.Vault {
 
 	if len(orphanResources) > 0 {
 		orphanage := keyvault.Vault{
-			Metadata:                types.NewUnmanagedMetadata(),
+			Metadata:                types2.NewUnmanagedMetadata(),
 			Secrets:                 nil,
 			Keys:                    nil,
-			EnablePurgeProtection:   types.BoolDefault(false, types.NewUnmanagedMetadata()),
-			SoftDeleteRetentionDays: types.IntDefault(0, types.NewUnmanagedMetadata()),
+			EnablePurgeProtection:   types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+			SoftDeleteRetentionDays: types2.IntDefault(0, types2.NewUnmanagedMetadata()),
 			NetworkACLs: keyvault.NetworkACLs{
-				Metadata:      types.NewUnmanagedMetadata(),
-				DefaultAction: types.StringDefault("", types.NewUnmanagedMetadata()),
+				Metadata:      types2.NewUnmanagedMetadata(),
+				DefaultAction: types2.StringDefault("", types2.NewUnmanagedMetadata()),
 			},
 		}
 		for _, secretResource := range orphanResources {
@@ -60,14 +60,14 @@ func (a *adapter) adaptVaults(modules terraform.Modules) []keyvault.Vault {
 
 	if len(orphanResources) > 0 {
 		orphanage := keyvault.Vault{
-			Metadata:                types.NewUnmanagedMetadata(),
+			Metadata:                types2.NewUnmanagedMetadata(),
 			Secrets:                 nil,
 			Keys:                    nil,
-			EnablePurgeProtection:   types.BoolDefault(false, types.NewUnmanagedMetadata()),
-			SoftDeleteRetentionDays: types.IntDefault(0, types.NewUnmanagedMetadata()),
+			EnablePurgeProtection:   types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+			SoftDeleteRetentionDays: types2.IntDefault(0, types2.NewUnmanagedMetadata()),
 			NetworkACLs: keyvault.NetworkACLs{
-				Metadata:      types.NewUnmanagedMetadata(),
-				DefaultAction: types.StringDefault("", types.NewUnmanagedMetadata()),
+				Metadata:      types2.NewUnmanagedMetadata(),
+				DefaultAction: types2.StringDefault("", types2.NewUnmanagedMetadata()),
 			},
 		}
 		for _, secretResource := range orphanResources {
@@ -83,7 +83,7 @@ func (a *adapter) adaptVault(resource *terraform.Block, module *terraform.Module
 	var keys []keyvault.Key
 	var secrets []keyvault.Secret
 
-	defaultActionVal := types.StringDefault("", resource.GetMetadata())
+	defaultActionVal := types2.StringDefault("", resource.GetMetadata())
 
 	secretBlocks := module.GetReferencingResources(resource, "azurerm_key_vault_secret", "key_vault_id")
 	for _, secretBlock := range secretBlocks {
@@ -103,7 +103,7 @@ func (a *adapter) adaptVault(resource *terraform.Block, module *terraform.Module
 	softDeleteRetentionDaysAttr := resource.GetAttribute("soft_delete_retention_days")
 	softDeleteRetentionDaysVal := softDeleteRetentionDaysAttr.AsIntValueOrDefault(0, resource)
 
-	aclMetadata := types.NewUnmanagedMetadata()
+	aclMetadata := types2.NewUnmanagedMetadata()
 	if aclBlock := resource.GetBlock("network_acls"); aclBlock.IsNotNil() {
 		aclMetadata = aclBlock.GetMetadata()
 		defaultActionAttr := aclBlock.GetAttribute("default_action")
@@ -128,15 +128,15 @@ func adaptSecret(resource *terraform.Block) keyvault.Secret {
 	contentTypeVal := contentTypeAttr.AsStringValueOrDefault("", resource)
 
 	expiryDateAttr := resource.GetAttribute("expiration_date")
-	expiryDateVal := types.TimeDefault(time.Time{}, resource.GetMetadata())
+	expiryDateVal := types2.TimeDefault(time.Time{}, resource.GetMetadata())
 
 	if expiryDateAttr.IsString() {
 		expiryDateString := expiryDateAttr.Value().AsString()
 		if expiryDate, err := time.Parse(time.RFC3339, expiryDateString); err == nil {
-			expiryDateVal = types.Time(expiryDate, expiryDateAttr.GetMetadata())
+			expiryDateVal = types2.Time(expiryDate, expiryDateAttr.GetMetadata())
 		}
 	} else if expiryDateAttr.IsNotNil() {
-		expiryDateVal = types.TimeUnresolvable(expiryDateAttr.GetMetadata())
+		expiryDateVal = types2.TimeUnresolvable(expiryDateAttr.GetMetadata())
 	}
 
 	return keyvault.Secret{
@@ -148,12 +148,12 @@ func adaptSecret(resource *terraform.Block) keyvault.Secret {
 
 func adaptKey(resource *terraform.Block) keyvault.Key {
 	expiryDateAttr := resource.GetAttribute("expiration_date")
-	expiryDateVal := types.TimeDefault(time.Time{}, resource.GetMetadata())
+	expiryDateVal := types2.TimeDefault(time.Time{}, resource.GetMetadata())
 
 	if expiryDateAttr.IsNotNil() {
 		expiryDateString := expiryDateAttr.Value().AsString()
 		if expiryDate, err := time.Parse(time.RFC3339, expiryDateString); err == nil {
-			expiryDateVal = types.Time(expiryDate, expiryDateAttr.GetMetadata())
+			expiryDateVal = types2.Time(expiryDate, expiryDateAttr.GetMetadata())
 		}
 	}
 

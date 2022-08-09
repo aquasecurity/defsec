@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckAutoUpgrade(t *testing.T) {
 			input: compute.Compute{
 				KubernetesClusters: []compute.KubernetesCluster{
 					{
-						Metadata:    types.NewTestMetadata(),
-						AutoUpgrade: types.Bool(false, types.NewTestMetadata()),
+						Metadata:    types2.NewTestMetadata(),
+						AutoUpgrade: types2.Bool(false, types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckAutoUpgrade(t *testing.T) {
 			input: compute.Compute{
 				KubernetesClusters: []compute.KubernetesCluster{
 					{
-						Metadata:    types.NewTestMetadata(),
-						AutoUpgrade: types.Bool(true, types.NewTestMetadata()),
+						Metadata:    types2.NewTestMetadata(),
+						AutoUpgrade: types2.Bool(true, types2.NewTestMetadata()),
 					},
 				},
 			},

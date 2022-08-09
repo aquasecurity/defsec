@@ -1,39 +1,39 @@
 package ec2
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/owenrumney/squealer/pkg/squealer"
 )
 
 type Instance struct {
-	types.Metadata
+	types2.Metadata
 	MetadataOptions MetadataOptions
-	UserData        types.StringValue
+	UserData        types2.StringValue
 	SecurityGroups  []SecurityGroup
 	RootBlockDevice *BlockDevice
 	EBSBlockDevices []*BlockDevice
 }
 
 type BlockDevice struct {
-	types.Metadata
-	Encrypted types.BoolValue
+	types2.Metadata
+	Encrypted types2.BoolValue
 }
 
 type MetadataOptions struct {
-	types.Metadata
-	HttpTokens   types.StringValue
-	HttpEndpoint types.StringValue
+	types2.Metadata
+	HttpTokens   types2.StringValue
+	HttpEndpoint types2.StringValue
 }
 
-func NewInstance(metadata types.Metadata) Instance {
+func NewInstance(metadata types2.Metadata) Instance {
 	return Instance{
 		Metadata: metadata,
 		MetadataOptions: MetadataOptions{
 			Metadata:     metadata,
-			HttpTokens:   types.StringDefault("optional", metadata),
-			HttpEndpoint: types.StringDefault("enabled", metadata),
+			HttpTokens:   types2.StringDefault("optional", metadata),
+			HttpEndpoint: types2.StringDefault("enabled", metadata),
 		},
-		UserData:        types.StringDefault("", metadata),
+		UserData:        types2.StringDefault("", metadata),
 		SecurityGroups:  []SecurityGroup{},
 		RootBlockDevice: nil,
 		EBSBlockDevices: nil,

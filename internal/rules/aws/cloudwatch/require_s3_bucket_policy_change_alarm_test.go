@@ -3,7 +3,8 @@ package cloudwatch
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -23,39 +24,39 @@ func TestCheckRequireS3BucketPolicyChangeAlarm(t *testing.T) {
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						CloudWatchLogsLogGroupArn: types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
-						IsLogging:                 types.Bool(true, types.NewTestMetadata()),
-						IsMultiRegion:             types.Bool(true, types.NewTestMetadata()),
+						Metadata:                  types2.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: types2.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types2.NewTestMetadata()),
+						IsLogging:                 types2.Bool(true, types2.NewTestMetadata()),
+						IsMultiRegion:             types2.Bool(true, types2.NewTestMetadata()),
 					},
 				},
 			},
 			cloudwatch: cloudwatch.CloudWatch{
 				LogGroups: []cloudwatch.LogGroup{
 					{
-						Metadata: types.NewTestMetadata(),
-						Arn:      types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
+						Metadata: types2.NewTestMetadata(),
+						Arn:      types2.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types2.NewTestMetadata()),
 						MetricFilters: []cloudwatch.MetricFilter{
 							{
-								Metadata:   types.NewTestMetadata(),
-								FilterName: types.String("BucketPolicyChange", types.NewTestMetadata()),
-								FilterPattern: types.String(`{($.eventSource=s3.amazonaws.com) && (($.eventName=PutBucketAcl) || 
+								Metadata:   types2.NewTestMetadata(),
+								FilterName: types2.String("BucketPolicyChange", types2.NewTestMetadata()),
+								FilterPattern: types2.String(`{($.eventSource=s3.amazonaws.com) && (($.eventName=PutBucketAcl) || 
 					($.eventName=PutBucketPolicy) || ($.eventName=PutBucketCors) || ($.eventName=PutBucketLifecycle) || 
 					($.eventName=PutBucketReplication) || ($.eventName=DeleteBucketPolicy) || ($.eventName=DeleteBucketCors) ||
-					 ($.eventName=DeleteBucketLifecycle) || ($.eventName=DeleteBucketReplication))}`, types.NewTestMetadata()),
+					 ($.eventName=DeleteBucketLifecycle) || ($.eventName=DeleteBucketReplication))}`, types2.NewTestMetadata()),
 							},
 						},
 					},
 				},
 				Alarms: []cloudwatch.Alarm{
 					{
-						Metadata:   types.NewTestMetadata(),
-						AlarmName:  types.String("BucketPolicyChange", types.NewTestMetadata()),
-						MetricName: types.String("BucketPolicyChange", types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						AlarmName:  types2.String("BucketPolicyChange", types2.NewTestMetadata()),
+						MetricName: types2.String("BucketPolicyChange", types2.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{
-								Metadata: types.NewTestMetadata(),
-								ID:       types.String("BucketPolicyChange", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								ID:       types2.String("BucketPolicyChange", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -68,25 +69,25 @@ func TestCheckRequireS3BucketPolicyChangeAlarm(t *testing.T) {
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						CloudWatchLogsLogGroupArn: types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
-						IsLogging:                 types.Bool(true, types.NewTestMetadata()),
-						IsMultiRegion:             types.Bool(true, types.NewTestMetadata()),
+						Metadata:                  types2.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: types2.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types2.NewTestMetadata()),
+						IsLogging:                 types2.Bool(true, types2.NewTestMetadata()),
+						IsMultiRegion:             types2.Bool(true, types2.NewTestMetadata()),
 					},
 				},
 			},
 			cloudwatch: cloudwatch.CloudWatch{
 				LogGroups: []cloudwatch.LogGroup{
 					{
-						Metadata:      types.NewTestMetadata(),
-						Arn:           types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
+						Metadata:      types2.NewTestMetadata(),
+						Arn:           types2.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types2.NewTestMetadata()),
 						MetricFilters: []cloudwatch.MetricFilter{},
 					},
 				},
 				Alarms: []cloudwatch.Alarm{
 					{
-						Metadata:  types.NewTestMetadata(),
-						AlarmName: types.String("BucketPolicyChange", types.NewTestMetadata()),
+						Metadata:  types2.NewTestMetadata(),
+						AlarmName: types2.String("BucketPolicyChange", types2.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{},
 						},

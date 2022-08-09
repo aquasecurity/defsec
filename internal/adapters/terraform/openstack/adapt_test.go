@@ -3,7 +3,7 @@ package openstack
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/openstack"
 
@@ -31,8 +31,8 @@ func TestFields(t *testing.T) {
 				Compute: openstack.Compute{
 					Instances: []openstack.Instance{
 						{
-							Metadata:      types.NewTestMetadata(),
-							AdminPassword: types.String("N0tSoS3cretP4ssw0rd", types.NewTestMetadata()),
+							Metadata:      types2.NewTestMetadata(),
+							AdminPassword: types2.String("N0tSoS3cretP4ssw0rd", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -47,8 +47,8 @@ func TestFields(t *testing.T) {
 				Compute: openstack.Compute{
 					Instances: []openstack.Instance{
 						{
-							Metadata:      types.NewTestMetadata(),
-							AdminPassword: types.String("", types.NewTestMetadata()),
+							Metadata:      types2.NewTestMetadata(),
+							AdminPassword: types2.String("", types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -70,12 +70,12 @@ func TestFields(t *testing.T) {
 					Firewall: openstack.Firewall{
 						AllowRules: []openstack.FirewallRule{
 							{
-								Metadata:        types.NewTestMetadata(),
-								Enabled:         types.Bool(true, types.NewTestMetadata()),
-								Destination:     types.String("10.10.10.1", types.NewTestMetadata()),
-								Source:          types.String("10.10.10.2", types.NewTestMetadata()),
-								DestinationPort: types.String("22", types.NewTestMetadata()),
-								SourcePort:      types.String("", types.NewTestMetadata()),
+								Metadata:        types2.NewTestMetadata(),
+								Enabled:         types2.Bool(true, types2.NewTestMetadata()),
+								Destination:     types2.String("10.10.10.1", types2.NewTestMetadata()),
+								Source:          types2.String("10.10.10.2", types2.NewTestMetadata()),
+								DestinationPort: types2.String("22", types2.NewTestMetadata()),
+								SourcePort:      types2.String("", types2.NewTestMetadata()),
 							},
 						},
 					},

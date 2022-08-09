@@ -1,7 +1,7 @@
 package cloudfront
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Cloudfront struct {
@@ -9,8 +9,8 @@ type Cloudfront struct {
 }
 
 type Distribution struct {
-	types.Metadata
-	WAFID                  types.StringValue
+	types2.Metadata
+	WAFID                  types2.StringValue
 	Logging                Logging
 	DefaultCacheBehaviour  CacheBehaviour
 	OrdererCacheBehaviours []CacheBehaviour
@@ -18,13 +18,13 @@ type Distribution struct {
 }
 
 type Logging struct {
-	types.Metadata
-	Bucket types.StringValue
+	types2.Metadata
+	Bucket types2.StringValue
 }
 
 type CacheBehaviour struct {
-	types.Metadata
-	ViewerProtocolPolicy types.StringValue
+	types2.Metadata
+	ViewerProtocolPolicy types2.StringValue
 }
 
 const (
@@ -38,6 +38,6 @@ const (
 )
 
 type ViewerCertificate struct {
-	types.Metadata
-	MinimumProtocolVersion types.StringValue
+	types2.Metadata
+	MinimumProtocolVersion types2.StringValue
 }

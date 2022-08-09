@@ -3,8 +3,9 @@ package database
 import (
 	"testing"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/database"
 	"github.com/aquasecurity/defsec/test/testutil"
 	"github.com/stretchr/testify/assert"
@@ -60,25 +61,25 @@ func Test_Adapt(t *testing.T) {
 			expected: database.Database{
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnableSSLEnforcement:      types.Bool(true, types.NewTestMetadata()),
-							MinimumTLSVersion:         types.String("TLS1_2", types.NewTestMetadata()),
-							EnablePublicNetworkAccess: types.Bool(true, types.NewTestMetadata()),
+							Metadata:                  types2.NewTestMetadata(),
+							EnableSSLEnforcement:      types2.Bool(true, types2.NewTestMetadata()),
+							MinimumTLSVersion:         types2.String("TLS1_2", types2.NewTestMetadata()),
+							EnablePublicNetworkAccess: types2.Bool(true, types2.NewTestMetadata()),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("40.112.8.12", types.NewTestMetadata()),
-									EndIP:    types.String("40.112.8.12", types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									StartIP:  types2.String("40.112.8.12", types2.NewTestMetadata()),
+									EndIP:    types2.String("40.112.8.12", types2.NewTestMetadata()),
 								},
 							},
 						},
 						Config: database.PostgresSQLConfig{
-							Metadata:             types.NewTestMetadata(),
-							LogConnections:       types.Bool(true, types.NewTestMetadata()),
-							LogCheckpoints:       types.Bool(true, types.NewTestMetadata()),
-							ConnectionThrottling: types.Bool(true, types.NewTestMetadata()),
+							Metadata:             types2.NewTestMetadata(),
+							LogConnections:       types2.Bool(true, types2.NewTestMetadata()),
+							LogCheckpoints:       types2.Bool(true, types2.NewTestMetadata()),
+							ConnectionThrottling: types2.Bool(true, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -106,17 +107,17 @@ func Test_Adapt(t *testing.T) {
 			expected: database.Database{
 				MariaDBServers: []database.MariaDBServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnableSSLEnforcement:      types.Bool(true, types.NewTestMetadata()),
-							MinimumTLSVersion:         types.String("", types.NewTestMetadata()),
-							EnablePublicNetworkAccess: types.Bool(false, types.NewTestMetadata()),
+							Metadata:                  types2.NewTestMetadata(),
+							EnableSSLEnforcement:      types2.Bool(true, types2.NewTestMetadata()),
+							MinimumTLSVersion:         types2.String("", types2.NewTestMetadata()),
+							EnablePublicNetworkAccess: types2.Bool(false, types2.NewTestMetadata()),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("40.112.0.0", types.NewTestMetadata()),
-									EndIP:    types.String("40.112.255.255", types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									StartIP:  types2.String("40.112.0.0", types2.NewTestMetadata()),
+									EndIP:    types2.String("40.112.255.255", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -142,17 +143,17 @@ func Test_Adapt(t *testing.T) {
 			expected: database.Database{
 				MySQLServers: []database.MySQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							EnableSSLEnforcement:      types.Bool(true, types.NewTestMetadata()),
-							MinimumTLSVersion:         types.String("TLS1_2", types.NewTestMetadata()),
-							EnablePublicNetworkAccess: types.Bool(true, types.NewTestMetadata()),
+							Metadata:                  types2.NewTestMetadata(),
+							EnableSSLEnforcement:      types2.Bool(true, types2.NewTestMetadata()),
+							MinimumTLSVersion:         types2.String("TLS1_2", types2.NewTestMetadata()),
+							EnablePublicNetworkAccess: types2.Bool(true, types2.NewTestMetadata()),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("40.112.8.12", types.NewTestMetadata()),
-									EndIP:    types.String("40.112.8.12", types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									StartIP:  types2.String("40.112.8.12", types2.NewTestMetadata()),
+									EndIP:    types2.String("40.112.8.12", types2.NewTestMetadata()),
 								},
 							},
 						},
@@ -197,37 +198,37 @@ func Test_Adapt(t *testing.T) {
 			expected: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:                  types.NewTestMetadata(),
-							MinimumTLSVersion:         types.String("1.2", types.NewTestMetadata()),
-							EnablePublicNetworkAccess: types.Bool(false, types.NewTestMetadata()),
-							EnableSSLEnforcement:      types.Bool(false, types.NewTestMetadata()),
+							Metadata:                  types2.NewTestMetadata(),
+							MinimumTLSVersion:         types2.String("1.2", types2.NewTestMetadata()),
+							EnablePublicNetworkAccess: types2.Bool(false, types2.NewTestMetadata()),
+							EnableSSLEnforcement:      types2.Bool(false, types2.NewTestMetadata()),
 							FirewallRules: []database.FirewallRule{
 								{
-									Metadata: types.NewTestMetadata(),
-									StartIP:  types.String("10.0.17.62", types.NewTestMetadata()),
-									EndIP:    types.String("10.0.17.62", types.NewTestMetadata()),
+									Metadata: types2.NewTestMetadata(),
+									StartIP:  types2.String("10.0.17.62", types2.NewTestMetadata()),
+									EndIP:    types2.String("10.0.17.62", types2.NewTestMetadata()),
 								},
 							},
 						},
 						ExtendedAuditingPolicies: []database.ExtendedAuditingPolicy{
 							{
-								Metadata:        types.NewTestMetadata(),
-								RetentionInDays: types.Int(6, types.NewTestMetadata()),
+								Metadata:        types2.NewTestMetadata(),
+								RetentionInDays: types2.Int(6, types2.NewTestMetadata()),
 							},
 						},
 						SecurityAlertPolicies: []database.SecurityAlertPolicy{
 							{
-								Metadata: types.NewTestMetadata(),
-								EmailAddresses: []types.StringValue{
-									types.String("example@example.com", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								EmailAddresses: []types2.StringValue{
+									types2.String("example@example.com", types2.NewTestMetadata()),
 								},
-								DisabledAlerts: []types.StringValue{
-									types.String("Sql_Injection", types.NewTestMetadata()),
-									types.String("Data_Exfiltration", types.NewTestMetadata()),
+								DisabledAlerts: []types2.StringValue{
+									types2.String("Sql_Injection", types2.NewTestMetadata()),
+									types2.String("Data_Exfiltration", types2.NewTestMetadata()),
 								},
-								EmailAccountAdmins: types.Bool(true, types.NewTestMetadata()),
+								EmailAccountAdmins: types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 					},

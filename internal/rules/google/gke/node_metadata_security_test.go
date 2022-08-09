@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckNodeMetadataSecurity(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
-								Metadata:     types.NewTestMetadata(),
-								NodeMetadata: types.String("UNSPECIFIED", types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								NodeMetadata: types2.String("UNSPECIFIED", types2.NewTestMetadata()),
 							},
 						},
 					},
@@ -42,22 +42,22 @@ func TestCheckNodeMetadataSecurity(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
-								Metadata:     types.NewTestMetadata(),
-								NodeMetadata: types.String("SECURE", types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								NodeMetadata: types2.String("SECURE", types2.NewTestMetadata()),
 							},
 						},
 						NodePools: []gke.NodePool{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								NodeConfig: gke.NodeConfig{
-									Metadata: types.NewTestMetadata(),
+									Metadata: types2.NewTestMetadata(),
 									WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
-										Metadata:     types.NewTestMetadata(),
-										NodeMetadata: types.String("EXPOSE", types.NewTestMetadata()),
+										Metadata:     types2.NewTestMetadata(),
+										NodeMetadata: types2.String("EXPOSE", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -72,12 +72,12 @@ func TestCheckNodeMetadataSecurity(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						NodeConfig: gke.NodeConfig{
-							Metadata: types.NewTestMetadata(),
+							Metadata: types2.NewTestMetadata(),
 							WorkloadMetadataConfig: gke.WorkloadMetadataConfig{
-								Metadata:     types.NewTestMetadata(),
-								NodeMetadata: types.String("SECURE", types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								NodeMetadata: types2.String("SECURE", types2.NewTestMetadata()),
 							},
 						},
 					},

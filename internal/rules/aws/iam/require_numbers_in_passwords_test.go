@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -23,8 +23,8 @@ func TestCheckRequireNumbersInPasswords(t *testing.T) {
 			name: "IAM password policy numbers not required",
 			input: iam.IAM{
 				PasswordPolicy: iam.PasswordPolicy{
-					Metadata:       types.NewTestMetadata(),
-					RequireNumbers: types.Bool(false, types.NewTestMetadata()),
+					Metadata:       types2.NewTestMetadata(),
+					RequireNumbers: types2.Bool(false, types2.NewTestMetadata()),
 				},
 			},
 			expected: true,
@@ -33,8 +33,8 @@ func TestCheckRequireNumbersInPasswords(t *testing.T) {
 			name: "IAM password policy numbers required",
 			input: iam.IAM{
 				PasswordPolicy: iam.PasswordPolicy{
-					Metadata:       types.NewTestMetadata(),
-					RequireNumbers: types.Bool(true, types.NewTestMetadata()),
+					Metadata:       types2.NewTestMetadata(),
+					RequireNumbers: types2.Bool(true, types2.NewTestMetadata()),
 				},
 			},
 			expected: false,

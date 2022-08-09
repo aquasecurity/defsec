@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/azure/compute"
 
@@ -29,10 +29,10 @@ resource "azurerm_managed_disk" "example" {
 	}
 }`,
 			expected: compute.ManagedDisk{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				Encryption: compute.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(false, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(false, types2.NewTestMetadata()),
 				},
 			},
 		},
@@ -42,10 +42,10 @@ resource "azurerm_managed_disk" "example" {
 resource "azurerm_managed_disk" "example" {
 }`,
 			expected: compute.ManagedDisk{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				Encryption: compute.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Enabled:  types2.Bool(true, types2.NewTestMetadata()),
 				},
 			},
 		},
@@ -86,14 +86,14 @@ resource "azurerm_virtual_machine" "example" {
 }
 `,
 			expected: compute.LinuxVirtualMachine{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				VirtualMachine: compute.VirtualMachine{
-					Metadata:   types.NewTestMetadata(),
-					CustomData: types.String("", types.NewTestMetadata()),
+					Metadata:   types2.NewTestMetadata(),
+					CustomData: types2.String("", types2.NewTestMetadata()),
 				},
 				OSProfileLinuxConfig: compute.OSProfileLinuxConfig{
-					Metadata:                      types.NewTestMetadata(),
-					DisablePasswordAuthentication: types.Bool(true, types.NewTestMetadata()),
+					Metadata:                      types2.NewTestMetadata(),
+					DisablePasswordAuthentication: types2.Bool(true, types2.NewTestMetadata()),
 				},
 			},
 		},
@@ -112,16 +112,16 @@ export DATABASE_PASSWORD=\"SomeSortOfPassword\"
 	}
 }`,
 			expected: compute.LinuxVirtualMachine{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				VirtualMachine: compute.VirtualMachine{
-					Metadata: types.NewTestMetadata(),
-					CustomData: types.String(
+					Metadata: types2.NewTestMetadata(),
+					CustomData: types2.String(
 						`export DATABASE_PASSWORD=\"SomeSortOfPassword\"
-`, types.NewTestMetadata()),
+`, types2.NewTestMetadata()),
 				},
 				OSProfileLinuxConfig: compute.OSProfileLinuxConfig{
-					Metadata:                      types.NewTestMetadata(),
-					DisablePasswordAuthentication: types.Bool(false, types.NewTestMetadata()),
+					Metadata:                      types2.NewTestMetadata(),
+					DisablePasswordAuthentication: types2.Bool(false, types2.NewTestMetadata()),
 				},
 			},
 		},
@@ -156,11 +156,11 @@ export DATABASE_PASSWORD=\"SomeSortOfPassword\"
 	}
 }`,
 			expected: compute.WindowsVirtualMachine{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				VirtualMachine: compute.VirtualMachine{
-					Metadata: types.NewTestMetadata(),
-					CustomData: types.String(`export DATABASE_PASSWORD=\"SomeSortOfPassword\"
-`, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					CustomData: types2.String(`export DATABASE_PASSWORD=\"SomeSortOfPassword\"
+`, types2.NewTestMetadata()),
 				},
 			},
 		},
@@ -174,11 +174,11 @@ export GREETING="Hello there"
 	EOF
 	}`,
 			expected: compute.WindowsVirtualMachine{
-				Metadata: types.NewTestMetadata(),
+				Metadata: types2.NewTestMetadata(),
 				VirtualMachine: compute.VirtualMachine{
-					Metadata: types.NewTestMetadata(),
-					CustomData: types.String(`export GREETING="Hello there"
-`, types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					CustomData: types2.String(`export GREETING="Hello there"
+`, types2.NewTestMetadata()),
 				},
 			},
 		},

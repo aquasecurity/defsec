@@ -1,9 +1,9 @@
 package database
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/database"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) database.Database {
@@ -67,12 +67,12 @@ func (a *mssqlAdapter) adaptMSSQLServers(modules terraform.Modules) []database.M
 
 	if len(orphanResources) > 0 {
 		orphanage := database.MSSQLServer{
-			Metadata: types.NewUnmanagedMetadata(),
+			Metadata: types2.NewUnmanagedMetadata(),
 			Server: database.Server{
-				Metadata:                  types.NewUnmanagedMetadata(),
-				EnableSSLEnforcement:      types.BoolDefault(false, types.NewUnmanagedMetadata()),
-				MinimumTLSVersion:         types.StringDefault("", types.NewUnmanagedMetadata()),
-				EnablePublicNetworkAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				Metadata:                  types2.NewUnmanagedMetadata(),
+				EnableSSLEnforcement:      types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+				MinimumTLSVersion:         types2.StringDefault("", types2.NewUnmanagedMetadata()),
+				EnablePublicNetworkAccess: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
 				FirewallRules:             nil,
 			},
 			ExtendedAuditingPolicies: nil,
@@ -89,12 +89,12 @@ func (a *mssqlAdapter) adaptMSSQLServers(modules terraform.Modules) []database.M
 
 	if len(orphanResources) > 0 {
 		orphanage := database.MSSQLServer{
-			Metadata: types.NewUnmanagedMetadata(),
+			Metadata: types2.NewUnmanagedMetadata(),
 			Server: database.Server{
-				Metadata:                  types.NewUnmanagedMetadata(),
-				EnableSSLEnforcement:      types.BoolDefault(false, types.NewUnmanagedMetadata()),
-				MinimumTLSVersion:         types.StringDefault("", types.NewUnmanagedMetadata()),
-				EnablePublicNetworkAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				Metadata:                  types2.NewUnmanagedMetadata(),
+				EnableSSLEnforcement:      types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+				MinimumTLSVersion:         types2.StringDefault("", types2.NewUnmanagedMetadata()),
+				EnablePublicNetworkAccess: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
 				FirewallRules:             nil,
 			},
 		}
@@ -109,7 +109,7 @@ func (a *mssqlAdapter) adaptMSSQLServers(modules terraform.Modules) []database.M
 
 	if len(orphanResources) > 0 {
 		orphanage := database.MSSQLServer{
-			Metadata: types.NewUnmanagedMetadata(),
+			Metadata: types2.NewUnmanagedMetadata(),
 		}
 		for _, policy := range orphanResources {
 			orphanage.FirewallRules = append(orphanage.FirewallRules, adaptFirewallRule(policy))
@@ -132,12 +132,12 @@ func (a *mysqlAdapter) adaptMySQLServers(modules terraform.Modules) []database.M
 
 	if len(orphanResources) > 0 {
 		orphanage := database.MySQLServer{
-			Metadata: types.NewUnmanagedMetadata(),
+			Metadata: types2.NewUnmanagedMetadata(),
 			Server: database.Server{
-				Metadata:                  types.NewUnmanagedMetadata(),
-				EnableSSLEnforcement:      types.BoolDefault(false, types.NewUnmanagedMetadata()),
-				MinimumTLSVersion:         types.StringDefault("", types.NewUnmanagedMetadata()),
-				EnablePublicNetworkAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				Metadata:                  types2.NewUnmanagedMetadata(),
+				EnableSSLEnforcement:      types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+				MinimumTLSVersion:         types2.StringDefault("", types2.NewUnmanagedMetadata()),
+				EnablePublicNetworkAccess: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
 				FirewallRules:             nil,
 			},
 		}
@@ -163,12 +163,12 @@ func (a *mariaDBAdapter) adaptMariaDBServers(modules terraform.Modules) []databa
 
 	if len(orphanResources) > 0 {
 		orphanage := database.MariaDBServer{
-			Metadata: types.NewUnmanagedMetadata(),
+			Metadata: types2.NewUnmanagedMetadata(),
 			Server: database.Server{
-				Metadata:                  types.NewUnmanagedMetadata(),
-				EnableSSLEnforcement:      types.BoolDefault(false, types.NewUnmanagedMetadata()),
-				MinimumTLSVersion:         types.StringDefault("", types.NewUnmanagedMetadata()),
-				EnablePublicNetworkAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				Metadata:                  types2.NewUnmanagedMetadata(),
+				EnableSSLEnforcement:      types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+				MinimumTLSVersion:         types2.StringDefault("", types2.NewUnmanagedMetadata()),
+				EnablePublicNetworkAccess: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
 				FirewallRules:             nil,
 			},
 		}
@@ -194,19 +194,19 @@ func (a *postgresqlAdapter) adaptPostgreSQLServers(modules terraform.Modules) []
 
 	if len(orphanResources) > 0 {
 		orphanage := database.PostgreSQLServer{
-			Metadata: types.NewUnmanagedMetadata(),
+			Metadata: types2.NewUnmanagedMetadata(),
 			Server: database.Server{
-				Metadata:                  types.NewUnmanagedMetadata(),
-				EnableSSLEnforcement:      types.BoolDefault(false, types.NewUnmanagedMetadata()),
-				MinimumTLSVersion:         types.StringDefault("", types.NewUnmanagedMetadata()),
-				EnablePublicNetworkAccess: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				Metadata:                  types2.NewUnmanagedMetadata(),
+				EnableSSLEnforcement:      types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+				MinimumTLSVersion:         types2.StringDefault("", types2.NewUnmanagedMetadata()),
+				EnablePublicNetworkAccess: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
 				FirewallRules:             nil,
 			},
 			Config: database.PostgresSQLConfig{
-				Metadata:             types.NewUnmanagedMetadata(),
-				LogCheckpoints:       types.BoolDefault(false, types.NewUnmanagedMetadata()),
-				ConnectionThrottling: types.BoolDefault(false, types.NewUnmanagedMetadata()),
-				LogConnections:       types.BoolDefault(false, types.NewUnmanagedMetadata()),
+				Metadata:             types2.NewUnmanagedMetadata(),
+				LogCheckpoints:       types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+				ConnectionThrottling: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
+				LogConnections:       types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
 			},
 		}
 		for _, policy := range orphanResources {
@@ -220,9 +220,9 @@ func (a *postgresqlAdapter) adaptPostgreSQLServers(modules terraform.Modules) []
 }
 
 func (a *mssqlAdapter) adaptMSSQLServer(resource *terraform.Block, module *terraform.Module) database.MSSQLServer {
-	minTLSVersionVal := types.StringDefault("", resource.GetMetadata())
-	publicAccessVal := types.BoolDefault(true, resource.GetMetadata())
-	enableSSLEnforcementVal := types.BoolDefault(false, resource.GetMetadata())
+	minTLSVersionVal := types2.StringDefault("", resource.GetMetadata())
+	publicAccessVal := types2.BoolDefault(true, resource.GetMetadata())
+	enableSSLEnforcementVal := types2.BoolDefault(false, resource.GetMetadata())
 
 	var auditingPolicies []database.ExtendedAuditingPolicy
 	var alertPolicies []database.SecurityAlertPolicy
@@ -330,7 +330,7 @@ func (a *mariaDBAdapter) adaptMariaDBServer(resource *terraform.Block, module *t
 		Server: database.Server{
 			Metadata:                  resource.GetMetadata(),
 			EnableSSLEnforcement:      enableSSLEnforcementVal,
-			MinimumTLSVersion:         types.StringDefault("", resource.GetMetadata()),
+			MinimumTLSVersion:         types2.StringDefault("", resource.GetMetadata()),
 			EnablePublicNetworkAccess: publicAccessVal,
 			FirewallRules:             firewallRules,
 		},
@@ -374,9 +374,9 @@ func (a *postgresqlAdapter) adaptPostgreSQLServer(resource *terraform.Block, mod
 func adaptPostgreSQLConfig(resource *terraform.Block, configBlocks []*terraform.Block) database.PostgresSQLConfig {
 	config := database.PostgresSQLConfig{
 		Metadata:             resource.GetMetadata(),
-		LogCheckpoints:       types.BoolDefault(false, resource.GetMetadata()),
-		ConnectionThrottling: types.BoolDefault(false, resource.GetMetadata()),
-		LogConnections:       types.BoolDefault(false, resource.GetMetadata()),
+		LogCheckpoints:       types2.BoolDefault(false, resource.GetMetadata()),
+		ConnectionThrottling: types2.BoolDefault(false, resource.GetMetadata()),
+		LogConnections:       types2.BoolDefault(false, resource.GetMetadata()),
 	}
 
 	for _, configBlock := range configBlocks {
@@ -385,13 +385,13 @@ func adaptPostgreSQLConfig(resource *terraform.Block, configBlocks []*terraform.
 		valAttr := configBlock.GetAttribute("value")
 
 		if nameAttr.Equals("log_checkpoints") {
-			config.LogCheckpoints = types.Bool(valAttr.Equals("on"), valAttr.GetMetadata())
+			config.LogCheckpoints = types2.Bool(valAttr.Equals("on"), valAttr.GetMetadata())
 		}
 		if nameAttr.Equals("connection_throttling") {
-			config.ConnectionThrottling = types.Bool(valAttr.Equals("on"), valAttr.GetMetadata())
+			config.ConnectionThrottling = types2.Bool(valAttr.Equals("on"), valAttr.GetMetadata())
 		}
 		if nameAttr.Equals("log_connections") {
-			config.LogConnections = types.Bool(valAttr.Equals("on"), valAttr.GetMetadata())
+			config.LogConnections = types2.Bool(valAttr.Equals("on"), valAttr.GetMetadata())
 		}
 	}
 

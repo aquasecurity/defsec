@@ -1,9 +1,9 @@
 package neptune
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/neptune"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) neptune.Neptune {
@@ -27,16 +27,16 @@ func adaptCluster(resource *terraform.Block) neptune.Cluster {
 		Metadata: resource.GetMetadata(),
 		Logging: neptune.Logging{
 			Metadata: resource.GetMetadata(),
-			Audit:    types.BoolDefault(false, resource.GetMetadata()),
+			Audit:    types2.BoolDefault(false, resource.GetMetadata()),
 		},
-		StorageEncrypted: types.BoolDefault(false, resource.GetMetadata()),
-		KMSKeyID:         types.StringDefault("", resource.GetMetadata()),
+		StorageEncrypted: types2.BoolDefault(false, resource.GetMetadata()),
+		KMSKeyID:         types2.StringDefault("", resource.GetMetadata()),
 	}
 
 	if enableLogExportsAttr := resource.GetAttribute("enable_cloudwatch_logs_exports"); enableLogExportsAttr.IsNotNil() {
 		cluster.Logging.Metadata = enableLogExportsAttr.GetMetadata()
 		if enableLogExportsAttr.Contains("audit") {
-			cluster.Logging.Audit = types.Bool(true, enableLogExportsAttr.GetMetadata())
+			cluster.Logging.Audit = types2.Bool(true, enableLogExportsAttr.GetMetadata())
 		}
 	}
 

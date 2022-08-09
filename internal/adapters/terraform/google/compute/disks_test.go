@@ -3,11 +3,11 @@ package compute
 import (
 	"testing"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/google/compute"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -38,21 +38,21 @@ func Test_adaptDisks(t *testing.T) {
 `,
 			expected: []compute.Disk{
 				{
-					Metadata: types.NewTestMetadata(),
-					Name:     types.String("disk #1", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Name:     types2.String("disk #1", types2.NewTestMetadata()),
 					Encryption: compute.DiskEncryption{
-						Metadata:   types.NewTestMetadata(),
-						KMSKeyLink: types.String("something", types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						KMSKeyLink: types2.String("something", types2.NewTestMetadata()),
 						RawKey:     nil,
 					},
 				},
 				{
-					Metadata: types.NewTestMetadata(),
-					Name:     types.String("disk #2", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Name:     types2.String("disk #2", types2.NewTestMetadata()),
 					Encryption: compute.DiskEncryption{
-						Metadata:   types.NewTestMetadata(),
-						KMSKeyLink: types.String("", types.NewTestMetadata()),
-						RawKey:     types.Bytes([]byte("b2ggbm8gdGhpcyBpcyBiYWQ"), types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						KMSKeyLink: types2.String("", types2.NewTestMetadata()),
+						RawKey:     types2.Bytes([]byte("b2ggbm8gdGhpcyBpcyBiYWQ"), types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -73,11 +73,11 @@ func Test_adaptDisks(t *testing.T) {
 			  }`,
 			expected: []compute.Disk{
 				{
-					Metadata: types.NewTestMetadata(),
-					Name:     types.String("disk #3", types.NewTestMetadata()),
+					Metadata: types2.NewTestMetadata(),
+					Name:     types2.String("disk #3", types2.NewTestMetadata()),
 					Encryption: compute.DiskEncryption{
-						Metadata:   types.NewTestMetadata(),
-						KMSKeyLink: types.String("google_kms_crypto_key.my_crypto_key", types.NewTestMetadata()),
+						Metadata:   types2.NewTestMetadata(),
+						KMSKeyLink: types2.String("google_kms_crypto_key.my_crypto_key", types2.NewTestMetadata()),
 						RawKey:     nil,
 					},
 				},

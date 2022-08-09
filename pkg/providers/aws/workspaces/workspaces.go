@@ -1,7 +1,7 @@
 package workspaces
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type WorkSpaces struct {
@@ -9,17 +9,17 @@ type WorkSpaces struct {
 }
 
 type WorkSpace struct {
-	types.Metadata
+	types2.Metadata
 	RootVolume Volume
 	UserVolume Volume
 }
 
 type Volume struct {
-	types.Metadata
+	types2.Metadata
 	Encryption Encryption
 }
 
 type Encryption struct {
-	types.Metadata
-	Enabled types.BoolValue
+	types2.Metadata
+	Enabled types2.BoolValue
 }

@@ -3,13 +3,13 @@ package storage
 import (
 	"testing"
 
+	types2 "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/azure/storage"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -66,45 +66,45 @@ func Test_Adapt(t *testing.T) {
 				Accounts: []storage.Account{
 
 					{
-						Metadata:          types.NewTestMetadata(),
-						EnforceHTTPS:      types.Bool(true, types.NewTestMetadata()),
-						MinimumTLSVersion: types.String("TLS1_2", types.NewTestMetadata()),
+						Metadata:          types2.NewTestMetadata(),
+						EnforceHTTPS:      types2.Bool(true, types2.NewTestMetadata()),
+						MinimumTLSVersion: types2.String("TLS1_2", types2.NewTestMetadata()),
 						NetworkRules: []storage.NetworkRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Bypass: []types.StringValue{
-									types.String("Metrics", types.NewTestMetadata()),
-									types.String("AzureServices", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Bypass: []types2.StringValue{
+									types2.String("Metrics", types2.NewTestMetadata()),
+									types2.String("AzureServices", types2.NewTestMetadata()),
 								},
-								AllowByDefault: types.Bool(false, types.NewTestMetadata()),
+								AllowByDefault: types2.Bool(false, types2.NewTestMetadata()),
 							},
 							{
-								Metadata: types.NewTestMetadata(),
-								Bypass: []types.StringValue{
-									types.String("Metrics", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Bypass: []types2.StringValue{
+									types2.String("Metrics", types2.NewTestMetadata()),
 								},
-								AllowByDefault: types.Bool(true, types.NewTestMetadata()),
+								AllowByDefault: types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 						QueueProperties: storage.QueueProperties{
-							Metadata:      types.NewTestMetadata(),
-							EnableLogging: types.Bool(true, types.NewTestMetadata()),
+							Metadata:      types2.NewTestMetadata(),
+							EnableLogging: types2.Bool(true, types2.NewTestMetadata()),
 						},
 						Containers: []storage.Container{
 							{
-								Metadata:     types.NewTestMetadata(),
-								PublicAccess: types.String("blob", types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								PublicAccess: types2.String("blob", types2.NewTestMetadata()),
 							},
 						},
 					},
 					{
-						Metadata:     types.NewUnmanagedMetadata(),
-						EnforceHTTPS: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+						Metadata:     types2.NewUnmanagedMetadata(),
+						EnforceHTTPS: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
 						QueueProperties: storage.QueueProperties{
-							Metadata:      types.NewUnmanagedMetadata(),
-							EnableLogging: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+							Metadata:      types2.NewUnmanagedMetadata(),
+							EnableLogging: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
 						},
-						MinimumTLSVersion: types.StringDefault("", types.NewUnmanagedMetadata()),
+						MinimumTLSVersion: types2.StringDefault("", types2.NewUnmanagedMetadata()),
 					},
 				},
 			},
@@ -124,26 +124,26 @@ func Test_Adapt(t *testing.T) {
 			expected: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata:     types.NewUnmanagedMetadata(),
-						EnforceHTTPS: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+						Metadata:     types2.NewUnmanagedMetadata(),
+						EnforceHTTPS: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
 						NetworkRules: []storage.NetworkRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Bypass: []types.StringValue{
-									types.String("Metrics", types.NewTestMetadata()),
+								Metadata: types2.NewTestMetadata(),
+								Bypass: []types2.StringValue{
+									types2.String("Metrics", types2.NewTestMetadata()),
 								},
-								AllowByDefault: types.Bool(true, types.NewTestMetadata()),
+								AllowByDefault: types2.Bool(true, types2.NewTestMetadata()),
 							},
 						},
 						QueueProperties: storage.QueueProperties{
-							Metadata:      types.NewUnmanagedMetadata(),
-							EnableLogging: types.BoolDefault(false, types.NewUnmanagedMetadata()),
+							Metadata:      types2.NewUnmanagedMetadata(),
+							EnableLogging: types2.BoolDefault(false, types2.NewUnmanagedMetadata()),
 						},
-						MinimumTLSVersion: types.StringDefault("", types.NewUnmanagedMetadata()),
+						MinimumTLSVersion: types2.StringDefault("", types2.NewUnmanagedMetadata()),
 						Containers: []storage.Container{
 							{
-								Metadata:     types.NewTestMetadata(),
-								PublicAccess: types.String("blob", types.NewTestMetadata()),
+								Metadata:     types2.NewTestMetadata(),
+								PublicAccess: types2.String("blob", types2.NewTestMetadata()),
 							},
 						},
 					},

@@ -3,7 +3,7 @@ package monitor
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckActivityLogRetentionSet(t *testing.T) {
 			input: monitor.Monitor{
 				LogProfiles: []monitor.LogProfile{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						RetentionPolicy: monitor.RetentionPolicy{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
-							Days:     types.Int(365, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(false, types2.NewTestMetadata()),
+							Days:     types2.Int(365, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckActivityLogRetentionSet(t *testing.T) {
 			input: monitor.Monitor{
 				LogProfiles: []monitor.LogProfile{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						RetentionPolicy: monitor.RetentionPolicy{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
-							Days:     types.Int(90, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+							Days:     types2.Int(90, types2.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,11 +56,11 @@ func TestCheckActivityLogRetentionSet(t *testing.T) {
 			input: monitor.Monitor{
 				LogProfiles: []monitor.LogProfile{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						RetentionPolicy: monitor.RetentionPolicy{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
-							Days:     types.Int(365, types.NewTestMetadata()),
+							Metadata: types2.NewTestMetadata(),
+							Enabled:  types2.Bool(true, types2.NewTestMetadata()),
+							Days:     types2.Int(365, types2.NewTestMetadata()),
 						},
 					},
 				},

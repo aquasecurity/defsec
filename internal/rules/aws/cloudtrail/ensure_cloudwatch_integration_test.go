@@ -3,7 +3,7 @@ package cloudtrail
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -23,8 +23,8 @@ func TestCheckEnsureCloudwatchIntegration(t *testing.T) {
 			input: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						CloudWatchLogsLogGroupArn: types.String("arn:aws:logs:us-east-1:123456789012:log-group:my-log-group", types.NewTestMetadata()),
+						Metadata:                  types2.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: types2.String("arn:aws:logs:us-east-1:123456789012:log-group:my-log-group", types2.NewTestMetadata()),
 					},
 				},
 			},
@@ -35,8 +35,8 @@ func TestCheckEnsureCloudwatchIntegration(t *testing.T) {
 			input: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						CloudWatchLogsLogGroupArn: types.String("", types.NewTestMetadata()),
+						Metadata:                  types2.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: types2.String("", types2.NewTestMetadata()),
 					},
 				},
 			},

@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,14 +24,14 @@ func TestCheckNoFolderLevelServiceAccountImpersonation(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata: types.NewTestMetadata(),
-										Role:     types.String("roles/iam.serviceAccountUser", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Role:     types2.String("roles/iam.serviceAccountUser", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -46,15 +46,15 @@ func TestCheckNoFolderLevelServiceAccountImpersonation(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Bindings: []iam.Binding{
 									{
-										Metadata:                      types.NewTestMetadata(),
-										IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
-										Role:                          types.String("roles/iam.serviceAccountTokenCreator", types.NewTestMetadata()),
+										Metadata:                      types2.NewTestMetadata(),
+										IncludesDefaultServiceAccount: types2.Bool(false, types2.NewTestMetadata()),
+										Role:                          types2.String("roles/iam.serviceAccountTokenCreator", types2.NewTestMetadata()),
 									},
 								},
 							},
@@ -69,21 +69,21 @@ func TestCheckNoFolderLevelServiceAccountImpersonation(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: types2.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: types2.NewTestMetadata(),
 								Members: []iam.Member{
 									{
-										Metadata: types.NewTestMetadata(),
-										Role:     types.String("roles/nothingInParticular", types.NewTestMetadata()),
+										Metadata: types2.NewTestMetadata(),
+										Role:     types2.String("roles/nothingInParticular", types2.NewTestMetadata()),
 									},
 								},
 								Bindings: []iam.Binding{
 									{
-										Metadata:                      types.NewTestMetadata(),
-										IncludesDefaultServiceAccount: types.Bool(false, types.NewTestMetadata()),
-										Role:                          types.String("roles/nothingInParticular", types.NewTestMetadata()),
+										Metadata:                      types2.NewTestMetadata(),
+										IncludesDefaultServiceAccount: types2.Bool(false, types2.NewTestMetadata()),
+										Role:                          types2.String("roles/nothingInParticular", types2.NewTestMetadata()),
 									},
 								},
 							},

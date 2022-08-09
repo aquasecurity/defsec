@@ -3,7 +3,7 @@ package elasticache
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	types2 "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticache"
 
@@ -36,10 +36,10 @@ func Test_adaptCluster(t *testing.T) {
 			}
 `,
 			expected: elasticache.Cluster{
-				Metadata:               types.NewTestMetadata(),
-				Engine:                 types.String("redis", types.NewTestMetadata()),
-				NodeType:               types.String("cache.m4.large", types.NewTestMetadata()),
-				SnapshotRetentionLimit: types.Int(5, types.NewTestMetadata()),
+				Metadata:               types2.NewTestMetadata(),
+				Engine:                 types2.String("redis", types2.NewTestMetadata()),
+				NodeType:               types2.String("cache.m4.large", types2.NewTestMetadata()),
+				SnapshotRetentionLimit: types2.Int(5, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -48,10 +48,10 @@ func Test_adaptCluster(t *testing.T) {
 			resource "aws_elasticache_cluster" "example" {
 			}`,
 			expected: elasticache.Cluster{
-				Metadata:               types.NewTestMetadata(),
-				Engine:                 types.String("", types.NewTestMetadata()),
-				NodeType:               types.String("", types.NewTestMetadata()),
-				SnapshotRetentionLimit: types.Int(0, types.NewTestMetadata()),
+				Metadata:               types2.NewTestMetadata(),
+				Engine:                 types2.String("", types2.NewTestMetadata()),
+				NodeType:               types2.String("", types2.NewTestMetadata()),
+				SnapshotRetentionLimit: types2.Int(0, types2.NewTestMetadata()),
 			},
 		},
 	}
@@ -82,9 +82,9 @@ func Test_adaptReplicationGroup(t *testing.T) {
 		}
 `,
 			expected: elasticache.ReplicationGroup{
-				Metadata:                 types.NewTestMetadata(),
-				TransitEncryptionEnabled: types.Bool(true, types.NewTestMetadata()),
-				AtRestEncryptionEnabled:  types.Bool(true, types.NewTestMetadata()),
+				Metadata:                 types2.NewTestMetadata(),
+				TransitEncryptionEnabled: types2.Bool(true, types2.NewTestMetadata()),
+				AtRestEncryptionEnabled:  types2.Bool(true, types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -94,9 +94,9 @@ func Test_adaptReplicationGroup(t *testing.T) {
 		}
 `,
 			expected: elasticache.ReplicationGroup{
-				Metadata:                 types.NewTestMetadata(),
-				TransitEncryptionEnabled: types.Bool(false, types.NewTestMetadata()),
-				AtRestEncryptionEnabled:  types.Bool(false, types.NewTestMetadata()),
+				Metadata:                 types2.NewTestMetadata(),
+				TransitEncryptionEnabled: types2.Bool(false, types2.NewTestMetadata()),
+				AtRestEncryptionEnabled:  types2.Bool(false, types2.NewTestMetadata()),
 			},
 		},
 	}
@@ -130,8 +130,8 @@ func Test_adaptSecurityGroup(t *testing.T) {
 			}			
 `,
 			expected: elasticache.SecurityGroup{
-				Metadata:    types.NewTestMetadata(),
-				Description: types.String("something", types.NewTestMetadata()),
+				Metadata:    types2.NewTestMetadata(),
+				Description: types2.String("something", types2.NewTestMetadata()),
 			},
 		},
 		{
@@ -146,8 +146,8 @@ func Test_adaptSecurityGroup(t *testing.T) {
 			}
 `,
 			expected: elasticache.SecurityGroup{
-				Metadata:    types.NewTestMetadata(),
-				Description: types.String("Managed by Terraform", types.NewTestMetadata()),
+				Metadata:    types2.NewTestMetadata(),
+				Description: types2.String("Managed by Terraform", types2.NewTestMetadata()),
 			},
 		},
 	}
