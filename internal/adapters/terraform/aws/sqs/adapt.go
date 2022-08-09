@@ -38,6 +38,7 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 			Document: iamp.Document{
 				Metadata: policyBlock.GetMetadata(),
 			},
+			Builtin: types.Bool(false, policyBlock.GetMetadata()),
 		}
 		if attr := policyBlock.GetAttribute("policy"); attr.IsString() {
 			parsed, err := iamgo.ParseString(attr.Value().AsString())
@@ -98,6 +99,7 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 			Document: iamp.Document{
 				Metadata: attr.GetMetadata(),
 			},
+			Builtin: types.Bool(false, attr.GetMetadata()),
 		}
 		parsed, err := iamgo.ParseString(attr.Value().AsString())
 		if err == nil {
@@ -116,6 +118,7 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 						Metadata: doc.Source.GetMetadata(),
 						Parsed:   doc.Document,
 					},
+					Builtin: types.Bool(false, refBlock.GetMetadata()),
 				}
 				policies = append(policies, policy)
 			}

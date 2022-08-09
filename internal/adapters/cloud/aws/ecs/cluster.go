@@ -37,7 +37,8 @@ func (a *adapter) getClusters() ([]ecs.Cluster, error) {
 	for _, clusterARN := range clusterARNs {
 		cluster, err := a.adaptCluster(clusterARN)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt cluster '%s': %s", cluster, err)
+			continue
 		}
 		clusters = append(clusters, *cluster)
 		a.Tracker().IncrementResource()

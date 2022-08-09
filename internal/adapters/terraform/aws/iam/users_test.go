@@ -74,6 +74,7 @@ func Test_adaptUsers(t *testing.T) {
 									HasRefs:  false,
 								}
 							}(),
+							Builtin: types.Bool(false, types.NewTestMetadata()),
 						},
 					},
 				},

@@ -35,7 +35,8 @@ func (a *adapter) getAPIsV2() ([]v2.API, error) {
 	for _, restAPI := range apiApis {
 		adaptedAPI, err := a.adaptAPIV2(restAPI)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt v2 API '%s': %s", *restAPI.ApiId, err)
+			continue
 		}
 		adapted = append(adapted, *adaptedAPI)
 		a.Tracker().IncrementResource()

@@ -49,12 +49,49 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 										Metadata: types.NewTestMetadata(),
 									}
 								}(),
+								Builtin: types.Bool(false, types.NewTestMetadata()),
 							},
 						},
 					},
 				},
 			},
 			expected: true,
+		},
+		{
+			name: "Builtin IAM policy with wildcard resource",
+			input: iam.IAM{
+				Roles: []iam.Role{
+					{
+						Metadata: types.NewTestMetadata(),
+						Policies: []iam.Policy{
+							{
+								Metadata: types.NewTestMetadata(),
+								Document: func() iam.Document {
+
+									builder := iamgo.NewPolicyBuilder()
+									builder.WithVersion("2012-10-17")
+
+									sb := iamgo.NewStatementBuilder()
+									sb.WithSid("ListYourObjects")
+									sb.WithEffect(iamgo.EffectAllow)
+									sb.WithActions([]string{"s3:ListBucket"})
+									sb.WithResources([]string{"arn:aws:s3:::*"})
+									sb.WithAWSPrincipals([]string{"arn:aws:iam::1234567890:root"})
+
+									builder.WithStatement(sb.Build())
+
+									return iam.Document{
+										Parsed:   builder.Build(),
+										Metadata: types.NewTestMetadata(),
+									}
+								}(),
+								Builtin: types.Bool(true, types.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: false,
 		},
 		{
 			name: "IAM policy with wildcard action",
@@ -81,6 +118,7 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 								Metadata: types.NewTestMetadata(),
 							}
 						}(),
+						Builtin: types.Bool(false, types.NewTestMetadata()),
 					},
 				},
 			},
@@ -110,6 +148,7 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 								Metadata: types.NewTestMetadata(),
 							}
 						}(),
+						Builtin: types.Bool(false, types.NewTestMetadata()),
 					},
 				},
 				Roles: []iam.Role{
@@ -135,6 +174,7 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 										Metadata: types.NewTestMetadata(),
 									}
 								}(),
+								Builtin: types.Bool(false, types.NewTestMetadata()),
 							},
 						},
 					},

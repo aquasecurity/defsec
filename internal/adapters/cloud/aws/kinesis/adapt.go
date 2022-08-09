@@ -66,7 +66,8 @@ func (a *adapter) getStreams() ([]kinesis.Stream, error) {
 		if lastName != apiStream {
 			stream, err := a.adaptStream(apiStream)
 			if err != nil {
-				return nil, err
+				a.Debug("Failed to adapt stream '%s': %s", apiStream, err)
+				continue
 			}
 			streams = append(streams, *stream)
 		}

@@ -2,6 +2,7 @@ package iam
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/liamg/iamgo"
 
@@ -39,7 +40,8 @@ func (a *adapter) adaptPolicies(state *state.State) error {
 	for _, apiPolicy := range nativePolicies {
 		policy, err := a.adaptPolicy(apiPolicy)
 		if err != nil {
-			return err
+			a.Debug("Failed to adapt policy '%s': %s", *apiPolicy.Arn, err)
+			continue
 		}
 		state.AWS.IAM.Policies = append(state.AWS.IAM.Policies, *policy)
 		a.Tracker().IncrementResource()
@@ -78,6 +80,7 @@ func (a *adapter) adaptPolicy(apiPolicy iamtypes.Policy) (*iam.Policy, error) {
 			Metadata: metadata,
 			Parsed:   *document,
 		},
+		Builtin: types.Bool(strings.HasPrefix(*apiPolicy.Arn, "arn:aws:iam::aws:"), metadata),
 	}, nil
 }
 

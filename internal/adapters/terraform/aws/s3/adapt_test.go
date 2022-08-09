@@ -228,6 +228,7 @@ func Test_Adapt(t *testing.T) {
 										HasRefs:  false,
 									}
 								}(),
+								Builtin: types.Bool(false, types.NewTestMetadata()),
 							},
 						},
 						Encryption: s3.Encryption{

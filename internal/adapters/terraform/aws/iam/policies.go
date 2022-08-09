@@ -37,6 +37,7 @@ func parsePolicy(policyBlock *terraform.Block, modules terraform.Modules) (iam.P
 			IsOffset: false,
 			HasRefs:  false,
 		},
+		Builtin: types.Bool(false, policyBlock.GetMetadata()),
 	}
 	var err error
 	doc, err := ParsePolicyFromAttr(policyBlock.GetAttribute("policy"), policyBlock, modules)
@@ -58,6 +59,7 @@ func adaptPolicies(modules terraform.Modules) (policies []iam.Policy) {
 				IsOffset: false,
 				HasRefs:  false,
 			},
+			Builtin: types.Bool(false, policyBlock.GetMetadata()),
 		}
 		doc, err := ParsePolicyFromAttr(policyBlock.GetAttribute("policy"), policyBlock, modules)
 		if err != nil {

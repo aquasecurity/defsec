@@ -65,7 +65,8 @@ func (a *adapter) getBrokers() ([]mq.Broker, error) {
 	for _, apiBroker := range apiBrokers {
 		broker, err := a.adaptBroker(apiBroker)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt broker '%s': %s", *apiBroker.BrokerArn, err)
+			continue
 		}
 		brokers = append(brokers, *broker)
 		a.Tracker().IncrementResource()

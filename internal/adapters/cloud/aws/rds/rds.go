@@ -44,7 +44,8 @@ func (a adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 	state.AWS.RDS.Classic, err = a.getClassic()
 	if err != nil {
-		return err
+		a.Debug("Failed to retrieve classic resource: %s", err)
+		return nil
 	}
 
 	return nil

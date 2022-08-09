@@ -47,20 +47,32 @@ var CheckNoPolicyWildcards = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, policy := range s.AWS.IAM.Policies {
+			if policy.Builtin.IsTrue() {
+				continue
+			}
 			results = checkPolicy(policy.Document, results)
 		}
 		for _, group := range s.AWS.IAM.Groups {
 			for _, policy := range group.Policies {
+				if policy.Builtin.IsTrue() {
+					continue
+				}
 				results = checkPolicy(policy.Document, results)
 			}
 		}
 		for _, user := range s.AWS.IAM.Users {
 			for _, policy := range user.Policies {
+				if policy.Builtin.IsTrue() {
+					continue
+				}
 				results = checkPolicy(policy.Document, results)
 			}
 		}
 		for _, role := range s.AWS.IAM.Roles {
 			for _, policy := range role.Policies {
+				if policy.Builtin.IsTrue() {
+					continue
+				}
 				results = checkPolicy(policy.Document, results)
 			}
 		}

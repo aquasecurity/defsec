@@ -58,6 +58,7 @@ func mapRoles(modules terraform.Modules) (map[string]iam.Role, map[string]struct
 					IsOffset: false,
 					HasRefs:  false,
 				},
+				Builtin: types.Bool(false, inlineBlock.GetMetadata()),
 			}
 			doc, err := ParsePolicyFromAttr(inlineBlock.GetAttribute("policy"), inlineBlock, modules)
 			if err != nil {

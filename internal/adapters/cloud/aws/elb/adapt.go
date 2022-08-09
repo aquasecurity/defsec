@@ -65,7 +65,8 @@ func (a *adapter) getLoadBalancers() ([]elb.LoadBalancer, error) {
 	for _, apiLoadBalancer := range apiLoadBalancers {
 		loadBalancer, err := a.adaptLoadBalancer(apiLoadBalancer)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt load balancer '%s': %s", *apiLoadBalancer.LoadBalancerArn, err)
+			continue
 		}
 		loadBalancers = append(loadBalancers, *loadBalancer)
 		a.Tracker().IncrementResource()

@@ -60,6 +60,7 @@ func (a *adapter) adaptPasswordPolicy(state *state.State) error {
 
 	output, err := a.api.GetAccountPasswordPolicy(a.Context(), &iamapi.GetAccountPasswordPolicyInput{})
 	if err != nil {
+		a.Debug("Failed to adapt account password policy: %s", err)
 		return nil
 	}
 	a.Tracker().SetTotalResources(1)

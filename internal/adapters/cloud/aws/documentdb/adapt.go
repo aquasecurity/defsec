@@ -63,11 +63,12 @@ func (a *adapter) getClusters() ([]documentdb.Cluster, error) {
 
 	var clusters []documentdb.Cluster
 	for _, apiCluster := range apiClusters {
-		logGroup, err := a.adaptCluster(apiCluster)
+		cluster, err := a.adaptCluster(apiCluster)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt cluster '%s': %s", *apiCluster.DBClusterArn, err)
+			continue
 		}
-		clusters = append(clusters, *logGroup)
+		clusters = append(clusters, *cluster)
 		a.Tracker().IncrementResource()
 	}
 

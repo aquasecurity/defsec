@@ -16,12 +16,6 @@ type Bucket struct {
 	ACL               types.StringValue
 }
 
-func NewBucket(metadata types.Metadata) Bucket {
-	return Bucket{
-		Metadata: metadata,
-	}
-}
-
 func (b *Bucket) HasPublicExposureACL() bool {
 	for _, publicACL := range []string{"public-read", "public-read-write", "website", "authenticated-read"} {
 		if b.ACL.EqualTo(publicACL) {

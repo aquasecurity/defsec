@@ -73,7 +73,8 @@ func (a *adapter) getWorkgroups() ([]athena.Workgroup, error) {
 	for _, apiWorkgroup := range apiWorkgroups {
 		workgroup, err := a.adaptWorkgroup(apiWorkgroup)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt workgroup '%s': %s", workgroup.Name, err)
+			continue
 		}
 		workgroups = append(workgroups, *workgroup)
 		a.Tracker().IncrementResource()
@@ -172,7 +173,8 @@ func (a *adapter) getDatabasesForCatalogue(catalogueName string) ([]athena.Datab
 	for _, apiDatabase := range apiDatabases {
 		catalogue, err := a.adaptDatabase(apiDatabase)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt database '%s': %s", *apiDatabase.Name, err)
+			continue
 		}
 		databases = append(databases, *catalogue)
 	}

@@ -62,10 +62,11 @@ func (a *adapter) getSecrets() ([]ssm.Secret, error) {
 	a.Tracker().SetServiceLabel("Adapting secrets...")
 
 	var secrets []ssm.Secret
-	for _, apiCluster := range apiSecrets {
-		secret, err := a.adaptSecret(apiCluster)
+	for _, apiSecret := range apiSecrets {
+		secret, err := a.adaptSecret(apiSecret)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt secret '%s': %s", *apiSecret.ARN, err)
+			continue
 		}
 		secrets = append(secrets, *secret)
 		a.Tracker().IncrementResource()

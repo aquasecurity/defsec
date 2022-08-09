@@ -64,7 +64,8 @@ func (a *adapter) getProjects() ([]codebuild.Project, error) {
 	for _, projectName := range projectNames {
 		logGroup, err := a.adaptProject(projectName)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt project '%s': %s", projectName, err)
+			continue
 		}
 		projects = append(projects, *logGroup)
 		a.Tracker().IncrementResource()

@@ -38,7 +38,11 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 	}
 
 	// this can error is classic resources are used where disabled
-	state.AWS.Redshift.SecurityGroups, _ = a.getSecurityGroups()
+	state.AWS.Redshift.SecurityGroups, err = a.getSecurityGroups()
+	if err != nil {
+		a.Debug("Failed to adapt security groups: %s", err)
+		return nil
+	}
 
 	return nil
 }
@@ -68,7 +72,8 @@ func (a *adapter) getClusters() ([]redshift.Cluster, error) {
 	for _, apiCluster := range apiClusters {
 		cluster, err := a.adaptCluster(apiCluster)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt cluster '%s': %s", *apiCluster.ClusterNamespaceArn, err)
+			continue
 		}
 		clusters = append(clusters, *cluster)
 		a.Tracker().IncrementResource()

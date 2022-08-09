@@ -83,7 +83,8 @@ func (a *adapter) getBatchTopics(token *string) (topics []sns.Topic, nextToken *
 			TopicArn: topic.TopicArn,
 		})
 		if err != nil {
-			return topics, nil, err
+			a.Debug("Failed to get topic attributes for '%s': %s", *topic.TopicArn, err)
+			continue
 		}
 
 		if kmsKeyID, ok := topicAttributes.Attributes["KmsMasterKeyId"]; ok {
