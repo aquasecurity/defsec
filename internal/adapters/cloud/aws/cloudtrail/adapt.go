@@ -79,7 +79,7 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 	metadata := a.CreateMetadataFromARN(*info.TrailARN)
 
 	response, err := a.client.GetTrail(a.Context(), &api.GetTrailInput{
-		Name: info.Name,
+		Name: info.TrailARN,
 	})
 	if err != nil {
 		return nil, err
