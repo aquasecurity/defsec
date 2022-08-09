@@ -1,6 +1,8 @@
 package iam
 
 import (
+	"sync"
+
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	defsecTypes "github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -9,6 +11,7 @@ import (
 )
 
 type adapter struct {
+	sync.Mutex
 	*aws.RootAdapter
 	api *iamapi.Client
 }

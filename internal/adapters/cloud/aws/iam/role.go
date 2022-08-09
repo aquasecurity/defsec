@@ -3,6 +3,7 @@ package iam
 import (
 	"fmt"
 
+	rapido "github.com/aquasecurity/defsec/internal/adapters/rapido"
 	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -33,15 +34,18 @@ func (a *adapter) adaptRoles(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting roles...")
 
-	for _, apiRole := range nativeRoles {
-		user, err := a.adaptRole(apiRole)
+	state.AWS.IAM.Roles = rapido.ConcurrentAdapt(func(apiRole iamtypes.Role) *iam.Role {
+
+		role, err := a.adaptRole(apiRole)
 		if err != nil {
 			a.Debug("Failed to adapt role '%s': %s", *apiRole.Arn, err)
-			continue
+			return nil
 		}
-		state.AWS.IAM.Roles = append(state.AWS.IAM.Roles, *user)
+
 		a.Tracker().IncrementResource()
-	}
+
+		return role
+	}, nativeRoles, a.RootAdapter.Logger())
 
 	return nil
 }

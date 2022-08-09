@@ -6,6 +6,7 @@ import (
 
 	"github.com/liamg/iamgo"
 
+	rapido "github.com/aquasecurity/defsec/internal/adapters/rapido"
 	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -37,15 +38,18 @@ func (a *adapter) adaptPolicies(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting policies...")
 
-	for _, apiPolicy := range nativePolicies {
+	state.AWS.IAM.Policies = rapido.ConcurrentAdapt(func(apiPolicy iamtypes.Policy) *iam.Policy {
+
 		policy, err := a.adaptPolicy(apiPolicy)
 		if err != nil {
-			a.Debug("Failed to adapt policy '%s': %s", *apiPolicy.Arn, err)
-			continue
+			a.Debug("Failed to adapt role '%s': %s", *apiPolicy.Arn, err)
+			return nil
 		}
-		state.AWS.IAM.Policies = append(state.AWS.IAM.Policies, *policy)
+
 		a.Tracker().IncrementResource()
-	}
+
+		return policy
+	}, nativePolicies, a.RootAdapter.Logger())
 	return nil
 }
 
