@@ -3,6 +3,7 @@ package iam
 import (
 	"fmt"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -32,16 +33,7 @@ func (a *adapter) adaptRoles(state *state.State) error {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting roles...")
-
-	for _, apiRole := range nativeRoles {
-		user, err := a.adaptRole(apiRole)
-		if err != nil {
-			a.Debug("Failed to adapt role '%s': %s", *apiRole.Arn, err)
-			continue
-		}
-		state.AWS.IAM.Roles = append(state.AWS.IAM.Roles, *user)
-		a.Tracker().IncrementResource()
-	}
+	state.AWS.IAM.Roles = concurrency.Adapt(nativeRoles, a.RootAdapter, a.adaptRole)
 
 	return nil
 }

@@ -88,6 +88,6 @@ func (a *adapter) adaptPasswordPolicy(state *state.State) error {
 		MaxAgeDays:           types.Int(maxAge, metadata),
 		MinimumLength:        types.Int(minimumLength, metadata),
 	}
-	a.Tracker().IncrementResource()
+
 	return nil
 }

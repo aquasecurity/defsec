@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/liamg/iamgo"
@@ -38,15 +39,7 @@ func (a *adapter) adaptPolicies(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting policies...")
 
-	for _, apiPolicy := range nativePolicies {
-		policy, err := a.adaptPolicy(apiPolicy)
-		if err != nil {
-			a.Debug("Failed to adapt policy '%s': %s", *apiPolicy.Arn, err)
-			continue
-		}
-		state.AWS.IAM.Policies = append(state.AWS.IAM.Policies, *policy)
-		a.Tracker().IncrementResource()
-	}
+	state.AWS.IAM.Policies = concurrency.Adapt(nativePolicies, a.RootAdapter, a.adaptPolicy)
 	return nil
 }
 

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -34,16 +35,7 @@ func (a *adapter) adaptUsers(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting users...")
 
-	for _, apiUser := range nativeUsers {
-		user, err := a.adaptUser(apiUser)
-		if err != nil {
-			a.Debug("Failed to adapt user '%s': %s", *apiUser.Arn, err)
-			continue
-		}
-		state.AWS.IAM.Users = append(state.AWS.IAM.Users, *user)
-		a.Tracker().IncrementResource()
-	}
-
+	state.AWS.IAM.Users = concurrency.Adapt(nativeUsers, a.RootAdapter, a.adaptUser)
 	return nil
 }
 

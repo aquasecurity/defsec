@@ -3,6 +3,7 @@ package s3
 import (
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
@@ -54,9 +55,10 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 	a.Tracker().SetServiceLabel("Scanning buckets...")
 	a.Tracker().SetTotalResources(len(apiBuckets.Buckets))
 
-	for _, bucket := range apiBuckets.Buckets {
+	buckets = concurrency.Adapt(apiBuckets.Buckets, a.RootAdapter, func(bucket s3types.Bucket) (*s3.Bucket, error) {
+
 		if bucket.Name == nil {
-			continue
+			return nil, nil
 		}
 
 		location, err := a.api.GetBucketLocation(a.Context(), &s3api.GetBucketLocationInput{
@@ -64,14 +66,14 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 		})
 		if err != nil {
 			a.Debug("Error getting bucket location: %s", err)
-			continue
+			return nil, nil
 		}
 		region := string(location.LocationConstraint)
 		if region == "" { // Region us-east-1 have a LocationConstraint of null (???)
 			region = "us-east-1"
 		}
 		if region != a.Region() {
-			continue
+			return nil, nil
 		}
 
 		bucketMetadata := a.CreateMetadata(*bucket.Name)
@@ -87,9 +89,9 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 			ACL:               a.getBucketACL(bucket.Name, bucketMetadata),
 		}
 
-		buckets = append(buckets, b)
-		a.Tracker().IncrementResource()
-	}
+		return &b, nil
+
+	})
 
 	return buckets, nil
 }
