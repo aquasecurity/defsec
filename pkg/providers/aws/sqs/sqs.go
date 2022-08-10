@@ -16,19 +16,6 @@ type Queue struct {
 	Policies   []iam.Policy
 }
 
-func NewQueue(metadata defsecTypes.Metadata, queueUrl string) Queue {
-	return Queue{
-		Metadata: metadata,
-		QueueURL: defsecTypes.StringDefault(queueUrl, metadata),
-		Policies: []iam.Policy{},
-		Encryption: Encryption{
-			Metadata:          metadata,
-			KMSKeyID:          defsecTypes.StringDefault("", metadata),
-			ManagedEncryption: defsecTypes.BoolDefault(false, metadata),
-		},
-	}
-}
-
 type Encryption struct {
 	defsecTypes.Metadata
 	KMSKeyID          defsecTypes.StringValue
