@@ -33,7 +33,6 @@ func (a *adapter) adaptRoles(state *state.State) error {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting roles...")
-
 	state.AWS.IAM.Roles = concurrency.Adapt(nativeRoles, a.RootAdapter, a.adaptRole)
 
 	return nil

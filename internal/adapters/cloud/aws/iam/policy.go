@@ -39,11 +39,16 @@ func (a *adapter) adaptPolicies(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting policies...")
 
-	state.AWS.IAM.Policies = concurrency.Adapt(nativePolicies, a.RootAdapter, a.adaptPolicy)
+	state.AWS.IAM.Policies = concurrency.Adapt(nativePolicies, a.RootAdapter, a.adaptPolicyWithTracker)
 	return nil
 }
 
-func (a *adapter) adaptPolicy(apiPolicy iamtypes.Policy) (*iam.Policy, error) {
+func (a *adapter) adaptPolicyWithTracker(apiPolicy iamtypes.Policy) (*iam.Policy, error) {
+	a.Tracker().SetServiceLabel("Adapting policy...")
+	return a.adaptPolicy(apiPolicy, true)
+}
+
+func (a *adapter) adaptPolicy(apiPolicy iamtypes.Policy, track bool) (*iam.Policy, error) {
 
 	if apiPolicy.Arn == nil {
 		return nil, fmt.Errorf("policy arn not specified")
@@ -66,7 +71,10 @@ func (a *adapter) adaptPolicy(apiPolicy iamtypes.Policy) (*iam.Policy, error) {
 	if err != nil {
 		return nil, err
 	}
-	a.Tracker().IncrementResource()
+	if track {
+		a.Tracker().IncrementResource()
+	}
+
 	return &iam.Policy{
 		Metadata: metadata,
 		Name:     defsecTypes.String(*apiPolicy.PolicyName, metadata),
@@ -94,5 +102,5 @@ func (a *adapter) adaptAttachedPolicy(apiPolicy iamtypes.AttachedPolicy) (*iam.P
 		return nil, err
 	}
 
-	return a.adaptPolicy(*policyOutput.Policy)
+	return a.adaptPolicy(*policyOutput.Policy, false)
 }
