@@ -61,7 +61,6 @@ func (a *adapter) getWorkspaces() ([]workspaces.WorkSpace, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting workspaces...")
-
 	return concurrency.Adapt(apiWorkspaces, a.RootAdapter, a.adaptWorkspace), nil
 }
 
