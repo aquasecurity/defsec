@@ -37,7 +37,7 @@ func (a *adapter) getLaunchTemplates() ([]ec2.LaunchTemplate, error) {
 
 func (a *adapter) adaptLaunchTemplate(template types.LaunchTemplate) (*ec2.LaunchTemplate, error) {
 
-	metadata := a.CreateMetadataFromARN(*template.LaunchTemplateId)
+	metadata := a.CreateMetadata("launch-template/" + *template.LaunchTemplateId)
 
 	var version string
 	if template.DefaultVersionNumber != nil {

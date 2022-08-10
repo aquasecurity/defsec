@@ -129,7 +129,7 @@ func (a *adapter) getClassic() (rds.Classic, error) {
 
 func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, error) {
 
-	dbInstanceMetadata := a.CreateMetadata(*dbInstance.DBInstanceIdentifier)
+	dbInstanceMetadata := a.CreateMetadata("db:" + *dbInstance.DBInstanceIdentifier)
 
 	instance := &rds.Instance{
 		Metadata:                  dbInstanceMetadata,
@@ -149,7 +149,7 @@ func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, e
 
 func (a *adapter) adaptCluster(dbCluster types.DBCluster) (*rds.Cluster, error) {
 
-	dbClusterMetadata := a.CreateMetadata(*dbCluster.DBClusterIdentifier)
+	dbClusterMetadata := a.CreateMetadata("cluster:" + *dbCluster.DBClusterIdentifier)
 
 	cluster := &rds.Cluster{
 		Metadata:                  dbClusterMetadata,
@@ -169,7 +169,7 @@ func (a *adapter) adaptCluster(dbCluster types.DBCluster) (*rds.Cluster, error) 
 
 func (a *adapter) adaptClassic(dbSecurityGroup types.DBSecurityGroup) (*rds.DBSecurityGroup, error) {
 
-	dbSecurityGroupMetadata := a.CreateMetadata(*dbSecurityGroup.DBSecurityGroupName)
+	dbSecurityGroupMetadata := a.CreateMetadata("secgrp:" + *dbSecurityGroup.DBSecurityGroupName)
 
 	dbsg := &rds.DBSecurityGroup{
 		Metadata: dbSecurityGroupMetadata,
