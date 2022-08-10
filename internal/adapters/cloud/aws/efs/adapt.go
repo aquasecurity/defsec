@@ -2,6 +2,7 @@ package efs
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/efs"
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -60,19 +61,7 @@ func (a *adapter) getFilesystems() ([]efs.FileSystem, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting filesystems...")
-
-	var filesystems []efs.FileSystem
-	for _, apiFilesystem := range apiFilesystems {
-		filesystem, err := a.adaptFilesystem(apiFilesystem)
-		if err != nil {
-			a.Debug("Failed to adapt filesystem '%s': %s", *apiFilesystem.FileSystemArn, err)
-			continue
-		}
-		filesystems = append(filesystems, *filesystem)
-		a.Tracker().IncrementResource()
-	}
-
-	return filesystems, nil
+	return concurrency.Adapt(apiFilesystems, a.RootAdapter, a.adaptFilesystem), nil
 }
 
 func (a *adapter) adaptFilesystem(apiFilesystem types.FileSystemDescription) (*efs.FileSystem, error) {

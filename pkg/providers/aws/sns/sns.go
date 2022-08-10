@@ -8,8 +8,8 @@ type SNS struct {
 	Topics []Topic
 }
 
-func NewTopic(arn string, metadata defsecTypes.Metadata) Topic {
-	return Topic{
+func NewTopic(arn string, metadata defsecTypes.Metadata) *Topic {
+	return &Topic{
 		Metadata: metadata,
 		ARN:      defsecTypes.String(arn, metadata),
 		Encryption: Encryption{

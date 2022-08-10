@@ -2,6 +2,7 @@ package ecr
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecr"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -63,19 +64,7 @@ func (a *adapter) getRepositories() ([]ecr.Repository, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting repositories...")
-
-	var repositories []ecr.Repository
-	for _, apiRepository := range apiRepositories {
-		repository, err := a.adaptRepository(apiRepository)
-		if err != nil {
-			a.Debug("Failed to adapt repository '%s': %s", *apiRepository.RepositoryArn, err)
-			continue
-		}
-		repositories = append(repositories, *repository)
-		a.Tracker().IncrementResource()
-	}
-
-	return repositories, nil
+	return concurrency.Adapt(apiRepositories, a.RootAdapter, a.adaptRepository), nil
 }
 
 func (a *adapter) adaptRepository(apiRepository types.Repository) (*ecr.Repository, error) {

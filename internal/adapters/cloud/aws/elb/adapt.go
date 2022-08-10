@@ -2,6 +2,7 @@ package elb
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elb"
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -60,19 +61,7 @@ func (a *adapter) getLoadBalancers() ([]elb.LoadBalancer, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting load balancers...")
-
-	var loadBalancers []elb.LoadBalancer
-	for _, apiLoadBalancer := range apiLoadBalancers {
-		loadBalancer, err := a.adaptLoadBalancer(apiLoadBalancer)
-		if err != nil {
-			a.Debug("Failed to adapt load balancer '%s': %s", *apiLoadBalancer.LoadBalancerArn, err)
-			continue
-		}
-		loadBalancers = append(loadBalancers, *loadBalancer)
-		a.Tracker().IncrementResource()
-	}
-
-	return loadBalancers, nil
+	return concurrency.Adapt(apiLoadBalancers, a.RootAdapter, a.adaptLoadBalancer), nil
 }
 
 func (a *adapter) adaptLoadBalancer(apiLoadBalancer types.LoadBalancer) (*elb.LoadBalancer, error) {

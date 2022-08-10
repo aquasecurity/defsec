@@ -2,6 +2,7 @@ package kinesis
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/kinesis"
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -59,23 +60,7 @@ func (a *adapter) getStreams() ([]kinesis.Stream, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting streams...")
-
-	var streams []kinesis.Stream
-	var lastName string
-	for _, apiStream := range apiStreams {
-		if lastName != apiStream {
-			stream, err := a.adaptStream(apiStream)
-			if err != nil {
-				a.Debug("Failed to adapt stream '%s': %s", apiStream, err)
-				continue
-			}
-			streams = append(streams, *stream)
-		}
-		lastName = apiStream
-		a.Tracker().IncrementResource()
-	}
-
-	return streams, nil
+	return concurrency.Adapt(apiStreams, a.RootAdapter, a.adaptStream), nil
 }
 
 func (a *adapter) adaptStream(streamName string) (*kinesis.Stream, error) {

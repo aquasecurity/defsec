@@ -1,15 +1,13 @@
 package ecs
 
 import (
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecs"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	ecsapi "github.com/aws/aws-sdk-go-v2/service/ecs"
 )
 
 func (a *adapter) getTaskDefinitions() ([]ecs.TaskDefinition, error) {
-
-	var definitions []ecs.TaskDefinition
-
 	var definitionARNs []string
 
 	a.Tracker().SetServiceLabel("Discovering task definitions...")
@@ -28,17 +26,7 @@ func (a *adapter) getTaskDefinitions() ([]ecs.TaskDefinition, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting task definitions...")
-	for _, definitionARN := range definitionARNs {
-		definition, err := a.adaptTaskDefinition(definitionARN)
-		if err != nil {
-			a.Debug("Failed to adapt task definition '%s': %s", definitionARN, err)
-			continue
-		}
-		definitions = append(definitions, *definition)
-		a.Tracker().IncrementResource()
-	}
-
-	return definitions, nil
+	return concurrency.Adapt(definitionARNs, a.RootAdapter, a.adaptTaskDefinition), nil
 }
 
 func (a *adapter) adaptTaskDefinition(arn string) (*ecs.TaskDefinition, error) {

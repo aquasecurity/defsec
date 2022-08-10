@@ -2,6 +2,7 @@ package ssm
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ssm"
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -60,19 +61,7 @@ func (a *adapter) getSecrets() ([]ssm.Secret, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting secrets...")
-
-	var secrets []ssm.Secret
-	for _, apiSecret := range apiSecrets {
-		secret, err := a.adaptSecret(apiSecret)
-		if err != nil {
-			a.Debug("Failed to adapt secret '%s': %s", *apiSecret.ARN, err)
-			continue
-		}
-		secrets = append(secrets, *secret)
-		a.Tracker().IncrementResource()
-	}
-
-	return secrets, nil
+	return concurrency.Adapt(apiSecrets, a.RootAdapter, a.adaptSecret), nil
 }
 
 func (a *adapter) adaptSecret(apiSecret types.SecretListEntry) (*ssm.Secret, error) {

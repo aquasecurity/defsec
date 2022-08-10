@@ -52,10 +52,10 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 		return buckets, err
 	}
 
-	a.Tracker().SetServiceLabel("Scanning buckets...")
+	a.Tracker().SetServiceLabel("Discovering buckets...")
 	a.Tracker().SetTotalResources(len(apiBuckets.Buckets))
 
-	buckets = concurrency.Adapt(apiBuckets.Buckets, a.RootAdapter, func(bucket s3types.Bucket) (*s3.Bucket, error) {
+	return concurrency.Adapt(apiBuckets.Buckets, a.RootAdapter, func(bucket s3types.Bucket) (*s3.Bucket, error) {
 
 		if bucket.Name == nil {
 			return nil, nil
@@ -91,9 +91,7 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 
 		return &b, nil
 
-	})
-
-	return buckets, nil
+	}), nil
 }
 
 func (a *adapter) getPublicAccessBlock(bucketName *string, metadata defsecTypes.Metadata) *s3.PublicAccessBlock {

@@ -3,6 +3,7 @@ package athena
 import (
 	"fmt"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
@@ -68,18 +69,7 @@ func (a *adapter) getWorkgroups() ([]athena.Workgroup, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting workgroups...")
-
-	var workgroups []athena.Workgroup
-	for _, apiWorkgroup := range apiWorkgroups {
-		workgroup, err := a.adaptWorkgroup(apiWorkgroup)
-		if err != nil {
-			a.Debug("Failed to adapt workgroup '%s': %s", workgroup.Name, err)
-			continue
-		}
-		workgroups = append(workgroups, *workgroup)
-		a.Tracker().IncrementResource()
-	}
-	return workgroups, nil
+	return concurrency.Adapt(apiWorkgroups, a.RootAdapter, a.adaptWorkgroup), nil
 }
 
 func (a *adapter) adaptWorkgroup(workgroup types.WorkGroupSummary) (*athena.Workgroup, error) {
@@ -141,7 +131,7 @@ func (a *adapter) getDatabases() ([]athena.Database, error) {
 	var databases []athena.Database
 
 	for _, apiCatalogue := range apiCatalogues {
-		catalogueDatabases, err := a.getDatabasesForCatalogue(*apiCatalogue.CatalogName)
+		catalogueDatabases, err := a.getDatabasesForCatalogue(apiCatalogue)
 		if err != nil {
 			return nil, err
 		}
@@ -151,11 +141,11 @@ func (a *adapter) getDatabases() ([]athena.Database, error) {
 	return databases, nil
 }
 
-func (a *adapter) getDatabasesForCatalogue(catalogueName string) ([]athena.Database, error) {
+func (a *adapter) getDatabasesForCatalogue(catalog types.DataCatalogSummary) ([]athena.Database, error) {
 
 	var apiDatabases []types.Database
 	input := api.ListDatabasesInput{
-		CatalogName: &catalogueName,
+		CatalogName: catalog.CatalogName,
 	}
 	for {
 		output, err := a.client.ListDatabases(a.Context(), &input)
@@ -168,17 +158,7 @@ func (a *adapter) getDatabasesForCatalogue(catalogueName string) ([]athena.Datab
 		}
 		input.NextToken = output.NextToken
 	}
-
-	var databases []athena.Database
-	for _, apiDatabase := range apiDatabases {
-		catalogue, err := a.adaptDatabase(apiDatabase)
-		if err != nil {
-			a.Debug("Failed to adapt database '%s': %s", *apiDatabase.Name, err)
-			continue
-		}
-		databases = append(databases, *catalogue)
-	}
-	return databases, nil
+	return concurrency.Adapt(apiDatabases, a.RootAdapter, a.adaptDatabase), nil
 }
 
 func (a *adapter) adaptDatabase(database types.Database) (*athena.Database, error) {
