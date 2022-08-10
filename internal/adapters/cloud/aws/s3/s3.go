@@ -1,10 +1,12 @@
 package s3
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/concurrency"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -64,6 +66,12 @@ func (a *adapter) getPublicAccessBlock(bucketName *string, metadata defsecTypes.
 		Bucket: bucketName,
 	})
 	if err != nil {
+		var awsError awserr.Error
+		if errors.As(err, &awsError) {
+			if awsError.Code() == "NoSuchPublicAccessBlockConfiguration" {
+				return nil
+			}
+		}
 		a.Debug("Error getting public access block: %s", err)
 		return nil
 	}
@@ -126,8 +134,15 @@ func (a *adapter) getBucketPolicies(bucketName *string, metadata defsecTypes.Met
 
 	bucketPolicy, err := a.api.GetBucketPolicy(a.Context(), &s3api.GetBucketPolicyInput{Bucket: bucketName})
 	if err != nil {
-		a.Debug("Error getting bucket policy: %s", err)
-		return bucketPolicies
+		var awsError awserr.Error
+		if errors.As(err, &awsError) {
+			if awsError.Code() == "NoSuchBucketPolicy" {
+				return nil
+			}
+		}
+		a.Debug("Error getting public access block: %s", err)
+		return nil
+
 	}
 
 	if bucketPolicy.Policy != nil {
@@ -162,7 +177,13 @@ func (a *adapter) getBucketEncryption(bucketName *string, metadata defsecTypes.M
 
 	encryption, err := a.api.GetBucketEncryption(a.Context(), &s3api.GetBucketEncryptionInput{Bucket: bucketName})
 	if err != nil {
-		a.Debug("Error getting bucket encryption: %s", err)
+		var awsError awserr.Error
+		if errors.As(err, &awsError) {
+			if awsError.Code() == "ServerSideEncryptionConfigurationNotFoundError" {
+				return bucketEncryption
+			}
+		}
+		a.Debug("Error getting encryption block: %s", err)
 		return bucketEncryption
 	}
 
@@ -188,6 +209,12 @@ func (a *adapter) getBucketVersioning(bucketName *string, metadata defsecTypes.M
 
 	versioning, err := a.api.GetBucketVersioning(a.Context(), &s3api.GetBucketVersioningInput{Bucket: bucketName})
 	if err != nil {
+		var awsError awserr.Error
+		if errors.As(err, &awsError) {
+			if awsError.Code() == "NotImplemented" {
+				return bucketVersioning
+			}
+		}
 		a.Debug("Error getting bucket versioning: %s", err)
 		return bucketVersioning
 	}
