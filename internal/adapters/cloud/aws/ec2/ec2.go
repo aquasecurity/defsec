@@ -17,7 +17,7 @@ import (
 
 type adapter struct {
 	*aws2.RootAdapter
-	api *ec2api.Client
+	client *ec2api.Client
 }
 
 func init() {
@@ -35,7 +35,7 @@ func (a *adapter) Name() string {
 func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 	a.RootAdapter = root
-	a.api = ec2api.NewFromConfig(root.SessionConfig())
+	a.client = ec2api.NewFromConfig(root.SessionConfig())
 	var err error
 
 	state.AWS.EC2.Instances, err = a.getInstances()
@@ -108,7 +108,7 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 		input.NextToken = token
 	}
 
-	apiInstances, err := a.api.DescribeInstances(a.Context(), input)
+	apiInstances, err := a.client.DescribeInstances(a.Context(), input)
 	if err != nil {
 		return instances, nextToken, err
 	}
@@ -150,7 +150,7 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 		}
 	}
 
-	volumes, err := a.api.DescribeVolumes(a.Context(), &ec2api.DescribeVolumesInput{
+	volumes, err := a.client.DescribeVolumes(a.Context(), &ec2api.DescribeVolumesInput{
 		VolumeIds: volumeIds,
 	})
 	if err != nil {

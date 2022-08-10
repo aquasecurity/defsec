@@ -2,6 +2,7 @@ package sqs
 
 import (
 	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -14,7 +15,7 @@ import (
 
 type adapter struct {
 	*aws2.RootAdapter
-	api *sqsApi.Client
+	client *sqsApi.Client
 }
 
 func init() {
@@ -32,7 +33,7 @@ func (a *adapter) Name() string {
 func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 	a.RootAdapter = root
-	a.api = sqsApi.NewFromConfig(root.SessionConfig())
+	a.client = sqsApi.NewFromConfig(root.SessionConfig())
 	var err error
 
 	state.AWS.SQS.Queues, err = a.getQueues()
@@ -45,102 +46,89 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 func (a *adapter) getQueues() (queues []sqs.Queue, err error) {
 
-	a.Tracker().SetServiceLabel("Scanning queues...")
+	a.Tracker().SetServiceLabel("Discovering SQS queues...")
+	var apiQueueURLs []string
+	var input sqsApi.ListQueuesInput
 
-	batchQueues, token, err := a.getQueueBatch(nil)
+	for {
+		output, err := a.client.ListQueues(a.Context(), &input)
+		if err != nil {
+			return nil, err
+		}
+		apiQueueURLs = append(apiQueueURLs, output.QueueUrls...)
+		a.Tracker().SetTotalResources(len(apiQueueURLs))
+		if output.NextToken == nil {
+			break
+		}
+		input.NextToken = output.NextToken
+	}
+
+	a.Tracker().SetServiceLabel("Adapting SQS queues...")
+	return concurrency.Adapt(apiQueueURLs, a.RootAdapter, a.adaptQueue), nil
+
+}
+
+func (a *adapter) adaptQueue(queueUrl string) (*sqs.Queue, error) {
+
+	// make another call to get the attributes for the Queue
+	queueAttributes, err := a.client.GetQueueAttributes(a.Context(), &sqsApi.GetQueueAttributesInput{
+		QueueUrl: aws.String(queueUrl),
+		AttributeNames: []sqsTypes.QueueAttributeName{
+			sqsTypes.QueueAttributeNameSqsManagedSseEnabled,
+			sqsTypes.QueueAttributeNameKmsMasterKeyId,
+			sqsTypes.QueueAttributeNamePolicy,
+			sqsTypes.QueueAttributeNameQueueArn,
+		},
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	queues = append(queues, batchQueues...)
+	queueARN := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameQueueArn)]
+	queueMetadata := a.CreateMetadataFromARN(queueARN)
 
-	// while we have a NextToken, page through the results
-	for token != nil {
-		batchQueues, token, err = a.getQueueBatch(token)
-		if err != nil {
-			return nil, err
-		}
-		queues = append(queues, batchQueues...)
+	queue := &sqs.Queue{
+		Metadata: queueMetadata,
+		QueueURL: defsecTypes.String(queueUrl, queueMetadata),
+		Policies: []iam.Policy{},
+		Encryption: sqs.Encryption{
+			Metadata:          queueMetadata,
+			KMSKeyID:          defsecTypes.StringDefault("", queueMetadata),
+			ManagedEncryption: defsecTypes.BoolDefault(false, queueMetadata),
+		},
 	}
 
-	return queues, nil
-}
+	sseEncrypted := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameSqsManagedSseEnabled)]
+	kmsEncryption := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameKmsMasterKeyId)]
+	queuePolicy := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNamePolicy)]
 
-func (a *adapter) getQueueBatch(token *string) (queues []sqs.Queue, nextToken *string, err error) {
-
-	input := &sqsApi.ListQueuesInput{}
-
-	if token != nil {
-		input.NextToken = token
+	if sseEncrypted == "SSE-SQS" || sseEncrypted == "SSE-KMS" {
+		queue.Encryption.ManagedEncryption = defsecTypes.Bool(true, queueMetadata)
 	}
 
-	apiQueues, err := a.api.ListQueues(a.Context(), input)
-	if err != nil {
-		return queues, nil, err
+	if kmsEncryption != "" {
+		queue.Encryption.KMSKeyID = defsecTypes.String(kmsEncryption, queueMetadata)
 	}
 
-	for _, queueUrl := range apiQueues.QueueUrls {
+	if queuePolicy != "" {
+		policy, err := iamgo.ParseString(queuePolicy)
+		if err == nil {
 
-		// make another call to get the attributes for the Queue
-		queueAttributes, err := a.api.GetQueueAttributes(a.Context(), &sqsApi.GetQueueAttributesInput{
-			QueueUrl: aws.String(queueUrl),
-			AttributeNames: []sqsTypes.QueueAttributeName{
-				sqsTypes.QueueAttributeNameSqsManagedSseEnabled,
-				sqsTypes.QueueAttributeNameKmsMasterKeyId,
-				sqsTypes.QueueAttributeNamePolicy,
-				sqsTypes.QueueAttributeNameQueueArn,
-			},
-		})
-		if err != nil {
-			return queues, nil, err
-		}
-
-		queueARN := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameQueueArn)]
-		queueMetadata := a.CreateMetadataFromARN(queueARN)
-
-		queue := sqs.Queue{
-			Metadata: queueMetadata,
-			QueueURL: defsecTypes.String(queueUrl, queueMetadata),
-			Policies: []iam.Policy{},
-			Encryption: sqs.Encryption{
-				Metadata:          queueMetadata,
-				KMSKeyID:          defsecTypes.StringDefault("", queueMetadata),
-				ManagedEncryption: defsecTypes.BoolDefault(false, queueMetadata),
-			},
-		}
-
-		sseEncrypted := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameSqsManagedSseEnabled)]
-		kmsEncryption := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameKmsMasterKeyId)]
-		queuePolicy := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNamePolicy)]
-
-		if sseEncrypted == "SSE-SQS" || sseEncrypted == "SSE-KMS" {
-			queue.Encryption.ManagedEncryption = defsecTypes.Bool(true, queueMetadata)
-		}
-
-		if kmsEncryption != "" {
-			queue.Encryption.KMSKeyID = defsecTypes.String(kmsEncryption, queueMetadata)
-		}
-
-		if queuePolicy != "" {
-			policy, err := iamgo.ParseString(queuePolicy)
-			if err == nil {
-
-				queue.Policies = append(queue.Policies, iam.Policy{
+			queue.Policies = append(queue.Policies, iam.Policy{
+				Metadata: queueMetadata,
+				Name:     defsecTypes.StringDefault("", queueMetadata),
+				Document: iam.Document{
 					Metadata: queueMetadata,
-					Name:     defsecTypes.StringDefault("", queueMetadata),
-					Document: iam.Document{
-						Metadata: queueMetadata,
-						Parsed:   *policy,
-					},
-					Builtin: defsecTypes.Bool(false, queueMetadata),
-				})
-
-			}
+					Parsed:   *policy,
+				},
+				Builtin: defsecTypes.Bool(false, queueMetadata),
+			})
 
 		}
-		a.Tracker().IncrementResource()
-		queues = append(queues, queue)
+
 	}
-	return queues, apiQueues.NextToken, nil
+	a.Tracker().IncrementResource()
+
+	return queue, nil
 
 }

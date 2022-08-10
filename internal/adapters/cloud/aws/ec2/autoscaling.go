@@ -19,7 +19,7 @@ func (a *adapter) getLaunchTemplates() ([]ec2.LaunchTemplate, error) {
 
 	var apiTemplates []types.LaunchTemplate
 	for {
-		output, err := a.api.DescribeLaunchTemplates(a.Context(), &input)
+		output, err := a.client.DescribeLaunchTemplates(a.Context(), &input)
 		if err != nil {
 			return nil, err
 		}
@@ -46,7 +46,7 @@ func (a *adapter) adaptLaunchTemplate(template types.LaunchTemplate) (*ec2.Launc
 		version = fmt.Sprintf("%d", *template.LatestVersionNumber)
 	}
 
-	output, err := a.api.DescribeLaunchTemplateVersions(a.Context(), &ec2api.DescribeLaunchTemplateVersionsInput{
+	output, err := a.client.DescribeLaunchTemplateVersions(a.Context(), &ec2api.DescribeLaunchTemplateVersionsInput{
 		LaunchTemplateId: template.LaunchTemplateId,
 		Versions:         []string{version},
 	})

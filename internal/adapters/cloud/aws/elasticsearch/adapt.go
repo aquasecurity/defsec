@@ -2,6 +2,7 @@ package elasticsearch
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -53,19 +54,7 @@ func (a *adapter) getDomains() ([]elasticsearch.Domain, error) {
 	a.Tracker().SetTotalResources(len(apiDomains))
 
 	a.Tracker().SetServiceLabel("Adapting domains...")
-
-	var domains []elasticsearch.Domain
-	for _, apiDomain := range apiDomains {
-		domain, err := a.adaptDomain(apiDomain)
-		if err != nil {
-			a.Debug("Failed to adapt domain '%s': %s", *apiDomain.DomainName, err)
-			continue
-		}
-		domains = append(domains, *domain)
-		a.Tracker().IncrementResource()
-	}
-
-	return domains, nil
+	return concurrency.Adapt(apiDomains, a.RootAdapter, a.adaptDomain), nil
 }
 
 func (a *adapter) adaptDomain(apiDomain types.DomainInfo) (*elasticsearch.Domain, error) {

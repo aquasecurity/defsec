@@ -17,7 +17,7 @@ func (a *adapter) getSecurityGroups() (securityGroups []ec2.SecurityGroup, err e
 	var input ec2api.DescribeSecurityGroupsInput
 
 	for {
-		output, err := a.api.DescribeSecurityGroups(a.Context(), &input)
+		output, err := a.client.DescribeSecurityGroups(a.Context(), &input)
 		if err != nil {
 			return nil, err
 		}
@@ -40,7 +40,7 @@ func (a *adapter) getNetworkACLs() (nacls []ec2.NetworkACL, err error) {
 	var input ec2api.DescribeNetworkAclsInput
 
 	for {
-		output, err := a.api.DescribeNetworkAcls(a.Context(), &input)
+		output, err := a.client.DescribeNetworkAcls(a.Context(), &input)
 		if err != nil {
 			return nil, err
 		}
@@ -62,7 +62,7 @@ func (a *adapter) getDefaultVPCs() (defaultVpcs []ec2.DefaultVPC, err error) {
 	var input ec2api.DescribeVpcsInput
 
 	for {
-		output, err := a.api.DescribeVpcs(a.Context(), &input)
+		output, err := a.client.DescribeVpcs(a.Context(), &input)
 		if err != nil {
 			return nil, err
 		}

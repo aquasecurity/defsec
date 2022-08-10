@@ -20,7 +20,7 @@ func (a *adapter) getVolumes() ([]ec2.Volume, error) {
 
 	var apiVolumes []types.Volume
 	for {
-		output, err := a.api.DescribeVolumes(a.Context(), &input)
+		output, err := a.client.DescribeVolumes(a.Context(), &input)
 		if err != nil {
 			return nil, err
 		}

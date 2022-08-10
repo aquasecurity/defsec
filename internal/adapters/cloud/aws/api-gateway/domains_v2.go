@@ -3,6 +3,7 @@ package api_gateway
 import (
 	"fmt"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	v2 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v2"
@@ -12,9 +13,6 @@ import (
 )
 
 func (a *adapter) getDomainNamesV2() ([]v2.DomainName, error) {
-
-	var adapted []v2.DomainName
-
 	a.Tracker().SetServiceLabel("Discovering v2 domain names...")
 
 	var input api.GetDomainNamesInput
@@ -38,7 +36,7 @@ func (a *adapter) getDomainNamesV2() ([]v2.DomainName, error) {
 
 }
 
-func (a *adapter) adaptDomainNameV2(domain agTypes.DomainName) v2.DomainName {
+func (a *adapter) adaptDomainNameV2(domain agTypes.DomainName) (*v2.DomainName, error) {
 	metadata := a.CreateMetadata(fmt.Sprintf("/domainnames/%s", *domain.DomainName))
 	securityPolicy := "TLS_1_2"
 	for _, policy := range domain.DomainNameConfigurations {
@@ -46,9 +44,9 @@ func (a *adapter) adaptDomainNameV2(domain agTypes.DomainName) v2.DomainName {
 			securityPolicy = string(policy.SecurityPolicy)
 		}
 	}
-	return v2.DomainName{
+	return &v2.DomainName{
 		Metadata:       metadata,
 		Name:           types.String(*domain.DomainName, metadata),
 		SecurityPolicy: types.String(securityPolicy, metadata),
-	}
+	}, nil
 }

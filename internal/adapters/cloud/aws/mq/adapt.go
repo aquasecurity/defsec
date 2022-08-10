@@ -2,6 +2,7 @@ package mq
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/mq"
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -60,19 +61,7 @@ func (a *adapter) getBrokers() ([]mq.Broker, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting brokers...")
-
-	var brokers []mq.Broker
-	for _, apiBroker := range apiBrokers {
-		broker, err := a.adaptBroker(apiBroker)
-		if err != nil {
-			a.Debug("Failed to adapt broker '%s': %s", *apiBroker.BrokerArn, err)
-			continue
-		}
-		brokers = append(brokers, *broker)
-		a.Tracker().IncrementResource()
-	}
-
-	return brokers, nil
+	return concurrency.Adapt(apiBrokers, a.RootAdapter, a.adaptBroker), nil
 }
 
 func (a *adapter) adaptBroker(apiBroker types.BrokerSummary) (*mq.Broker, error) {
