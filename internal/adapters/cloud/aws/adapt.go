@@ -64,10 +64,6 @@ func (a *RootAdapter) Debug(format string, args ...interface{}) {
 	a.debugWriter.Log(format, args...)
 }
 
-func (a *RootAdapter) Logger() debug.Logger {
-	return a.debugWriter
-}
-
 func (a *RootAdapter) ConcurrencyStrategy() concurrency.Strategy {
 	return a.concurrencyStrategy
 }

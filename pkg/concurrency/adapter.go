@@ -3,25 +3,25 @@ package concurrency
 import (
 	"sync"
 
-	"github.com/aquasecurity/defsec/pkg/debug"
+	"github.com/aquasecurity/defsec/pkg/progress"
 	"github.com/aquasecurity/defsec/pkg/state"
 )
 
 type Context interface {
-	Logger() debug.Logger
+	Debug(format string, args ...interface{})
 	ConcurrencyStrategy() Strategy
+	Tracker() progress.ServiceTracker
 }
 
-func Adapt[T any, S any](items []T, adapter Context, adapt func(T) (*S, error)) []S {
-	return AdaptWithStrategy(items, nil, adapter, func(item T, _ *state.State) (*S, error) {
+func Adapt[T any, S any](items []T, ctx Context, adapt func(T) (*S, error)) []S {
+	return AdaptWithStrategy(items, nil, ctx, func(item T, _ *state.State) (*S, error) {
 		return adapt(item)
 	})
 }
 
-func AdaptWithStrategy[T any, S any](items []T, currentState *state.State, adapter Context, adapt func(T, *state.State) (*S, error)) []S {
-	processes := getProcessCount(adapter.ConcurrencyStrategy())
-	logger := adapter.Logger()
-	logger.Log("Using %d processes to adapt %d resources", processes, len(items))
+func AdaptWithStrategy[T any, S any](items []T, currentState *state.State, ctx Context, adapt func(T, *state.State) (*S, error)) []S {
+	processes := getProcessCount(ctx.ConcurrencyStrategy())
+	ctx.Debug("Using %d processes to adapt %d resources", processes, len(items))
 
 	mu := sync.Mutex{}
 
@@ -40,8 +40,9 @@ func AdaptWithStrategy[T any, S any](items []T, currentState *state.State, adapt
 					return
 				}
 				out, err := adapt(in, currentState)
+				ctx.Tracker().IncrementResource()
 				if err != nil {
-					logger.Log("Error while adapting resource: %s", err)
+					ctx.Debug("Error while adapting resource %v: %w", in, err)
 					continue
 				}
 

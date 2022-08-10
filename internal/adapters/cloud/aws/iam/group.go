@@ -87,7 +87,7 @@ func (a *adapter) adaptGroup(apiGroup iamtypes.Group, state *state.State) (*iam.
 			}
 		}
 	}
-	a.Tracker().IncrementResource()
+
 	return &iam.Group{
 		Metadata: metadata,
 		Name:     types.String(*apiGroup.GroupName, metadata),

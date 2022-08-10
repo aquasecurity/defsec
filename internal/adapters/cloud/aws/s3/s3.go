@@ -2,7 +2,6 @@ package s3
 
 import (
 	"strings"
-	"sync"
 
 	"github.com/aquasecurity/defsec/pkg/concurrency"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -17,7 +16,6 @@ import (
 )
 
 type adapter struct {
-	sync.Mutex
 	*aws.RootAdapter
 	api *s3api.Client
 }

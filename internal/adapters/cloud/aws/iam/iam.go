@@ -1,8 +1,6 @@
 package iam
 
 import (
-	"sync"
-
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -11,7 +9,6 @@ import (
 )
 
 type adapter struct {
-	sync.Mutex
 	*aws.RootAdapter
 	api *iamapi.Client
 }
@@ -91,6 +88,6 @@ func (a *adapter) adaptPasswordPolicy(state *state.State) error {
 		MaxAgeDays:           types.Int(maxAge, metadata),
 		MinimumLength:        types.Int(minimumLength, metadata),
 	}
-	a.Tracker().IncrementResource()
+
 	return nil
 }

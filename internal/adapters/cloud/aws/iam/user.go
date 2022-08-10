@@ -196,7 +196,7 @@ func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 	if apiUser.PasswordLastUsed != nil {
 		lastAccess = defsecTypes.Time(*apiUser.PasswordLastUsed, metadata)
 	}
-	a.Tracker().IncrementResource()
+
 	return &iam.User{
 		Metadata:   metadata,
 		Name:       defsecTypes.String(*apiUser.UserName, metadata),

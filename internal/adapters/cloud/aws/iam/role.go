@@ -75,7 +75,7 @@ func (a *adapter) adaptRole(apiRole iamtypes.Role) (*iam.Role, error) {
 	}
 
 	metadata := a.CreateMetadataFromARN(*apiRole.Arn)
-	a.Tracker().IncrementResource()
+
 	return &iam.Role{
 		Metadata: metadata,
 		Name:     types.String(*apiRole.RoleName, metadata),
