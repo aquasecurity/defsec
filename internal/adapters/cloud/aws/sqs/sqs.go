@@ -81,9 +81,6 @@ func (a *adapter) getQueueBatch(token *string) (queues []sqs.Queue, nextToken *s
 
 	for _, queueUrl := range apiQueues.QueueUrls {
 
-		// construct the ARN for metadata unique referencing
-		queueMetadata := a.CreateMetadata(queueUrl)
-
 		// make another call to get the attributes for the Queue
 		queueAttributes, err := a.api.GetQueueAttributes(a.Context(), &sqsApi.GetQueueAttributesInput{
 			QueueUrl: aws.String(queueUrl),
@@ -91,14 +88,26 @@ func (a *adapter) getQueueBatch(token *string) (queues []sqs.Queue, nextToken *s
 				sqsTypes.QueueAttributeNameSqsManagedSseEnabled,
 				sqsTypes.QueueAttributeNameKmsMasterKeyId,
 				sqsTypes.QueueAttributeNamePolicy,
+				sqsTypes.QueueAttributeNameQueueArn,
 			},
 		})
 		if err != nil {
 			return queues, nil, err
 		}
 
-		queue := sqs.NewQueue(queueMetadata, queueUrl)
-		queue.QueueURL = defsecTypes.String(queueUrl, queueMetadata)
+		queueARN := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameQueueArn)]
+		queueMetadata := a.CreateMetadataFromARN(queueARN)
+
+		queue := sqs.Queue{
+			Metadata: queueMetadata,
+			QueueURL: defsecTypes.String(queueUrl, queueMetadata),
+			Policies: []iam.Policy{},
+			Encryption: sqs.Encryption{
+				Metadata:          queueMetadata,
+				KMSKeyID:          defsecTypes.StringDefault("", queueMetadata),
+				ManagedEncryption: defsecTypes.BoolDefault(false, queueMetadata),
+			},
+		}
 
 		sseEncrypted := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameSqsManagedSseEnabled)]
 		kmsEncryption := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameKmsMasterKeyId)]
