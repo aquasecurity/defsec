@@ -80,7 +80,7 @@ func (a *adapter) getDefaultVPCs() (defaultVpcs []ec2.DefaultVPC, err error) {
 
 func (a *adapter) adaptSecurityGroup(apiSecurityGroup types.SecurityGroup) (*ec2.SecurityGroup, error) {
 
-	sgMetadata := a.CreateMetadata(*apiSecurityGroup.GroupId)
+	sgMetadata := a.CreateMetadata("security-group/" + *apiSecurityGroup.GroupId)
 
 	sg := &ec2.SecurityGroup{
 		Metadata:    sgMetadata,
@@ -115,7 +115,7 @@ func (a *adapter) adaptSecurityGroup(apiSecurityGroup types.SecurityGroup) (*ec2
 
 func (a *adapter) adaptNetworkACL(apiNacl types.NetworkAcl) (*ec2.NetworkACL, error) {
 
-	naclMetadata := a.CreateMetadata(*apiNacl.NetworkAclId)
+	naclMetadata := a.CreateMetadata("network-acl/" + *apiNacl.NetworkAclId)
 
 	nacl := &ec2.NetworkACL{
 		Metadata:      naclMetadata,
@@ -143,7 +143,7 @@ func (a *adapter) adaptVPC(v types.Vpc) (*ec2.DefaultVPC, error) {
 
 	if aws.ToBool(v.IsDefault) {
 
-		vpcMetadata := a.CreateMetadata(*v.VpcId)
+		vpcMetadata := a.CreateMetadata("vpc/" + *v.VpcId)
 
 		return &ec2.DefaultVPC{
 			Metadata: vpcMetadata,

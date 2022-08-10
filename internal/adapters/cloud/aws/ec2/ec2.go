@@ -108,7 +108,7 @@ func (a *adapter) adaptInstance(instance ec2Types.Instance) (*ec2.Instance, erro
 
 	volumeBlockMap := make(map[string]*ec2.BlockDevice)
 	var volumeIds []string
-	instanceMetadata := a.CreateMetadata(*instance.InstanceId)
+	instanceMetadata := a.CreateMetadata("instance/" + *instance.InstanceId)
 
 	i := ec2.NewInstance(instanceMetadata)
 	if instance.MetadataOptions != nil {
