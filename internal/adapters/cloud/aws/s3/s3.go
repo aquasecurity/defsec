@@ -55,43 +55,7 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 	a.Tracker().SetServiceLabel("Discovering buckets...")
 	a.Tracker().SetTotalResources(len(apiBuckets.Buckets))
 
-	return concurrency.Adapt(apiBuckets.Buckets, a.RootAdapter, func(bucket s3types.Bucket) (*s3.Bucket, error) {
-
-		if bucket.Name == nil {
-			return nil, nil
-		}
-
-		location, err := a.api.GetBucketLocation(a.Context(), &s3api.GetBucketLocationInput{
-			Bucket: bucket.Name,
-		})
-		if err != nil {
-			a.Debug("Error getting bucket location: %s", err)
-			return nil, nil
-		}
-		region := string(location.LocationConstraint)
-		if region == "" { // Region us-east-1 have a LocationConstraint of null (???)
-			region = "us-east-1"
-		}
-		if region != a.Region() {
-			return nil, nil
-		}
-
-		bucketMetadata := a.CreateMetadata(*bucket.Name)
-
-		b := s3.Bucket{
-			Metadata:          bucketMetadata,
-			Name:              defsecTypes.String(*bucket.Name, bucketMetadata),
-			PublicAccessBlock: a.getPublicAccessBlock(bucket.Name, bucketMetadata),
-			BucketPolicies:    a.getBucketPolicies(bucket.Name, bucketMetadata),
-			Encryption:        a.getBucketEncryption(bucket.Name, bucketMetadata),
-			Versioning:        a.getBucketVersioning(bucket.Name, bucketMetadata),
-			Logging:           a.getBucketLogging(bucket.Name, bucketMetadata),
-			ACL:               a.getBucketACL(bucket.Name, bucketMetadata),
-		}
-
-		return &b, nil
-
-	}), nil
+	return concurrency.Adapt(apiBuckets.Buckets, a.RootAdapter, a.adaptBucket), nil
 }
 
 func (a *adapter) getPublicAccessBlock(bucketName *string, metadata defsecTypes.Metadata) *s3.PublicAccessBlock {
@@ -117,6 +81,44 @@ func (a *adapter) getPublicAccessBlock(bucketName *string, metadata defsecTypes.
 	pab.RestrictPublicBuckets = defsecTypes.Bool(config.RestrictPublicBuckets, metadata)
 
 	return &pab
+}
+
+func (a *adapter) adaptBucket(bucket s3types.Bucket) (*s3.Bucket, error) {
+
+	if bucket.Name == nil {
+		return nil, nil
+	}
+
+	location, err := a.api.GetBucketLocation(a.Context(), &s3api.GetBucketLocationInput{
+		Bucket: bucket.Name,
+	})
+	if err != nil {
+		a.Debug("Error getting bucket location: %s", err)
+		return nil, nil
+	}
+	region := string(location.LocationConstraint)
+	if region == "" { // Region us-east-1 have a LocationConstraint of null (???)
+		region = "us-east-1"
+	}
+	if region != a.Region() {
+		return nil, nil
+	}
+
+	bucketMetadata := a.CreateMetadata(*bucket.Name)
+
+	b := s3.Bucket{
+		Metadata:          bucketMetadata,
+		Name:              defsecTypes.String(*bucket.Name, bucketMetadata),
+		PublicAccessBlock: a.getPublicAccessBlock(bucket.Name, bucketMetadata),
+		BucketPolicies:    a.getBucketPolicies(bucket.Name, bucketMetadata),
+		Encryption:        a.getBucketEncryption(bucket.Name, bucketMetadata),
+		Versioning:        a.getBucketVersioning(bucket.Name, bucketMetadata),
+		Logging:           a.getBucketLogging(bucket.Name, bucketMetadata),
+		ACL:               a.getBucketACL(bucket.Name, bucketMetadata),
+	}
+
+	return &b, nil
+
 }
 
 func (a *adapter) getBucketPolicies(bucketName *string, metadata defsecTypes.Metadata) []iam.Policy {
