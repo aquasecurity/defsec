@@ -78,7 +78,7 @@ func (a *adapter) getInstances() (instances []rds.Instance, err error) {
 
 func (a *adapter) getClusters() (clusters []rds.Cluster, err error) {
 
-	a.Tracker().SetServiceLabel("Scanning RDS clusters...")
+	a.Tracker().SetServiceLabel("Discovering RDS clusters...")
 	var apDBClusters []types.DBCluster
 	var input rdsApi.DescribeDBClustersInput
 
@@ -104,7 +104,7 @@ func (a *adapter) getClassic() (rds.Classic, error) {
 		DBSecurityGroups: nil,
 	}
 
-	a.Tracker().SetServiceLabel("Scanning RDS classic instances...")
+	a.Tracker().SetServiceLabel("Discovering RDS classic instances...")
 	var apiDBSGs []types.DBSecurityGroup
 	var input rdsApi.DescribeDBSecurityGroupsInput
 
@@ -144,7 +144,6 @@ func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, e
 		PublicAccess: defsecTypes.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
 	}
 
-	a.Tracker().IncrementResource()
 	return instance, nil
 }
 

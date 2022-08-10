@@ -35,7 +35,7 @@ func (a *adapter) getSecurityGroups() (securityGroups []ec2.SecurityGroup, err e
 
 func (a *adapter) getNetworkACLs() (nacls []ec2.NetworkACL, err error) {
 
-	a.Tracker().SetServiceLabel("Scanning network ACLs...")
+	a.Tracker().SetServiceLabel("Discovering network ACLs...")
 	var apiNetworkACLs []types.NetworkAcl
 	var input ec2api.DescribeNetworkAclsInput
 
@@ -57,7 +57,7 @@ func (a *adapter) getNetworkACLs() (nacls []ec2.NetworkACL, err error) {
 
 func (a *adapter) getDefaultVPCs() (defaultVpcs []ec2.DefaultVPC, err error) {
 
-	a.Tracker().SetServiceLabel("Scanning default VPCs...")
+	a.Tracker().SetServiceLabel("Discovering default VPCs...")
 	var apiDefaultVPCs []types.Vpc
 	var input ec2api.DescribeVpcsInput
 

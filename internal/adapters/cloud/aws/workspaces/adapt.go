@@ -61,18 +61,6 @@ func (a *adapter) getWorkspaces() ([]workspaces.WorkSpace, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting workspaces...")
-
-	var spaces []workspaces.WorkSpace
-	for _, apiWorkspace := range apiWorkspaces {
-		workspace, err := a.adaptWorkspace(apiWorkspace)
-		if err != nil {
-			a.Debug("Failed to adapt workspace '%s': %s", *apiWorkspace.WorkspaceId, err)
-			continue
-		}
-		spaces = append(spaces, *workspace)
-		a.Tracker().IncrementResource()
-	}
-
 	return concurrency.Adapt(apiWorkspaces, a.RootAdapter, a.adaptWorkspace), nil
 }
 

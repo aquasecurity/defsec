@@ -52,7 +52,7 @@ func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
 		return buckets, err
 	}
 
-	a.Tracker().SetServiceLabel("Scanning buckets...")
+	a.Tracker().SetServiceLabel("Discovering buckets...")
 	a.Tracker().SetTotalResources(len(apiBuckets.Buckets))
 
 	return concurrency.Adapt(apiBuckets.Buckets, a.RootAdapter, func(bucket s3types.Bucket) (*s3.Bucket, error) {

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 
 	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
@@ -73,28 +73,8 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 func (a *adapter) getInstances() (instances []ec2.Instance, err error) {
 
-	a.Tracker().SetServiceLabel("Scanning instances...")
-
-	batchInstances, token, err := a.getInstanceBatch(nil)
-	if err != nil {
-		return instances, err
-	}
-
-	instances = append(instances, batchInstances...)
-
-	for token != nil {
-		instances, token, err = a.getInstanceBatch(token)
-		if err != nil {
-			return instances, err
-		}
-		instances = append(instances, batchInstances...)
-	}
-
-	return instances, nil
-}
-
-func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nextToken *string, err error) {
-
+	a.Tracker().SetServiceLabel("Discovering instances...")
+	var apiInstances []ec2Types.Instance
 	input := &ec2api.DescribeInstancesInput{
 		Filters: []ec2Types.Filter{
 			{
@@ -104,49 +84,53 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 		},
 	}
 
-	if token != nil {
-		input.NextToken = token
+	for {
+		output, err := a.client.DescribeInstances(a.Context(), input)
+		if err != nil {
+			return nil, err
+		}
+		for _, res := range output.Reservations {
+			apiInstances = append(apiInstances, res.Instances...)
+		}
+
+		a.Tracker().SetTotalResources(len(apiInstances))
+		if output.NextToken == nil {
+			break
+		}
+		input.NextToken = output.NextToken
 	}
 
-	apiInstances, err := a.client.DescribeInstances(a.Context(), input)
-	if err != nil {
-		return instances, nextToken, err
-	}
+	a.Tracker().SetServiceLabel("Adapting instances...")
+	return concurrency.Adapt(apiInstances, a.RootAdapter, a.adaptInstance), nil
+}
+
+func (a *adapter) adaptInstance(instance ec2Types.Instance) (*ec2.Instance, error) {
 
 	volumeBlockMap := make(map[string]*ec2.BlockDevice)
 	var volumeIds []string
+	instanceMetadata := a.CreateMetadata(*instance.InstanceId)
 
-	for _, reservation := range apiInstances.Reservations {
-		for _, instance := range reservation.Instances {
+	i := ec2.NewInstance(instanceMetadata)
+	if instance.MetadataOptions != nil {
+		i.MetadataOptions.HttpTokens = defsecTypes.StringDefault(string(instance.MetadataOptions.HttpTokens), instanceMetadata)
+		i.MetadataOptions.HttpEndpoint = defsecTypes.StringDefault(string(instance.MetadataOptions.HttpEndpoint), instanceMetadata)
+	}
 
-			instanceMetadata := a.CreateMetadata(*instance.InstanceId)
-
-			i := ec2.NewInstance(instanceMetadata)
-			if instance.MetadataOptions != nil {
-				i.MetadataOptions.HttpTokens = defsecTypes.StringDefault(string(instance.MetadataOptions.HttpTokens), instanceMetadata)
-				i.MetadataOptions.HttpEndpoint = defsecTypes.StringDefault(string(instance.MetadataOptions.HttpEndpoint), instanceMetadata)
+	if instance.BlockDeviceMappings != nil {
+		for _, blockMapping := range instance.BlockDeviceMappings {
+			volumeMetadata := a.CreateMetadata(fmt.Sprintf("volume/%s", *blockMapping.Ebs.VolumeId))
+			ebsDevice := &ec2.BlockDevice{
+				Metadata:  volumeMetadata,
+				Encrypted: defsecTypes.BoolDefault(false, volumeMetadata),
 			}
-
-			if instance.BlockDeviceMappings != nil {
-				for _, blockMapping := range instance.BlockDeviceMappings {
-					volumeMetadata := a.CreateMetadata(fmt.Sprintf("volume/%s", *blockMapping.Ebs.VolumeId))
-					ebsDevice := &ec2.BlockDevice{
-						Metadata:  volumeMetadata,
-						Encrypted: defsecTypes.BoolDefault(false, volumeMetadata),
-					}
-					if strings.EqualFold(*blockMapping.DeviceName, *instance.RootDeviceName) {
-						// is root block device
-						i.RootBlockDevice = ebsDevice
-					} else {
-						i.EBSBlockDevices = append(i.EBSBlockDevices, ebsDevice)
-					}
-					volumeBlockMap[*blockMapping.Ebs.VolumeId] = ebsDevice
-					volumeIds = append(volumeIds, *blockMapping.Ebs.VolumeId)
-				}
+			if strings.EqualFold(*blockMapping.DeviceName, *instance.RootDeviceName) {
+				// is root block device
+				i.RootBlockDevice = ebsDevice
+			} else {
+				i.EBSBlockDevices = append(i.EBSBlockDevices, ebsDevice)
 			}
-
-			instances = append(instances, i)
-			a.Tracker().IncrementResource()
+			volumeBlockMap[*blockMapping.Ebs.VolumeId] = ebsDevice
+			volumeIds = append(volumeIds, *blockMapping.Ebs.VolumeId)
 		}
 	}
 
@@ -154,7 +138,7 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 		VolumeIds: volumeIds,
 	})
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	for _, v := range volumes.Volumes {
@@ -163,5 +147,5 @@ func (a *adapter) getInstanceBatch(token *string) (instances []ec2.Instance, nex
 			block.Encrypted = defsecTypes.Bool(*v.Encrypted, block.Metadata)
 		}
 	}
-	return instances, apiInstances.NextToken, nil
+	return i, nil
 }

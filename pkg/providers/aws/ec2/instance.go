@@ -25,8 +25,8 @@ type MetadataOptions struct {
 	HttpEndpoint defsecTypes.StringValue
 }
 
-func NewInstance(metadata defsecTypes.Metadata) Instance {
-	return Instance{
+func NewInstance(metadata defsecTypes.Metadata) *Instance {
+	return &Instance{
 		Metadata: metadata,
 		MetadataOptions: MetadataOptions{
 			Metadata:     metadata,

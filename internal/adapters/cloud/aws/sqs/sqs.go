@@ -127,8 +127,6 @@ func (a *adapter) adaptQueue(queueUrl string) (*sqs.Queue, error) {
 		}
 
 	}
-	a.Tracker().IncrementResource()
-
 	return queue, nil
 
 }

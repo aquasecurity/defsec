@@ -81,6 +81,6 @@ func (a *adapter) adaptLaunchTemplate(template types.LaunchTemplate) (*ec2.Launc
 
 	return &ec2.LaunchTemplate{
 		Metadata: metadata,
-		Instance: instance,
+		Instance: *instance,
 	}, nil
 }
