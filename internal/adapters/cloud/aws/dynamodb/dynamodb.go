@@ -2,6 +2,7 @@ package dynamodb
 
 import (
 	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/dynamodb"
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -12,24 +13,24 @@ import (
 
 type adapter struct {
 	*aws2.RootAdapter
-	api *dynamodbApi.Client
+	client *dynamodbApi.Client
 }
 
 func init() {
 	aws2.RegisterServiceAdapter(&adapter{})
 }
 
-func (a adapter) Name() string {
+func (a *adapter) Name() string {
 	return "dynamodb"
 }
 
-func (a adapter) Provider() string {
+func (a *adapter) Provider() string {
 	return "aws"
 }
 
-func (a adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
+func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 	a.RootAdapter = root
-	a.api = dynamodbApi.NewFromConfig(root.SessionConfig())
+	a.client = dynamodbApi.NewFromConfig(root.SessionConfig())
 	var err error
 
 	state.AWS.DynamoDB.Tables, err = a.getTables()
@@ -40,89 +41,70 @@ func (a adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 	return nil
 }
 
-func (a adapter) getTables() (tables []dynamodb.Table, err error) {
+func (a *adapter) getTables() (tables []dynamodb.Table, err error) {
 
-	a.Tracker().SetServiceLabel("Scanning DynamoDB tables...")
+	a.Tracker().SetServiceLabel("Discovering DynamoDB tables...")
 
-	batchTables, token, err := a.getTableBatch(nil)
-	if err != nil {
-		return tables, err
-	}
-	tables = append(tables, batchTables...)
-
-	for token != nil {
-		batchTables, token, err = a.getTableBatch(nil)
+	var apiTables []string
+	var input dynamodbApi.ListTablesInput
+	for {
+		output, err := a.client.ListTables(a.Context(), &input)
 		if err != nil {
-			return tables, err
+			return nil, err
 		}
-		tables = append(tables, batchTables...)
+		apiTables = append(apiTables, output.TableNames...)
+		a.Tracker().SetTotalResources(len(apiTables))
+		if output.LastEvaluatedTableName == nil {
+			break
+		}
+		input.ExclusiveStartTableName = output.LastEvaluatedTableName
 	}
 
-	return tables, nil
+	a.Tracker().SetServiceLabel("Adapting DynamoDB tables...")
+	return concurrency.Adapt(apiTables, a.RootAdapter, a.adaptTable), nil
+
 }
 
-func (a *adapter) getTableBatch(token *string) (tables []dynamodb.Table, nextToken *string, err error) {
+func (a *adapter) adaptTable(tableName string) (*dynamodb.Table, error) {
 
-	input := dynamodbApi.ListTablesInput{}
+	tableMetadata := a.CreateMetadata(tableName)
 
-	if token != nil {
-		input.ExclusiveStartTableName = token
-	}
-
-	apiTables, err := a.api.ListTables(a.Context(), &input)
+	table, err := a.client.DescribeTable(a.Context(), &dynamodbApi.DescribeTableInput{
+		TableName: aws.String(tableName),
+	})
 	if err != nil {
-		return tables, nil, err
+		return nil, err
 	}
-
-	for _, apiTable := range apiTables.TableNames {
-
-		tableMetadata := a.CreateMetadata(apiTable)
-
-		table, err := a.api.DescribeTable(a.Context(), &dynamodbApi.DescribeTableInput{
-			TableName: aws.String(apiTable),
-		})
-		if err != nil {
-			a.Debug("Failed to adapt table '%s': %s", apiTable, err)
-			continue
-		}
-
-		encryption := dynamodb.ServerSideEncryption{
-			Metadata: tableMetadata,
-			Enabled:  defsecTypes.BoolDefault(false, tableMetadata),
-			KMSKeyID: defsecTypes.StringDefault("", tableMetadata),
-		}
-
-		if table.Table.SSEDescription != nil {
-
-			if table.Table.SSEDescription.Status == dynamodbTypes.SSEStatusEnabled {
-				encryption.Enabled = defsecTypes.BoolDefault(true, tableMetadata)
-			}
-
-			if table.Table.SSEDescription.KMSMasterKeyArn != nil {
-				encryption.KMSKeyID = defsecTypes.StringDefault(*table.Table.SSEDescription.KMSMasterKeyArn, tableMetadata)
-			}
-		}
-
-		pitRecovery := defsecTypes.Bool(false, tableMetadata)
-		continuousBackup, err := a.api.DescribeContinuousBackups(a.Context(), &dynamodbApi.DescribeContinuousBackupsInput{
-			TableName: aws.String(apiTable),
-		})
-
-		if err != nil && continuousBackup != nil && continuousBackup.ContinuousBackupsDescription != nil && continuousBackup.ContinuousBackupsDescription.PointInTimeRecoveryDescription != nil {
-			if continuousBackup.ContinuousBackupsDescription.PointInTimeRecoveryDescription.PointInTimeRecoveryStatus == dynamodbTypes.PointInTimeRecoveryStatusEnabled {
-				pitRecovery = defsecTypes.BoolDefault(true, tableMetadata)
-			}
-
-		}
-
-		tables = append(tables, dynamodb.Table{
-			Metadata:             tableMetadata,
-			ServerSideEncryption: encryption,
-			PointInTimeRecovery:  pitRecovery,
-		})
-
-		a.Tracker().IncrementResource()
+	encryption := dynamodb.ServerSideEncryption{
+		Metadata: tableMetadata,
+		Enabled:  defsecTypes.BoolDefault(false, tableMetadata),
+		KMSKeyID: defsecTypes.StringDefault("", tableMetadata),
 	}
+	if table.Table.SSEDescription != nil {
 
-	return tables, apiTables.LastEvaluatedTableName, nil
+		if table.Table.SSEDescription.Status == dynamodbTypes.SSEStatusEnabled {
+			encryption.Enabled = defsecTypes.BoolDefault(true, tableMetadata)
+		}
+
+		if table.Table.SSEDescription.KMSMasterKeyArn != nil {
+			encryption.KMSKeyID = defsecTypes.StringDefault(*table.Table.SSEDescription.KMSMasterKeyArn, tableMetadata)
+		}
+	}
+	pitRecovery := defsecTypes.Bool(false, tableMetadata)
+	continuousBackup, err := a.client.DescribeContinuousBackups(a.Context(), &dynamodbApi.DescribeContinuousBackupsInput{
+		TableName: aws.String(tableName),
+	})
+
+	if err != nil && continuousBackup != nil && continuousBackup.ContinuousBackupsDescription != nil &&
+		continuousBackup.ContinuousBackupsDescription.PointInTimeRecoveryDescription != nil {
+		if continuousBackup.ContinuousBackupsDescription.PointInTimeRecoveryDescription.PointInTimeRecoveryStatus == dynamodbTypes.PointInTimeRecoveryStatusEnabled {
+			pitRecovery = defsecTypes.BoolDefault(true, tableMetadata)
+		}
+
+	}
+	return &dynamodb.Table{
+		Metadata:             tableMetadata,
+		ServerSideEncryption: encryption,
+		PointInTimeRecovery:  pitRecovery,
+	}, nil
 }

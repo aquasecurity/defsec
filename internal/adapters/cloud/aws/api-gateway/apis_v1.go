@@ -3,6 +3,7 @@ package api_gateway
 import (
 	"fmt"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
@@ -12,7 +13,6 @@ import (
 )
 
 func (a *adapter) getAPIsV1() ([]v1.API, error) {
-	var adapted []v1.API
 
 	a.Tracker().SetServiceLabel("Discovering v1 APIs...")
 
@@ -33,17 +33,7 @@ func (a *adapter) getAPIsV1() ([]v1.API, error) {
 
 	a.Tracker().SetServiceLabel("Adapting v1 APIs...")
 
-	for _, restAPI := range apiRestApis {
-		adaptedAPI, err := a.adaptRestAPIV1(restAPI)
-		if err != nil {
-			a.Debug("Failed to adapt v1 API '%s': %s", *restAPI.Id, err)
-			continue
-		}
-		adapted = append(adapted, *adaptedAPI)
-		a.Tracker().IncrementResource()
-	}
-
-	return adapted, nil
+	return concurrency.Adapt(apiRestApis, a.RootAdapter, a.adaptRestAPIV1), nil
 }
 
 func (a *adapter) adaptRestAPIV1(restAPI agTypes.RestApi) (*v1.API, error) {

@@ -3,6 +3,7 @@ package ec2
 import (
 	"fmt"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
@@ -31,19 +32,7 @@ func (a *adapter) getLaunchTemplates() ([]ec2.LaunchTemplate, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting launch templates...")
-
-	var templates []ec2.LaunchTemplate
-
-	for _, apiTemplate := range apiTemplates {
-		template, err := a.adaptLaunchTemplate(apiTemplate)
-		if err != nil {
-			return nil, err
-		}
-		templates = append(templates, *template)
-		a.Tracker().IncrementResource()
-	}
-
-	return templates, nil
+	return concurrency.Adapt(apiTemplates, a.RootAdapter, a.adaptLaunchTemplate), nil
 }
 
 func (a *adapter) adaptLaunchTemplate(template types.LaunchTemplate) (*ec2.LaunchTemplate, error) {

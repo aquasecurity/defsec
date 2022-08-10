@@ -2,6 +2,7 @@ package cloudtrail
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -60,19 +61,7 @@ func (a *adapter) getTrails() ([]cloudtrail.Trail, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting trails...")
-
-	var trails []cloudtrail.Trail
-	for _, apiDistribution := range apiTrails {
-		trail, err := a.adaptTrail(apiDistribution)
-		if err != nil {
-			a.Debug("Failed to adapt trail '%s': %s", *apiDistribution.TrailARN, err)
-			continue
-		}
-		trails = append(trails, *trail)
-		a.Tracker().IncrementResource()
-	}
-
-	return trails, nil
+	return concurrency.Adapt(apiTrails, a.RootAdapter, a.adaptTrail), nil
 }
 
 func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {

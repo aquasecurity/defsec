@@ -14,12 +14,12 @@ type Context interface {
 }
 
 func Adapt[T any, S any](items []T, ctx Context, adapt func(T) (*S, error)) []S {
-	return AdaptWithStrategy(items, nil, ctx, func(item T, _ *state.State) (*S, error) {
+	return AdaptWithState(items, nil, ctx, func(item T, _ *state.State) (*S, error) {
 		return adapt(item)
 	})
 }
 
-func AdaptWithStrategy[T any, S any](items []T, currentState *state.State, ctx Context, adapt func(T, *state.State) (*S, error)) []S {
+func AdaptWithState[T any, S any](items []T, currentState *state.State, ctx Context, adapt func(T, *state.State) (*S, error)) []S {
 	processes := getProcessCount(ctx.ConcurrencyStrategy())
 	ctx.Debug("Using %d processes to adapt %d resources", processes, len(items))
 

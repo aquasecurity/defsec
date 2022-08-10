@@ -34,12 +34,7 @@ func (a *adapter) getDomainNamesV2() ([]v2.DomainName, error) {
 
 	a.Tracker().SetServiceLabel("Adapting v2 domain names...")
 
-	for _, apiDomain := range apiDomainNames {
-		adapted = append(adapted, a.adaptDomainNameV2(apiDomain))
-		a.Tracker().IncrementResource()
-	}
-
-	return adapted, nil
+	return concurrency.Adapt(apiDomainNames, a.RootAdapter, a.adaptDomainNameV2), nil
 
 }
 

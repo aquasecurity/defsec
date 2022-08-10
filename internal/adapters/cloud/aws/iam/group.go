@@ -34,7 +34,7 @@ func (a *adapter) adaptGroups(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting groups...")
 
-	state.AWS.IAM.Groups = concurrency.AdaptWithStrategy(nativeGroups, state, a.RootAdapter, a.adaptGroup)
+	state.AWS.IAM.Groups = concurrency.AdaptWithState(nativeGroups, state, a.RootAdapter, a.adaptGroup)
 	return nil
 }
 

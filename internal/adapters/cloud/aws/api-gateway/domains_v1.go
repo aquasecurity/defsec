@@ -12,9 +12,6 @@ import (
 )
 
 func (a *adapter) getDomainNamesv1() ([]v1.DomainName, error) {
-
-	var adapted []v1.DomainName
-
 	a.Tracker().SetServiceLabel("Discovering v1 domain names...")
 
 	var input api.GetDomainNamesInput
@@ -33,13 +30,7 @@ func (a *adapter) getDomainNamesv1() ([]v1.DomainName, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting v1 domain names...")
-
-	for _, apiDomain := range apiDomainNames {
-		adapted = append(adapted, a.adaptDomainNameV1(apiDomain))
-		a.Tracker().IncrementResource()
-	}
-
-	return adapted, nil
+	return concurrency.Adapt(apiDomainNames, a.RootAdapter, a.adaptDomainNameV1), nil
 
 }
 

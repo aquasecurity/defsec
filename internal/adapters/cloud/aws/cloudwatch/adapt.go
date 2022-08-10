@@ -2,6 +2,7 @@ package cloudwatch
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -68,19 +69,7 @@ func (a *adapter) getAlarms() ([]cloudwatch.Alarm, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting log groups...")
-
-	var alarms []cloudwatch.Alarm
-	for _, apiAlarm := range apiAlarms {
-		alarm, err := a.adaptAlarm(apiAlarm)
-		if err != nil {
-			a.Debug("Failed to adapt alarm '%s': %s", *apiAlarm.AlarmArn, err)
-			continue
-		}
-		alarms = append(alarms, *alarm)
-		a.Tracker().IncrementResource()
-	}
-
-	return alarms, nil
+	return concurrency.Adapt(apiAlarms, a.RootAdapter, a.adaptAlarm), nil
 }
 
 func (a *adapter) getLogGroups() ([]cloudwatch.LogGroup, error) {
@@ -103,19 +92,7 @@ func (a *adapter) getLogGroups() ([]cloudwatch.LogGroup, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting log groups...")
-
-	var logGroups []cloudwatch.LogGroup
-	for _, apiGroup := range apiLogGroups {
-		logGroup, err := a.adaptLogGroup(apiGroup)
-		if err != nil {
-			a.Debug("Failed to adapt log group '%s': %s", *apiGroup.Arn, err)
-			continue
-		}
-		logGroups = append(logGroups, *logGroup)
-		a.Tracker().IncrementResource()
-	}
-
-	return logGroups, nil
+	return concurrency.Adapt(apiLogGroups, a.RootAdapter, a.adaptLogGroup), nil
 }
 
 func (a *adapter) adaptLogGroup(group types.LogGroup) (*cloudwatch.LogGroup, error) {

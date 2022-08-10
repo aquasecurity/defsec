@@ -2,6 +2,7 @@ package documentdb
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/documentdb"
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -60,19 +61,7 @@ func (a *adapter) getClusters() ([]documentdb.Cluster, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting clusters...")
-
-	var clusters []documentdb.Cluster
-	for _, apiCluster := range apiClusters {
-		cluster, err := a.adaptCluster(apiCluster)
-		if err != nil {
-			a.Debug("Failed to adapt cluster '%s': %s", *apiCluster.DBClusterArn, err)
-			continue
-		}
-		clusters = append(clusters, *cluster)
-		a.Tracker().IncrementResource()
-	}
-
-	return clusters, nil
+	return concurrency.Adapt(apiClusters, a.RootAdapter, a.adaptCluster), nil
 }
 
 func (a *adapter) adaptCluster(cluster types.DBCluster) (*documentdb.Cluster, error) {

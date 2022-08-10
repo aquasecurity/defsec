@@ -2,6 +2,7 @@ package cloudfront
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudfront"
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -60,19 +61,7 @@ func (a *adapter) getDistributions() ([]cloudfront.Distribution, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting distributions...")
-
-	var distributions []cloudfront.Distribution
-	for _, apiDistribution := range apiDistributions {
-		distribution, err := a.adaptDistribution(apiDistribution)
-		if err != nil {
-			a.Debug("Failed to adapt distribution '%s': %s", *apiDistribution.ARN, err)
-			continue
-		}
-		distributions = append(distributions, *distribution)
-		a.Tracker().IncrementResource()
-	}
-
-	return distributions, nil
+	return concurrency.Adapt(apiDistributions, a.RootAdapter, a.adaptDistribution), nil
 }
 
 func (a *adapter) adaptDistribution(distribution types.DistributionSummary) (*cloudfront.Distribution, error) {
