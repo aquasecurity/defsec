@@ -1,7 +1,6 @@
 package s3
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/concurrency"
@@ -66,8 +65,8 @@ func (a *adapter) getPublicAccessBlock(bucketName *string, metadata defsecTypes.
 		Bucket: bucketName,
 	})
 	if err != nil {
-		var awsError awserr.Error
-		if errors.As(err, &awsError) {
+		// nolint
+		if awsError, ok := err.(awserr.Error); ok {
 			if awsError.Code() == "NoSuchPublicAccessBlockConfiguration" {
 				return nil
 			}
@@ -134,8 +133,8 @@ func (a *adapter) getBucketPolicies(bucketName *string, metadata defsecTypes.Met
 
 	bucketPolicy, err := a.api.GetBucketPolicy(a.Context(), &s3api.GetBucketPolicyInput{Bucket: bucketName})
 	if err != nil {
-		var awsError awserr.Error
-		if errors.As(err, &awsError) {
+		// nolint
+		if awsError, ok := err.(awserr.Error); ok {
 			if awsError.Code() == "NoSuchBucketPolicy" {
 				return nil
 			}
@@ -177,8 +176,8 @@ func (a *adapter) getBucketEncryption(bucketName *string, metadata defsecTypes.M
 
 	encryption, err := a.api.GetBucketEncryption(a.Context(), &s3api.GetBucketEncryptionInput{Bucket: bucketName})
 	if err != nil {
-		var awsError awserr.Error
-		if errors.As(err, &awsError) {
+		// nolint
+		if awsError, ok := err.(awserr.Error); ok {
 			if awsError.Code() == "ServerSideEncryptionConfigurationNotFoundError" {
 				return bucketEncryption
 			}
@@ -209,8 +208,8 @@ func (a *adapter) getBucketVersioning(bucketName *string, metadata defsecTypes.M
 
 	versioning, err := a.api.GetBucketVersioning(a.Context(), &s3api.GetBucketVersioningInput{Bucket: bucketName})
 	if err != nil {
-		var awsError awserr.Error
-		if errors.As(err, &awsError) {
+		// nolint
+		if awsError, ok := err.(awserr.Error); ok {
 			if awsError.Code() == "NotImplemented" {
 				return bucketVersioning
 			}
