@@ -1,7 +1,6 @@
 package s3
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/concurrency"
