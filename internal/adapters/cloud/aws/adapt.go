@@ -3,6 +3,7 @@ package aws
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/types"
@@ -177,6 +178,8 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 
 	c.region = c.sessionCfg.Region
 
+	var adapterErrors []error
+
 	for _, adapter := range registeredAdapters {
 		if len(opt.Services) != 0 && !contains(opt.Services, adapter.Name()) {
 			continue
@@ -186,11 +189,23 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 		opt.ProgressTracker.StartService(adapter.Name())
 
 		if err := adapter.Adapt(c, state); err != nil {
-			return err
+			c.Debug("Error occurred while running adapter for %s: %s", adapter.Name(), err)
+			adapterErrors = append(adapterErrors, fmt.Errorf("failed to run adapter for %s: %w", adapter.Name(), err))
 		}
 		opt.ProgressTracker.FinishService()
 	}
+
+	if len(adapterErrors) > 0 {
+		printErrors(adapterErrors, c)
+	}
+
 	return nil
+}
+
+func printErrors(adapterErrors []error, c *RootAdapter) {
+	for _, err := range adapterErrors {
+		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
+	}
 }
 
 func contains(services []string, service string) bool {

@@ -48,46 +48,15 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 }
 
 func (a *adapter) getBuckets() (buckets []s3.Bucket, err error) {
+	a.Tracker().SetServiceLabel("Discovering buckets...")
 	apiBuckets, err := a.api.ListBuckets(a.Context(), &s3api.ListBucketsInput{})
 	if err != nil {
 		return buckets, err
 	}
 
-	a.Tracker().SetServiceLabel("Discovering buckets...")
 	a.Tracker().SetTotalResources(len(apiBuckets.Buckets))
-
+	a.Tracker().SetServiceLabel("Discovering buckets...")
 	return concurrency.Adapt(apiBuckets.Buckets, a.RootAdapter, a.adaptBucket), nil
-}
-
-func (a *adapter) getPublicAccessBlock(bucketName *string, metadata defsecTypes.Metadata) *s3.PublicAccessBlock {
-
-	publicAccessBlocks, err := a.api.GetPublicAccessBlock(a.Context(), &s3api.GetPublicAccessBlockInput{
-		Bucket: bucketName,
-	})
-	if err != nil {
-		// nolint
-		if awsError, ok := err.(awserr.Error); ok {
-			if awsError.Code() == "NoSuchPublicAccessBlockConfiguration" {
-				return nil
-			}
-		}
-		a.Debug("Error getting public access block: %s", err)
-		return nil
-	}
-
-	if publicAccessBlocks == nil {
-		return nil
-	}
-
-	config := publicAccessBlocks.PublicAccessBlockConfiguration
-	pab := s3.NewPublicAccessBlock(metadata)
-
-	pab.BlockPublicACLs = defsecTypes.Bool(config.BlockPublicAcls, metadata)
-	pab.BlockPublicPolicy = defsecTypes.Bool(config.BlockPublicPolicy, metadata)
-	pab.IgnorePublicACLs = defsecTypes.Bool(config.IgnorePublicAcls, metadata)
-	pab.RestrictPublicBuckets = defsecTypes.Bool(config.RestrictPublicBuckets, metadata)
-
-	return &pab
 }
 
 func (a *adapter) adaptBucket(bucket s3types.Bucket) (*s3.Bucket, error) {
@@ -126,6 +95,37 @@ func (a *adapter) adaptBucket(bucket s3types.Bucket) (*s3.Bucket, error) {
 
 	return &b, nil
 
+}
+
+func (a *adapter) getPublicAccessBlock(bucketName *string, metadata defsecTypes.Metadata) *s3.PublicAccessBlock {
+
+	publicAccessBlocks, err := a.api.GetPublicAccessBlock(a.Context(), &s3api.GetPublicAccessBlockInput{
+		Bucket: bucketName,
+	})
+	if err != nil {
+		// nolint
+		if awsError, ok := err.(awserr.Error); ok {
+			if awsError.Code() == "NoSuchPublicAccessBlockConfiguration" {
+				return nil
+			}
+		}
+		a.Debug("Error getting public access block: %s", err)
+		return nil
+	}
+
+	if publicAccessBlocks == nil {
+		return nil
+	}
+
+	config := publicAccessBlocks.PublicAccessBlockConfiguration
+	pab := s3.NewPublicAccessBlock(metadata)
+
+	pab.BlockPublicACLs = defsecTypes.Bool(config.BlockPublicAcls, metadata)
+	pab.BlockPublicPolicy = defsecTypes.Bool(config.BlockPublicPolicy, metadata)
+	pab.IgnorePublicACLs = defsecTypes.Bool(config.IgnorePublicAcls, metadata)
+	pab.RestrictPublicBuckets = defsecTypes.Bool(config.RestrictPublicBuckets, metadata)
+
+	return &pab
 }
 
 func (a *adapter) getBucketPolicies(bucketName *string, metadata defsecTypes.Metadata) []iam.Policy {
