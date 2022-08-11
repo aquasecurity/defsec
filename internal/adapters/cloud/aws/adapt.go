@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/aquasecurity/defsec/pkg/concurrency"
+	"github.com/aquasecurity/defsec/pkg/errs"
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
@@ -177,6 +178,8 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 
 	c.region = c.sessionCfg.Region
 
+	var adapterErrors []error
+
 	for _, adapter := range registeredAdapters {
 		if len(opt.Services) != 0 && !contains(opt.Services, adapter.Name()) {
 			continue
@@ -186,10 +189,16 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 		opt.ProgressTracker.StartService(adapter.Name())
 
 		if err := adapter.Adapt(c, state); err != nil {
-			return err
+			c.Debug("Error occurred while running adapter for %s: %s", adapter.Name(), err)
+			adapterErrors = append(adapterErrors, fmt.Errorf("failed to run adapter for %s: %w", adapter.Name(), err))
 		}
 		opt.ProgressTracker.FinishService()
 	}
+
+	if len(adapterErrors) > 0 {
+		return errs.NewAdapterError(adapterErrors)
+	}
+
 	return nil
 }
 

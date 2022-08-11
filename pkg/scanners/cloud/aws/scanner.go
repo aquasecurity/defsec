@@ -2,11 +2,13 @@ package aws
 
 import (
 	"context"
+	"errors"
 	"io"
 	"io/fs"
 
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/concurrency"
+	"github.com/aquasecurity/defsec/pkg/errs"
 
 	adapter "github.com/aquasecurity/defsec/internal/adapters/cloud"
 	cloudoptions "github.com/aquasecurity/defsec/internal/adapters/cloud/options"
@@ -79,7 +81,12 @@ func (s *Scanner) Scan(ctx context.Context) (results scan.Results, err error) {
 		ConcurrencyStrategy: s.concurrencyStrategy,
 	})
 	if err != nil {
-		return nil, err
+		var adaptionError errs.AdapterError
+		if errors.As(err, &adaptionError) {
+			s.debug.Log("There were %d errors during adaption process: %s", len(adaptionError.Errors()), adaptionError)
+		} else {
+			return nil, err
+		}
 	}
 
 	for _, rule := range rules.GetFrameworkRules(s.frameworks...) {
@@ -97,9 +104,7 @@ func (s *Scanner) Scan(ctx context.Context) (results scan.Results, err error) {
 			results = append(results, ruleResults...)
 		}
 	}
-
-	return results, nil
-
+	return results, err
 }
 
 func (s *Scanner) Name() string {
