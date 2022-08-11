@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/aquasecurity/defsec/pkg/concurrency"
-	"github.com/aquasecurity/defsec/pkg/errors"
+	"github.com/aquasecurity/defsec/pkg/errs"
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
@@ -196,7 +196,7 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 	}
 
 	if len(adapterErrors) > 0 {
-		return errors.NewAdapterError(adapterErrors)
+		return errs.NewAdapterError(adapterErrors)
 	}
 
 	return nil

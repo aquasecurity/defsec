@@ -1,9 +1,9 @@
-package errors
+package errs
 
 import "strings"
 
 type AdapterError struct {
-	Errors       []error
+	errs         []error
 	errorStrings []string
 }
 
@@ -15,9 +15,13 @@ func NewAdapterError(errs []error) AdapterError {
 	}
 
 	return AdapterError{
-		Errors:       errs,
+		errs:         errs,
 		errorStrings: errorStrings,
 	}
+}
+
+func (e *AdapterError) Errors() []error {
+	return e.errs
 }
 
 func (e AdapterError) Error() string {
