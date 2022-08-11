@@ -3,9 +3,9 @@ package aws
 import (
 	"context"
 	"fmt"
-	"os"
 
 	"github.com/aquasecurity/defsec/pkg/concurrency"
+	"github.com/aquasecurity/defsec/pkg/errors"
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
@@ -196,16 +196,10 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 	}
 
 	if len(adapterErrors) > 0 {
-		printErrors(adapterErrors, c)
+		return errors.NewAdapterError(adapterErrors)
 	}
 
 	return nil
-}
-
-func printErrors(adapterErrors []error, c *RootAdapter) {
-	for _, err := range adapterErrors {
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
-	}
 }
 
 func contains(services []string, service string) bool {
