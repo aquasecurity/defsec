@@ -25,7 +25,18 @@ func adaptUsers(modules terraform.Modules) []iam.User {
 		if err != nil {
 			continue
 		}
-		user := userMap[userBlock.ID()]
+		user, ok := userMap[userBlock.ID()]
+		if !ok {
+			user = iam.User{
+				Metadata:   userBlock.GetMetadata(),
+				Name:       userBlock.GetAttribute("name").AsStringValueOrDefault("", userBlock),
+				Groups:     nil,
+				Policies:   nil,
+				AccessKeys: nil,
+				MFADevices: nil,
+				LastAccess: defsecTypes.TimeUnresolvable(userBlock.GetMetadata()),
+			}
+		}
 		user.Policies = append(user.Policies, policy)
 		userMap[userBlock.ID()] = user
 	}

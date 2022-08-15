@@ -25,7 +25,15 @@ func adaptGroups(modules terraform.Modules) []iam.Group {
 		if err != nil {
 			continue
 		}
-		group := groupMap[groupBlock.ID()]
+		group, ok := groupMap[groupBlock.ID()]
+		if !ok {
+			group = iam.Group{
+				Metadata: groupBlock.GetMetadata(),
+				Name:     groupBlock.GetAttribute("name").AsStringValueOrDefault("", groupBlock),
+				Users:    nil,
+				Policies: nil,
+			}
+		}
 		group.Policies = append(group.Policies, policy)
 		groupMap[groupBlock.ID()] = group
 	}
@@ -54,7 +62,15 @@ func adaptGroups(modules terraform.Modules) []iam.Group {
 		if err != nil {
 			continue
 		}
-		group := groupMap[groupBlock.ID()]
+		group, ok := groupMap[groupBlock.ID()]
+		if !ok {
+			group = iam.Group{
+				Metadata: groupBlock.GetMetadata(),
+				Name:     groupBlock.GetAttribute("name").AsStringValueOrDefault("", groupBlock),
+				Users:    nil,
+				Policies: nil,
+			}
+		}
 		group.Policies = append(group.Policies, policy)
 		groupMap[groupBlock.ID()] = group
 	}
