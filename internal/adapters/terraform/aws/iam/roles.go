@@ -27,7 +27,14 @@ func adaptRoles(modules terraform.Modules) []iam.Role {
 		if err != nil {
 			continue
 		}
-		role := roleMap[roleBlock.ID()]
+		role, ok := roleMap[roleBlock.ID()]
+		if !ok {
+			role = iam.Role{
+				Metadata: roleBlock.GetMetadata(),
+				Name:     roleBlock.GetAttribute("name").AsStringValueOrDefault("", roleBlock),
+				Policies: nil,
+			}
+		}
 		role.Policies = append(role.Policies, policy)
 		roleMap[roleBlock.ID()] = role
 	}
