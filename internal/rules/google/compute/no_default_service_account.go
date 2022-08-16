@@ -32,7 +32,7 @@ var CheckNoDefaultServiceAccount = rules.Register(
 			if instance.IsUnmanaged() {
 				continue
 			}
-			if instance.ServiceAccount.Email.IsEmpty() || instance.ServiceAccount.Email.EndsWith("-compute@developer.gserviceaccount.com") {
+			if instance.ServiceAccount.IsDefault.IsTrue() {
 				results.Add(
 					"Instance uses the default service account.",
 					instance.ServiceAccount.Email,

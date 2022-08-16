@@ -20,8 +20,9 @@ type Instance struct {
 
 type ServiceAccount struct {
 	defsecTypes.Metadata
-	Email  defsecTypes.StringValue
-	Scopes []defsecTypes.StringValue
+	Email     defsecTypes.StringValue
+	IsDefault defsecTypes.BoolValue
+	Scopes    []defsecTypes.StringValue
 }
 
 type NetworkInterface struct {

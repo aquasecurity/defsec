@@ -21,9 +21,10 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 				VTPMEnabled:                defsecTypes.BoolDefault(false, instanceBlock.GetMetadata()),
 			},
 			ServiceAccount: compute.ServiceAccount{
-				Metadata: instanceBlock.GetMetadata(),
-				Email:    defsecTypes.StringDefault("", instanceBlock.GetMetadata()),
-				Scopes:   nil,
+				Metadata:  instanceBlock.GetMetadata(),
+				Email:     defsecTypes.StringDefault("", instanceBlock.GetMetadata()),
+				IsDefault: defsecTypes.BoolDefault(false, instanceBlock.GetMetadata()),
+				Scopes:    nil,
 			},
 			CanIPForward:                instanceBlock.GetAttribute("can_ip_forward").AsBoolValueOrDefault(false, instanceBlock),
 			OSLoginEnabled:              defsecTypes.BoolDefault(true, instanceBlock.GetMetadata()),
@@ -60,6 +61,9 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 		if serviceAccountBlock := instanceBlock.GetBlock("service_account"); serviceAccountBlock.IsNotNil() {
 			instance.ServiceAccount.Metadata = serviceAccountBlock.GetMetadata()
 			instance.ServiceAccount.Email = serviceAccountBlock.GetAttribute("email").AsStringValueOrDefault("", serviceAccountBlock)
+			if instance.ServiceAccount.Email.IsEmpty() || instance.ServiceAccount.Email.EndsWith("-compute@developer.gserviceaccount.com") {
+				instance.ServiceAccount.IsDefault = defsecTypes.Bool(true, serviceAccountBlock.GetMetadata())
+			}
 		}
 
 		// metadata
