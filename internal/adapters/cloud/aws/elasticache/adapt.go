@@ -189,8 +189,12 @@ func (a *adapter) getSecurityGroups() ([]elasticache.SecurityGroup, error) {
 
 func (a *adapter) adaptSecurityGroup(apiGroup types.CacheSecurityGroup) (*elasticache.SecurityGroup, error) {
 	metadata := a.CreateMetadataFromARN(*apiGroup.ARN)
+	description := defsecTypes.StringDefault("", metadata)
+	if apiGroup.Description != nil {
+		description = defsecTypes.String(*apiGroup.Description, metadata)
+	}
 	return &elasticache.SecurityGroup{
 		Metadata:    metadata,
-		Description: defsecTypes.String(*apiGroup.Description, metadata),
+		Description: description,
 	}, nil
 }

@@ -208,9 +208,14 @@ func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 		lastAccess = defsecTypes.Time(*apiUser.PasswordLastUsed, metadata)
 	}
 
+	username := defsecTypes.StringDefault("", metadata)
+	if apiUser.UserName != nil {
+		username = defsecTypes.String(*apiUser.UserName, metadata)
+	}
+
 	return &iam.User{
 		Metadata:   metadata,
-		Name:       defsecTypes.String(*apiUser.UserName, metadata),
+		Name:       username,
 		Groups:     groups,
 		Policies:   policies,
 		AccessKeys: keys,

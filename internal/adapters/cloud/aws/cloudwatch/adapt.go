@@ -146,27 +146,58 @@ func (a *adapter) adaptAlarm(alarm cwTypes.MetricAlarm) (*cloudwatch.Alarm, erro
 
 	var dimensions []cloudwatch.AlarmDimension
 	for _, dimension := range alarm.Dimensions {
+
+		name := defsecTypes.StringDefault("", metadata)
+		if dimension.Name != nil {
+			name = defsecTypes.String(*dimension.Name, metadata)
+		}
+
+		value := defsecTypes.StringDefault("", metadata)
+		if dimension.Value != nil {
+			value = defsecTypes.String(*dimension.Value, metadata)
+		}
+
 		dimensions = append(dimensions, cloudwatch.AlarmDimension{
 			Metadata: metadata,
-			Name:     defsecTypes.String(*dimension.Name, metadata),
-			Value:    defsecTypes.String(*dimension.Value, metadata),
+			Name:     name,
+			Value:    value,
 		})
 	}
 
 	var metrics []cloudwatch.MetricDataQuery
 	for _, metric := range alarm.Metrics {
 
+		id := defsecTypes.StringDefault("", metadata)
+		if metric.Id != nil {
+			id = defsecTypes.String(*metric.Id, metadata)
+		}
+
+		expression := defsecTypes.StringDefault("", metadata)
+		if metric.Expression != nil {
+			expression = defsecTypes.String(*metric.Expression, metadata)
+		}
+
 		metrics = append(metrics, cloudwatch.MetricDataQuery{
 			Metadata:   metadata,
-			ID:         defsecTypes.String(*metric.Id, metadata),
-			Expression: defsecTypes.String(*metric.Expression, metadata),
+			ID:         id,
+			Expression: expression,
 		})
+	}
+
+	name := defsecTypes.StringDefault("", metadata)
+	if alarm.AlarmName != nil {
+		name = defsecTypes.String(*alarm.AlarmName, metadata)
+	}
+
+	metric := defsecTypes.StringDefault("", metadata)
+	if alarm.MetricName != nil {
+		metric = defsecTypes.String(*alarm.MetricName, metadata)
 	}
 
 	return &cloudwatch.Alarm{
 		Metadata:   metadata,
-		AlarmName:  defsecTypes.String(*alarm.AlarmName, metadata),
-		MetricName: defsecTypes.String(*alarm.MetricName, metadata),
+		AlarmName:  name,
+		MetricName: metric,
 		Dimensions: dimensions,
 		Metrics:    metrics,
 	}, nil
@@ -193,10 +224,20 @@ func (a *adapter) getMetricFilters(name *string, metadata defsecTypes.Metadata) 
 
 	var metricFilters []cloudwatch.MetricFilter
 	for _, mf := range apiMetricFilters {
+
+		name := defsecTypes.StringDefault("", metadata)
+		if mf.FilterName != nil {
+			name = defsecTypes.String(*mf.FilterName, metadata)
+		}
+
+		pattern := defsecTypes.StringDefault("", metadata)
+		if mf.FilterPattern != nil {
+			pattern = defsecTypes.String(*mf.FilterPattern, metadata)
+		}
 		metricFilters = append(metricFilters, cloudwatch.MetricFilter{
 			Metadata:      metadata,
-			FilterName:    defsecTypes.String(*mf.FilterName, metadata),
-			FilterPattern: defsecTypes.String(*mf.FilterPattern, metadata),
+			FilterName:    name,
+			FilterPattern: pattern,
 		})
 
 	}
