@@ -151,9 +151,19 @@ func (a *adapter) adaptConfig(config types.SecurityConfigurationSummary) (*emr.S
 		return nil, err
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if config.Name != nil {
+		name = defsecTypes.String(*config.Name, metadata)
+	}
+
+	secConf := defsecTypes.StringDefault("", metadata)
+	if output.SecurityConfiguration != nil {
+		secConf = defsecTypes.String(*output.SecurityConfiguration, metadata)
+	}
+
 	return &emr.SecurityConfiguration{
 		Metadata:      metadata,
-		Name:          defsecTypes.String(*config.Name, metadata),
-		Configuration: defsecTypes.String(*output.SecurityConfiguration, metadata),
+		Name:          name,
+		Configuration: secConf,
 	}, nil
 }

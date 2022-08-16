@@ -168,9 +168,14 @@ func (a *adapter) getDatabasesForCatalogue(catalog types.DataCatalogSummary) ([]
 
 func (a *adapter) adaptDatabase(database types.Database) (*athena.Database, error) {
 	metadata := a.CreateMetadata("database/" + *database.Name)
+	name := defsecTypes.StringDefault("", metadata)
+	if database.Name != nil {
+		name = defsecTypes.String(*database.Name, metadata)
+	}
+
 	return &athena.Database{
 		Metadata: metadata,
-		Name:     defsecTypes.String(*database.Name, metadata),
+		Name:     name,
 		Encryption: athena.EncryptionConfiguration{
 			Metadata: metadata,
 			// see https://stackoverflow.com/questions/72456689/what-does-encryption-configuration-in-terraform-aws-athena-database-resource
