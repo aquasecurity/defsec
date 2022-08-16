@@ -95,9 +95,14 @@ func (a *adapter) adaptDomain(apiDomain types.DomainInfo) (*elasticsearch.Domain
 		}
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if apiDomain.DomainName != nil {
+		name = defsecTypes.String(*apiDomain.DomainName, metadata)
+	}
+
 	return &elasticsearch.Domain{
 		Metadata:   metadata,
-		DomainName: defsecTypes.String(*apiDomain.DomainName, metadata),
+		DomainName: name,
 		LogPublishing: elasticsearch.LogPublishing{
 			Metadata:     metadata,
 			AuditEnabled: defsecTypes.Bool(auditEnabled, metadata),

@@ -3,6 +3,7 @@ package iam
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/aquasecurity/defsec/pkg/concurrency"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -151,11 +152,21 @@ func (a *adapter) getUserKeys(apiUser iamtypes.User) ([]iam.AccessKey, error) {
 				}
 			}
 
+			accessKeyId := defsecTypes.StringDefault("", metadata)
+			if apiAccessKey.AccessKeyId != nil {
+				accessKeyId = defsecTypes.String(*apiAccessKey.AccessKeyId, metadata)
+			}
+
+			creationDate := defsecTypes.TimeDefault(time.Now(), metadata)
+			if apiAccessKey.CreateDate != nil {
+				creationDate = defsecTypes.Time(*apiAccessKey.CreateDate, metadata)
+			}
+
 			keys = append(keys, iam.AccessKey{
 				Metadata:     metadata,
-				AccessKeyId:  defsecTypes.String(*apiAccessKey.AccessKeyId, metadata),
+				AccessKeyId:  accessKeyId,
 				Active:       defsecTypes.Bool(apiAccessKey.Status == iamtypes.StatusTypeActive, metadata),
-				CreationDate: defsecTypes.Time(*apiAccessKey.CreateDate, metadata),
+				CreationDate: creationDate,
 				LastAccess:   lastUsed,
 			})
 		}

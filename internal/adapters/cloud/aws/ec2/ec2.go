@@ -144,7 +144,10 @@ func (a *adapter) adaptInstance(instance ec2Types.Instance) (*ec2.Instance, erro
 	for _, v := range volumes.Volumes {
 		block := volumeBlockMap[*v.VolumeId]
 		if block != nil {
-			block.Encrypted = defsecTypes.Bool(*v.Encrypted, block.Metadata)
+			block.Encrypted = defsecTypes.BoolDefault(false, block.Metadata)
+			if v.Encrypted != nil {
+				block.Encrypted = defsecTypes.Bool(*v.Encrypted, block.Metadata)
+			}
 		}
 	}
 	return i, nil

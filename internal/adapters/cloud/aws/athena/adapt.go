@@ -96,9 +96,14 @@ func (a *adapter) adaptWorkgroup(workgroup types.WorkGroupSummary) (*athena.Work
 
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if workgroup.Name != nil {
+		name = defsecTypes.String(*workgroup.Name, metadata)
+	}
+
 	return &athena.Workgroup{
 		Metadata: metadata,
-		Name:     defsecTypes.String(*workgroup.Name, metadata),
+		Name:     name,
 		Encryption: athena.EncryptionConfiguration{
 			Metadata: metadata,
 			Type:     defsecTypes.String(encType, metadata),
