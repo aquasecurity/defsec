@@ -141,8 +141,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 22, instance.ShieldedVM.SecureBootEnabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 22, instance.ShieldedVM.SecureBootEnabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 32, instance.ServiceAccount.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 35, instance.ServiceAccount.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 11, instance.ServiceAccount.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 43, instance.ServiceAccount.GetMetadata().Range().GetEndLine())
 
 	assert.Equal(t, 33, instance.ServiceAccount.Email.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 33, instance.ServiceAccount.Email.GetMetadata().Range().GetEndLine())

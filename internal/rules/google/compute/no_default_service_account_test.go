@@ -20,14 +20,15 @@ func TestCheckNoDefaultServiceAccount(t *testing.T) {
 		expected bool
 	}{
 		{
-			name: "Instance service account missing email",
+			name: "Instance service account not specified",
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
 						Metadata: defsecTypes.NewTestMetadata(),
 						ServiceAccount: compute.ServiceAccount{
-							Metadata: defsecTypes.NewTestMetadata(),
-							Email:    defsecTypes.String("", defsecTypes.NewTestMetadata()),
+							Metadata:  defsecTypes.NewTestMetadata(),
+							Email:     defsecTypes.String("", defsecTypes.NewTestMetadata()),
+							IsDefault: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -41,8 +42,9 @@ func TestCheckNoDefaultServiceAccount(t *testing.T) {
 					{
 						Metadata: defsecTypes.NewTestMetadata(),
 						ServiceAccount: compute.ServiceAccount{
-							Metadata: defsecTypes.NewTestMetadata(),
-							Email:    defsecTypes.String("1234567890-compute@developer.gserviceaccount.com", defsecTypes.NewTestMetadata()),
+							Metadata:  defsecTypes.NewTestMetadata(),
+							Email:     defsecTypes.String("1234567890-compute@developer.gserviceaccount.com", defsecTypes.NewTestMetadata()),
+							IsDefault: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,8 +58,9 @@ func TestCheckNoDefaultServiceAccount(t *testing.T) {
 					{
 						Metadata: defsecTypes.NewTestMetadata(),
 						ServiceAccount: compute.ServiceAccount{
-							Metadata: defsecTypes.NewTestMetadata(),
-							Email:    defsecTypes.String("proper@email.com", defsecTypes.NewTestMetadata()),
+							Metadata:  defsecTypes.NewTestMetadata(),
+							Email:     defsecTypes.String("proper@email.com", defsecTypes.NewTestMetadata()),
+							IsDefault: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

@@ -20,7 +20,7 @@ func Test_adaptInstances(t *testing.T) {
 		{
 			name: "defined",
 			terraform: `
-			resource "google_service_account" "default" {
+			resource "google_service_account" "myaccount" {
 			  }
 		  
 			resource "google_compute_instance" "example" {
@@ -45,7 +45,7 @@ func Test_adaptInstances(t *testing.T) {
 				  }
 
 				  service_account {
-					email  = google_service_account.default.email
+					email  = google_service_account.myaccount.email
 					scopes = ["cloud-platform"]
 				  }
 				  can_ip_forward = true
@@ -76,10 +76,11 @@ func Test_adaptInstances(t *testing.T) {
 					},
 					ServiceAccount: compute.ServiceAccount{
 						Metadata: defsecTypes.NewTestMetadata(),
-						Email:    defsecTypes.String("google_service_account.default", defsecTypes.NewTestMetadata()),
+						Email:    defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						Scopes: []defsecTypes.StringValue{
 							defsecTypes.String("cloud-platform", defsecTypes.NewTestMetadata()),
 						},
+						IsDefault: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 					CanIPForward:                defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					OSLoginEnabled:              defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
@@ -117,8 +118,38 @@ func Test_adaptInstances(t *testing.T) {
 						VTPMEnabled:                defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 					ServiceAccount: compute.ServiceAccount{
-						Metadata: defsecTypes.NewTestMetadata(),
-						Email:    defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						Metadata:  defsecTypes.NewTestMetadata(),
+						Email:     defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						IsDefault: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					},
+					CanIPForward:                defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					OSLoginEnabled:              defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					EnableProjectSSHKeyBlocking: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					EnableSerialPort:            defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				},
+			},
+		},
+		{
+			name: "default service account",
+			terraform: `
+			resource "google_compute_instance" "example" {
+				service_account {}
+			}
+`,
+			expected: []compute.Instance{
+				{
+					Metadata: defsecTypes.NewTestMetadata(),
+					Name:     defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					ShieldedVM: compute.ShieldedVMConfig{
+						Metadata:                   defsecTypes.NewTestMetadata(),
+						SecureBootEnabled:          defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						IntegrityMonitoringEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						VTPMEnabled:                defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					},
+					ServiceAccount: compute.ServiceAccount{
+						Metadata:  defsecTypes.NewTestMetadata(),
+						Email:     defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						IsDefault: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 					CanIPForward:                defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					OSLoginEnabled:              defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
