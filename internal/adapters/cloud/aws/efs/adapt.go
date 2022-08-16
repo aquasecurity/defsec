@@ -66,8 +66,12 @@ func (a *adapter) getFilesystems() ([]efs.FileSystem, error) {
 
 func (a *adapter) adaptFilesystem(apiFilesystem types.FileSystemDescription) (*efs.FileSystem, error) {
 	metadata := a.CreateMetadataFromARN(*apiFilesystem.FileSystemArn)
+	encrypted := defsecTypes.BoolDefault(false, metadata)
+	if apiFilesystem.Encrypted != nil {
+		encrypted = defsecTypes.Bool(*apiFilesystem.Encrypted, metadata)
+	}
 	return &efs.FileSystem{
 		Metadata:  metadata,
-		Encrypted: defsecTypes.Bool(*apiFilesystem.Encrypted, metadata),
+		Encrypted: encrypted,
 	}, nil
 }

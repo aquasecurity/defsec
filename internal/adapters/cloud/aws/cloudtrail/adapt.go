@@ -97,14 +97,24 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		bucketName = *response.Trail.S3BucketName
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if info.Name != nil {
+		name = defsecTypes.String(*info.Name, metadata)
+	}
+
+	isLogging := defsecTypes.BoolDefault(false, metadata)
+	if status.IsLogging != nil {
+		isLogging = defsecTypes.Bool(*status.IsLogging, metadata)
+	}
+
 	return &cloudtrail.Trail{
 		Metadata:                  metadata,
-		Name:                      defsecTypes.String(*info.Name, metadata),
+		Name:                      name,
 		EnableLogFileValidation:   defsecTypes.Bool(response.Trail.LogFileValidationEnabled != nil && *response.Trail.LogFileValidationEnabled, metadata),
 		IsMultiRegion:             defsecTypes.Bool(response.Trail.IsMultiRegionTrail != nil && *response.Trail.IsMultiRegionTrail, metadata),
 		CloudWatchLogsLogGroupArn: cloudWatchLogsArn,
 		KMSKeyID:                  defsecTypes.String(kmsKeyId, metadata),
-		IsLogging:                 defsecTypes.Bool(*status.IsLogging, metadata),
+		IsLogging:                 isLogging,
 		BucketName:                defsecTypes.String(bucketName, metadata),
 	}, nil
 }

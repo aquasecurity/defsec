@@ -72,9 +72,14 @@ func (a *adapter) adaptRestAPIV1(restAPI agTypes.RestApi) (*v1.API, error) {
 		resourcesInput.Position = resourcesOutput.Position
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if restAPI.Name != nil {
+		name = defsecTypes.String(*restAPI.Name, metadata)
+	}
+
 	return &v1.API{
 		Metadata:  metadata,
-		Name:      defsecTypes.String(*restAPI.Name, metadata),
+		Name:      name,
 		Stages:    stages,
 		Resources: resources,
 	}, nil
@@ -98,9 +103,14 @@ func (a *adapter) adaptStageV1(restAPI agTypes.RestApi, stage agTypes.Stage) v1.
 		})
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if stage.StageName != nil {
+		name = defsecTypes.String(*stage.StageName, metadata)
+	}
+
 	return v1.Stage{
 		Metadata: metadata,
-		Name:     defsecTypes.String(*stage.StageName, metadata),
+		Name:     name,
 		AccessLogging: v1.AccessLogging{
 			Metadata:              metadata,
 			CloudwatchLogGroupARN: defsecTypes.String(logARN, metadata),
@@ -121,11 +131,23 @@ func (a *adapter) adaptResourceV1(restAPI agTypes.RestApi, apiResource agTypes.R
 
 	for _, method := range apiResource.ResourceMethods {
 		metadata := a.CreateMetadata(fmt.Sprintf("/restapis/%s/resources/%s/methods/%s", *restAPI.Id, *apiResource.Id, *method.HttpMethod))
+		httpMethod := defsecTypes.StringDefault("", metadata)
+		if method.HttpMethod != nil {
+			httpMethod = defsecTypes.String(*method.HttpMethod, metadata)
+		}
+		authType := defsecTypes.StringDefault("", metadata)
+		if method.AuthorizationType != nil {
+			authType = defsecTypes.String(*method.AuthorizationType, metadata)
+		}
+		keyRequired := defsecTypes.BoolDefault(false, metadata)
+		if method.ApiKeyRequired != nil {
+			keyRequired = defsecTypes.Bool(*method.ApiKeyRequired, metadata)
+		}
 		resource.Methods = append(resource.Methods, v1.Method{
 			Metadata:          metadata,
-			HTTPMethod:        defsecTypes.String(*method.HttpMethod, metadata),
-			AuthorizationType: defsecTypes.String(*method.AuthorizationType, metadata),
-			APIKeyRequired:    defsecTypes.Bool(*method.ApiKeyRequired, metadata),
+			HTTPMethod:        httpMethod,
+			AuthorizationType: authType,
+			APIKeyRequired:    keyRequired,
 		})
 	}
 

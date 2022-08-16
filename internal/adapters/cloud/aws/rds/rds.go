@@ -198,7 +198,6 @@ func getPerformanceInsights(enabled *bool, kmsKeyID *string, metadata defsecType
 		Enabled:  defsecTypes.BoolDefault(false, metadata),
 		KMSKeyID: defsecTypes.StringDefault("", metadata),
 	}
-
 	if enabled != nil {
 		performanceInsights.Enabled = defsecTypes.Bool(*enabled, metadata)
 	}

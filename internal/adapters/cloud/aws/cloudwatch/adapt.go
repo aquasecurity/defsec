@@ -120,10 +120,20 @@ func (a *adapter) adaptLogGroup(group types.LogGroup) (*cloudwatch.LogGroup, err
 
 	}
 
+	arn := defsecTypes.StringDefault("", metadata)
+	if group.Arn != nil {
+		arn = defsecTypes.String(*group.Arn, metadata)
+	}
+
+	name := defsecTypes.StringDefault("", metadata)
+	if group.LogGroupName != nil {
+		name = defsecTypes.String(*group.LogGroupName, metadata)
+	}
+
 	return &cloudwatch.LogGroup{
 		Metadata:        metadata,
-		Arn:             defsecTypes.String(*group.Arn, metadata),
-		Name:            defsecTypes.String(*group.LogGroupName, metadata),
+		Arn:             arn,
+		Name:            name,
 		KMSKeyID:        defsecTypes.String(kmsKeyId, metadata),
 		RetentionInDays: defsecTypes.Int(retentionInDays, metadata),
 		MetricFilters:   metricFilters,

@@ -82,9 +82,14 @@ func (a *adapter) adaptBucket(bucket s3types.Bucket) (*s3.Bucket, error) {
 
 	bucketMetadata := a.CreateMetadata(*bucket.Name)
 
+	name := defsecTypes.StringDefault("", bucketMetadata)
+	if bucket.Name != nil {
+		name = defsecTypes.String(*bucket.Name, bucketMetadata)
+	}
+
 	b := s3.Bucket{
 		Metadata:          bucketMetadata,
-		Name:              defsecTypes.String(*bucket.Name, bucketMetadata),
+		Name:              name,
 		PublicAccessBlock: a.getPublicAccessBlock(bucket.Name, bucketMetadata),
 		BucketPolicies:    a.getBucketPolicies(bucket.Name, bucketMetadata),
 		Encryption:        a.getBucketEncryption(bucket.Name, bucketMetadata),

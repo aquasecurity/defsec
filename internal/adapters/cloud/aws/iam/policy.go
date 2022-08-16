@@ -67,9 +67,14 @@ func (a *adapter) adaptPolicy(apiPolicy iamtypes.Policy) (*iam.Policy, error) {
 		return nil, err
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if apiPolicy.PolicyName != nil {
+		name = defsecTypes.String(*apiPolicy.PolicyName, metadata)
+	}
+
 	return &iam.Policy{
 		Metadata: metadata,
-		Name:     defsecTypes.String(*apiPolicy.PolicyName, metadata),
+		Name:     name,
 		Document: iam.Document{
 			Metadata: metadata,
 			Parsed:   *document,
