@@ -92,9 +92,13 @@ func (a *adapter) adaptRepository(apiRepository types.Repository) (*ecr.Reposito
 		if err != nil {
 			return nil, err
 		}
+		name := defsecTypes.StringDefault("", metadata)
+		if output.RepositoryName != nil {
+			name = defsecTypes.String(*output.RepositoryName, metadata)
+		}
 		policies = append(policies, iam.Policy{
 			Metadata: metadata,
-			Name:     defsecTypes.String(*output.RepositoryName, metadata),
+			Name:     name,
 			Document: iam.Document{
 				Metadata: metadata,
 				Parsed:   *parsed,

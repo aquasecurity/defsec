@@ -123,8 +123,13 @@ func (a *adapter) adaptSecurityGroup(apiSG types.ClusterSecurityGroup) (*redshif
 
 	metadata := a.CreateMetadata("securitygroup:" + *apiSG.ClusterSecurityGroupName)
 
+	description := defsecTypes.StringDefault("", metadata)
+	if apiSG.Description != nil {
+		description = defsecTypes.String(*apiSG.Description, metadata)
+	}
+
 	return &redshift.SecurityGroup{
 		Metadata:    metadata,
-		Description: defsecTypes.String(*apiSG.Description, metadata),
+		Description: description,
 	}, nil
 }

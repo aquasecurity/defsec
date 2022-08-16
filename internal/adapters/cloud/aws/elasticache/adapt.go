@@ -74,11 +74,27 @@ func (a *adapter) getClusters() ([]elasticache.Cluster, error) {
 
 func (a *adapter) adaptCluster(apiCluster types.CacheCluster) (*elasticache.Cluster, error) {
 	metadata := a.CreateMetadataFromARN(*apiCluster.ARN)
+
+	engine := defsecTypes.StringDefault("", metadata)
+	if apiCluster.Engine != nil {
+		engine = defsecTypes.String(*apiCluster.Engine, metadata)
+	}
+
+	nodeType := defsecTypes.StringDefault("", metadata)
+	if apiCluster.CacheNodeType != nil {
+		nodeType = defsecTypes.String(*apiCluster.CacheNodeType, metadata)
+	}
+
+	limit := defsecTypes.IntDefault(0, metadata)
+	if apiCluster.SnapshotRetentionLimit != nil {
+		limit = defsecTypes.Int(int(*apiCluster.SnapshotRetentionLimit), metadata)
+	}
+
 	return &elasticache.Cluster{
 		Metadata:               metadata,
-		Engine:                 defsecTypes.String(*apiCluster.Engine, metadata),
-		NodeType:               defsecTypes.String(*apiCluster.CacheNodeType, metadata),
-		SnapshotRetentionLimit: defsecTypes.Int(int(*apiCluster.SnapshotRetentionLimit), metadata),
+		Engine:                 engine,
+		NodeType:               nodeType,
+		SnapshotRetentionLimit: limit,
 	}, nil
 }
 
@@ -119,10 +135,20 @@ func (a *adapter) getReplicationGroups() ([]elasticache.ReplicationGroup, error)
 
 func (a *adapter) adaptReplicationGroup(apiGroup types.ReplicationGroup) (*elasticache.ReplicationGroup, error) {
 	metadata := a.CreateMetadataFromARN(*apiGroup.ARN)
+
+	transitEncrypted := defsecTypes.BoolDefault(false, metadata)
+	if apiGroup.TransitEncryptionEnabled != nil {
+		transitEncrypted = defsecTypes.Bool(*apiGroup.TransitEncryptionEnabled, metadata)
+	}
+	atRestEncrypted := defsecTypes.BoolDefault(false, metadata)
+	if apiGroup.AtRestEncryptionEnabled != nil {
+		atRestEncrypted = defsecTypes.Bool(*apiGroup.AtRestEncryptionEnabled, metadata)
+	}
+
 	return &elasticache.ReplicationGroup{
 		Metadata:                 metadata,
-		TransitEncryptionEnabled: defsecTypes.Bool(*apiGroup.TransitEncryptionEnabled, metadata),
-		AtRestEncryptionEnabled:  defsecTypes.Bool(*apiGroup.AtRestEncryptionEnabled, metadata),
+		TransitEncryptionEnabled: transitEncrypted,
+		AtRestEncryptionEnabled:  atRestEncrypted,
 	}, nil
 }
 

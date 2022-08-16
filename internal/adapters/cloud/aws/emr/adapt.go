@@ -80,13 +80,28 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterSummary) (*emr.Cluster, e
 		return nil, err
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if apiCluster.Name != nil {
+		name = defsecTypes.String(*apiCluster.Name, metadata)
+	}
+
+	releaseLabel := defsecTypes.StringDefault("", metadata)
+	if output.Cluster != nil && output.Cluster.ReleaseLabel != nil {
+		releaseLabel = defsecTypes.String(*output.Cluster.ReleaseLabel, metadata)
+	}
+
+	serviceRole := defsecTypes.StringDefault("", metadata)
+	if output.Cluster != nil && output.Cluster.ServiceRole != nil {
+		serviceRole = defsecTypes.String(*output.Cluster.ServiceRole, metadata)
+	}
+
 	return &emr.Cluster{
 		Metadata: metadata,
 		Settings: emr.ClusterSettings{
 			Metadata:     metadata,
-			Name:         defsecTypes.String(*apiCluster.Name, metadata),
-			ReleaseLabel: defsecTypes.String(*output.Cluster.ReleaseLabel, metadata),
-			ServiceRole:  defsecTypes.String(*output.Cluster.ServiceRole, metadata),
+			Name:         name,
+			ReleaseLabel: releaseLabel,
+			ServiceRole:  serviceRole,
 		},
 	}, nil
 }

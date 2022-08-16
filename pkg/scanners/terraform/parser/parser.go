@@ -119,7 +119,7 @@ func (p *Parser) newModuleParser(moduleFS fs.FS, moduleSource, modulePath, modul
 	mp.projectRoot = p.projectRoot
 	p.children = append(p.children, mp)
 	for _, option := range p.options {
-		option(p)
+		option(mp)
 	}
 	return mp
 }
