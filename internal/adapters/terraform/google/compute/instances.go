@@ -21,9 +21,10 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 				VTPMEnabled:                defsecTypes.BoolDefault(false, instanceBlock.GetMetadata()),
 			},
 			ServiceAccount: compute.ServiceAccount{
-				Metadata: instanceBlock.GetMetadata(),
-				Email:    defsecTypes.StringDefault("", instanceBlock.GetMetadata()),
-				Scopes:   nil,
+				Metadata:  instanceBlock.GetMetadata(),
+				Email:     defsecTypes.StringDefault("", instanceBlock.GetMetadata()),
+				IsDefault: defsecTypes.BoolDefault(false, instanceBlock.GetMetadata()),
+				Scopes:    nil,
 			},
 			CanIPForward:                instanceBlock.GetAttribute("can_ip_forward").AsBoolValueOrDefault(false, instanceBlock),
 			OSLoginEnabled:              defsecTypes.BoolDefault(true, instanceBlock.GetMetadata()),
@@ -55,11 +56,6 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 			instance.ShieldedVM.IntegrityMonitoringEnabled = shieldedBlock.GetAttribute("enable_integrity_monitoring").AsBoolValueOrDefault(true, shieldedBlock)
 			instance.ShieldedVM.VTPMEnabled = shieldedBlock.GetAttribute("enable_vtpm").AsBoolValueOrDefault(true, shieldedBlock)
 			instance.ShieldedVM.SecureBootEnabled = shieldedBlock.GetAttribute("enable_secure_boot").AsBoolValueOrDefault(false, shieldedBlock)
-		}
-
-		if serviceAccountBlock := instanceBlock.GetBlock("service_account"); serviceAccountBlock.IsNotNil() {
-			instance.ServiceAccount.Metadata = serviceAccountBlock.GetMetadata()
-			instance.ServiceAccount.Email = serviceAccountBlock.GetAttribute("email").AsStringValueOrDefault("", serviceAccountBlock)
 		}
 
 		// metadata
@@ -101,17 +97,22 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 			instance.AttachedDisks = append(instance.AttachedDisks, disk)
 		}
 
-		if instanceBlock.GetBlock("service_account").IsNotNil() {
-			emailAttr := instanceBlock.GetBlock("service_account").GetAttribute("email")
-			instance.ServiceAccount.Email = emailAttr.AsStringValueOrDefault("", instanceBlock)
+		if serviceAccountBlock := instanceBlock.GetBlock("service_account"); serviceAccountBlock.IsNotNil() {
+			emailAttr := serviceAccountBlock.GetAttribute("email")
+			instance.ServiceAccount.Email = emailAttr.AsStringValueOrDefault("", serviceAccountBlock)
+
+			if instance.ServiceAccount.Email.IsEmpty() || instance.ServiceAccount.Email.EndsWith("-compute@developer.gserviceaccount.com") {
+				instance.ServiceAccount.IsDefault = defsecTypes.Bool(true, serviceAccountBlock.GetMetadata())
+			}
 
 			if emailAttr.IsResourceBlockReference("google_service_account") {
 				if accBlock, err := modules.GetReferencedBlock(emailAttr, instanceBlock); err == nil {
-					instance.ServiceAccount.Email = defsecTypes.String(accBlock.FullName(), emailAttr.GetMetadata())
+					instance.ServiceAccount.IsDefault = defsecTypes.Bool(false, serviceAccountBlock.GetMetadata())
+					instance.ServiceAccount.Email = accBlock.GetAttribute("email").AsStringValueOrDefault("", accBlock)
 				}
 			}
 
-			if scopesAttr := instanceBlock.GetBlock("service_account").GetAttribute("scopes"); scopesAttr.IsNotNil() {
+			if scopesAttr := serviceAccountBlock.GetAttribute("scopes"); scopesAttr.IsNotNil() {
 				instance.ServiceAccount.Scopes = append(instance.ServiceAccount.Scopes, scopesAttr.AsStringValues()...)
 			}
 		}
