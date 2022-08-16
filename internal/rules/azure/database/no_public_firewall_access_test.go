@@ -41,6 +41,27 @@ func TestCheckNoPublicFirewallAccess(t *testing.T) {
 			expected: true,
 		},
 		{
+			name: "MySQL server firewall allows single public internet access",
+			input: database.Database{
+				MySQLServers: []database.MySQLServer{
+					{
+						Metadata: defsecTypes.NewTestMetadata(),
+						Server: database.Server{
+							Metadata: defsecTypes.NewTestMetadata(),
+							FirewallRules: []database.FirewallRule{
+								{
+									Metadata: defsecTypes.NewTestMetadata(),
+									StartIP:  defsecTypes.String("8.8.8.8", defsecTypes.NewTestMetadata()),
+									EndIP:    defsecTypes.String("8.8.8.8", defsecTypes.NewTestMetadata()),
+								},
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
 			name: "MS SQL server firewall allows public internet access",
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
