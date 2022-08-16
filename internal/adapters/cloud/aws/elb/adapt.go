@@ -105,10 +105,15 @@ func (a *adapter) adaptLoadBalancer(apiLoadBalancer types.LoadBalancer) (*elb.Lo
 					})
 				}
 
+				sslPolicy := defsecTypes.StringDefault("", metadata)
+				if listener.SslPolicy != nil {
+					sslPolicy = defsecTypes.String(*listener.SslPolicy, metadata)
+				}
+
 				listeners = append(listeners, elb.Listener{
 					Metadata:       metadata,
 					Protocol:       defsecTypes.String(string(listener.Protocol), metadata),
-					TLSPolicy:      defsecTypes.String(*listener.SslPolicy, metadata),
+					TLSPolicy:      sslPolicy,
 					DefaultActions: actions,
 				})
 			}
