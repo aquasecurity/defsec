@@ -85,6 +85,7 @@ func adaptRepository(resource *terraform.Block, module *terraform.Module, module
 						Document: iamp.Document{
 							Parsed:   doc.Document,
 							Metadata: doc.Source.GetMetadata(),
+							IsOffset: true,
 						},
 						Builtin: defsecTypes.Bool(false, policyRes.GetMetadata()),
 					}
