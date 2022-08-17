@@ -94,8 +94,10 @@ func adaptCluster(resource *terraform.Block) container.KubernetesCluster {
 		azureRoleBasedAccessControl := resource.GetBlock("azure_active_directory_role_based_access_control")
 		if azureRoleBasedAccessControl.IsNotNil() {
 			enabledAttr := azureRoleBasedAccessControl.GetAttribute("azure_rbac_enabled")
-			cluster.RoleBasedAccessControl.Metadata = azureRoleBasedAccessControl.GetMetadata()
-			cluster.RoleBasedAccessControl.Enabled = enabledAttr.AsBoolValueOrDefault(false, azureRoleBasedAccessControl)
+			if !cluster.RoleBasedAccessControl.Enabled.IsTrue() {
+				cluster.RoleBasedAccessControl.Metadata = azureRoleBasedAccessControl.GetMetadata()
+				cluster.RoleBasedAccessControl.Enabled = enabledAttr.AsBoolValueOrDefault(false, azureRoleBasedAccessControl)
+			}
 		}
 	}
 	return cluster
