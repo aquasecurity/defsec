@@ -41,12 +41,20 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 			Builtin: defsecTypes.Bool(false, policyBlock.GetMetadata()),
 		}
 		if attr := policyBlock.GetAttribute("policy"); attr.IsString() {
-			parsed, err := iamgo.ParseString(attr.Value().AsString())
+			dataBlock, err := a.modules.GetBlockById(attr.Value().AsString())
 			if err != nil {
-				continue
+				parsed, err := iamgo.ParseString(attr.Value().AsString())
+				if err != nil {
+					continue
+				}
+				policy.Document.Parsed = *parsed
+				policy.Document.Metadata = attr.GetMetadata()
+			} else if dataBlock.Type() == "data" && dataBlock.TypeLabel() == "aws_iam_policy_document" {
+				if doc, err := iam.ConvertTerraformDocument(a.modules, dataBlock); err == nil {
+					policy.Document.Parsed = doc.Document
+					policy.Document.Metadata = doc.Source.GetMetadata()
+				}
 			}
-			policy.Document.Parsed = *parsed
-			policy.Document.Metadata = attr.GetMetadata()
 		} else if refBlock, err := a.modules.GetReferencedBlock(attr, policyBlock); err == nil {
 			if refBlock.Type() == "data" && refBlock.TypeLabel() == "aws_iam_policy_document" {
 				if doc, err := iam.ConvertTerraformDocument(a.modules, refBlock); err == nil {
@@ -54,6 +62,8 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 					policy.Document.Metadata = doc.Source.GetMetadata()
 				}
 			}
+		} else if len(attr.AllReferences()) > 0 {
+			panic("wow")
 		}
 
 		if urlAttr := policyBlock.GetAttribute("queue_url"); urlAttr.IsNotNil() {
@@ -93,21 +103,41 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 
 	var policies []iamp.Policy
 	if attr := resource.GetAttribute("policy"); attr.IsString() {
-		policy := iamp.Policy{
-			Metadata: attr.GetMetadata(),
-			Name:     defsecTypes.StringDefault("", attr.GetMetadata()),
-			Document: iamp.Document{
+
+		dataBlock, err := a.modules.GetBlockById(attr.Value().AsString())
+		if err != nil {
+			policy := iamp.Policy{
 				Metadata: attr.GetMetadata(),
-			},
-			Builtin: defsecTypes.Bool(false, attr.GetMetadata()),
+				Name:     defsecTypes.StringDefault("", attr.GetMetadata()),
+				Document: iamp.Document{
+					Metadata: attr.GetMetadata(),
+				},
+				Builtin: defsecTypes.Bool(false, attr.GetMetadata()),
+			}
+			parsed, err := iamgo.ParseString(attr.Value().AsString())
+			if err == nil {
+				policy.Document.Parsed = *parsed
+				policy.Document.Metadata = attr.GetMetadata()
+				policy.Metadata = attr.GetMetadata()
+				policies = append(policies, policy)
+			}
+		} else if dataBlock.Type() == "data" && dataBlock.TypeLabel() == "aws_iam_policy_document" {
+			if doc, err := iam.ConvertTerraformDocument(a.modules, dataBlock); err == nil {
+				policy := iamp.Policy{
+					Metadata: attr.GetMetadata(),
+					Name:     defsecTypes.StringDefault("", attr.GetMetadata()),
+					Document: iamp.Document{
+						Metadata: doc.Source.GetMetadata(),
+						Parsed:   doc.Document,
+						IsOffset: false,
+						HasRefs:  false,
+					},
+					Builtin: defsecTypes.Bool(false, attr.GetMetadata()),
+				}
+				policies = append(policies, policy)
+			}
 		}
-		parsed, err := iamgo.ParseString(attr.Value().AsString())
-		if err == nil {
-			policy.Document.Parsed = *parsed
-			policy.Document.Metadata = attr.GetMetadata()
-			policy.Metadata = attr.GetMetadata()
-			policies = append(policies, policy)
-		}
+
 	} else if refBlock, err := a.modules.GetReferencedBlock(attr, resource); err == nil {
 		if refBlock.Type() == "data" && refBlock.TypeLabel() == "aws_iam_policy_document" {
 			if doc, err := iam.ConvertTerraformDocument(a.modules, refBlock); err == nil {
