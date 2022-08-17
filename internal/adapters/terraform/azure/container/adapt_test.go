@@ -121,6 +121,37 @@ func Test_adaptCluster(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "rbac off with k8s rbac on",
+			terraform: `
+resource "azurerm_kubernetes_cluster" "misreporting_example" {
+    role_based_access_control_enabled = true # Enable k8s RBAC
+    azure_active_directory_role_based_access_control {
+      managed = true # Enable AKS-managed Azure AAD integration 
+      azure_rbac_enabled = false # Explicitly disable Azure RBAC for Kubernetes Authorization
+    }
+ }
+`,
+			expected: container.KubernetesCluster{
+				Metadata: defsecTypes.NewTestMetadata(),
+				NetworkProfile: container.NetworkProfile{
+					Metadata:      defsecTypes.NewTestMetadata(),
+					NetworkPolicy: defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				},
+				EnablePrivateCluster: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				AddonProfile: container.AddonProfile{
+					Metadata: defsecTypes.NewTestMetadata(),
+					OMSAgent: container.OMSAgent{
+						Metadata: defsecTypes.NewTestMetadata(),
+						Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					},
+				},
+				RoleBasedAccessControl: container.RoleBasedAccessControl{
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				},
+			},
+		},
 	}
 
 	for _, test := range tests {
