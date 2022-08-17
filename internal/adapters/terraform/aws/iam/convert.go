@@ -29,16 +29,29 @@ func ParsePolicyFromAttr(attr *terraform.Attribute, owner *terraform.Block, modu
 	}
 
 	if attr.IsString() {
-		parsed, err := iamgo.Parse([]byte(unescapeVars(attr.Value().AsString())))
+
+		dataBlock, err := modules.GetBlockById(attr.Value().AsString())
 		if err != nil {
-			return nil, err
+			parsed, err := iamgo.Parse([]byte(unescapeVars(attr.Value().AsString())))
+			if err != nil {
+				return nil, err
+			}
+			return &iam.Document{
+				Parsed:   *parsed,
+				Metadata: attr.GetMetadata(),
+				IsOffset: false,
+				HasRefs:  len(attr.AllReferences()) > 0,
+			}, nil
+		} else if dataBlock.Type() == "data" && dataBlock.TypeLabel() == "aws_iam_policy_document" {
+			if doc, err := ConvertTerraformDocument(modules, dataBlock); err == nil {
+				return &iam.Document{
+					Metadata: doc.Source.GetMetadata(),
+					Parsed:   doc.Document,
+					IsOffset: false,
+					HasRefs:  false,
+				}, nil
+			}
 		}
-		return &iam.Document{
-			Parsed:   *parsed,
-			Metadata: attr.GetMetadata(),
-			IsOffset: false,
-			HasRefs:  len(attr.AllReferences()) > 0,
-		}, nil
 	}
 
 	return &iam.Document{

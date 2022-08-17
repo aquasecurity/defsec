@@ -1,6 +1,7 @@
 package ecr
 
 import (
+	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecr"
 	iamp "github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/terraform"
@@ -18,13 +19,13 @@ func adaptRepositories(modules terraform.Modules) []ecr.Repository {
 	var repositories []ecr.Repository
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("aws_ecr_repository") {
-			repositories = append(repositories, adaptRepository(resource, module))
+			repositories = append(repositories, adaptRepository(resource, module, modules))
 		}
 	}
 	return repositories
 }
 
-func adaptRepository(resource *terraform.Block, module *terraform.Module) ecr.Repository {
+func adaptRepository(resource *terraform.Block, module *terraform.Module, modules terraform.Modules) ecr.Repository {
 	repo := ecr.Repository{
 		Metadata: resource.GetMetadata(),
 		ImageScanning: ecr.ImageScanning{
@@ -57,22 +58,39 @@ func adaptRepository(resource *terraform.Block, module *terraform.Module) ecr.Re
 	for _, policyRes := range policyBlocks {
 		if policyAttr := policyRes.GetAttribute("policy"); policyAttr.IsString() {
 
-			parsed, err := iamgo.ParseString(policyAttr.Value().AsString())
+			dataBlock, err := module.GetBlockByID(policyAttr.Value().AsString())
 			if err != nil {
-				continue
-			}
 
-			policy := iamp.Policy{
-				Metadata: policyRes.GetMetadata(),
-				Name:     defsecTypes.StringDefault("", policyRes.GetMetadata()),
-				Document: iamp.Document{
-					Parsed:   *parsed,
-					Metadata: policyAttr.GetMetadata(),
-				},
-				Builtin: defsecTypes.Bool(false, policyRes.GetMetadata()),
-			}
+				parsed, err := iamgo.ParseString(policyAttr.Value().AsString())
+				if err != nil {
+					continue
+				}
 
-			repo.Policies = append(repo.Policies, policy)
+				policy := iamp.Policy{
+					Metadata: policyRes.GetMetadata(),
+					Name:     defsecTypes.StringDefault("", policyRes.GetMetadata()),
+					Document: iamp.Document{
+						Parsed:   *parsed,
+						Metadata: policyAttr.GetMetadata(),
+					},
+					Builtin: defsecTypes.Bool(false, policyRes.GetMetadata()),
+				}
+
+				repo.Policies = append(repo.Policies, policy)
+			} else if dataBlock.Type() == "data" && dataBlock.TypeLabel() == "aws_iam_policy_document" {
+				if doc, err := iam.ConvertTerraformDocument(modules, dataBlock); err == nil {
+					policy := iamp.Policy{
+						Metadata: policyRes.GetMetadata(),
+						Name:     defsecTypes.StringDefault("", policyRes.GetMetadata()),
+						Document: iamp.Document{
+							Parsed:   doc.Document,
+							Metadata: doc.Source.GetMetadata(),
+						},
+						Builtin: defsecTypes.Bool(false, policyRes.GetMetadata()),
+					}
+					repo.Policies = append(repo.Policies, policy)
+				}
+			}
 		}
 	}
 

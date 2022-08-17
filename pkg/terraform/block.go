@@ -440,6 +440,10 @@ func (b *Block) Values() cty.Value {
 	// referencable id/arn. this isn't perfect, but the only way to link blocks in certain circumstances.
 	values["id"] = cty.StringVal(b.ID())
 	values["arn"] = cty.StringVal(b.ID())
+	// workaround for weird iam feature
+	if b.TypeLabel() == "aws_iam_policy_document" {
+		values["json"] = cty.StringVal(b.ID())
+	}
 	for _, attribute := range b.GetAttributes() {
 		values[attribute.Name()] = attribute.Value()
 	}
