@@ -53,6 +53,7 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 				if doc, err := iam.ConvertTerraformDocument(a.modules, dataBlock); err == nil {
 					policy.Document.Parsed = doc.Document
 					policy.Document.Metadata = doc.Source.GetMetadata()
+					policy.Document.IsOffset = true
 				}
 			}
 		} else if refBlock, err := a.modules.GetReferencedBlock(attr, policyBlock); err == nil {
@@ -129,7 +130,7 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 					Document: iamp.Document{
 						Metadata: doc.Source.GetMetadata(),
 						Parsed:   doc.Document,
-						IsOffset: false,
+						IsOffset: true,
 						HasRefs:  false,
 					},
 					Builtin: defsecTypes.Bool(false, attr.GetMetadata()),

@@ -45,7 +45,7 @@ func ParsePolicyFromAttr(attr *terraform.Attribute, owner *terraform.Block, modu
 		} else if dataBlock.Type() == "data" && dataBlock.TypeLabel() == "aws_iam_policy_document" {
 			if doc, err := ConvertTerraformDocument(modules, dataBlock); err == nil {
 				return &iam.Document{
-					Metadata: doc.Source.GetMetadata(),
+					Metadata: dataBlock.GetMetadata(),
 					Parsed:   doc.Document,
 					IsOffset: false,
 					HasRefs:  false,

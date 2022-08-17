@@ -189,6 +189,10 @@ func (r *Result) GetCode(opts ...CodeOption) (*Code, error) {
 
 		for lineNo := innerRange.GetStartLine(); lineNo <= innerRange.GetEndLine(); lineNo++ {
 
+			if lineNo-1 >= len(rawLines) || lineNo-1 >= len(highlightedLines) {
+				break
+			}
+
 			line := Line{
 				Number:      lineNo,
 				Content:     strings.TrimSuffix(rawLines[lineNo-1], "\r"),
