@@ -47,7 +47,7 @@ func ParsePolicyFromAttr(attr *terraform.Attribute, owner *terraform.Block, modu
 				return &iam.Document{
 					Metadata: dataBlock.GetMetadata(),
 					Parsed:   doc.Document,
-					IsOffset: false,
+					IsOffset: true,
 					HasRefs:  false,
 				}, nil
 			}
