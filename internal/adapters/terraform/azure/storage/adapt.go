@@ -85,6 +85,13 @@ func adaptAccounts(modules terraform.Modules) ([]storage.Account, []string, []st
 				accountedForNetworkRules = append(accountedForNetworkRules, networkRuleBlock.ID())
 				account.NetworkRules = append(account.NetworkRules, adaptNetworkRule(networkRuleBlock))
 			}
+			for _, queueBlock := range module.GetReferencingResources(resource, "azurerm_storage_queue", "storage_account_name") {
+				queue := storage.Queue{
+					Metadata: queueBlock.GetMetadata(),
+					Name:     queueBlock.GetAttribute("name").AsStringValueOrDefault("", queueBlock),
+				}
+				account.Queues = append(account.Queues, queue)
+			}
 			accounts = append(accounts, account)
 		}
 	}
