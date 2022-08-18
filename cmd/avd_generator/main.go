@@ -44,13 +44,45 @@ func writeDocsFile(meta rules.RegisteredRule) {
 
 	file, err := os.Create(filepath.Join(docpath, "docs.md"))
 	if err != nil {
-		fail("error occurred creating the file for %s", docpath)
+		fail("error occurred creating the docs file for %s", docpath)
 	}
 
 	if err := tmpl.Execute(file, meta.Rule()); err != nil {
 		fail("error occurred generating the document %v", err)
 	}
-	fmt.Printf("Generating file for policy %s\n", meta.Rule().AVDID)
+	fmt.Printf("Generating docs file for policy %s\n", meta.Rule().AVDID)
+
+	if meta.Rule().Terraform != nil {
+		tmpl, err := template.New("terraform").Parse(terraformMarkdownTemplate)
+		if err != nil {
+			fail("error occurred creating the template %v\n", err)
+		}
+		file, err := os.Create(filepath.Join(docpath, "Terraform.md"))
+		if err != nil {
+			fail("error occurred creating the Terraform file for %s", docpath)
+		}
+
+		if err := tmpl.Execute(file, meta.Rule()); err != nil {
+			fail("error occurred generating the document %v", err)
+		}
+		fmt.Printf("Generating Terraform file for policy %s\n", meta.Rule().AVDID)
+	}
+
+	if meta.Rule().CloudFormation != nil {
+		tmpl, err := template.New("cloudformation").Parse(cloudformationMarkdownTemplate)
+		if err != nil {
+			fail("error occurred creating the template %v\n", err)
+		}
+		file, err := os.Create(filepath.Join(docpath, "CloudFormation.md"))
+		if err != nil {
+			fail("error occurred creating the CloudFormation file for %s", docpath)
+		}
+
+		if err := tmpl.Execute(file, meta.Rule()); err != nil {
+			fail("error occurred generating the document %v", err)
+		}
+		fmt.Printf("Generating CloudFormation file for policy %s\n", meta.Rule().AVDID)
+	}
 }
 
 func fail(msg string, args ...interface{}) {
@@ -69,6 +101,40 @@ var docsMarkdownTemplate = `
 
 {{ if .Links }}### Links{{ range .Links }}
 - {{ . }}
+{{ end}}
+{{ end }}
+`
+
+var terraformMarkdownTemplate = `
+{{ .Resolution }}
+
+{{ if .Terraform.GoodExamples }}
+{{ range .Terraform.GoodExamples }}
+{{ "```hcl" }}
+{{ . }}
+{{ "```" }}
+{{ end}}
+{{ end }}
+
+{{ if .Terraform.Links }}#### Remediation Links{{ range .Terraform.Links }}
+ - {{ . }}
+{{ end}}
+{{ end }}
+`
+
+var cloudformationMarkdownTemplate = `
+{{ .Resolution }}
+
+{{ if .CloudFormation.GoodExamples }}
+{{ range .CloudFormation.GoodExamples }}
+{{ "```yaml" }}
+{{ . }}
+{{ "```" }}
+{{ end}}
+{{ end }}
+
+{{ if .CloudFormation.Links }}#### Remediation Links{{ range .CloudFormation.Links }}
+ - {{ . }}
 {{ end}}
 {{ end }}
 `
