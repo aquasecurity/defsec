@@ -75,14 +75,18 @@ func Test_AdaptVPC(t *testing.T) {
 			expected: ec2.EC2{
 				VPCs: []ec2.VPC{
 					{
-						Metadata:  defsecTypes.NewTestMetadata(),
-						IsDefault: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
-						ID:        defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						Metadata:        defsecTypes.NewTestMetadata(),
+						IsDefault:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						ID:              defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						CIDRBlock:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						FlowLogsEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 					{
-						Metadata:  defsecTypes.NewTestMetadata(),
-						IsDefault: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
-						ID:        defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						Metadata:        defsecTypes.NewTestMetadata(),
+						IsDefault:       defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						ID:              defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						CIDRBlock:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						FlowLogsEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 				SecurityGroups: []ec2.SecurityGroup{

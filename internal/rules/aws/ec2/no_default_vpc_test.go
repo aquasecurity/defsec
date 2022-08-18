@@ -33,6 +33,18 @@ func TestCheckNoDefaultVpc(t *testing.T) {
 			expected: true,
 		},
 		{
+			name: "vpc but not default AWS VPC",
+			input: ec2.EC2{
+				VPCs: []ec2.VPC{
+					{
+						Metadata:  types.NewTestMetadata(),
+						IsDefault: types.Bool(false, types.NewTestMetadata()),
+					},
+				},
+			},
+			expected: false,
+		},
+		{
 			name:     "no default AWS VPC",
 			input:    ec2.EC2{},
 			expected: false,

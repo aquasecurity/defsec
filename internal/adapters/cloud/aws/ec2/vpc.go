@@ -146,11 +146,40 @@ func (a *adapter) adaptNetworkACL(apiNacl types.NetworkAcl) (*ec2.NetworkACL, er
 }
 
 func (a *adapter) adaptVPC(v types.Vpc) (*ec2.VPC, error) {
+
 	vpcMetadata := a.CreateMetadata("vpc/" + *v.VpcId)
-	return &ec2.VPC{
-		Metadata:       vpcMetadata,
-		ID:             defsecTypes.String(*v.VpcId, vpcMetadata),
-		IsDefault:      defsecTypes.Bool(v.IsDefault != nil && *v.IsDefault, vpcMetadata),
-		SecurityGroups: nil, // we link these up afterwards
-	}, nil
+	vpc := &ec2.VPC{
+		Metadata:        vpcMetadata,
+		ID:              defsecTypes.String(*v.VpcId, vpcMetadata),
+		IsDefault:       defsecTypes.BoolDefault(false, vpcMetadata),
+		CIDRBlock:       defsecTypes.String("", vpcMetadata),
+		FlowLogsEnabled: defsecTypes.BoolDefault(false, vpcMetadata),
+		SecurityGroups:  nil, // we link these up afterwards
+	}
+
+	if v.IsDefault != nil {
+		vpc.IsDefault = defsecTypes.BoolDefault(*v.IsDefault, vpcMetadata)
+	}
+	if v.CidrBlock != nil {
+		vpc.CIDRBlock = defsecTypes.String(*v.CidrBlock, vpcMetadata)
+	}
+
+	logs, err := a.client.DescribeFlowLogs(a.Context(), &ec2api.DescribeFlowLogsInput{
+		Filter: []types.Filter{
+			{
+				Name:   aws.String("resource-id"),
+				Values: []string{*v.VpcId},
+			},
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if logs != nil && len(logs.FlowLogs) > 0 {
+		vpc.FlowLogsEnabled = defsecTypes.BoolDefault(true, vpcMetadata)
+	}
+
+	return vpc, nil
+
 }
