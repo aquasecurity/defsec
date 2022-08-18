@@ -51,6 +51,7 @@ import (
 	_ "github.com/aquasecurity/defsec/internal/rules/digitalocean/compute"
 	_ "github.com/aquasecurity/defsec/internal/rules/digitalocean/spaces"
 	_ "github.com/aquasecurity/defsec/internal/rules/github/actions"
+	_ "github.com/aquasecurity/defsec/internal/rules/github/branch_protections"
 	_ "github.com/aquasecurity/defsec/internal/rules/github/repositories"
 	_ "github.com/aquasecurity/defsec/internal/rules/google/bigquery"
 	_ "github.com/aquasecurity/defsec/internal/rules/google/compute"
