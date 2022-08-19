@@ -6,7 +6,6 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
 	"sync/atomic"
 
 	"github.com/hashicorp/go-getter"
@@ -37,12 +36,6 @@ func (r *remoteResolver) Resolve(ctx context.Context, _ fs.FS, opt Options) (fil
 
 	if !opt.AllowDownloads {
 		return nil, "", "", false, nil
-	}
-
-	if opt.RelativePath == "" && strings.LastIndex(opt.Source, "//") > strings.Index(opt.Source, "/") {
-		parts := strings.Split(opt.Source, "//")
-		opt.RelativePath = parts[len(parts)-1]
-		opt.Source = strings.TrimSuffix(opt.Source, "//"+opt.RelativePath)
 	}
 
 	key := cacheKey(opt.OriginalSource, opt.OriginalVersion, opt.RelativePath)
