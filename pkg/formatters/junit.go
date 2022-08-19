@@ -68,7 +68,7 @@ func outputJUnit(b ConfigurableFormatter, results scan.Results) error {
 				continue
 			}
 		}
-		path := b.Path(res)
+		path := b.Path(res, res.Metadata())
 		output.TestCases = append(output.TestCases,
 			jUnitTestCase{
 				Classname: path,
@@ -120,7 +120,7 @@ func buildFailure(b ConfigurableFormatter, res scan.Result) *jUnitFailure {
 	if !res.Range().IsMultiLine() {
 		lineInfo = fmt.Sprintf("%d", res.Range().GetStartLine())
 	}
-	location := fmt.Sprintf("%s:%s", b.Path(res), lineInfo)
+	location := fmt.Sprintf("%s:%s", b.Path(res, res.Metadata()), lineInfo)
 
 	return &jUnitFailure{
 		Message: res.Description(),

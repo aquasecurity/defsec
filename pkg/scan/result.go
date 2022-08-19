@@ -104,35 +104,33 @@ func (r Result) Traces() []string {
 	return r.traces
 }
 
-func (r *Result) AbsolutePath(fsRoot string) string {
+func (r *Result) AbsolutePath(fsRoot string, metadata defsecTypes.Metadata) string {
 	if strings.HasSuffix(fsRoot, ":") {
 		fsRoot += "/"
 	}
 
-	m := r.Metadata()
-	if m.IsUnmanaged() || m.Range() == nil {
+	if metadata.IsUnmanaged() || metadata.Range() == nil {
 		return ""
 	}
-	rng := m.Range()
+	rng := metadata.Range()
 	if rng.GetSourcePrefix() != "" && !strings.HasPrefix(rng.GetSourcePrefix(), ".") {
 		return rng.GetFilename()
 	}
 	return filepath.Join(fsRoot, rng.GetLocalFilename())
 }
 
-func (r *Result) RelativePathTo(fsRoot string, to string) string {
+func (r *Result) RelativePathTo(fsRoot, to string, metadata defsecTypes.Metadata) string {
 
-	absolute := r.AbsolutePath(fsRoot)
+	absolute := r.AbsolutePath(fsRoot, metadata)
 
 	if strings.HasSuffix(fsRoot, ":") {
 		fsRoot += "/"
 	}
 
-	m := r.Metadata()
-	if m.IsUnmanaged() || m.Range() == nil {
+	if metadata.IsUnmanaged() || metadata.Range() == nil {
 		return absolute
 	}
-	rng := m.Range()
+	rng := metadata.Range()
 	if rng.GetSourcePrefix() != "" && !strings.HasPrefix(rng.GetSourcePrefix(), ".") {
 		return absolute
 	}
