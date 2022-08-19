@@ -49,6 +49,17 @@ func getEncryption(block *terraform.Block, a *adapter) s3.Encryption {
 	for _, encryptionResource := range a.modules.GetResourcesByType("aws_s3_bucket_server_side_encryption_configuration") {
 		bucketAttr := encryptionResource.GetAttribute("bucket")
 		if bucketAttr.IsNotNil() {
+			if bucketAttr.IsString() {
+				actualBucketName := block.GetAttribute("bucket").AsStringValueOrDefault("", block).Value()
+				if bucketAttr.Equals(block.ID()) || bucketAttr.Equals(actualBucketName) {
+					return s3.Encryption{
+						Metadata:  encryptionResource.GetMetadata(),
+						Enabled:   isEncrypted(encryptionResource),
+						Algorithm: encryptionResource.GetNestedAttribute("rule.apply_server_side_encryption_by_default.sse_algorithm").AsStringValueOrDefault("", block),
+						KMSKeyId:  encryptionResource.GetNestedAttribute("rule.apply_server_side_encryption_by_default.kms_master_key_id").AsStringValueOrDefault("", block),
+					}
+				}
+			}
 			if referencedBlock, err := a.modules.GetReferencedBlock(bucketAttr, encryptionResource); err == nil {
 				if referencedBlock.ID() == block.ID() {
 					return s3.Encryption{
@@ -79,6 +90,15 @@ func getVersioning(block *terraform.Block, a *adapter) s3.Versioning {
 	for _, versioningResource := range a.modules.GetResourcesByType("aws_s3_bucket_versioning") {
 		bucketAttr := versioningResource.GetAttribute("bucket")
 		if bucketAttr.IsNotNil() {
+			if bucketAttr.IsString() {
+				actualBucketName := block.GetAttribute("bucket").AsStringValueOrDefault("", block).Value()
+				if bucketAttr.Equals(block.ID()) || bucketAttr.Equals(actualBucketName) {
+					return s3.Versioning{
+						Metadata: versioningResource.GetMetadata(),
+						Enabled:  isVersioned(versioningResource),
+					}
+				}
+			}
 			if referencedBlock, err := a.modules.GetReferencedBlock(bucketAttr, versioningResource); err == nil {
 				if referencedBlock.ID() == block.ID() {
 					return s3.Versioning{
@@ -116,6 +136,16 @@ func getLogging(block *terraform.Block, a *adapter) s3.Logging {
 			if referencedBlock, err := a.modules.GetReferencedBlock(loggingResource.GetAttribute("target_bucket"), loggingResource); err == nil {
 				targetBucket = defsecTypes.String(referencedBlock.FullName(), loggingResource.GetAttribute("target_bucket").GetMetadata())
 			}
+			if bucketAttr.IsString() {
+				actualBucketName := block.GetAttribute("bucket").AsStringValueOrDefault("", block).Value()
+				if bucketAttr.Equals(block.ID()) || bucketAttr.Equals(actualBucketName) {
+					return s3.Logging{
+						Metadata:     loggingResource.GetMetadata(),
+						Enabled:      hasLogging(loggingResource),
+						TargetBucket: targetBucket,
+					}
+				}
+			}
 			if referencedBlock, err := a.modules.GetReferencedBlock(bucketAttr, loggingResource); err == nil {
 				if referencedBlock.ID() == block.ID() {
 					return s3.Logging{
@@ -145,6 +175,12 @@ func getBucketAcl(block *terraform.Block, a *adapter) defsecTypes.StringValue {
 		bucketAttr := aclResource.GetAttribute("bucket")
 
 		if bucketAttr.IsNotNil() {
+			if bucketAttr.IsString() {
+				actualBucketName := block.GetAttribute("bucket").AsStringValueOrDefault("", block).Value()
+				if bucketAttr.Equals(block.ID()) || bucketAttr.Equals(actualBucketName) {
+					return aclResource.GetAttribute("acl").AsStringValueOrDefault("private", aclResource)
+				}
+			}
 			if referencedBlock, err := a.modules.GetReferencedBlock(bucketAttr, aclResource); err == nil {
 				if referencedBlock.ID() == block.ID() {
 					return aclResource.GetAttribute("acl").AsStringValueOrDefault("private", aclResource)
