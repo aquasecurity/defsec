@@ -29,10 +29,31 @@ func TestCheckQueueServicesLoggingEnabled(t *testing.T) {
 							Metadata:      defsecTypes.NewTestMetadata(),
 							EnableLogging: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
+						Queues: []storage.Queue{
+							{
+								Metadata: defsecTypes.NewTestMetadata(),
+								Name:     defsecTypes.String("my-queue", defsecTypes.NewTestMetadata()),
+							},
+						},
 					},
 				},
 			},
 			expected: true,
+		},
+		{
+			name: "Storage account queue properties logging disabled with no queues",
+			input: storage.Storage{
+				Accounts: []storage.Account{
+					{
+						Metadata: defsecTypes.NewTestMetadata(),
+						QueueProperties: storage.QueueProperties{
+							Metadata:      defsecTypes.NewTestMetadata(),
+							EnableLogging: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: false,
 		},
 		{
 			name: "Storage account queue properties logging enabled",
