@@ -15,6 +15,12 @@ type Account struct {
 	Containers        []Container
 	QueueProperties   QueueProperties
 	MinimumTLSVersion defsecTypes.StringValue
+	Queues            []Queue
+}
+
+type Queue struct {
+	defsecTypes.Metadata
+	Name defsecTypes.StringValue
 }
 
 type QueueProperties struct {

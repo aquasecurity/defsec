@@ -32,6 +32,11 @@ var terraformQueueServicesLoggingEnabledBadExamples = []string{
      queue_properties  {
    }
  }
+
+  resource "azurerm_storage_queue" "bad_example" {
+	 name                 = "my-queue"
+	 storage_account_name  = azurerm_storage_account.bad_example.name
+  }
  `,
 }
 
