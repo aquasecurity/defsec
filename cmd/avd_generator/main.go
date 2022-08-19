@@ -110,9 +110,9 @@ var terraformMarkdownTemplate = `
 
 {{ if .Terraform.GoodExamples }}
 {{ range .Terraform.GoodExamples }}
-{{ "```hcl" }}
+` + "```hcl" + `
 {{ . }}
-{{ "```" }}
+` + "```" + `
 {{ end}}
 {{ end }}
 
@@ -127,9 +127,9 @@ var cloudformationMarkdownTemplate = `
 
 {{ if .CloudFormation.GoodExamples }}
 {{ range .CloudFormation.GoodExamples }}
-{{ "```yaml" }}
+` + "```yaml" + `
 {{ . }}
-{{ "```" }}
+` + "```" + `
 {{ end}}
 {{ end }}
 
