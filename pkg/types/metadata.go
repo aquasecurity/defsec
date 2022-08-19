@@ -77,6 +77,14 @@ func (m Metadata) Parent() *Metadata {
 	return m.parent
 }
 
+func (m Metadata) Root() Metadata {
+	meta := &m
+	for meta.Parent() != nil {
+		meta = meta.Parent()
+	}
+	return *meta
+}
+
 func (m Metadata) IsMultiLine() bool {
 	return m.rnge.GetStartLine() < m.rnge.GetEndLine()
 }

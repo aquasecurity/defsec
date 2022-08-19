@@ -6,6 +6,8 @@ import (
 	"os"
 	"sort"
 
+	"github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/severity"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -25,7 +27,7 @@ type ConfigurableFormatter interface {
 	GroupResults([]scan.Result) ([]GroupedResult, error)
 	IncludePassed() bool
 	IncludeIgnored() bool
-	Path(result scan.Result) string
+	Path(result scan.Result, metadata types.Metadata) string
 }
 
 type Base struct {
@@ -62,11 +64,11 @@ func NewBase() *Base {
 	}
 }
 
-func (b *Base) Path(result scan.Result) string {
+func (b *Base) Path(result scan.Result, metadata types.Metadata) string {
 	if b.relative {
-		return result.RelativePathTo(b.fsRoot, b.baseDir)
+		return result.RelativePathTo(b.fsRoot, b.baseDir, metadata)
 	}
-	return result.AbsolutePath(b.fsRoot)
+	return result.AbsolutePath(b.fsRoot, metadata)
 }
 
 func (b *Base) IncludePassed() bool {
