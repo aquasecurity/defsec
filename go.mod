@@ -21,7 +21,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.15.14
 	github.com/aws/aws-sdk-go-v2/service/codebuild v1.19.12
 	github.com/aws/aws-sdk-go-v2/service/docdb v1.19.4
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.13
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.16.0
 	github.com/aws/aws-sdk-go-v2/service/ec2 v1.52.1
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.17.12
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.18.15
