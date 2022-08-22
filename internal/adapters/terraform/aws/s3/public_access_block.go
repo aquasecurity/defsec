@@ -23,7 +23,7 @@ func (a *adapter) adaptPublicAccessBlocks() {
 				if bucket, ok := a.bucketMap[referencedBlock.ID()]; ok {
 					bucket.PublicAccessBlock = &pba
 					a.bucketMap[referencedBlock.ID()] = bucket
-					continue
+					break
 				}
 			}
 		}
