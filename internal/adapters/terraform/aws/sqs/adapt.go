@@ -63,8 +63,6 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 					policy.Document.Metadata = doc.Source.GetMetadata()
 				}
 			}
-		} else if len(attr.AllReferences()) > 0 {
-			panic("wow")
 		}
 
 		if urlAttr := policyBlock.GetAttribute("queue_url"); urlAttr.IsNotNil() {
