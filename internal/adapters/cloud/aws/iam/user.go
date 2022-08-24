@@ -68,7 +68,7 @@ func (a *adapter) getMFADevices(user iamtypes.User) ([]iam.MFADevice, error) {
 		}
 		devices = append(devices, iam.MFADevice{
 			Metadata:  metadata,
-			IsVirtual: types.Bool(isVirtual, metadata),
+			IsVirtual: defsecTypes.Bool(isVirtual, metadata),
 		})
 	}
 

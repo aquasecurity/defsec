@@ -16,7 +16,7 @@ import (
 
 var checkRootHardwareMFAEnabled = rules.Register(
 	scan.Rule{
-		AVDID:     "AVD-AWS-0164",
+		AVDID:     "AVD-AWS-0165",
 		Provider:  providers.AWSProvider,
 		Service:   "iam",
 		ShortCode: "enforce-root-hardware-mfa",

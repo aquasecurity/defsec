@@ -55,8 +55,8 @@ func TestCheckEnforceUserMFA(t *testing.T) {
 						Name:     defsecTypes.String("root", defsecTypes.NewTestMetadata()),
 						MFADevices: []iam.MFADevice{
 							{
-								Metadata:  types.NewTestMetadata(),
-								IsVirtual: types.Bool(true, types.NewTestMetadata()),
+								Metadata:  defsecTypes.NewTestMetadata(),
+								IsVirtual: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
