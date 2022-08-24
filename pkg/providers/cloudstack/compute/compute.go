@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Compute struct {
@@ -9,6 +9,6 @@ type Compute struct {
 }
 
 type Instance struct {
-	types.Metadata
-	UserData types.StringValue // not b64 encoded pls
+	defsecTypes.Metadata
+	UserData defsecTypes.StringValue // not b64 encoded pls
 }

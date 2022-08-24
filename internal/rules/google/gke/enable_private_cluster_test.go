@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnablePrivateCluster(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						PrivateCluster: gke.PrivateCluster{
-							Metadata:           types.NewTestMetadata(),
-							EnablePrivateNodes: types.Bool(false, types.NewTestMetadata()),
+							Metadata:           defsecTypes.NewTestMetadata(),
+							EnablePrivateNodes: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnablePrivateCluster(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						PrivateCluster: gke.PrivateCluster{
-							Metadata:           types.NewTestMetadata(),
-							EnablePrivateNodes: types.Bool(true, types.NewTestMetadata()),
+							Metadata:           defsecTypes.NewTestMetadata(),
+							EnablePrivateNodes: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

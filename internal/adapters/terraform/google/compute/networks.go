@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/google/compute"
 	"github.com/aquasecurity/defsec/pkg/terraform"
@@ -28,12 +28,12 @@ func adaptNetworks(modules terraform.Modules) (networks []compute.Network) {
 		subnetwork := compute.SubNetwork{
 			Metadata:       subnetworkBlock.GetMetadata(),
 			Name:           subnetworkBlock.GetAttribute("name").AsStringValueOrDefault("", subnetworkBlock),
-			EnableFlowLogs: types.BoolDefault(false, subnetworkBlock.GetMetadata()),
+			EnableFlowLogs: defsecTypes.BoolDefault(false, subnetworkBlock.GetMetadata()),
 		}
 
 		// logging
 		if logConfigBlock := subnetworkBlock.GetBlock("log_config"); logConfigBlock.IsNotNil() {
-			subnetwork.EnableFlowLogs = types.BoolExplicit(true, subnetworkBlock.GetBlock("log_config").GetMetadata())
+			subnetwork.EnableFlowLogs = defsecTypes.BoolExplicit(true, subnetworkBlock.GetBlock("log_config").GetMetadata())
 		}
 
 		nwAttr := subnetworkBlock.GetAttribute("network")
@@ -48,7 +48,7 @@ func adaptNetworks(modules terraform.Modules) (networks []compute.Network) {
 		}
 
 		placeholder := compute.Network{
-			Metadata:    types.NewUnmanagedMetadata(),
+			Metadata:    defsecTypes.NewUnmanagedMetadata(),
 			Firewall:    nil,
 			Subnetworks: nil,
 		}
@@ -86,7 +86,7 @@ func adaptNetworks(modules terraform.Modules) (networks []compute.Network) {
 		}
 
 		placeholder := compute.Network{
-			Metadata:    types.NewUnmanagedMetadata(),
+			Metadata:    defsecTypes.NewUnmanagedMetadata(),
 			Firewall:    nil,
 			Subnetworks: nil,
 		}
@@ -101,15 +101,15 @@ func adaptNetworks(modules terraform.Modules) (networks []compute.Network) {
 	return networks
 }
 
-func expandRange(ports string, attr *terraform.Attribute) []types.IntValue {
+func expandRange(ports string, attr *terraform.Attribute) []defsecTypes.IntValue {
 	ports = strings.ReplaceAll(ports, " ", "")
 	if !strings.Contains(ports, "-") {
 		i, err := strconv.Atoi(ports)
 		if err != nil {
 			return nil
 		}
-		return []types.IntValue{
-			types.Int(i, attr.GetMetadata()),
+		return []defsecTypes.IntValue{
+			defsecTypes.Int(i, attr.GetMetadata()),
 		}
 	}
 	parts := strings.Split(ports, "-")
@@ -124,9 +124,9 @@ func expandRange(ports string, attr *terraform.Attribute) []types.IntValue {
 	if err != nil {
 		return nil
 	}
-	var output []types.IntValue
+	var output []defsecTypes.IntValue
 	for i := start; i <= end; i++ {
-		output = append(output, types.Int(i, attr.GetMetadata()))
+		output = append(output, defsecTypes.Int(i, attr.GetMetadata()))
 	}
 	return output
 }
@@ -135,7 +135,7 @@ func adaptFirewallRule(firewall *compute.Firewall, firewallBlock, ruleBlock *ter
 	protocolAttr := ruleBlock.GetAttribute("protocol")
 	portsAttr := ruleBlock.GetAttribute("ports")
 
-	var ports []types.IntValue
+	var ports []defsecTypes.IntValue
 	rawPorts := portsAttr.AsStringValues()
 	for _, portStr := range rawPorts {
 		ports = append(ports, expandRange(portStr.Value(), portsAttr)...)
@@ -146,8 +146,8 @@ func adaptFirewallRule(firewall *compute.Firewall, firewallBlock, ruleBlock *ter
 
 	rule := compute.FirewallRule{
 		Metadata: firewallBlock.GetMetadata(),
-		Enforced: types.BoolDefault(true, firewallBlock.GetMetadata()),
-		IsAllow:  types.Bool(allow, ruleBlock.GetMetadata()),
+		Enforced: defsecTypes.BoolDefault(true, firewallBlock.GetMetadata()),
+		IsAllow:  defsecTypes.Bool(allow, ruleBlock.GetMetadata()),
 		Protocol: protocolAttr.AsStringValueOrDefault("tcp", ruleBlock),
 		Ports:    ports,
 	}
@@ -155,20 +155,20 @@ func adaptFirewallRule(firewall *compute.Firewall, firewallBlock, ruleBlock *ter
 	disabledAttr := firewallBlock.GetAttribute("disabled")
 	switch {
 	case disabledAttr.IsNil():
-		rule.Enforced = types.BoolDefault(true, firewallBlock.GetMetadata())
+		rule.Enforced = defsecTypes.BoolDefault(true, firewallBlock.GetMetadata())
 	case disabledAttr.IsTrue():
-		rule.Enforced = types.Bool(false, disabledAttr.GetMetadata())
+		rule.Enforced = defsecTypes.Bool(false, disabledAttr.GetMetadata())
 	default:
-		rule.Enforced = types.Bool(true, disabledAttr.GetMetadata())
+		rule.Enforced = defsecTypes.Bool(true, disabledAttr.GetMetadata())
 	}
 
 	if isEgress {
-		var destinations []types.StringValue
+		var destinations []defsecTypes.StringValue
 		if destinationAttr := firewallBlock.GetAttribute("destination_ranges"); destinationAttr.IsNotNil() {
 			destinations = append(destinations, destinationAttr.AsStringValues()...)
 		}
 		if len(destinations) == 0 {
-			destinations = append(destinations, types.StringDefault("0.0.0.0/0", firewallBlock.GetMetadata()))
+			destinations = append(destinations, defsecTypes.StringDefault("0.0.0.0/0", firewallBlock.GetMetadata()))
 		}
 		firewall.EgressRules = append(firewall.EgressRules, compute.EgressRule{
 			Metadata:          firewallBlock.GetMetadata(),
@@ -176,12 +176,12 @@ func adaptFirewallRule(firewall *compute.Firewall, firewallBlock, ruleBlock *ter
 			DestinationRanges: destinations,
 		})
 	} else {
-		var sources []types.StringValue
+		var sources []defsecTypes.StringValue
 		if sourceAttr := firewallBlock.GetAttribute("source_ranges"); sourceAttr.IsNotNil() {
 			sources = append(sources, sourceAttr.AsStringValues()...)
 		}
 		if len(sources) == 0 {
-			sources = append(sources, types.StringDefault("0.0.0.0/0", firewallBlock.GetMetadata()))
+			sources = append(sources, defsecTypes.StringDefault("0.0.0.0/0", firewallBlock.GetMetadata()))
 		}
 		firewall.IngressRules = append(firewall.IngressRules, compute.IngressRule{
 			Metadata:     firewallBlock.GetMetadata(),

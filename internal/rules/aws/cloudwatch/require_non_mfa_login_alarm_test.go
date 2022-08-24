@@ -3,7 +3,8 @@ package cloudwatch
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -23,39 +24,39 @@ func TestCheckRequireNonMFALoginAlarm(t *testing.T) {
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						CloudWatchLogsLogGroupArn: types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
-						IsLogging:                 types.Bool(true, types.NewTestMetadata()),
-						IsMultiRegion:             types.Bool(true, types.NewTestMetadata()),
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
+						IsLogging:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						IsMultiRegion:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
 			cloudwatch: cloudwatch.CloudWatch{
 				LogGroups: []cloudwatch.LogGroup{
 					{
-						Metadata: types.NewTestMetadata(),
-						Arn:      types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Arn:      defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
 						MetricFilters: []cloudwatch.MetricFilter{
 							{
-								Metadata:   types.NewTestMetadata(),
-								FilterName: types.String("NonMFALogin", types.NewTestMetadata()),
-								FilterPattern: types.String(`($.eventName = "ConsoleLogin") && 
+								Metadata:   defsecTypes.NewTestMetadata(),
+								FilterName: defsecTypes.String("NonMFALogin", defsecTypes.NewTestMetadata()),
+								FilterPattern: defsecTypes.String(`($.eventName = "ConsoleLogin") && 
 ($.additionalEventData.MFAUsed != "Yes") && 
 ($.userIdentity.type=="IAMUser") && 
-($.responseElements.ConsoleLogin == "Success")`, types.NewTestMetadata()),
+($.responseElements.ConsoleLogin == "Success")`, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
 				},
 				Alarms: []cloudwatch.Alarm{
 					{
-						Metadata:   types.NewTestMetadata(),
-						AlarmName:  types.String("NonMFALogin", types.NewTestMetadata()),
-						MetricName: types.String("NonMFALogin", types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						AlarmName:  defsecTypes.String("NonMFALogin", defsecTypes.NewTestMetadata()),
+						MetricName: defsecTypes.String("NonMFALogin", defsecTypes.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{
-								Metadata: types.NewTestMetadata(),
-								ID:       types.String("NonMFALogin", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								ID:       defsecTypes.String("NonMFALogin", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -68,25 +69,25 @@ func TestCheckRequireNonMFALoginAlarm(t *testing.T) {
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						CloudWatchLogsLogGroupArn: types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
-						IsLogging:                 types.Bool(true, types.NewTestMetadata()),
-						IsMultiRegion:             types.Bool(true, types.NewTestMetadata()),
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
+						IsLogging:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						IsMultiRegion:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
 			cloudwatch: cloudwatch.CloudWatch{
 				LogGroups: []cloudwatch.LogGroup{
 					{
-						Metadata:      types.NewTestMetadata(),
-						Arn:           types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
+						Metadata:      defsecTypes.NewTestMetadata(),
+						Arn:           defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
 						MetricFilters: []cloudwatch.MetricFilter{},
 					},
 				},
 				Alarms: []cloudwatch.Alarm{
 					{
-						Metadata:  types.NewTestMetadata(),
-						AlarmName: types.String("CloudTrail_Unauthorized_API_Call", types.NewTestMetadata()),
+						Metadata:  defsecTypes.NewTestMetadata(),
+						AlarmName: defsecTypes.String("CloudTrail_Unauthorized_API_Call", defsecTypes.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{},
 						},

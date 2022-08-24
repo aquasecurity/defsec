@@ -1,8 +1,8 @@
 package iam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/google/iam"
+	"github.com/aquasecurity/defsec/pkg/types"
 	"github.com/google/uuid"
 )
 
@@ -24,7 +24,16 @@ func (a *adapter) adaptOrganizationMembers() {
 		if refBlock, err := a.modules.GetReferencedBlock(organizationAttr, iamBlock); err == nil {
 			if refBlock.TypeLabel() == "google_organization" {
 				a.addOrg(refBlock.ID())
-				org := a.orgs[refBlock.ID()]
+				org, ok := a.orgs[refBlock.ID()]
+				if !ok {
+					org = iam.Organization{
+						Metadata: refBlock.GetMetadata(),
+						Folders:  nil,
+						Projects: nil,
+						Members:  []iam.Member{member},
+						Bindings: nil,
+					}
+				}
 				org.Members = append(org.Members, member)
 				a.orgs[refBlock.ID()] = org
 				continue

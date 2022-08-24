@@ -3,7 +3,7 @@ package ecr
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableImageScans(t *testing.T) {
 			input: ecr.ECR{
 				Repositories: []ecr.Repository{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ImageScanning: ecr.ImageScanning{
-							Metadata:   types.NewTestMetadata(),
-							ScanOnPush: types.Bool(false, types.NewTestMetadata()),
+							Metadata:   defsecTypes.NewTestMetadata(),
+							ScanOnPush: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableImageScans(t *testing.T) {
 			input: ecr.ECR{
 				Repositories: []ecr.Repository{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ImageScanning: ecr.ImageScanning{
-							Metadata:   types.NewTestMetadata(),
-							ScanOnPush: types.Bool(true, types.NewTestMetadata()),
+							Metadata:   defsecTypes.NewTestMetadata(),
+							ScanOnPush: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

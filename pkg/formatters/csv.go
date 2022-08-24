@@ -32,7 +32,7 @@ func outputCSV(b ConfigurableFormatter, results scan.Results) error {
 		}
 
 		rng := res.Range()
-		path := b.Path(res)
+		path := b.Path(res, res.Metadata())
 
 		records = append(records, []string{
 			path,

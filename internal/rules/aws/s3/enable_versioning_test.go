@@ -3,7 +3,7 @@ package s3
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckVersioningIsEnabled(t *testing.T) {
 			input: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Versioning: s3.Versioning{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckVersioningIsEnabled(t *testing.T) {
 			input: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Versioning: s3.Versioning{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

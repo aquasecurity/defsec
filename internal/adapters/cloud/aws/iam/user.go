@@ -3,8 +3,10 @@ package iam
 import (
 	"fmt"
 	"strings"
+	"time"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -34,15 +36,7 @@ func (a *adapter) adaptUsers(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting users...")
 
-	for _, apiUser := range nativeUsers {
-		user, err := a.adaptUser(apiUser)
-		if err != nil {
-			return err
-		}
-		state.AWS.IAM.Users = append(state.AWS.IAM.Users, *user)
-		a.Tracker().IncrementResource()
-	}
-
+	state.AWS.IAM.Users = concurrency.Adapt(nativeUsers, a.RootAdapter, a.adaptUser)
 	return nil
 }
 
@@ -152,20 +146,30 @@ func (a *adapter) getUserKeys(apiUser iamtypes.User) ([]iam.AccessKey, error) {
 		}
 		for _, apiAccessKey := range output.AccessKeyMetadata {
 
-			lastUsed := types.TimeUnresolvable(metadata)
+			lastUsed := defsecTypes.TimeUnresolvable(metadata)
 			if output, err := a.api.GetAccessKeyLastUsed(a.Context(), &iamapi.GetAccessKeyLastUsedInput{
 				AccessKeyId: apiAccessKey.AccessKeyId,
 			}); err == nil {
 				if output.AccessKeyLastUsed != nil && output.AccessKeyLastUsed.LastUsedDate != nil {
-					lastUsed = types.Time(*output.AccessKeyLastUsed.LastUsedDate, metadata)
+					lastUsed = defsecTypes.Time(*output.AccessKeyLastUsed.LastUsedDate, metadata)
 				}
+			}
+
+			accessKeyId := defsecTypes.StringDefault("", metadata)
+			if apiAccessKey.AccessKeyId != nil {
+				accessKeyId = defsecTypes.String(*apiAccessKey.AccessKeyId, metadata)
+			}
+
+			creationDate := defsecTypes.TimeDefault(time.Now(), metadata)
+			if apiAccessKey.CreateDate != nil {
+				creationDate = defsecTypes.Time(*apiAccessKey.CreateDate, metadata)
 			}
 
 			keys = append(keys, iam.AccessKey{
 				Metadata:     metadata,
-				AccessKeyId:  types.String(*apiAccessKey.AccessKeyId, metadata),
-				Active:       types.Bool(apiAccessKey.Status == iamtypes.StatusTypeActive, metadata),
-				CreationDate: types.Time(*apiAccessKey.CreateDate, metadata),
+				AccessKeyId:  accessKeyId,
+				Active:       defsecTypes.Bool(apiAccessKey.Status == iamtypes.StatusTypeActive, metadata),
+				CreationDate: creationDate,
 				LastAccess:   lastUsed,
 			})
 		}
@@ -202,14 +206,19 @@ func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 		return nil, err
 	}
 
-	lastAccess := types.TimeUnresolvable(metadata)
+	lastAccess := defsecTypes.TimeUnresolvable(metadata)
 	if apiUser.PasswordLastUsed != nil {
-		lastAccess = types.Time(*apiUser.PasswordLastUsed, metadata)
+		lastAccess = defsecTypes.Time(*apiUser.PasswordLastUsed, metadata)
+	}
+
+	username := defsecTypes.StringDefault("", metadata)
+	if apiUser.UserName != nil {
+		username = defsecTypes.String(*apiUser.UserName, metadata)
 	}
 
 	return &iam.User{
 		Metadata:   metadata,
-		Name:       types.String(*apiUser.UserName, metadata),
+		Name:       username,
 		Groups:     groups,
 		Policies:   policies,
 		AccessKeys: keys,

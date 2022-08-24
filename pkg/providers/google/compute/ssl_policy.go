@@ -1,12 +1,12 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type SSLPolicy struct {
-	types.Metadata
-	Name              types.StringValue
-	Profile           types.StringValue
-	MinimumTLSVersion types.StringValue
+	defsecTypes.Metadata
+	Name              defsecTypes.StringValue
+	Profile           defsecTypes.StringValue
+	MinimumTLSVersion defsecTypes.StringValue
 }

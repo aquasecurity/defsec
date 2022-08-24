@@ -10,11 +10,7 @@ import (
 
 // Adapt ...
 func Adapt(ctx context.Context, opt options.Options) (*state.State, error) {
-
 	cloudState := &state.State{}
-	if err := aws.Adapt(ctx, cloudState, opt); err != nil {
-		return nil, err
-	}
-
-	return cloudState, nil
+	err := aws.Adapt(ctx, cloudState, opt)
+	return cloudState, err
 }

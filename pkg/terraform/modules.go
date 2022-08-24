@@ -3,7 +3,7 @@ package terraform
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Modules []*Module
@@ -74,6 +74,16 @@ func (m Modules) GetBlocks() Blocks {
 		blocks = append(blocks, module.GetBlocks()...)
 	}
 	return blocks
+}
+
+func (m Modules) GetBlockById(id string) (*Block, error) {
+	for _, module := range m {
+		if found := module.blocks.WithID(id); found != nil {
+			return found, nil
+		}
+
+	}
+	return nil, fmt.Errorf("block not found")
 }
 
 func (m Modules) GetResourceByIDs(id ...string) Blocks {

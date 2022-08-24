@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
 
@@ -50,8 +50,8 @@ func Test_JSON(t *testing.T) {
 	var results scan.Results
 	results.Add("Cluster encryption is not enabled.",
 		dynamodb.ServerSideEncryption{
-			Metadata: types.NewTestMetadata(),
-			Enabled:  types.Bool(false, types.NewTestMetadata()),
+			Metadata: defsecTypes.NewTestMetadata(),
+			Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 		})
 	results.SetRule(scan.Rule{
 		AVDID:       "AVD-AA-9999",

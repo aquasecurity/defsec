@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -23,8 +23,8 @@ func TestCheckSetMaxPasswordAge(t *testing.T) {
 			name: "Password expires in 99 days",
 			input: iam.IAM{
 				PasswordPolicy: iam.PasswordPolicy{
-					Metadata:   types.NewTestMetadata(),
-					MaxAgeDays: types.Int(99, types.NewTestMetadata()),
+					Metadata:   defsecTypes.NewTestMetadata(),
+					MaxAgeDays: defsecTypes.Int(99, defsecTypes.NewTestMetadata()),
 				},
 			},
 			expected: true,
@@ -33,8 +33,8 @@ func TestCheckSetMaxPasswordAge(t *testing.T) {
 			name: "Password expires in 60 days",
 			input: iam.IAM{
 				PasswordPolicy: iam.PasswordPolicy{
-					Metadata:   types.NewTestMetadata(),
-					MaxAgeDays: types.Int(60, types.NewTestMetadata()),
+					Metadata:   defsecTypes.NewTestMetadata(),
+					MaxAgeDays: defsecTypes.Int(60, defsecTypes.NewTestMetadata()),
 				},
 			},
 			expected: false,

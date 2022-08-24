@@ -2,9 +2,10 @@ package efs
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/efs"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/efs"
 	"github.com/aws/aws-sdk-go-v2/service/efs/types"
 )
@@ -60,24 +61,17 @@ func (a *adapter) getFilesystems() ([]efs.FileSystem, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting filesystems...")
-
-	var filesystems []efs.FileSystem
-	for _, apiFilesystem := range apiFilesystems {
-		filesystem, err := a.adaptFilesystem(apiFilesystem)
-		if err != nil {
-			return nil, err
-		}
-		filesystems = append(filesystems, *filesystem)
-		a.Tracker().IncrementResource()
-	}
-
-	return filesystems, nil
+	return concurrency.Adapt(apiFilesystems, a.RootAdapter, a.adaptFilesystem), nil
 }
 
 func (a *adapter) adaptFilesystem(apiFilesystem types.FileSystemDescription) (*efs.FileSystem, error) {
 	metadata := a.CreateMetadataFromARN(*apiFilesystem.FileSystemArn)
+	encrypted := defsecTypes.BoolDefault(false, metadata)
+	if apiFilesystem.Encrypted != nil {
+		encrypted = defsecTypes.Bool(*apiFilesystem.Encrypted, metadata)
+	}
 	return &efs.FileSystem{
 		Metadata:  metadata,
-		Encrypted: defsecTypes.Bool(*apiFilesystem.Encrypted, metadata),
+		Encrypted: encrypted,
 	}, nil
 }

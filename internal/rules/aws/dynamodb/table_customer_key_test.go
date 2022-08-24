@@ -3,7 +3,7 @@ package dynamodb
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckTableCustomerKey(t *testing.T) {
 			input: dynamodb.DynamoDB{
 				DAXClusters: []dynamodb.DAXCluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ServerSideEncryption: dynamodb.ServerSideEncryption{
-							Metadata: types.NewTestMetadata(),
-							KMSKeyID: types.String("", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckTableCustomerKey(t *testing.T) {
 			input: dynamodb.DynamoDB{
 				DAXClusters: []dynamodb.DAXCluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ServerSideEncryption: dynamodb.ServerSideEncryption{
-							Metadata: types.NewTestMetadata(),
-							KMSKeyID: types.String(dynamodb.DefaultKMSKeyID, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							KMSKeyID: defsecTypes.String(dynamodb.DefaultKMSKeyID, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -54,10 +54,10 @@ func TestCheckTableCustomerKey(t *testing.T) {
 			input: dynamodb.DynamoDB{
 				DAXClusters: []dynamodb.DAXCluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ServerSideEncryption: dynamodb.ServerSideEncryption{
-							Metadata: types.NewTestMetadata(),
-							KMSKeyID: types.String("some-ok-key", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							KMSKeyID: defsecTypes.String("some-ok-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

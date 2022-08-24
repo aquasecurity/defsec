@@ -2,10 +2,11 @@ package ecr
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecr"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	ecrapi "github.com/aws/aws-sdk-go-v2/service/ecr"
 	"github.com/aws/aws-sdk-go-v2/service/ecr/types"
 	"github.com/liamg/iamgo"
@@ -63,18 +64,7 @@ func (a *adapter) getRepositories() ([]ecr.Repository, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting repositories...")
-
-	var repositories []ecr.Repository
-	for _, apiRepository := range apiRepositories {
-		repository, err := a.adaptRepository(apiRepository)
-		if err != nil {
-			return nil, err
-		}
-		repositories = append(repositories, *repository)
-		a.Tracker().IncrementResource()
-	}
-
-	return repositories, nil
+	return concurrency.Adapt(apiRepositories, a.RootAdapter, a.adaptRepository), nil
 }
 
 func (a *adapter) adaptRepository(apiRepository types.Repository) (*ecr.Repository, error) {
@@ -102,13 +92,18 @@ func (a *adapter) adaptRepository(apiRepository types.Repository) (*ecr.Reposito
 		if err != nil {
 			return nil, err
 		}
+		name := defsecTypes.StringDefault("", metadata)
+		if output.RepositoryName != nil {
+			name = defsecTypes.String(*output.RepositoryName, metadata)
+		}
 		policies = append(policies, iam.Policy{
 			Metadata: metadata,
-			Name:     defsecTypes.String(*output.RepositoryName, metadata),
+			Name:     name,
 			Document: iam.Document{
 				Metadata: metadata,
 				Parsed:   *parsed,
 			},
+			Builtin: defsecTypes.Bool(false, metadata),
 		})
 	}
 

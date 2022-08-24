@@ -1,19 +1,19 @@
 package github
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Action struct {
-	types.Metadata
+	defsecTypes.Metadata
 	EnvironmentSecrets []EnvironmentSecret
 }
 
 type EnvironmentSecret struct {
-	types.Metadata
-	Repository     types.StringValue
-	Environment    types.StringValue
-	SecretName     types.StringValue
-	PlainTextValue types.StringValue
-	EncryptedValue types.StringValue
+	defsecTypes.Metadata
+	Repository     defsecTypes.StringValue
+	Environment    defsecTypes.StringValue
+	SecretName     defsecTypes.StringValue
+	PlainTextValue defsecTypes.StringValue
+	EncryptedValue defsecTypes.StringValue
 }

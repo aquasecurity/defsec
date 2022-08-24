@@ -3,7 +3,7 @@ package elb
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,9 +24,9 @@ func TestCheckDropInvalidHeaders(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata:                types.NewTestMetadata(),
-						Type:                    types.String(elb.TypeApplication, types.NewTestMetadata()),
-						DropInvalidHeaderFields: types.Bool(false, types.NewTestMetadata()),
+						Metadata:                defsecTypes.NewTestMetadata(),
+						Type:                    defsecTypes.String(elb.TypeApplication, defsecTypes.NewTestMetadata()),
+						DropInvalidHeaderFields: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -37,9 +37,9 @@ func TestCheckDropInvalidHeaders(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata:                types.NewTestMetadata(),
-						Type:                    types.String(elb.TypeApplication, types.NewTestMetadata()),
-						DropInvalidHeaderFields: types.Bool(true, types.NewTestMetadata()),
+						Metadata:                defsecTypes.NewTestMetadata(),
+						Type:                    defsecTypes.String(elb.TypeApplication, defsecTypes.NewTestMetadata()),
+						DropInvalidHeaderFields: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -49,8 +49,8 @@ func TestCheckDropInvalidHeaders(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types.NewTestMetadata(),
-						Type:     types.String(elb.TypeClassic, types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Type:     defsecTypes.String(elb.TypeClassic, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

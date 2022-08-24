@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/aquasecurity/defsec/pkg/debug"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
+	"github.com/aquasecurity/defsec/pkg/errs"
+	"github.com/aquasecurity/defsec/pkg/types"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/debug"
 
 	"github.com/aws/aws-sdk-go-v2/service/sts"
 
@@ -36,13 +38,14 @@ type ServiceAdapter interface {
 }
 
 type RootAdapter struct {
-	ctx            context.Context
-	sessionCfg     aws.Config
-	tracker        progress.ServiceTracker
-	accountID      string
-	currentService string
-	region         string
-	debugWriter    debug.Logger
+	ctx                 context.Context
+	sessionCfg          aws.Config
+	tracker             progress.ServiceTracker
+	accountID           string
+	currentService      string
+	region              string
+	debugWriter         debug.Logger
+	concurrencyStrategy concurrency.Strategy
 }
 
 func NewRootAdapter(ctx context.Context, cfg aws.Config, tracker progress.ServiceTracker) *RootAdapter {
@@ -50,11 +53,20 @@ func NewRootAdapter(ctx context.Context, cfg aws.Config, tracker progress.Servic
 		ctx:        ctx,
 		tracker:    tracker,
 		sessionCfg: cfg,
+		region:     cfg.Region,
 	}
+}
+
+func (a *RootAdapter) Region() string {
+	return a.region
 }
 
 func (a *RootAdapter) Debug(format string, args ...interface{}) {
 	a.debugWriter.Log(format, args...)
+}
+
+func (a *RootAdapter) ConcurrencyStrategy() concurrency.Strategy {
+	return a.concurrencyStrategy
 }
 
 func (a *RootAdapter) SessionConfig() aws.Config {
@@ -122,9 +134,10 @@ func AllServices() []string {
 
 func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 	c := &RootAdapter{
-		ctx:         ctx,
-		tracker:     opt.ProgressTracker,
-		debugWriter: opt.DebugWriter.Extend("adapt", "aws"),
+		ctx:                 ctx,
+		tracker:             opt.ProgressTracker,
+		debugWriter:         opt.DebugWriter.Extend("adapt", "aws"),
+		concurrencyStrategy: opt.ConcurrencyStrategy,
 	}
 
 	cfg, err := config.LoadDefaultConfig(ctx)
@@ -165,6 +178,8 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 
 	c.region = c.sessionCfg.Region
 
+	var adapterErrors []error
+
 	for _, adapter := range registeredAdapters {
 		if len(opt.Services) != 0 && !contains(opt.Services, adapter.Name()) {
 			continue
@@ -174,10 +189,16 @@ func Adapt(ctx context.Context, state *state.State, opt options.Options) error {
 		opt.ProgressTracker.StartService(adapter.Name())
 
 		if err := adapter.Adapt(c, state); err != nil {
-			return err
+			c.Debug("Error occurred while running adapter for %s: %s", adapter.Name(), err)
+			adapterErrors = append(adapterErrors, fmt.Errorf("failed to run adapter for %s: %w", adapter.Name(), err))
 		}
 		opt.ProgressTracker.FinishService()
 	}
+
+	if len(adapterErrors) > 0 {
+		return errs.NewAdapterError(adapterErrors)
+	}
+
 	return nil
 }
 

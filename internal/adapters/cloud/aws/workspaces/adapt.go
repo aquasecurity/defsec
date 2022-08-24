@@ -2,9 +2,10 @@ package workspaces
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/workspaces"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/workspaces"
 	"github.com/aws/aws-sdk-go-v2/service/workspaces/types"
 )
@@ -44,15 +45,15 @@ func (a *adapter) getWorkspaces() ([]workspaces.WorkSpace, error) {
 
 	a.Tracker().SetServiceLabel("Discovering workspaces...")
 
-	var apiSecrets []types.Workspace
+	var apiWorkspaces []types.Workspace
 	var input api.DescribeWorkspacesInput
 	for {
 		output, err := a.api.DescribeWorkspaces(a.Context(), &input)
 		if err != nil {
 			return nil, err
 		}
-		apiSecrets = append(apiSecrets, output.Workspaces...)
-		a.Tracker().SetTotalResources(len(apiSecrets))
+		apiWorkspaces = append(apiWorkspaces, output.Workspaces...)
+		a.Tracker().SetTotalResources(len(apiWorkspaces))
 		if output.NextToken == nil {
 			break
 		}
@@ -60,18 +61,7 @@ func (a *adapter) getWorkspaces() ([]workspaces.WorkSpace, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting workspaces...")
-
-	var spaces []workspaces.WorkSpace
-	for _, apiCluster := range apiSecrets {
-		workspace, err := a.adaptWorkspace(apiCluster)
-		if err != nil {
-			return nil, err
-		}
-		spaces = append(spaces, *workspace)
-		a.Tracker().IncrementResource()
-	}
-
-	return spaces, nil
+	return concurrency.Adapt(apiWorkspaces, a.RootAdapter, a.adaptWorkspace), nil
 }
 
 func (a *adapter) adaptWorkspace(apiWorkspace types.Workspace) (*workspaces.WorkSpace, error) {

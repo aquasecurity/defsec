@@ -125,7 +125,9 @@ func (e *evaluator) loadModuleFromTerraformCache(ctx context.Context, b *terrafo
 	}
 
 	if prefix, relativeDir, ok := strings.Cut(source, "//"); ok && !strings.HasSuffix(prefix, ":") && strings.Count(prefix, "/") == 2 {
-		modulePath = fmt.Sprintf("%s/%s", modulePath, relativeDir)
+		if !strings.HasSuffix(modulePath, relativeDir) {
+			modulePath = fmt.Sprintf("%s/%s", modulePath, relativeDir)
+		}
 	}
 
 	e.debug.Log("Module '%s' resolved to path '%s' in filesystem '%s' using modules.json", b.FullName(), modulePath, e.filesystem)

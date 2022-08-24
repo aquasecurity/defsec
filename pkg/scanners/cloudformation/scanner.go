@@ -8,11 +8,11 @@ import (
 	"sort"
 	"sync"
 
+	"github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/debug"
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
-
-	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 

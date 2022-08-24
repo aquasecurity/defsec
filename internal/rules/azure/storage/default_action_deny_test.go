@@ -3,7 +3,7 @@ package storage
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckDefaultActionDeny(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NetworkRules: []storage.NetworkRule{
 							{
-								Metadata:       types.NewTestMetadata(),
-								AllowByDefault: types.Bool(true, types.NewTestMetadata()),
+								Metadata:       defsecTypes.NewTestMetadata(),
+								AllowByDefault: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,11 +41,11 @@ func TestCheckDefaultActionDeny(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NetworkRules: []storage.NetworkRule{
 							{
-								Metadata:       types.NewTestMetadata(),
-								AllowByDefault: types.Bool(false, types.NewTestMetadata()),
+								Metadata:       defsecTypes.NewTestMetadata(),
+								AllowByDefault: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

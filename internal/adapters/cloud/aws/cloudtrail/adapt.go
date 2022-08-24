@@ -2,9 +2,10 @@ package cloudtrail
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/cloudtrail"
 	"github.com/aws/aws-sdk-go-v2/service/cloudtrail/types"
 )
@@ -60,18 +61,7 @@ func (a *adapter) getTrails() ([]cloudtrail.Trail, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting trails...")
-
-	var trails []cloudtrail.Trail
-	for _, apiDistribution := range apiTrails {
-		trail, err := a.adaptTrail(apiDistribution)
-		if err != nil {
-			return nil, err
-		}
-		trails = append(trails, *trail)
-		a.Tracker().IncrementResource()
-	}
-
-	return trails, nil
+	return concurrency.Adapt(apiTrails, a.RootAdapter, a.adaptTrail), nil
 }
 
 func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
@@ -79,7 +69,7 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 	metadata := a.CreateMetadataFromARN(*info.TrailARN)
 
 	response, err := a.client.GetTrail(a.Context(), &api.GetTrailInput{
-		Name: info.Name,
+		Name: info.TrailARN,
 	})
 	if err != nil {
 		return nil, err
@@ -107,14 +97,24 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		bucketName = *response.Trail.S3BucketName
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if info.Name != nil {
+		name = defsecTypes.String(*info.Name, metadata)
+	}
+
+	isLogging := defsecTypes.BoolDefault(false, metadata)
+	if status.IsLogging != nil {
+		isLogging = defsecTypes.Bool(*status.IsLogging, metadata)
+	}
+
 	return &cloudtrail.Trail{
 		Metadata:                  metadata,
-		Name:                      defsecTypes.String(*info.Name, metadata),
+		Name:                      name,
 		EnableLogFileValidation:   defsecTypes.Bool(response.Trail.LogFileValidationEnabled != nil && *response.Trail.LogFileValidationEnabled, metadata),
 		IsMultiRegion:             defsecTypes.Bool(response.Trail.IsMultiRegionTrail != nil && *response.Trail.IsMultiRegionTrail, metadata),
 		CloudWatchLogsLogGroupArn: cloudWatchLogsArn,
 		KMSKeyID:                  defsecTypes.String(kmsKeyId, metadata),
-		IsLogging:                 defsecTypes.Bool(*status.IsLogging, metadata),
+		IsLogging:                 isLogging,
 		BucketName:                defsecTypes.String(bucketName, metadata),
 	}, nil
 }

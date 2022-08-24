@@ -3,7 +3,8 @@ package iam
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
+	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -33,15 +34,7 @@ func (a *adapter) adaptGroups(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting groups...")
 
-	for _, apiGroup := range nativeGroups {
-		group, err := a.adaptGroup(apiGroup, state)
-		if err != nil {
-			return err
-		}
-		state.AWS.IAM.Groups = append(state.AWS.IAM.Groups, *group)
-		a.Tracker().IncrementResource()
-	}
-
+	state.AWS.IAM.Groups = concurrency.AdaptWithState(nativeGroups, state, a.RootAdapter, a.adaptGroup)
 	return nil
 }
 

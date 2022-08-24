@@ -6,13 +6,13 @@ import (
 	"io/fs"
 	"sync"
 
+	"github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/framework"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
-
-	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aquasecurity/defsec/pkg/rego"
 	"github.com/aquasecurity/defsec/pkg/scanners/json/parser"

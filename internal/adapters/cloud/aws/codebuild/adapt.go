@@ -2,9 +2,10 @@ package codebuild
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/codebuild"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/codebuild"
 )
 
@@ -59,18 +60,7 @@ func (a *adapter) getProjects() ([]codebuild.Project, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting projects...")
-
-	var projects []codebuild.Project
-	for _, projectName := range projectNames {
-		logGroup, err := a.adaptProject(projectName)
-		if err != nil {
-			return nil, err
-		}
-		projects = append(projects, *logGroup)
-		a.Tracker().IncrementResource()
-	}
-
-	return projects, nil
+	return concurrency.Adapt(projectNames, a.RootAdapter, a.adaptProject), nil
 }
 
 func (a *adapter) adaptProject(name string) (*codebuild.Project, error) {

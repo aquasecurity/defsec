@@ -3,7 +3,8 @@ package ec2
 import (
 	"fmt"
 
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 	ec2api "github.com/aws/aws-sdk-go-v2/service/ec2"
@@ -18,7 +19,7 @@ func (a *adapter) getLaunchTemplates() ([]ec2.LaunchTemplate, error) {
 
 	var apiTemplates []types.LaunchTemplate
 	for {
-		output, err := a.api.DescribeLaunchTemplates(a.Context(), &input)
+		output, err := a.client.DescribeLaunchTemplates(a.Context(), &input)
 		if err != nil {
 			return nil, err
 		}
@@ -31,24 +32,12 @@ func (a *adapter) getLaunchTemplates() ([]ec2.LaunchTemplate, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting launch templates...")
-
-	var templates []ec2.LaunchTemplate
-
-	for _, apiTemplate := range apiTemplates {
-		template, err := a.adaptLaunchTemplate(apiTemplate)
-		if err != nil {
-			return nil, err
-		}
-		templates = append(templates, *template)
-		a.Tracker().IncrementResource()
-	}
-
-	return templates, nil
+	return concurrency.Adapt(apiTemplates, a.RootAdapter, a.adaptLaunchTemplate), nil
 }
 
 func (a *adapter) adaptLaunchTemplate(template types.LaunchTemplate) (*ec2.LaunchTemplate, error) {
 
-	metadata := a.CreateMetadataFromARN(*template.LaunchTemplateId)
+	metadata := a.CreateMetadata("launch-template/" + *template.LaunchTemplateId)
 
 	var version string
 	if template.DefaultVersionNumber != nil {
@@ -57,7 +46,7 @@ func (a *adapter) adaptLaunchTemplate(template types.LaunchTemplate) (*ec2.Launc
 		version = fmt.Sprintf("%d", *template.LatestVersionNumber)
 	}
 
-	output, err := a.api.DescribeLaunchTemplateVersions(a.Context(), &ec2api.DescribeLaunchTemplateVersionsInput{
+	output, err := a.client.DescribeLaunchTemplateVersions(a.Context(), &ec2api.DescribeLaunchTemplateVersionsInput{
 		LaunchTemplateId: template.LaunchTemplateId,
 		Versions:         []string{version},
 	})
@@ -92,6 +81,6 @@ func (a *adapter) adaptLaunchTemplate(template types.LaunchTemplate) (*ec2.Launc
 
 	return &ec2.LaunchTemplate{
 		Metadata: metadata,
-		Instance: instance,
+		Instance: *instance,
 	}, nil
 }

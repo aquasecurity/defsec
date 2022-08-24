@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -26,10 +26,10 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 			input: iam.IAM{
 				Roles: []iam.Role{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Policies: []iam.Policy{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Document: func() iam.Document {
 
 									builder := iamgo.NewPolicyBuilder()
@@ -46,9 +46,10 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 
 									return iam.Document{
 										Parsed:   builder.Build(),
-										Metadata: types.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 									}
 								}(),
+								Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -57,11 +58,47 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 			expected: true,
 		},
 		{
+			name: "Builtin IAM policy with wildcard resource",
+			input: iam.IAM{
+				Roles: []iam.Role{
+					{
+						Metadata: defsecTypes.NewTestMetadata(),
+						Policies: []iam.Policy{
+							{
+								Metadata: defsecTypes.NewTestMetadata(),
+								Document: func() iam.Document {
+
+									builder := iamgo.NewPolicyBuilder()
+									builder.WithVersion("2012-10-17")
+
+									sb := iamgo.NewStatementBuilder()
+									sb.WithSid("ListYourObjects")
+									sb.WithEffect(iamgo.EffectAllow)
+									sb.WithActions([]string{"s3:ListBucket"})
+									sb.WithResources([]string{"arn:aws:s3:::*"})
+									sb.WithAWSPrincipals([]string{"arn:aws:iam::1234567890:root"})
+
+									builder.WithStatement(sb.Build())
+
+									return iam.Document{
+										Parsed:   builder.Build(),
+										Metadata: defsecTypes.NewTestMetadata(),
+									}
+								}(),
+								Builtin: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
 			name: "IAM policy with wildcard action",
 			input: iam.IAM{
 				Policies: []iam.Policy{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Document: func() iam.Document {
 
 							builder := iamgo.NewPolicyBuilder()
@@ -78,9 +115,10 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 
 							return iam.Document{
 								Parsed:   builder.Build(),
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 							}
 						}(),
+						Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -91,7 +129,7 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 			input: iam.IAM{
 				Policies: []iam.Policy{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Document: func() iam.Document {
 
 							builder := iamgo.NewPolicyBuilder()
@@ -107,17 +145,18 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 
 							return iam.Document{
 								Parsed:   builder.Build(),
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 							}
 						}(),
+						Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 				Roles: []iam.Role{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Policies: []iam.Policy{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Document: func() iam.Document {
 
 									builder := iamgo.NewPolicyBuilder()
@@ -132,9 +171,10 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 
 									return iam.Document{
 										Parsed:   builder.Build(),
-										Metadata: types.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 									}
 								}(),
+								Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

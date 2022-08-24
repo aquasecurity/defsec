@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNoIpForwarding(t *testing.T) {
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
-						Metadata:     types.NewTestMetadata(),
-						CanIPForward: types.Bool(true, types.NewTestMetadata()),
+						Metadata:     defsecTypes.NewTestMetadata(),
+						CanIPForward: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckNoIpForwarding(t *testing.T) {
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
-						Metadata:     types.NewTestMetadata(),
-						CanIPForward: types.Bool(false, types.NewTestMetadata()),
+						Metadata:     defsecTypes.NewTestMetadata(),
+						CanIPForward: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

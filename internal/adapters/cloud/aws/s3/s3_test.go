@@ -87,7 +87,7 @@ func Test_S3BucketACLs(t *testing.T) {
 			err = s3Adapter.Adapt(ra, testState)
 			require.NoError(t, err)
 
-			assert.Len(t, testState.AWS.S3.Buckets, 2)
+			require.Len(t, testState.AWS.S3.Buckets, 2)
 			var got s3.Bucket
 			for _, b := range testState.AWS.S3.Buckets {
 				if b.Name.Value() == tt.details.bucketName {

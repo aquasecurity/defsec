@@ -3,7 +3,7 @@ package neptune
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableStorageEncryption(t *testing.T) {
 			input: neptune.Neptune{
 				Clusters: []neptune.Cluster{
 					{
-						Metadata:         types.NewTestMetadata(),
-						StorageEncrypted: types.Bool(false, types.NewTestMetadata()),
+						Metadata:         defsecTypes.NewTestMetadata(),
+						StorageEncrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableStorageEncryption(t *testing.T) {
 			input: neptune.Neptune{
 				Clusters: []neptune.Cluster{
 					{
-						Metadata:         types.NewTestMetadata(),
-						StorageEncrypted: types.Bool(true, types.NewTestMetadata()),
+						Metadata:         defsecTypes.NewTestMetadata(),
+						StorageEncrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

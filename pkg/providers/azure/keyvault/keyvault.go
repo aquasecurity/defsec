@@ -1,7 +1,7 @@
 package keyvault
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type KeyVault struct {
@@ -9,26 +9,26 @@ type KeyVault struct {
 }
 
 type Vault struct {
-	types.Metadata
+	defsecTypes.Metadata
 	Secrets                 []Secret
 	Keys                    []Key
-	EnablePurgeProtection   types.BoolValue
-	SoftDeleteRetentionDays types.IntValue
+	EnablePurgeProtection   defsecTypes.BoolValue
+	SoftDeleteRetentionDays defsecTypes.IntValue
 	NetworkACLs             NetworkACLs
 }
 
 type NetworkACLs struct {
-	types.Metadata
-	DefaultAction types.StringValue
+	defsecTypes.Metadata
+	DefaultAction defsecTypes.StringValue
 }
 
 type Key struct {
-	types.Metadata
-	ExpiryDate types.TimeValue
+	defsecTypes.Metadata
+	ExpiryDate defsecTypes.TimeValue
 }
 
 type Secret struct {
-	types.Metadata
-	ContentType types.StringValue
-	ExpiryDate  types.TimeValue
+	defsecTypes.Metadata
+	ContentType defsecTypes.StringValue
+	ExpiryDate  defsecTypes.TimeValue
 }

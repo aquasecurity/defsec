@@ -3,7 +3,7 @@ package cloudfront
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableLogging(t *testing.T) {
 			input: cloudfront.Cloudfront{
 				Distributions: []cloudfront.Distribution{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Logging: cloudfront.Logging{
-							Metadata: types.NewTestMetadata(),
-							Bucket:   types.String("", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Bucket:   defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableLogging(t *testing.T) {
 			input: cloudfront.Cloudfront{
 				Distributions: []cloudfront.Distribution{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Logging: cloudfront.Logging{
-							Metadata: types.NewTestMetadata(),
-							Bucket:   types.String("mylogs.s3.amazonaws.com", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Bucket:   defsecTypes.String("mylogs.s3.amazonaws.com", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

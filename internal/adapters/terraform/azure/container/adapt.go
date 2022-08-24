@@ -1,9 +1,9 @@
 package container
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/container"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) container.Container {
@@ -29,19 +29,19 @@ func adaptCluster(resource *terraform.Block) container.KubernetesCluster {
 		Metadata: resource.GetMetadata(),
 		NetworkProfile: container.NetworkProfile{
 			Metadata:      resource.GetMetadata(),
-			NetworkPolicy: types.StringDefault("", resource.GetMetadata()),
+			NetworkPolicy: defsecTypes.StringDefault("", resource.GetMetadata()),
 		},
-		EnablePrivateCluster:        types.BoolDefault(false, resource.GetMetadata()),
+		EnablePrivateCluster:        defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		APIServerAuthorizedIPRanges: nil,
 		RoleBasedAccessControl: container.RoleBasedAccessControl{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
+			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		},
 		AddonProfile: container.AddonProfile{
 			Metadata: resource.GetMetadata(),
 			OMSAgent: container.OMSAgent{
 				Metadata: resource.GetMetadata(),
-				Enabled:  types.BoolDefault(false, resource.GetMetadata()),
+				Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 			},
 		},
 	}
@@ -73,7 +73,7 @@ func adaptCluster(resource *terraform.Block) container.KubernetesCluster {
 	// >= azurerm 2.97.0
 	if omsAgentBlock := resource.GetBlock("oms_agent"); omsAgentBlock.IsNotNil() {
 		cluster.AddonProfile.OMSAgent.Metadata = omsAgentBlock.GetMetadata()
-		cluster.AddonProfile.OMSAgent.Enabled = types.Bool(true, omsAgentBlock.GetMetadata())
+		cluster.AddonProfile.OMSAgent.Enabled = defsecTypes.Bool(true, omsAgentBlock.GetMetadata())
 	}
 
 	// azurerm < 2.99.0
@@ -94,8 +94,10 @@ func adaptCluster(resource *terraform.Block) container.KubernetesCluster {
 		azureRoleBasedAccessControl := resource.GetBlock("azure_active_directory_role_based_access_control")
 		if azureRoleBasedAccessControl.IsNotNil() {
 			enabledAttr := azureRoleBasedAccessControl.GetAttribute("azure_rbac_enabled")
-			cluster.RoleBasedAccessControl.Metadata = azureRoleBasedAccessControl.GetMetadata()
-			cluster.RoleBasedAccessControl.Enabled = enabledAttr.AsBoolValueOrDefault(false, azureRoleBasedAccessControl)
+			if !cluster.RoleBasedAccessControl.Enabled.IsTrue() {
+				cluster.RoleBasedAccessControl.Metadata = azureRoleBasedAccessControl.GetMetadata()
+				cluster.RoleBasedAccessControl.Enabled = enabledAttr.AsBoolValueOrDefault(false, azureRoleBasedAccessControl)
+			}
 		}
 	}
 	return cluster

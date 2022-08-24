@@ -3,15 +3,16 @@ package api_gateway
 import (
 	"fmt"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 
-	"github.com/aquasecurity/defsec/internal/types"
 	api "github.com/aws/aws-sdk-go-v2/service/apigateway"
 	agTypes "github.com/aws/aws-sdk-go-v2/service/apigateway/types"
 )
 
 func (a *adapter) getAPIsV1() ([]v1.API, error) {
-	var adapted []v1.API
 
 	a.Tracker().SetServiceLabel("Discovering v1 APIs...")
 
@@ -32,16 +33,7 @@ func (a *adapter) getAPIsV1() ([]v1.API, error) {
 
 	a.Tracker().SetServiceLabel("Adapting v1 APIs...")
 
-	for _, restAPI := range apiRestApis {
-		adaptedAPI, err := a.adaptRestAPIV1(restAPI)
-		if err != nil {
-			return nil, err
-		}
-		adapted = append(adapted, *adaptedAPI)
-		a.Tracker().IncrementResource()
-	}
-
-	return adapted, nil
+	return concurrency.Adapt(apiRestApis, a.RootAdapter, a.adaptRestAPIV1), nil
 }
 
 func (a *adapter) adaptRestAPIV1(restAPI agTypes.RestApi) (*v1.API, error) {
@@ -80,9 +72,14 @@ func (a *adapter) adaptRestAPIV1(restAPI agTypes.RestApi) (*v1.API, error) {
 		resourcesInput.Position = resourcesOutput.Position
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if restAPI.Name != nil {
+		name = defsecTypes.String(*restAPI.Name, metadata)
+	}
+
 	return &v1.API{
 		Metadata:  metadata,
-		Name:      types.String(*restAPI.Name, metadata),
+		Name:      name,
 		Stages:    stages,
 		Resources: resources,
 	}, nil
@@ -100,21 +97,26 @@ func (a *adapter) adaptStageV1(restAPI agTypes.RestApi, stage agTypes.Stage) v1.
 	for method, setting := range stage.MethodSettings {
 		methodSettings = append(methodSettings, v1.RESTMethodSettings{
 			Metadata:           metadata,
-			Method:             types.String(method, metadata),
-			CacheDataEncrypted: types.Bool(setting.CacheDataEncrypted, metadata),
-			CacheEnabled:       types.Bool(setting.CachingEnabled, metadata),
+			Method:             defsecTypes.String(method, metadata),
+			CacheDataEncrypted: defsecTypes.Bool(setting.CacheDataEncrypted, metadata),
+			CacheEnabled:       defsecTypes.Bool(setting.CachingEnabled, metadata),
 		})
+	}
+
+	name := defsecTypes.StringDefault("", metadata)
+	if stage.StageName != nil {
+		name = defsecTypes.String(*stage.StageName, metadata)
 	}
 
 	return v1.Stage{
 		Metadata: metadata,
-		Name:     types.String(*stage.StageName, metadata),
+		Name:     name,
 		AccessLogging: v1.AccessLogging{
 			Metadata:              metadata,
-			CloudwatchLogGroupARN: types.String(logARN, metadata),
+			CloudwatchLogGroupARN: defsecTypes.String(logARN, metadata),
 		},
 		RESTMethodSettings: methodSettings,
-		XRayTracingEnabled: types.Bool(stage.TracingEnabled, metadata),
+		XRayTracingEnabled: defsecTypes.Bool(stage.TracingEnabled, metadata),
 	}
 }
 
@@ -129,11 +131,23 @@ func (a *adapter) adaptResourceV1(restAPI agTypes.RestApi, apiResource agTypes.R
 
 	for _, method := range apiResource.ResourceMethods {
 		metadata := a.CreateMetadata(fmt.Sprintf("/restapis/%s/resources/%s/methods/%s", *restAPI.Id, *apiResource.Id, *method.HttpMethod))
+		httpMethod := defsecTypes.StringDefault("", metadata)
+		if method.HttpMethod != nil {
+			httpMethod = defsecTypes.String(*method.HttpMethod, metadata)
+		}
+		authType := defsecTypes.StringDefault("", metadata)
+		if method.AuthorizationType != nil {
+			authType = defsecTypes.String(*method.AuthorizationType, metadata)
+		}
+		keyRequired := defsecTypes.BoolDefault(false, metadata)
+		if method.ApiKeyRequired != nil {
+			keyRequired = defsecTypes.Bool(*method.ApiKeyRequired, metadata)
+		}
 		resource.Methods = append(resource.Methods, v1.Method{
 			Metadata:          metadata,
-			HTTPMethod:        types.String(*method.HttpMethod, metadata),
-			AuthorizationType: types.String(*method.AuthorizationType, metadata),
-			APIKeyRequired:    types.Bool(*method.ApiKeyRequired, metadata),
+			HTTPMethod:        httpMethod,
+			AuthorizationType: authType,
+			APIKeyRequired:    keyRequired,
 		})
 	}
 

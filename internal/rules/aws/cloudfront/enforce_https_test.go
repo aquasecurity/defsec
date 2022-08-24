@@ -3,7 +3,7 @@ package cloudfront
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnforceHttps(t *testing.T) {
 			input: cloudfront.Cloudfront{
 				Distributions: []cloudfront.Distribution{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						DefaultCacheBehaviour: cloudfront.CacheBehaviour{
-							Metadata:             types.NewTestMetadata(),
-							ViewerProtocolPolicy: types.String(cloudfront.ViewerPolicyProtocolAllowAll, types.NewTestMetadata()),
+							Metadata:             defsecTypes.NewTestMetadata(),
+							ViewerProtocolPolicy: defsecTypes.String(cloudfront.ViewerPolicyProtocolAllowAll, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,15 +39,15 @@ func TestCheckEnforceHttps(t *testing.T) {
 			input: cloudfront.Cloudfront{
 				Distributions: []cloudfront.Distribution{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						DefaultCacheBehaviour: cloudfront.CacheBehaviour{
-							Metadata:             types.NewTestMetadata(),
-							ViewerProtocolPolicy: types.String(cloudfront.ViewerPolicyProtocolHTTPSOnly, types.NewTestMetadata()),
+							Metadata:             defsecTypes.NewTestMetadata(),
+							ViewerProtocolPolicy: defsecTypes.String(cloudfront.ViewerPolicyProtocolHTTPSOnly, defsecTypes.NewTestMetadata()),
 						},
 						OrdererCacheBehaviours: []cloudfront.CacheBehaviour{
 							{
-								Metadata:             types.NewTestMetadata(),
-								ViewerProtocolPolicy: types.String(cloudfront.ViewerPolicyProtocolAllowAll, types.NewTestMetadata()),
+								Metadata:             defsecTypes.NewTestMetadata(),
+								ViewerProtocolPolicy: defsecTypes.String(cloudfront.ViewerPolicyProtocolAllowAll, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -60,15 +60,15 @@ func TestCheckEnforceHttps(t *testing.T) {
 			input: cloudfront.Cloudfront{
 				Distributions: []cloudfront.Distribution{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						DefaultCacheBehaviour: cloudfront.CacheBehaviour{
-							Metadata:             types.NewTestMetadata(),
-							ViewerProtocolPolicy: types.String(cloudfront.ViewerPolicyProtocolHTTPSOnly, types.NewTestMetadata()),
+							Metadata:             defsecTypes.NewTestMetadata(),
+							ViewerProtocolPolicy: defsecTypes.String(cloudfront.ViewerPolicyProtocolHTTPSOnly, defsecTypes.NewTestMetadata()),
 						},
 						OrdererCacheBehaviours: []cloudfront.CacheBehaviour{
 							{
-								Metadata:             types.NewTestMetadata(),
-								ViewerProtocolPolicy: types.String(cloudfront.ViewerPolicyProtocolHTTPSOnly, types.NewTestMetadata()),
+								Metadata:             defsecTypes.NewTestMetadata(),
+								ViewerProtocolPolicy: defsecTypes.String(cloudfront.ViewerPolicyProtocolHTTPSOnly, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

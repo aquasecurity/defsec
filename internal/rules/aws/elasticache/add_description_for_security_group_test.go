@@ -3,7 +3,7 @@ package elasticache
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckAddDescriptionForSecurityGroup(t *testing.T) {
 			input: elasticache.ElastiCache{
 				SecurityGroups: []elasticache.SecurityGroup{
 					{
-						Metadata:    types.NewTestMetadata(),
-						Description: types.String("", types.NewTestMetadata()),
+						Metadata:    defsecTypes.NewTestMetadata(),
+						Description: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckAddDescriptionForSecurityGroup(t *testing.T) {
 			input: elasticache.ElastiCache{
 				SecurityGroups: []elasticache.SecurityGroup{
 					{
-						Metadata:    types.NewTestMetadata(),
-						Description: types.String("some decent description", types.NewTestMetadata()),
+						Metadata:    defsecTypes.NewTestMetadata(),
+						Description: defsecTypes.String("some decent description", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

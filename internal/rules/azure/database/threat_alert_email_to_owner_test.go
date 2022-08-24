@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckThreatAlertEmailToOwner(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						SecurityAlertPolicies: []database.SecurityAlertPolicy{
 							{
-								Metadata:           types.NewTestMetadata(),
-								EmailAccountAdmins: types.Bool(false, types.NewTestMetadata()),
+								Metadata:           defsecTypes.NewTestMetadata(),
+								EmailAccountAdmins: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,11 +41,11 @@ func TestCheckThreatAlertEmailToOwner(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						SecurityAlertPolicies: []database.SecurityAlertPolicy{
 							{
-								Metadata:           types.NewTestMetadata(),
-								EmailAccountAdmins: types.Bool(true, types.NewTestMetadata()),
+								Metadata:           defsecTypes.NewTestMetadata(),
+								EmailAccountAdmins: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

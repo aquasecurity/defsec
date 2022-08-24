@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,7 +24,7 @@ func TestCheckEnableAudit(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata:                 types.NewTestMetadata(),
+						Metadata:                 defsecTypes.NewTestMetadata(),
 						ExtendedAuditingPolicies: []database.ExtendedAuditingPolicy{},
 					},
 				},
@@ -36,11 +36,11 @@ func TestCheckEnableAudit(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ExtendedAuditingPolicies: []database.ExtendedAuditingPolicy{
 							{
-								Metadata:        types.NewTestMetadata(),
-								RetentionInDays: types.Int(6, types.NewTestMetadata()),
+								Metadata:        defsecTypes.NewTestMetadata(),
+								RetentionInDays: defsecTypes.Int(6, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

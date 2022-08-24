@@ -3,7 +3,7 @@ package sqs
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckEnableQueueEncryption(t *testing.T) {
 			input: sqs.SQS{
 				Queues: []sqs.Queue{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: sqs.Encryption{
-							Metadata:          types.NewTestMetadata(),
-							ManagedEncryption: types.Bool(false, types.NewTestMetadata()),
-							KMSKeyID:          types.String("", types.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							ManagedEncryption: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							KMSKeyID:          defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckEnableQueueEncryption(t *testing.T) {
 			input: sqs.SQS{
 				Queues: []sqs.Queue{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: sqs.Encryption{
-							Metadata:          types.NewTestMetadata(),
-							ManagedEncryption: types.Bool(false, types.NewTestMetadata()),
-							KMSKeyID:          types.String("alias/aws/sqs", types.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							ManagedEncryption: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							KMSKeyID:          defsecTypes.String("alias/aws/sqs", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -56,11 +56,11 @@ func TestCheckEnableQueueEncryption(t *testing.T) {
 			input: sqs.SQS{
 				Queues: []sqs.Queue{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: sqs.Encryption{
-							Metadata:          types.NewTestMetadata(),
-							ManagedEncryption: types.Bool(false, types.NewTestMetadata()),
-							KMSKeyID:          types.String("some-ok-key", types.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							ManagedEncryption: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							KMSKeyID:          defsecTypes.String("some-ok-key", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -72,11 +72,11 @@ func TestCheckEnableQueueEncryption(t *testing.T) {
 			input: sqs.SQS{
 				Queues: []sqs.Queue{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Encryption: sqs.Encryption{
-							Metadata:          types.NewTestMetadata(),
-							ManagedEncryption: types.Bool(true, types.NewTestMetadata()),
-							KMSKeyID:          types.String("", types.NewTestMetadata()),
+							Metadata:          defsecTypes.NewTestMetadata(),
+							ManagedEncryption: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							KMSKeyID:          defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

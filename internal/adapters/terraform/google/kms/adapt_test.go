@@ -3,7 +3,7 @@ package kms
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/google/kms"
 
@@ -35,11 +35,11 @@ func Test_adaptKeyRings(t *testing.T) {
 `,
 			expected: []kms.KeyRing{
 				{
-					Metadata: types.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					Keys: []kms.Key{
 						{
-							Metadata:              types.NewTestMetadata(),
-							RotationPeriodSeconds: types.Int(7776000, types.NewTestMetadata()),
+							Metadata:              defsecTypes.NewTestMetadata(),
+							RotationPeriodSeconds: defsecTypes.Int(7776000, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -55,7 +55,7 @@ func Test_adaptKeyRings(t *testing.T) {
 `,
 			expected: []kms.KeyRing{
 				{
-					Metadata: types.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 				},
 			},
 		},
@@ -73,11 +73,11 @@ func Test_adaptKeyRings(t *testing.T) {
 `,
 			expected: []kms.KeyRing{
 				{
-					Metadata: types.NewTestMetadata(),
+					Metadata: defsecTypes.NewTestMetadata(),
 					Keys: []kms.Key{
 						{
-							Metadata:              types.NewTestMetadata(),
-							RotationPeriodSeconds: types.Int(-1, types.NewTestMetadata()),
+							Metadata:              defsecTypes.NewTestMetadata(),
+							RotationPeriodSeconds: defsecTypes.Int(-1, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

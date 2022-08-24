@@ -3,7 +3,7 @@ package sam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableStateMachineLogging(t *testing.T) {
 			input: sam.SAM{
 				StateMachines: []sam.StateMachine{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						LoggingConfiguration: sam.LoggingConfiguration{
-							Metadata:       types.NewTestMetadata(),
-							LoggingEnabled: types.Bool(false, types.NewTestMetadata()),
+							Metadata:       defsecTypes.NewTestMetadata(),
+							LoggingEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableStateMachineLogging(t *testing.T) {
 			input: sam.SAM{
 				StateMachines: []sam.StateMachine{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						LoggingConfiguration: sam.LoggingConfiguration{
-							Metadata:       types.NewTestMetadata(),
-							LoggingEnabled: types.Bool(true, types.NewTestMetadata()),
+							Metadata:       defsecTypes.NewTestMetadata(),
+							LoggingEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

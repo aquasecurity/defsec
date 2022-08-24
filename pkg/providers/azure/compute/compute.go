@@ -1,7 +1,7 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Compute struct {
@@ -11,32 +11,32 @@ type Compute struct {
 }
 
 type VirtualMachine struct {
-	types.Metadata
-	CustomData types.StringValue // NOT base64 encoded
+	defsecTypes.Metadata
+	CustomData defsecTypes.StringValue // NOT base64 encoded
 }
 
 type LinuxVirtualMachine struct {
-	types.Metadata
+	defsecTypes.Metadata
 	VirtualMachine
 	OSProfileLinuxConfig OSProfileLinuxConfig
 }
 
 type WindowsVirtualMachine struct {
-	types.Metadata
+	defsecTypes.Metadata
 	VirtualMachine
 }
 
 type OSProfileLinuxConfig struct {
-	types.Metadata
-	DisablePasswordAuthentication types.BoolValue
+	defsecTypes.Metadata
+	DisablePasswordAuthentication defsecTypes.BoolValue
 }
 
 type ManagedDisk struct {
-	types.Metadata
+	defsecTypes.Metadata
 	Encryption Encryption
 }
 
 type Encryption struct {
-	types.Metadata
-	Enabled types.BoolValue
+	defsecTypes.Metadata
+	Enabled defsecTypes.BoolValue
 }

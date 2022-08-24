@@ -2,9 +2,10 @@ package elb
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elb"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 	"github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2/types"
 )
@@ -60,18 +61,7 @@ func (a *adapter) getLoadBalancers() ([]elb.LoadBalancer, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting load balancers...")
-
-	var loadBalancers []elb.LoadBalancer
-	for _, apiLoadBalancer := range apiLoadBalancers {
-		loadBalancer, err := a.adaptLoadBalancer(apiLoadBalancer)
-		if err != nil {
-			return nil, err
-		}
-		loadBalancers = append(loadBalancers, *loadBalancer)
-		a.Tracker().IncrementResource()
-	}
-
-	return loadBalancers, nil
+	return concurrency.Adapt(apiLoadBalancers, a.RootAdapter, a.adaptLoadBalancer), nil
 }
 
 func (a *adapter) adaptLoadBalancer(apiLoadBalancer types.LoadBalancer) (*elb.LoadBalancer, error) {
@@ -115,10 +105,15 @@ func (a *adapter) adaptLoadBalancer(apiLoadBalancer types.LoadBalancer) (*elb.Lo
 					})
 				}
 
+				sslPolicy := defsecTypes.StringDefault("", metadata)
+				if listener.SslPolicy != nil {
+					sslPolicy = defsecTypes.String(*listener.SslPolicy, metadata)
+				}
+
 				listeners = append(listeners, elb.Listener{
 					Metadata:       metadata,
 					Protocol:       defsecTypes.String(string(listener.Protocol), metadata),
-					TLSPolicy:      defsecTypes.String(*listener.SslPolicy, metadata),
+					TLSPolicy:      sslPolicy,
 					DefaultActions: actions,
 				})
 			}

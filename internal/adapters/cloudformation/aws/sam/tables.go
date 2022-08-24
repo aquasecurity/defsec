@@ -1,9 +1,9 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sam"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getSimpleTables(cfFile parser.FileContext) (tables []sam.SimpleTable) {
@@ -26,8 +26,8 @@ func getSSESpecification(r *parser.Resource) sam.SSESpecification {
 
 	spec := sam.SSESpecification{
 		Metadata:       r.Metadata(),
-		Enabled:        types.BoolDefault(false, r.Metadata()),
-		KMSMasterKeyID: types.StringDefault("", r.Metadata()),
+		Enabled:        defsecTypes.BoolDefault(false, r.Metadata()),
+		KMSMasterKeyID: defsecTypes.StringDefault("", r.Metadata()),
 	}
 
 	if sse := r.GetProperty("SSESpecification"); sse.IsNotNil() {

@@ -1,7 +1,7 @@
 package eks
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type EKS struct {
@@ -9,24 +9,24 @@ type EKS struct {
 }
 
 type Cluster struct {
-	types.Metadata
+	defsecTypes.Metadata
 	Logging             Logging
 	Encryption          Encryption
-	PublicAccessEnabled types.BoolValue
-	PublicAccessCIDRs   []types.StringValue
+	PublicAccessEnabled defsecTypes.BoolValue
+	PublicAccessCIDRs   []defsecTypes.StringValue
 }
 
 type Logging struct {
-	types.Metadata
-	API               types.BoolValue
-	Audit             types.BoolValue
-	Authenticator     types.BoolValue
-	ControllerManager types.BoolValue
-	Scheduler         types.BoolValue
+	defsecTypes.Metadata
+	API               defsecTypes.BoolValue
+	Audit             defsecTypes.BoolValue
+	Authenticator     defsecTypes.BoolValue
+	ControllerManager defsecTypes.BoolValue
+	Scheduler         defsecTypes.BoolValue
 }
 
 type Encryption struct {
-	types.Metadata
-	Secrets  types.BoolValue
-	KMSKeyID types.StringValue
+	defsecTypes.Metadata
+	Secrets  defsecTypes.BoolValue
+	KMSKeyID defsecTypes.StringValue
 }

@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckSecurityGroupHasDescription(t *testing.T) {
 			input: openstack.Networking{
 				SecurityGroups: []openstack.SecurityGroup{
 					{
-						Metadata:    types.NewTestMetadata(),
-						Description: types.String("", types.NewTestMetadata()),
+						Metadata:    defsecTypes.NewTestMetadata(),
+						Description: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckSecurityGroupHasDescription(t *testing.T) {
 			input: openstack.Networking{
 				SecurityGroups: []openstack.SecurityGroup{
 					{
-						Metadata:    types.NewTestMetadata(),
-						Description: types.String("this is for connecting to the database", types.NewTestMetadata()),
+						Metadata:    defsecTypes.NewTestMetadata(),
+						Description: defsecTypes.String("this is for connecting to the database", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

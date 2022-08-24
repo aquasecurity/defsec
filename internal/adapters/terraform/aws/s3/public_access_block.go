@@ -18,7 +18,6 @@ func (a *adapter) adaptPublicAccessBlocks() {
 
 		var bucketName string
 		bucketAttr := b.GetAttribute("bucket")
-
 		if bucketAttr.IsNotNil() {
 			if referencedBlock, err := a.modules.GetReferencedBlock(bucketAttr, b); err == nil {
 				if bucket, ok := a.bucketMap[referencedBlock.ID()]; ok {
@@ -28,14 +27,13 @@ func (a *adapter) adaptPublicAccessBlocks() {
 				}
 			}
 		}
-
 		if bucketAttr.IsString() {
 			bucketName = bucketAttr.Value().AsString()
 			for id, bucket := range a.bucketMap {
 				if bucketAttr.Equals(id) || bucket.Name.EqualTo(bucketName) {
 					bucket.PublicAccessBlock = &pba
 					a.bucketMap[id] = bucket
-					break
+					continue
 				}
 			}
 		}

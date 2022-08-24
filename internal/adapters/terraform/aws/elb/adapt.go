@@ -1,9 +1,9 @@
 package elb
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elb"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) elb.ELB {
@@ -36,10 +36,10 @@ func (a *adapter) adaptLoadBalancers(modules terraform.Modules) []elb.LoadBalanc
 	orphanResources := modules.GetResourceByIDs(a.listenerIDs.Orphans()...)
 	if len(orphanResources) > 0 {
 		orphanage := elb.LoadBalancer{
-			Metadata:                types.NewUnmanagedMetadata(),
-			Type:                    types.StringDefault(elb.TypeApplication, types.NewUnmanagedMetadata()),
-			DropInvalidHeaderFields: types.BoolDefault(false, types.NewUnmanagedMetadata()),
-			Internal:                types.BoolDefault(false, types.NewUnmanagedMetadata()),
+			Metadata:                defsecTypes.NewUnmanagedMetadata(),
+			Type:                    defsecTypes.StringDefault(elb.TypeApplication, defsecTypes.NewUnmanagedMetadata()),
+			DropInvalidHeaderFields: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+			Internal:                defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 			Listeners:               nil,
 		}
 		for _, listenerResource := range orphanResources {
@@ -85,8 +85,8 @@ func (a *adapter) adaptClassicLoadBalancer(resource *terraform.Block, module ter
 
 	return elb.LoadBalancer{
 		Metadata:                resource.GetMetadata(),
-		Type:                    types.String("classic", resource.GetMetadata()),
-		DropInvalidHeaderFields: types.BoolDefault(false, resource.GetMetadata()),
+		Type:                    defsecTypes.String("classic", resource.GetMetadata()),
+		DropInvalidHeaderFields: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		Internal:                internalVal,
 		Listeners:               nil,
 	}
@@ -95,8 +95,8 @@ func (a *adapter) adaptClassicLoadBalancer(resource *terraform.Block, module ter
 func adaptListener(listenerBlock *terraform.Block, typeVal string) elb.Listener {
 	listener := elb.Listener{
 		Metadata:       listenerBlock.GetMetadata(),
-		Protocol:       types.StringDefault("", listenerBlock.GetMetadata()),
-		TLSPolicy:      types.StringDefault("", listenerBlock.GetMetadata()),
+		Protocol:       defsecTypes.StringDefault("", listenerBlock.GetMetadata()),
+		TLSPolicy:      defsecTypes.StringDefault("", listenerBlock.GetMetadata()),
 		DefaultActions: nil,
 	}
 

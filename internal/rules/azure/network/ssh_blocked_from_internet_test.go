@@ -3,7 +3,7 @@ package network
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,23 +24,23 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Allow:    types.Bool(true, types.NewTestMetadata()),
-								Outbound: types.Bool(false, types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Allow:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								Outbound: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								DestinationPorts: []network.PortRange{
 									{
-										Metadata: types.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Start:    22,
 										End:      22,
 									},
 								},
-								SourceAddresses: []types.StringValue{
-									types.String("*", types.NewTestMetadata()),
+								SourceAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("*", defsecTypes.NewTestMetadata()),
 								},
-								Protocol: types.String("Tcp", types.NewTestMetadata()),
+								Protocol: defsecTypes.String("Tcp", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -53,23 +53,23 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Allow:    types.Bool(true, types.NewTestMetadata()),
-								Outbound: types.Bool(false, types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Allow:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								Outbound: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								DestinationPorts: []network.PortRange{
 									{
-										Metadata: types.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Start:    22,
 										End:      22,
 									},
 								},
-								SourceAddresses: []types.StringValue{
-									types.String("*", types.NewTestMetadata()),
+								SourceAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("*", defsecTypes.NewTestMetadata()),
 								},
-								Protocol: types.String("Icmp", types.NewTestMetadata()),
+								Protocol: defsecTypes.String("Icmp", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -82,23 +82,23 @@ func TestCheckSshBlockedFromInternet(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Allow:    types.Bool(true, types.NewTestMetadata()),
-								Outbound: types.Bool(false, types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Allow:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								Outbound: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								DestinationPorts: []network.PortRange{
 									{
-										Metadata: types.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Start:    22,
 										End:      22,
 									},
 								},
-								SourceAddresses: []types.StringValue{
-									types.String("82.102.23.23", types.NewTestMetadata()),
+								SourceAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("82.102.23.23", defsecTypes.NewTestMetadata()),
 								},
-								Protocol: types.String("Tcp", types.NewTestMetadata()),
+								Protocol: defsecTypes.String("Tcp", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

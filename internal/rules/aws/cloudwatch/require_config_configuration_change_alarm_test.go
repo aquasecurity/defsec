@@ -3,7 +3,8 @@ package cloudwatch
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -23,36 +24,36 @@ func TestCheckConfigConfigurationChangeAlarm(t *testing.T) {
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						CloudWatchLogsLogGroupArn: types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
-						IsLogging:                 types.Bool(true, types.NewTestMetadata()),
-						IsMultiRegion:             types.Bool(true, types.NewTestMetadata()),
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
+						IsLogging:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						IsMultiRegion:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
 			cloudwatch: cloudwatch.CloudWatch{
 				LogGroups: []cloudwatch.LogGroup{
 					{
-						Metadata: types.NewTestMetadata(),
-						Arn:      types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Arn:      defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
 						MetricFilters: []cloudwatch.MetricFilter{
 							{
-								Metadata:      types.NewTestMetadata(),
-								FilterName:    types.String("ConfigConfigurationChange", types.NewTestMetadata()),
-								FilterPattern: types.String(`{($.eventSource=config.amazonaws.com) && (($.eventName=StopConfigurationRecorder) || ($.eventName=DeleteDeliveryChannel) || ($.eventName=PutDeliveryChannel) || ($.eventName=PutConfigurationRecorder))}`, types.NewTestMetadata()),
+								Metadata:      defsecTypes.NewTestMetadata(),
+								FilterName:    defsecTypes.String("ConfigConfigurationChange", defsecTypes.NewTestMetadata()),
+								FilterPattern: defsecTypes.String(`{($.eventSource=config.amazonaws.com) && (($.eventName=StopConfigurationRecorder) || ($.eventName=DeleteDeliveryChannel) || ($.eventName=PutDeliveryChannel) || ($.eventName=PutConfigurationRecorder))}`, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
 				},
 				Alarms: []cloudwatch.Alarm{
 					{
-						Metadata:   types.NewTestMetadata(),
-						AlarmName:  types.String("ConfigConfigurationChange", types.NewTestMetadata()),
-						MetricName: types.String("ConfigConfigurationChange", types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						AlarmName:  defsecTypes.String("ConfigConfigurationChange", defsecTypes.NewTestMetadata()),
+						MetricName: defsecTypes.String("ConfigConfigurationChange", defsecTypes.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{
-								Metadata: types.NewTestMetadata(),
-								ID:       types.String("ConfigConfigurationChange", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								ID:       defsecTypes.String("ConfigConfigurationChange", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -65,25 +66,25 @@ func TestCheckConfigConfigurationChangeAlarm(t *testing.T) {
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						CloudWatchLogsLogGroupArn: types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
-						IsLogging:                 types.Bool(true, types.NewTestMetadata()),
-						IsMultiRegion:             types.Bool(true, types.NewTestMetadata()),
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
+						IsLogging:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						IsMultiRegion:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
 			cloudwatch: cloudwatch.CloudWatch{
 				LogGroups: []cloudwatch.LogGroup{
 					{
-						Metadata:      types.NewTestMetadata(),
-						Arn:           types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
+						Metadata:      defsecTypes.NewTestMetadata(),
+						Arn:           defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
 						MetricFilters: []cloudwatch.MetricFilter{},
 					},
 				},
 				Alarms: []cloudwatch.Alarm{
 					{
-						Metadata:  types.NewTestMetadata(),
-						AlarmName: types.String("ConfigConfigurationChange", types.NewTestMetadata()),
+						Metadata:  defsecTypes.NewTestMetadata(),
+						AlarmName: defsecTypes.String("ConfigConfigurationChange", defsecTypes.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{},
 						},

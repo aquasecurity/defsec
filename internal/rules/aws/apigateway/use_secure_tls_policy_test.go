@@ -3,9 +3,9 @@ package apigateway
 import (
 	"testing"
 
-	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,8 +25,8 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: v1.APIGateway{
 				DomainNames: []v1.DomainName{
 					{
-						Metadata:       types.NewTestMetadata(),
-						SecurityPolicy: types.String("TLS_1_0", types.NewTestMetadata()),
+						Metadata:       defsecTypes.NewTestMetadata(),
+						SecurityPolicy: defsecTypes.String("TLS_1_0", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -37,8 +37,8 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: v1.APIGateway{
 				DomainNames: []v1.DomainName{
 					{
-						Metadata:       types.NewTestMetadata(),
-						SecurityPolicy: types.String("TLS_1_2", types.NewTestMetadata()),
+						Metadata:       defsecTypes.NewTestMetadata(),
+						SecurityPolicy: defsecTypes.String("TLS_1_2", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

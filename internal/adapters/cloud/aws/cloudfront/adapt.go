@@ -2,9 +2,10 @@ package cloudfront
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudfront"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/cloudfront"
 	"github.com/aws/aws-sdk-go-v2/service/cloudfront/types"
 )
@@ -60,18 +61,7 @@ func (a *adapter) getDistributions() ([]cloudfront.Distribution, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting distributions...")
-
-	var distributions []cloudfront.Distribution
-	for _, apiDistribution := range apiDistributions {
-		distribution, err := a.adaptDistribution(apiDistribution)
-		if err != nil {
-			return nil, err
-		}
-		distributions = append(distributions, *distribution)
-		a.Tracker().IncrementResource()
-	}
-
-	return distributions, nil
+	return concurrency.Adapt(apiDistributions, a.RootAdapter, a.adaptDistribution), nil
 }
 
 func (a *adapter) adaptDistribution(distribution types.DistributionSummary) (*cloudfront.Distribution, error) {

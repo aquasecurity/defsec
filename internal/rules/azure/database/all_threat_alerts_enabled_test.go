@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckAllThreatAlertsEnabled(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						SecurityAlertPolicies: []database.SecurityAlertPolicy{
 							{
-								Metadata: types.NewTestMetadata(),
-								DisabledAlerts: []types.StringValue{
-									types.String("Sql_Injection", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								DisabledAlerts: []defsecTypes.StringValue{
+									defsecTypes.String("Sql_Injection", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -43,11 +43,11 @@ func TestCheckAllThreatAlertsEnabled(t *testing.T) {
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						SecurityAlertPolicies: []database.SecurityAlertPolicy{
 							{
-								Metadata:       types.NewTestMetadata(),
-								DisabledAlerts: []types.StringValue{},
+								Metadata:       defsecTypes.NewTestMetadata(),
+								DisabledAlerts: []defsecTypes.StringValue{},
 							},
 						},
 					},

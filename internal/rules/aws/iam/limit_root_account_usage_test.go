@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,9 +25,9 @@ func TestCheckLimitRootAccountUsage(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Name:       types.String("root", types.NewTestMetadata()),
-						LastAccess: types.TimeUnresolvable(types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Name:       defsecTypes.String("root", defsecTypes.NewTestMetadata()),
+						LastAccess: defsecTypes.TimeUnresolvable(defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -38,9 +38,9 @@ func TestCheckLimitRootAccountUsage(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Name:       types.String("other", types.NewTestMetadata()),
-						LastAccess: types.Time(time.Now().Add(-time.Hour*24*90), types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Name:       defsecTypes.String("other", defsecTypes.NewTestMetadata()),
+						LastAccess: defsecTypes.Time(time.Now().Add(-time.Hour*24*90), defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -51,9 +51,9 @@ func TestCheckLimitRootAccountUsage(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Name:       types.String("root", types.NewTestMetadata()),
-						LastAccess: types.Time(time.Now().Add(-time.Hour), types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Name:       defsecTypes.String("root", defsecTypes.NewTestMetadata()),
+						LastAccess: defsecTypes.Time(time.Now().Add(-time.Hour), defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -64,9 +64,9 @@ func TestCheckLimitRootAccountUsage(t *testing.T) {
 			input: iam.IAM{
 				Users: []iam.User{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Name:       types.String("other", types.NewTestMetadata()),
-						LastAccess: types.Time(time.Now().Add(-time.Hour), types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Name:       defsecTypes.String("other", defsecTypes.NewTestMetadata()),
+						LastAccess: defsecTypes.Time(time.Now().Add(-time.Hour), defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

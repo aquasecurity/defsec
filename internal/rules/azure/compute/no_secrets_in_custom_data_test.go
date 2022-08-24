@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckNoSecretsInCustomData(t *testing.T) {
 			input: compute.Compute{
 				LinuxVirtualMachines: []compute.LinuxVirtualMachine{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						VirtualMachine: compute.VirtualMachine{
-							Metadata:   types.NewTestMetadata(),
-							CustomData: types.String(`export DATABASE_PASSWORD=\"SomeSortOfPassword\"`, types.NewTestMetadata()),
+							Metadata:   defsecTypes.NewTestMetadata(),
+							CustomData: defsecTypes.String(`export DATABASE_PASSWORD=\"SomeSortOfPassword\"`, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckNoSecretsInCustomData(t *testing.T) {
 			input: compute.Compute{
 				LinuxVirtualMachines: []compute.LinuxVirtualMachine{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						VirtualMachine: compute.VirtualMachine{
-							Metadata:   types.NewTestMetadata(),
-							CustomData: types.String(`export GREETING="Hello there"`, types.NewTestMetadata()),
+							Metadata:   defsecTypes.NewTestMetadata(),
+							CustomData: defsecTypes.String(`export GREETING="Hello there"`, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

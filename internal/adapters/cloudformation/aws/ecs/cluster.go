@@ -1,9 +1,9 @@
 package ecs
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecs"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getClusters(ctx parser.FileContext) (clusters []ecs.Cluster) {

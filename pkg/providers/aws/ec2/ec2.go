@@ -7,5 +7,6 @@ type EC2 struct {
 	DefaultVPCs          []DefaultVPC
 	SecurityGroups       []SecurityGroup
 	NetworkACLs          []NetworkACL
+	Subnets              []Subnet
 	Volumes              []Volume
 }

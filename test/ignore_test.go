@@ -340,3 +340,54 @@ resource "bad" "my-rule" {
 `, "testworkspace")
 	assert.Len(t, results.GetFailed(), 0)
 }
+
+func Test_IgnoreForImpliedIAMResource(t *testing.T) {
+	reg := rules.Register(exampleRule, nil)
+	defer rules.Deregister(reg)
+
+	results := scanHCL(t, `
+terraform {
+required_version = "~> 1.1.6"
+
+required_providers {
+aws = {
+source  = "hashicorp/aws"
+version = "~> 3.48"
+}
+}
+}
+
+# Retrieve an IAM group defined outside of this Terraform config.
+
+# tfsec:ignore:aws-iam-enforce-mfa
+data "aws_iam_group" "externally_defined_group" {
+group_name = "group-name" # tfsec:ignore:aws-iam-enforce-mfa
+}
+
+# Create an IAM policy and attach it to the group.
+
+# tfsec:ignore:aws-iam-enforce-mfa
+resource "aws_iam_policy" "test_policy" {
+name   = "test-policy" # tfsec:ignore:aws-iam-enforce-mfa
+policy = data.aws_iam_policy_document.test_policy.json # tfsec:ignore:aws-iam-enforce-mfa
+}
+
+# tfsec:ignore:aws-iam-enforce-mfa
+resource "aws_iam_group_policy_attachment" "test_policy_attachment" {
+group      = data.aws_iam_group.externally_defined_group.group_name # tfsec:ignore:aws-iam-enforce-mfa
+policy_arn = aws_iam_policy.test_policy.arn # tfsec:ignore:aws-iam-enforce-mfa
+}
+
+# tfsec:ignore:aws-iam-enforce-mfa
+data "aws_iam_policy_document" "test_policy" {
+statement {
+sid = "PublishToCloudWatch" # tfsec:ignore:aws-iam-enforce-mfa
+actions = [
+"cloudwatch:PutMetricData", # tfsec:ignore:aws-iam-enforce-mfa
+]
+resources = ["*"] # tfsec:ignore:aws-iam-enforce-mfa
+}
+}
+`)
+	assert.Len(t, results.GetFailed(), 0)
+}

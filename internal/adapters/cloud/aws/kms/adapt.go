@@ -2,9 +2,10 @@ package kms
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/kms"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/aws/aws-sdk-go-v2/service/kms/types"
 )
@@ -60,18 +61,7 @@ func (a *adapter) getKeys() ([]kms.Key, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting keys...")
-
-	var keys []kms.Key
-	for _, apiKey := range apiKeys {
-		key, err := a.adaptKey(apiKey)
-		if err != nil {
-			return nil, err
-		}
-		keys = append(keys, *key)
-		a.Tracker().IncrementResource()
-	}
-
-	return keys, nil
+	return concurrency.Adapt(apiKeys, a.RootAdapter, a.adaptKey), nil
 }
 
 func (a *adapter) adaptKey(apiKey types.KeyListEntry) (*kms.Key, error) {

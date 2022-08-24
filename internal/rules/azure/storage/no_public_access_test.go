@@ -3,7 +3,7 @@ package storage
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Containers: []storage.Container{
 							{
-								Metadata:     types.NewTestMetadata(),
-								PublicAccess: types.String(storage.PublicAccessBlob, types.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								PublicAccess: defsecTypes.String(storage.PublicAccessBlob, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,11 +41,11 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Containers: []storage.Container{
 							{
-								Metadata:     types.NewTestMetadata(),
-								PublicAccess: types.String(storage.PublicAccessContainer, types.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								PublicAccess: defsecTypes.String(storage.PublicAccessContainer, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -58,11 +58,11 @@ func TestCheckNoPublicAccess(t *testing.T) {
 			input: storage.Storage{
 				Accounts: []storage.Account{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Containers: []storage.Container{
 							{
-								Metadata:     types.NewTestMetadata(),
-								PublicAccess: types.String(storage.PublicAccessOff, types.NewTestMetadata()),
+								Metadata:     defsecTypes.NewTestMetadata(),
+								PublicAccess: defsecTypes.String(storage.PublicAccessOff, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

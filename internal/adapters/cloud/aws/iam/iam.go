@@ -2,9 +2,9 @@ package iam
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/state"
+	"github.com/aquasecurity/defsec/pkg/types"
 	iamapi "github.com/aws/aws-sdk-go-v2/service/iam"
 )
 
@@ -60,6 +60,7 @@ func (a *adapter) adaptPasswordPolicy(state *state.State) error {
 
 	output, err := a.api.GetAccountPasswordPolicy(a.Context(), &iamapi.GetAccountPasswordPolicyInput{})
 	if err != nil {
+		a.Debug("Failed to adapt account password policy: %s", err)
 		return nil
 	}
 	a.Tracker().SetTotalResources(1)
@@ -79,14 +80,14 @@ func (a *adapter) adaptPasswordPolicy(state *state.State) error {
 	}
 	state.AWS.IAM.PasswordPolicy = iam.PasswordPolicy{
 		Metadata:             metadata,
-		ReusePreventionCount: defsecTypes.Int(reusePrevention, metadata),
-		RequireLowercase:     defsecTypes.Bool(policy.RequireLowercaseCharacters, metadata),
-		RequireUppercase:     defsecTypes.Bool(policy.RequireUppercaseCharacters, metadata),
-		RequireNumbers:       defsecTypes.Bool(policy.RequireNumbers, metadata),
-		RequireSymbols:       defsecTypes.Bool(policy.RequireSymbols, metadata),
-		MaxAgeDays:           defsecTypes.Int(maxAge, metadata),
-		MinimumLength:        defsecTypes.Int(minimumLength, metadata),
+		ReusePreventionCount: types.Int(reusePrevention, metadata),
+		RequireLowercase:     types.Bool(policy.RequireLowercaseCharacters, metadata),
+		RequireUppercase:     types.Bool(policy.RequireUppercaseCharacters, metadata),
+		RequireNumbers:       types.Bool(policy.RequireNumbers, metadata),
+		RequireSymbols:       types.Bool(policy.RequireSymbols, metadata),
+		MaxAgeDays:           types.Int(maxAge, metadata),
+		MinimumLength:        types.Int(minimumLength, metadata),
 	}
-	a.Tracker().IncrementResource()
+
 	return nil
 }

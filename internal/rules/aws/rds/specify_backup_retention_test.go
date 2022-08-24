@@ -3,7 +3,7 @@ package rds
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,9 +24,9 @@ func TestCheckBackupRetentionSpecified(t *testing.T) {
 			input: rds.RDS{
 				Clusters: []rds.Cluster{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						ReplicationSourceARN:      types.String("", types.NewTestMetadata()),
-						BackupRetentionPeriodDays: types.Int(1, types.NewTestMetadata()),
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						ReplicationSourceARN:      defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						BackupRetentionPeriodDays: defsecTypes.Int(1, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -37,9 +37,9 @@ func TestCheckBackupRetentionSpecified(t *testing.T) {
 			input: rds.RDS{
 				Instances: []rds.Instance{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						ReplicationSourceARN:      types.String("", types.NewTestMetadata()),
-						BackupRetentionPeriodDays: types.Int(1, types.NewTestMetadata()),
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						ReplicationSourceARN:      defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						BackupRetentionPeriodDays: defsecTypes.Int(1, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -50,9 +50,9 @@ func TestCheckBackupRetentionSpecified(t *testing.T) {
 			input: rds.RDS{
 				Clusters: []rds.Cluster{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						ReplicationSourceARN:      types.String("", types.NewTestMetadata()),
-						BackupRetentionPeriodDays: types.Int(5, types.NewTestMetadata()),
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						ReplicationSourceARN:      defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						BackupRetentionPeriodDays: defsecTypes.Int(5, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -63,9 +63,9 @@ func TestCheckBackupRetentionSpecified(t *testing.T) {
 			input: rds.RDS{
 				Instances: []rds.Instance{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						ReplicationSourceARN:      types.String("", types.NewTestMetadata()),
-						BackupRetentionPeriodDays: types.Int(5, types.NewTestMetadata()),
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						ReplicationSourceARN:      defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						BackupRetentionPeriodDays: defsecTypes.Int(5, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

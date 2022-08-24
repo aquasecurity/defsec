@@ -3,7 +3,7 @@ package sam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableApiTracing(t *testing.T) {
 			input: sam.SAM{
 				APIs: []sam.API{
 					{
-						Metadata:       types.NewTestMetadata(),
-						TracingEnabled: types.Bool(false, types.NewTestMetadata()),
+						Metadata:       defsecTypes.NewTestMetadata(),
+						TracingEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableApiTracing(t *testing.T) {
 			input: sam.SAM{
 				APIs: []sam.API{
 					{
-						Metadata:       types.NewTestMetadata(),
-						TracingEnabled: types.Bool(true, types.NewTestMetadata()),
+						Metadata:       defsecTypes.NewTestMetadata(),
+						TracingEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

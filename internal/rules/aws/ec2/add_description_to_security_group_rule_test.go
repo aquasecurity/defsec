@@ -3,9 +3,9 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -25,11 +25,11 @@ func TestCheckAddDescriptionToSecurityGroupRule(t *testing.T) {
 			input: ec2.EC2{
 				SecurityGroups: []ec2.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						IngressRules: []ec2.SecurityGroupRule{
 							{
-								Metadata:    types.NewTestMetadata(),
-								Description: types.String("", types.NewTestMetadata()),
+								Metadata:    defsecTypes.NewTestMetadata(),
+								Description: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -42,11 +42,11 @@ func TestCheckAddDescriptionToSecurityGroupRule(t *testing.T) {
 			input: ec2.EC2{
 				SecurityGroups: []ec2.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						IngressRules: []ec2.SecurityGroupRule{
 							{
-								Metadata:    types.NewTestMetadata(),
-								Description: types.String("some description", types.NewTestMetadata()),
+								Metadata:    defsecTypes.NewTestMetadata(),
+								Description: defsecTypes.String("some description", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

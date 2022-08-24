@@ -1,9 +1,9 @@
 package apigateway
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	v2 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v2"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func adaptAPIsV2(modules terraform.Modules) []v2.API {
@@ -35,9 +35,9 @@ func adaptAPIsV2(modules terraform.Modules) []v2.API {
 	orphanResources := modules.GetResourceByIDs(apiStageIDs.Orphans()...)
 	if len(orphanResources) > 0 {
 		orphanage := v2.API{
-			Metadata:     types.NewUnmanagedMetadata(),
-			Name:         types.StringDefault("", types.NewUnmanagedMetadata()),
-			ProtocolType: types.StringUnresolvable(types.NewUnmanagedMetadata()),
+			Metadata:     defsecTypes.NewUnmanagedMetadata(),
+			Name:         defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			ProtocolType: defsecTypes.StringUnresolvable(defsecTypes.NewUnmanagedMetadata()),
 			Stages:       nil,
 		}
 		for _, stage := range orphanResources {
@@ -55,7 +55,7 @@ func adaptStageV2(stageBlock *terraform.Block) v2.Stage {
 		Name:     stageBlock.GetAttribute("name").AsStringValueOrDefault("", stageBlock),
 		AccessLogging: v2.AccessLogging{
 			Metadata:              stageBlock.GetMetadata(),
-			CloudwatchLogGroupARN: types.StringDefault("", stageBlock.GetMetadata()),
+			CloudwatchLogGroupARN: defsecTypes.StringDefault("", stageBlock.GetMetadata()),
 		},
 	}
 	if accessLogging := stageBlock.GetBlock("access_log_settings"); accessLogging.IsNotNil() {
@@ -63,7 +63,7 @@ func adaptStageV2(stageBlock *terraform.Block) v2.Stage {
 		stage.AccessLogging.CloudwatchLogGroupARN = accessLogging.GetAttribute("destination_arn").AsStringValueOrDefault("", accessLogging)
 	} else {
 		stage.AccessLogging.Metadata = stageBlock.GetMetadata()
-		stage.AccessLogging.CloudwatchLogGroupARN = types.StringDefault("", stageBlock.GetMetadata())
+		stage.AccessLogging.CloudwatchLogGroupARN = defsecTypes.StringDefault("", stageBlock.GetMetadata())
 	}
 	return stage
 }

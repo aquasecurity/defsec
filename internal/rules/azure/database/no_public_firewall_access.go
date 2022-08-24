@@ -37,15 +37,10 @@ var CheckNoPublicFirewallAccess = rules.Register(
 				if allowingAzureServices(rule) {
 					continue
 				}
-				if cidr.IsPublic(rule.StartIP.Value()) {
+				if (cidr.IsPublic(rule.StartIP.Value()) || cidr.IsPublic(rule.EndIP.Value())) && rule.StartIP.NotEqualTo(rule.EndIP.Value()) {
 					results.Add(
 						"Firewall rule allows public internet access to a database server.",
 						rule.StartIP,
-					)
-				} else if cidr.IsPublic(rule.EndIP.Value()) {
-					results.Add(
-						"Firewall rule allows public internet access to a database server.",
-						rule.EndIP,
 					)
 				} else {
 					results.AddPassed(&rule)
@@ -57,15 +52,10 @@ var CheckNoPublicFirewallAccess = rules.Register(
 				if allowingAzureServices(rule) {
 					continue
 				}
-				if cidr.IsPublic(rule.StartIP.Value()) {
+				if (cidr.IsPublic(rule.StartIP.Value()) || cidr.IsPublic(rule.EndIP.Value())) && rule.StartIP.NotEqualTo(rule.EndIP.Value()) {
 					results.Add(
 						"Firewall rule allows public internet access to a database server.",
 						rule.StartIP,
-					)
-				} else if cidr.IsPublic(rule.EndIP.Value()) {
-					results.Add(
-						"Firewall rule allows public internet access to a database server.",
-						rule.EndIP,
 					)
 				} else {
 					results.AddPassed(&rule)
@@ -77,15 +67,10 @@ var CheckNoPublicFirewallAccess = rules.Register(
 				if allowingAzureServices(rule) {
 					continue
 				}
-				if cidr.IsPublic(rule.StartIP.Value()) {
+				if (cidr.IsPublic(rule.StartIP.Value()) || cidr.IsPublic(rule.EndIP.Value())) && rule.StartIP.NotEqualTo(rule.EndIP.Value()) {
 					results.Add(
 						"Firewall rule allows public internet access to a database server.",
 						rule.StartIP,
-					)
-				} else if cidr.IsPublic(rule.EndIP.Value()) {
-					results.Add(
-						"Firewall rule allows public internet access to a database server.",
-						rule.EndIP,
 					)
 				} else {
 					results.AddPassed(&rule)
@@ -97,15 +82,10 @@ var CheckNoPublicFirewallAccess = rules.Register(
 				if allowingAzureServices(rule) {
 					continue
 				}
-				if cidr.IsPublic(rule.StartIP.Value()) {
+				if (cidr.IsPublic(rule.StartIP.Value()) || cidr.IsPublic(rule.EndIP.Value())) && rule.StartIP.NotEqualTo(rule.EndIP.Value()) {
 					results.Add(
 						"Firewall rule allows public internet access to a database server.",
 						rule.StartIP,
-					)
-				} else if cidr.IsPublic(rule.EndIP.Value()) {
-					results.Add(
-						"Firewall rule allows public internet access to a database server.",
-						rule.EndIP,
 					)
 				} else {
 					results.AddPassed(&rule)

@@ -3,7 +3,8 @@ package ec2
 import (
 	"fmt"
 
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
 
@@ -19,7 +20,7 @@ func (a *adapter) getVolumes() ([]ec2.Volume, error) {
 
 	var apiVolumes []types.Volume
 	for {
-		output, err := a.api.DescribeVolumes(a.Context(), &input)
+		output, err := a.client.DescribeVolumes(a.Context(), &input)
 		if err != nil {
 			return nil, err
 		}
@@ -32,18 +33,7 @@ func (a *adapter) getVolumes() ([]ec2.Volume, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting volumes...")
-
-	var volumes []ec2.Volume
-	for _, apiVolume := range apiVolumes {
-		volume, err := a.adaptVolume(apiVolume)
-		if err != nil {
-			return nil, err
-		}
-		volumes = append(volumes, *volume)
-		a.Tracker().IncrementResource()
-	}
-
-	return volumes, nil
+	return concurrency.Adapt(apiVolumes, a.RootAdapter, a.adaptVolume), nil
 }
 
 func (a *adapter) adaptVolume(volume types.Volume) (*ec2.Volume, error) {

@@ -1,9 +1,9 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sam"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getApis(cfFile parser.FileContext) (apis []sam.API) {
@@ -29,10 +29,10 @@ func getRestMethodSettings(r *parser.Resource) sam.RESTMethodSettings {
 
 	settings := sam.RESTMethodSettings{
 		Metadata:           r.Metadata(),
-		CacheDataEncrypted: types.BoolDefault(false, r.Metadata()),
-		LoggingEnabled:     types.BoolDefault(false, r.Metadata()),
-		DataTraceEnabled:   types.BoolDefault(false, r.Metadata()),
-		MetricsEnabled:     types.BoolDefault(false, r.Metadata()),
+		CacheDataEncrypted: defsecTypes.BoolDefault(false, r.Metadata()),
+		LoggingEnabled:     defsecTypes.BoolDefault(false, r.Metadata()),
+		DataTraceEnabled:   defsecTypes.BoolDefault(false, r.Metadata()),
+		MetricsEnabled:     defsecTypes.BoolDefault(false, r.Metadata()),
 	}
 
 	settingsProp := r.GetProperty("MethodSettings")
@@ -41,16 +41,16 @@ func getRestMethodSettings(r *parser.Resource) sam.RESTMethodSettings {
 		settings = sam.RESTMethodSettings{
 			Metadata:           settingsProp.Metadata(),
 			CacheDataEncrypted: settingsProp.GetBoolProperty("CacheDataEncrypted"),
-			LoggingEnabled:     types.BoolDefault(false, settingsProp.Metadata()),
+			LoggingEnabled:     defsecTypes.BoolDefault(false, settingsProp.Metadata()),
 			DataTraceEnabled:   settingsProp.GetBoolProperty("DataTraceEnabled"),
 			MetricsEnabled:     settingsProp.GetBoolProperty("MetricsEnabled"),
 		}
 
 		if loggingLevel := settingsProp.GetProperty("LoggingLevel"); loggingLevel.IsNotNil() {
 			if loggingLevel.EqualTo("OFF", parser.IgnoreCase) {
-				settings.LoggingEnabled = types.Bool(false, loggingLevel.Metadata())
+				settings.LoggingEnabled = defsecTypes.Bool(false, loggingLevel.Metadata())
 			} else {
-				settings.LoggingEnabled = types.Bool(true, loggingLevel.Metadata())
+				settings.LoggingEnabled = defsecTypes.Bool(true, loggingLevel.Metadata())
 			}
 		}
 	}
@@ -62,7 +62,7 @@ func getAccessLogging(r *parser.Resource) sam.AccessLogging {
 
 	logging := sam.AccessLogging{
 		Metadata:              r.Metadata(),
-		CloudwatchLogGroupARN: types.StringDefault("", r.Metadata()),
+		CloudwatchLogGroupARN: defsecTypes.StringDefault("", r.Metadata()),
 	}
 
 	if access := r.GetProperty("AccessLogSetting"); access.IsNotNil() {
@@ -79,8 +79,8 @@ func getDomainConfiguration(r *parser.Resource) sam.DomainConfiguration {
 
 	domainConfig := sam.DomainConfiguration{
 		Metadata:       r.Metadata(),
-		Name:           types.StringDefault("", r.Metadata()),
-		SecurityPolicy: types.StringDefault("TLS_1_0", r.Metadata()),
+		Name:           defsecTypes.StringDefault("", r.Metadata()),
+		SecurityPolicy: defsecTypes.StringDefault("TLS_1_0", r.Metadata()),
 	}
 
 	if domain := r.GetProperty("Domain"); domain.IsNotNil() {

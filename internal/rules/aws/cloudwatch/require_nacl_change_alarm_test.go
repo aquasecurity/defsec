@@ -3,7 +3,8 @@ package cloudwatch
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
 	"github.com/aquasecurity/defsec/pkg/scan"
@@ -23,39 +24,39 @@ func TestCheckNACLChangeAlarm(t *testing.T) {
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						CloudWatchLogsLogGroupArn: types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
-						IsLogging:                 types.Bool(true, types.NewTestMetadata()),
-						IsMultiRegion:             types.Bool(true, types.NewTestMetadata()),
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
+						IsLogging:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						IsMultiRegion:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
 			cloudwatch: cloudwatch.CloudWatch{
 				LogGroups: []cloudwatch.LogGroup{
 					{
-						Metadata: types.NewTestMetadata(),
-						Arn:      types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Arn:      defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
 						MetricFilters: []cloudwatch.MetricFilter{
 							{
-								Metadata:   types.NewTestMetadata(),
-								FilterName: types.String("NACLChange", types.NewTestMetadata()),
-								FilterPattern: types.String(`{($.eventName=CreateNetworkAcl) || 
+								Metadata:   defsecTypes.NewTestMetadata(),
+								FilterName: defsecTypes.String("NACLChange", defsecTypes.NewTestMetadata()),
+								FilterPattern: defsecTypes.String(`{($.eventName=CreateNetworkAcl) || 
 					($.eventName=CreateNetworkAclEntry) || ($.eventName=DeleteNetworkAcl) || 
 					($.eventName=DeleteNetworkAclEntry) || ($.eventName=ReplaceNetworkAclEntry) || 
-					($.eventName=ReplaceNetworkAclAssociation)}`, types.NewTestMetadata()),
+					($.eventName=ReplaceNetworkAclAssociation)}`, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
 				},
 				Alarms: []cloudwatch.Alarm{
 					{
-						Metadata:   types.NewTestMetadata(),
-						AlarmName:  types.String("NACLChange", types.NewTestMetadata()),
-						MetricName: types.String("NACLChange", types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						AlarmName:  defsecTypes.String("NACLChange", defsecTypes.NewTestMetadata()),
+						MetricName: defsecTypes.String("NACLChange", defsecTypes.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{
-								Metadata: types.NewTestMetadata(),
-								ID:       types.String("NACLChange", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								ID:       defsecTypes.String("NACLChange", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -68,25 +69,25 @@ func TestCheckNACLChangeAlarm(t *testing.T) {
 			cloudtrail: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata:                  types.NewTestMetadata(),
-						CloudWatchLogsLogGroupArn: types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
-						IsLogging:                 types.Bool(true, types.NewTestMetadata()),
-						IsMultiRegion:             types.Bool(true, types.NewTestMetadata()),
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
+						IsLogging:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						IsMultiRegion:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
 			cloudwatch: cloudwatch.CloudWatch{
 				LogGroups: []cloudwatch.LogGroup{
 					{
-						Metadata:      types.NewTestMetadata(),
-						Arn:           types.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", types.NewTestMetadata()),
+						Metadata:      defsecTypes.NewTestMetadata(),
+						Arn:           defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
 						MetricFilters: []cloudwatch.MetricFilter{},
 					},
 				},
 				Alarms: []cloudwatch.Alarm{
 					{
-						Metadata:  types.NewTestMetadata(),
-						AlarmName: types.String("NACLChange", types.NewTestMetadata()),
+						Metadata:  defsecTypes.NewTestMetadata(),
+						AlarmName: defsecTypes.String("NACLChange", defsecTypes.NewTestMetadata()),
 						Metrics: []cloudwatch.MetricDataQuery{
 							{},
 						},

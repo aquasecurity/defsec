@@ -3,8 +3,10 @@ package lambda
 import (
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/concurrency"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/lambda"
 	"github.com/aquasecurity/defsec/pkg/state"
 	lambdaapi "github.com/aws/aws-sdk-go-v2/service/lambda"
@@ -67,18 +69,7 @@ func (a *adapter) getFunctions() ([]lambda.Function, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting functions...")
-
-	var functions []lambda.Function
-	for _, apiFunction := range apiFunctions {
-		function, err := a.adaptFunction(apiFunction)
-		if err != nil {
-			return nil, err
-		}
-		functions = append(functions, *function)
-		a.Tracker().IncrementResource()
-	}
-
-	return functions, nil
+	return concurrency.Adapt(apiFunctions, a.RootAdapter, a.adaptFunction), nil
 }
 
 func (a *adapter) adaptFunction(function types.FunctionConfiguration) (*lambda.Function, error) {

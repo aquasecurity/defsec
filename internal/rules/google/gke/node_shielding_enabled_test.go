@@ -3,7 +3,7 @@ package gke
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNodeShieldingEnabled(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata:            types.NewTestMetadata(),
-						EnableShieldedNodes: types.Bool(false, types.NewTestMetadata()),
+						Metadata:            defsecTypes.NewTestMetadata(),
+						EnableShieldedNodes: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckNodeShieldingEnabled(t *testing.T) {
 			input: gke.GKE{
 				Clusters: []gke.Cluster{
 					{
-						Metadata:            types.NewTestMetadata(),
-						EnableShieldedNodes: types.Bool(true, types.NewTestMetadata()),
+						Metadata:            defsecTypes.NewTestMetadata(),
+						EnableShieldedNodes: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

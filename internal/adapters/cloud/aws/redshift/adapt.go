@@ -2,9 +2,10 @@ package redshift
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/redshift"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/redshift"
 	"github.com/aws/aws-sdk-go-v2/service/redshift/types"
 )
@@ -38,7 +39,11 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 	}
 
 	// this can error is classic resources are used where disabled
-	state.AWS.Redshift.SecurityGroups, _ = a.getSecurityGroups()
+	state.AWS.Redshift.SecurityGroups, err = a.getSecurityGroups()
+	if err != nil {
+		a.Debug("Failed to adapt security groups: %s", err)
+		return nil
+	}
 
 	return nil
 }
@@ -63,18 +68,7 @@ func (a *adapter) getClusters() ([]redshift.Cluster, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting clusters...")
-
-	var clusters []redshift.Cluster
-	for _, apiCluster := range apiClusters {
-		cluster, err := a.adaptCluster(apiCluster)
-		if err != nil {
-			return nil, err
-		}
-		clusters = append(clusters, *cluster)
-		a.Tracker().IncrementResource()
-	}
-
-	return clusters, nil
+	return concurrency.Adapt(apiClusters, a.RootAdapter, a.adaptCluster), nil
 }
 
 func (a *adapter) adaptCluster(apiCluster types.Cluster) (*redshift.Cluster, error) {
@@ -122,26 +116,20 @@ func (a *adapter) getSecurityGroups() ([]redshift.SecurityGroup, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting security groups...")
-
-	var securityGroups []redshift.SecurityGroup
-	for _, apiGroup := range apiGroups {
-		group, err := a.adaptSecurityGroup(apiGroup)
-		if err != nil {
-			return nil, err
-		}
-		securityGroups = append(securityGroups, *group)
-		a.Tracker().IncrementResource()
-	}
-
-	return securityGroups, nil
+	return concurrency.Adapt(apiGroups, a.RootAdapter, a.adaptSecurityGroup), nil
 }
 
 func (a *adapter) adaptSecurityGroup(apiSG types.ClusterSecurityGroup) (*redshift.SecurityGroup, error) {
 
 	metadata := a.CreateMetadata("securitygroup:" + *apiSG.ClusterSecurityGroupName)
 
+	description := defsecTypes.StringDefault("", metadata)
+	if apiSG.Description != nil {
+		description = defsecTypes.String(*apiSG.Description, metadata)
+	}
+
 	return &redshift.SecurityGroup{
 		Metadata:    metadata,
-		Description: defsecTypes.String(*apiSG.Description, metadata),
+		Description: description,
 	}, nil
 }

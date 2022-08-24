@@ -633,3 +633,133 @@ deny[res] {
 		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
 	}
 }
+
+func Test_S3_Linking(t *testing.T) {
+
+	code := `
+## tfsec:ignore:aws-s3-enable-bucket-encryption
+## tfsec:ignore:aws-s3-enable-bucket-logging
+## tfsec:ignore:aws-s3-enable-versioning
+resource "aws_s3_bucket" "blubb" {
+  bucket = "test"
+}
+
+resource "aws_s3_bucket_public_access_block" "audit_logs_athena" {
+  bucket = aws_s3_bucket.blubb.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# tfsec:ignore:aws-s3-enable-bucket-encryption
+# tfsec:ignore:aws-s3-enable-bucket-logging
+# tfsec:ignore:aws-s3-enable-versioning
+resource "aws_s3_bucket" "foo" {
+  bucket        = "prefix-" # remove this variable and it works; does not report
+  force_destroy = true
+}
+
+resource "aws_s3_bucket_public_access_block" "foo" {
+  bucket = aws_s3_bucket.foo.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+`
+
+	fs := testutil.CreateFS(t, map[string]string{
+		"code/main.tf": code,
+	})
+
+	debugLog := bytes.NewBuffer([]byte{})
+	scanner := New(
+		options.ScannerWithDebug(debugLog),
+	)
+
+	results, err := scanner.ScanFS(context.TODO(), fs, "code")
+	require.NoError(t, err)
+
+	failed := results.GetFailed()
+	for _, result := range failed {
+		// public access block
+		assert.NotEqual(t, "AVD-AWS-0094", result.Rule().AVDID, "AVD-AWS-0094 should not be reported - was found at "+result.Metadata().Range().String())
+		// encryption
+		assert.NotEqual(t, "AVD-AWS-0088", result.Rule().AVDID)
+		// logging
+		assert.NotEqual(t, "AVD-AWS-0089", result.Rule().AVDID)
+		// versioning
+		assert.NotEqual(t, "AVD-AWS-0090", result.Rule().AVDID)
+	}
+
+	if t.Failed() {
+		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
+	}
+}
+
+func Test_S3_Linking_PublicAccess(t *testing.T) {
+
+	code := `
+resource "aws_s3_bucket" "testA" {
+  bucket = "com.test.testA"
+}
+
+resource "aws_s3_bucket_acl" "testA" {
+  bucket = aws_s3_bucket.testA.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_public_access_block" "testA" {
+  bucket = aws_s3_bucket.testA.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket" "testB" {
+  bucket = "com.test.testB"
+}
+
+resource "aws_s3_bucket_acl" "testB" {
+  bucket = aws_s3_bucket.testB.id
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_public_access_block" "testB" {
+  bucket = aws_s3_bucket.testB.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+`
+
+	fs := testutil.CreateFS(t, map[string]string{
+		"code/main.tf": code,
+	})
+
+	debugLog := bytes.NewBuffer([]byte{})
+	scanner := New(
+		options.ScannerWithDebug(debugLog),
+	)
+
+	results, err := scanner.ScanFS(context.TODO(), fs, "code")
+	require.NoError(t, err)
+
+	for _, result := range results.GetFailed() {
+		// public access block
+		assert.NotEqual(t, "AVD-AWS-0094", result.Rule().AVDID)
+	}
+
+	if t.Failed() {
+		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
+	}
+}

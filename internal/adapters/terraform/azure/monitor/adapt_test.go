@@ -3,7 +3,7 @@ package monitor
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/azure/monitor"
 
@@ -43,21 +43,21 @@ func Test_adaptLogProfile(t *testing.T) {
 			  }
 `,
 			expected: monitor.LogProfile{
-				Metadata: types.NewTestMetadata(),
-				Categories: []types.StringValue{
-					types.String("Action", types.NewTestMetadata()),
-					types.String("Delete", types.NewTestMetadata()),
-					types.String("Write", types.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				Categories: []defsecTypes.StringValue{
+					defsecTypes.String("Action", defsecTypes.NewTestMetadata()),
+					defsecTypes.String("Delete", defsecTypes.NewTestMetadata()),
+					defsecTypes.String("Write", defsecTypes.NewTestMetadata()),
 				},
 				RetentionPolicy: monitor.RetentionPolicy{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
-					Days:     types.Int(365, types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					Days:     defsecTypes.Int(365, defsecTypes.NewTestMetadata()),
 				},
-				Locations: []types.StringValue{
-					types.String("eastus", types.NewTestMetadata()),
-					types.String("eastus2", types.NewTestMetadata()),
-					types.String("southcentralus", types.NewTestMetadata()),
+				Locations: []defsecTypes.StringValue{
+					defsecTypes.String("eastus", defsecTypes.NewTestMetadata()),
+					defsecTypes.String("eastus2", defsecTypes.NewTestMetadata()),
+					defsecTypes.String("southcentralus", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -68,11 +68,11 @@ func Test_adaptLogProfile(t *testing.T) {
 			  }
 `,
 			expected: monitor.LogProfile{
-				Metadata: types.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				RetentionPolicy: monitor.RetentionPolicy{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(false, types.NewTestMetadata()),
-					Days:     types.Int(0, types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					Days:     defsecTypes.Int(0, defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

@@ -3,7 +3,7 @@ package database
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 			input: database.Database{
 				MariaDBServers: []database.MariaDBServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:             types.NewTestMetadata(),
-							EnableSSLEnforcement: types.Bool(false, types.NewTestMetadata()),
+							Metadata:             defsecTypes.NewTestMetadata(),
+							EnableSSLEnforcement: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 			input: database.Database{
 				MySQLServers: []database.MySQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:             types.NewTestMetadata(),
-							EnableSSLEnforcement: types.Bool(false, types.NewTestMetadata()),
+							Metadata:             defsecTypes.NewTestMetadata(),
+							EnableSSLEnforcement: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -54,10 +54,10 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 			input: database.Database{
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:             types.NewTestMetadata(),
-							EnableSSLEnforcement: types.Bool(false, types.NewTestMetadata()),
+							Metadata:             defsecTypes.NewTestMetadata(),
+							EnableSSLEnforcement: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -69,10 +69,10 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 			input: database.Database{
 				MariaDBServers: []database.MariaDBServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:             types.NewTestMetadata(),
-							EnableSSLEnforcement: types.Bool(true, types.NewTestMetadata()),
+							Metadata:             defsecTypes.NewTestMetadata(),
+							EnableSSLEnforcement: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -84,10 +84,10 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 			input: database.Database{
 				MySQLServers: []database.MySQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:             types.NewTestMetadata(),
-							EnableSSLEnforcement: types.Bool(true, types.NewTestMetadata()),
+							Metadata:             defsecTypes.NewTestMetadata(),
+							EnableSSLEnforcement: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -99,10 +99,10 @@ func TestCheckEnableSslEnforcement(t *testing.T) {
 			input: database.Database{
 				PostgreSQLServers: []database.PostgreSQLServer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Server: database.Server{
-							Metadata:             types.NewTestMetadata(),
-							EnableSSLEnforcement: types.Bool(true, types.NewTestMetadata()),
+							Metadata:             defsecTypes.NewTestMetadata(),
+							EnableSSLEnforcement: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

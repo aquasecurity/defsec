@@ -1,9 +1,9 @@
 package appservice
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/appservice"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) appservice.AppService {
@@ -40,22 +40,22 @@ func adaptService(resource *terraform.Block) appservice.Service {
 	enableClientCertVal := enableClientCertAttr.AsBoolValueOrDefault(false, resource)
 
 	identityBlock := resource.GetBlock("identity")
-	typeVal := types.String("", resource.GetMetadata())
+	typeVal := defsecTypes.String("", resource.GetMetadata())
 	if identityBlock.IsNotNil() {
 		typeAttr := identityBlock.GetAttribute("type")
 		typeVal = typeAttr.AsStringValueOrDefault("", identityBlock)
 	}
 
 	authBlock := resource.GetBlock("auth_settings")
-	enabledVal := types.Bool(false, resource.GetMetadata())
+	enabledVal := defsecTypes.Bool(false, resource.GetMetadata())
 	if authBlock.IsNotNil() {
 		enabledAttr := authBlock.GetAttribute("enabled")
 		enabledVal = enabledAttr.AsBoolValueOrDefault(false, authBlock)
 	}
 
 	siteBlock := resource.GetBlock("site_config")
-	enableHTTP2Val := types.Bool(false, resource.GetMetadata())
-	minTLSVersionVal := types.String("1.2", resource.GetMetadata())
+	enableHTTP2Val := defsecTypes.Bool(false, resource.GetMetadata())
+	minTLSVersionVal := defsecTypes.String("1.2", resource.GetMetadata())
 	if siteBlock.IsNotNil() {
 		enableHTTP2Attr := siteBlock.GetAttribute("http2_enabled")
 		enableHTTP2Val = enableHTTP2Attr.AsBoolValueOrDefault(false, siteBlock)
@@ -67,15 +67,15 @@ func adaptService(resource *terraform.Block) appservice.Service {
 	return appservice.Service{
 		Metadata:         resource.GetMetadata(),
 		EnableClientCert: enableClientCertVal,
-		Identity: struct{ Type types.StringValue }{
+		Identity: struct{ Type defsecTypes.StringValue }{
 			Type: typeVal,
 		},
-		Authentication: struct{ Enabled types.BoolValue }{
+		Authentication: struct{ Enabled defsecTypes.BoolValue }{
 			Enabled: enabledVal,
 		},
 		Site: struct {
-			EnableHTTP2       types.BoolValue
-			MinimumTLSVersion types.StringValue
+			EnableHTTP2       defsecTypes.BoolValue
+			MinimumTLSVersion defsecTypes.StringValue
 		}{
 			EnableHTTP2:       enableHTTP2Val,
 			MinimumTLSVersion: minTLSVersionVal,

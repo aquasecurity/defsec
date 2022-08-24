@@ -1,7 +1,7 @@
 package athena
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Athena struct {
@@ -10,16 +10,16 @@ type Athena struct {
 }
 
 type Database struct {
-	types.Metadata
-	Name       types.StringValue
+	defsecTypes.Metadata
+	Name       defsecTypes.StringValue
 	Encryption EncryptionConfiguration
 }
 
 type Workgroup struct {
-	types.Metadata
-	Name                 types.StringValue
+	defsecTypes.Metadata
+	Name                 defsecTypes.StringValue
 	Encryption           EncryptionConfiguration
-	EnforceConfiguration types.BoolValue
+	EnforceConfiguration defsecTypes.BoolValue
 }
 
 const (
@@ -30,6 +30,6 @@ const (
 )
 
 type EncryptionConfiguration struct {
-	types.Metadata
-	Type types.StringValue
+	defsecTypes.Metadata
+	Type defsecTypes.StringValue
 }

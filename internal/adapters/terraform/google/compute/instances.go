@@ -1,9 +1,9 @@
 package compute
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/google/compute"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -16,19 +16,20 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 			Name:     instanceBlock.GetAttribute("name").AsStringValueOrDefault("", instanceBlock),
 			ShieldedVM: compute.ShieldedVMConfig{
 				Metadata:                   instanceBlock.GetMetadata(),
-				SecureBootEnabled:          types.BoolDefault(false, instanceBlock.GetMetadata()),
-				IntegrityMonitoringEnabled: types.BoolDefault(false, instanceBlock.GetMetadata()),
-				VTPMEnabled:                types.BoolDefault(false, instanceBlock.GetMetadata()),
+				SecureBootEnabled:          defsecTypes.BoolDefault(false, instanceBlock.GetMetadata()),
+				IntegrityMonitoringEnabled: defsecTypes.BoolDefault(false, instanceBlock.GetMetadata()),
+				VTPMEnabled:                defsecTypes.BoolDefault(false, instanceBlock.GetMetadata()),
 			},
 			ServiceAccount: compute.ServiceAccount{
-				Metadata: instanceBlock.GetMetadata(),
-				Email:    types.StringDefault("", instanceBlock.GetMetadata()),
-				Scopes:   nil,
+				Metadata:  instanceBlock.GetMetadata(),
+				Email:     defsecTypes.StringDefault("", instanceBlock.GetMetadata()),
+				IsDefault: defsecTypes.BoolDefault(false, instanceBlock.GetMetadata()),
+				Scopes:    nil,
 			},
 			CanIPForward:                instanceBlock.GetAttribute("can_ip_forward").AsBoolValueOrDefault(false, instanceBlock),
-			OSLoginEnabled:              types.BoolDefault(true, instanceBlock.GetMetadata()),
-			EnableProjectSSHKeyBlocking: types.BoolDefault(false, instanceBlock.GetMetadata()),
-			EnableSerialPort:            types.BoolDefault(false, instanceBlock.GetMetadata()),
+			OSLoginEnabled:              defsecTypes.BoolDefault(true, instanceBlock.GetMetadata()),
+			EnableProjectSSHKeyBlocking: defsecTypes.BoolDefault(false, instanceBlock.GetMetadata()),
+			EnableSerialPort:            defsecTypes.BoolDefault(false, instanceBlock.GetMetadata()),
 			NetworkInterfaces:           nil,
 			BootDisks:                   nil,
 			AttachedDisks:               nil,
@@ -40,11 +41,11 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 				Metadata:    networkInterfaceBlock.GetMetadata(),
 				Network:     nil,
 				SubNetwork:  nil,
-				HasPublicIP: types.BoolDefault(false, networkInterfaceBlock.GetMetadata()),
-				NATIP:       types.StringDefault("", networkInterfaceBlock.GetMetadata()),
+				HasPublicIP: defsecTypes.BoolDefault(false, networkInterfaceBlock.GetMetadata()),
+				NATIP:       defsecTypes.StringDefault("", networkInterfaceBlock.GetMetadata()),
 			}
 			if accessConfigBlock := networkInterfaceBlock.GetBlock("access_config"); accessConfigBlock.IsNotNil() {
-				ni.HasPublicIP = types.Bool(true, accessConfigBlock.GetMetadata())
+				ni.HasPublicIP = defsecTypes.Bool(true, accessConfigBlock.GetMetadata())
 			}
 			instance.NetworkInterfaces = append(instance.NetworkInterfaces, ni)
 		}
@@ -57,21 +58,16 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 			instance.ShieldedVM.SecureBootEnabled = shieldedBlock.GetAttribute("enable_secure_boot").AsBoolValueOrDefault(false, shieldedBlock)
 		}
 
-		if serviceAccountBlock := instanceBlock.GetBlock("service_account"); serviceAccountBlock.IsNotNil() {
-			instance.ServiceAccount.Metadata = serviceAccountBlock.GetMetadata()
-			instance.ServiceAccount.Email = serviceAccountBlock.GetAttribute("email").AsStringValueOrDefault("", serviceAccountBlock)
-		}
-
 		// metadata
 		if metadataAttr := instanceBlock.GetAttribute("metadata"); metadataAttr.IsNotNil() {
 			if val := metadataAttr.MapValue("enable-oslogin"); val.Type() == cty.Bool {
-				instance.OSLoginEnabled = types.BoolExplicit(val.True(), metadataAttr.GetMetadata())
+				instance.OSLoginEnabled = defsecTypes.BoolExplicit(val.True(), metadataAttr.GetMetadata())
 			}
 			if val := metadataAttr.MapValue("block-project-ssh-keys"); val.Type() == cty.Bool {
-				instance.EnableProjectSSHKeyBlocking = types.BoolExplicit(val.True(), metadataAttr.GetMetadata())
+				instance.EnableProjectSSHKeyBlocking = defsecTypes.BoolExplicit(val.True(), metadataAttr.GetMetadata())
 			}
 			if val := metadataAttr.MapValue("serial-port-enable"); val.Type() == cty.Bool {
-				instance.EnableSerialPort = types.BoolExplicit(val.True(), metadataAttr.GetMetadata())
+				instance.EnableSerialPort = defsecTypes.BoolExplicit(val.True(), metadataAttr.GetMetadata())
 			}
 		}
 
@@ -101,17 +97,22 @@ func adaptInstances(modules terraform.Modules) (instances []compute.Instance) {
 			instance.AttachedDisks = append(instance.AttachedDisks, disk)
 		}
 
-		if instanceBlock.GetBlock("service_account").IsNotNil() {
-			emailAttr := instanceBlock.GetBlock("service_account").GetAttribute("email")
-			instance.ServiceAccount.Email = emailAttr.AsStringValueOrDefault("", instanceBlock)
+		if serviceAccountBlock := instanceBlock.GetBlock("service_account"); serviceAccountBlock.IsNotNil() {
+			emailAttr := serviceAccountBlock.GetAttribute("email")
+			instance.ServiceAccount.Email = emailAttr.AsStringValueOrDefault("", serviceAccountBlock)
+
+			if instance.ServiceAccount.Email.IsEmpty() || instance.ServiceAccount.Email.EndsWith("-compute@developer.gserviceaccount.com") {
+				instance.ServiceAccount.IsDefault = defsecTypes.Bool(true, serviceAccountBlock.GetMetadata())
+			}
 
 			if emailAttr.IsResourceBlockReference("google_service_account") {
 				if accBlock, err := modules.GetReferencedBlock(emailAttr, instanceBlock); err == nil {
-					instance.ServiceAccount.Email = types.String(accBlock.FullName(), emailAttr.GetMetadata())
+					instance.ServiceAccount.IsDefault = defsecTypes.Bool(false, serviceAccountBlock.GetMetadata())
+					instance.ServiceAccount.Email = accBlock.GetAttribute("email").AsStringValueOrDefault("", accBlock)
 				}
 			}
 
-			if scopesAttr := instanceBlock.GetBlock("service_account").GetAttribute("scopes"); scopesAttr.IsNotNil() {
+			if scopesAttr := serviceAccountBlock.GetAttribute("scopes"); scopesAttr.IsNotNil() {
 				instance.ServiceAccount.Scopes = append(instance.ServiceAccount.Scopes, scopesAttr.AsStringValues()...)
 			}
 		}

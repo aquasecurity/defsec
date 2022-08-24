@@ -18,6 +18,7 @@ type jUnitTestSuite struct {
 	XMLName   xml.Name        `xml:"testsuite"`
 	Name      string          `xml:"name,attr"`
 	Failures  string          `xml:"failures,attr"`
+	Skipped   string          `xml:"skipped,attr,omitempty"`
 	Tests     string          `xml:"tests,attr"`
 	TestCases []jUnitTestCase `xml:"testcase"`
 }
@@ -29,6 +30,7 @@ type jUnitTestCase struct {
 	Name      string        `xml:"name,attr"`
 	Time      string        `xml:"time,attr"`
 	Failure   *jUnitFailure `xml:"failure,omitempty"`
+	Skipped   *jUnitSkipped `xml:"skipped,omitempty"`
 }
 
 // jUnitFailure contains data related to a failed test.
@@ -38,12 +40,21 @@ type jUnitFailure struct {
 	Contents string `xml:",chardata"`
 }
 
-func outputJUnit(b ConfigurableFormatter, results scan.Results) error {
+// jUnitSkipped defines a not executed test.
+type jUnitSkipped struct {
+	Message string `xml:"message,attr,omitempty"`
+}
 
+func outputJUnit(b ConfigurableFormatter, results scan.Results) error {
 	output := jUnitTestSuite{
 		Name:     filepath.Base(os.Args[0]),
-		Failures: fmt.Sprintf("%d", len(results)-countPassedResults(results)),
+		Failures: fmt.Sprintf("%d", countWithStatus(results, scan.StatusFailed)),
 		Tests:    fmt.Sprintf("%d", len(results)),
+	}
+
+	skipped := countWithStatus(results, scan.StatusIgnored)
+	if skipped > 0 {
+		output.Skipped = fmt.Sprintf("%d", skipped)
 	}
 
 	for _, res := range results {
@@ -57,13 +68,14 @@ func outputJUnit(b ConfigurableFormatter, results scan.Results) error {
 				continue
 			}
 		}
-		path := b.Path(res)
+		path := b.Path(res, res.Metadata())
 		output.TestCases = append(output.TestCases,
 			jUnitTestCase{
 				Classname: path,
 				Name:      fmt.Sprintf("[%s][%s] - %s", res.Rule().LongID(), res.Severity(), res.Description()),
 				Time:      "0",
 				Failure:   buildFailure(b, res),
+				Skipped:   buildSkipped(res),
 			},
 		)
 	}
@@ -94,7 +106,7 @@ func highlightCodeJunit(res scan.Result) string {
 }
 
 func buildFailure(b ConfigurableFormatter, res scan.Result) *jUnitFailure {
-	if res.Status() == scan.StatusPassed {
+	if res.Status() != scan.StatusFailed {
 		return nil
 	}
 
@@ -108,7 +120,7 @@ func buildFailure(b ConfigurableFormatter, res scan.Result) *jUnitFailure {
 	if !res.Range().IsMultiLine() {
 		lineInfo = fmt.Sprintf("%d", res.Range().GetStartLine())
 	}
-	location := fmt.Sprintf("%s:%s", b.Path(res), lineInfo)
+	location := fmt.Sprintf("%s:%s", b.Path(res, res.Metadata()), lineInfo)
 
 	return &jUnitFailure{
 		Message: res.Description(),
@@ -120,14 +132,23 @@ func buildFailure(b ConfigurableFormatter, res scan.Result) *jUnitFailure {
 	}
 }
 
-func countPassedResults(results []scan.Result) int {
-	passed := 0
+func buildSkipped(res scan.Result) *jUnitSkipped {
+	if res.Status() != scan.StatusIgnored {
+		return nil
+	}
+	return &jUnitSkipped{
+		Message: res.Description(),
+	}
+}
+
+func countWithStatus(results []scan.Result, status scan.Status) int {
+	count := 0
 
 	for _, res := range results {
-		if res.Status() == scan.StatusPassed {
-			passed++
+		if res.Status() == status {
+			count++
 		}
 	}
 
-	return passed
+	return count
 }

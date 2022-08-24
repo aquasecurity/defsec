@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,20 +24,20 @@ func TestCheckNoPublicEgress(t *testing.T) {
 			input: compute.Compute{
 				Networks: []compute.Network{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Firewall: &compute.Firewall{
-							Metadata: types.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							EgressRules: []compute.EgressRule{
 								{
-									Metadata: types.NewTestMetadata(),
+									Metadata: defsecTypes.NewTestMetadata(),
 									FirewallRule: compute.FirewallRule{
-										Metadata: types.NewTestMetadata(),
-										IsAllow:  types.Bool(true, types.NewTestMetadata()),
-										Enforced: types.Bool(true, types.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										IsAllow:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+										Enforced: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 									},
-									DestinationRanges: []types.StringValue{
-										types.String("0.0.0.0/0", types.NewTestMetadata()),
-										types.String("1.2.3.4/32", types.NewTestMetadata()),
+									DestinationRanges: []defsecTypes.StringValue{
+										defsecTypes.String("0.0.0.0/0", defsecTypes.NewTestMetadata()),
+										defsecTypes.String("1.2.3.4/32", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},
@@ -52,19 +52,19 @@ func TestCheckNoPublicEgress(t *testing.T) {
 			input: compute.Compute{
 				Networks: []compute.Network{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Firewall: &compute.Firewall{
-							Metadata: types.NewTestMetadata(),
+							Metadata: defsecTypes.NewTestMetadata(),
 							EgressRules: []compute.EgressRule{
 								{
-									Metadata: types.NewTestMetadata(),
+									Metadata: defsecTypes.NewTestMetadata(),
 									FirewallRule: compute.FirewallRule{
-										Metadata: types.NewTestMetadata(),
-										IsAllow:  types.Bool(true, types.NewTestMetadata()),
-										Enforced: types.Bool(true, types.NewTestMetadata()),
+										Metadata: defsecTypes.NewTestMetadata(),
+										IsAllow:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+										Enforced: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 									},
-									DestinationRanges: []types.StringValue{
-										types.String("1.2.3.4/32", types.NewTestMetadata()),
+									DestinationRanges: []defsecTypes.StringValue{
+										defsecTypes.String("1.2.3.4/32", defsecTypes.NewTestMetadata()),
 									},
 								},
 							},

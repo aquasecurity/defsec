@@ -3,7 +3,7 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestASCheckEnableAtRestEncryption(t *testing.T) {
 			input: ec2.EC2{
 				LaunchConfigurations: []ec2.LaunchConfiguration{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						RootBlockDevice: &ec2.BlockDevice{
-							Metadata:  types.NewTestMetadata(),
-							Encrypted: types.Bool(false, types.NewTestMetadata()),
+							Metadata:  defsecTypes.NewTestMetadata(),
+							Encrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,11 +39,11 @@ func TestASCheckEnableAtRestEncryption(t *testing.T) {
 			input: ec2.EC2{
 				LaunchConfigurations: []ec2.LaunchConfiguration{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						EBSBlockDevices: []*ec2.BlockDevice{
 							{
-								Metadata:  types.NewTestMetadata(),
-								Encrypted: types.Bool(false, types.NewTestMetadata()),
+								Metadata:  defsecTypes.NewTestMetadata(),
+								Encrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -56,15 +56,15 @@ func TestASCheckEnableAtRestEncryption(t *testing.T) {
 			input: ec2.EC2{
 				LaunchConfigurations: []ec2.LaunchConfiguration{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						RootBlockDevice: &ec2.BlockDevice{
-							Metadata:  types.NewTestMetadata(),
-							Encrypted: types.Bool(true, types.NewTestMetadata()),
+							Metadata:  defsecTypes.NewTestMetadata(),
+							Encrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 						EBSBlockDevices: []*ec2.BlockDevice{
 							{
-								Metadata:  types.NewTestMetadata(),
-								Encrypted: types.Bool(true, types.NewTestMetadata()),
+								Metadata:  defsecTypes.NewTestMetadata(),
+								Encrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

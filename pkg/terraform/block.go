@@ -5,7 +5,7 @@ import (
 	"io/fs"
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/context"
 
@@ -26,7 +26,7 @@ type Block struct {
 	cloneIndex   int
 	childBlocks  []*Block
 	attributes   []*Attribute
-	metadata     types.Metadata
+	metadata     defsecTypes.Metadata
 	moduleSource string
 	moduleFS     fs.FS
 }
@@ -49,7 +49,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 	if moduleBlock != nil {
 		moduleName = moduleBlock.FullName()
 	}
-	rng := types.NewRange(
+	rng := defsecTypes.NewRange(
 		r.Filename,
 		r.Start.Line,
 		r.End.Line,
@@ -78,7 +78,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 		}
 	}
 
-	metadata := types.NewMetadata(rng, ref)
+	metadata := defsecTypes.NewMetadata(rng, ref)
 
 	if parentBlock != nil {
 		metadata = metadata.WithParent(parentBlock.metadata)
@@ -125,7 +125,7 @@ func (b *Block) ID() string {
 	return b.id
 }
 
-func (b *Block) GetMetadata() types.Metadata {
+func (b *Block) GetMetadata() defsecTypes.Metadata {
 	return b.metadata
 }
 
@@ -435,15 +435,11 @@ func (b *Block) Attributes() map[string]*Attribute {
 }
 
 func (b *Block) Values() cty.Value {
-	values := make(map[string]cty.Value)
-	// here we set up common "id" values that are set by the provider - this ensures all blocks have a default
-	// referencable id/arn. this isn't perfect, but the only way to link blocks in certain circumstances.
-	values["id"] = cty.StringVal(b.ID())
-	values["arn"] = cty.StringVal(b.ID())
+	values := createPresetValues(b)
 	for _, attribute := range b.GetAttributes() {
 		values[attribute.Name()] = attribute.Value()
 	}
-	return cty.ObjectVal(values)
+	return cty.ObjectVal(postProcessValues(b, values))
 }
 
 func (b *Block) IsNil() bool {

@@ -3,7 +3,7 @@ package cloudtrail
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 			input: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 			input: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
-						Metadata: types.NewTestMetadata(),
-						KMSKeyID: types.String("some-kms-key", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						KMSKeyID: defsecTypes.String("some-kms-key", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

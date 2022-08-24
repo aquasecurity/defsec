@@ -2,9 +2,10 @@ package eks
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/eks"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	eksapi "github.com/aws/aws-sdk-go-v2/service/eks"
 	"github.com/aws/aws-sdk-go-v2/service/eks/types"
 )
@@ -60,19 +61,7 @@ func (a *adapter) getClusters() ([]eks.Cluster, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting clusters...")
-
-	var clusters []eks.Cluster
-
-	for _, arn := range clusterNames {
-		cluster, err := a.adaptCluster(arn)
-		if err != nil {
-			return nil, err
-		}
-		clusters = append(clusters, *cluster)
-		a.Tracker().IncrementResource()
-	}
-
-	return clusters, nil
+	return concurrency.Adapt(clusterNames, a.RootAdapter, a.adaptCluster), nil
 }
 
 // nolint

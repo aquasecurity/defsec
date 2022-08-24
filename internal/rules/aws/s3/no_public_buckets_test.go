@@ -3,7 +3,7 @@ package s3
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,7 +24,7 @@ func TestCheckPublicBucketsAreRestricted(t *testing.T) {
 			input: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 					},
 				},
 			},
@@ -35,10 +35,10 @@ func TestCheckPublicBucketsAreRestricted(t *testing.T) {
 			input: s3.S3{
 				Buckets: []s3.Bucket{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						PublicAccessBlock: &s3.PublicAccessBlock{
-							Metadata:              types.NewTestMetadata(),
-							RestrictPublicBuckets: types.Bool(true, types.NewTestMetadata()),
+							Metadata:              defsecTypes.NewTestMetadata(),
+							RestrictPublicBuckets: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

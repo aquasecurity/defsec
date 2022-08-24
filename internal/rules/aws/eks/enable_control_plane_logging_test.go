@@ -3,7 +3,7 @@ package eks
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,13 +24,13 @@ func TestCheckEnableControlPlaneLogging(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Logging: eks.Logging{
-							API:               types.Bool(false, types.NewTestMetadata()),
-							Audit:             types.Bool(false, types.NewTestMetadata()),
-							Authenticator:     types.Bool(false, types.NewTestMetadata()),
-							ControllerManager: types.Bool(false, types.NewTestMetadata()),
-							Scheduler:         types.Bool(false, types.NewTestMetadata()),
+							API:               defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							Audit:             defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							Authenticator:     defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							ControllerManager: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							Scheduler:         defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -42,13 +42,13 @@ func TestCheckEnableControlPlaneLogging(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Logging: eks.Logging{
-							API:               types.Bool(false, types.NewTestMetadata()),
-							Audit:             types.Bool(true, types.NewTestMetadata()),
-							Authenticator:     types.Bool(false, types.NewTestMetadata()),
-							ControllerManager: types.Bool(true, types.NewTestMetadata()),
-							Scheduler:         types.Bool(true, types.NewTestMetadata()),
+							API:               defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							Audit:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Authenticator:     defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							ControllerManager: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Scheduler:         defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -60,13 +60,13 @@ func TestCheckEnableControlPlaneLogging(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Logging: eks.Logging{
-							API:               types.Bool(true, types.NewTestMetadata()),
-							Audit:             types.Bool(true, types.NewTestMetadata()),
-							Authenticator:     types.Bool(true, types.NewTestMetadata()),
-							ControllerManager: types.Bool(true, types.NewTestMetadata()),
-							Scheduler:         types.Bool(true, types.NewTestMetadata()),
+							API:               defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Audit:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Authenticator:     defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							ControllerManager: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Scheduler:         defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

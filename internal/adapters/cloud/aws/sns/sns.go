@@ -2,15 +2,17 @@ package sns
 
 import (
 	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sns"
 	"github.com/aquasecurity/defsec/pkg/state"
+	"github.com/aquasecurity/defsec/pkg/types"
 	snsapi "github.com/aws/aws-sdk-go-v2/service/sns"
+	snsTypes "github.com/aws/aws-sdk-go-v2/service/sns/types"
 )
 
 type adapter struct {
 	*aws2.RootAdapter
-	api *snsapi.Client
+	client *snsapi.Client
 }
 
 func init() {
@@ -28,7 +30,7 @@ func (a *adapter) Name() string {
 func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 	a.RootAdapter = root
-	a.api = snsapi.NewFromConfig(root.SessionConfig())
+	a.client = snsapi.NewFromConfig(root.SessionConfig())
 	var err error
 
 	state.AWS.SNS.Topics, err = a.getTopics()
@@ -41,58 +43,45 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 func (a *adapter) getTopics() (queues []sns.Topic, err error) {
 
-	a.Tracker().SetServiceLabel("Scanning queues...")
+	a.Tracker().SetServiceLabel("Discovering SNS topics...")
+	var apiTopics []snsTypes.Topic
+	var input snsapi.ListTopicsInput
 
-	batchQueues, token, err := a.getBatchTopics(nil)
-	if err != nil {
-		return nil, err
-	}
-
-	queues = append(queues, batchQueues...)
-
-	for token != nil {
-		batchQueues, token, err = a.getBatchTopics(token)
+	for {
+		output, err := a.client.ListTopics(a.Context(), &input)
 		if err != nil {
 			return nil, err
 		}
-		queues = append(queues, batchQueues...)
+		apiTopics = append(apiTopics, output.Topics...)
+		a.Tracker().SetTotalResources(len(apiTopics))
+		if output.NextToken == nil {
+			break
+		}
+		input.NextToken = output.NextToken
 	}
 
-	return queues, nil
+	a.Tracker().SetServiceLabel("Adapting SNS topics...")
+	return concurrency.Adapt(apiTopics, a.RootAdapter, a.adaptTopic), nil
+
 }
 
-func (a *adapter) getBatchTopics(token *string) (topics []sns.Topic, nextToken *string, err error) {
+func (a *adapter) adaptTopic(topic snsTypes.Topic) (*sns.Topic, error) {
 
-	input := &snsapi.ListTopicsInput{}
+	topicMetadata := a.CreateMetadataFromARN(*topic.TopicArn)
 
-	if token != nil {
-		input.NextToken = token
-	}
-
-	apiTopics, err := a.api.ListTopics(a.Context(), input)
+	t := sns.NewTopic(*topic.TopicArn, topicMetadata)
+	topicAttributes, err := a.client.GetTopicAttributes(a.Context(), &snsapi.GetTopicAttributesInput{
+		TopicArn: topic.TopicArn,
+	})
 	if err != nil {
-		return topics, nil, err
+		a.Debug("Failed to get topic attributes for '%s': %s", *topic.TopicArn, err)
+		return nil, err
 	}
 
-	for _, topic := range apiTopics.Topics {
-
-		topicMetadata := a.CreateMetadataFromARN(*topic.TopicArn)
-
-		t := sns.NewTopic(*topic.TopicArn, topicMetadata)
-		topicAttributes, err := a.api.GetTopicAttributes(a.Context(), &snsapi.GetTopicAttributesInput{
-			TopicArn: topic.TopicArn,
-		})
-		if err != nil {
-			return topics, nil, err
-		}
-
-		if kmsKeyID, ok := topicAttributes.Attributes["KmsMasterKeyId"]; ok {
-			t.Encryption.KMSKeyID = types.String(kmsKeyID, topicMetadata)
-		}
-
-		topics = append(topics, t)
-		a.Tracker().IncrementResource()
+	if kmsKeyID, ok := topicAttributes.Attributes["KmsMasterKeyId"]; ok {
+		t.Encryption.KMSKeyID = types.String(kmsKeyID, topicMetadata)
 	}
-	return topics, apiTopics.NextToken, nil
+
+	return t, nil
 
 }

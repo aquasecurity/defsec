@@ -1,7 +1,7 @@
 package authorization
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Authorization struct {
@@ -9,12 +9,12 @@ type Authorization struct {
 }
 
 type RoleDefinition struct {
-	types.Metadata
+	defsecTypes.Metadata
 	Permissions      []Permission
-	AssignableScopes []types.StringValue
+	AssignableScopes []defsecTypes.StringValue
 }
 
 type Permission struct {
-	types.Metadata
-	Actions []types.StringValue
+	defsecTypes.Metadata
+	Actions []defsecTypes.StringValue
 }

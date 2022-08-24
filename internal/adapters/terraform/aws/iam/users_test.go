@@ -3,12 +3,12 @@ package iam
 import (
 	"testing"
 
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/liamg/iamgo"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -47,13 +47,13 @@ func Test_adaptUsers(t *testing.T) {
 `,
 			expected: []iam.User{
 				{
-					Metadata:   types.NewTestMetadata(),
-					Name:       types.String("loadbalancer", types.NewTestMetadata()),
-					LastAccess: types.TimeUnresolvable(types.NewTestMetadata()),
+					Metadata:   defsecTypes.NewTestMetadata(),
+					Name:       defsecTypes.String("loadbalancer", defsecTypes.NewTestMetadata()),
+					LastAccess: defsecTypes.TimeUnresolvable(defsecTypes.NewTestMetadata()),
 					Policies: []iam.Policy{
 						{
-							Metadata: types.NewTestMetadata(),
-							Name:     types.String("test", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Name:     defsecTypes.String("test", defsecTypes.NewTestMetadata()),
 							Document: func() iam.Document {
 
 								builder := iamgo.NewPolicyBuilder()
@@ -69,11 +69,12 @@ func Test_adaptUsers(t *testing.T) {
 
 								return iam.Document{
 									Parsed:   builder.Build(),
-									Metadata: types.NewTestMetadata(),
+									Metadata: defsecTypes.NewTestMetadata(),
 									IsOffset: false,
 									HasRefs:  false,
 								}
 							}(),
+							Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

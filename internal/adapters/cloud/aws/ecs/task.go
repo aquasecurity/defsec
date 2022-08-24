@@ -1,15 +1,13 @@
 package ecs
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecs"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	ecsapi "github.com/aws/aws-sdk-go-v2/service/ecs"
 )
 
 func (a *adapter) getTaskDefinitions() ([]ecs.TaskDefinition, error) {
-
-	var definitions []ecs.TaskDefinition
-
 	var definitionARNs []string
 
 	a.Tracker().SetServiceLabel("Discovering task definitions...")
@@ -28,16 +26,7 @@ func (a *adapter) getTaskDefinitions() ([]ecs.TaskDefinition, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting task definitions...")
-	for _, definitionARN := range definitionARNs {
-		definition, err := a.adaptTaskDefinition(definitionARN)
-		if err != nil {
-			return nil, err
-		}
-		definitions = append(definitions, *definition)
-		a.Tracker().IncrementResource()
-	}
-
-	return definitions, nil
+	return concurrency.Adapt(definitionARNs, a.RootAdapter, a.adaptTaskDefinition), nil
 }
 
 func (a *adapter) adaptTaskDefinition(arn string) (*ecs.TaskDefinition, error) {
@@ -64,8 +53,8 @@ func (a *adapter) adaptTaskDefinition(arn string) (*ecs.TaskDefinition, error) {
 				hostPort = int(*apiMapping.HostPort)
 			}
 			portMappings = append(portMappings, ecs.PortMapping{
-				ContainerPort: types.Int(containerPort, metadata),
-				HostPort:      types.Int(hostPort, metadata),
+				ContainerPort: defsecTypes.Int(containerPort, metadata),
+				HostPort:      defsecTypes.Int(hostPort, metadata),
 			})
 		}
 
@@ -99,14 +88,14 @@ func (a *adapter) adaptTaskDefinition(arn string) (*ecs.TaskDefinition, error) {
 
 		containerDefinitions = append(containerDefinitions, ecs.ContainerDefinition{
 			Metadata:     metadata,
-			Name:         types.String(name, metadata),
-			Image:        types.String(image, metadata),
-			CPU:          types.Int(cpu, metadata),
-			Memory:       types.Int(memory, metadata),
-			Essential:    types.Bool(essential, metadata),
+			Name:         defsecTypes.String(name, metadata),
+			Image:        defsecTypes.String(image, metadata),
+			CPU:          defsecTypes.Int(cpu, metadata),
+			Memory:       defsecTypes.Int(memory, metadata),
+			Essential:    defsecTypes.Bool(essential, metadata),
 			PortMappings: portMappings,
 			Environment:  envVars,
-			Privileged:   types.Bool(apiContainer.Privileged != nil && *apiContainer.Privileged, metadata),
+			Privileged:   defsecTypes.Bool(apiContainer.Privileged != nil && *apiContainer.Privileged, metadata),
 		})
 	}
 
@@ -117,7 +106,7 @@ func (a *adapter) adaptTaskDefinition(arn string) (*ecs.TaskDefinition, error) {
 			Metadata: metadata,
 			EFSVolumeConfiguration: ecs.EFSVolumeConfiguration{
 				Metadata:                 metadata,
-				TransitEncryptionEnabled: types.Bool(encrypted, metadata),
+				TransitEncryptionEnabled: defsecTypes.Bool(encrypted, metadata),
 			},
 		})
 	}

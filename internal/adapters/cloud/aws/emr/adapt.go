@@ -2,9 +2,10 @@ package emr
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/emr"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/emr"
 	"github.com/aws/aws-sdk-go-v2/service/emr/types"
 )
@@ -65,18 +66,7 @@ func (a *adapter) getClusters() ([]emr.Cluster, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting clusters...")
-
-	var clusters []emr.Cluster
-	for _, apiCluster := range apiClusters {
-		cluster, err := a.adaptCluster(apiCluster)
-		if err != nil {
-			return nil, err
-		}
-		clusters = append(clusters, *cluster)
-		a.Tracker().IncrementResource()
-	}
-
-	return clusters, nil
+	return concurrency.Adapt(apiClusters, a.RootAdapter, a.adaptCluster), nil
 }
 
 func (a *adapter) adaptCluster(apiCluster types.ClusterSummary) (*emr.Cluster, error) {
@@ -90,13 +80,28 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterSummary) (*emr.Cluster, e
 		return nil, err
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if apiCluster.Name != nil {
+		name = defsecTypes.String(*apiCluster.Name, metadata)
+	}
+
+	releaseLabel := defsecTypes.StringDefault("", metadata)
+	if output.Cluster != nil && output.Cluster.ReleaseLabel != nil {
+		releaseLabel = defsecTypes.String(*output.Cluster.ReleaseLabel, metadata)
+	}
+
+	serviceRole := defsecTypes.StringDefault("", metadata)
+	if output.Cluster != nil && output.Cluster.ServiceRole != nil {
+		serviceRole = defsecTypes.String(*output.Cluster.ServiceRole, metadata)
+	}
+
 	return &emr.Cluster{
 		Metadata: metadata,
 		Settings: emr.ClusterSettings{
 			Metadata:     metadata,
-			Name:         defsecTypes.String(*apiCluster.Name, metadata),
-			ReleaseLabel: defsecTypes.String(*output.Cluster.ReleaseLabel, metadata),
-			ServiceRole:  defsecTypes.String(*output.Cluster.ServiceRole, metadata),
+			Name:         name,
+			ReleaseLabel: releaseLabel,
+			ServiceRole:  serviceRole,
 		},
 	}, nil
 }
@@ -125,7 +130,8 @@ func (a *adapter) getSecurityConfigurations() ([]emr.SecurityConfiguration, erro
 	for _, apiConfig := range apiConfigs {
 		config, err := a.adaptConfig(apiConfig)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt security configuration '%s': %s", *apiConfig.Name, err)
+			continue
 		}
 		configs = append(configs, *config)
 		a.Tracker().IncrementResource()
@@ -145,9 +151,19 @@ func (a *adapter) adaptConfig(config types.SecurityConfigurationSummary) (*emr.S
 		return nil, err
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if config.Name != nil {
+		name = defsecTypes.String(*config.Name, metadata)
+	}
+
+	secConf := defsecTypes.StringDefault("", metadata)
+	if output.SecurityConfiguration != nil {
+		secConf = defsecTypes.String(*output.SecurityConfiguration, metadata)
+	}
+
 	return &emr.SecurityConfiguration{
 		Metadata:      metadata,
-		Name:          defsecTypes.String(*config.Name, metadata),
-		Configuration: defsecTypes.String(*output.SecurityConfiguration, metadata),
+		Name:          name,
+		Configuration: secConf,
 	}, nil
 }

@@ -1,9 +1,9 @@
 package apigateway
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	v2 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v2"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func adaptDomainNamesV2(modules terraform.Modules) []v2.DomainName {

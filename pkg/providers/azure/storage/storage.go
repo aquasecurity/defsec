@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Storage struct {
@@ -9,23 +9,29 @@ type Storage struct {
 }
 
 type Account struct {
-	types.Metadata
+	defsecTypes.Metadata
 	NetworkRules      []NetworkRule
-	EnforceHTTPS      types.BoolValue
+	EnforceHTTPS      defsecTypes.BoolValue
 	Containers        []Container
 	QueueProperties   QueueProperties
-	MinimumTLSVersion types.StringValue
+	MinimumTLSVersion defsecTypes.StringValue
+	Queues            []Queue
+}
+
+type Queue struct {
+	defsecTypes.Metadata
+	Name defsecTypes.StringValue
 }
 
 type QueueProperties struct {
-	types.Metadata
-	EnableLogging types.BoolValue
+	defsecTypes.Metadata
+	EnableLogging defsecTypes.BoolValue
 }
 
 type NetworkRule struct {
-	types.Metadata
-	Bypass         []types.StringValue
-	AllowByDefault types.BoolValue
+	defsecTypes.Metadata
+	Bypass         []defsecTypes.StringValue
+	AllowByDefault defsecTypes.BoolValue
 }
 
 const (
@@ -35,6 +41,6 @@ const (
 )
 
 type Container struct {
-	types.Metadata
-	PublicAccess types.StringValue
+	defsecTypes.Metadata
+	PublicAccess defsecTypes.StringValue
 }

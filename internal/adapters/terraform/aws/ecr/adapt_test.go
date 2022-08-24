@@ -3,7 +3,7 @@ package ecr
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecr"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -77,21 +77,21 @@ func Test_adaptRepository(t *testing.T) {
 			  }
 `,
 			expected: ecr.Repository{
-				Metadata:           types.NewTestMetadata(),
-				ImageTagsImmutable: types.Bool(false, types.NewTestMetadata()),
+				Metadata:           defsecTypes.NewTestMetadata(),
+				ImageTagsImmutable: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				ImageScanning: ecr.ImageScanning{
-					Metadata:   types.NewTestMetadata(),
-					ScanOnPush: types.Bool(true, types.NewTestMetadata()),
+					Metadata:   defsecTypes.NewTestMetadata(),
+					ScanOnPush: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 				Encryption: ecr.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Type:     types.String("KMS", types.NewTestMetadata()),
-					KMSKeyID: types.String("aws_kms_key.ecr_kms", types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Type:     defsecTypes.String("KMS", defsecTypes.NewTestMetadata()),
+					KMSKeyID: defsecTypes.String("aws_kms_key.ecr_kms", defsecTypes.NewTestMetadata()),
 				},
 				Policies: []iam.Policy{
 					{
-						Metadata: types.NewTestMetadata(),
-						Name:     types.StringDefault("", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Name:     defsecTypes.StringDefault("", defsecTypes.NewTestMetadata()),
 						Document: func() iam.Document {
 
 							builder := iamgo.NewPolicyBuilder()
@@ -121,9 +121,10 @@ func Test_adaptRepository(t *testing.T) {
 
 							return iam.Document{
 								Parsed:   builder.Build(),
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 							}
 						}(),
+						Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -135,16 +136,16 @@ func Test_adaptRepository(t *testing.T) {
 			}
 `,
 			expected: ecr.Repository{
-				Metadata:           types.NewTestMetadata(),
-				ImageTagsImmutable: types.Bool(false, types.NewTestMetadata()),
+				Metadata:           defsecTypes.NewTestMetadata(),
+				ImageTagsImmutable: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				ImageScanning: ecr.ImageScanning{
-					Metadata:   types.NewTestMetadata(),
-					ScanOnPush: types.Bool(false, types.NewTestMetadata()),
+					Metadata:   defsecTypes.NewTestMetadata(),
+					ScanOnPush: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 				Encryption: ecr.Encryption{
-					Metadata: types.NewTestMetadata(),
-					Type:     types.String("AES256", types.NewTestMetadata()),
-					KMSKeyID: types.String("", types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Type:     defsecTypes.String("AES256", defsecTypes.NewTestMetadata()),
+					KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -153,7 +154,7 @@ func Test_adaptRepository(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
-			adapted := adaptRepository(modules.GetBlocks()[0], modules[0])
+			adapted := adaptRepository(modules.GetBlocks()[0], modules[0], modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
 	}

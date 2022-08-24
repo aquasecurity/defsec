@@ -3,7 +3,7 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckIMDSAccessRequiresToken(t *testing.T) {
 			input: ec2.EC2{
 				Instances: []ec2.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						MetadataOptions: ec2.MetadataOptions{
-							Metadata:     types.NewTestMetadata(),
-							HttpTokens:   types.String("optional", types.NewTestMetadata()),
-							HttpEndpoint: types.String("enabled", types.NewTestMetadata()),
+							Metadata:     defsecTypes.NewTestMetadata(),
+							HttpTokens:   defsecTypes.String("optional", defsecTypes.NewTestMetadata()),
+							HttpEndpoint: defsecTypes.String("enabled", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -40,11 +40,11 @@ func TestCheckIMDSAccessRequiresToken(t *testing.T) {
 			input: ec2.EC2{
 				Instances: []ec2.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						MetadataOptions: ec2.MetadataOptions{
-							Metadata:     types.NewTestMetadata(),
-							HttpTokens:   types.String("required", types.NewTestMetadata()),
-							HttpEndpoint: types.String("disabled", types.NewTestMetadata()),
+							Metadata:     defsecTypes.NewTestMetadata(),
+							HttpTokens:   defsecTypes.String("required", defsecTypes.NewTestMetadata()),
+							HttpEndpoint: defsecTypes.String("disabled", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

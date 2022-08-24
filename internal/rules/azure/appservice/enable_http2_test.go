@@ -3,7 +3,7 @@ package appservice
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckEnableHttp2(t *testing.T) {
 			input: appservice.AppService{
 				Services: []appservice.Service{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Site: struct {
-							EnableHTTP2       types.BoolValue
-							MinimumTLSVersion types.StringValue
+							EnableHTTP2       defsecTypes.BoolValue
+							MinimumTLSVersion defsecTypes.StringValue
 						}{
-							EnableHTTP2: types.Bool(false, types.NewTestMetadata()),
+							EnableHTTP2: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -41,12 +41,12 @@ func TestCheckEnableHttp2(t *testing.T) {
 			input: appservice.AppService{
 				Services: []appservice.Service{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Site: struct {
-							EnableHTTP2       types.BoolValue
-							MinimumTLSVersion types.StringValue
+							EnableHTTP2       defsecTypes.BoolValue
+							MinimumTLSVersion defsecTypes.StringValue
 						}{
-							EnableHTTP2: types.Bool(true, types.NewTestMetadata()),
+							EnableHTTP2: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

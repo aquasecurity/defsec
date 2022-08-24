@@ -2,10 +2,13 @@ package iam
 
 import (
 	"fmt"
+	"strings"
+
+	"github.com/aquasecurity/defsec/pkg/concurrency"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/liamg/iamgo"
 
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/state"
 	iamapi "github.com/aws/aws-sdk-go-v2/service/iam"
@@ -36,14 +39,7 @@ func (a *adapter) adaptPolicies(state *state.State) error {
 
 	a.Tracker().SetServiceLabel("Adapting policies...")
 
-	for _, apiPolicy := range nativePolicies {
-		policy, err := a.adaptPolicy(apiPolicy)
-		if err != nil {
-			return err
-		}
-		state.AWS.IAM.Policies = append(state.AWS.IAM.Policies, *policy)
-		a.Tracker().IncrementResource()
-	}
+	state.AWS.IAM.Policies = concurrency.Adapt(nativePolicies, a.RootAdapter, a.adaptPolicy)
 	return nil
 }
 
@@ -71,13 +67,19 @@ func (a *adapter) adaptPolicy(apiPolicy iamtypes.Policy) (*iam.Policy, error) {
 		return nil, err
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if apiPolicy.PolicyName != nil {
+		name = defsecTypes.String(*apiPolicy.PolicyName, metadata)
+	}
+
 	return &iam.Policy{
 		Metadata: metadata,
-		Name:     types.String(*apiPolicy.PolicyName, metadata),
+		Name:     name,
 		Document: iam.Document{
 			Metadata: metadata,
 			Parsed:   *document,
 		},
+		Builtin: defsecTypes.Bool(strings.HasPrefix(*apiPolicy.Arn, "arn:aws:iam::aws:"), metadata),
 	}, nil
 }
 

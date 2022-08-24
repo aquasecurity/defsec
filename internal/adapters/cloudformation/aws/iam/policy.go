@@ -1,30 +1,34 @@
 package iam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/liamg/iamgo"
 )
 
 func getPolicies(ctx parser.FileContext) (policies []iam.Policy) {
 	for _, policyResource := range ctx.GetResourcesByType("AWS::IAM::Policy") {
-		policyProp := policyResource.GetProperty("PolicyDocument")
-		policyName := policyResource.GetStringProperty("PolicyName")
 
-		doc, err := iamgo.Parse(policyProp.GetJsonBytes())
-		if err != nil {
-			continue
+		policy := iam.Policy{
+			Metadata: policyResource.Metadata(),
+			Name:     policyResource.GetStringProperty("PolicyName"),
+			Document: iam.Document{
+				Metadata: policyResource.Metadata(),
+				Parsed:   iamgo.Document{},
+			},
+			Builtin: defsecTypes.Bool(false, policyResource.Metadata()),
 		}
 
-		policies = append(policies, iam.Policy{
-			Metadata: policyProp.Metadata(),
-			Name:     policyName,
-			Document: iam.Document{
-				Metadata: policyProp.Metadata(),
-				Parsed:   *doc,
-			},
-		})
+		if policyProp := policyResource.GetProperty("PolicyDocument"); policyProp.IsNotNil() {
+			doc, err := iamgo.Parse(policyProp.GetJsonBytes())
+			if err != nil {
+				continue
+			}
+			policy.Document.Parsed = *doc
+		}
+
+		policies = append(policies, policy)
 	}
 	return policies
 }
@@ -51,7 +55,7 @@ func getUsers(ctx parser.FileContext) (users []iam.User) {
 		users = append(users, iam.User{
 			Metadata:   userResource.Metadata(),
 			Name:       userName,
-			LastAccess: types.TimeUnresolvable(userResource.Metadata()),
+			LastAccess: defsecTypes.TimeUnresolvable(userResource.Metadata()),
 			Policies:   getPoliciesDocs(policyProp),
 			AccessKeys: getAccessKeys(ctx, userName.Value()),
 		})
@@ -65,16 +69,16 @@ func getAccessKeys(ctx parser.FileContext, username string) (accessKeys []iam.Ac
 		if !keyUsername.EqualTo(username) {
 			continue
 		}
-		active := types.BoolDefault(false, keyResource.Metadata())
+		active := defsecTypes.BoolDefault(false, keyResource.Metadata())
 		if statusProp := keyResource.GetProperty("Status"); statusProp.IsString() {
-			active = types.Bool(statusProp.AsString() == "Active", statusProp.Metadata())
+			active = defsecTypes.Bool(statusProp.AsString() == "Active", statusProp.Metadata())
 		}
 
 		accessKeys = append(accessKeys, iam.AccessKey{
 			Metadata:     keyResource.Metadata(),
-			AccessKeyId:  types.StringUnresolvable(keyResource.Metadata()),
-			CreationDate: types.TimeUnresolvable(keyResource.Metadata()),
-			LastAccess:   types.TimeUnresolvable(keyResource.Metadata()),
+			AccessKeyId:  defsecTypes.StringUnresolvable(keyResource.Metadata()),
+			CreationDate: defsecTypes.TimeUnresolvable(keyResource.Metadata()),
+			LastAccess:   defsecTypes.TimeUnresolvable(keyResource.Metadata()),
 			Active:       active,
 		})
 	}
@@ -114,6 +118,7 @@ func getPoliciesDocs(policiesProp *parser.Property) []iam.Policy {
 				Metadata: policyProp.Metadata(),
 				Parsed:   *doc,
 			},
+			Builtin: defsecTypes.Bool(false, policyProp.Metadata()),
 		})
 	}
 	return policies

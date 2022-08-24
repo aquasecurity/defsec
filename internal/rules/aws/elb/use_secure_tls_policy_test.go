@@ -3,7 +3,7 @@ package elb
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Listeners: []elb.Listener{
 							{
-								Metadata:  types.NewTestMetadata(),
-								TLSPolicy: types.String("ELBSecurityPolicy-TLS-1-0-2015-04", types.NewTestMetadata()),
+								Metadata:  defsecTypes.NewTestMetadata(),
+								TLSPolicy: defsecTypes.String("ELBSecurityPolicy-TLS-1-0-2015-04", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,11 +41,11 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: elb.ELB{
 				LoadBalancers: []elb.LoadBalancer{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Listeners: []elb.Listener{
 							{
-								Metadata:  types.NewTestMetadata(),
-								TLSPolicy: types.String("ELBSecurityPolicy-TLS-1-2-2017-01", types.NewTestMetadata()),
+								Metadata:  defsecTypes.NewTestMetadata(),
+								TLSPolicy: defsecTypes.String("ELBSecurityPolicy-TLS-1-2-2017-01", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

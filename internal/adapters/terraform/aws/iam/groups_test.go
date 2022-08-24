@@ -3,12 +3,12 @@ package iam
 import (
 	"testing"
 
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/liamg/iamgo"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
-	"github.com/aquasecurity/defsec/internal/types"
-
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -50,12 +50,12 @@ func Test_adaptGroups(t *testing.T) {
 			  `,
 			expected: []iam.Group{
 				{
-					Metadata: types.NewTestMetadata(),
-					Name:     types.String("developers", types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Name:     defsecTypes.String("developers", defsecTypes.NewTestMetadata()),
 					Policies: []iam.Policy{
 						{
-							Metadata: types.NewTestMetadata(),
-							Name:     types.String("my_developer_policy", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Name:     defsecTypes.String("my_developer_policy", defsecTypes.NewTestMetadata()),
 							Document: func() iam.Document {
 
 								builder := iamgo.NewPolicyBuilder()
@@ -71,11 +71,12 @@ func Test_adaptGroups(t *testing.T) {
 
 								return iam.Document{
 									Parsed:   builder.Build(),
-									Metadata: types.NewTestMetadata(),
+									Metadata: defsecTypes.NewTestMetadata(),
 									IsOffset: false,
 									HasRefs:  false,
 								}
 							}(),
+							Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

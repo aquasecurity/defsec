@@ -3,7 +3,7 @@ package sns
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sns"
 
@@ -28,11 +28,11 @@ func Test_adaptTopic(t *testing.T) {
 			}
 `,
 			expected: sns.Topic{
-				Metadata: types.NewTestMetadata(),
-				ARN:      types.String("", types.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				ARN:      defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				Encryption: sns.Encryption{
-					Metadata: types.NewTestMetadata(),
-					KMSKeyID: types.String("/blah", types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					KMSKeyID: defsecTypes.String("/blah", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -43,11 +43,11 @@ func Test_adaptTopic(t *testing.T) {
 			}
 `,
 			expected: sns.Topic{
-				Metadata: types.NewTestMetadata(),
-				ARN:      types.String("", types.NewTestMetadata()),
+				Metadata: defsecTypes.NewTestMetadata(),
+				ARN:      defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				Encryption: sns.Encryption{
-					Metadata: types.NewTestMetadata(),
-					KMSKeyID: types.String("", types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					KMSKeyID: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

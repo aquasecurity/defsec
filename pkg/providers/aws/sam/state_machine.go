@@ -1,25 +1,25 @@
 package sam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type StateMachine struct {
-	types.Metadata
-	Name                 types.StringValue
+	defsecTypes.Metadata
+	Name                 defsecTypes.StringValue
 	LoggingConfiguration LoggingConfiguration
-	ManagedPolicies      []types.StringValue
+	ManagedPolicies      []defsecTypes.StringValue
 	Policies             []iam.Policy
 	Tracing              TracingConfiguration
 }
 
 type LoggingConfiguration struct {
-	types.Metadata
-	LoggingEnabled types.BoolValue
+	defsecTypes.Metadata
+	LoggingEnabled defsecTypes.BoolValue
 }
 
 type TracingConfiguration struct {
-	types.Metadata
-	Enabled types.BoolValue
+	defsecTypes.Metadata
+	Enabled defsecTypes.BoolValue
 }

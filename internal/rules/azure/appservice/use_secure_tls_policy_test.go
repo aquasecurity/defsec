@@ -3,7 +3,7 @@ package appservice
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,13 +24,13 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: appservice.AppService{
 				Services: []appservice.Service{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Site: struct {
-							EnableHTTP2       types.BoolValue
-							MinimumTLSVersion types.StringValue
+							EnableHTTP2       defsecTypes.BoolValue
+							MinimumTLSVersion defsecTypes.StringValue
 						}{
-							EnableHTTP2:       types.Bool(true, types.NewTestMetadata()),
-							MinimumTLSVersion: types.String("1.0", types.NewTestMetadata()),
+							EnableHTTP2:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							MinimumTLSVersion: defsecTypes.String("1.0", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -42,13 +42,13 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: appservice.AppService{
 				Services: []appservice.Service{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Site: struct {
-							EnableHTTP2       types.BoolValue
-							MinimumTLSVersion types.StringValue
+							EnableHTTP2       defsecTypes.BoolValue
+							MinimumTLSVersion defsecTypes.StringValue
 						}{
-							EnableHTTP2:       types.Bool(true, types.NewTestMetadata()),
-							MinimumTLSVersion: types.String("1.2", types.NewTestMetadata()),
+							EnableHTTP2:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							MinimumTLSVersion: defsecTypes.String("1.2", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

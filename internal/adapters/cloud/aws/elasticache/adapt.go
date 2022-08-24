@@ -2,9 +2,10 @@ package elasticache
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticache"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/elasticache"
 	"github.com/aws/aws-sdk-go-v2/service/elasticache/types"
 )
@@ -68,27 +69,32 @@ func (a *adapter) getClusters() ([]elasticache.Cluster, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting clusters...")
-
-	var clusters []elasticache.Cluster
-	for _, apiCluster := range apiClusters {
-		cluster, err := a.adaptCluster(apiCluster)
-		if err != nil {
-			return nil, err
-		}
-		clusters = append(clusters, *cluster)
-		a.Tracker().IncrementResource()
-	}
-
-	return clusters, nil
+	return concurrency.Adapt(apiClusters, a.RootAdapter, a.adaptCluster), nil
 }
 
 func (a *adapter) adaptCluster(apiCluster types.CacheCluster) (*elasticache.Cluster, error) {
 	metadata := a.CreateMetadataFromARN(*apiCluster.ARN)
+
+	engine := defsecTypes.StringDefault("", metadata)
+	if apiCluster.Engine != nil {
+		engine = defsecTypes.String(*apiCluster.Engine, metadata)
+	}
+
+	nodeType := defsecTypes.StringDefault("", metadata)
+	if apiCluster.CacheNodeType != nil {
+		nodeType = defsecTypes.String(*apiCluster.CacheNodeType, metadata)
+	}
+
+	limit := defsecTypes.IntDefault(0, metadata)
+	if apiCluster.SnapshotRetentionLimit != nil {
+		limit = defsecTypes.Int(int(*apiCluster.SnapshotRetentionLimit), metadata)
+	}
+
 	return &elasticache.Cluster{
 		Metadata:               metadata,
-		Engine:                 defsecTypes.String(*apiCluster.Engine, metadata),
-		NodeType:               defsecTypes.String(*apiCluster.CacheNodeType, metadata),
-		SnapshotRetentionLimit: defsecTypes.Int(int(*apiCluster.SnapshotRetentionLimit), metadata),
+		Engine:                 engine,
+		NodeType:               nodeType,
+		SnapshotRetentionLimit: limit,
 	}, nil
 }
 
@@ -117,7 +123,8 @@ func (a *adapter) getReplicationGroups() ([]elasticache.ReplicationGroup, error)
 	for _, apiGroup := range apiGroups {
 		group, err := a.adaptReplicationGroup(apiGroup)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt replication group '%s': %s", *apiGroup.ARN, err)
+			continue
 		}
 		groups = append(groups, *group)
 		a.Tracker().IncrementResource()
@@ -128,10 +135,20 @@ func (a *adapter) getReplicationGroups() ([]elasticache.ReplicationGroup, error)
 
 func (a *adapter) adaptReplicationGroup(apiGroup types.ReplicationGroup) (*elasticache.ReplicationGroup, error) {
 	metadata := a.CreateMetadataFromARN(*apiGroup.ARN)
+
+	transitEncrypted := defsecTypes.BoolDefault(false, metadata)
+	if apiGroup.TransitEncryptionEnabled != nil {
+		transitEncrypted = defsecTypes.Bool(*apiGroup.TransitEncryptionEnabled, metadata)
+	}
+	atRestEncrypted := defsecTypes.BoolDefault(false, metadata)
+	if apiGroup.AtRestEncryptionEnabled != nil {
+		atRestEncrypted = defsecTypes.Bool(*apiGroup.AtRestEncryptionEnabled, metadata)
+	}
+
 	return &elasticache.ReplicationGroup{
 		Metadata:                 metadata,
-		TransitEncryptionEnabled: defsecTypes.Bool(*apiGroup.TransitEncryptionEnabled, metadata),
-		AtRestEncryptionEnabled:  defsecTypes.Bool(*apiGroup.AtRestEncryptionEnabled, metadata),
+		TransitEncryptionEnabled: transitEncrypted,
+		AtRestEncryptionEnabled:  atRestEncrypted,
 	}, nil
 }
 
@@ -160,7 +177,8 @@ func (a *adapter) getSecurityGroups() ([]elasticache.SecurityGroup, error) {
 	for _, apiGroup := range apiGroups {
 		group, err := a.adaptSecurityGroup(apiGroup)
 		if err != nil {
-			return nil, err
+			a.Debug("Failed to adapt security group '%s': %s", *apiGroup.ARN, err)
+			continue
 		}
 		groups = append(groups, *group)
 		a.Tracker().IncrementResource()
@@ -171,8 +189,12 @@ func (a *adapter) getSecurityGroups() ([]elasticache.SecurityGroup, error) {
 
 func (a *adapter) adaptSecurityGroup(apiGroup types.CacheSecurityGroup) (*elasticache.SecurityGroup, error) {
 	metadata := a.CreateMetadataFromARN(*apiGroup.ARN)
+	description := defsecTypes.StringDefault("", metadata)
+	if apiGroup.Description != nil {
+		description = defsecTypes.String(*apiGroup.Description, metadata)
+	}
 	return &elasticache.SecurityGroup{
 		Metadata:    metadata,
-		Description: defsecTypes.String(*apiGroup.Description, metadata),
+		Description: description,
 	}, nil
 }

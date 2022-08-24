@@ -3,7 +3,7 @@ package container
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckConfiguredNetworkPolicy(t *testing.T) {
 			input: container.Container{
 				KubernetesClusters: []container.KubernetesCluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NetworkProfile: container.NetworkProfile{
-							Metadata:      types.NewTestMetadata(),
-							NetworkPolicy: types.String("", types.NewTestMetadata()),
+							Metadata:      defsecTypes.NewTestMetadata(),
+							NetworkPolicy: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckConfiguredNetworkPolicy(t *testing.T) {
 			input: container.Container{
 				KubernetesClusters: []container.KubernetesCluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						NetworkProfile: container.NetworkProfile{
-							Metadata:      types.NewTestMetadata(),
-							NetworkPolicy: types.String("calico", types.NewTestMetadata()),
+							Metadata:      defsecTypes.NewTestMetadata(),
+							NetworkPolicy: defsecTypes.String("calico", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

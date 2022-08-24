@@ -3,7 +3,7 @@ package eks
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,7 +24,7 @@ func TestCheckNoPublicClusterAccess(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						PublicAccessEnabled: types.Bool(true, types.NewTestMetadata()),
+						PublicAccessEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -35,7 +35,7 @@ func TestCheckNoPublicClusterAccess(t *testing.T) {
 			input: eks.EKS{
 				Clusters: []eks.Cluster{
 					{
-						PublicAccessEnabled: types.Bool(false, types.NewTestMetadata()),
+						PublicAccessEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

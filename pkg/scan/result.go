@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
 )
@@ -24,7 +24,7 @@ type Result struct {
 	description      string
 	annotation       string
 	status           Status
-	metadata         types.Metadata
+	metadata         defsecTypes.Metadata
 	severityOverride *severity.Severity
 	regoNamespace    string
 	regoRule         string
@@ -60,7 +60,7 @@ func (r *Result) OverrideDescription(description string) {
 	r.description = description
 }
 
-func (r *Result) OverrideMetadata(metadata types.Metadata) {
+func (r *Result) OverrideMetadata(metadata defsecTypes.Metadata) {
 	r.metadata = metadata
 }
 
@@ -92,11 +92,11 @@ func (r Result) Annotation() string {
 	return r.annotation
 }
 
-func (r Result) Metadata() types.Metadata {
+func (r Result) Metadata() defsecTypes.Metadata {
 	return r.metadata
 }
 
-func (r Result) Range() types.Range {
+func (r Result) Range() defsecTypes.Range {
 	return r.metadata.Range()
 }
 
@@ -104,35 +104,33 @@ func (r Result) Traces() []string {
 	return r.traces
 }
 
-func (r *Result) AbsolutePath(fsRoot string) string {
+func (r *Result) AbsolutePath(fsRoot string, metadata defsecTypes.Metadata) string {
 	if strings.HasSuffix(fsRoot, ":") {
 		fsRoot += "/"
 	}
 
-	m := r.Metadata()
-	if m.IsUnmanaged() || m.Range() == nil {
+	if metadata.IsUnmanaged() || metadata.Range() == nil {
 		return ""
 	}
-	rng := m.Range()
+	rng := metadata.Range()
 	if rng.GetSourcePrefix() != "" && !strings.HasPrefix(rng.GetSourcePrefix(), ".") {
 		return rng.GetFilename()
 	}
 	return filepath.Join(fsRoot, rng.GetLocalFilename())
 }
 
-func (r *Result) RelativePathTo(fsRoot string, to string) string {
+func (r *Result) RelativePathTo(fsRoot, to string, metadata defsecTypes.Metadata) string {
 
-	absolute := r.AbsolutePath(fsRoot)
+	absolute := r.AbsolutePath(fsRoot, metadata)
 
 	if strings.HasSuffix(fsRoot, ":") {
 		fsRoot += "/"
 	}
 
-	m := r.Metadata()
-	if m.IsUnmanaged() || m.Range() == nil {
+	if metadata.IsUnmanaged() || metadata.Range() == nil {
 		return absolute
 	}
-	rng := m.Range()
+	rng := metadata.Range()
 	if rng.GetSourcePrefix() != "" && !strings.HasPrefix(rng.GetSourcePrefix(), ".") {
 		return absolute
 	}
@@ -149,7 +147,7 @@ func (r *Result) RelativePathTo(fsRoot string, to string) string {
 type Results []Result
 
 type MetadataProvider interface {
-	GetMetadata() types.Metadata
+	GetMetadata() defsecTypes.Metadata
 	GetRawValue() interface{}
 }
 
@@ -259,16 +257,16 @@ func (r *Results) SetSourceAndFilesystem(source string, f fs.FS, logicalSource b
 		}
 		rng := m.Range()
 
-		newrng := types.NewRange(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(), source, f)
+		newrng := defsecTypes.NewRange(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(), source, f)
 		if logicalSource {
-			newrng = types.NewRangeWithLogicalSource(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(),
+			newrng = defsecTypes.NewRangeWithLogicalSource(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(),
 				source, f)
 		}
 		switch {
 		case m.IsExplicit():
-			m = types.NewExplicitMetadata(newrng, m.Reference())
+			m = defsecTypes.NewExplicitMetadata(newrng, m.Reference())
 		default:
-			m = types.NewMetadata(newrng, m.Reference())
+			m = defsecTypes.NewMetadata(newrng, m.Reference())
 		}
 		(*r)[i].OverrideMetadata(m)
 	}

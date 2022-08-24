@@ -3,7 +3,7 @@ package elasticsearch
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticsearch"
 
@@ -47,24 +47,24 @@ func Test_adaptDomain(t *testing.T) {
 			  }
 `,
 			expected: elasticsearch.Domain{
-				Metadata:   types.NewTestMetadata(),
-				DomainName: types.String("domain-foo", types.NewTestMetadata()),
+				Metadata:   defsecTypes.NewTestMetadata(),
+				DomainName: defsecTypes.String("domain-foo", defsecTypes.NewTestMetadata()),
 				LogPublishing: elasticsearch.LogPublishing{
-					Metadata:     types.NewTestMetadata(),
-					AuditEnabled: types.Bool(true, types.NewTestMetadata()),
+					Metadata:     defsecTypes.NewTestMetadata(),
+					AuditEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 				TransitEncryption: elasticsearch.TransitEncryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 				AtRestEncryption: elasticsearch.AtRestEncryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(true, types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 				Endpoint: elasticsearch.Endpoint{
-					Metadata:     types.NewTestMetadata(),
-					EnforceHTTPS: types.Bool(true, types.NewTestMetadata()),
-					TLSPolicy:    types.String("Policy-Min-TLS-1-2-2019-07", types.NewTestMetadata()),
+					Metadata:     defsecTypes.NewTestMetadata(),
+					EnforceHTTPS: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					TLSPolicy:    defsecTypes.String("Policy-Min-TLS-1-2-2019-07", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},
@@ -75,24 +75,24 @@ func Test_adaptDomain(t *testing.T) {
 			  }
 `,
 			expected: elasticsearch.Domain{
-				Metadata:   types.NewTestMetadata(),
-				DomainName: types.String("", types.NewTestMetadata()),
+				Metadata:   defsecTypes.NewTestMetadata(),
+				DomainName: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				LogPublishing: elasticsearch.LogPublishing{
-					Metadata:     types.NewTestMetadata(),
-					AuditEnabled: types.Bool(false, types.NewTestMetadata()),
+					Metadata:     defsecTypes.NewTestMetadata(),
+					AuditEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 				TransitEncryption: elasticsearch.TransitEncryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(false, types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 				AtRestEncryption: elasticsearch.AtRestEncryption{
-					Metadata: types.NewTestMetadata(),
-					Enabled:  types.Bool(false, types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				},
 				Endpoint: elasticsearch.Endpoint{
-					Metadata:     types.NewTestMetadata(),
-					EnforceHTTPS: types.Bool(false, types.NewTestMetadata()),
-					TLSPolicy:    types.String("", types.NewTestMetadata()),
+					Metadata:     defsecTypes.NewTestMetadata(),
+					EnforceHTTPS: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					TLSPolicy:    defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

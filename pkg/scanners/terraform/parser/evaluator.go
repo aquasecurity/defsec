@@ -7,9 +7,9 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/aquasecurity/defsec/pkg/debug"
+	"github.com/aquasecurity/defsec/pkg/types"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/debug"
 
 	tfcontext "github.com/aquasecurity/defsec/pkg/scanners/terraform/context"
 	"github.com/aquasecurity/defsec/pkg/terraform"

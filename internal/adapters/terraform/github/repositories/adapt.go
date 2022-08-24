@@ -1,9 +1,9 @@
 package repositories
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/github"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) []github.Repository {

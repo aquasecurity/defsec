@@ -3,7 +3,7 @@ package dns
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/google/dns"
 
@@ -42,19 +42,19 @@ func Test_Adapt(t *testing.T) {
 			expected: dns.DNS{
 				ManagedZones: []dns.ManagedZone{
 					{
-						Metadata:   types.NewTestMetadata(),
-						Visibility: types.String("public", types.NewTestMetadata()),
+						Metadata:   defsecTypes.NewTestMetadata(),
+						Visibility: defsecTypes.String("public", defsecTypes.NewTestMetadata()),
 						DNSSec: dns.DNSSec{
-							Enabled: types.Bool(true, types.NewTestMetadata()),
+							Enabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							DefaultKeySpecs: dns.KeySpecs{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								ZoneSigningKey: dns.Key{
-									Metadata:  types.NewTestMetadata(),
-									Algorithm: types.String("", types.NewTestMetadata()),
+									Metadata:  defsecTypes.NewTestMetadata(),
+									Algorithm: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 								},
 								KeySigningKey: dns.Key{
-									Metadata:  types.NewTestMetadata(),
-									Algorithm: types.String("rsasha1", types.NewTestMetadata()),
+									Metadata:  defsecTypes.NewTestMetadata(),
+									Algorithm: defsecTypes.String("rsasha1", defsecTypes.NewTestMetadata()),
 								},
 							},
 						},
@@ -91,14 +91,14 @@ func Test_adaptKeySpecs(t *testing.T) {
 			}
 `,
 			expected: dns.KeySpecs{
-				Metadata: types.NewTestMetadata(),
+				Metadata: defsecTypes.NewTestMetadata(),
 				ZoneSigningKey: dns.Key{
-					Metadata:  types.NewTestMetadata(),
-					Algorithm: types.String("rsasha512", types.NewTestMetadata()),
+					Metadata:  defsecTypes.NewTestMetadata(),
+					Algorithm: defsecTypes.String("rsasha512", defsecTypes.NewTestMetadata()),
 				},
 				KeySigningKey: dns.Key{
-					Metadata:  types.NewTestMetadata(),
-					Algorithm: types.String("", types.NewTestMetadata()),
+					Metadata:  defsecTypes.NewTestMetadata(),
+					Algorithm: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
 			},
 		},

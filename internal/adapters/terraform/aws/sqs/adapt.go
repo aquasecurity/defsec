@@ -2,10 +2,10 @@ package sqs
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/aws/iam"
-	"github.com/aquasecurity/defsec/internal/types"
 	iamp "github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/liamg/iamgo"
 
 	"github.com/google/uuid"
@@ -34,18 +34,28 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 
 		policy := iamp.Policy{
 			Metadata: policyBlock.GetMetadata(),
-			Name:     types.StringDefault("", policyBlock.GetMetadata()),
+			Name:     defsecTypes.StringDefault("", policyBlock.GetMetadata()),
 			Document: iamp.Document{
 				Metadata: policyBlock.GetMetadata(),
 			},
+			Builtin: defsecTypes.Bool(false, policyBlock.GetMetadata()),
 		}
 		if attr := policyBlock.GetAttribute("policy"); attr.IsString() {
-			parsed, err := iamgo.ParseString(attr.Value().AsString())
+			dataBlock, err := a.modules.GetBlockById(attr.Value().AsString())
 			if err != nil {
-				continue
+				parsed, err := iamgo.ParseString(attr.Value().AsString())
+				if err != nil {
+					continue
+				}
+				policy.Document.Parsed = *parsed
+				policy.Document.Metadata = attr.GetMetadata()
+			} else if dataBlock.Type() == "data" && dataBlock.TypeLabel() == "aws_iam_policy_document" {
+				if doc, err := iam.ConvertTerraformDocument(a.modules, dataBlock); err == nil {
+					policy.Document.Parsed = doc.Document
+					policy.Document.Metadata = doc.Source.GetMetadata()
+					policy.Document.IsOffset = true
+				}
 			}
-			policy.Document.Parsed = *parsed
-			policy.Document.Metadata = attr.GetMetadata()
 		} else if refBlock, err := a.modules.GetReferencedBlock(attr, policyBlock); err == nil {
 			if refBlock.Type() == "data" && refBlock.TypeLabel() == "aws_iam_policy_document" {
 				if doc, err := iam.ConvertTerraformDocument(a.modules, refBlock); err == nil {
@@ -66,12 +76,12 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 		}
 
 		a.queues[uuid.NewString()] = sqs.Queue{
-			Metadata: types.NewUnmanagedMetadata(),
-			QueueURL: types.StringDefault("", types.NewUnmanagedMetadata()),
+			Metadata: defsecTypes.NewUnmanagedMetadata(),
+			QueueURL: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			Encryption: sqs.Encryption{
-				Metadata:          types.NewUnmanagedMetadata(),
-				ManagedEncryption: types.BoolDefault(false, types.NewUnmanagedMetadata()),
-				KMSKeyID:          types.StringDefault("", types.NewUnmanagedMetadata()),
+				Metadata:          defsecTypes.NewUnmanagedMetadata(),
+				ManagedEncryption: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+				KMSKeyID:          defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			},
 			Policies: []iamp.Policy{policy},
 		}
@@ -92,30 +102,52 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 
 	var policies []iamp.Policy
 	if attr := resource.GetAttribute("policy"); attr.IsString() {
-		policy := iamp.Policy{
-			Metadata: attr.GetMetadata(),
-			Name:     types.StringDefault("", attr.GetMetadata()),
-			Document: iamp.Document{
+
+		dataBlock, err := a.modules.GetBlockById(attr.Value().AsString())
+		if err != nil {
+			policy := iamp.Policy{
 				Metadata: attr.GetMetadata(),
-			},
+				Name:     defsecTypes.StringDefault("", attr.GetMetadata()),
+				Document: iamp.Document{
+					Metadata: attr.GetMetadata(),
+				},
+				Builtin: defsecTypes.Bool(false, attr.GetMetadata()),
+			}
+			parsed, err := iamgo.ParseString(attr.Value().AsString())
+			if err == nil {
+				policy.Document.Parsed = *parsed
+				policy.Document.Metadata = attr.GetMetadata()
+				policy.Metadata = attr.GetMetadata()
+				policies = append(policies, policy)
+			}
+		} else if dataBlock.Type() == "data" && dataBlock.TypeLabel() == "aws_iam_policy_document" {
+			if doc, err := iam.ConvertTerraformDocument(a.modules, dataBlock); err == nil {
+				policy := iamp.Policy{
+					Metadata: attr.GetMetadata(),
+					Name:     defsecTypes.StringDefault("", attr.GetMetadata()),
+					Document: iamp.Document{
+						Metadata: doc.Source.GetMetadata(),
+						Parsed:   doc.Document,
+						IsOffset: true,
+						HasRefs:  false,
+					},
+					Builtin: defsecTypes.Bool(false, attr.GetMetadata()),
+				}
+				policies = append(policies, policy)
+			}
 		}
-		parsed, err := iamgo.ParseString(attr.Value().AsString())
-		if err == nil {
-			policy.Document.Parsed = *parsed
-			policy.Document.Metadata = attr.GetMetadata()
-			policy.Metadata = attr.GetMetadata()
-			policies = append(policies, policy)
-		}
+
 	} else if refBlock, err := a.modules.GetReferencedBlock(attr, resource); err == nil {
 		if refBlock.Type() == "data" && refBlock.TypeLabel() == "aws_iam_policy_document" {
 			if doc, err := iam.ConvertTerraformDocument(a.modules, refBlock); err == nil {
 				policy := iamp.Policy{
 					Metadata: doc.Source.GetMetadata(),
-					Name:     types.StringDefault("", doc.Source.GetMetadata()),
+					Name:     defsecTypes.StringDefault("", doc.Source.GetMetadata()),
 					Document: iamp.Document{
 						Metadata: doc.Source.GetMetadata(),
 						Parsed:   doc.Document,
 					},
+					Builtin: defsecTypes.Bool(false, refBlock.GetMetadata()),
 				}
 				policies = append(policies, policy)
 			}
@@ -124,7 +156,7 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 
 	a.queues[resource.ID()] = sqs.Queue{
 		Metadata: resource.GetMetadata(),
-		QueueURL: types.StringDefault("", resource.GetMetadata()),
+		QueueURL: defsecTypes.StringDefault("", resource.GetMetadata()),
 		Encryption: sqs.Encryption{
 			Metadata:          resource.GetMetadata(),
 			ManagedEncryption: managedEncryption.AsBoolValueOrDefault(false, resource),

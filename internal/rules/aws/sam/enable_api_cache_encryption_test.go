@@ -3,7 +3,7 @@ package sam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableApiCacheEncryption(t *testing.T) {
 			input: sam.SAM{
 				APIs: []sam.API{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						RESTMethodSettings: sam.RESTMethodSettings{
-							Metadata:           types.NewTestMetadata(),
-							CacheDataEncrypted: types.Bool(false, types.NewTestMetadata()),
+							Metadata:           defsecTypes.NewTestMetadata(),
+							CacheDataEncrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableApiCacheEncryption(t *testing.T) {
 			input: sam.SAM{
 				APIs: []sam.API{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						RESTMethodSettings: sam.RESTMethodSettings{
-							Metadata:           types.NewTestMetadata(),
-							CacheDataEncrypted: types.Bool(true, types.NewTestMetadata()),
+							Metadata:           defsecTypes.NewTestMetadata(),
+							CacheDataEncrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

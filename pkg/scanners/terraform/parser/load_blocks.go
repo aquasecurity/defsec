@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
@@ -53,7 +53,7 @@ func parseIgnores(data []byte, path string, moduleSource string) []terraform.Ign
 
 }
 
-var commentPattern = regexp.MustCompile(`^\s*([/]+|/\*|#)\s*tfsec:`)
+var commentPattern = regexp.MustCompile(`^\s*([/]+|/\*|#)+\s*tfsec:`)
 
 func parseIgnoresFromLine(input string) []terraform.Ignore {
 

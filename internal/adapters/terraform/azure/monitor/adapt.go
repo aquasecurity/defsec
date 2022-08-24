@@ -1,9 +1,9 @@
 package monitor
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/azure/monitor"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) monitor.Monitor {
@@ -29,8 +29,8 @@ func adaptLogProfile(resource *terraform.Block) monitor.LogProfile {
 		Metadata: resource.GetMetadata(),
 		RetentionPolicy: monitor.RetentionPolicy{
 			Metadata: resource.GetMetadata(),
-			Enabled:  types.BoolDefault(false, resource.GetMetadata()),
-			Days:     types.IntDefault(0, resource.GetMetadata()),
+			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
+			Days:     defsecTypes.IntDefault(0, resource.GetMetadata()),
 		},
 		Categories: nil,
 		Locations:  nil,

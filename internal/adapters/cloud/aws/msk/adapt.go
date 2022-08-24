@@ -2,9 +2,10 @@ package msk
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/msk"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/kafka"
 	"github.com/aws/aws-sdk-go-v2/service/kafka/types"
 )
@@ -60,18 +61,7 @@ func (a *adapter) getClusters() ([]msk.Cluster, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting clusters...")
-
-	var clusters []msk.Cluster
-	for _, apiCluster := range apiClusters {
-		cluster, err := a.adaptCluster(apiCluster)
-		if err != nil {
-			return nil, err
-		}
-		clusters = append(clusters, *cluster)
-		a.Tracker().IncrementResource()
-	}
-
-	return clusters, nil
+	return concurrency.Adapt(apiClusters, a.RootAdapter, a.adaptCluster), nil
 }
 
 func (a *adapter) adaptCluster(apiCluster types.ClusterInfo) (*msk.Cluster, error) {

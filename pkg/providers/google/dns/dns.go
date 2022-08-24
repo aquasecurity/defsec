@@ -1,7 +1,7 @@
 package dns
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type DNS struct {
@@ -9,28 +9,28 @@ type DNS struct {
 }
 
 type ManagedZone struct {
-	types.Metadata
+	defsecTypes.Metadata
 	DNSSec     DNSSec
-	Visibility types.StringValue
+	Visibility defsecTypes.StringValue
 }
 
 func (m ManagedZone) IsPrivate() bool {
-	return m.Visibility.EqualTo("private", types.IgnoreCase)
+	return m.Visibility.EqualTo("private", defsecTypes.IgnoreCase)
 }
 
 type DNSSec struct {
-	types.Metadata
-	Enabled         types.BoolValue
+	defsecTypes.Metadata
+	Enabled         defsecTypes.BoolValue
 	DefaultKeySpecs KeySpecs
 }
 
 type KeySpecs struct {
-	types.Metadata
+	defsecTypes.Metadata
 	KeySigningKey  Key
 	ZoneSigningKey Key
 }
 
 type Key struct {
-	types.Metadata
-	Algorithm types.StringValue
+	defsecTypes.Metadata
+	Algorithm defsecTypes.StringValue
 }

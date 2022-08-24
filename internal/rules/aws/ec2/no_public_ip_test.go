@@ -3,10 +3,10 @@ package ec2
 import (
 	"testing"
 
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 	"github.com/aquasecurity/defsec/pkg/scan"
-
-	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNoPublicIp(t *testing.T) {
 			input: ec2.EC2{
 				LaunchConfigurations: []ec2.LaunchConfiguration{
 					{
-						Metadata:          types.NewTestMetadata(),
-						AssociatePublicIP: types.Bool(true, types.NewTestMetadata()),
+						Metadata:          defsecTypes.NewTestMetadata(),
+						AssociatePublicIP: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckNoPublicIp(t *testing.T) {
 			input: ec2.EC2{
 				LaunchConfigurations: []ec2.LaunchConfiguration{
 					{
-						Metadata:          types.NewTestMetadata(),
-						AssociatePublicIP: types.Bool(false, types.NewTestMetadata()),
+						Metadata:          defsecTypes.NewTestMetadata(),
+						AssociatePublicIP: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

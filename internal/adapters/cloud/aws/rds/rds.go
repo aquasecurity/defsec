@@ -2,11 +2,13 @@ package rds
 
 import (
 	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	"github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/rds"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	rdsApi "github.com/aws/aws-sdk-go-v2/service/rds"
+	"github.com/aws/aws-sdk-go-v2/service/rds/types"
 )
 
 type adapter struct {
@@ -18,15 +20,15 @@ func init() {
 	aws2.RegisterServiceAdapter(&adapter{})
 }
 
-func (a adapter) Name() string {
+func (a *adapter) Name() string {
 	return "rds"
 }
 
-func (a adapter) Provider() string {
+func (a *adapter) Provider() string {
 	return "aws"
 }
 
-func (a adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
+func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 	a.RootAdapter = root
 	a.api = rdsApi.NewFromConfig(root.SessionConfig())
@@ -44,206 +46,163 @@ func (a adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 	state.AWS.RDS.Classic, err = a.getClassic()
 	if err != nil {
-		return err
+		a.Debug("Failed to retrieve classic resource: %s", err)
+		return nil
 	}
 
 	return nil
 }
 
-func (a adapter) getInstances() (instances []rds.Instance, err error) {
+func (a *adapter) getInstances() (instances []rds.Instance, err error) {
 
-	a.Tracker().SetServiceLabel("Scanning RDS instances...")
+	a.Tracker().SetServiceLabel("Discovering RDS instances...")
+	var apiDBInstances []types.DBInstance
+	var input rdsApi.DescribeDBInstancesInput
 
-	batchInstances, token, err := a.getInstanceBatch(nil)
-	if err != nil {
-		return instances, err
-	}
-
-	instances = append(instances, batchInstances...)
-
-	for token != nil {
-		instances, token, err = a.getInstanceBatch(token)
+	for {
+		output, err := a.api.DescribeDBInstances(a.Context(), &input)
 		if err != nil {
-			return instances, err
+			return nil, err
 		}
-		instances = append(instances, batchInstances...)
+		apiDBInstances = append(apiDBInstances, output.DBInstances...)
+		a.Tracker().SetTotalResources(len(apiDBInstances))
+		if output.Marker == nil {
+			break
+		}
+		input.Marker = output.Marker
 	}
 
-	return instances, nil
+	a.Tracker().SetServiceLabel("Adapting RDS instances...")
+	return concurrency.Adapt(apiDBInstances, a.RootAdapter, a.adaptDBInstance), nil
 }
 
-func (a adapter) getClusters() (clusters []rds.Cluster, err error) {
+func (a *adapter) getClusters() (clusters []rds.Cluster, err error) {
 
-	a.Tracker().SetServiceLabel("Scanning RDS clusters...")
+	a.Tracker().SetServiceLabel("Discovering RDS clusters...")
+	var apDBClusters []types.DBCluster
+	var input rdsApi.DescribeDBClustersInput
 
-	batchClusters, token, err := a.getClusterBatch(nil)
-	if err != nil {
-		return clusters, err
-	}
-
-	clusters = append(clusters, batchClusters...)
-
-	for token != nil {
-		clusters, token, err = a.getClusterBatch(token)
+	for {
+		output, err := a.api.DescribeDBClusters(a.Context(), &input)
 		if err != nil {
-			return clusters, err
+			return nil, err
 		}
-		clusters = append(clusters, batchClusters...)
+		apDBClusters = append(apDBClusters, output.DBClusters...)
+		a.Tracker().SetTotalResources(len(apDBClusters))
+		if output.Marker == nil {
+			break
+		}
+		input.Marker = output.Marker
 	}
-
-	return clusters, nil
+	a.Tracker().SetServiceLabel("Adapting RDS clusters...")
+	return concurrency.Adapt(apDBClusters, a.RootAdapter, a.adaptCluster), nil
 }
 
-func (a adapter) getClassic() (rds.Classic, error) {
+func (a *adapter) getClassic() (rds.Classic, error) {
 
 	classic := rds.Classic{
 		DBSecurityGroups: nil,
 	}
 
-	a.Tracker().SetServiceLabel("Scanning RDS classic instances...")
+	a.Tracker().SetServiceLabel("Discovering RDS classic instances...")
+	var apiDBSGs []types.DBSecurityGroup
+	var input rdsApi.DescribeDBSecurityGroupsInput
 
-	classicSecurityGroups, token, err := a.getClassicBatch(nil)
-	if err != nil {
-		return classic, err
-	}
-
-	classic.DBSecurityGroups = append(classic.DBSecurityGroups, classicSecurityGroups...)
-
-	for token != nil {
-		classic.DBSecurityGroups, token, err = a.getClassicBatch(token)
+	for {
+		output, err := a.api.DescribeDBSecurityGroups(a.Context(), &input)
 		if err != nil {
 			return classic, err
 		}
-		classic.DBSecurityGroups = append(classic.DBSecurityGroups, classicSecurityGroups...)
+		apiDBSGs = append(apiDBSGs, output.DBSecurityGroups...)
+		a.Tracker().SetTotalResources(len(apiDBSGs))
+		if output.Marker == nil {
+			break
+		}
+		input.Marker = output.Marker
 	}
+	a.Tracker().SetServiceLabel("Adapting RDS clusters...")
+	sgs := concurrency.Adapt(apiDBSGs, a.RootAdapter, a.adaptClassic)
 
-	return classic, err
+	classic.DBSecurityGroups = sgs
+	return classic, nil
 }
 
-func (a *adapter) getInstanceBatch(token *string) (instances []rds.Instance, nextToken *string, err error) {
+func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, error) {
 
-	input := &rdsApi.DescribeDBInstancesInput{}
+	dbInstanceMetadata := a.CreateMetadata("db:" + *dbInstance.DBInstanceIdentifier)
 
-	if token != nil {
-		input.Marker = token
+	instance := &rds.Instance{
+		Metadata:                  dbInstanceMetadata,
+		BackupRetentionPeriodDays: defsecTypes.IntFromInt32(dbInstance.BackupRetentionPeriod, dbInstanceMetadata),
+		ReplicationSourceARN:      defsecTypes.String(aws.ToString(dbInstance.ReadReplicaSourceDBInstanceIdentifier), dbInstanceMetadata),
+		PerformanceInsights: getPerformanceInsights(
+			dbInstance.PerformanceInsightsEnabled,
+			dbInstance.PerformanceInsightsKMSKeyId,
+			dbInstanceMetadata,
+		),
+		Encryption:   getInstanceEncryption(dbInstance.StorageEncrypted, dbInstance.KmsKeyId, dbInstanceMetadata),
+		PublicAccess: defsecTypes.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
 	}
 
-	apiDbInstances, err := a.api.DescribeDBInstances(a.Context(), input)
-	if err != nil {
-		return instances, nextToken, err
-	}
-
-	for _, dbInstance := range apiDbInstances.DBInstances {
-
-		dbInstanceMetadata := a.CreateMetadata(*dbInstance.DBInstanceIdentifier)
-
-		instances = append(instances, rds.Instance{
-			Metadata:                  dbInstanceMetadata,
-			BackupRetentionPeriodDays: types.IntFromInt32(dbInstance.BackupRetentionPeriod, dbInstanceMetadata),
-			ReplicationSourceARN:      types.String(aws.ToString(dbInstance.ReadReplicaSourceDBInstanceIdentifier), dbInstanceMetadata),
-			PerformanceInsights: getPerformanceInsights(
-				dbInstance.PerformanceInsightsEnabled,
-				dbInstance.PerformanceInsightsKMSKeyId,
-				dbInstanceMetadata,
-			),
-			Encryption:   getInstanceEncryption(dbInstance.StorageEncrypted, dbInstance.KmsKeyId, dbInstanceMetadata),
-			PublicAccess: types.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
-		})
-
-		a.Tracker().IncrementResource()
-	}
-
-	nextToken = apiDbInstances.Marker
-	return instances, nextToken, nil
+	return instance, nil
 }
 
-func (a *adapter) getClusterBatch(token *string) (clusters []rds.Cluster, nextToken *string, err error) {
+func (a *adapter) adaptCluster(dbCluster types.DBCluster) (*rds.Cluster, error) {
 
-	input := &rdsApi.DescribeDBClustersInput{}
-	if token != nil {
-		input.Marker = token
+	dbClusterMetadata := a.CreateMetadata("cluster:" + *dbCluster.DBClusterIdentifier)
+
+	cluster := &rds.Cluster{
+		Metadata:                  dbClusterMetadata,
+		BackupRetentionPeriodDays: defsecTypes.IntFromInt32(aws.ToInt32(dbCluster.BackupRetentionPeriod), dbClusterMetadata),
+		ReplicationSourceARN:      defsecTypes.String(aws.ToString(dbCluster.ReplicationSourceIdentifier), dbClusterMetadata),
+		PerformanceInsights: getPerformanceInsights(
+			dbCluster.PerformanceInsightsEnabled,
+			dbCluster.PerformanceInsightsKMSKeyId,
+			dbClusterMetadata,
+		),
+		Encryption:   getInstanceEncryption(dbCluster.StorageEncrypted, dbCluster.KmsKeyId, dbClusterMetadata),
+		PublicAccess: defsecTypes.Bool(aws.ToBool(dbCluster.PubliclyAccessible), dbClusterMetadata),
 	}
 
-	apiDbClusters, err := a.api.DescribeDBClusters(a.Context(), input)
-	if err != nil {
-		return clusters, nextToken, err
-	}
-
-	for _, dbCluster := range apiDbClusters.DBClusters {
-
-		dbClusterMetadata := a.CreateMetadata(*dbCluster.DBClusterIdentifier)
-
-		clusters = append(clusters, rds.Cluster{
-			Metadata:                  dbClusterMetadata,
-			BackupRetentionPeriodDays: types.IntFromInt32(aws.ToInt32(dbCluster.BackupRetentionPeriod), dbClusterMetadata),
-			ReplicationSourceARN:      types.String(aws.ToString(dbCluster.ReplicationSourceIdentifier), dbClusterMetadata),
-			PerformanceInsights: getPerformanceInsights(
-				dbCluster.PerformanceInsightsEnabled,
-				dbCluster.PerformanceInsightsKMSKeyId,
-				dbClusterMetadata,
-			),
-			Encryption:   getInstanceEncryption(dbCluster.StorageEncrypted, dbCluster.KmsKeyId, dbClusterMetadata),
-			PublicAccess: types.Bool(aws.ToBool(dbCluster.PubliclyAccessible), dbClusterMetadata),
-		})
-
-	}
-	nextToken = apiDbClusters.Marker
-	return clusters, nextToken, nil
+	return cluster, nil
 }
 
-func (a *adapter) getClassicBatch(token *string) (dbSecurityGroups []rds.DBSecurityGroup, nextToken *string, err error) {
+func (a *adapter) adaptClassic(dbSecurityGroup types.DBSecurityGroup) (*rds.DBSecurityGroup, error) {
 
-	input := &rdsApi.DescribeDBSecurityGroupsInput{}
+	dbSecurityGroupMetadata := a.CreateMetadata("secgrp:" + *dbSecurityGroup.DBSecurityGroupName)
 
-	if token != nil {
-		input.Marker = token
+	dbsg := &rds.DBSecurityGroup{
+		Metadata: dbSecurityGroupMetadata,
 	}
 
-	apiDbSecurityGroups, err := a.api.DescribeDBSecurityGroups(a.Context(), input)
-	if err != nil {
-		return dbSecurityGroups, nextToken, err
-	}
-
-	for _, dbSecurityGroup := range apiDbSecurityGroups.DBSecurityGroups {
-
-		dbSecurityGroupMetadata := a.CreateMetadata(*dbSecurityGroup.DBSecurityGroupName)
-
-		dbSecurityGroups = append(dbSecurityGroups, rds.DBSecurityGroup{
-			Metadata: dbSecurityGroupMetadata,
-		})
-
-		a.Tracker().IncrementResource()
-	}
-
-	return dbSecurityGroups, nextToken, nil
+	return dbsg, nil
 }
 
-func getInstanceEncryption(storageEncrypted bool, kmsKeyID *string, metadata types.Metadata) rds.Encryption {
+func getInstanceEncryption(storageEncrypted bool, kmsKeyID *string, metadata defsecTypes.Metadata) rds.Encryption {
 	encryption := rds.Encryption{
 		Metadata:       metadata,
-		EncryptStorage: types.BoolDefault(storageEncrypted, metadata),
-		KMSKeyID:       types.StringDefault("", metadata),
+		EncryptStorage: defsecTypes.BoolDefault(storageEncrypted, metadata),
+		KMSKeyID:       defsecTypes.StringDefault("", metadata),
 	}
 
 	if kmsKeyID != nil {
-		encryption.KMSKeyID = types.String(*kmsKeyID, metadata)
+		encryption.KMSKeyID = defsecTypes.String(*kmsKeyID, metadata)
 	}
 
 	return encryption
 }
 
-func getPerformanceInsights(enabled *bool, kmsKeyID *string, metadata types.Metadata) rds.PerformanceInsights {
+func getPerformanceInsights(enabled *bool, kmsKeyID *string, metadata defsecTypes.Metadata) rds.PerformanceInsights {
 	performanceInsights := rds.PerformanceInsights{
 		Metadata: metadata,
-		Enabled:  types.BoolDefault(false, metadata),
-		KMSKeyID: types.StringDefault("", metadata),
+		Enabled:  defsecTypes.BoolDefault(false, metadata),
+		KMSKeyID: defsecTypes.StringDefault("", metadata),
 	}
-
 	if enabled != nil {
-		performanceInsights.Enabled = types.Bool(*enabled, metadata)
+		performanceInsights.Enabled = defsecTypes.Bool(*enabled, metadata)
 	}
 	if kmsKeyID != nil {
-		performanceInsights.KMSKeyID = types.String(*kmsKeyID, metadata)
+		performanceInsights.KMSKeyID = defsecTypes.String(*kmsKeyID, metadata)
 	}
 
 	return performanceInsights

@@ -3,7 +3,7 @@ package compute
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckNoSensitiveInfo(t *testing.T) {
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
-						UserData: types.String(` export DATABASE_PASSWORD=\"SomeSortOfPassword\"`, types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						UserData: defsecTypes.String(` export DATABASE_PASSWORD=\"SomeSortOfPassword\"`, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckNoSensitiveInfo(t *testing.T) {
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
-						Metadata: types.NewTestMetadata(),
-						UserData: types.String(` export GREETING="Hello there"`, types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						UserData: defsecTypes.String(` export GREETING="Hello there"`, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

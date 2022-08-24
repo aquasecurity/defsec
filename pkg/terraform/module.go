@@ -134,6 +134,14 @@ func (c *Module) GetReferencedBlock(referringAttr *Attribute, parentBlock *Block
 	return nil, fmt.Errorf("no referenced block found in '%s'", referringAttr.Name())
 }
 
+func (c *Module) GetBlockByID(id string) (*Block, error) {
+	found := c.blocks.WithID(id)
+	if found == nil {
+		return nil, fmt.Errorf("no block found with id '%s'", id)
+	}
+	return found, nil
+}
+
 func (c *Module) GetReferencingResources(originalBlock *Block, referencingLabel string, referencingAttributeName string) Blocks {
 	return c.GetReferencingBlocks(originalBlock, "resource", referencingLabel, referencingAttributeName)
 }

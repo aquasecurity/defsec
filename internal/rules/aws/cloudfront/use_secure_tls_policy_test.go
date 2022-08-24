@@ -3,7 +3,7 @@ package cloudfront
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: cloudfront.Cloudfront{
 				Distributions: []cloudfront.Distribution{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ViewerCertificate: cloudfront.ViewerCertificate{
-							Metadata:               types.NewTestMetadata(),
-							MinimumProtocolVersion: types.String("TLSv1.0", types.NewTestMetadata()),
+							Metadata:               defsecTypes.NewTestMetadata(),
+							MinimumProtocolVersion: defsecTypes.String("TLSv1.0", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			input: cloudfront.Cloudfront{
 				Distributions: []cloudfront.Distribution{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ViewerCertificate: cloudfront.ViewerCertificate{
-							Metadata:               types.NewTestMetadata(),
-							MinimumProtocolVersion: types.String(cloudfront.ProtocolVersionTLS1_2, types.NewTestMetadata()),
+							Metadata:               defsecTypes.NewTestMetadata(),
+							MinimumProtocolVersion: defsecTypes.String(cloudfront.ProtocolVersionTLS1_2, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

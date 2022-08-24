@@ -3,7 +3,7 @@ package dynamodb
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 			input: dynamodb.DynamoDB{
 				DAXClusters: []dynamodb.DAXCluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ServerSideEncryption: dynamodb.ServerSideEncryption{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableAtRestEncryption(t *testing.T) {
 			input: dynamodb.DynamoDB{
 				DAXClusters: []dynamodb.DAXCluster{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						ServerSideEncryption: dynamodb.ServerSideEncryption{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

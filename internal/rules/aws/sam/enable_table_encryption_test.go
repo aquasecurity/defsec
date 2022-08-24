@@ -3,7 +3,7 @@ package sam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,10 +24,10 @@ func TestCheckEnableTableEncryption(t *testing.T) {
 			input: sam.SAM{
 				SimpleTables: []sam.SimpleTable{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						SSESpecification: sam.SSESpecification{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(false, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -39,10 +39,10 @@ func TestCheckEnableTableEncryption(t *testing.T) {
 			input: sam.SAM{
 				SimpleTables: []sam.SimpleTable{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						SSESpecification: sam.SSESpecification{
-							Metadata: types.NewTestMetadata(),
-							Enabled:  types.Bool(true, types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

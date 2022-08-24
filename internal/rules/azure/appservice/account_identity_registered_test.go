@@ -3,7 +3,7 @@ package appservice
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,9 +24,9 @@ func TestCheckAccountIdentityRegistered(t *testing.T) {
 			input: appservice.AppService{
 				Services: []appservice.Service{
 					{
-						Metadata: types.NewTestMetadata(),
-						Identity: struct{ Type types.StringValue }{
-							Type: types.String("", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Identity: struct{ Type defsecTypes.StringValue }{
+							Type: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -38,9 +38,9 @@ func TestCheckAccountIdentityRegistered(t *testing.T) {
 			input: appservice.AppService{
 				Services: []appservice.Service{
 					{
-						Metadata: types.NewTestMetadata(),
-						Identity: struct{ Type types.StringValue }{
-							Type: types.String("UserAssigned", types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Identity: struct{ Type defsecTypes.StringValue }{
+							Type: defsecTypes.String("UserAssigned", defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

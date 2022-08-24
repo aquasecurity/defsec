@@ -3,7 +3,8 @@ package ecs
 import (
 	"fmt"
 
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecs"
 	ecsapi "github.com/aws/aws-sdk-go-v2/service/ecs"
@@ -32,18 +33,7 @@ func (a *adapter) getClusters() ([]ecs.Cluster, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting clusters...")
-	var clusters []ecs.Cluster
-
-	for _, clusterARN := range clusterARNs {
-		cluster, err := a.adaptCluster(clusterARN)
-		if err != nil {
-			return nil, err
-		}
-		clusters = append(clusters, *cluster)
-		a.Tracker().IncrementResource()
-	}
-
-	return clusters, nil
+	return concurrency.Adapt(clusterARNs, a.RootAdapter, a.adaptCluster), nil
 }
 
 func (a *adapter) adaptCluster(arn string) (*ecs.Cluster, error) {

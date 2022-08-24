@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,11 +24,11 @@ func TestCheckNoOrgLevelServiceAccountImpersonation(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Members: []iam.Member{
 							{
-								Metadata: types.NewTestMetadata(),
-								Role:     types.String("roles/iam.serviceAccountUser", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Role:     defsecTypes.String("roles/iam.serviceAccountUser", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -41,11 +41,11 @@ func TestCheckNoOrgLevelServiceAccountImpersonation(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Bindings: []iam.Binding{
 							{
-								Metadata: types.NewTestMetadata(),
-								Role:     types.String("roles/iam.serviceAccountTokenCreator", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Role:     defsecTypes.String("roles/iam.serviceAccountTokenCreator", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -59,17 +59,17 @@ func TestCheckNoOrgLevelServiceAccountImpersonation(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Members: []iam.Member{
 							{
-								Metadata: types.NewTestMetadata(),
-								Role:     types.String("roles/some-custom-role", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Role:     defsecTypes.String("roles/some-custom-role", defsecTypes.NewTestMetadata()),
 							},
 						},
 						Bindings: []iam.Binding{
 							{
-								Metadata: types.NewTestMetadata(),
-								Role:     types.String("roles/some-custom-role", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Role:     defsecTypes.String("roles/some-custom-role", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

@@ -3,7 +3,7 @@ package spaces
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/digitalocean/spaces"
 
@@ -42,19 +42,19 @@ func Test_adaptBuckets(t *testing.T) {
 `,
 			expected: []spaces.Bucket{
 				{
-					Metadata: types.NewTestMetadata(),
-					Name:     types.String("public_space", types.NewTestMetadata()),
+					Metadata: defsecTypes.NewTestMetadata(),
+					Name:     defsecTypes.String("public_space", defsecTypes.NewTestMetadata()),
 					Objects: []spaces.Object{
 						{
-							Metadata: types.NewTestMetadata(),
-							ACL:      types.String("private", types.NewTestMetadata()),
+							Metadata: defsecTypes.NewTestMetadata(),
+							ACL:      defsecTypes.String("private", defsecTypes.NewTestMetadata()),
 						},
 					},
-					ACL:          types.String("private", types.NewTestMetadata()),
-					ForceDestroy: types.Bool(true, types.NewTestMetadata()),
+					ACL:          defsecTypes.String("private", defsecTypes.NewTestMetadata()),
+					ForceDestroy: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					Versioning: spaces.Versioning{
-						Metadata: types.NewTestMetadata(),
-						Enabled:  types.Bool(true, types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -68,14 +68,14 @@ func Test_adaptBuckets(t *testing.T) {
 `,
 			expected: []spaces.Bucket{
 				{
-					Metadata:     types.NewTestMetadata(),
-					Name:         types.String("", types.NewTestMetadata()),
+					Metadata:     defsecTypes.NewTestMetadata(),
+					Name:         defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					Objects:      nil,
-					ACL:          types.String("public-read", types.NewTestMetadata()),
-					ForceDestroy: types.Bool(false, types.NewTestMetadata()),
+					ACL:          defsecTypes.String("public-read", defsecTypes.NewTestMetadata()),
+					ForceDestroy: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					Versioning: spaces.Versioning{
-						Metadata: types.NewTestMetadata(),
-						Enabled:  types.Bool(false, types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

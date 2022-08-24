@@ -1,7 +1,7 @@
 package spaces
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 type Spaces struct {
@@ -9,20 +9,20 @@ type Spaces struct {
 }
 
 type Bucket struct {
-	types.Metadata
-	Name         types.StringValue
+	defsecTypes.Metadata
+	Name         defsecTypes.StringValue
 	Objects      []Object
-	ACL          types.StringValue
-	ForceDestroy types.BoolValue
+	ACL          defsecTypes.StringValue
+	ForceDestroy defsecTypes.BoolValue
 	Versioning   Versioning
 }
 
 type Versioning struct {
-	types.Metadata
-	Enabled types.BoolValue
+	defsecTypes.Metadata
+	Enabled defsecTypes.BoolValue
 }
 
 type Object struct {
-	types.Metadata
-	ACL types.StringValue
+	defsecTypes.Metadata
+	ACL defsecTypes.StringValue
 }

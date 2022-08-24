@@ -3,7 +3,7 @@ package spaces
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,8 +24,8 @@ func TestCheckDisableForceDestroy(t *testing.T) {
 			input: spaces.Spaces{
 				Buckets: []spaces.Bucket{
 					{
-						Metadata:     types.NewTestMetadata(),
-						ForceDestroy: types.Bool(true, types.NewTestMetadata()),
+						Metadata:     defsecTypes.NewTestMetadata(),
+						ForceDestroy: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -36,8 +36,8 @@ func TestCheckDisableForceDestroy(t *testing.T) {
 			input: spaces.Spaces{
 				Buckets: []spaces.Bucket{
 					{
-						Metadata:     types.NewTestMetadata(),
-						ForceDestroy: types.Bool(false, types.NewTestMetadata()),
+						Metadata:     defsecTypes.NewTestMetadata(),
+						ForceDestroy: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},

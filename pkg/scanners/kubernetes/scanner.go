@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"sync"
 
+	"github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/framework"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
@@ -15,8 +17,6 @@ import (
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/liamg/memoryfs"
-
-	"github.com/aquasecurity/defsec/internal/types"
 
 	"github.com/aquasecurity/defsec/pkg/rego"
 	"github.com/aquasecurity/defsec/pkg/scanners/kubernetes/parser"

@@ -1,9 +1,9 @@
 package iam
 
 import (
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/liamg/iamgo"
 )
 
@@ -27,7 +27,14 @@ func adaptRoles(modules terraform.Modules) []iam.Role {
 		if err != nil {
 			continue
 		}
-		role := roleMap[roleBlock.ID()]
+		role, ok := roleMap[roleBlock.ID()]
+		if !ok {
+			role = iam.Role{
+				Metadata: roleBlock.GetMetadata(),
+				Name:     roleBlock.GetAttribute("name").AsStringValueOrDefault("", roleBlock),
+				Policies: nil,
+			}
+		}
 		role.Policies = append(role.Policies, policy)
 		roleMap[roleBlock.ID()] = role
 	}
@@ -53,11 +60,12 @@ func mapRoles(modules terraform.Modules) (map[string]iam.Role, map[string]struct
 				Metadata: inlineBlock.GetMetadata(),
 				Name:     inlineBlock.GetAttribute("name").AsStringValueOrDefault("", inlineBlock),
 				Document: iam.Document{
-					Metadata: types.NewUnmanagedMetadata(),
+					Metadata: defsecTypes.NewUnmanagedMetadata(),
 					Parsed:   iamgo.Document{},
 					IsOffset: false,
 					HasRefs:  false,
 				},
+				Builtin: defsecTypes.Bool(false, inlineBlock.GetMetadata()),
 			}
 			doc, err := ParsePolicyFromAttr(inlineBlock.GetAttribute("policy"), inlineBlock, modules)
 			if err != nil {

@@ -3,7 +3,7 @@ package network
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,25 +24,25 @@ func TestCheckDisableRdpFromInternet(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Outbound: types.Bool(false, types.NewTestMetadata()),
-								Allow:    types.Bool(true, types.NewTestMetadata()),
-								SourceAddresses: []types.StringValue{
-									types.String("*", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Outbound: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+								Allow:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								SourceAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("*", defsecTypes.NewTestMetadata()),
 								},
 								SourcePorts:          nil,
 								DestinationAddresses: nil,
 								DestinationPorts: []network.PortRange{
 									{
-										Metadata: types.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Start:    3310,
 										End:      3390,
 									},
 								},
-								Protocol: types.String("Tcp", types.NewTestMetadata()),
+								Protocol: defsecTypes.String("Tcp", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -55,23 +55,23 @@ func TestCheckDisableRdpFromInternet(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Allow:    types.Bool(true, types.NewTestMetadata()),
-								Outbound: types.Bool(false, types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Allow:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								Outbound: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 								DestinationPorts: []network.PortRange{
 									{
-										Metadata: types.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Start:    3310,
 										End:      3390,
 									},
 								},
-								SourceAddresses: []types.StringValue{
-									types.String("4.53.160.75", types.NewTestMetadata()),
+								SourceAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("4.53.160.75", defsecTypes.NewTestMetadata()),
 								},
-								Protocol: types.String("Tcp", types.NewTestMetadata()),
+								Protocol: defsecTypes.String("Tcp", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -84,25 +84,25 @@ func TestCheckDisableRdpFromInternet(t *testing.T) {
 			input: network.Network{
 				SecurityGroups: []network.SecurityGroup{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Rules: []network.SecurityGroupRule{
 							{
-								Metadata: types.NewTestMetadata(),
-								Outbound: types.Bool(false, types.NewTestMetadata()),
-								Allow:    types.Bool(true, types.NewTestMetadata()),
-								SourceAddresses: []types.StringValue{
-									types.String("*", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Outbound: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+								Allow:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+								SourceAddresses: []defsecTypes.StringValue{
+									defsecTypes.String("*", defsecTypes.NewTestMetadata()),
 								},
 								SourcePorts:          nil,
 								DestinationAddresses: nil,
 								DestinationPorts: []network.PortRange{
 									{
-										Metadata: types.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Start:    3310,
 										End:      3390,
 									},
 								},
-								Protocol: types.String("Icmp", types.NewTestMetadata()),
+								Protocol: defsecTypes.String("Icmp", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},

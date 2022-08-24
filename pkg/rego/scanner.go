@@ -9,6 +9,8 @@ import (
 	"io/fs"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/debug"
 	"github.com/aquasecurity/defsec/pkg/framework"
 
@@ -16,7 +18,6 @@ import (
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/storage"
 
-	"github.com/aquasecurity/defsec/internal/types"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 )

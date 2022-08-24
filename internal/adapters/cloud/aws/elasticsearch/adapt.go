@@ -2,9 +2,10 @@ package elasticsearch
 
 import (
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	defsecTypes "github.com/aquasecurity/defsec/internal/types"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/elasticsearchservice"
 	"github.com/aws/aws-sdk-go-v2/service/elasticsearchservice/types"
 )
@@ -53,18 +54,7 @@ func (a *adapter) getDomains() ([]elasticsearch.Domain, error) {
 	a.Tracker().SetTotalResources(len(apiDomains))
 
 	a.Tracker().SetServiceLabel("Adapting domains...")
-
-	var domains []elasticsearch.Domain
-	for _, apiDomain := range apiDomains {
-		domain, err := a.adaptDomain(apiDomain)
-		if err != nil {
-			return nil, err
-		}
-		domains = append(domains, *domain)
-		a.Tracker().IncrementResource()
-	}
-
-	return domains, nil
+	return concurrency.Adapt(apiDomains, a.RootAdapter, a.adaptDomain), nil
 }
 
 func (a *adapter) adaptDomain(apiDomain types.DomainInfo) (*elasticsearch.Domain, error) {
@@ -105,9 +95,14 @@ func (a *adapter) adaptDomain(apiDomain types.DomainInfo) (*elasticsearch.Domain
 		}
 	}
 
+	name := defsecTypes.StringDefault("", metadata)
+	if apiDomain.DomainName != nil {
+		name = defsecTypes.String(*apiDomain.DomainName, metadata)
+	}
+
 	return &elasticsearch.Domain{
 		Metadata:   metadata,
-		DomainName: defsecTypes.String(*apiDomain.DomainName, metadata),
+		DomainName: name,
 		LogPublishing: elasticsearch.LogPublishing{
 			Metadata:     metadata,
 			AuditEnabled: defsecTypes.Bool(auditEnabled, metadata),

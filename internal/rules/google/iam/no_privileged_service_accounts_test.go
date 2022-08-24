@@ -3,7 +3,7 @@ package iam
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,12 +24,12 @@ func TestCheckNoPrivilegedServiceAccounts(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Members: []iam.Member{
 							{
-								Metadata: types.NewTestMetadata(),
-								Role:     types.String("roles/owner", types.NewTestMetadata()),
-								Member:   types.String("serviceAccount:${google_service_account.test.email}", types.NewTestMetadata()),
+								Metadata: defsecTypes.NewTestMetadata(),
+								Role:     defsecTypes.String("roles/owner", defsecTypes.NewTestMetadata()),
+								Member:   defsecTypes.String("serviceAccount:${google_service_account.test.email}", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -42,19 +42,19 @@ func TestCheckNoPrivilegedServiceAccounts(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Projects: []iam.Project{
 									{
-										Metadata: types.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Bindings: []iam.Binding{
 											{
-												Metadata: types.NewTestMetadata(),
-												Role:     types.String("roles/editor", types.NewTestMetadata()),
-												Members: []types.StringValue{
-													types.String("serviceAccount:${google_service_account.test.email}", types.NewTestMetadata()),
+												Metadata: defsecTypes.NewTestMetadata(),
+												Role:     defsecTypes.String("roles/editor", defsecTypes.NewTestMetadata()),
+												Members: []defsecTypes.StringValue{
+													defsecTypes.String("serviceAccount:${google_service_account.test.email}", defsecTypes.NewTestMetadata()),
 												},
 											},
 										},
@@ -72,26 +72,26 @@ func TestCheckNoPrivilegedServiceAccounts(t *testing.T) {
 			input: iam.IAM{
 				Organizations: []iam.Organization{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Folders: []iam.Folder{
 							{
-								Metadata: types.NewTestMetadata(),
+								Metadata: defsecTypes.NewTestMetadata(),
 								Projects: []iam.Project{
 									{
-										Metadata: types.NewTestMetadata(),
+										Metadata: defsecTypes.NewTestMetadata(),
 										Members: []iam.Member{
 											{
-												Metadata: types.NewTestMetadata(),
-												Role:     types.String("roles/owner", types.NewTestMetadata()),
-												Member:   types.String("proper@email.com", types.NewTestMetadata()),
+												Metadata: defsecTypes.NewTestMetadata(),
+												Role:     defsecTypes.String("roles/owner", defsecTypes.NewTestMetadata()),
+												Member:   defsecTypes.String("proper@email.com", defsecTypes.NewTestMetadata()),
 											},
 										},
 										Bindings: []iam.Binding{
 											{
-												Metadata: types.NewTestMetadata(),
-												Role:     types.String("roles/logging.logWriter", types.NewTestMetadata()),
-												Members: []types.StringValue{
-													types.String("serviceAccount:${google_service_account.test.email}", types.NewTestMetadata()),
+												Metadata: defsecTypes.NewTestMetadata(),
+												Role:     defsecTypes.String("roles/logging.logWriter", defsecTypes.NewTestMetadata()),
+												Members: []defsecTypes.StringValue{
+													defsecTypes.String("serviceAccount:${google_service_account.test.email}", defsecTypes.NewTestMetadata()),
 												},
 											},
 										},

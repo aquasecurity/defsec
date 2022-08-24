@@ -3,7 +3,7 @@ package appservice
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/internal/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -24,9 +24,9 @@ func TestCheckAuthenticationEnabled(t *testing.T) {
 			input: appservice.AppService{
 				Services: []appservice.Service{
 					{
-						Metadata: types.NewTestMetadata(),
-						Authentication: struct{ Enabled types.BoolValue }{
-							Enabled: types.Bool(false, types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Authentication: struct{ Enabled defsecTypes.BoolValue }{
+							Enabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
@@ -38,9 +38,9 @@ func TestCheckAuthenticationEnabled(t *testing.T) {
 			input: appservice.AppService{
 				Services: []appservice.Service{
 					{
-						Metadata: types.NewTestMetadata(),
-						Authentication: struct{ Enabled types.BoolValue }{
-							Enabled: types.Bool(true, types.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
+						Authentication: struct{ Enabled defsecTypes.BoolValue }{
+							Enabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},
