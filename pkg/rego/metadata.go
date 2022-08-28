@@ -76,7 +76,7 @@ func NewMetadataRetriever(compiler *ast.Compiler) *MetadataRetriever {
 	}
 }
 
-func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Module) (*StaticMetadata, error) {
+func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Module, inputs ...Input) (*StaticMetadata, error) {
 
 	namespace := getModuleNamespace(module)
 	metadataQuery := fmt.Sprintf("data.%s.__rego_metadata__", namespace)
@@ -96,6 +96,11 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		rego.Query(metadataQuery),
 		rego.Compiler(m.compiler),
 	}
+	// support dynamic metadata fields
+	for _, in := range inputs {
+		options = append(options, rego.Input(in.Contents))
+	}
+
 	instance := rego.New(options...)
 	set, err := instance.Eval(ctx)
 	if err != nil {
