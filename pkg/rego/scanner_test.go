@@ -685,7 +685,7 @@ func Test_dynamicMetadata(t *testing.T) {
 package defsec.test
 
 __rego_metadata__ := {
-  "title" : sprintf("this is %s",[input.text])
+  "title" : sprintf("i am %s",[input.text])
 }
 
 deny {
@@ -704,12 +704,12 @@ deny {
 	results, err := scanner.ScanInput(context.TODO(), Input{
 		Path: "/evil.lol",
 		Contents: map[string]interface{}{
-			"text": "test",
+			"text": "dynamic",
 		},
 		Type: "???",
 	})
 	require.NoError(t, err)
-	assert.Equal(t, results[0].Rule().Summary, "this is test")
+	assert.Equal(t, results[0].Rule().Summary, "i am dynamic")
 }
 func Test_staticMetadata(t *testing.T) {
 
