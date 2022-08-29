@@ -124,6 +124,15 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		return nil, fmt.Errorf("failed to parse metadata: not an object")
 	}
 
+	err = m.updateMetadata(meta, &metadata)
+	if err != nil {
+		return nil, err
+	}
+
+	return &metadata, nil
+}
+
+func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata *StaticMetadata) error {
 	if raw, ok := meta["id"]; ok {
 		metadata.ID = fmt.Sprintf("%s", raw)
 	}
@@ -154,14 +163,13 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 	if raw, ok := meta["frameworks"]; ok {
 		frameworks, ok := raw.(map[string][]string)
 		if !ok {
-			return nil, fmt.Errorf("failed to parse framework metadata: not an object")
+			return fmt.Errorf("failed to parse framework metadata: not an object")
 		}
 		for fw, sections := range frameworks {
 			metadata.Frameworks[framework.Framework(fw)] = sections
 		}
 	}
-
-	return &metadata, nil
+	return nil
 }
 
 func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.Module) InputOptions {
