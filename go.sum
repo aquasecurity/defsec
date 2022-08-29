@@ -199,8 +199,8 @@ github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.12 h1:hq6hUnQE8BsnKovE6R
 github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.12/go.mod h1:DOlzbEGNcn2qOptUtmV/VLV88E+sXp9SxQrCFRE5GHA=
 github.com/aws/aws-sdk-go-v2/service/athena v1.18.4 h1:y9sTm8n9Xora+ccJQnUqZr/cW4UPpmok7TdNzseth04=
 github.com/aws/aws-sdk-go-v2/service/athena v1.18.4/go.mod h1:jOnCLzfWkUi6Myeb7txSwq2HMBPmeVW97saTMUh+pGQ=
-github.com/aws/aws-sdk-go-v2/service/cloudfront v1.18.8 h1:cEyz3Baavcf/o04SdkRIekONUCZDc130qQJBUUPrxiY=
-github.com/aws/aws-sdk-go-v2/service/cloudfront v1.18.8/go.mod h1:8xLCTMp8Lp0TFMitgMZUGC1LQvt0aaLCt4PHxblxvT0=
+github.com/aws/aws-sdk-go-v2/service/cloudfront v1.20.0 h1:LoDc6Bpr5S2vDemfPpdy1QnMPOFyS4ofsfcPYoOhr68=
+github.com/aws/aws-sdk-go-v2/service/cloudfront v1.20.0/go.mod h1:8xLCTMp8Lp0TFMitgMZUGC1LQvt0aaLCt4PHxblxvT0=
 github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.16.8 h1:8y6EWV7zcggA+1mhI4AndodYLaDwTAD2m8kG2BGKQ48=
 github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.16.8/go.mod h1:DAYVFTQuWYLg/8haillTZEi0k1w/QAFEahIkreT4DMY=
 github.com/aws/aws-sdk-go-v2/service/cloudwatch v1.20.1 h1:j1GFJM5LubkpDHwxSe2Zr23t38EBU3HysCEehm6Wf8E=
