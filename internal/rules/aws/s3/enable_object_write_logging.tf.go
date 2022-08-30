@@ -11,7 +11,7 @@ resource "aws_cloudtrail" "example" {
     read_write_type           = "WriteOnly" # or "All"
     data_resource {
       type = "AWS::S3::Object"
-      values = ["arn:aws:s3:::${resource.aws_s3_bucket.good_example.bucket}/"]
+      values = ["arn:aws:s3:::${aws_s3_bucket.good_example.bucket}/"]
     }
   }
 }
