@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
+
 	"github.com/stretchr/testify/assert"
 
 	"github.com/stretchr/testify/require"
@@ -18,7 +20,7 @@ import (
 
 func TestAVDIDs(t *testing.T) {
 	existing := make(map[string]struct{})
-	for _, rule := range rules.GetFrameworkRules() {
+	for _, rule := range rules.GetFrameworkRules(framework.ALL) {
 		t.Run(rule.Rule().LongID(), func(t *testing.T) {
 			if rule.Rule().AVDID == "" {
 				t.Errorf("Rule has no AVD ID: %#v", rule)
