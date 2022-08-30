@@ -37,7 +37,8 @@ type Logging struct {
 
 type Versioning struct {
 	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Enabled   defsecTypes.BoolValue
+	MFADelete defsecTypes.BoolValue
 }
 
 type Encryption struct {

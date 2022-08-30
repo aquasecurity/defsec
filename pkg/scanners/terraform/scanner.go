@@ -176,7 +176,7 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 	}
 
 	s.execLock.Lock()
-	s.executorOpt = append(s.executorOpt, executor.OptionWithRegoScanner(regoScanner))
+	s.executorOpt = append(s.executorOpt, executor.OptionWithRegoScanner(regoScanner), executor.OptionWithFrameworks(s.frameworks...))
 	s.execLock.Unlock()
 
 	var allResults scan.Results

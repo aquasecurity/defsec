@@ -81,11 +81,14 @@ func getEncryption(block *terraform.Block, a *adapter) s3.Encryption {
 }
 
 func getVersioning(block *terraform.Block, a *adapter) s3.Versioning {
-	if block.HasChild("versioning") {
-		return s3.Versioning{
-			Metadata: block.GetMetadata(),
-			Enabled:  isVersioned(block),
-		}
+	versioning := s3.Versioning{
+		Metadata:  block.GetMetadata(),
+		Enabled:   defsecTypes.BoolDefault(false, block.GetMetadata()),
+		MFADelete: defsecTypes.BoolDefault(false, block.GetMetadata()),
+	}
+	if vBlock := block.GetBlock("versioning"); vBlock != nil {
+		versioning.Enabled = vBlock.GetAttribute("enabled").AsBoolValueOrDefault(true, vBlock)
+		versioning.MFADelete = vBlock.GetAttribute("mfa_delete").AsBoolValueOrDefault(false, vBlock)
 	}
 	for _, versioningResource := range a.modules.GetResourcesByType("aws_s3_bucket_versioning") {
 		bucketAttr := versioningResource.GetAttribute("bucket")
@@ -93,27 +96,35 @@ func getVersioning(block *terraform.Block, a *adapter) s3.Versioning {
 			if bucketAttr.IsString() {
 				actualBucketName := block.GetAttribute("bucket").AsStringValueOrDefault("", block).Value()
 				if bucketAttr.Equals(block.ID()) || bucketAttr.Equals(actualBucketName) {
-					return s3.Versioning{
-						Metadata: versioningResource.GetMetadata(),
-						Enabled:  isVersioned(versioningResource),
-					}
+					return getVersioningFromResource(versioningResource)
 				}
 			}
 			if referencedBlock, err := a.modules.GetReferencedBlock(bucketAttr, versioningResource); err == nil {
 				if referencedBlock.ID() == block.ID() {
-					return s3.Versioning{
-						Metadata: versioningResource.GetMetadata(),
-						Enabled:  isVersioned(versioningResource),
-					}
+					return getVersioningFromResource(versioningResource)
 				}
 			}
 		}
 	}
+	return versioning
+}
 
-	return s3.Versioning{
-		Metadata: block.GetMetadata(),
-		Enabled:  defsecTypes.BoolDefault(false, block.GetMetadata()),
+// from aws_s3_bucket_versioning
+func getVersioningFromResource(block *terraform.Block) s3.Versioning {
+	versioning := s3.Versioning{
+		Metadata:  block.GetMetadata(),
+		Enabled:   defsecTypes.BoolDefault(false, block.GetMetadata()),
+		MFADelete: defsecTypes.BoolDefault(false, block.GetMetadata()),
 	}
+	if config := block.GetBlock("versioning_configuration"); config != nil {
+		if status := config.GetAttribute("status"); status.IsNotNil() {
+			versioning.Enabled = defsecTypes.Bool(status.Equals("Enabled", terraform.IgnoreCase), status.GetMetadata())
+		}
+		if mfa := config.GetAttribute("mfa_delete"); mfa.IsNotNil() {
+			versioning.MFADelete = defsecTypes.Bool(mfa.Equals("Enabled", terraform.IgnoreCase), mfa.GetMetadata())
+		}
+	}
+	return versioning
 }
 
 func getLogging(block *terraform.Block, a *adapter) s3.Logging {
@@ -221,22 +232,4 @@ func hasLogging(b *terraform.Block) defsecTypes.BoolValue {
 		return defsecTypes.Bool(true, targetBucket.GetMetadata())
 	}
 	return defsecTypes.BoolDefault(false, b.GetMetadata())
-}
-
-func isVersioned(b *terraform.Block) defsecTypes.BoolValue {
-	if versioningBlock := b.GetBlock("versioning"); versioningBlock.IsNotNil() {
-		return versioningBlock.GetAttribute("enabled").AsBoolValueOrDefault(true, versioningBlock)
-	}
-	if versioningBlock := b.GetBlock("versioning_configuration"); versioningBlock.IsNotNil() {
-		status := versioningBlock.GetAttribute("status")
-		if status.Equals("Enabled", terraform.IgnoreCase) {
-			return defsecTypes.Bool(true, status.GetMetadata())
-		} else {
-			return defsecTypes.Bool(false, b.GetMetadata())
-		}
-	}
-	return defsecTypes.BoolDefault(
-		false,
-		b.GetMetadata(),
-	)
 }

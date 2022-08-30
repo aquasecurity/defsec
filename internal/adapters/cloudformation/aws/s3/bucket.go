@@ -23,8 +23,9 @@ func getBuckets(cfFile parser.FileContext) []s3.Bucket {
 			PublicAccessBlock: getPublicAccessBlock(r),
 			Encryption:        getEncryption(r, cfFile),
 			Versioning: s3.Versioning{
-				Metadata: r.Metadata(),
-				Enabled:  hasVersioning(r),
+				Metadata:  r.Metadata(),
+				Enabled:   hasVersioning(r),
+				MFADelete: defsecTypes.BoolUnresolvable(r.Metadata()),
 			},
 			Logging: getLogging(r),
 			ACL:     convertAclValue(r.GetStringProperty("AccessControl", "private")),

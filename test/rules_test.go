@@ -7,14 +7,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/framework"
-
 	"github.com/stretchr/testify/assert"
-
 	"github.com/stretchr/testify/require"
 
 	"github.com/aquasecurity/defsec/internal/rules"
-
+	"github.com/aquasecurity/defsec/pkg/framework"
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"github.com/aquasecurity/defsec/test/testutil"
 )
 
@@ -35,7 +33,7 @@ func TestAVDIDs(t *testing.T) {
 }
 
 func TestRulesAgainstExampleCode(t *testing.T) {
-	for _, rule := range rules.GetFrameworkRules() {
+	for _, rule := range rules.GetFrameworkRules(framework.ALL) {
 		testName := fmt.Sprintf("%s/%s", rule.Rule().AVDID, rule.Rule().LongID())
 		t.Run(testName, func(t *testing.T) {
 			rule := rule
@@ -52,7 +50,7 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 				t.Run("terraform: good examples", func(t *testing.T) {
 					for i, example := range rule.Rule().Terraform.GoodExamples {
 						t.Run(fmt.Sprintf("example %d", i), func(t *testing.T) {
-							results := scanHCL(t, example)
+							results := scanHCL(t, example, options.ScannerWithFrameworks(framework.ALL))
 							testutil.AssertRuleNotFound(t, rule.Rule().LongID(), results, "Rule %s was detected in good example #%d:\n%s", rule.Rule().LongID(), i, example)
 						})
 					}
@@ -60,12 +58,14 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 				t.Run("terraform: bad examples", func(t *testing.T) {
 					for i, example := range rule.Rule().Terraform.BadExamples {
 						t.Run(fmt.Sprintf("example %d", i), func(t *testing.T) {
-							results := scanHCL(t, example)
+							results := scanHCL(t, example, options.ScannerWithFrameworks(framework.ALL))
 							testutil.AssertRuleFound(t, rule.Rule().LongID(), results, "Rule %s was not detected in bad example #%d:\n%s", rule.Rule().LongID(), i, example)
 							for _, result := range results.GetFailed() {
-								code, err := result.GetCode()
-								require.NoError(t, err)
-								assert.Greater(t, len(code.Lines), 0)
+								if result.Rule().LongID() == rule.Rule().LongID() {
+									code, err := result.GetCode()
+									require.NoError(t, err)
+									assert.Greater(t, len(code.Lines), 0)
+								}
 							}
 						})
 					}
@@ -75,7 +75,7 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 				t.Run("cloudformation: good examples", func(t *testing.T) {
 					for i, example := range rule.Rule().CloudFormation.GoodExamples {
 						t.Run(fmt.Sprintf("example %d", i), func(t *testing.T) {
-							results := scanCF(t, example)
+							results := scanCF(t, example, options.ScannerWithFrameworks(framework.ALL))
 							testutil.AssertRuleNotFound(t, rule.Rule().LongID(), results, "Rule %s was detected in good example #%d:\n%s", rule.Rule().LongID(), i, example)
 						})
 					}
@@ -83,12 +83,14 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 				t.Run("cloudformation: bad examples", func(t *testing.T) {
 					for i, example := range rule.Rule().CloudFormation.BadExamples {
 						t.Run(fmt.Sprintf("example %d", i), func(t *testing.T) {
-							results := scanCF(t, example)
+							results := scanCF(t, example, options.ScannerWithFrameworks(framework.ALL))
 							testutil.AssertRuleFound(t, rule.Rule().LongID(), results, "Rule %s was not detected in bad example #%d:\n%s", rule.Rule().LongID(), i, example)
 							for _, result := range results.GetFailed() {
-								code, err := result.GetCode()
-								require.NoError(t, err)
-								assert.Greater(t, len(code.Lines), 0)
+								if result.Rule().LongID() == rule.Rule().LongID() {
+									code, err := result.GetCode()
+									require.NoError(t, err)
+									assert.Greater(t, len(code.Lines), 0)
+								}
 							}
 						})
 					}
