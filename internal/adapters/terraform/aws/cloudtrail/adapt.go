@@ -35,6 +35,23 @@ func adaptTrail(resource *terraform.Block) cloudtrail.Trail {
 	KMSKeyIDAttr := resource.GetAttribute("kms_key_id")
 	KMSKeyIDVal := KMSKeyIDAttr.AsStringValueOrDefault("", resource)
 
+	var selectors []cloudtrail.EventSelector
+	for _, selBlock := range resource.GetBlocks("event_selector") {
+		var resources []cloudtrail.DataResource
+		for _, resBlock := range selBlock.GetBlocks("data_resource") {
+			resources = append(resources, cloudtrail.DataResource{
+				Type:   resBlock.GetAttribute("type").AsStringValueOrDefault("", resBlock),
+				Values: resBlock.GetAttribute("values").AsStringValues(),
+			})
+		}
+		selector := cloudtrail.EventSelector{
+			Metadata:      selBlock.GetMetadata(),
+			DataResources: resources,
+			ReadWriteType: selBlock.GetAttribute("read_write_type").AsStringValueOrDefault("All", selBlock),
+		}
+		selectors = append(selectors, selector)
+	}
+
 	return cloudtrail.Trail{
 		Metadata:                  resource.GetMetadata(),
 		Name:                      nameVal,
@@ -44,5 +61,6 @@ func adaptTrail(resource *terraform.Block) cloudtrail.Trail {
 		CloudWatchLogsLogGroupArn: resource.GetAttribute("cloud_watch_logs_group_arn").AsStringValueOrDefault("", resource),
 		IsLogging:                 resource.GetAttribute("enable_logging").AsBoolValueOrDefault(true, resource),
 		BucketName:                resource.GetAttribute("s3_bucket_name").AsStringValueOrDefault("", resource),
+		EventSelectors:            selectors,
 	}
 }

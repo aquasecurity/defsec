@@ -107,6 +107,39 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		isLogging = defsecTypes.Bool(*status.IsLogging, metadata)
 	}
 
+	var eventSelectors []cloudtrail.EventSelector
+	if response.Trail.HasCustomEventSelectors != nil && *response.Trail.HasCustomEventSelectors {
+		output, err := a.client.GetEventSelectors(a.Context(), &api.GetEventSelectorsInput{
+			TrailName: info.Name,
+		})
+		if err != nil {
+			return nil, err
+		}
+		for _, eventSelector := range output.EventSelectors {
+			var resources []cloudtrail.DataResource
+			for _, dataResource := range eventSelector.DataResources {
+				typ := defsecTypes.StringDefault("", metadata)
+				if dataResource.Type != nil {
+					typ = defsecTypes.String(*dataResource.Type, metadata)
+				}
+				var values defsecTypes.StringValueList
+				for _, value := range dataResource.Values {
+					values = append(values, defsecTypes.String(value, metadata))
+				}
+				resources = append(resources, cloudtrail.DataResource{
+					Metadata: metadata,
+					Type:     typ,
+					Values:   values,
+				})
+			}
+			eventSelectors = append(eventSelectors, cloudtrail.EventSelector{
+				Metadata:      metadata,
+				DataResources: resources,
+				ReadWriteType: defsecTypes.String(string(eventSelector.ReadWriteType), metadata),
+			})
+		}
+	}
+
 	return &cloudtrail.Trail{
 		Metadata:                  metadata,
 		Name:                      name,
@@ -116,5 +149,6 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		KMSKeyID:                  defsecTypes.String(kmsKeyId, metadata),
 		IsLogging:                 isLogging,
 		BucketName:                defsecTypes.String(bucketName, metadata),
+		EventSelectors:            eventSelectors,
 	}, nil
 }
