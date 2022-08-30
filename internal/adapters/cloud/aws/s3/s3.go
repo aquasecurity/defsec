@@ -207,8 +207,9 @@ func (a *adapter) getBucketEncryption(bucketName *string, metadata defsecTypes.M
 
 func (a *adapter) getBucketVersioning(bucketName *string, metadata defsecTypes.Metadata) s3.Versioning {
 	bucketVersioning := s3.Versioning{
-		Metadata: metadata,
-		Enabled:  defsecTypes.BoolDefault(false, metadata),
+		Metadata:  metadata,
+		Enabled:   defsecTypes.BoolDefault(false, metadata),
+		MFADelete: defsecTypes.BoolDefault(false, metadata),
 	}
 
 	versioning, err := a.api.GetBucketVersioning(a.Context(), &s3api.GetBucketVersioningInput{Bucket: bucketName})
@@ -226,6 +227,8 @@ func (a *adapter) getBucketVersioning(bucketName *string, metadata defsecTypes.M
 	if versioning.Status == s3types.BucketVersioningStatusEnabled {
 		bucketVersioning.Enabled = defsecTypes.Bool(true, metadata)
 	}
+
+	bucketVersioning.MFADelete = defsecTypes.Bool(versioning.MFADelete == s3types.MFADeleteStatusEnabled, metadata)
 
 	return bucketVersioning
 }

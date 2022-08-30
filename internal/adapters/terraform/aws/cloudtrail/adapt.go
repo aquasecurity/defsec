@@ -40,8 +40,9 @@ func adaptTrail(resource *terraform.Block) cloudtrail.Trail {
 		var resources []cloudtrail.DataResource
 		for _, resBlock := range selBlock.GetBlocks("data_resource") {
 			resources = append(resources, cloudtrail.DataResource{
-				Type:   resBlock.GetAttribute("type").AsStringValueOrDefault("", resBlock),
-				Values: resBlock.GetAttribute("values").AsStringValues(),
+				Metadata: resBlock.GetMetadata(),
+				Type:     resBlock.GetAttribute("type").AsStringValueOrDefault("", resBlock),
+				Values:   resBlock.GetAttribute("values").AsStringValues(),
 			})
 		}
 		selector := cloudtrail.EventSelector{
