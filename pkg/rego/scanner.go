@@ -192,7 +192,7 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 			continue
 		}
 
-		staticMeta, err := s.retriever.RetrieveMetadata(ctx, module)
+		staticMeta, err := s.retriever.RetrieveMetadata(ctx, module, inputs...)
 		if err != nil {
 			return nil, err
 		}
