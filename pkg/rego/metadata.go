@@ -76,7 +76,7 @@ func NewMetadataRetriever(compiler *ast.Compiler) *MetadataRetriever {
 	}
 }
 
-func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Module) (*StaticMetadata, error) {
+func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Module, inputs ...Input) (*StaticMetadata, error) {
 
 	namespace := getModuleNamespace(module)
 	metadataQuery := fmt.Sprintf("data.%s.__rego_metadata__", namespace)
@@ -96,6 +96,11 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		rego.Query(metadataQuery),
 		rego.Compiler(m.compiler),
 	}
+	// support dynamic metadata fields
+	for _, in := range inputs {
+		options = append(options, rego.Input(in.Contents))
+	}
+
 	instance := rego.New(options...)
 	set, err := instance.Eval(ctx)
 	if err != nil {
@@ -119,6 +124,15 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		return nil, fmt.Errorf("failed to parse metadata: not an object")
 	}
 
+	err = m.updateMetadata(meta, &metadata)
+	if err != nil {
+		return nil, err
+	}
+
+	return &metadata, nil
+}
+
+func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata *StaticMetadata) error {
 	if raw, ok := meta["id"]; ok {
 		metadata.ID = fmt.Sprintf("%s", raw)
 	}
@@ -149,14 +163,13 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 	if raw, ok := meta["frameworks"]; ok {
 		frameworks, ok := raw.(map[string][]string)
 		if !ok {
-			return nil, fmt.Errorf("failed to parse framework metadata: not an object")
+			return fmt.Errorf("failed to parse framework metadata: not an object")
 		}
 		for fw, sections := range frameworks {
 			metadata.Frameworks[framework.Framework(fw)] = sections
 		}
 	}
-
-	return &metadata, nil
+	return nil
 }
 
 func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.Module) InputOptions {

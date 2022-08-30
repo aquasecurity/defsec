@@ -9,11 +9,17 @@ import (
 )
 
 type IAM struct {
-	PasswordPolicy PasswordPolicy
-	Policies       []Policy
-	Groups         []Group
-	Users          []User
-	Roles          []Role
+	PasswordPolicy     PasswordPolicy
+	Policies           []Policy
+	Groups             []Group
+	Users              []User
+	Roles              []Role
+	ServerCertificates []ServerCertificate
+}
+
+type ServerCertificate struct {
+	defsecTypes.Metadata
+	Expiration defsecTypes.TimeValue
 }
 
 type Policy struct {
@@ -70,6 +76,7 @@ func (u *User) HasLoggedIn() bool {
 
 type MFADevice struct {
 	defsecTypes.Metadata
+	IsVirtual defsecTypes.BoolValue
 }
 
 type AccessKey struct {

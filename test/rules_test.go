@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
+	"github.com/aquasecurity/defsec/pkg/framework"
 
 	"github.com/stretchr/testify/assert"
 
