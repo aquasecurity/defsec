@@ -61,9 +61,11 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 							results := scanHCL(t, example, options.ScannerWithFrameworks(framework.ALL))
 							testutil.AssertRuleFound(t, rule.Rule().LongID(), results, "Rule %s was not detected in bad example #%d:\n%s", rule.Rule().LongID(), i, example)
 							for _, result := range results.GetFailed() {
-								code, err := result.GetCode()
-								require.NoError(t, err)
-								assert.Greater(t, len(code.Lines), 0)
+								if result.Rule().LongID() == rule.Rule().LongID() {
+									code, err := result.GetCode()
+									require.NoError(t, err)
+									assert.Greater(t, len(code.Lines), 0)
+								}
 							}
 						})
 					}
@@ -84,9 +86,11 @@ func TestRulesAgainstExampleCode(t *testing.T) {
 							results := scanCF(t, example, options.ScannerWithFrameworks(framework.ALL))
 							testutil.AssertRuleFound(t, rule.Rule().LongID(), results, "Rule %s was not detected in bad example #%d:\n%s", rule.Rule().LongID(), i, example)
 							for _, result := range results.GetFailed() {
-								code, err := result.GetCode()
-								require.NoError(t, err)
-								assert.Greater(t, len(code.Lines), 0)
+								if result.Rule().LongID() == rule.Rule().LongID() {
+									code, err := result.GetCode()
+									require.NoError(t, err)
+									assert.Greater(t, len(code.Lines), 0)
+								}
 							}
 						})
 					}
