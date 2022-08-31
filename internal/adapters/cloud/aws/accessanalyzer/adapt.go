@@ -73,7 +73,7 @@ func (a *adapter) adaptAnalyzer(apiAnalyzer aatypes.AnalyzerSummary) (*accessana
 	}
 	parsed, err := arn.Parse(*apiAnalyzer.Arn)
 	if err != nil {
-		return nil, fmt.Errorf("invalid arn: %s", err)
+		return nil, fmt.Errorf("invalid arn: %w", err)
 	}
 	if parsed.Region != a.Region() {
 		return nil, nil // skip other regions
