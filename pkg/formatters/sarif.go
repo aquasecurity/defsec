@@ -14,7 +14,7 @@ func outputSARIF(b ConfigurableFormatter, results scan.Results) error {
 		return err
 	}
 
-	run := sarif.NewRunWithInformationURI("tfsec", "https://tfsec.dev")
+	run := sarif.NewRunWithInformationURI("defsec", "https://github.com/aquasecurity/defsec")
 	report.AddRun(run)
 
 	for _, res := range results {
