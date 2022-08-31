@@ -108,6 +108,9 @@ func (r baseRange) String() string {
 	if r.startLine != r.endLine {
 		return fmt.Sprintf("%s:%d-%d", r.GetFilename(), r.startLine, r.endLine)
 	}
+	if r.startLine == 0 && r.endLine == 0 {
+		return r.GetFilename()
+	}
 	return fmt.Sprintf("%s:%d", r.GetFilename(), r.startLine)
 }
 

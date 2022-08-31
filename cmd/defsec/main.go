@@ -1,47 +1,29 @@
 package main
 
 import (
-	"context"
+	"fmt"
 	"os"
-	"path/filepath"
 
-	"github.com/aquasecurity/defsec/pkg/framework"
+	"github.com/spf13/cobra"
+)
 
-	"github.com/aquasecurity/defsec/pkg/debug"
+var rootCmd = &cobra.Command{
+	Use:   "defsec",
+	Short: "defsec is a tool to scan filesystems and cloud accounts for security vulnerabilities and misconfigurations",
+}
 
-	"github.com/aquasecurity/defsec/pkg/scanners/options"
-
-	"github.com/aquasecurity/defsec/pkg/formatters"
-
-	"github.com/aquasecurity/defsec/pkg/scanners/universal"
-
-	"github.com/aquasecurity/defsec/pkg/extrafs"
+var (
+	flagDebug  = false
+	flagFormat = "simple"
 )
 
 func main() {
-	dir := "."
-	if len(os.Args) > 1 {
-		dir = os.Args[1]
-	}
-	abs, err := filepath.Abs(dir)
-	if err != nil {
-		panic(err)
-	}
-	debug.LogSystemInfo(os.Stderr, "")
-	fsys := extrafs.OSDir(abs)
-	s := universal.New(
-		options.ScannerWithDebug(os.Stderr),
-		options.ScannerWithEmbeddedPolicies(true),
-		options.ScannerWithFrameworks(framework.ALL),
-	)
 
-	// Execute the filesystem based scanners
-	results, err := s.ScanFS(context.TODO(), fsys, ".")
-	if err != nil {
-		panic(err)
-	}
+	rootCmd.PersistentFlags().BoolVarP(&flagDebug, "debug", "d", flagDebug, "enable debug output")
+	rootCmd.PersistentFlags().StringVarP(&flagFormat, "format", "f", flagFormat, "output format (simple, sarif, json, csv, checkstyle, junit)")
 
-	if err := formatters.New().WithBaseDir(abs).AsSARIF().Build().Output(results); err != nil {
-		panic(err)
+	if err := rootCmd.Execute(); err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "Error: %s\n", err)
+		os.Exit(1)
 	}
 }
