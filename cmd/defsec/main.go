@@ -5,6 +5,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/cloud/aws"
+
+	"github.com/aquasecurity/defsec/pkg/framework"
+
 	"github.com/aquasecurity/defsec/pkg/debug"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
@@ -27,13 +31,25 @@ func main() {
 	}
 	debug.LogSystemInfo(os.Stderr, "")
 	fsys := extrafs.OSDir(abs)
-	s := universal.New(options.ScannerWithDebug(os.Stderr), options.ScannerWithEmbeddedPolicies(true))
+	s := universal.New(
+		options.ScannerWithDebug(os.Stderr),
+		options.ScannerWithEmbeddedPolicies(true),
+		options.ScannerWithFrameworks(framework.ALL),
+		aws.ScannerWithAWSServices("access-analyzer"),
+	)
 
 	// Execute the filesystem based scanners
 	results, err := s.ScanFS(context.TODO(), fsys, ".")
 	if err != nil {
 		panic(err)
 	}
+
+	apiResults, err := s.Scan(context.TODO())
+	if err != nil {
+		panic(err)
+	}
+
+	results = append(results, apiResults...)
 
 	if err := formatters.New().WithBaseDir(abs).AsSARIF().Build().Output(results); err != nil {
 		panic(err)
