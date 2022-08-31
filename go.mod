@@ -9,13 +9,14 @@ require (
 	github.com/apparentlymart/go-cidr v1.1.0
 	github.com/aquasecurity/go-mock-aws v0.0.0-20220726154943-99847deb62b0
 	github.com/aws/aws-sdk-go v1.44.77
-	github.com/aws/aws-sdk-go-v2 v1.16.11
+	github.com/aws/aws-sdk-go-v2 v1.16.12
 	github.com/aws/aws-sdk-go-v2/config v1.17.0
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.13
+	github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.15.14
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.14
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.12
 	github.com/aws/aws-sdk-go-v2/service/athena v1.18.4
-	github.com/aws/aws-sdk-go-v2/service/cloudfront v1.18.8
+	github.com/aws/aws-sdk-go-v2/service/cloudfront v1.20.1
 	github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.16.8
 	github.com/aws/aws-sdk-go-v2/service/cloudwatch v1.20.1
 	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.15.14
@@ -93,8 +94,8 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.4 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.12 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.18 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.12 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.19 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.13 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.19 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.9 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.5 // indirect
@@ -103,7 +104,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.12 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.12 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.11.16 // indirect
-	github.com/aws/smithy-go v1.12.1 // indirect
+	github.com/aws/smithy-go v1.13.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
