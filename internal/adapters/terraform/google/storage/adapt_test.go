@@ -24,23 +24,27 @@ func Test_Adapt(t *testing.T) {
 			name: "defined",
 			terraform: `
 			resource "google_storage_bucket" "static-site" {
-				name          = "image-store.com"
-				location      = "EU"				
-				uniform_bucket_level_access = true
+			  name                        = "image-store.com"
+			  location                    = "EU"				
+			  uniform_bucket_level_access = true
+
+			  encryption {
+			    default_kms_key_name = "default-kms-key-name"
+			  }
 			}
 
 			resource "google_storage_bucket_iam_binding" "binding" {
-				bucket = google_storage_bucket.static-site.name
-				role = "roles/storage.admin #1"
-				members = [
-					"group:test@example.com",
-				]
+			  bucket = google_storage_bucket.static-site.name
+			  role   = "roles/storage.admin #1"
+			  members = [
+			    "group:test@example.com",
+			  ]
 			}
 
 			resource "google_storage_bucket_iam_member" "example" {
-				member = "serviceAccount:test@example.com"
-				bucket = google_storage_bucket.static-site.name
-				role = "roles/storage.admin #2"
+			  member = "serviceAccount:test@example.com"
+			  bucket = google_storage_bucket.static-site.name
+			  role   = "roles/storage.admin #2"
 			}`,
 			expected: storage.Storage{
 				Buckets: []storage.Bucket{
@@ -67,6 +71,10 @@ func Test_Adapt(t *testing.T) {
 								DefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
+						Encryption: storage.BucketEncryption{
+							Metadata:          defsecTypes.NewTestMetadata(),
+							DefaultKMSKeyName: defsecTypes.String("default-kms-key-name", defsecTypes.NewTestMetadata()),
+						},
 					},
 				},
 			},
@@ -78,14 +86,12 @@ func Test_Adapt(t *testing.T) {
 			}
 
 			resource "google_storage_bucket_iam_binding" "binding" {
-				bucket = google_storage_bucket.static-site.name
+			  bucket = google_storage_bucket.static-site.name
 			}
 
 			resource "google_storage_bucket_iam_member" "example" {
-				bucket = google_storage_bucket.static-site.name
-			}
-
-`,
+			  bucket = google_storage_bucket.static-site.name
+			}`,
 			expected: storage.Storage{
 				Buckets: []storage.Bucket{
 					{
@@ -108,6 +114,10 @@ func Test_Adapt(t *testing.T) {
 								DefaultServiceAccount: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 							},
 						},
+						Encryption: storage.BucketEncryption{
+							Metadata:          defsecTypes.NewTestMetadata(),
+							DefaultKMSKeyName: defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						},
 					},
 				},
 			},
@@ -126,23 +136,23 @@ func Test_Adapt(t *testing.T) {
 func TestLines(t *testing.T) {
 	src := `
 	resource "google_storage_bucket" "static-site" {
-		name          = "image-store.com"
-		location      = "EU"				
-		uniform_bucket_level_access = true
+	  name                        = "image-store.com"
+	  location                    = "EU"				
+	  uniform_bucket_level_access = true
 	}
 
 	resource "google_storage_bucket_iam_binding" "binding" {
-		bucket = google_storage_bucket.static-site.name
-		role = "roles/storage.admin #1"
-		members = [
-			"group:test@example.com",
-		]
+	  bucket = google_storage_bucket.static-site.name
+	  role   = "roles/storage.admin #1"
+	  members = [
+	    "group:test@example.com",
+	  ]
 	}
 
 	resource "google_storage_bucket_iam_member" "example" {
-		member = "serviceAccount:test@example.com"
-		bucket = google_storage_bucket.static-site.name
-		role = "roles/storage.admin #2"
+	  member = "serviceAccount:test@example.com"
+	  bucket = google_storage_bucket.static-site.name
+	  role   = "roles/storage.admin #2"
 	}`
 
 	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
