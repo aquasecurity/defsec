@@ -38,8 +38,7 @@ rolled back.
 		Severity: severity.Low,
 	},
 	func(s *state.State) (results scan.Results) {
-		multiRegionTrails := s.AWS.CloudTrail.MultiRegionTrails()
-		for _, trail := range multiRegionTrails {
+		for _, trail := range s.AWS.CloudTrail.MultiRegionTrails() {
 			logGroup := s.AWS.CloudWatch.GetLogGroupByArn(trail.CloudWatchLogsLogGroupArn.Value())
 			if logGroup == nil || trail.IsLogging.IsFalse() {
 				continue
