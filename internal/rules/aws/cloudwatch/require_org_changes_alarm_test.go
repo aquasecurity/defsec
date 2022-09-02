@@ -3,6 +3,8 @@ package cloudwatch
 import (
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
+
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
@@ -14,12 +16,34 @@ import (
 func TestCheckRequireOrgChangesAlarm(t *testing.T) {
 	tests := []struct {
 		name       string
+		cloudtrail cloudtrail.CloudTrail
 		cloudwatch cloudwatch.CloudWatch
 		expected   bool
 	}{
 		{
 			name: "alarm exists",
+			cloudtrail: cloudtrail.CloudTrail{
+				Trails: []cloudtrail.Trail{
+					{
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
+						IsLogging:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						IsMultiRegion:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					},
+				},
+			},
 			cloudwatch: cloudwatch.CloudWatch{
+				LogGroups: []cloudwatch.LogGroup{
+					{
+						Arn: defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
+						MetricFilters: []cloudwatch.MetricFilter{
+							{
+								FilterName:    defsecTypes.String("OrganizationEvents", defsecTypes.NewTestMetadata()),
+								FilterPattern: defsecTypes.String("{ $.eventSource = \"organizations.amazonaws.com\" }", defsecTypes.NewTestMetadata()),
+							},
+						},
+					},
+				},
 				Alarms: []cloudwatch.Alarm{
 					{
 						Metadata:   defsecTypes.NewTestMetadata(),
@@ -30,14 +54,58 @@ func TestCheckRequireOrgChangesAlarm(t *testing.T) {
 			expected: false,
 		},
 		{
-			name:       "alarm does not exist",
-			cloudwatch: cloudwatch.CloudWatch{},
-			expected:   true,
+			name: "metric filter does not exist",
+			cloudtrail: cloudtrail.CloudTrail{
+				Trails: []cloudtrail.Trail{
+					{
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
+						IsLogging:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						IsMultiRegion:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					},
+				},
+			},
+			cloudwatch: cloudwatch.CloudWatch{
+				LogGroups: []cloudwatch.LogGroup{
+					{
+						Arn: defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
+					},
+				},
+			},
+			expected: true,
+		},
+		{
+			name: "alarm does not exist",
+			cloudtrail: cloudtrail.CloudTrail{
+				Trails: []cloudtrail.Trail{
+					{
+						Metadata:                  defsecTypes.NewTestMetadata(),
+						CloudWatchLogsLogGroupArn: defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
+						IsLogging:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						IsMultiRegion:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					},
+				},
+			},
+			cloudwatch: cloudwatch.CloudWatch{
+				LogGroups: []cloudwatch.LogGroup{
+					{
+						Arn: defsecTypes.String("arn:aws:cloudwatch:us-east-1:123456789012:log-group:cloudtrail-logging", defsecTypes.NewTestMetadata()),
+						MetricFilters: []cloudwatch.MetricFilter{
+							{
+								FilterName:    defsecTypes.String("OrganizationEvents", defsecTypes.NewTestMetadata()),
+								FilterPattern: defsecTypes.String("{ $.eventSource = \"organizations.amazonaws.com\" }", defsecTypes.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: true,
 		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
+			testState.AWS.CloudTrail = test.cloudtrail
 			testState.AWS.CloudWatch = test.cloudwatch
 			results := CheckRequireOrgChangesAlarm.Evaluate(&testState)
 			var found bool

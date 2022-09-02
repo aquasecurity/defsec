@@ -12,7 +12,7 @@ import (
 
 var CheckEnableAccessAnalyzer = rules.Register(
 	scan.Rule{
-		AVDID:     "AVD-AWS-0173",
+		AVDID:     "AVD-AWS-0175",
 		Provider:  providers.AWSProvider,
 		Service:   "accessanalyzer",
 		ShortCode: "enable-access-analyzer",
