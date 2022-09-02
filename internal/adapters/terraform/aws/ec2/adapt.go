@@ -13,7 +13,7 @@ func Adapt(modules terraform.Modules) ec2.EC2 {
 
 	return ec2.EC2{
 		Instances:            getInstances(modules),
-		DefaultVPCs:          adaptDefaultVPCs(modules),
+		VPCs:                 adaptDefaultVPCs(modules),
 		SecurityGroups:       sgAdapter.adaptSecurityGroups(modules),
 		Subnets:              adaptSubnets(modules),
 		NetworkACLs:          naclAdapter.adaptNetworkACLs(modules),

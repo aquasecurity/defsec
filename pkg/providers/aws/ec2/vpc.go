@@ -12,9 +12,11 @@ type NetworkACL struct {
 
 type SecurityGroup struct {
 	defsecTypes.Metadata
+	IsDefault    defsecTypes.BoolValue
 	Description  defsecTypes.StringValue
 	IngressRules []SecurityGroupRule
 	EgressRules  []SecurityGroupRule
+	VPCID        defsecTypes.StringValue
 }
 
 type SecurityGroupRule struct {
@@ -23,8 +25,11 @@ type SecurityGroupRule struct {
 	CIDRs       []defsecTypes.StringValue
 }
 
-type DefaultVPC struct {
+type VPC struct {
 	defsecTypes.Metadata
+	ID             defsecTypes.StringValue
+	IsDefault      defsecTypes.BoolValue
+	SecurityGroups []SecurityGroup
 }
 
 const (

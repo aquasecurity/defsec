@@ -73,7 +73,7 @@ func Test_AdaptVPC(t *testing.T) {
 			  }
 `,
 			expected: ec2.EC2{
-				DefaultVPCs: []ec2.DefaultVPC{
+				VPCs: []ec2.VPC{
 					{
 						Metadata: defsecTypes.NewTestMetadata(),
 					},
@@ -244,11 +244,11 @@ func TestVPCLines(t *testing.T) {
 	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
-	require.Len(t, adapted.DefaultVPCs, 1)
+	require.Len(t, adapted.VPCs, 1)
 	require.Len(t, adapted.SecurityGroups, 1)
 	require.Len(t, adapted.NetworkACLs, 1)
 
-	defaultVPC := adapted.DefaultVPCs[0]
+	defaultVPC := adapted.VPCs[0]
 	securityGroup := adapted.SecurityGroups[0]
 	networkACL := adapted.NetworkACLs[0]
 

@@ -14,11 +14,11 @@ type sgAdapter struct {
 	sgRuleIDs terraform.ResourceIDResolutions
 }
 
-func adaptDefaultVPCs(modules terraform.Modules) []ec2.DefaultVPC {
-	var defaultVPCs []ec2.DefaultVPC
+func adaptDefaultVPCs(modules terraform.Modules) []ec2.VPC {
+	var defaultVPCs []ec2.VPC
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("aws_default_vpc") {
-			defaultVPCs = append(defaultVPCs, ec2.DefaultVPC{
+			defaultVPCs = append(defaultVPCs, ec2.VPC{
 				Metadata: resource.GetMetadata(),
 			})
 		}
