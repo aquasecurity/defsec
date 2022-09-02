@@ -14,11 +14,19 @@ type sgAdapter struct {
 	sgRuleIDs terraform.ResourceIDResolutions
 }
 
-func adaptDefaultVPCs(modules terraform.Modules) []ec2.VPC {
-	var defaultVPCs []ec2.VPC
+func adaptVPCs(modules terraform.Modules) []ec2.VPC {
+	var vpcs []ec2.VPC
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("aws_default_vpc") {
-			defaultVPCs = append(defaultVPCs, ec2.VPC{
+			vpcs = append(vpcs, ec2.VPC{
+				Metadata:       resource.GetMetadata(),
+				ID:             defsecTypes.StringUnresolvable(resource.GetMetadata()),
+				IsDefault:      defsecTypes.Bool(true, resource.GetMetadata()),
+				SecurityGroups: nil,
+			})
+		}
+		for _, resource := range module.GetResourcesByType("aws_vpc") {
+			vpcs = append(vpcs, ec2.VPC{
 				Metadata:       resource.GetMetadata(),
 				ID:             defsecTypes.StringUnresolvable(resource.GetMetadata()),
 				IsDefault:      defsecTypes.Bool(false, resource.GetMetadata()),
@@ -26,7 +34,7 @@ func adaptDefaultVPCs(modules terraform.Modules) []ec2.VPC {
 			})
 		}
 	}
-	return defaultVPCs
+	return vpcs
 }
 
 func (a *sgAdapter) adaptSecurityGroups(modules terraform.Modules) []ec2.SecurityGroup {

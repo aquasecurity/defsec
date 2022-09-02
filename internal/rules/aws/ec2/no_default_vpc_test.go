@@ -25,7 +25,8 @@ func TestCheckNoDefaultVpc(t *testing.T) {
 			input: ec2.EC2{
 				VPCs: []ec2.VPC{
 					{
-						Metadata: types.NewTestMetadata(),
+						Metadata:  types.NewTestMetadata(),
+						IsDefault: types.Bool(true, types.NewTestMetadata()),
 					},
 				},
 			},

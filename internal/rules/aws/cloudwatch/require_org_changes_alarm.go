@@ -34,9 +34,7 @@ rolled back.
 		Links: []string{
 			"https://docs.aws.amazon.com/organizations/latest/userguide/orgs_security_incident-response.html",
 		},
-		Terraform:      &scan.EngineMetadata{},
-		CloudFormation: &scan.EngineMetadata{},
-		Severity:       severity.Low,
+		Severity: severity.Low,
 	},
 	func(s *state.State) (results scan.Results) {
 		if metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName("OrganizationEvents"); metricAlarm == nil {
