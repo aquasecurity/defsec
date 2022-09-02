@@ -13,6 +13,8 @@ func getSecurityGroups(ctx parser.FileContext) (groups []ec2.SecurityGroup) {
 			Description:  r.GetStringProperty("GroupDescription"),
 			IngressRules: getIngressRules(r),
 			EgressRules:  getEgressRules(r),
+			IsDefault:    types.Bool(r.GetStringProperty("GroupName").EqualTo("default"), r.Metadata()),
+			VPCID:        r.GetStringProperty("VpcId"),
 		}
 
 		groups = append(groups, group)

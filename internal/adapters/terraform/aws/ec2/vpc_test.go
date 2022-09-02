@@ -73,15 +73,24 @@ func Test_AdaptVPC(t *testing.T) {
 			  }
 `,
 			expected: ec2.EC2{
-				DefaultVPCs: []ec2.DefaultVPC{
+				VPCs: []ec2.VPC{
 					{
-						Metadata: defsecTypes.NewTestMetadata(),
+						Metadata:  defsecTypes.NewTestMetadata(),
+						IsDefault: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						ID:        defsecTypes.String("", defsecTypes.NewTestMetadata()),
+					},
+					{
+						Metadata:  defsecTypes.NewTestMetadata(),
+						IsDefault: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						ID:        defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					},
 				},
 				SecurityGroups: []ec2.SecurityGroup{
 					{
 						Metadata:    defsecTypes.NewTestMetadata(),
 						Description: defsecTypes.String("Allow inbound HTTP traffic", defsecTypes.NewTestMetadata()),
+						IsDefault:   defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						VPCID:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						IngressRules: []ec2.SecurityGroupRule{
 							{
 								Metadata: defsecTypes.NewTestMetadata(),
@@ -151,6 +160,8 @@ func Test_AdaptVPC(t *testing.T) {
 					{
 						Metadata:    defsecTypes.NewTestMetadata(),
 						Description: defsecTypes.String("Managed by Terraform", defsecTypes.NewTestMetadata()),
+						IsDefault:   defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						VPCID:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						IngressRules: []ec2.SecurityGroupRule{
 							{
 								Metadata:    defsecTypes.NewTestMetadata(),
@@ -244,11 +255,11 @@ func TestVPCLines(t *testing.T) {
 	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
 
-	require.Len(t, adapted.DefaultVPCs, 1)
+	require.Len(t, adapted.VPCs, 2)
 	require.Len(t, adapted.SecurityGroups, 1)
 	require.Len(t, adapted.NetworkACLs, 1)
 
-	defaultVPC := adapted.DefaultVPCs[0]
+	defaultVPC := adapted.VPCs[0]
 	securityGroup := adapted.SecurityGroups[0]
 	networkACL := adapted.NetworkACLs[0]
 

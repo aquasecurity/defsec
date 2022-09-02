@@ -14,16 +14,27 @@ type sgAdapter struct {
 	sgRuleIDs terraform.ResourceIDResolutions
 }
 
-func adaptDefaultVPCs(modules terraform.Modules) []ec2.DefaultVPC {
-	var defaultVPCs []ec2.DefaultVPC
+func adaptVPCs(modules terraform.Modules) []ec2.VPC {
+	var vpcs []ec2.VPC
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("aws_default_vpc") {
-			defaultVPCs = append(defaultVPCs, ec2.DefaultVPC{
-				Metadata: resource.GetMetadata(),
+			vpcs = append(vpcs, ec2.VPC{
+				Metadata:       resource.GetMetadata(),
+				ID:             defsecTypes.StringUnresolvable(resource.GetMetadata()),
+				IsDefault:      defsecTypes.Bool(true, resource.GetMetadata()),
+				SecurityGroups: nil,
+			})
+		}
+		for _, resource := range module.GetResourcesByType("aws_vpc") {
+			vpcs = append(vpcs, ec2.VPC{
+				Metadata:       resource.GetMetadata(),
+				ID:             defsecTypes.StringUnresolvable(resource.GetMetadata()),
+				IsDefault:      defsecTypes.Bool(false, resource.GetMetadata()),
+				SecurityGroups: nil,
 			})
 		}
 	}
-	return defaultVPCs
+	return vpcs
 }
 
 func (a *sgAdapter) adaptSecurityGroups(modules terraform.Modules) []ec2.SecurityGroup {
@@ -38,6 +49,8 @@ func (a *sgAdapter) adaptSecurityGroups(modules terraform.Modules) []ec2.Securit
 			Description:  defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			IngressRules: nil,
 			EgressRules:  nil,
+			IsDefault:    defsecTypes.BoolUnresolvable(defsecTypes.NewUnmanagedMetadata()),
+			VPCID:        defsecTypes.StringUnresolvable(defsecTypes.NewUnmanagedMetadata()),
 		}
 		for _, sgRule := range orphanResources {
 			if sgRule.GetAttribute("type").Equals("ingress") {
@@ -108,6 +121,8 @@ func (a *sgAdapter) adaptSecurityGroup(resource *terraform.Block, module terrafo
 		Description:  descriptionVal,
 		IngressRules: ingressRules,
 		EgressRules:  egressRules,
+		IsDefault:    defsecTypes.Bool(false, defsecTypes.NewUnmanagedMetadata()),
+		VPCID:        resource.GetAttribute("vpc_id").AsStringValueOrDefault("", resource),
 	}
 }
 
