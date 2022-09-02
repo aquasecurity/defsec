@@ -1,6 +1,7 @@
 package rules
 
 import (
+	_ "github.com/aquasecurity/defsec/internal/rules/aws/accessanalyzer"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/apigateway"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/athena"
 	_ "github.com/aquasecurity/defsec/internal/rules/aws/cloudfront"

@@ -4,6 +4,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/rules"
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/providers"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -37,10 +38,39 @@ rolled back.
 		Severity: severity.Low,
 	},
 	func(s *state.State) (results scan.Results) {
-		if metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName("OrganizationEvents"); metricAlarm == nil {
-			results.Add("CloudWatch has no alarm associated with organisation events", types.NewUnmanagedMetadata())
-		} else {
-			results.AddPassed(metricAlarm)
+		multiRegionTrails := s.AWS.CloudTrail.MultiRegionTrails()
+		for _, trail := range multiRegionTrails {
+			logGroup := s.AWS.CloudWatch.GetLogGroupByArn(trail.CloudWatchLogsLogGroupArn.Value())
+			if logGroup == nil || trail.IsLogging.IsFalse() {
+				continue
+			}
+
+			var metricFilter cloudwatch.MetricFilter
+			var found bool
+			for _, filter := range logGroup.MetricFilters {
+				if filter.FilterPattern.Contains(`$.eventSource = organizations.amazonaws.com`, types.IgnoreWhitespace) {
+					metricFilter = filter
+					found = true
+					break
+				}
+				if filter.FilterPattern.Contains(`$.eventSource = "organizations.amazonaws.com"`, types.IgnoreWhitespace) {
+					metricFilter = filter
+					found = true
+					break
+				}
+			}
+
+			if !found {
+				results.Add("Cloudwatch has no organisation changes log filter", trail)
+				continue
+			}
+
+			if metricAlarm := s.AWS.CloudWatch.GetAlarmByMetricName(metricFilter.FilterName.Value()); metricAlarm == nil {
+				results.Add("Cloudwatch has organisation changes alarm", trail)
+				continue
+			}
+
+			results.AddPassed(trail)
 		}
 		return
 	},
