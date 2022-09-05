@@ -8,7 +8,7 @@ require (
 	github.com/alecthomas/chroma v0.10.0
 	github.com/apparentlymart/go-cidr v1.1.0
 	github.com/aquasecurity/go-mock-aws v0.0.0-20220726154943-99847deb62b0
-	github.com/aws/aws-sdk-go v1.44.77
+	github.com/aws/aws-sdk-go v1.44.91
 	github.com/aws/aws-sdk-go-v2 v1.16.12
 	github.com/aws/aws-sdk-go-v2/config v1.17.0
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.13
@@ -63,6 +63,7 @@ require (
 	github.com/owenrumney/go-sarif/v2 v2.1.2
 	github.com/owenrumney/squealer v1.0.1-0.20220510063705-c0be93f0edea
 	github.com/sirupsen/logrus v1.9.0
+	github.com/spf13/cobra v1.5.0
 	github.com/stretchr/testify v1.8.0
 	github.com/zclconf/go-cty v1.10.0
 	github.com/zclconf/go-cty-yaml v1.0.2
@@ -200,7 +201,6 @@ require (
 	github.com/sergi/go-diff v1.1.0 // indirect
 	github.com/shopspring/decimal v1.2.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
-	github.com/spf13/cobra v1.5.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/ulikunitz/xz v0.5.8 // indirect
 	github.com/vektah/gqlparser/v2 v2.4.6 // indirect
