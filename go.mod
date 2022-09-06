@@ -252,4 +252,3 @@ replace github.com/docker/docker => github.com/docker/docker v20.10.3-0.20220224
 
 replace oras.land/oras-go => oras.land/oras-go v1.1.1
 
-replace github.com/elgohr/go-localstack => github.com/aquasecurity/go-localstack v0.0.0-20220706080605-1ec0e9b8753c
