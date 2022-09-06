@@ -116,7 +116,7 @@ func addFilesToMemFS(memfs *memoryfs.FS, typePolicy bool, folderName string) err
 	if err := memfs.MkdirAll(base, 0o700); err != nil {
 		return err
 	}
-	err := filepath.Walk(folderName,
+	err := filepath.Walk(filepath.FromSlash(folderName),
 		func(fpath string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
@@ -149,7 +149,7 @@ func addFilesToMemFS(memfs *memoryfs.FS, typePolicy bool, folderName string) err
 }
 
 func getFileName(fpath string, info os.FileInfo, typePolicy bool) string {
-	pathParts := strings.Split(fpath, "/")
+	pathParts := strings.Split(fpath, filepath.FromSlash("/"))
 	fileName := info.Name()
 	// append test data folder to input file name example Dockerfile.allowed_DS001
 	if len(pathParts) > 2 && !typePolicy {
