@@ -1,10 +1,7 @@
 
 Enable ElasticSearch domain encryption
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: AWS::Elasticsearch::Domain
@@ -26,4 +23,7 @@ Resources:
         Iops: '0'
         VolumeSize: '20'
         VolumeType: 'gp2'
+
 ```
+
+

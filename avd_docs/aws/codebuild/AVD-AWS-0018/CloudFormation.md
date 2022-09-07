@@ -1,10 +1,7 @@
 
 Enable encryption for CodeBuild project artifacts
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodProject:
     Type: AWS::CodeBuild::Project
@@ -29,4 +26,7 @@ Resources:
           Packaging: "String"
           Path: "String"
           Type: "String"
+
 ```
+
+

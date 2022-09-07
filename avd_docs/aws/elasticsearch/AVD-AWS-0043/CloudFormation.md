@@ -1,10 +1,7 @@
 
 Enable encrypted node to node communication
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: AWS::Elasticsearch::Domain
@@ -28,4 +25,7 @@ Resources:
         VolumeType: 'gp2'
       NodeToNodeEncryptionOptions:
         Enabled: true
+
 ```
+
+

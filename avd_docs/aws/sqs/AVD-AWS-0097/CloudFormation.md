@@ -1,10 +1,7 @@
 
 Keep policy scope to the minimum that is required to be effective
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 AWSTemplateFormatVersion: 2010-09-09
 Description: Good example of queue policy
 Resources:
@@ -27,5 +24,8 @@ Resources:
             Resource: "arn:aws:sqs:us-east-2:444455556666:queue2"
             Principal:  
               AWS: 
-                - "111122223333"
+                - "111122223333"        
+
 ```
+
+

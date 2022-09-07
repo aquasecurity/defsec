@@ -1,10 +1,7 @@
 
 Use the most modern TLS/SSL policies available
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Properties:
@@ -21,4 +18,7 @@ Resources:
         ViewerCertificate:
           MinimumProtocolVersion: TLSv1.2_2021
     Type: AWS::CloudFront::Distribution
+
 ```
+
+

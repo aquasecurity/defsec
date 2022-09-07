@@ -1,10 +1,7 @@
 
 Remove sensitive data from the EC2 instance user-data
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: AWS::EC2::Instance
@@ -20,4 +17,8 @@ Resources:
             DeleteOnTermination: "false"
             VolumeSize: "20"
         - DeviceName: "/dev/sdk"
+
+
 ```
+
+

@@ -9,7 +9,9 @@ Resources:
         ServerSideEncryptionConfiguration:
           - BucketKeyEnabled: true
             ServerSideEncryptionByDefault:
-              KMSMasterKeyID: kms-arn
-              SSEAlgorithm: aws:kms
+              SSEAlgorithm: AES256
     Type: AWS::S3::Bucket
+
 ```
+
+

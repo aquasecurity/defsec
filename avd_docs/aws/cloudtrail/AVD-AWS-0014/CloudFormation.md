@@ -1,10 +1,7 @@
 
 Enable Cloudtrail in all regions
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   BadExample:
     Type: AWS::CloudTrail::Trail
@@ -14,4 +11,7 @@ Resources:
       S3BucketName: "CloudtrailBucket"
       S3KeyPrefix: "/trailing"
       TrailName: "Cloudtrail"
+
 ```
+
+

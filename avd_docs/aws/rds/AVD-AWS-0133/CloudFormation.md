@@ -1,10 +1,7 @@
 
-Enable Performance Insights to detect potential problems
+Enable performance insights
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 AWSTemplateFormatVersion: 2010-09-09
 Description: Good example
 Resources:
@@ -12,4 +9,9 @@ Resources:
     Type: AWS::RDS::DBInstance
     Properties:
       EnablePerformanceInsights: true
+      PerformanceInsightsKMSKeyId: "something"
+
+
 ```
+
+

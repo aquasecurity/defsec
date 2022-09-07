@@ -1,10 +1,7 @@
 
 Enable logging for CloudFront distributions
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Properties:
@@ -19,4 +16,7 @@ Resources:
           - DomainName: https://some.domain
             Id: somedomain1
     Type: AWS::CloudFront::Distribution
+
 ```
+
+

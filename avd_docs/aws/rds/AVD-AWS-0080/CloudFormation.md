@@ -1,10 +1,7 @@
 
 Enable encryption for RDS instances
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 AWSTemplateFormatVersion: 2010-09-09
 Description: Good example of rds sgr
 Resources:
@@ -13,4 +10,8 @@ Resources:
     Properties:
       StorageEncrypted: true
       KmsKeyId: "something"
+
+
 ```
+
+

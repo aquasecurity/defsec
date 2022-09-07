@@ -1,10 +1,7 @@
 
 Always provide a source arn for Lambda permissions
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: AWS::Lambda::Function
@@ -31,4 +28,8 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: s3.amazonaws.com
       SourceArn: "lambda.amazonaws.com"
+  
+
 ```
+
+

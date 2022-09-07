@@ -1,10 +1,7 @@
 
 Enable tracing
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   Function:
     Type: AWS::Lambda::Function
@@ -25,3 +22,5 @@ Resources:
           - subnet-071f712345678e7c8
           - subnet-07fd123456788a036
 ```
+
+

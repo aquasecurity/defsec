@@ -1,10 +1,7 @@
 
 Enable logging for ElasticSearch domains
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: AWS::Elasticsearch::Domain
@@ -15,7 +12,8 @@ Resources:
         Enabled: true
         KmsKeyId: alias/kmskey
       LogPublishingOptions:
-        Enabled: true
+        AUDIT_LOGS:
+          Enabled: true
       ElasticsearchClusterConfig:
         DedicatedMasterEnabled: true
         InstanceCount: '2'
@@ -28,4 +26,7 @@ Resources:
         Iops: '0'
         VolumeSize: '20'
         VolumeType: 'gp2'
+
 ```
+
+

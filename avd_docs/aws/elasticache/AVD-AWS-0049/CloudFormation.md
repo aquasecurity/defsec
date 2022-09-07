@@ -1,10 +1,7 @@
 
 Add descriptions for all security groups and rules
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExampleCacheGroup:
     Type: AWS::ElastiCache::SecurityGroup
@@ -20,4 +17,7 @@ Resources:
     Properties: 
       CacheSecurityGroupName: GoodExampleCacheGroup
       EC2SecurityGroupName: GoodExampleEc2SecurityGroup
+
 ```
+
+
