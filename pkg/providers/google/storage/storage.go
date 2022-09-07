@@ -16,4 +16,10 @@ type Bucket struct {
 	EnableUniformBucketLevelAccess defsecTypes.BoolValue
 	Members                        []iam.Member
 	Bindings                       []iam.Binding
+	Encryption                     BucketEncryption
+}
+
+type BucketEncryption struct {
+	defsecTypes.Metadata
+	DefaultKMSKeyName defsecTypes.StringValue
 }

@@ -85,6 +85,16 @@ func (a *adapter) adaptBucketResource(resourceBlock *terraform.Block) storage.Bu
 		EnableUniformBucketLevelAccess: ublaValue,
 		Members:                        nil,
 		Bindings:                       nil,
+		Encryption: storage.BucketEncryption{
+			Metadata:          resourceBlock.GetMetadata(),
+			DefaultKMSKeyName: defsecTypes.StringDefault("", resourceBlock.GetMetadata()),
+		},
+	}
+
+	if encBlock := resourceBlock.GetBlock("encryption"); encBlock.IsNotNil() {
+		bucket.Encryption.Metadata = encBlock.GetMetadata()
+		kmsKeyNameAttr := encBlock.GetAttribute("default_kms_key_name")
+		bucket.Encryption.DefaultKMSKeyName = kmsKeyNameAttr.AsStringValueOrDefault("", encBlock)
 	}
 
 	var name string
