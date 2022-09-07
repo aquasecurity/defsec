@@ -173,6 +173,7 @@ func Test_Adapt(t *testing.T) {
 				bucket = aws_s3_bucket.example.id
 				versioning_configuration {
 				  status = "Enabled"
+                  mfa_delete = "Enabled"
 				}
 			  }
 
@@ -239,8 +240,9 @@ func Test_Adapt(t *testing.T) {
 							KMSKeyId:  defsecTypes.String("string-key", defsecTypes.NewTestMetadata()),
 						},
 						Versioning: s3.Versioning{
-							Metadata: defsecTypes.NewTestMetadata(),
-							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							Metadata:  defsecTypes.NewTestMetadata(),
+							Enabled:   defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+							MFADelete: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 						},
 						Logging: s3.Logging{
 							Metadata:     defsecTypes.NewTestMetadata(),

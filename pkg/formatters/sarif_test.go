@@ -25,8 +25,8 @@ func Test_SARIF(t *testing.T) {
     {
       "tool": {
         "driver": {
-          "informationUri": "https://tfsec.dev",
-          "name": "tfsec",
+          "informationUri": "https://github.com/aquasecurity/defsec",
+          "name": "defsec",
           "rules": [
             {
               "id": "aws-dynamodb-enable-at-rest-encryption",

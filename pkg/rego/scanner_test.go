@@ -678,3 +678,69 @@ deny {
 
 	assert.Greater(t, len(results.GetFailed()[0].Traces()), 0)
 }
+func Test_dynamicMetadata(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `
+package defsec.test
+
+__rego_metadata__ := {
+  "title" : sprintf("i am %s",[input.text])
+}
+
+deny {
+  input.text
+}
+
+`,
+	})
+
+	scanner := NewScanner()
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{
+		Path: "/evil.lol",
+		Contents: map[string]interface{}{
+			"text": "dynamic",
+		},
+		Type: "???",
+	})
+	require.NoError(t, err)
+	assert.Equal(t, results[0].Rule().Summary, "i am dynamic")
+}
+func Test_staticMetadata(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `
+package defsec.test
+
+__rego_metadata__ := {
+  "title" : "i am static"
+}
+
+deny {
+  input.text
+}
+
+`,
+	})
+
+	scanner := NewScanner()
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{
+		Path: "/evil.lol",
+		Contents: map[string]interface{}{
+			"text": "test",
+		},
+		Type: "???",
+	})
+	require.NoError(t, err)
+	assert.Equal(t, results[0].Rule().Summary, "i am static")
+}

@@ -33,6 +33,8 @@ func postProcessValues(b *Block, input map[string]cty.Value) map[string]cty.Valu
 	if strings.HasPrefix(b.TypeLabel(), "aws_s3_bucket") {
 		if bucket, ok := input["bucket"]; ok {
 			input["id"] = bucket
+		} else {
+			input["bucket"] = cty.StringVal(b.ID())
 		}
 	}
 

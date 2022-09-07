@@ -195,8 +195,7 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 						ref = scanResult.Metadata().Parent().Reference()
 					}
 
-					reference := ref.(*parser.CFReference)
-					description := getDescription(scanResult, reference)
+					description := getDescription(scanResult, ref)
 					scanResult.OverrideDescription(description)
 					results = append(results, scanResult)
 				}
@@ -215,7 +214,11 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 	return append(results, regoResults...), nil
 }
 
-func getDescription(scanResult scan.Result, location *parser.CFReference) string {
+type logicalIDProvider interface {
+	LogicalID() string
+}
+
+func getDescription(scanResult scan.Result, location logicalIDProvider) string {
 	switch scanResult.Status() {
 	case scan.StatusPassed:
 		return fmt.Sprintf("Resource '%s' passed check: %s", location.LogicalID(), scanResult.Rule().Summary)

@@ -14,7 +14,7 @@ func outputSARIF(b ConfigurableFormatter, results scan.Results) error {
 		return err
 	}
 
-	run := sarif.NewRunWithInformationURI("tfsec", "https://tfsec.dev")
+	run := sarif.NewRunWithInformationURI("defsec", "https://github.com/aquasecurity/defsec")
 	report.AddRun(run)
 
 	for _, res := range results {
@@ -38,7 +38,9 @@ func outputSARIF(b ConfigurableFormatter, results scan.Results) error {
 			rule.WithHelpURI(links[0])
 		}
 
-		rng := res.Range()
+		metadata := res.Metadata().Root()
+
+		rng := metadata.Range()
 		message := sarif.NewTextMessage(res.Description())
 		region := sarif.NewSimpleRegion(rng.GetStartLine(), rng.GetEndLine())
 		var level string
@@ -53,7 +55,7 @@ func outputSARIF(b ConfigurableFormatter, results scan.Results) error {
 			level = "error"
 		}
 
-		path := b.Path(res)
+		path := b.Path(res, metadata)
 
 		location := sarif.NewPhysicalLocation().
 			WithArtifactLocation(sarif.NewSimpleArtifactLocation(path)).

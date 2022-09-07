@@ -60,12 +60,15 @@ func (a *adapter) getMFADevices(user iamtypes.User) ([]iam.MFADevice, error) {
 
 	var devices []iam.MFADevice
 	for _, apiDevice := range apiDevices {
+		isVirtual := true
 		metadata := a.CreateMetadataFromARN(*apiDevice.SerialNumber)
 		if !strings.HasPrefix(*apiDevice.SerialNumber, "arn:") {
 			metadata = a.CreateMetadataFromARN(*user.Arn)
+			isVirtual = false
 		}
 		devices = append(devices, iam.MFADevice{
-			Metadata: metadata,
+			Metadata:  metadata,
+			IsVirtual: defsecTypes.Bool(isVirtual, metadata),
 		})
 	}
 

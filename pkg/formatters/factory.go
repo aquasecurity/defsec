@@ -104,3 +104,8 @@ func (f *factory) AsSARIF() *factory {
 	f.base.outputOverride = outputSARIF
 	return f
 }
+
+func (f *factory) AsSimple() *factory {
+	f.base.outputOverride = outputSimple
+	return f
+}

@@ -53,7 +53,7 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 		return err
 	}
 
-	state.AWS.EC2.DefaultVPCs, err = a.getDefaultVPCs()
+	state.AWS.EC2.VPCs, err = a.getVPCs()
 	if err != nil {
 		return err
 	}
@@ -66,6 +66,14 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 	state.AWS.EC2.Volumes, err = a.getVolumes()
 	if err != nil {
 		return err
+	}
+
+	for i, vpc := range state.AWS.EC2.VPCs {
+		for _, group := range state.AWS.EC2.SecurityGroups {
+			if group.VPCID.EqualTo(vpc.ID.Value()) {
+				state.AWS.EC2.VPCs[i].SecurityGroups = append(state.AWS.EC2.VPCs[i].SecurityGroups, group)
+			}
+		}
 	}
 
 	return nil

@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
+
 	_ "github.com/aquasecurity/defsec/pkg/rego"
 	"github.com/aquasecurity/defsec/pkg/rules"
 )
@@ -15,7 +17,7 @@ func main() {
 
 	// organise existing rules by provider
 	keyMap := make(map[string][]string)
-	for _, rule := range rules.GetRegistered() {
+	for _, rule := range rules.GetRegistered(framework.ALL) {
 		id := rule.Rule().AVDID
 		if id == "" {
 			continue

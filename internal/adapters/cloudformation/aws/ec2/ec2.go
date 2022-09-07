@@ -11,9 +11,10 @@ func Adapt(cfFile parser.FileContext) ec2.EC2 {
 		LaunchConfigurations: getLaunchConfigurations(cfFile),
 		LaunchTemplates:      getLaunchTemplates(cfFile),
 		Instances:            getInstances(cfFile),
-		DefaultVPCs:          nil,
+		VPCs:                 nil,
 		NetworkACLs:          getNetworkACLs(cfFile),
 		SecurityGroups:       getSecurityGroups(cfFile),
+		Subnets:              getSubnets(cfFile),
 		Volumes:              getVolumes(cfFile),
 	}
 }

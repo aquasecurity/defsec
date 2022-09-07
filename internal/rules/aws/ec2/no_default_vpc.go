@@ -31,11 +31,13 @@ var CheckNoDefaultVpc = rules.Register(
 		Severity: severity.High,
 	},
 	func(s *state.State) (results scan.Results) {
-		for _, def := range s.AWS.EC2.DefaultVPCs {
-			results.Add(
-				"Default VPC is used.",
-				&def,
-			)
+		for _, def := range s.AWS.EC2.VPCs {
+			if def.IsDefault.IsTrue() {
+				results.Add(
+					"Default VPC is used.",
+					&def,
+				)
+			}
 		}
 		return
 	},

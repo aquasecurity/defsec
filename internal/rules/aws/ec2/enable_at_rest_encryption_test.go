@@ -3,6 +3,8 @@ package ec2
 import (
 	"testing"
 
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -12,21 +14,36 @@ import (
 )
 
 func TestCheckEnableAtRestEncryption(t *testing.T) {
-	t.SkipNow()
 	tests := []struct {
 		name     string
 		input    ec2.EC2
 		expected bool
 	}{
 		{
-			name:     "positive result",
-			input:    ec2.EC2{},
-			expected: true,
+			name: "encrypted block device",
+			input: ec2.EC2{
+				Instances: []ec2.Instance{
+					{
+						RootBlockDevice: &ec2.BlockDevice{
+							Encrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: false,
 		},
 		{
-			name:     "negative result",
-			input:    ec2.EC2{},
-			expected: false,
+			name: "unencrypted block device",
+			input: ec2.EC2{
+				Instances: []ec2.Instance{
+					{
+						RootBlockDevice: &ec2.BlockDevice{
+							Encrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						},
+					},
+				},
+			},
+			expected: true,
 		},
 	}
 	for _, test := range tests {

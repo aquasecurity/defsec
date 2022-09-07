@@ -4,8 +4,9 @@ type EC2 struct {
 	Instances            []Instance
 	LaunchConfigurations []LaunchConfiguration
 	LaunchTemplates      []LaunchTemplate
-	DefaultVPCs          []DefaultVPC
+	VPCs                 []VPC
 	SecurityGroups       []SecurityGroup
 	NetworkACLs          []NetworkACL
+	Subnets              []Subnet
 	Volumes              []Volume
 }

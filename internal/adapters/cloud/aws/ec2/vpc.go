@@ -55,10 +55,10 @@ func (a *adapter) getNetworkACLs() (nacls []ec2.NetworkACL, err error) {
 	return concurrency.Adapt(apiNetworkACLs, a.RootAdapter, a.adaptNetworkACL), nil
 }
 
-func (a *adapter) getDefaultVPCs() (defaultVpcs []ec2.DefaultVPC, err error) {
+func (a *adapter) getVPCs() (defaultVpcs []ec2.VPC, err error) {
 
-	a.Tracker().SetServiceLabel("Discovering default VPCs...")
-	var apiDefaultVPCs []types.Vpc
+	a.Tracker().SetServiceLabel("Discovering VPCs...")
+	var apiVPCs []types.Vpc
 	var input ec2api.DescribeVpcsInput
 
 	for {
@@ -66,16 +66,16 @@ func (a *adapter) getDefaultVPCs() (defaultVpcs []ec2.DefaultVPC, err error) {
 		if err != nil {
 			return nil, err
 		}
-		apiDefaultVPCs = append(apiDefaultVPCs, output.Vpcs...)
-		a.Tracker().SetTotalResources(len(apiDefaultVPCs))
+		apiVPCs = append(apiVPCs, output.Vpcs...)
+		a.Tracker().SetTotalResources(len(apiVPCs))
 		if output.NextToken == nil {
 			break
 		}
 		input.NextToken = output.NextToken
 	}
 
-	a.Tracker().SetServiceLabel("Adapting default VPCs...")
-	return concurrency.Adapt(apiDefaultVPCs, a.RootAdapter, a.adaptVPC), nil
+	a.Tracker().SetServiceLabel("Adapting VPCs...")
+	return concurrency.Adapt(apiVPCs, a.RootAdapter, a.adaptVPC), nil
 }
 
 func (a *adapter) adaptSecurityGroup(apiSecurityGroup types.SecurityGroup) (*ec2.SecurityGroup, error) {
@@ -84,7 +84,13 @@ func (a *adapter) adaptSecurityGroup(apiSecurityGroup types.SecurityGroup) (*ec2
 
 	sg := &ec2.SecurityGroup{
 		Metadata:    sgMetadata,
+		IsDefault:   defsecTypes.BoolDefault(apiSecurityGroup.GroupName != nil && *apiSecurityGroup.GroupName == "default", sgMetadata),
 		Description: defsecTypes.String(aws.ToString(apiSecurityGroup.Description), sgMetadata),
+		VPCID:       defsecTypes.StringDefault("", sgMetadata),
+	}
+
+	if apiSecurityGroup.VpcId != nil {
+		sg.VPCID = defsecTypes.String(*apiSecurityGroup.VpcId, sgMetadata)
 	}
 
 	for _, ingress := range apiSecurityGroup.IpPermissions {
@@ -139,17 +145,12 @@ func (a *adapter) adaptNetworkACL(apiNacl types.NetworkAcl) (*ec2.NetworkACL, er
 	return nacl, nil
 }
 
-func (a *adapter) adaptVPC(v types.Vpc) (*ec2.DefaultVPC, error) {
-
-	if aws.ToBool(v.IsDefault) {
-
-		vpcMetadata := a.CreateMetadata("vpc/" + *v.VpcId)
-
-		return &ec2.DefaultVPC{
-			Metadata: vpcMetadata,
-		}, nil
-	}
-
-	return nil, nil
-
+func (a *adapter) adaptVPC(v types.Vpc) (*ec2.VPC, error) {
+	vpcMetadata := a.CreateMetadata("vpc/" + *v.VpcId)
+	return &ec2.VPC{
+		Metadata:       vpcMetadata,
+		ID:             defsecTypes.String(*v.VpcId, vpcMetadata),
+		IsDefault:      defsecTypes.Bool(v.IsDefault != nil && *v.IsDefault, vpcMetadata),
+		SecurityGroups: nil, // we link these up afterwards
+	}, nil
 }

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/framework"
+
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/severity"
 
@@ -20,10 +22,13 @@ import (
 
 var CheckNoPolicyWildcards = rules.Register(
 	scan.Rule{
-		AVDID:       "AVD-AWS-0057",
-		Provider:    providers.AWSProvider,
-		Service:     "iam",
-		ShortCode:   "no-policy-wildcards",
+		AVDID:     "AVD-AWS-0057",
+		Provider:  providers.AWSProvider,
+		Service:   "iam",
+		ShortCode: "no-policy-wildcards",
+		Frameworks: map[framework.Framework][]string{
+			framework.CIS_AWS_1_4: {"1.16"},
+		},
 		Summary:     "IAM policy should avoid use of wildcards and instead apply the principle of least privilege",
 		Impact:      "Overly permissive policies may grant access to sensitive resources",
 		Resolution:  "Specify the exact permissions required, and to which resources they should apply instead of using wildcards.",

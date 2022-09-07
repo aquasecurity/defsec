@@ -49,6 +49,17 @@ func getEncryption(block *terraform.Block, a *adapter) s3.Encryption {
 	for _, encryptionResource := range a.modules.GetResourcesByType("aws_s3_bucket_server_side_encryption_configuration") {
 		bucketAttr := encryptionResource.GetAttribute("bucket")
 		if bucketAttr.IsNotNil() {
+			if bucketAttr.IsString() {
+				actualBucketName := block.GetAttribute("bucket").AsStringValueOrDefault("", block).Value()
+				if bucketAttr.Equals(block.ID()) || bucketAttr.Equals(actualBucketName) {
+					return s3.Encryption{
+						Metadata:  encryptionResource.GetMetadata(),
+						Enabled:   isEncrypted(encryptionResource),
+						Algorithm: encryptionResource.GetNestedAttribute("rule.apply_server_side_encryption_by_default.sse_algorithm").AsStringValueOrDefault("", block),
+						KMSKeyId:  encryptionResource.GetNestedAttribute("rule.apply_server_side_encryption_by_default.kms_master_key_id").AsStringValueOrDefault("", block),
+					}
+				}
+			}
 			if referencedBlock, err := a.modules.GetReferencedBlock(bucketAttr, encryptionResource); err == nil {
 				if referencedBlock.ID() == block.ID() {
 					return s3.Encryption{
@@ -70,30 +81,50 @@ func getEncryption(block *terraform.Block, a *adapter) s3.Encryption {
 }
 
 func getVersioning(block *terraform.Block, a *adapter) s3.Versioning {
-	if block.HasChild("versioning") {
-		return s3.Versioning{
-			Metadata: block.GetMetadata(),
-			Enabled:  isVersioned(block),
-		}
+	versioning := s3.Versioning{
+		Metadata:  block.GetMetadata(),
+		Enabled:   defsecTypes.BoolDefault(false, block.GetMetadata()),
+		MFADelete: defsecTypes.BoolDefault(false, block.GetMetadata()),
+	}
+	if vBlock := block.GetBlock("versioning"); vBlock != nil {
+		versioning.Enabled = vBlock.GetAttribute("enabled").AsBoolValueOrDefault(true, vBlock)
+		versioning.MFADelete = vBlock.GetAttribute("mfa_delete").AsBoolValueOrDefault(false, vBlock)
 	}
 	for _, versioningResource := range a.modules.GetResourcesByType("aws_s3_bucket_versioning") {
 		bucketAttr := versioningResource.GetAttribute("bucket")
 		if bucketAttr.IsNotNil() {
+			if bucketAttr.IsString() {
+				actualBucketName := block.GetAttribute("bucket").AsStringValueOrDefault("", block).Value()
+				if bucketAttr.Equals(block.ID()) || bucketAttr.Equals(actualBucketName) {
+					return getVersioningFromResource(versioningResource)
+				}
+			}
 			if referencedBlock, err := a.modules.GetReferencedBlock(bucketAttr, versioningResource); err == nil {
 				if referencedBlock.ID() == block.ID() {
-					return s3.Versioning{
-						Metadata: versioningResource.GetMetadata(),
-						Enabled:  isVersioned(versioningResource),
-					}
+					return getVersioningFromResource(versioningResource)
 				}
 			}
 		}
 	}
+	return versioning
+}
 
-	return s3.Versioning{
-		Metadata: block.GetMetadata(),
-		Enabled:  defsecTypes.BoolDefault(false, block.GetMetadata()),
+// from aws_s3_bucket_versioning
+func getVersioningFromResource(block *terraform.Block) s3.Versioning {
+	versioning := s3.Versioning{
+		Metadata:  block.GetMetadata(),
+		Enabled:   defsecTypes.BoolDefault(false, block.GetMetadata()),
+		MFADelete: defsecTypes.BoolDefault(false, block.GetMetadata()),
 	}
+	if config := block.GetBlock("versioning_configuration"); config != nil {
+		if status := config.GetAttribute("status"); status.IsNotNil() {
+			versioning.Enabled = defsecTypes.Bool(status.Equals("Enabled", terraform.IgnoreCase), status.GetMetadata())
+		}
+		if mfa := config.GetAttribute("mfa_delete"); mfa.IsNotNil() {
+			versioning.MFADelete = defsecTypes.Bool(mfa.Equals("Enabled", terraform.IgnoreCase), mfa.GetMetadata())
+		}
+	}
+	return versioning
 }
 
 func getLogging(block *terraform.Block, a *adapter) s3.Logging {
@@ -115,6 +146,16 @@ func getLogging(block *terraform.Block, a *adapter) s3.Logging {
 			targetBucket := loggingResource.GetAttribute("target-bucket").AsStringValueOrDefault("", loggingResource)
 			if referencedBlock, err := a.modules.GetReferencedBlock(loggingResource.GetAttribute("target_bucket"), loggingResource); err == nil {
 				targetBucket = defsecTypes.String(referencedBlock.FullName(), loggingResource.GetAttribute("target_bucket").GetMetadata())
+			}
+			if bucketAttr.IsString() {
+				actualBucketName := block.GetAttribute("bucket").AsStringValueOrDefault("", block).Value()
+				if bucketAttr.Equals(block.ID()) || bucketAttr.Equals(actualBucketName) {
+					return s3.Logging{
+						Metadata:     loggingResource.GetMetadata(),
+						Enabled:      hasLogging(loggingResource),
+						TargetBucket: targetBucket,
+					}
+				}
 			}
 			if referencedBlock, err := a.modules.GetReferencedBlock(bucketAttr, loggingResource); err == nil {
 				if referencedBlock.ID() == block.ID() {
@@ -145,6 +186,12 @@ func getBucketAcl(block *terraform.Block, a *adapter) defsecTypes.StringValue {
 		bucketAttr := aclResource.GetAttribute("bucket")
 
 		if bucketAttr.IsNotNil() {
+			if bucketAttr.IsString() {
+				actualBucketName := block.GetAttribute("bucket").AsStringValueOrDefault("", block).Value()
+				if bucketAttr.Equals(block.ID()) || bucketAttr.Equals(actualBucketName) {
+					return aclResource.GetAttribute("acl").AsStringValueOrDefault("private", aclResource)
+				}
+			}
 			if referencedBlock, err := a.modules.GetReferencedBlock(bucketAttr, aclResource); err == nil {
 				if referencedBlock.ID() == block.ID() {
 					return aclResource.GetAttribute("acl").AsStringValueOrDefault("private", aclResource)
@@ -185,22 +232,4 @@ func hasLogging(b *terraform.Block) defsecTypes.BoolValue {
 		return defsecTypes.Bool(true, targetBucket.GetMetadata())
 	}
 	return defsecTypes.BoolDefault(false, b.GetMetadata())
-}
-
-func isVersioned(b *terraform.Block) defsecTypes.BoolValue {
-	if versioningBlock := b.GetBlock("versioning"); versioningBlock.IsNotNil() {
-		return versioningBlock.GetAttribute("enabled").AsBoolValueOrDefault(true, versioningBlock)
-	}
-	if versioningBlock := b.GetBlock("versioning_configuration"); versioningBlock.IsNotNil() {
-		status := versioningBlock.GetAttribute("status")
-		if status.Equals("Enabled", terraform.IgnoreCase) {
-			return defsecTypes.Bool(true, status.GetMetadata())
-		} else {
-			return defsecTypes.Bool(false, b.GetMetadata())
-		}
-	}
-	return defsecTypes.BoolDefault(
-		false,
-		b.GetMetadata(),
-	)
 }

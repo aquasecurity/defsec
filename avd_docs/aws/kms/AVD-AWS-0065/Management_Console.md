@@ -1,4 +1,4 @@
-1. Log into the AWS Management Console.
+1. Login to the AWS Management Console.
 2. Select the "Services" option and search for KMS. ![Step](/resources/aws/kms/kms-key-rotation/step2.png)
 3. Scroll down the left navigation panel and choose "Customer Managed Keys" under "Key Management Service".![Step](/resources/aws/kms/kms-key-rotation/step3.png)
 4. Select the key that needs to be verified by clicking on the alias of the key under "Alias".![Step](/resources/aws/kms/kms-key-rotation/step4.png)
