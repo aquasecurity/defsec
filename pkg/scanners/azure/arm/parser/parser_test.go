@@ -131,6 +131,9 @@ func TestParser_Parse(t *testing.T) {
 
 				rootMetadata := createMetadata(targetFS, filename, 0, 0, "", nil)
 				resourceMetadata := createMetadata(targetFS, filename, 6, 43, "myResource", &rootMetadata)
+				propertiesMetadata := createMetadata(targetFS, filename, 27, 42, "myResource.properties", &resourceMetadata)
+				customDomainMetadata := createMetadata(targetFS, filename, 29, 33, "myResource.properties.customDomain", &propertiesMetadata)
+				networkACLMetadata := createMetadata(targetFS, filename, 34, 41, "myResource.properties.networkAcls", &propertiesMetadata)
 
 				return &azure.Deployment{
 					Metadata:    rootMetadata,
@@ -163,10 +166,32 @@ func TestParser_Parse(t *testing.T) {
 								createMetadata(targetFS, filename, 10, 10, "myResource.location", &resourceMetadata),
 								nil,
 							),
+							Properties: azure.PropertyBag{
+								Metadata: createMetadata(targetFS, filename, 27, 42, "myResource.properties", &resourceMetadata),
+								Data: map[string]azure.Value{
+									"allowSharedKeyAccess": azure.NewValue(false, createMetadata(targetFS, filename, 28, 28, "myResource.properties.allowSharedKeyAccess", &propertiesMetadata), nil),
+									"customDomain": azure.NewValue(
+										map[string]interface{}{
+											"name":             azure.NewValue("string", createMetadata(targetFS, filename, 23, 23, "myResource.properties.customDomain.name", &customDomainMetadata), nil),
+											"useSubDomainName": azure.NewValue(false, createMetadata(targetFS, filename, 24, 24, "myResource.properties.customDomain.useSubDomainName", &customDomainMetadata), nil),
+											"number":           azure.NewValue(123, createMetadata(targetFS, filename, 25, 25, "myResource.properties.customDomain.number", &customDomainMetadata), nil),
+										}, customDomainMetadata, nil),
+									"networkAcls": azure.NewValue(
+										[]interface{}{
+											map[string]azure.Value{
+												"bypass": azure.NewValue("AzureServices1", createMetadata(targetFS, filename, 26, 26, "myResource.properties.networkAcls[0]", &networkACLMetadata), nil),
+											},
+											map[string]azure.Value{
+												"bypass": azure.NewValue("AzureServices2", createMetadata(targetFS, filename, 26, 26, "myResource.properties.networkAcls[1]", &networkACLMetadata), nil),
+											},
+										}, networkACLMetadata, nil),
+								},
+							},
 						},
 					},
 				}
 			},
+
 			wantDeployment: true,
 		},
 	}
@@ -186,7 +211,10 @@ func TestParser_Parse(t *testing.T) {
 			}
 
 			require.Len(t, got, 1)
-			require.Equal(t, tt.want(), got[0])
+			want := tt.want()
+			g := got[0]
+
+			require.Equal(t, want, g)
 		})
 	}
 }

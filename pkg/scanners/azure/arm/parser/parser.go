@@ -204,9 +204,16 @@ func (p *Parser) convertResource(input Resource, rootMetadata types.Metadata, re
 		name = input.Name.Raw.(string)
 	}
 
-	var properties azure.PropertyBag
-
 	metadata := p.createParentedMetadata(rootMetadata, input.StartLine, input.EndLine, name)
+
+	properties := azure.PropertyBag{
+		Metadata: p.createParentedMetadata(metadata, input.Properties.StartLine, input.Properties.EndLine, "properties"),
+		Data:     make(map[string]azure.Value),
+	}
+
+	for propName, propValue := range input.Properties.innerMapValue {
+		properties.Data[propName] = azure.NewValue(propValue.Raw, p.createParentedMetadata(properties.Metadata, propValue.StartLine, propValue.EndLine, propName), resolver)
+	}
 
 	resource := azure.Resource{
 		Metadata:   metadata,

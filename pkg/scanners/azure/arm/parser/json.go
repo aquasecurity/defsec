@@ -48,20 +48,88 @@ const (
 
 type Function struct{}
 
+type innerMapValue map[string]Value
+
+type MapValue struct {
+	Metadata
+	innerMapValue
+}
+
+type innerSliceValue []Value
+
+type SliceValue struct {
+	Metadata
+	innerSliceValue
+}
+
 type Resource struct {
 	Metadata `json:"-"`
 	innerResource
 }
 
 type innerResource struct {
-	APIVersion Value            `json:"apiVersion"`
-	Type       Value            `json:"type"`
-	Kind       Value            `json:"kind"`
-	Name       Value            `json:"name"`
-	Location   Value            `json:"location"`
-	Tags       map[string]Value `json:"tags"`
-	Sku        map[string]Value `json:"sku"`
-	Properties map[string]Value `json:"properties"`
+	APIVersion Value    `json:"apiVersion"`
+	Type       Value    `json:"type"`
+	Kind       Value    `json:"kind"`
+	Name       Value    `json:"name"`
+	Location   Value    `json:"location"`
+	Tags       MapValue `json:"tags"`
+	Sku        MapValue `json:"sku"`
+	Properties MapValue `json:"properties"`
+}
+
+func (v *MapValue) UnmarshalJSONWithMetadata(node armjson.Node) error {
+	tempMap := make(map[string]interface{})
+	if err := node.Decode(&tempMap); err != nil {
+		return err
+	}
+
+	if err := node.Decode(&v.innerMapValue); err != nil {
+		return err
+	}
+
+	for _, val := range tempMap {
+		switch t := val.(type) {
+		case []interface{}:
+			var sliceValues innerSliceValue
+			for _, i := range t {
+				sliceValues = append(sliceValues, Value{
+					Metadata: v.Metadata, Raw: i,
+				})
+			}
+			_ = SliceValue{Metadata: v.Metadata, innerSliceValue: sliceValues}
+		}
+	}
+
+	if err := node.Decode(&v.innerMapValue); err != nil {
+		return err
+	}
+	v.StartLine = node.Range().Start.Line
+	v.EndLine = node.Range().End.Line
+	for _, comment := range node.Comments() {
+		var str string
+		if err := comment.Decode(&str); err != nil {
+			return err
+		}
+		v.Comments = append(v.Comments, str)
+	}
+	return nil
+}
+
+func (v *SliceValue) UnmarshalJSONWithMetadata(node armjson.Node) error {
+	if err := node.Decode(&v.innerSliceValue); err != nil {
+		return err
+	}
+	v.StartLine = node.Range().Start.Line
+	v.EndLine = node.Range().End.Line
+	for _, comment := range node.Comments() {
+		var str string
+		if err := comment.Decode(&str); err != nil {
+			return err
+		}
+		v.Comments = append(v.Comments, str)
+	}
+	return nil
 }
 
 func (v *Resource) UnmarshalJSONWithMetadata(node armjson.Node) error {
