@@ -21,8 +21,9 @@ resource "google_compute_network" "custom-test" {
   name                    = "test-network"
   auto_create_subnetworks = false
 }
+
 ```
 
 #### Remediation Links
  - https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_subnetwork#enable_flow_logs
-        
+

@@ -108,33 +108,21 @@ var docsMarkdownTemplate = `
 var terraformMarkdownTemplate = `
 {{ .Resolution }}
 
-{{ if .Terraform.GoodExamples }}
-{{ range .Terraform.GoodExamples }}
-` + "```hcl" + `
-{{ . }}
+{{ if .Terraform.GoodExamples }}{{ range .Terraform.GoodExamples }}` + "```hcl" + `{{ . }}
 ` + "```" + `
-{{ end}}
-{{ end }}
-
+{{ end}}{{ end }}
 {{ if .Terraform.Links }}#### Remediation Links{{ range .Terraform.Links }}
  - {{ . }}
-{{ end}}
-{{ end }}
+{{ end}}{{ end }}
 `
 
 var cloudformationMarkdownTemplate = `
 {{ .Resolution }}
 
-{{ if .CloudFormation.GoodExamples }}
-{{ range .CloudFormation.GoodExamples }}
-` + "```yaml" + `
-{{ . }}
+{{ if .CloudFormation.GoodExamples }}{{ range .CloudFormation.GoodExamples }}` + "```yaml" + `{{ . }}
 ` + "```" + `
-{{ end}}
-{{ end }}
-
+{{ end}}{{ end }}
 {{ if .CloudFormation.Links }}#### Remediation Links{{ range .CloudFormation.Links }}
  - {{ . }}
-{{ end}}
-{{ end }}
+{{ end}}{{ end }}
 `

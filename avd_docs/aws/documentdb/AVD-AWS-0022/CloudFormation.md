@@ -1,10 +1,7 @@
 
 Enable encryption using customer managed keys
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: "AWS::DocDB::DBCluster"
@@ -25,4 +22,7 @@ Resources:
       DBInstanceClass: "db.r5.large"
       DBInstanceIdentifier: "sample-cluster-instance-0"
       PreferredMaintenanceWindow: "sat:06:54-sat:07:24"
+
 ```
+
+

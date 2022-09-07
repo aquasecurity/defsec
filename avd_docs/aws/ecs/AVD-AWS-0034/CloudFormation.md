@@ -1,10 +1,7 @@
 
 Enable Container Insights
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: 'AWS::ECS::Cluster'
@@ -13,4 +10,7 @@ Resources:
       ClusterSettings:
         - Name: containerInsights
           Value: enabled
+
 ```
+
+

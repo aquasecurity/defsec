@@ -1,10 +1,7 @@
 
 Enable logging for API Gateway stages
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 AWSTemplateFormatVersion: 2010-09-09
 Description: Good Example of SAM API
 Resources:
@@ -19,4 +16,7 @@ Resources:
       AccessLogSetting:
         DestinationArn: gateway-logging
         Format: json
+
 ```
+
+

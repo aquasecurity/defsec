@@ -1,10 +1,7 @@
 
 Enable encryption of EKS secrets
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: 'AWS::EKS::Cluster'
@@ -24,4 +21,7 @@ Resources:
         SubnetIds:
           - subnet-6782e71e
           - subnet-e7e761ac
+
 ```
+
+

@@ -1,10 +1,7 @@
 
 Enable encryption for EFS
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: AWS::EFS::FileSystem
@@ -16,4 +13,7 @@ Resources:
       PerformanceMode: generalPurpose
       Encrypted: true
       ThroughputMode: bursting
+
 ```
+
+

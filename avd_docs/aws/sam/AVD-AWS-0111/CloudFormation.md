@@ -1,10 +1,7 @@
 
 Enable tracing
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 AWSTemplateFormatVersion: 2010-09-09
 Description: Good Example of SAM API
 Resources:
@@ -14,4 +11,7 @@ Resources:
       Name: Good SAM API example
       StageName: Prod
       TracingEnabled: true
+
 ```
+
+
