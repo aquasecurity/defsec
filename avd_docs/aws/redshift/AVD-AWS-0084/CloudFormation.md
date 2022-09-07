@@ -1,10 +1,7 @@
 
 Enable encryption using CMK
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 AWSTemplateFormatVersion: 2010-09-09
 Description: Bad example of redshift cluster
 Resources:
@@ -13,4 +10,8 @@ Resources:
     Properties:
       Encrypted: true
       KmsKeyId: "something"
+
+
 ```
+
+

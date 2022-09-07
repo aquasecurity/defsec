@@ -1,10 +1,7 @@
 
 Enable in transit encryption for replication group
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: 'AWS::ElastiCache::ReplicationGroup'
@@ -24,4 +21,7 @@ Resources:
       SnapshotRetentionLimit: 5
       SnapshotWindow: '10:00-12:00'   
       TransitEncryptionEnabled: true
+
 ```
+
+

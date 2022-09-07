@@ -1,10 +1,7 @@
 
 Do not allow public access in the policy
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: AWS::ECR::Repository
@@ -33,4 +30,7 @@ Resources:
               - "ecr:InitiateLayerUpload"
               - "ecr:UploadLayerPart"
               - "ecr:CompleteLayerUpload"
+
 ```
+
+

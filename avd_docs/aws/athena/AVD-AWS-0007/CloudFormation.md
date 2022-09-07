@@ -1,10 +1,7 @@
 
 Enforce the configuration to prevent client overrides
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Properties:
@@ -15,4 +12,7 @@ Resources:
           EncryptionConfiguration:
             EncryptionOption: SSE_KMS
     Type: AWS::Athena::WorkGroup
+
 ```
+
+

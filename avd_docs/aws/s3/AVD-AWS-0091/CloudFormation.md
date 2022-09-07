@@ -1,10 +1,7 @@
 
 Enable ignoring the application of public ACLs in PUT calls
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Properties:
@@ -15,4 +12,7 @@ Resources:
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
     Type: AWS::S3::Bucket
+
 ```
+
+

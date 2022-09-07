@@ -1,10 +1,7 @@
 
 Set the aggregator to cover all regions
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: AWS::Config::ConfigurationAggregator
@@ -12,4 +9,17 @@ Resources:
       AccountAggregationSources:
         - AllAwsRegions: true
       ConfigurationAggregatorName: "GoodAccountLevelAggregation"
+
 ```
+```yaml---
+Resources:
+  GoodExample:
+    Type: AWS::Config::ConfigurationAggregator
+    Properties:
+      OrganizationAggregationSource: 
+        AllAwsRegions: true
+      ConfigurationAggregatorName: "GoodAccountLevelAggregation"
+
+```
+
+

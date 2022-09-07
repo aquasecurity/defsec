@@ -1,10 +1,7 @@
 
 Only allow HTTPS for CloudFront distribution communication
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Properties:
@@ -20,4 +17,7 @@ Resources:
             Id: somedomain1
         WebACLId: waf_id
     Type: AWS::CloudFront::Distribution
+
 ```
+
+
