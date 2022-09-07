@@ -2,11 +2,11 @@ package ec2
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getInstances(ctx parser.FileContext) (instances []ec2.Instance) {
+func getInstances(ctx parser2.FileContext) (instances []ec2.Instance) {
 
 	instanceResources := ctx.GetResourcesByType("AWS::EC2::Instance")
 
@@ -40,7 +40,7 @@ func getInstances(ctx parser.FileContext) (instances []ec2.Instance) {
 	return instances
 }
 
-func getBlockDevices(r *parser.Resource) []*ec2.BlockDevice {
+func getBlockDevices(r *parser2.Resource) []*ec2.BlockDevice {
 	var blockDevices []*ec2.BlockDevice
 
 	devicesProp := r.GetProperty("BlockDeviceMappings")

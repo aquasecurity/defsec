@@ -2,11 +2,11 @@ package cloudfront
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudfront"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getDistributions(ctx parser.FileContext) (distributions []cloudfront.Distribution) {
+func getDistributions(ctx parser2.FileContext) (distributions []cloudfront.Distribution) {
 
 	distributionResources := ctx.GetResourcesByType("AWS::CloudFront::Distribution")
 
@@ -32,7 +32,7 @@ func getDistributions(ctx parser.FileContext) (distributions []cloudfront.Distri
 	return distributions
 }
 
-func getDefaultCacheBehaviour(r *parser.Resource) cloudfront.CacheBehaviour {
+func getDefaultCacheBehaviour(r *parser2.Resource) cloudfront.CacheBehaviour {
 	defaultCache := r.GetProperty("DistributionConfig.DefaultCacheBehavior")
 	if defaultCache.IsNil() {
 		return cloudfront.CacheBehaviour{

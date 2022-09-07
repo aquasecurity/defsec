@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	cfScanner "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
@@ -11,7 +12,6 @@ import (
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 
-	cfScanner "github.com/aquasecurity/defsec/pkg/scanners/cloudformation"
 	tfScanner "github.com/aquasecurity/defsec/pkg/scanners/terraform"
 
 	"github.com/stretchr/testify/require"

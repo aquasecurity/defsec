@@ -3,12 +3,12 @@ package sam
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sam"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/liamg/iamgo"
 )
 
-func getFunctions(cfFile parser.FileContext) (functions []sam.Function) {
+func getFunctions(cfFile parser2.FileContext) (functions []sam.Function) {
 
 	functionResources := cfFile.GetResourcesByType("AWS::Serverless::Function")
 	for _, r := range functionResources {
@@ -27,7 +27,7 @@ func getFunctions(cfFile parser.FileContext) (functions []sam.Function) {
 	return functions
 }
 
-func setFunctionPolicies(r *parser.Resource, function *sam.Function) {
+func setFunctionPolicies(r *parser2.Resource, function *sam.Function) {
 	policies := r.GetProperty("Policies")
 	if policies.IsNotNil() {
 		if policies.IsString() {

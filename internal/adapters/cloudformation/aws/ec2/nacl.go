@@ -3,11 +3,10 @@ package ec2
 import (
 	"strconv"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
-
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 )
 
 func getNetworkACLs(ctx parser.FileContext) (acls []ec2.NetworkACL) {

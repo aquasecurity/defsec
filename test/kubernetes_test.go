@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/scanners/kubernetes"
+	"github.com/aquasecurity/defsec/pkg/scanners/k8s/kubernetes"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 

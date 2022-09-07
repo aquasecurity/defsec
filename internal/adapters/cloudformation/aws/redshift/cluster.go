@@ -2,7 +2,7 @@ package redshift
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/redshift"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 )
 
 func getClusters(ctx parser.FileContext) (clusters []redshift.Cluster) {

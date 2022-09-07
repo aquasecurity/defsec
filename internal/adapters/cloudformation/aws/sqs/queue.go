@@ -3,9 +3,8 @@ package sqs
 import (
 	"fmt"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
-
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"

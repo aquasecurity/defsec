@@ -2,11 +2,11 @@ package apigateway
 
 import (
 	v2 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v2"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getApis(cfFile parser.FileContext) (apis []v2.API) {
+func getApis(cfFile parser2.FileContext) (apis []v2.API) {
 
 	apiResources := cfFile.GetResourcesByType("AWS::ApiGatewayV2::Api")
 	for _, apiRes := range apiResources {
@@ -22,7 +22,7 @@ func getApis(cfFile parser.FileContext) (apis []v2.API) {
 	return apis
 }
 
-func getStages(apiId string, cfFile parser.FileContext) []v2.Stage {
+func getStages(apiId string, cfFile parser2.FileContext) []v2.Stage {
 	var apiStages []v2.Stage
 
 	stageResources := cfFile.GetResourcesByType("AWS::ApiGatewayV2::Stage")
@@ -43,7 +43,7 @@ func getStages(apiId string, cfFile parser.FileContext) []v2.Stage {
 	return apiStages
 }
 
-func getAccessLogging(r *parser.Resource) v2.AccessLogging {
+func getAccessLogging(r *parser2.Resource) v2.AccessLogging {
 
 	loggingProp := r.GetProperty("AccessLogSettings")
 	if loggingProp.IsNil() {

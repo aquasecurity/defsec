@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"sync"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/dockerfile/parser"
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
@@ -13,8 +14,6 @@ import (
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/rego"
-	"github.com/aquasecurity/defsec/pkg/scanners/dockerfile/parser"
-
 	"github.com/aquasecurity/defsec/pkg/scan"
 
 	"github.com/aquasecurity/defsec/pkg/scanners"

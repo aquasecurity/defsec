@@ -2,11 +2,11 @@ package documentdb
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/documentdb"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getClusters(ctx parser.FileContext) (clusters []documentdb.Cluster) {
+func getClusters(ctx parser2.FileContext) (clusters []documentdb.Cluster) {
 
 	clusterResources := ctx.GetResourcesByType("AWS::DocDB::DBCluster")
 
@@ -27,7 +27,7 @@ func getClusters(ctx parser.FileContext) (clusters []documentdb.Cluster) {
 	return clusters
 }
 
-func updateInstancesOnCluster(cluster *documentdb.Cluster, ctx parser.FileContext) {
+func updateInstancesOnCluster(cluster *documentdb.Cluster, ctx parser2.FileContext) {
 
 	instanceResources := ctx.GetResourcesByType("AWS::DocDB::DBInstance")
 
@@ -42,7 +42,7 @@ func updateInstancesOnCluster(cluster *documentdb.Cluster, ctx parser.FileContex
 	}
 }
 
-func getLogExports(r *parser.Resource) (logExports []types.StringValue) {
+func getLogExports(r *parser2.Resource) (logExports []types.StringValue) {
 
 	exportsList := r.GetProperty("EnableCloudwatchLogsExports")
 

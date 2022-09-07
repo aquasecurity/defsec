@@ -5,8 +5,7 @@ import (
 	"io"
 
 	"github.com/aquasecurity/defsec/pkg/framework"
-
-	"github.com/aquasecurity/defsec/pkg/scanners/cloud/aws"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloud"
 
 	"github.com/spf13/cobra"
 
@@ -47,16 +46,16 @@ func scanAWS(stdout, stderr io.Writer) error {
 	}
 
 	if flagAWSRegion != "" {
-		opts = append(opts, aws.ScannerWithAWSRegion(flagAWSRegion))
+		opts = append(opts, cloud.ScannerWithAWSRegion(flagAWSRegion))
 	}
 
 	if len(flagAWSServices) > 0 {
-		opts = append(opts, aws.ScannerWithAWSServices(flagAWSServices...))
+		opts = append(opts, cloud.ScannerWithAWSServices(flagAWSServices...))
 	}
 
 	opts = append(opts, options.ScannerWithFrameworks(framework.Framework(flagFramework)))
 
-	scanner := aws.New(opts...)
+	scanner := cloud.New(opts...)
 
 	// Execute the filesystem based scanners
 	results, err := scanner.Scan(context.TODO())

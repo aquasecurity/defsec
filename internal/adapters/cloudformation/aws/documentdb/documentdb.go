@@ -2,7 +2,7 @@ package documentdb
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/documentdb"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 )
 
 // Adapt ...

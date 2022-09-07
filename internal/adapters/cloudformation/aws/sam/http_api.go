@@ -2,11 +2,11 @@ package sam
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sam"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getHttpApis(cfFile parser.FileContext) (apis []sam.HttpAPI) {
+func getHttpApis(cfFile parser2.FileContext) (apis []sam.HttpAPI) {
 
 	apiResources := cfFile.GetResourcesByType("AWS::Serverless::HttpApi")
 	for _, r := range apiResources {
@@ -24,7 +24,7 @@ func getHttpApis(cfFile parser.FileContext) (apis []sam.HttpAPI) {
 	return apis
 }
 
-func getRouteSettings(r *parser.Resource) sam.RouteSettings {
+func getRouteSettings(r *parser2.Resource) sam.RouteSettings {
 
 	routeSettings := sam.RouteSettings{
 		Metadata:               r.Metadata(),

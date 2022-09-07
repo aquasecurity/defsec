@@ -3,9 +3,8 @@ package ecr
 import (
 	"fmt"
 
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
-
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecr"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
@@ -13,7 +12,7 @@ import (
 	"github.com/liamg/iamgo"
 )
 
-func getRepositories(ctx parser.FileContext) (repositories []ecr.Repository) {
+func getRepositories(ctx parser2.FileContext) (repositories []ecr.Repository) {
 
 	repositoryResources := ctx.GetResourcesByType("AWS::ECR::Repository")
 
@@ -59,7 +58,7 @@ func getRepositories(ctx parser.FileContext) (repositories []ecr.Repository) {
 	return repositories
 }
 
-func getPolicy(r *parser.Resource) (*iam.Policy, error) {
+func getPolicy(r *parser2.Resource) (*iam.Policy, error) {
 	policyProp := r.GetProperty("RepositoryPolicyText")
 	if policyProp.IsNil() {
 		return nil, fmt.Errorf("missing policy")
@@ -81,7 +80,7 @@ func getPolicy(r *parser.Resource) (*iam.Policy, error) {
 	}, nil
 }
 
-func hasImmutableImageTags(r *parser.Resource) defsecTypes.BoolValue {
+func hasImmutableImageTags(r *parser2.Resource) defsecTypes.BoolValue {
 	mutabilityProp := r.GetProperty("ImageTagMutability")
 	if mutabilityProp.IsNil() {
 		return defsecTypes.BoolDefault(false, r.Metadata())

@@ -2,7 +2,7 @@ package elasticache
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticache"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 )
 
 func getReplicationGroups(ctx parser.FileContext) (replicationGroups []elasticache.ReplicationGroup) {

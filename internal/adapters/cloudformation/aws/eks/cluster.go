@@ -2,11 +2,11 @@ package eks
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/eks"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getClusters(ctx parser.FileContext) (clusters []eks.Cluster) {
+func getClusters(ctx parser2.FileContext) (clusters []eks.Cluster) {
 
 	clusterResources := ctx.GetResourcesByType("AWS::EKS::Cluster")
 
@@ -33,7 +33,7 @@ func getClusters(ctx parser.FileContext) (clusters []eks.Cluster) {
 	return clusters
 }
 
-func getEncryptionConfig(r *parser.Resource) eks.Encryption {
+func getEncryptionConfig(r *parser2.Resource) eks.Encryption {
 
 	encryption := eks.Encryption{
 		Metadata: r.Metadata(),

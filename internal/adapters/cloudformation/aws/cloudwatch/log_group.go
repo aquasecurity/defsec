@@ -2,7 +2,7 @@ package cloudwatch
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 

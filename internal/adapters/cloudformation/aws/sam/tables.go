@@ -2,11 +2,11 @@ package sam
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sam"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getSimpleTables(cfFile parser.FileContext) (tables []sam.SimpleTable) {
+func getSimpleTables(cfFile parser2.FileContext) (tables []sam.SimpleTable) {
 
 	tableResources := cfFile.GetResourcesByType("AWS::Serverless::SimpleTable")
 	for _, r := range tableResources {
@@ -22,7 +22,7 @@ func getSimpleTables(cfFile parser.FileContext) (tables []sam.SimpleTable) {
 	return tables
 }
 
-func getSSESpecification(r *parser.Resource) sam.SSESpecification {
+func getSSESpecification(r *parser2.Resource) sam.SSESpecification {
 
 	spec := sam.SSESpecification{
 		Metadata:       r.Metadata(),

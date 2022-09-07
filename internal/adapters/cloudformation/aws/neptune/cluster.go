@@ -2,11 +2,11 @@ package neptune
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/neptune"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getClusters(ctx parser.FileContext) (clusters []neptune.Cluster) {
+func getClusters(ctx parser2.FileContext) (clusters []neptune.Cluster) {
 	for _, r := range ctx.GetResourcesByType("AWS::Neptune::DBCluster") {
 
 		cluster := neptune.Cluster{
@@ -23,7 +23,7 @@ func getClusters(ctx parser.FileContext) (clusters []neptune.Cluster) {
 	return clusters
 }
 
-func getAuditLog(r *parser.Resource) types.BoolValue {
+func getAuditLog(r *parser2.Resource) types.BoolValue {
 	if logsProp := r.GetProperty("EnableCloudwatchLogsExports"); logsProp.IsList() {
 		if logsProp.Contains("audit") {
 			return types.Bool(true, logsProp.Metadata())

@@ -2,7 +2,7 @@ package workspaces
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/workspaces"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 )
 
 // Adapt ...

@@ -2,7 +2,7 @@ package ec2
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 

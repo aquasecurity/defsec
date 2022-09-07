@@ -2,7 +2,7 @@ package cloudtrail
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 )
 
 func getCloudTrails(ctx parser.FileContext) (trails []cloudtrail.Trail) {

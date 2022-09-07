@@ -2,7 +2,7 @@ package redshift
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/redshift"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 )
 
 func getSecurityGroups(ctx parser.FileContext) (groups []redshift.SecurityGroup) {

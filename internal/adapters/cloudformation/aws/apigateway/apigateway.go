@@ -4,7 +4,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
 	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 	v2 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v2"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 )
 
 // Adapt ...

@@ -2,11 +2,11 @@ package codebuild
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/codebuild"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getProjects(ctx parser.FileContext) (projects []codebuild.Project) {
+func getProjects(ctx parser2.FileContext) (projects []codebuild.Project) {
 
 	projectResources := ctx.GetResourcesByType("AWS::CodeBuild::Project")
 
@@ -23,7 +23,7 @@ func getProjects(ctx parser.FileContext) (projects []codebuild.Project) {
 	return projects
 }
 
-func getSecondaryArtifactSettings(r *parser.Resource) (secondaryArtifacts []codebuild.ArtifactSettings) {
+func getSecondaryArtifactSettings(r *parser2.Resource) (secondaryArtifacts []codebuild.ArtifactSettings) {
 	secondaryArtifactsList := r.GetProperty("SecondaryArtifacts")
 	if secondaryArtifactsList.IsNil() || !secondaryArtifactsList.IsList() {
 		return
@@ -44,7 +44,7 @@ func getSecondaryArtifactSettings(r *parser.Resource) (secondaryArtifacts []code
 	return secondaryArtifacts
 }
 
-func getArtifactSettings(r *parser.Resource) codebuild.ArtifactSettings {
+func getArtifactSettings(r *parser2.Resource) codebuild.ArtifactSettings {
 
 	settings := codebuild.ArtifactSettings{
 		Metadata:          r.Metadata(),

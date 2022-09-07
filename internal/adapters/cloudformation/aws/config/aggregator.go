@@ -2,11 +2,11 @@ package config
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/config"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getConfigurationAggregator(ctx parser.FileContext) config.ConfigurationAggregrator {
+func getConfigurationAggregator(ctx parser2.FileContext) config.ConfigurationAggregrator {
 
 	aggregator := config.ConfigurationAggregrator{
 		Metadata:         defsecTypes.NewUnmanagedMetadata(),
@@ -25,7 +25,7 @@ func getConfigurationAggregator(ctx parser.FileContext) config.ConfigurationAggr
 	}
 }
 
-func isSourcingAllRegions(r *parser.Resource) defsecTypes.BoolValue {
+func isSourcingAllRegions(r *parser2.Resource) defsecTypes.BoolValue {
 	accountProp := r.GetProperty("AccountAggregationSources")
 	orgProp := r.GetProperty("OrganizationAggregationSource")
 

@@ -2,11 +2,11 @@ package lambda
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/lambda"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getFunctions(ctx parser.FileContext) (functions []lambda.Function) {
+func getFunctions(ctx parser2.FileContext) (functions []lambda.Function) {
 
 	functionResources := ctx.GetResourcesByType("AWS::Lambda::Function")
 
@@ -34,7 +34,7 @@ func getFunctions(ctx parser.FileContext) (functions []lambda.Function) {
 	return functions
 }
 
-func getPermissions(funcR *parser.Resource, ctx parser.FileContext) (perms []lambda.Permission) {
+func getPermissions(funcR *parser2.Resource, ctx parser2.FileContext) (perms []lambda.Permission) {
 
 	permissionResources := ctx.GetResourcesByType("AWS::Lambda::Permission")
 

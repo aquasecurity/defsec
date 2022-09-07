@@ -2,11 +2,11 @@ package sam
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sam"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getApis(cfFile parser.FileContext) (apis []sam.API) {
+func getApis(cfFile parser2.FileContext) (apis []sam.API) {
 
 	apiResources := cfFile.GetResourcesByType("AWS::Serverless::Api")
 	for _, r := range apiResources {
@@ -25,7 +25,7 @@ func getApis(cfFile parser.FileContext) (apis []sam.API) {
 	return apis
 }
 
-func getRestMethodSettings(r *parser.Resource) sam.RESTMethodSettings {
+func getRestMethodSettings(r *parser2.Resource) sam.RESTMethodSettings {
 
 	settings := sam.RESTMethodSettings{
 		Metadata:           r.Metadata(),
@@ -47,7 +47,7 @@ func getRestMethodSettings(r *parser.Resource) sam.RESTMethodSettings {
 		}
 
 		if loggingLevel := settingsProp.GetProperty("LoggingLevel"); loggingLevel.IsNotNil() {
-			if loggingLevel.EqualTo("OFF", parser.IgnoreCase) {
+			if loggingLevel.EqualTo("OFF", parser2.IgnoreCase) {
 				settings.LoggingEnabled = defsecTypes.Bool(false, loggingLevel.Metadata())
 			} else {
 				settings.LoggingEnabled = defsecTypes.Bool(true, loggingLevel.Metadata())
@@ -58,7 +58,7 @@ func getRestMethodSettings(r *parser.Resource) sam.RESTMethodSettings {
 	return settings
 }
 
-func getAccessLogging(r *parser.Resource) sam.AccessLogging {
+func getAccessLogging(r *parser2.Resource) sam.AccessLogging {
 
 	logging := sam.AccessLogging{
 		Metadata:              r.Metadata(),
@@ -75,7 +75,7 @@ func getAccessLogging(r *parser.Resource) sam.AccessLogging {
 	return logging
 }
 
-func getDomainConfiguration(r *parser.Resource) sam.DomainConfiguration {
+func getDomainConfiguration(r *parser2.Resource) sam.DomainConfiguration {
 
 	domainConfig := sam.DomainConfiguration{
 		Metadata:       r.Metadata(),

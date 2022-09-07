@@ -3,12 +3,12 @@ package sam
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sam"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/liamg/iamgo"
 )
 
-func getStateMachines(cfFile parser.FileContext) (stateMachines []sam.StateMachine) {
+func getStateMachines(cfFile parser2.FileContext) (stateMachines []sam.StateMachine) {
 
 	stateMachineResources := cfFile.GetResourcesByType("AWS::Serverless::StateMachine")
 	for _, r := range stateMachineResources {
@@ -38,7 +38,7 @@ func getStateMachines(cfFile parser.FileContext) (stateMachines []sam.StateMachi
 	return stateMachines
 }
 
-func getTracingConfiguration(r *parser.Resource) sam.TracingConfiguration {
+func getTracingConfiguration(r *parser2.Resource) sam.TracingConfiguration {
 	tracing := r.GetProperty("Tracing")
 	if tracing.IsNil() {
 		return sam.TracingConfiguration{
@@ -53,7 +53,7 @@ func getTracingConfiguration(r *parser.Resource) sam.TracingConfiguration {
 	}
 }
 
-func setStateMachinePolicies(r *parser.Resource, stateMachine *sam.StateMachine) {
+func setStateMachinePolicies(r *parser2.Resource, stateMachine *sam.StateMachine) {
 	policies := r.GetProperty("Policies")
 	if policies.IsNotNil() {
 		if policies.IsString() {

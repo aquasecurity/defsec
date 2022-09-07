@@ -4,20 +4,18 @@ import (
 	"context"
 	"io/fs"
 
-	"github.com/aquasecurity/defsec/pkg/scanners/cloud/aws"
-	"github.com/aquasecurity/defsec/pkg/scanners/helm"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloud"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation"
+	"github.com/aquasecurity/defsec/pkg/scanners/dockerfile"
+	"github.com/aquasecurity/defsec/pkg/scanners/genericconfig/json"
+	"github.com/aquasecurity/defsec/pkg/scanners/genericconfig/toml"
+	"github.com/aquasecurity/defsec/pkg/scanners/genericconfig/yaml"
+	"github.com/aquasecurity/defsec/pkg/scanners/k8s/helm"
+	"github.com/aquasecurity/defsec/pkg/scanners/k8s/kubernetes"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
-	"github.com/aquasecurity/defsec/pkg/scanners/json"
-	"github.com/aquasecurity/defsec/pkg/scanners/toml"
-	"github.com/aquasecurity/defsec/pkg/scanners/yaml"
-
 	"github.com/aquasecurity/defsec/pkg/scan"
-
 	"github.com/aquasecurity/defsec/pkg/scanners"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation"
-	"github.com/aquasecurity/defsec/pkg/scanners/dockerfile"
-	"github.com/aquasecurity/defsec/pkg/scanners/kubernetes"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform"
 )
 
@@ -51,7 +49,7 @@ func New(opts ...options.ScannerOption) *Scanner {
 			helm.New(opts...),
 		},
 		apiScanners: []nestableAPIScanners{
-			aws.New(opts...),
+			cloud.New(opts...),
 		},
 	}
 	return s

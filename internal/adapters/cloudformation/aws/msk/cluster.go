@@ -2,7 +2,7 @@ package msk
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/msk"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 

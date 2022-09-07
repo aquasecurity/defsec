@@ -4,15 +4,15 @@ import (
 	"regexp"
 	"strings"
 
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 )
 
 var aclConvertRegex = regexp.MustCompile(`[A-Z][^A-Z]*`)
 
-func getBuckets(cfFile parser.FileContext) []s3.Bucket {
+func getBuckets(cfFile parser2.FileContext) []s3.Bucket {
 	var buckets []s3.Bucket
 	bucketResources := cfFile.GetResourcesByType("AWS::S3::Bucket")
 
@@ -36,7 +36,7 @@ func getBuckets(cfFile parser.FileContext) []s3.Bucket {
 	return buckets
 }
 
-func getPublicAccessBlock(r *parser.Resource) *s3.PublicAccessBlock {
+func getPublicAccessBlock(r *parser2.Resource) *s3.PublicAccessBlock {
 	if block := r.GetProperty("PublicAccessBlockConfiguration"); block.IsNil() {
 		return nil
 	}
@@ -56,7 +56,7 @@ func convertAclValue(aclValue defsecTypes.StringValue) defsecTypes.StringValue {
 	return defsecTypes.String(strings.ToLower(strings.Join(matches, "-")), aclValue.GetMetadata())
 }
 
-func getLogging(r *parser.Resource) s3.Logging {
+func getLogging(r *parser2.Resource) s3.Logging {
 
 	logging := s3.Logging{
 		Metadata:     r.Metadata(),
@@ -73,7 +73,7 @@ func getLogging(r *parser.Resource) s3.Logging {
 	return logging
 }
 
-func hasVersioning(r *parser.Resource) defsecTypes.BoolValue {
+func hasVersioning(r *parser2.Resource) defsecTypes.BoolValue {
 	versioningProp := r.GetProperty("VersioningConfiguration.Status")
 
 	if versioningProp.IsNil() {
@@ -88,7 +88,7 @@ func hasVersioning(r *parser.Resource) defsecTypes.BoolValue {
 	return defsecTypes.Bool(versioningEnabled, versioningProp.Metadata())
 }
 
-func getEncryption(r *parser.Resource, _ parser.FileContext) s3.Encryption {
+func getEncryption(r *parser2.Resource, _ parser2.FileContext) s3.Encryption {
 
 	encryption := s3.Encryption{
 		Metadata:  r.Metadata(),

@@ -2,11 +2,11 @@ package ecs
 
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ecs"
-	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	parser2 "github.com/aquasecurity/defsec/pkg/scanners/aws/cloudformation/parser"
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getTaskDefinitions(ctx parser.FileContext) (taskDefinitions []ecs.TaskDefinition) {
+func getTaskDefinitions(ctx parser2.FileContext) (taskDefinitions []ecs.TaskDefinition) {
 
 	taskDefResources := ctx.GetResourcesByType("AWS::ECS::TaskDefinition")
 
@@ -23,7 +23,7 @@ func getTaskDefinitions(ctx parser.FileContext) (taskDefinitions []ecs.TaskDefin
 	return taskDefinitions
 }
 
-func getContainerDefinitions(r *parser.Resource) ([]ecs.ContainerDefinition, error) {
+func getContainerDefinitions(r *parser2.Resource) ([]ecs.ContainerDefinition, error) {
 	var definitions []ecs.ContainerDefinition
 	containerDefs := r.GetProperty("ContainerDefinitions")
 	if containerDefs.IsNil() || containerDefs.IsNotList() {
@@ -60,7 +60,7 @@ func getContainerDefinitions(r *parser.Resource) ([]ecs.ContainerDefinition, err
 	return definitions, nil
 }
 
-func getVolumes(r *parser.Resource) (volumes []ecs.Volume) {
+func getVolumes(r *parser2.Resource) (volumes []ecs.Volume) {
 
 	volumesList := r.GetProperty("Volumes")
 	if volumesList.IsNil() || volumesList.IsNotList() {
@@ -76,7 +76,7 @@ func getVolumes(r *parser.Resource) (volumes []ecs.Volume) {
 			},
 		}
 		transitProp := v.GetProperty("EFSVolumeConfiguration.TransitEncryption")
-		if transitProp.IsNotNil() && transitProp.EqualTo("enabled", parser.IgnoreCase) {
+		if transitProp.IsNotNil() && transitProp.EqualTo("enabled", parser2.IgnoreCase) {
 			volume.EFSVolumeConfiguration.TransitEncryptionEnabled = types.Bool(true, transitProp.Metadata())
 		}
 
