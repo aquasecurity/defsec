@@ -2,6 +2,7 @@ package parser
 
 import (
 	"context"
+	"io/fs"
 	"os"
 	"testing"
 
@@ -17,6 +18,14 @@ import (
 
 	"github.com/aquasecurity/defsec/pkg/scanners/azure"
 )
+
+func createMetadata(targetFS fs.FS, filename string, start, end int, ref string, parent *types.Metadata) types.Metadata {
+	child := types.NewMetadata(types.NewRange(filename, start, end, "", targetFS), types.NewNamedReference(ref))
+	if parent != nil {
+		child = child.WithParent(*parent)
+	}
+	return child
+}
 
 func TestParser_Parse(t *testing.T) {
 
@@ -51,15 +60,19 @@ func TestParser_Parse(t *testing.T) {
   "resources": []
 }`,
 			want: func() *azure.Deployment {
+
+				metadata := createMetadata(targetFS, filename, 0, 0, "", nil)
+
 				return &azure.Deployment{
+					Metadata:    metadata,
 					TargetScope: azure.ScopeResourceGroup,
 					Parameters: []azure.Parameter{
 						{
 							Variable: azure.Variable{
 								Name:  "storagePrefix",
-								Value: azure.NewValue("x", types.NewTestMetadataWithLines(targetFS, filename, 7, 7, "storagePrefix"), nil),
+								Value: azure.NewValue("x", createMetadata(targetFS, filename, 7, 7, "storagePrefix", &metadata), nil),
 							},
-							Default:    azure.NewValue("x", types.NewTestMetadataWithLines(targetFS, filename, 7, 7, "storagePrefix"), nil),
+							Default:    azure.NewValue("x", createMetadata(targetFS, filename, 7, 7, "storagePrefix", &metadata), nil),
 							Decorators: nil,
 						},
 					},
@@ -77,7 +90,7 @@ func TestParser_Parse(t *testing.T) {
 {
   "type": "Microsoft.Storage/storageAccounts",
   "apiVersion": "2022-05-01",
-  "name": "string",
+  "name": "myResource",
   "location": "string",
   "tags": {
     "tagName1": "tagValue1",
@@ -115,24 +128,41 @@ func TestParser_Parse(t *testing.T) {
 ]
 }`,
 			want: func() *azure.Deployment {
+
+				rootMetadata := createMetadata(targetFS, filename, 0, 0, "", nil)
+				resourceMetadata := createMetadata(targetFS, filename, 6, 43, "myResource", &rootMetadata)
+
 				return &azure.Deployment{
+					Metadata:    rootMetadata,
 					TargetScope: azure.ScopeResourceGroup,
 					Resources: []azure.Resource{
 						{
-							Metadata: types.NewTestMetadataWithLines(targetFS, filename, 6, 43, "string"),
+							Metadata: resourceMetadata,
 							APIVersion: azure.NewValue(
 								"2022-05-01",
-								types.NewTestMetadataWithLines(targetFS, filename, 8, 8, "apiVersion"),
+								createMetadata(targetFS, filename, 8, 8, "myResource.apiVersion", &resourceMetadata),
 								nil,
 							),
 							Type: azure.NewValue(
 								"Microsoft.Storage/storageAccounts",
-								types.NewTestMetadataWithLines(targetFS, filename, 7, 7, "type"),
+								createMetadata(targetFS, filename, 7, 7, "myResource.type", &resourceMetadata),
 								nil,
 							),
-							Kind:     nil,
-							Name:     nil,
-							Location: nil,
+							Kind: azure.NewValue(
+								"string",
+								createMetadata(targetFS, filename, 18, 18, "myResource.kind", &resourceMetadata),
+								nil,
+							),
+							Name: azure.NewValue(
+								"myResource",
+								createMetadata(targetFS, filename, 9, 9, "myResource.name", &resourceMetadata),
+								nil,
+							),
+							Location: azure.NewValue(
+								"string",
+								createMetadata(targetFS, filename, 10, 10, "myResource.location", &resourceMetadata),
+								nil,
+							),
 						},
 					},
 				}

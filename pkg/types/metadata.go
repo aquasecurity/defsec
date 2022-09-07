@@ -2,7 +2,6 @@ package types
 
 import (
 	"fmt"
-	"io/fs"
 	"strings"
 )
 
@@ -98,10 +97,6 @@ func NewUnmanagedMetadata() Metadata {
 
 func NewTestMetadata() Metadata {
 	return NewMetadata(NewRange("test.test", 123, 123, "", nil), &FakeReference{})
-}
-
-func NewTestMetadataWithLines(targetFS fs.FS, filename string, start, end int, ref string) Metadata {
-	return NewMetadata(NewRange(filename, start, end, "", targetFS), NewNamedReference(ref))
 }
 
 func NewApiMetadata(provider string, parts ...string) Metadata {

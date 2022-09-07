@@ -180,6 +180,11 @@ func (p *Parser) createMetadata(filename string, start, end int, ref string) typ
 }
 
 func (p *Parser) createParentedMetadata(parent types.Metadata, start, end int, ref string) types.Metadata {
+
+	if p := parent.Reference().String(); p != "" {
+		ref = p + "." + ref
+	}
+
 	return types.NewMetadata(
 		types.NewRange(
 			parent.Range().GetFilename(),
@@ -188,7 +193,7 @@ func (p *Parser) createParentedMetadata(parent types.Metadata, start, end int, r
 			"",
 			p.targetFS,
 		),
-		types.NewNamedReference(parent.Reference().String()+"."+ref),
+		types.NewNamedReference(ref),
 	).WithParent(parent)
 }
 
