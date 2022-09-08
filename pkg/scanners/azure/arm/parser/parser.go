@@ -22,7 +22,6 @@ import (
 type Parser struct {
 	targetFS     fs.FS
 	skipRequired bool
-	resolver     azure.Resolver
 	debug        debug.Logger
 }
 
@@ -119,6 +118,8 @@ func (p *Parser) parseFile(r io.Reader, filename string) (*azure.Deployment, err
 		types.NewRange(filename, 0, 0, "", p.targetFS),
 		types.NewNamedReference(""),
 	)
+	resolver := azure.NewResolver()
+	root.SetInternal(resolver)
 	if err := armjson.Unmarshal(data, &template, root); err != nil {
 		return nil, fmt.Errorf("failed to parse template: %w", err)
 	}
@@ -126,6 +127,7 @@ func (p *Parser) parseFile(r io.Reader, filename string) (*azure.Deployment, err
 }
 
 func (p *Parser) convertTemplate(template Template) *azure.Deployment {
+
 	deployment := azure.Deployment{
 		Metadata:    *template.Metadata,
 		TargetScope: azure.ScopeResourceGroup, // TODO: override from --resource-group?
@@ -133,6 +135,10 @@ func (p *Parser) convertTemplate(template Template) *azure.Deployment {
 		Variables:   nil,
 		Resources:   nil,
 		Outputs:     nil,
+	}
+
+	if resolver, ok := template.Metadata.Internal().(azure.Resolver); ok {
+		resolver.SetDeployment(&deployment)
 	}
 
 	// TODO: the references passed here should probably not be the name - maybe params.NAME.DefaultValue?
@@ -172,6 +178,12 @@ func (p *Parser) convertResource(input Resource) azure.Resource {
 
 	// name := input.Name.AsString()
 
+	var children []azure.Resource
+
+	for _, child := range input.Resources {
+		children = append(children, p.convertResource(child))
+	}
+
 	resource := azure.Resource{
 		Metadata:   *input.Metadata,
 		APIVersion: input.APIVersion,
@@ -180,6 +192,7 @@ func (p *Parser) convertResource(input Resource) azure.Resource {
 		Name:       input.Name,
 		Location:   input.Location,
 		Properties: input.Properties,
+		Resources:  children,
 	}
 
 	return resource

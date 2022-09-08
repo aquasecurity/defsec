@@ -230,3 +230,91 @@ func TestParser_Parse(t *testing.T) {
 		})
 	}
 }
+
+func Test_NestedResourceParsing(t *testing.T) {
+
+	input := `
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "type": "string",
+      "allowedValues": [
+        "dev",
+        "test",
+        "prod"
+      ]
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    },
+    "storageAccountSkuName": {
+      "type": "string",
+      "defaultValue": "Standard_LRS"
+    },
+    "storageAccountSkuTier": {
+      "type": "string",
+      "defaultValue": "Standard"
+    }
+  },
+  "variables": {
+    "uniquePart": "[take(uniqueString(resourceGroup().id), 4)]",
+    "storageAccountName": "[concat('mystorageaccount', variables('uniquePart'), parameters('environment'))]",
+    "queueName": "myqueue"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('storageAccountName')]",
+      "location": "[parameters('location')]",
+      "apiVersion": "2019-06-01",
+      "sku": {
+        "name": "[parameters('storageAccountSkuName')]",
+        "tier": "[parameters('storageAccountSkuTier')]"
+      },
+      "kind": "StorageV2",
+      "properties": {},
+      "resources": [
+        {
+          "name": "[concat('default/', variables('queueName'))]",
+          "type": "queueServices/queues",
+          "apiVersion": "2019-06-01",
+          "dependsOn": [
+            "[variables('storageAccountName')]"
+          ],
+          "properties": {
+            "metadata": {}
+          }
+        }
+      ]
+    }
+  ]
+}
+`
+
+	targetFS := memoryfs.New()
+
+	require.NoError(t, targetFS.WriteFile("nested.json", []byte(input), 0644))
+
+	p := New(targetFS, options.ParserWithDebug(os.Stderr))
+	got, err := p.ParseFS(context.Background(), ".")
+	require.NoError(t, err)
+	require.Len(t, got, 1)
+
+	deployment := got[0]
+
+	require.Len(t, deployment.Resources, 1)
+
+	storageAccountResource := deployment.Resources[0]
+
+	require.Len(t, storageAccountResource.Resources, 1)
+
+	queue := storageAccountResource.Resources[0]
+
+	assert.Equal(t, "queueServices/queues", queue.Type.AsString())
+}

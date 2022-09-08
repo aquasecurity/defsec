@@ -18,6 +18,15 @@ type Metadata struct {
 	isExplicit     bool
 	isUnresolvable bool
 	parent         *Metadata
+	internal       interface{} // used for different storage depending on consumer
+}
+
+func (m *Metadata) SetInternal(internal interface{}) {
+	m.internal = internal
+}
+
+func (m *Metadata) Internal() interface{} {
+	return m.internal
 }
 
 func (m *Metadata) ToRego() interface{} {

@@ -1,6 +1,8 @@
 package azure
 
-import "github.com/aquasecurity/defsec/pkg/types"
+import (
+	"github.com/aquasecurity/defsec/pkg/types"
+)
 
 type Deployment struct {
 	Metadata    types.Metadata
@@ -34,6 +36,7 @@ type Resource struct {
 	Tags       Value
 	Sku        Value
 	Properties Value
+	Resources  []Resource
 }
 
 type PropertyBag struct {
@@ -54,3 +57,23 @@ const (
 	ScopeTenant          Scope = "tenant"
 	ScopeManagementGroup Scope = "managementGroup"
 )
+
+func (d *Deployment) GetResourcesByType(t string) []Resource {
+	var resources []Resource
+	for _, r := range d.Resources {
+		if r.Type.AsString() == t {
+			resources = append(resources, r)
+		}
+	}
+	return resources
+}
+
+func (r *Resource) GetResourcesByType(t string) []Resource {
+	var resources []Resource
+	for _, res := range r.Resources {
+		if res.Type.AsString() == t {
+			resources = append(resources, res)
+		}
+	}
+	return resources
+}

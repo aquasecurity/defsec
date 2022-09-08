@@ -54,6 +54,7 @@ type innerResource struct {
 	Tags       azure.Value `json:"tags"`
 	Sku        azure.Value `json:"sku"`
 	Properties azure.Value `json:"properties"`
+	Resources  []Resource  `json:"resources"`
 }
 
 func (v *Resource) UnmarshalJSONWithMetadata(node armjson.Node) error {

@@ -1,13 +1,11 @@
 package azure
 
 import (
+	"strings"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/azure/arm/parser/armjson"
 	"github.com/aquasecurity/defsec/pkg/types"
 )
-
-type Resolver interface {
-	Resolve(name string) Value
-}
 
 type EvalContext struct{}
 
@@ -15,13 +13,13 @@ type Kind string
 
 const (
 	KindUnresolvable Kind = "unresolvable"
+	KindNull         Kind = "null"
 	KindBoolean      Kind = "boolean"
 	KindString       Kind = "string"
 	KindNumber       Kind = "number"
 	KindObject       Kind = "object"
-	KindNull         Kind = "null"
 	KindArray        Kind = "array"
-	KindFunction     Kind = "function"
+	KindExpression   Kind = "expression"
 )
 
 type Value struct {
@@ -31,6 +29,10 @@ type Value struct {
 	rArr     []Value
 	Kind     Kind
 	Comments []string
+}
+
+var NullValue = Value{
+	Kind: KindNull,
 }
 
 func NewValue(value interface{}, metadata types.Metadata) Value {
@@ -90,6 +92,13 @@ func NewValue(value interface{}, metadata types.Metadata) Value {
 	return v
 }
 
+func (v Value) GetMetadata() types.Metadata {
+	if v.Metadata == nil {
+		return types.NewUnmanagedMetadata()
+	}
+	return *v.Metadata
+}
+
 func (v *Value) UnmarshalJSONWithMetadata(node armjson.Node) error {
 
 	switch node.Kind() {
@@ -136,6 +145,18 @@ func (v *Value) UnmarshalJSONWithMetadata(node armjson.Node) error {
 			obj[key] = val
 		}
 		v.rMap = obj
+	case armjson.KindString:
+		var str string
+		if err := node.Decode(&str); err != nil {
+			return err
+		}
+		if strings.HasPrefix(str, "[") && !strings.HasPrefix(str, "[[") && strings.HasSuffix(str, "]") {
+			// function!
+			v.Kind = KindExpression
+			v.rLit = str[1 : len(str)-1]
+		} else {
+			v.rLit = str
+		}
 	default:
 		if err := node.Decode(&v.rLit); err != nil {
 			return err
@@ -152,28 +173,72 @@ func (v *Value) UnmarshalJSONWithMetadata(node armjson.Node) error {
 	return nil
 }
 
-func (v *Value) AsString() string {
+func (v Value) AsString() string {
+	v.Resolve()
 	if v.Kind != KindString {
 		return ""
 	}
 	return v.rLit.(string)
 }
 
-func (v *Value) AsMap() map[string]Value {
+func (v Value) AsBool() bool {
+	v.Resolve()
+	if v.Kind != KindBoolean {
+		return false
+	}
+	return v.rLit.(bool)
+}
+
+func (v Value) AsBoolValue(def bool, metadata types.Metadata) types.BoolValue {
+	v.Resolve()
+	if v.Kind != KindBoolean {
+		return types.Bool(def, metadata)
+	}
+	return types.Bool(v.rLit.(bool), v.GetMetadata())
+}
+
+func (v Value) EqualTo(value interface{}) bool {
+	switch ty := value.(type) {
+	case string:
+		return v.AsString() == ty
+	default:
+		panic("not supported")
+	}
+}
+
+func (v Value) AsStringValue(def string, metadata types.Metadata) types.StringValue {
+	v.Resolve()
+	if v.Kind != KindString {
+		return types.StringDefault(def, metadata)
+	}
+	return types.String(v.rLit.(string), *v.Metadata)
+}
+
+func (v Value) GetMapValue(key string) Value {
+	v.Resolve()
+	if v.Kind != KindObject {
+		return NullValue
+	}
+	return v.rMap[key]
+}
+
+func (v Value) AsMap() map[string]Value {
+	v.Resolve()
 	if v.Kind != KindObject {
 		return nil
 	}
 	return v.rMap
 }
 
-func (v *Value) AsList() []Value {
+func (v Value) AsList() []Value {
+	v.Resolve()
 	if v.Kind != KindArray {
 		return nil
 	}
 	return v.rArr
 }
 
-func (v *Value) Raw() interface{} {
+func (v Value) Raw() interface{} {
 	switch v.Kind {
 	case KindArray:
 		// TODO: recursively build raw array
@@ -183,5 +248,14 @@ func (v *Value) Raw() interface{} {
 		return nil
 	default:
 		return v.rLit
+	}
+}
+
+func (v *Value) Resolve() {
+	if v.Kind != KindExpression {
+		return
+	}
+	if resolver, ok := v.Metadata.Internal().(Resolver); ok {
+		*v = resolver.ResolveExpression(*v)
 	}
 }

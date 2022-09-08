@@ -1,45 +1,48 @@
 {
-"$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-"contentVersion": "1.0.0.0",
-"parameters": {},
-"resources": [
-{
-"type": "Microsoft.Storage/storageAccounts",
-"apiVersion": "2022-05-01",
-"name": "myResource",
-"location": "string",
-"tags": {
-"tagName1": "tagValue1",
-"tagName2": "tagValue2"
-},
-"sku": {
-"name": "string"
-},
-"kind": "string",
-"extendedLocation": {
-"name": "string",
-"type": "EdgeZone"
-},
-"identity": {
-"type": "string",
-"userAssignedIdentities": {}
-},
-"properties": {
-"allowSharedKeyAccess":false,
-"customDomain": {
-"name": "string",
-"useSubDomainName":false,
-"number": 123
-},
-"networkAcls": [
-{
-"bypass": "AzureServices1"
-},
-{
-"bypass": "AzureServices2"
-}
-]
-}
-}
-]
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "logAnalytics": {
+      "type": "string",
+      "defaultValue": ""
+    }
+  },
+  "resources": [
+    {
+      "condition": "[not(empty(parameters('logAnalytics')))]",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "apiVersion": "2017-03-30",
+      "name": "[concat(parameters('vmName'),'/omsOnboarding')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+        "type": "MicrosoftMonitoringAgent",
+        "typeHandlerVersion": "1.0",
+        "autoUpgradeMinorVersion": true,
+        "description": "hello
+        this is a description,
+        across multiple lines",
+        "slices": "look,like,this,sometimes",
+        "settings": {
+          // workspace id
+          "workspaceId": "[if(not(empty(parameters('logAnalytics'))), reference(parameters('logAnalytics'), '2015-11-01-preview').customerId, json('null'))]"
+        },
+        "protectedSettings": {
+          "workspaceKey": "[if(not(empty(parameters('logAnalytics'))), listKeys(parameters('logAnalytics'), '2015-11-01-preview').primarySharedKey, json('null'))]"
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "mgmtStatus": {
+      "type": "string",
+      "value": "[if(not(empty(parameters('logAnalytics'))), 'Enabled monitoring for VM!', 'Nothing to enable')]"
+    }
+  }
 }
