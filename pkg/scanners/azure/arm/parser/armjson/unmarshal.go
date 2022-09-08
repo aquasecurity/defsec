@@ -1,13 +1,21 @@
 package armjson
 
-import "bytes"
+import (
+	"bytes"
+
+	"github.com/aquasecurity/defsec/pkg/types"
+)
 
 type Unmarshaller interface {
 	UnmarshalJSONWithMetadata(node Node) error
 }
 
-func Unmarshal(data []byte, target interface{}) error {
-	node, err := newParser(NewPeekReader(bytes.NewReader(data)), Position{1, 1}).parse()
+type MetadataReceiver interface {
+	SetMetadata(m *types.Metadata)
+}
+
+func Unmarshal(data []byte, target interface{}, metadata types.Metadata) error {
+	node, err := newParser(NewPeekReader(bytes.NewReader(data)), Position{1, 1}).parse(&metadata)
 	if err != nil {
 		return err
 	}

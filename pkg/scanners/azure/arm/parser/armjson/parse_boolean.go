@@ -1,13 +1,17 @@
 package armjson
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/aquasecurity/defsec/pkg/types"
+)
 
 var trueRunes = []rune("true")
 var falseRunes = []rune("false")
 
-func (p *parser) parseBoolean() (Node, error) {
+func (p *parser) parseBoolean(parentMetadata *types.Metadata) (Node, error) {
 
-	n := p.newNode(KindBoolean)
+	n, _ := p.newNode(KindBoolean, parentMetadata)
 
 	r, err := p.peeker.Peek()
 	if err != nil {
@@ -22,7 +26,7 @@ func (p *parser) parseBoolean() (Node, error) {
 		}
 		n.raw = true
 		n.end = p.position
-		return n, nil
+		return n, err
 	}
 
 	for _, expected := range falseRunes {

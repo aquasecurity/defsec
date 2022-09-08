@@ -1,6 +1,8 @@
 package armjson
 
-func (p *parser) parseComment() (Node, error) {
+import "github.com/aquasecurity/defsec/pkg/types"
+
+func (p *parser) parseComment(parentMetadata *types.Metadata) (Node, error) {
 
 	if err := p.parseWhitespace(); err != nil {
 		return nil, err
@@ -18,17 +20,17 @@ func (p *parser) parseComment() (Node, error) {
 
 	switch b {
 	case '/':
-		return p.parseLineComment()
+		return p.parseLineComment(parentMetadata)
 	case '*':
-		return p.parseBlockComment()
+		return p.parseBlockComment(parentMetadata)
 	default:
 		return nil, p.makeError("expecting comment delimiter")
 	}
 }
 
-func (p *parser) parseLineComment() (Node, error) {
+func (p *parser) parseLineComment(parentMetadata *types.Metadata) (Node, error) {
 
-	n := p.newNode(KindComment)
+	n, _ := p.newNode(KindComment, parentMetadata)
 
 	var comment string
 	for {
@@ -45,6 +47,7 @@ func (p *parser) parseLineComment() (Node, error) {
 	}
 
 	n.raw = comment
+	n.end = p.position
 
 	if err := p.parseWhitespace(); err != nil {
 		return nil, err
@@ -52,9 +55,9 @@ func (p *parser) parseLineComment() (Node, error) {
 	return n, nil
 }
 
-func (p *parser) parseBlockComment() (Node, error) {
+func (p *parser) parseBlockComment(parentMetadata *types.Metadata) (Node, error) {
 
-	n := p.newNode(KindComment)
+	n, _ := p.newNode(KindComment, parentMetadata)
 
 	var comment string
 

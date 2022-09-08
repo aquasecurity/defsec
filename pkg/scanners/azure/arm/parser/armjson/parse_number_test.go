@@ -3,6 +3,8 @@ package armjson
 import (
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -10,7 +12,7 @@ import (
 func Test_Number_IntToInt(t *testing.T) {
 	example := []byte(`123`)
 	var output int
-	err := Unmarshal(example, &output)
+	err := Unmarshal(example, &output, types.NewTestMetadata())
 	require.NoError(t, err)
 	assert.Equal(t, 123, output)
 }
@@ -18,7 +20,7 @@ func Test_Number_IntToInt(t *testing.T) {
 func Test_Number_IntToFloat(t *testing.T) {
 	example := []byte(`123`)
 	var output float64
-	err := Unmarshal(example, &output)
+	err := Unmarshal(example, &output, types.NewTestMetadata())
 	require.NoError(t, err)
 	assert.Equal(t, 123.0, output)
 }
@@ -26,7 +28,7 @@ func Test_Number_IntToFloat(t *testing.T) {
 func Test_Number_FloatToFloat(t *testing.T) {
 	example := []byte(`123.456`)
 	var output float64
-	err := Unmarshal(example, &output)
+	err := Unmarshal(example, &output, types.NewTestMetadata())
 	require.NoError(t, err)
 	assert.Equal(t, 123.456, output)
 }
@@ -34,7 +36,7 @@ func Test_Number_FloatToFloat(t *testing.T) {
 func Test_Number_FloatToInt(t *testing.T) {
 	example := []byte(`123.456`)
 	var output int
-	err := Unmarshal(example, &output)
+	err := Unmarshal(example, &output, types.NewTestMetadata())
 	require.NoError(t, err)
 	assert.Equal(t, 123, output)
 }
@@ -61,7 +63,7 @@ func Test_Number_FloatWithExponent(t *testing.T) {
 		t.Run(test.in, func(t *testing.T) {
 			example := []byte(test.in)
 			var output float64
-			err := Unmarshal(example, &output)
+			err := Unmarshal(example, &output, types.NewTestMetadata())
 			require.NoError(t, err)
 			assert.Equal(t, test.out, output)
 
@@ -87,7 +89,7 @@ func Test_Number_IntWithExponent(t *testing.T) {
 		t.Run(test.in, func(t *testing.T) {
 			example := []byte(test.in)
 			var output int64
-			err := Unmarshal(example, &output)
+			err := Unmarshal(example, &output, types.NewTestMetadata())
 			require.NoError(t, err)
 			assert.Equal(t, test.out, output)
 
@@ -157,7 +159,7 @@ func Test_Number_Ints(t *testing.T) {
 		t.Run(test.in, func(t *testing.T) {
 			example := []byte(test.in)
 			var output int64
-			err := Unmarshal(example, &output)
+			err := Unmarshal(example, &output, types.NewTestMetadata())
 			if test.err {
 				require.Error(t, err)
 				return

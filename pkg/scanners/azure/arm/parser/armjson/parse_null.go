@@ -1,12 +1,16 @@
 package armjson
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/aquasecurity/defsec/pkg/types"
+)
 
 var nullRunes = []rune("null")
 
-func (p *parser) parseNull() (Node, error) {
+func (p *parser) parseNull(parentMetadata *types.Metadata) (Node, error) {
 
-	n := p.newNode(KindNull)
+	n, _ := p.newNode(KindNull, parentMetadata)
 
 	for _, expected := range nullRunes {
 		if !p.swallowIfEqual(expected) {

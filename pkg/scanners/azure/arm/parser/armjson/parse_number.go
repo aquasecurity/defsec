@@ -3,10 +3,13 @@ package armjson
 import (
 	"fmt"
 	"strconv"
+
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
-func (p *parser) parseNumber() (Node, error) {
-	n := p.newNode(KindNumber)
+func (p *parser) parseNumber(parentMetadata *types.Metadata) (Node, error) {
+
+	n, _ := p.newNode(KindNumber, parentMetadata)
 
 	var str string
 

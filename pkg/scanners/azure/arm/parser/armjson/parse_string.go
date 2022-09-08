@@ -2,6 +2,8 @@ package armjson
 
 import (
 	"strconv"
+
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 var escapes = map[rune]string{
@@ -15,9 +17,9 @@ var escapes = map[rune]string{
 	't':  "\t",
 }
 
-func (p *parser) parseString() (Node, error) {
+func (p *parser) parseString(parentMetadata *types.Metadata) (Node, error) {
 
-	n := p.newNode(KindString)
+	n, _ := p.newNode(KindString, parentMetadata)
 
 	b, err := p.next()
 	if err != nil {

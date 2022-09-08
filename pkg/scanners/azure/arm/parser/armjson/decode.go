@@ -3,6 +3,8 @@ package armjson
 import (
 	"fmt"
 	"reflect"
+
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func (n *node) Decode(target interface{}) error {
@@ -10,11 +12,22 @@ func (n *node) Decode(target interface{}) error {
 	return n.decodeToValue(v)
 }
 
-var inter = reflect.TypeOf((*Unmarshaller)(nil)).Elem()
+func (n *node) Metadata() *types.Metadata {
+	return n.metadata
+}
+
+var unmarshaller = reflect.TypeOf((*Unmarshaller)(nil)).Elem()
+var receiver = reflect.TypeOf((*MetadataReceiver)(nil)).Elem()
 
 func (n *node) decodeToValue(v reflect.Value) error {
 
-	if v.Type().Implements(inter) {
+	if v.Type().Implements(receiver) {
+		rec := v
+		defer func() {
+			rec.MethodByName("SetMetadata").Call([]reflect.Value{reflect.ValueOf(n.metadata)})
+		}()
+	}
+	if v.Type().Implements(unmarshaller) {
 		returns := v.MethodByName("UnmarshalJSONWithMetadata").Call([]reflect.Value{reflect.ValueOf(n)})
 		if err := returns[0].Interface(); err != nil {
 			return err.(error)

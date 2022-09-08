@@ -2,6 +2,9 @@ package armjson
 
 import (
 	"fmt"
+	"strings"
+
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 type parser struct {
@@ -17,15 +20,20 @@ func newParser(p *PeekReader, pos Position) *parser {
 	}
 }
 
-func (p *parser) parse() (Node, error) {
-	return p.parseElement()
+func (p *parser) parse(rootMetadata *types.Metadata) (Node, error) {
+	root, err := p.parseElement(rootMetadata)
+	if err != nil {
+		return nil, err
+	}
+	root.(*node).updateMetadata("")
+	return root, nil
 }
 
-func (p *parser) parseElement() (Node, error) {
+func (p *parser) parseElement(parentMetadata *types.Metadata) (Node, error) {
 	if err := p.parseWhitespace(); err != nil {
 		return nil, err
 	}
-	n, err := p.parseValue()
+	n, err := p.parseValue(parentMetadata)
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +43,7 @@ func (p *parser) parseElement() (Node, error) {
 	return n, nil
 }
 
-func (p *parser) parseValue() (Node, error) {
+func (p *parser) parseValue(parentMetadata *types.Metadata) (Node, error) {
 	c, err := p.peeker.Peek()
 	if err != nil {
 		return nil, err
@@ -43,20 +51,20 @@ func (p *parser) parseValue() (Node, error) {
 
 	switch c {
 	case '/':
-		return p.parseComment()
+		return p.parseComment(parentMetadata)
 	case '"':
-		return p.parseString()
+		return p.parseString(parentMetadata)
 	case '{':
-		return p.parseObject()
+		return p.parseObject(parentMetadata)
 	case '[':
-		return p.parseArray()
+		return p.parseArray(parentMetadata)
 	case 'n':
-		return p.parseNull()
+		return p.parseNull(parentMetadata)
 	case 't', 'f':
-		return p.parseBoolean()
+		return p.parseBoolean(parentMetadata)
 	default:
 		if c == '-' || (c >= '0' && c <= '9') {
-			return p.parseNumber()
+			return p.parseNumber(parentMetadata)
 		}
 		return nil, fmt.Errorf("unexpected character '%c'", c)
 	}
@@ -90,10 +98,34 @@ func (p *parser) makeError(format string, args ...interface{}) error {
 	)
 }
 
-func (p *parser) newNode(k Kind) *node {
-	return &node{
+func (p *parser) newNode(k Kind, parentMetadata *types.Metadata) (*node, *types.Metadata) {
+	n := &node{
 		start: p.position,
 		kind:  k,
+	}
+	metadata := types.NewMetadata(
+		types.NewRange(parentMetadata.Range().GetFilename(), n.start.Line, n.end.Line, "", parentMetadata.Range().GetFS()),
+		types.NewNamedReference(n.ref),
+	).WithParentPtr(parentMetadata)
+	n.metadata = &metadata
+	return n, n.metadata
+}
+
+func (n *node) updateMetadata(prefix string) {
+
+	var full string
+	if strings.HasPrefix(n.ref, "[") {
+		full = prefix + n.ref
+	} else if prefix != "" {
+		full = prefix + "." + n.ref
+	} else {
+		full = n.ref
+	}
+
+	n.metadata.SetReference(types.NewNamedReference(full))
+	n.metadata.SetRange(types.NewRange(n.metadata.Range().GetFilename(), n.start.Line, n.end.Line, "", n.metadata.Range().GetFS()))
+	for i := range n.content {
+		n.content[i].(*node).updateMetadata(full)
 	}
 }
 

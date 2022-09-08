@@ -1,8 +1,13 @@
 package armjson
 
-func (p *parser) parseObject() (Node, error) {
+import (
+	"github.com/aquasecurity/defsec/pkg/types"
+)
 
-	n := p.newNode(KindObject)
+func (p *parser) parseObject(parentMetadata *types.Metadata) (Node, error) {
+
+	n, metadata := p.newNode(KindObject, parentMetadata)
+
 	c, err := p.next()
 	if err != nil {
 		return nil, err
@@ -51,7 +56,7 @@ func (p *parser) parseObject() (Node, error) {
 			if peeked != '/' {
 				break
 			}
-			comment, err := p.parseComment()
+			comment, err := p.parseComment(metadata)
 			if err != nil {
 				return nil, err
 			}
@@ -64,7 +69,7 @@ func (p *parser) parseObject() (Node, error) {
 			}
 		}
 
-		key, err := p.parseString()
+		key, err := p.parseString(metadata)
 		if err != nil {
 			return nil, err
 		}
@@ -77,10 +82,13 @@ func (p *parser) parseObject() (Node, error) {
 			return nil, p.makeError("invalid character, expecting ':'")
 		}
 
-		val, err := p.parseElement()
+		val, err := p.parseElement(metadata)
 		if err != nil {
 			return nil, err
 		}
+		ref := key.(*node).raw.(string)
+		key.(*node).ref = ref
+		val.(*node).ref = ref
 
 		for {
 			peeked, err := p.peeker.Peek()
@@ -90,7 +98,7 @@ func (p *parser) parseObject() (Node, error) {
 			if peeked != '/' {
 				break
 			}
-			comment, err := p.parseComment()
+			comment, err := p.parseComment(metadata)
 			if err != nil {
 				return nil, err
 			}
@@ -121,7 +129,7 @@ func (p *parser) parseObject() (Node, error) {
 			if peeked != '/' {
 				break
 			}
-			comment, err := p.parseComment()
+			comment, err := p.parseComment(metadata)
 			if err != nil {
 				return nil, err
 			}

@@ -31,9 +31,9 @@ type Resource struct {
 	Kind       Value
 	Name       Value
 	Location   Value
-	Tags       PropertyBag
-	Sku        PropertyBag
-	Properties PropertyBag
+	Tags       Value
+	Sku        Value
+	Properties Value
 }
 
 type PropertyBag struct {

@@ -1,7 +1,13 @@
 package armjson
 
-func (p *parser) parseArray() (Node, error) {
-	n := p.newNode(KindArray)
+import (
+	"fmt"
+
+	"github.com/aquasecurity/defsec/pkg/types"
+)
+
+func (p *parser) parseArray(parentMetadata *types.Metadata) (Node, error) {
+	n, metadata := p.newNode(KindArray, parentMetadata)
 
 	c, err := p.next()
 	if err != nil {
@@ -27,10 +33,12 @@ func (p *parser) parseArray() (Node, error) {
 			return nil, err
 		}
 
-		val, err := p.parseElement()
+		val, err := p.parseElement(metadata)
 		if err != nil {
 			return nil, err
 		}
+		val.(*node).ref = fmt.Sprintf("[%d]", len(n.content))
+
 		n.content = append(n.content, val)
 
 		// we've hit the end of the array

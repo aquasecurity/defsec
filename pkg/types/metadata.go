@@ -68,8 +68,31 @@ func NewExplicitMetadata(r Range, ref Reference) Metadata {
 	return m
 }
 
+func (m Metadata) WithParentPtr(p *Metadata) Metadata {
+	if base, ok := m.rnge.(baseRange); ok {
+		if p.rnge.GetFS() != nil {
+			if base.fs == nil {
+				base.fs = p.rnge.GetFS()
+			}
+		}
+		if p.rnge.GetFilename() != "" {
+			if base.filename == "" {
+				base.filename = p.rnge.GetFilename()
+			}
+		}
+		if p.rnge.GetFSKey() != "" {
+			if base.fsKey == "" {
+				base.fsKey = p.rnge.GetFSKey()
+			}
+		}
+		m.rnge = base
+	}
+	m.parent = p
+	return m
+}
+
 func (m Metadata) WithParent(p Metadata) Metadata {
-	m.parent = &p
+	m.WithParentPtr(&p)
 	return m
 }
 
@@ -132,6 +155,14 @@ func (m Metadata) Range() Range {
 		return NewRange("unknown", 0, 0, "", nil)
 	}
 	return m.rnge
+}
+
+func (m *Metadata) SetRange(r Range) {
+	m.rnge = r
+}
+
+func (m *Metadata) SetReference(r Reference) {
+	m.ref = r
 }
 
 func (m Metadata) IsManaged() bool {

@@ -1,11 +1,14 @@
 package armjson
 
+import "github.com/aquasecurity/defsec/pkg/types"
+
 type Node interface {
 	Comments() []Node
 	Range() Range
 	Decode(target interface{}) error
 	Kind() Kind
 	Content() []Node
+	Metadata() *types.Metadata
 }
 
 type Range struct {
@@ -25,6 +28,8 @@ type node struct {
 	kind     Kind
 	content  []Node
 	comments []Node
+	metadata *types.Metadata
+	ref      string
 }
 
 func (n *node) Range() Range {

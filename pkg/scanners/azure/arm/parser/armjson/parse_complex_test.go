@@ -3,6 +3,8 @@ package armjson
 import (
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/stretchr/testify/require"
 )
 
@@ -30,7 +32,7 @@ func Test_Complex(t *testing.T) {
         }
     }
 }`
-	require.NoError(t, Unmarshal([]byte(input), &target))
+	require.NoError(t, Unmarshal([]byte(input), &target, types.NewTestMetadata()))
 }
 
 type Resource struct {
@@ -128,5 +130,5 @@ func Test_CloudFormation(t *testing.T) {
   }
 }
 `
-	require.NoError(t, Unmarshal([]byte(input), &target))
+	require.NoError(t, Unmarshal([]byte(input), &target, types.NewTestMetadata()))
 }
