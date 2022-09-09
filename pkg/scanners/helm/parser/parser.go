@@ -116,7 +116,13 @@ func (p *Parser) ParseFS(ctx context.Context, target fs.FS, path string) error {
 			if err != nil {
 				return err
 			}
-			if err := p.ParseFS(ctx, tarFS, "."); err != nil {
+
+			targetPath := filepath.Dir(path)
+			if targetPath == "" {
+				targetPath = "."
+			}
+
+			if err := p.ParseFS(ctx, tarFS, targetPath); err != nil {
 				return err
 			}
 			return nil
