@@ -5,13 +5,13 @@ metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 8000
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 8000
-  selector: {{ include "common.labels.matchLabels" . | nindent 4 }}
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8000
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 8000
+  selector:{{ include "common.labels.matchLabels" . | nindent 4 }}
   type: ClusterIP

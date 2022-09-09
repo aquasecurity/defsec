@@ -50,7 +50,8 @@ func Test_helm_parser(t *testing.T) {
 				expectedContent, err := os.ReadFile(expectedPath)
 				require.NoError(t, err)
 
-				assert.Equal(t, strings.ReplaceAll(string(expectedContent), "\r\n", "\n"), strings.ReplaceAll(manifest.ManifestContent, "\r\n", "\n"))
+				got := strings.ReplaceAll(manifest.ManifestContent, "\r\n", "\n")
+				assert.Equal(t, strings.ReplaceAll(string(expectedContent), "\r\n", "\n"), got)
 			}
 		})
 	}
