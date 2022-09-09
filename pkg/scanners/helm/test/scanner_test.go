@@ -192,50 +192,51 @@ deny[res] {
 	}
 
 	for _, test := range tests {
-		t.Logf("Running test: %s", test.testName)
+		t.Run(test.testName, func(t *testing.T) {
+			t.Logf("Running test: %s", test.testName)
 
-		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true),
-			options.ScannerWithPolicyDirs("rules"),
-			options.ScannerWithPolicyNamespaces("user"))
+			helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true),
+				options.ScannerWithPolicyDirs("rules"),
+				options.ScannerWithPolicyNamespaces("user"))
 
-		testTemp := t.TempDir()
-		testFileName := filepath.Join(testTemp, "chart", test.archiveName)
-		require.NoError(t, os.Mkdir(filepath.Dir(testFileName), 0o700))
-		require.NoError(t, copyArchive(test.path, testFileName))
+			testTemp := t.TempDir()
+			testFileName := filepath.Join(testTemp, test.archiveName)
+			require.NoError(t, copyArchive(test.path, testFileName))
 
-		policyDirName := filepath.Join(testTemp, "rules")
-		require.NoError(t, os.Mkdir(policyDirName, 0o700))
-		require.NoError(t, os.WriteFile(filepath.Join(policyDirName, "rule.rego"), []byte(regoRule), 0o600))
+			policyDirName := filepath.Join(testTemp, "rules")
+			require.NoError(t, os.Mkdir(policyDirName, 0o700))
+			require.NoError(t, os.WriteFile(filepath.Join(policyDirName, "rule.rego"), []byte(regoRule), 0o600))
 
-		testFs := os.DirFS(testTemp)
+			testFs := os.DirFS(testTemp)
 
-		results, err := helmScanner.ScanFS(context.TODO(), testFs, "chart")
-		require.NoError(t, err)
-		require.NotNil(t, results)
+			results, err := helmScanner.ScanFS(context.TODO(), testFs, ".")
+			require.NoError(t, err)
+			require.NotNil(t, results)
 
-		failed := results.GetFailed()
-		assert.Equal(t, 14, len(failed))
+			failed := results.GetFailed()
+			assert.Equal(t, 14, len(failed))
 
-		visited := make(map[string]bool)
-		var errorCodes []string
-		for _, result := range failed {
-			id := result.Flatten().RuleID
-			if _, exists := visited[id]; !exists {
-				visited[id] = true
-				errorCodes = append(errorCodes, id)
+			visited := make(map[string]bool)
+			var errorCodes []string
+			for _, result := range failed {
+				id := result.Flatten().RuleID
+				if _, exists := visited[id]; !exists {
+					visited[id] = true
+					errorCodes = append(errorCodes, id)
+				}
 			}
-		}
-		assert.Len(t, errorCodes, 13)
+			assert.Len(t, errorCodes, 13)
 
-		sort.Strings(errorCodes)
+			sort.Strings(errorCodes)
 
-		assert.Equal(t, []string{
-			"AVD-KSV-0001", "AVD-KSV-0003",
-			"AVD-KSV-0011", "AVD-KSV-0012", "AVD-KSV-0014",
-			"AVD-KSV-0015", "AVD-KSV-0016", "AVD-KSV-0018",
-			"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0030",
-			"AVD-KSV-0106", "AVD-USR-ID001",
-		}, errorCodes)
+			assert.Equal(t, []string{
+				"AVD-KSV-0001", "AVD-KSV-0003",
+				"AVD-KSV-0011", "AVD-KSV-0012", "AVD-KSV-0014",
+				"AVD-KSV-0015", "AVD-KSV-0016", "AVD-KSV-0018",
+				"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0030",
+				"AVD-KSV-0106", "AVD-USR-ID001",
+			}, errorCodes)
+		})
 	}
 }
 
