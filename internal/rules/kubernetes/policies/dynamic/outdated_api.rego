@@ -25,5 +25,5 @@ recommendedVersions := {}
 deny[res] {
 	_ = recommendedVersions[input.apiVersion][input.kind]
 	msg := sprintf("apiVersion '%s' and kind ‘%s' should be replaced with the new API ‘%s'", [input.apiVersion, input.kind, recommendedVersions[input.apiVersion][input.kind].replacement_version])
-	res := result.new(msg, input)
+	res := result.new(msg, {"apiVersion": input.apiVersion, "kind": input.kind})
 }
