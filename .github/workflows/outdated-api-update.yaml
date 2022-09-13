@@ -22,8 +22,10 @@ jobs:
          url: 'https://raw.githubusercontent.com/aquasecurity/trivy-db-data/main/k8s/api/k8s-outdated-api.json'
          method: 'GET'
       - name: embed outdatedapi-data with in dynamic rego policy
+        env:
+          OUTDATE_API_DATA: ${{ toJson(steps.outdatedapi.outputs.response) }}
         run: |
-          make outdated-api-updated data=${{ toJson(steps.outdatedapi.outputs.response) }}
+          make outdated-api-updated
       - name: commit and push updated outdated-api policy when changes found
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
