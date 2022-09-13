@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: "0 0 * * 0" # Sunday midnight
 permissions:
-  contents: read
+  contents: write
 env:
   GH_USER: aqua-bot
 jobs:
