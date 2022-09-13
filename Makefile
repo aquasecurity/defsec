@@ -1,3 +1,5 @@
+DYNAMIC_REGO_FOLDER=./internal/rules/kubernetes/policies/dynamic
+
 .PHONY: test
 test:
 	go test -race ./...
@@ -52,3 +54,7 @@ update-aws-deps:
 adapter-lint:
 	go run ./cmd/adapter-lint/main.go ./internal/adapters/...
 	go run ./cmd/adapter-lint/main.go ./pkg/providers/...
+
+.PHONY: outdated-api-updated
+outdated-api-updated:
+	sed -i.bak "s|recommendedVersions :=.*|recommendedVersions := $(data)|" $(DYNAMIC_REGO_FOLDER)/outdated_api.rego && rm $(DYNAMIC_REGO_FOLDER)/outdated_api.rego.bak
