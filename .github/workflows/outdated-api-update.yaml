@@ -34,12 +34,7 @@ jobs:
           sudo mv ./opa /usr/local/bin
       - name: OPA Format
         run: |
-          files=$(opa fmt --list . | grep -v vendor || true)
-          if [ -n "$files" ]; then
-            echo "=== The following files are not formatted ==="
-            echo "$files"
-            exit 1
-          fi
+          opa fmt -w . | grep -v vendor || true
       - name: commit and push updated outdated-api policy when changes found
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
