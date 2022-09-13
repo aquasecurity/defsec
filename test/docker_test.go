@@ -3,8 +3,15 @@ package test
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"path"
+	"path/filepath"
+	"strings"
 	"testing"
+
+	"github.com/liamg/memoryfs"
+	"github.com/open-policy-agent/opa/bundle"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
@@ -21,13 +28,23 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 	entries, err := os.ReadDir("./testdata/dockerfile")
 	require.NoError(t, err)
 
+	policiesPath, err := filepath.Abs("../internal/rules")
+	require.NoError(t, err)
 	scanner := dockerfile.NewScanner(
-		options.ScannerWithPolicyDirs("internal/rules"),
+		options.ScannerWithPolicyDirs(filepath.Base(policiesPath)),
 	)
+	memfs := memoryfs.New()
+	// add policies
+	err = addFilesToMemFS(memfs, true, policiesPath)
+	require.NoError(t, err)
 
-	srcFS := os.DirFS("../")
+	// add test data
+	testDataPath, err := filepath.Abs("./testdata/dockerfile")
+	require.NoError(t, err)
+	err = addFilesToMemFS(memfs, false, testDataPath)
+	require.NoError(t, err)
 
-	results, err := scanner.ScanFS(context.TODO(), srcFS, "test/testdata/dockerfile")
+	results, err := scanner.ScanFS(context.TODO(), memfs, filepath.Base(testDataPath))
 	require.NoError(t, err)
 
 	for _, entry := range entries {
@@ -44,8 +61,7 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 							assert.Greater(t, result.Range().GetStartLine(), 0)
 							assert.Greater(t, result.Range().GetEndLine(), 0)
 						}
-						expectedFile := fmt.Sprintf("test/testdata/dockerfile/%s/Dockerfile.denied", entry.Name())
-						if result.Range().GetFilename() != expectedFile {
+						if !strings.HasSuffix(result.Range().GetFilename(), entry.Name()) {
 							continue
 						}
 						matched++
@@ -93,4 +109,55 @@ func Test_Docker_RegoPoliciesEmbedded(t *testing.T) {
 
 		})
 	}
+}
+
+func addFilesToMemFS(memfs *memoryfs.FS, typePolicy bool, folderName string) error {
+	base := filepath.Base(folderName)
+	if err := memfs.MkdirAll(base, 0o700); err != nil {
+		return err
+	}
+	err := filepath.Walk(filepath.FromSlash(folderName),
+		func(fpath string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if info.IsDir() {
+				return nil
+			}
+			if typePolicy && !isRegoFile(info.Name()) {
+				return nil
+			}
+			// ignore embedded lib rego to avoid duplicate default definition
+			if strings.Contains(fpath, filepath.FromSlash("/lib/")) {
+				return nil
+			}
+			data, err := ioutil.ReadFile(fpath)
+			if err != nil {
+				return err
+			}
+			fileName := getFileName(fpath, info, typePolicy)
+			if err := memfs.WriteFile(path.Join(base, fileName), data, 0o644); err != nil {
+				return err
+			}
+			return nil
+		})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func getFileName(fpath string, info os.FileInfo, typePolicy bool) string {
+	pathParts := strings.Split(fpath, filepath.FromSlash("/"))
+	fileName := info.Name()
+	// append test data folder to input file name example Dockerfile.allowed_DS001
+	if len(pathParts) > 2 && !typePolicy {
+		fileName = fmt.Sprintf("%s_%s", fileName, pathParts[len(pathParts)-2])
+	}
+	return fileName
+}
+
+func isRegoFile(name string) bool {
+	return strings.HasSuffix(name, bundle.RegoExt) && !strings.HasSuffix(name, "_test"+bundle.RegoExt)
 }
