@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.AUTO_COMMIT_TOKEN }}
       - name: Fetch outdated API data from trivy-db-data repo
         id: outdatedapi
         uses: fjogeleit/http-request-action@v1
@@ -25,4 +27,5 @@ jobs:
       - name: commit and push updated outdated-api policy when changes found
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: Update outdated-api policy data   
+          commit_message: Update outdated-api policy data
+          push_options: --force   
