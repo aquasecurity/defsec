@@ -1,13 +1,13 @@
 
-Add a logging block to the resource to enable access logging
+Don't use canned ACLs or switch to private acl
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Properties:
       AccessControl: Private
     Type: AWS::S3::Bucket
+
 ```
+
+

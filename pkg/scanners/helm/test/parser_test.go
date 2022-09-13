@@ -24,29 +24,36 @@ func Test_helm_parser(t *testing.T) {
 			testName:  "Parsing directory 'testchart'",
 			chartName: "testchart",
 		},
+		{
+			testName:  "Parsing directory with tarred dependency",
+			chartName: "with-tarred-dep",
+		},
 	}
 
 	for _, test := range tests {
-		chartName := test.chartName
+		t.Run(test.testName, func(t *testing.T) {
+			chartName := test.chartName
 
-		t.Logf("Running test: %s", test.testName)
+			t.Logf("Running test: %s", test.testName)
 
-		helmParser := parser.New(chartName)
-		err := helmParser.ParseFS(context.TODO(), os.DirFS(filepath.Join("testdata", chartName)), ".")
-		require.NoError(t, err)
-		manifests, err := helmParser.RenderedChartFiles()
-		require.NoError(t, err)
-
-		assert.Len(t, manifests, 3)
-
-		for _, manifest := range manifests {
-			expectedPath := filepath.Join("testdata", "expected", chartName, manifest.TemplateFilePath)
-
-			expectedContent, err := os.ReadFile(expectedPath)
+			helmParser := parser.New(chartName)
+			err := helmParser.ParseFS(context.TODO(), os.DirFS(filepath.Join("testdata", chartName)), ".")
+			require.NoError(t, err)
+			manifests, err := helmParser.RenderedChartFiles()
 			require.NoError(t, err)
 
-			assert.Equal(t, strings.ReplaceAll(string(expectedContent), "\r\n", "\n"), strings.ReplaceAll(manifest.ManifestContent, "\r\n", "\n"))
-		}
+			assert.Len(t, manifests, 3)
+
+			for _, manifest := range manifests {
+				expectedPath := filepath.Join("testdata", "expected", chartName, manifest.TemplateFilePath)
+
+				expectedContent, err := os.ReadFile(expectedPath)
+				require.NoError(t, err)
+
+				got := strings.ReplaceAll(manifest.ManifestContent, "\r\n", "\n")
+				assert.Equal(t, strings.ReplaceAll(string(expectedContent), "\r\n", "\n"), got)
+			}
+		})
 	}
 }
 

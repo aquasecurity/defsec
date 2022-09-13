@@ -1,10 +1,7 @@
 
 Enable encryption at rest for Athena databases and workgroup configurations
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Properties:
@@ -14,4 +11,7 @@ Resources:
           EncryptionConfiguration:
             EncryptionOption: SSE_KMS
     Type: AWS::Athena::WorkGroup
+
 ```
+
+

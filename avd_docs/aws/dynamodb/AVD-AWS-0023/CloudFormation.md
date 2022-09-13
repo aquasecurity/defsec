@@ -1,10 +1,7 @@
 
 Enable encryption at rest for DAX Cluster
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   daxCluster:
     Type: AWS::DAX::Cluster
@@ -16,4 +13,7 @@ Resources:
       Description: "DAX cluster created with CloudFormation"
       SSESpecification:
         SSEEnabled: true
+
 ```
+
+

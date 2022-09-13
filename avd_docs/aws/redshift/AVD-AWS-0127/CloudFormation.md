@@ -1,10 +1,7 @@
 
 Deploy Redshift cluster into a non default VPC
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 AWSTemplateFormatVersion: 2010-09-09
 Description: Bad example of redshift cluster
 Resources:
@@ -12,4 +9,8 @@ Resources:
     Type: AWS::Redshift::Cluster
     Properties:
       ClusterSubnetGroupName: "my-subnet-group"
+
+
 ```
+
+

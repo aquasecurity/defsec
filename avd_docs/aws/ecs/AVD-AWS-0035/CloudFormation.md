@@ -1,10 +1,7 @@
 
 Enable in transit encryption when using efs
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: 'AWS::ECS::Cluster'
@@ -40,4 +37,7 @@ Resources:
           EFSVolumeConfiguration:
             FilesystemId: "fs1"
             TransitEncryption: ENABLED
+
 ```
+
+

@@ -2,12 +2,18 @@
 Enable RBAC
 
 ```hcl
-resource "azurerm_kubernetes_cluster" "good_example" {
-  role_based_access_control {
-    enabled = true
-  }
-}
+ resource "azurerm_kubernetes_cluster" "good_example" {
+	// azurerm < 2.99.0
+	role_based_access_control {
+ 		enabled = true
+ 	}
 
+	// azurerm >= 2.99.0
+ 	role_based_access_control_enabled = true
+ }
+ 
+```
+```hcl
 resource "azurerm_kubernetes_cluster" "aks_cluster" {
   name                            = var.name
   location                        = var.location
@@ -44,9 +50,8 @@ resource "azurerm_kubernetes_cluster" "aks_cluster" {
 
 }
 
-
 ```
 
 #### Remediation Links
  - https://www.terraform.io/docs/providers/azurerm/r/kubernetes_cluster.html#role_based_access_control
-        
+

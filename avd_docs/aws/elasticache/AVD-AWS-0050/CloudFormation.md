@@ -1,10 +1,7 @@
 
 Configure snapshot retention for redis cluster
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: AWS::ElastiCache::CacheCluster
@@ -17,5 +14,8 @@ Resources:
       PreferredAvailabilityZones:
         - us-west-2a
         - us-west-2a
-        - us-west-2b
+        - us-west-2b 
+
 ```
+
+

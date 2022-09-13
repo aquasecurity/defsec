@@ -52,16 +52,17 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 		}
 
 		// get the individual path and extract to the current directory
-		path := header.Name
+		entryPath := header.Name
 
 		switch header.Typeflag {
 		case tar.TypeDir:
-			if err := tarFS.MkdirAll(path, os.FileMode(header.Mode)); err != nil {
+			if err := tarFS.MkdirAll(entryPath, os.FileMode(header.Mode)); err != nil {
 				return nil, err
 			}
 		case tar.TypeReg:
-			p.debug.Log("Unpacking tar %s", path)
-			_ = tarFS.MkdirAll(filepath.Dir(path), fs.ModePerm)
+			writePath := fmt.Sprintf("%s/%s", filepath.Dir(path), entryPath)
+			p.debug.Log("Unpacking tar entry %s", writePath)
+			_ = tarFS.MkdirAll(filepath.Dir(writePath), fs.ModePerm)
 			content := []byte{}
 			writer := bytes.NewBuffer(content)
 
@@ -77,7 +78,9 @@ func (p *Parser) addTarToFS(path string) (fs.FS, error) {
 					return nil, err
 				}
 			}
-			if err := tarFS.WriteFile(path, writer.Bytes(), fs.ModePerm); err != nil {
+
+			p.debug.Log("writing file contents to %s", writePath)
+			if err := tarFS.WriteFile(writePath, writer.Bytes(), fs.ModePerm); err != nil {
 				return nil, err
 			}
 

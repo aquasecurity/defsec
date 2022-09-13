@@ -1,5 +1,5 @@
 
-Configure bucket encryption
+Enable encryption using customer managed keys
 
 ```yaml
 Resources:
@@ -9,6 +9,10 @@ Resources:
         ServerSideEncryptionConfiguration:
           - BucketKeyEnabled: true
             ServerSideEncryptionByDefault:
-              SSEAlgorithm: AES256
+              KMSMasterKeyID: kms-arn
+              SSEAlgorithm: aws:kms
     Type: AWS::S3::Bucket
+
 ```
+
+

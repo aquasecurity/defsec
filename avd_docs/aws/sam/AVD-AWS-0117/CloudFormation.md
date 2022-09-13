@@ -1,10 +1,7 @@
 
 Enable tracing
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 AWSTemplateFormatVersion: 2010-09-09
 Description: Good Example of SAM API
 Resources:
@@ -21,4 +18,7 @@ Resources:
       Role: arn:aws:iam::123456123456:role/service-role/my-sample-role
       Tracing:
         Enabled: true
+
 ```
+
+

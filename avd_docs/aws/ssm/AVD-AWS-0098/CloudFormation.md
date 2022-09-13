@@ -1,10 +1,7 @@
 
 Use customer managed keys
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 AWSTemplateFormatVersion: 2010-09-09
 Description: Good example of ingress rule
 Resources:
@@ -15,4 +12,7 @@ Resources:
       KmsKeyId: "my-key-id"
       Name: "blah"
       SecretString: "don't tell anyone"
+
 ```
+
+

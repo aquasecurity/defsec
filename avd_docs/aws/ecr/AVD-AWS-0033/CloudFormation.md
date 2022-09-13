@@ -1,10 +1,7 @@
 
 Use customer managed keys
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: AWS::ECR::Repository
@@ -16,4 +13,7 @@ Resources:
       EncryptionConfiguration:
         EncryptionType: KMS
         KmsKey: "alias/ecr-key"
+
 ```
+
+

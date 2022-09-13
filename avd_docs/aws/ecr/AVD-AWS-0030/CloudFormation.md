@@ -1,10 +1,7 @@
 
 Enable ECR image scanning
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 Resources:
   GoodExample:
     Type: AWS::ECR::Repository
@@ -12,8 +9,11 @@ Resources:
       RepositoryName: "test-repository"
       ImageTagImmutability: IMMUTABLE
       ImageScanningConfiguration:
-        ScanOnPush: true
+        ScanOnPush: True
       EncryptionConfiguration:
         EncryptionType: KMS
         KmsKey: "alias/ecr-key"
+
 ```
+
+

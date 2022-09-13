@@ -1,10 +1,7 @@
 
 Enable in transit encryption
 
-```yaml
----
-AWSTemplateFormatVersion: "2010-09-09"
-Description: A sample template
+```yaml---
 AWSTemplateFormatVersion: 2010-09-09
 Description: Good example
 Resources:
@@ -14,4 +11,7 @@ Resources:
       EncryptionInfo:
         EncryptionInTransit:
           ClientBroker: "TLS"
+
 ```
+
+
