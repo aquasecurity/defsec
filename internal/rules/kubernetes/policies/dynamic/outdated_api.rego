@@ -10,7 +10,7 @@ __rego_metadata__ := {
 	"title": "Evaluate k8s deprecated and removed APIs",
 	"short_code": "evaluate-k8s-deprecated-removed-apis",
 	"severity": "HIGH",
-	 "description": sprintf("apiVersion '%s' and kind '%s' has been deprecated on: '%s' and planned for removal on:'%s'", [input.apiVersion, input.kind, recommendedVersions[input.apiVersion][input.kind].deprecation_version, recommendedVersions[input.apiVersion][input.kind].removed_version]),
+	"description": sprintf("apiVersion '%s' and kind '%s' has been deprecated on: '%s' and planned for removal on:'%s'", [input.apiVersion, input.kind, recommendedVersions[input.apiVersion][input.kind].deprecation_version, recommendedVersio[input.apiVersion][input.kind].removed_version]),
 	"recommended_actions": sprintf("It recommended to move to the new replacement API:'%s'", [recommendedVersions[input.apiVersion][input.kind].replacement_version]),
 	"url": sprintf("%s", [recommendedVersions[input.apiVersion][input.kind].ref]),
 }
