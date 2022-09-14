@@ -25,5 +25,5 @@ recommendedVersions := {"admission.k8s.io/v1beta1": {"AdmissionReview": {"deprec
 deny[res] {
 	_ = recommendedVersions[input.apiVersion][input.kind]
 	msg := sprintf("apiVersion '%s' and kind ‘%s' should be replaced with the new API ‘%s'", [input.apiVersion, input.kind, recommendedVersions[input.apiVersion][input.kind].replacement_version])
-	res := result.new(msg, {"apiVersion": input.apiVersion, "kind": input.kind})
+	res := result.new(msg, {"__defsec_metadata": {"startline": 1, "endline": 5}})
 }
