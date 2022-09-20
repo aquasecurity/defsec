@@ -678,6 +678,7 @@ deny {
 
 	assert.Greater(t, len(results.GetFailed()[0].Traces()), 0)
 }
+
 func Test_dynamicMetadata(t *testing.T) {
 
 	srcFS := testutil.CreateFS(t, map[string]string{
@@ -711,6 +712,7 @@ deny {
 	require.NoError(t, err)
 	assert.Equal(t, results[0].Rule().Summary, "i am dynamic")
 }
+
 func Test_staticMetadata(t *testing.T) {
 
 	srcFS := testutil.CreateFS(t, map[string]string{
@@ -743,4 +745,60 @@ deny {
 	})
 	require.NoError(t, err)
 	assert.Equal(t, results[0].Rule().Summary, "i am static")
+}
+
+func Test_annotationMetadata(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `# METADATA
+# title: i am a title
+# description: i am a description
+# related_resources:
+# - https://google.com
+# custom:
+#   id: EG123
+#   avd_id: AVD-EG-0123
+#   severity: LOW
+#   recommended_action: have a cup of tea
+package defsec.test
+
+deny {
+  input.text
+}
+
+`,
+		"policies/test2.rego": `# METADATA
+# title: i am another title
+package defsec.test2
+
+deny {
+  input.blah
+}
+
+`,
+	})
+
+	scanner := NewScanner()
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{
+		Path: "/evil.lol",
+		Contents: map[string]interface{}{
+			"text": "test",
+		},
+		Type: "???",
+	})
+	require.NoError(t, err)
+	require.Len(t, results.GetFailed(), 1)
+	failure := results.GetFailed()[0].Rule()
+	assert.Equal(t, "i am a title", failure.Summary)
+	assert.Equal(t, "i am a description", failure.Explanation)
+	require.Len(t, failure.Links, 1)
+	assert.Equal(t, "https://google.com", failure.Links[0])
+	assert.Equal(t, "AVD-EG-0123", failure.AVDID)
+	assert.Equal(t, severity.Low, failure.Severity)
+	assert.Equal(t, "have a cup of tea", failure.Resolution)
 }

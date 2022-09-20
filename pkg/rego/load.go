@@ -33,7 +33,9 @@ func (s *Scanner) loadPoliciesFromDirs(target fs.FS, paths []string) (map[string
 			if err != nil {
 				return err
 			}
-			module, err := ast.ParseModuleWithOpts(path, string(data), ast.ParserOptions{})
+			module, err := ast.ParseModuleWithOpts(path, string(data), ast.ParserOptions{
+				ProcessAnnotation: true,
+			})
 			if err != nil {
 				return err
 			}
@@ -54,7 +56,9 @@ func (s *Scanner) loadPoliciesFromReaders(readers []io.Reader) (map[string]*ast.
 		if err != nil {
 			return nil, err
 		}
-		module, err := ast.ParseModuleWithOpts(moduleName, string(data), ast.ParserOptions{})
+		module, err := ast.ParseModuleWithOpts(moduleName, string(data), ast.ParserOptions{
+			ProcessAnnotation: true,
+		})
 		if err != nil {
 			return nil, err
 		}

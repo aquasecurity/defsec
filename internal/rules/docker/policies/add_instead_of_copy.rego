@@ -1,3 +1,16 @@
+# METADATA
+# title: ADD instead of COPY
+# description: You should use COPY instead of ADD unless you want to extract a tar file. Note that an ADD command will extract a tar file, which adds the risk of Zip-based vulnerabilities. Accordingly, it is advised to use a COPY command, which does not extract tar files.
+# scope: package
+# authors:
+# - John Doe <john@example.com>
+# related_resources:
+# - https://docs.docker.com/engine/reference/builder/#add
+# custom:
+#   id: DS005
+#   avd_id: AVD-DS-0005
+#   severity: LOW
+#   recommended_action: Use COPY instead of ADD
 package builtin.dockerfile.DS005
 
 import data.lib.docker
@@ -8,7 +21,6 @@ __rego_metadata__ := {
 	"title": "ADD instead of COPY",
 	"short_code": "use-copy-over-add",
 	"severity": "LOW",
-	"type": "Dockerfile Security Check",
 	"description": "You should use COPY instead of ADD unless you want to extract a tar file. Note that an ADD command will extract a tar file, which adds the risk of Zip-based vulnerabilities. Accordingly, it is advised to use a COPY command, which does not extract tar files.",
 	"recommended_actions": "Use COPY instead of ADD",
 	"url": "https://docs.docker.com/engine/reference/builder/#add",

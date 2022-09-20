@@ -89,7 +89,9 @@ func recurseEmbeddedModules(fs embed.FS, dir string) (map[string]*ast.Module, er
 		if err != nil {
 			return nil, err
 		}
-		mod, err := ast.ParseModule(fullPath, string(data))
+		mod, err := ast.ParseModuleWithOpts(fullPath, string(data), ast.ParserOptions{
+			ProcessAnnotation: true,
+		})
 		if err != nil {
 			return nil, err
 		}

@@ -20,7 +20,6 @@ import (
 type StaticMetadata struct {
 	ID                 string
 	AVDID              string
-	Type               string
 	Title              string
 	ShortCode          string
 	Description        string
@@ -78,12 +77,8 @@ func NewMetadataRetriever(compiler *ast.Compiler) *MetadataRetriever {
 
 func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Module, inputs ...Input) (*StaticMetadata, error) {
 
-	namespace := getModuleNamespace(module)
-	metadataQuery := fmt.Sprintf("data.%s.__rego_metadata__", namespace)
-
 	metadata := StaticMetadata{
 		ID:           "N/A",
-		Type:         "N/A",
 		Title:        "N/A",
 		Severity:     "UNKNOWN",
 		Description:  fmt.Sprintf("Rego module: %s", module.Package.Path.String()),
@@ -91,6 +86,24 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		InputOptions: m.queryInputOptions(ctx, module),
 		Frameworks:   make(map[framework.Framework][]string),
 	}
+
+	// read metadata from official rego annotations if possible
+	if annotationSet := m.compiler.GetAnnotationSet(); annotationSet != nil {
+		for _, annotation := range annotationSet.Flatten() {
+			if annotation.GetPackage().Path.String() != module.Package.Path.String() || annotation.Annotations.Scope != "package" {
+				continue
+			}
+			if err := m.fromAnnotations(&metadata, annotation.Annotations); err != nil {
+				return nil, err
+			}
+			// as soon as we find an annotation, use it
+			return &metadata, nil
+		}
+	}
+
+	// otherwise, try to read metadata from the rego module itself - we used to do this before annotations were a thing
+	namespace := getModuleNamespace(module)
+	metadataQuery := fmt.Sprintf("data.%s.__rego_metadata__", namespace)
 
 	options := []func(*rego.Rego){
 		rego.Query(metadataQuery),
@@ -148,13 +161,13 @@ func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata
 	if raw, ok := meta["severity"]; ok {
 		metadata.Severity = strings.ToUpper(fmt.Sprintf("%s", raw))
 	}
-	if raw, ok := meta["type"]; ok {
-		metadata.Type = fmt.Sprintf("%s", raw)
-	}
 	if raw, ok := meta["description"]; ok {
 		metadata.Description = fmt.Sprintf("%s", raw)
 	}
 	if raw, ok := meta["recommended_actions"]; ok {
+		metadata.RecommendedActions = fmt.Sprintf("%s", raw)
+	}
+	if raw, ok := meta["recommended_action"]; ok {
 		metadata.RecommendedActions = fmt.Sprintf("%s", raw)
 	}
 	if raw, ok := meta["url"]; ok {
@@ -168,6 +181,26 @@ func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata
 		for fw, sections := range frameworks {
 			metadata.Frameworks[framework.Framework(fw)] = sections
 		}
+	}
+	return nil
+}
+
+func (m *MetadataRetriever) fromAnnotations(metadata *StaticMetadata, annotation *ast.Annotations) error {
+	metadata.Title = annotation.Title
+	metadata.Description = annotation.Description
+	for _, resource := range annotation.RelatedResources {
+		if !resource.Ref.IsAbs() {
+			continue
+		}
+		metadata.References = append(metadata.References, resource.Ref.String())
+	}
+	if custom := annotation.Custom; custom != nil {
+		if err := m.updateMetadata(custom, metadata); err != nil {
+			return err
+		}
+	}
+	if len(annotation.RelatedResources) > 0 {
+		metadata.PrimaryURL = annotation.RelatedResources[0].Ref.String()
 	}
 	return nil
 }
