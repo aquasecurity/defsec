@@ -6,6 +6,8 @@ import (
 	"io"
 	"io/fs"
 	"io/ioutil"
+	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -161,6 +163,76 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 		return compiler.Errors
 	}
 	retriever := NewMetadataRetriever(compiler)
+
+	// REMOVE
+	for filename, module := range s.policies {
+		filename = path.Join("internal/rules", filename)
+		fmt.Print(filename + " ... ")
+		static, err := retriever.RetrieveMetadata(context.Background(), module)
+		if err != nil {
+			return err
+		}
+
+		resources := ""
+		if static.PrimaryURL != "" {
+			resources = fmt.Sprintf("\n# related_resources:\n# - %s", static.PrimaryURL)
+		}
+		shortCode := ""
+		if static.ShortCode != "" {
+			shortCode = fmt.Sprintf("\n#   short_code: %s", static.ShortCode)
+		}
+		input := ""
+		if len(static.InputOptions.Selectors) > 0 {
+			input = "\n#   input:\n#     selector:"
+			for _, selector := range static.InputOptions.Selectors {
+				if selector.Type == "defsec" {
+					selector.Type = "cloud"
+				}
+				input += fmt.Sprintf("\n#     - type: %s", selector.Type)
+			}
+		}
+
+		metadata := fmt.Sprintf(`# METADATA
+# title: %s
+# description: %s
+# scope: package%s
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: %s
+#   avd_id: %s
+#   severity: %s%s
+#   recommended_action: %s%s
+`,
+			static.Title,
+			static.Description,
+			resources,
+			static.ID,
+			static.AVDID,
+			static.Severity,
+			shortCode,
+			static.RecommendedActions,
+			input,
+		)
+		fmt.Println(metadata)
+
+		before, err := os.ReadFile(filename)
+		if err != nil {
+			return err
+		}
+
+		if strings.Contains(string(before), "# METADATA") {
+			fmt.Println("SKIPPED")
+			continue
+		}
+
+		if err := os.WriteFile(filename, []byte(metadata+string(before)), 0644); err != nil {
+			return err
+		}
+		fmt.Println("UPDATED")
+	}
+	// REMOVE
+
 	if err := s.filterModules(retriever); err != nil {
 		return err
 	}
