@@ -1,7 +1,16 @@
 package schemas
 
+import _ "embed"
+
+type Schema string
+
 var (
-	Anything = `{}`
-	// go:embed dockerfile.json
-	Dockerfile string
+	None     Schema = ""
+	Anything Schema = `{}`
+	//go:embed dockerfile.json
+	Dockerfile Schema
+	Cloud      Schema = `{}`
+	Helm       Schema = `{}`
+	Kubernetes Schema = `{}`
+	RBAC       Schema = `{}`
 )

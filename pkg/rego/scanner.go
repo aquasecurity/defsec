@@ -9,6 +9,8 @@ import (
 	"io/fs"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/rego/schemas"
+
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
@@ -104,7 +106,7 @@ type DynamicMetadata struct {
 	EndLine   int
 }
 
-func NewScanner(schemaReader io.Reader, options ...options.ScannerOption) *Scanner {
+func NewScanner(schema schemas.Schema, options ...options.ScannerOption) *Scanner {
 	s := &Scanner{
 		ruleNamespaces: map[string]struct{}{
 			"builtin":   {},
@@ -116,8 +118,8 @@ func NewScanner(schemaReader io.Reader, options ...options.ScannerOption) *Scann
 	for _, opt := range options {
 		opt(s)
 	}
-	if schemaReader != nil {
-		err := json.NewDecoder(schemaReader).Decode(&s.inputSchema)
+	if schema != schemas.None {
+		err := json.Unmarshal([]byte(schema), &s.inputSchema)
 		if err != nil {
 			panic(err)
 		}

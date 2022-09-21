@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/rego/schemas"
+
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/framework"
@@ -161,7 +163,7 @@ func (s *Scanner) getScanResults(path string, ctx context.Context, target fs.FS)
 		return nil, nil
 	}
 
-	regoScanner := rego.NewScanner(s.options...)
+	regoScanner := rego.NewScanner(schemas.Helm, s.options...)
 	policyFS := target
 	if s.policyFS != nil {
 		policyFS = s.policyFS
