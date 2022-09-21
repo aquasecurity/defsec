@@ -8,9 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
-
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/context"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
@@ -481,6 +480,60 @@ func (a *Attribute) Contains(checkValue interface{}, equalityOptions ...Equality
 	}
 
 	return strings.Contains(val.AsString(), stringToLookFor)
+}
+
+func (a *Attribute) OnlyContains(checkValue interface{}) bool {
+	if a == nil {
+		return false
+	}
+	val := a.Value()
+	if val.IsNull() {
+		return false
+	}
+
+	checkSlice, ok := checkValue.([]interface{})
+	if !ok {
+		return false
+	}
+
+	if val.Type().IsListType() || val.Type().IsTupleType() {
+		for _, value := range val.AsValueSlice() {
+			found := false
+			for _, cVal := range checkSlice {
+				switch t := cVal.(type) {
+				case string:
+					if t == value.AsString() {
+						found = true
+						break
+					}
+				case bool:
+					if t == value.True() {
+						found = true
+						break
+					}
+				case int, int8, int16, int32, int64:
+					i, _ := value.AsBigFloat().Int64()
+					if t == i {
+						found = true
+						break
+					}
+				case float32, float64:
+					f, _ := value.AsBigFloat().Float64()
+					if t == f {
+						found = true
+						break
+					}
+				}
+
+			}
+			if !found {
+				return false
+			}
+		}
+		return true
+	}
+
+	return false
 }
 
 func containsIgnoreCase(left, substring string) bool {
