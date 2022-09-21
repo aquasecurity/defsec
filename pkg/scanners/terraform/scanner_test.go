@@ -763,3 +763,59 @@ resource "aws_s3_bucket_public_access_block" "testB" {
 		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
 	}
 }
+
+func Test_RegoInput(t *testing.T) {
+
+	var regoInput interface{}
+
+	opts := []options.ScannerOption{
+		ScannerWithStateFunc(func(s *state.State) {
+			regoInput = s.ToRego()
+		}),
+	}
+	_ = scanWithOptions(t, `
+resource "aws_security_group" "example_security_group" {
+  name = "example_security_group"
+
+  description = "Example SG"
+
+  ingress {
+    description = "Allow SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["1.2.3.4", "5.6.7.8"]
+  }
+
+}
+`, opts...)
+
+	outer, ok := regoInput.(map[string]interface{})
+	require.True(t, ok)
+	aws, ok := outer["aws"].(map[string]interface{})
+	require.True(t, ok)
+	ec2, ok := aws["ec2"].(map[string]interface{})
+	require.True(t, ok)
+	sgs, ok := ec2["securitygroups"].([]interface{})
+	require.True(t, ok)
+	require.Len(t, sgs, 1)
+	sg0, ok := sgs[0].(map[string]interface{})
+	require.True(t, ok)
+	ingress, ok := sg0["ingressrules"].([]interface{})
+	require.True(t, ok)
+	require.Len(t, ingress, 1)
+	ingress0, ok := ingress[0].(map[string]interface{})
+	require.True(t, ok)
+	cidrs, ok := ingress0["cidrs"].([]interface{})
+	require.True(t, ok)
+	require.Len(t, cidrs, 2)
+
+	cidr0, ok := cidrs[0].(map[string]interface{})
+	require.True(t, ok)
+
+	cidr1, ok := cidrs[1].(map[string]interface{})
+	require.True(t, ok)
+
+	assert.Equal(t, "1.2.3.4", cidr0["value"])
+	assert.Equal(t, "5.6.7.8", cidr1["value"])
+}
