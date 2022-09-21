@@ -27,6 +27,7 @@ var CheckNoPolicyWildcards = rules.Register(
 		Service:   "iam",
 		ShortCode: "no-policy-wildcards",
 		Frameworks: map[framework.Framework][]string{
+			framework.Default:     nil,
 			framework.CIS_AWS_1_4: {"1.16"},
 		},
 		Summary:     "IAM policy should avoid use of wildcards and instead apply the principle of least privilege",
