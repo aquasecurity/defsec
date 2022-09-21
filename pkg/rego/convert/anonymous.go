@@ -12,6 +12,13 @@ func anonymousToRego(inputValue reflect.Value) interface{} {
 		return nil
 	}
 
+	for inputValue.Type().Kind() == reflect.Interface {
+		if inputValue.IsNil() {
+			return nil
+		}
+		inputValue = inputValue.Elem()
+	}
+
 	if inputValue.Type().Implements(converterInterface) {
 		returns := inputValue.MethodByName("ToRego").Call(nil)
 		return returns[0].Interface()
