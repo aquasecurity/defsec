@@ -819,8 +819,3 @@ resource "aws_security_group" "example_security_group" {
 	assert.Equal(t, "1.2.3.4", cidr0["value"])
 	assert.Equal(t, "5.6.7.8", cidr1["value"])
 }
-
-/*
-
-
- */
