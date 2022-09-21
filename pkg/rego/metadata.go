@@ -75,6 +75,20 @@ func NewMetadataRetriever(compiler *ast.Compiler) *MetadataRetriever {
 	}
 }
 
+func (m *MetadataRetriever) findPackageAnnotation(module *ast.Module) *ast.Annotations {
+	annotationSet := m.compiler.GetAnnotationSet()
+	if annotationSet == nil {
+		return nil
+	}
+	for _, annotation := range annotationSet.Flatten() {
+		if annotation.GetPackage().Path.String() != module.Package.Path.String() || annotation.Annotations.Scope != "package" {
+			continue
+		}
+		return annotation.Annotations
+	}
+	return nil
+}
+
 func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Module, inputs ...Input) (*StaticMetadata, error) {
 
 	metadata := StaticMetadata{
@@ -88,17 +102,12 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 	}
 
 	// read metadata from official rego annotations if possible
-	if annotationSet := m.compiler.GetAnnotationSet(); annotationSet != nil {
-		for _, annotation := range annotationSet.Flatten() {
-			if annotation.GetPackage().Path.String() != module.Package.Path.String() || annotation.Annotations.Scope != "package" {
-				continue
-			}
-			if err := m.fromAnnotations(&metadata, annotation.Annotations); err != nil {
-				return nil, err
-			}
-			// as soon as we find an annotation, use it
-			return &metadata, nil
+	if annotation := m.findPackageAnnotation(module); annotation != nil {
+		if err := m.fromAnnotation(&metadata, annotation); err != nil {
+			return nil, err
 		}
+		// as soon as we find an annotation, use it
+		return &metadata, nil
 	}
 
 	// otherwise, try to read metadata from the rego module itself - we used to do this before annotations were a thing
@@ -185,7 +194,7 @@ func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata
 	return nil
 }
 
-func (m *MetadataRetriever) fromAnnotations(metadata *StaticMetadata, annotation *ast.Annotations) error {
+func (m *MetadataRetriever) fromAnnotation(metadata *StaticMetadata, annotation *ast.Annotations) error {
 	metadata.Title = annotation.Title
 	metadata.Description = annotation.Description
 	for _, resource := range annotation.RelatedResources {
@@ -212,36 +221,51 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 		Selectors: nil,
 	}
 
-	namespace := getModuleNamespace(module)
-	inputOptionQuery := fmt.Sprintf("data.%s.__rego_input__", namespace)
-	instance := rego.New(
-		rego.Query(inputOptionQuery),
-		rego.Compiler(m.compiler),
-	)
-	set, err := instance.Eval(ctx)
-	if err != nil {
-		return options
+	var metadata map[string]interface{}
+
+	// read metadata from official rego annotations if possible
+	if annotation := m.findPackageAnnotation(module); annotation != nil && annotation.Custom != nil {
+		if input, ok := annotation.Custom["input"]; ok {
+			if mapped, ok := input.(map[string]interface{}); ok {
+				metadata = mapped
+			}
+		}
 	}
 
-	if len(set) != 1 {
-		return options
-	}
-	if len(set[0].Expressions) != 1 {
-		return options
-	}
-	expression := set[0].Expressions[0]
-	meta, ok := expression.Value.(map[string]interface{})
-	if !ok {
-		return options
+	if metadata == nil {
+
+		namespace := getModuleNamespace(module)
+		inputOptionQuery := fmt.Sprintf("data.%s.__rego_input__", namespace)
+		instance := rego.New(
+			rego.Query(inputOptionQuery),
+			rego.Compiler(m.compiler),
+		)
+		set, err := instance.Eval(ctx)
+		if err != nil {
+			return options
+		}
+
+		if len(set) != 1 {
+			return options
+		}
+		if len(set[0].Expressions) != 1 {
+			return options
+		}
+		expression := set[0].Expressions[0]
+		meta, ok := expression.Value.(map[string]interface{})
+		if !ok {
+			return options
+		}
+		metadata = meta
 	}
 
-	if raw, ok := meta["combine"]; ok {
+	if raw, ok := metadata["combine"]; ok {
 		if combine, ok := raw.(bool); ok {
 			options.Combined = combine
 		}
 	}
 
-	if raw, ok := meta["selector"]; ok {
+	if raw, ok := metadata["selector"]; ok {
 		if each, ok := raw.([]interface{}); ok {
 			for _, rawSelector := range each {
 				var selector Selector

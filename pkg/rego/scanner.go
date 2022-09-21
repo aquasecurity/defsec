@@ -37,6 +37,7 @@ type Scanner struct {
 	retriever      *MetadataRetriever
 	policyFS       fs.FS
 	frameworks     []framework.Framework
+	inputSchema    interface{} // unmarshalled into this from a json schema document
 }
 
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
@@ -103,7 +104,7 @@ type DynamicMetadata struct {
 	EndLine   int
 }
 
-func NewScanner(options ...options.ScannerOption) *Scanner {
+func NewScanner(schemaReader io.Reader, options ...options.ScannerOption) *Scanner {
 	s := &Scanner{
 		ruleNamespaces: map[string]struct{}{
 			"builtin":   {},
@@ -114,6 +115,12 @@ func NewScanner(options ...options.ScannerOption) *Scanner {
 	}
 	for _, opt := range options {
 		opt(s)
+	}
+	if schemaReader != nil {
+		err := json.NewDecoder(schemaReader).Decode(&s.inputSchema)
+		if err != nil {
+			panic(err)
+		}
 	}
 	return s
 }
@@ -136,6 +143,12 @@ func (s *Scanner) runQuery(ctx context.Context, query string, input interface{},
 		rego.Store(s.store),
 		rego.Runtime(s.runtimeValues),
 		rego.Trace(trace),
+	}
+
+	if s.inputSchema != nil {
+		schemaSet := ast.NewSchemaSet()
+		schemaSet.Put(ast.MustParseRef("schema.input"), s.inputSchema)
+		regoOptions = append(regoOptions, rego.Schemas(schemaSet))
 	}
 
 	if input != nil {

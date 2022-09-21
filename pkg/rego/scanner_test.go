@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
@@ -29,7 +30,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -64,7 +65,7 @@ warn {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -97,7 +98,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -141,7 +142,7 @@ exception[ns] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -190,7 +191,7 @@ exception[ns] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -228,7 +229,7 @@ exception[rules] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -265,7 +266,7 @@ exception[rules] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -300,7 +301,7 @@ deny_evil {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -332,7 +333,7 @@ deny[msg] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -371,7 +372,7 @@ deny[res] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -414,7 +415,7 @@ deny[res] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -469,7 +470,7 @@ deny[res] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -519,7 +520,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -554,7 +555,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -586,7 +587,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -622,7 +623,7 @@ deny {
 
 	traceBuffer := bytes.NewBuffer([]byte{})
 
-	scanner := NewScanner(options.ScannerWithTrace(traceBuffer))
+	scanner := NewScanner(nil, options.ScannerWithTrace(traceBuffer))
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -657,7 +658,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner(options.ScannerWithPerResultTracing(true))
+	scanner := NewScanner(nil, options.ScannerWithPerResultTracing(true))
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -696,7 +697,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -730,7 +731,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -778,7 +779,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(nil)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -801,4 +802,67 @@ deny {
 	assert.Equal(t, "AVD-EG-0123", failure.AVDID)
 	assert.Equal(t, severity.Low, failure.Severity)
 	assert.Equal(t, "have a cup of tea", failure.Resolution)
+}
+
+func Test_RegoScanning_WithInvalidInputSchema(t *testing.T) {
+
+	inputSchema := `{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aquasecurity/defsec/tree/master/pkg/rego/schemas/dockerfile.json",
+  "type": "object",
+  "properties": {
+    "valid": { "type": "string" }
+  },
+  "required": ["valid"]
+}`
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `# METADATA
+# schemas:
+# - input: schema["input"]
+package defsec.test
+
+deny {
+    input.evil == "lol"
+}
+`,
+	})
+
+	scanner := NewScanner(strings.NewReader(inputSchema))
+	assert.ErrorContains(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+		"undefined ref: input.evil",
+	)
+}
+
+func Test_RegoScanning_WithValidInputSchema(t *testing.T) {
+
+	inputSchema := `{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/aquasecurity/defsec/tree/master/pkg/rego/schemas/dockerfile.json",
+  "type": "object",
+  "properties": {
+    "valid": { "type": "string" }
+  },
+  "required": ["valid"]
+}`
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `# METADATA
+# schemas:
+# - input: schema["input"]
+package defsec.test
+
+deny {
+    input.valid == "lol"
+}
+`,
+	})
+
+	scanner := NewScanner(strings.NewReader(inputSchema))
+	assert.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
 }

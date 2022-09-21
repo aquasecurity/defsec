@@ -3,10 +3,12 @@ package rego
 import (
 	"context"
 	"embed"
+	"encoding/json"
 	"path/filepath"
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/pkg/rego/schemas"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/bundle"
@@ -30,6 +32,11 @@ func init() {
 	ctx := context.TODO()
 
 	compiler := ast.NewCompiler()
+	schemaSet := ast.NewSchemaSet()
+	var schema interface{}
+	_ = json.Unmarshal([]byte(schemas.Anything), &schema)
+	schemaSet.Put(ast.MustParseRef("schema.input"), schema)
+	compiler.WithSchemas(schemaSet)
 	compiler.Compile(modules)
 	if compiler.Failed() {
 		// we should panic as the embedded rego policies are syntactically incorrect...
