@@ -1,25 +1,22 @@
+# METADATA
+# title: "Ensure that the --secure-port argument is not set to 0"
+# description: "Do not disable the secure port."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0017
+#   avd_id: AVD-KCV-0017
+#   severity: LOW
+#   short_code: ensure-secure-port-argument-is-not-set-to-0
+#   recommended_action: "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and either remove the --secure-port parameter or set it to a different (non-zero) desired port."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0017
 
 import data.lib.kubernetes
 import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0017",
-	"avd_id": "AVD-KCV-0017",
-	"title": "Ensure that the --secure-port argument is not set to 0",
-	"short_code": "ensure-secure-port-argument-is-not-set-to-0",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Do not disable the secure port.",
-	"recommended_actions": "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and either remove the --secure-port parameter or set it to a different (non-zero) desired port.",
-	"url": "https://www.cisecurity.org/benchmark/kubernetes",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 check_flag[container] {
 	container := kubernetes.containers[_]

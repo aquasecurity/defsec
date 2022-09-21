@@ -1,24 +1,23 @@
+# METADATA
+# title: "Do not allow privilege escalation from node proxy"
+# description: "Check whether role permits privilege escalation from node proxy"
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV047
+#   avd_id: AVD-KSV-0047
+#   severity: HIGH
+#   short_code: no-privilege-escalation-from-node-proxy
+#   recommended_action: "Create a role which does not permit privilege escalation from node proxy"
+#   input:
+#     selector:
+#     - type: rbac
 package builtin.kubernetes.KSV047
 
 import data.lib.kubernetes
 import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV047",
-	"avd_id": "AVD-KSV-0047",
-	"title": "Do not allow privilege escalation from node proxy",
-	"short_code": "no-privilege-escalation-from-node-proxy",
-	"severity": "HIGH",
-	"description": "Check whether role permits privilege escalation from node proxy",
-	"recommended_actions": "Create a role which does not permit privilege escalation from node proxy",
-	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "rbac"}],
-}
 
 readVerbs := ["get", "create"]
 

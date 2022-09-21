@@ -108,8 +108,6 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		if err := m.fromAnnotation(&metadata, annotation); err != nil {
 			return nil, err
 		}
-		// as soon as we find an annotation, use it
-		return &metadata, nil
 	}
 
 	// otherwise, try to read metadata from the rego module itself - we used to do this before annotations were a thing

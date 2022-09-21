@@ -1,23 +1,23 @@
+# METADATA
+# title: "Do not allow management of networking resources"
+# description: "The ability to control which pods get service traffic directed to them allows for interception attacks. Controlling network policy allows for bypassing lateral movement restrictions."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV056
+#   avd_id: AVD-KSV-0056
+#   severity: HIGH
+#   short_code: no-manage-networking-resources
+#   recommended_action: "Networking resources are only allowed for verbs 'list', 'watch', 'get'"
+#   input:
+#     selector:
+#     - type: rbac
 package builtin.kubernetes.KSV056
 
 import data.lib.kubernetes
 import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV056",
-	"avd_id": "AVD-KSV-0056",
-	"title": "Do not allow management of networking resources",
-	"short_code": "no-manage-networking-resources",
-	"severity": "HIGH",
-	"description": "The ability to control which pods get service traffic directed to them allows for interception attacks. Controlling network policy allows for bypassing lateral movement restrictions.",
-	"recommended_actions": "Networking resources are only allowed for verbs 'list', 'watch', 'get'",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "rbac"}],
-}
 
 readKinds := ["Role", "ClusterRole"]
 

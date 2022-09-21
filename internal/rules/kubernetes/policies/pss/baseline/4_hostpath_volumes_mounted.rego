@@ -1,3 +1,18 @@
+# METADATA
+# title: "hostPath volumes mounted"
+# description: "HostPath volumes must be forbidden."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV023
+#   avd_id: AVD-KSV-0023
+#   severity: MEDIUM
+#   short_code: no-mounted-hostpath
+#   recommended_action: "Do not set 'spec.volumes[*].hostPath'."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV023
 
 import data.lib.kubernetes
@@ -5,24 +20,6 @@ import data.lib.result
 import data.lib.utils
 
 default failHostPathVolume = false
-
-__rego_metadata__ := {
-	"id": "KSV023",
-	"avd_id": "AVD-KSV-0023",
-	"title": "hostPath volumes mounted",
-	"short_code": "no-mounted-hostpath",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "HostPath volumes must be forbidden.",
-	"recommended_actions": "Do not set 'spec.volumes[*].hostPath'.",
-	"url": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 failHostPathVolume {
 	volumes := kubernetes.volumes

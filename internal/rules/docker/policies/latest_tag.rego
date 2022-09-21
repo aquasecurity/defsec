@@ -1,22 +1,21 @@
+# METADATA
+# title: "':latest' tag used"
+# description: "When using a 'FROM' statement you should use a specific tag to avoid uncontrolled behavior when the image is updated."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: DS001
+#   avd_id: AVD-DS-0001
+#   severity: MEDIUM
+#   short_code: use-specific-tags
+#   recommended_action: "Add a tag to the image in the 'FROM' statement"
+#   input:
+#     selector:
+#     - type: dockerfile
 package builtin.dockerfile.DS001
 
 import data.lib.docker
-
-__rego_metadata__ := {
-	"id": "DS001",
-	"avd_id": "AVD-DS-0001",
-	"title": "':latest' tag used",
-	"short_code": "use-specific-tags",
-	"severity": "MEDIUM",
-	"type": "Dockerfile Security Check",
-	"description": "When using a 'FROM' statement you should use a specific tag to avoid uncontrolled behavior when the image is updated.",
-	"recommended_actions": "Add a tag to the image in the 'FROM' statement",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "dockerfile"}],
-}
 
 # returns element after AS
 get_alias(values) = alias {

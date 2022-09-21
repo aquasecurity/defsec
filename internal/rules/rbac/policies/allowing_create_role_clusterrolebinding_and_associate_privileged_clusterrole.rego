@@ -1,24 +1,23 @@
+# METADATA
+# title: "Do not allow role to create ClusterRoleBindings and association with privileged role"
+# description: "Check whether role permits creating role ClusterRoleBindings and association with privileged cluster role"
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV052
+#   avd_id: AVD-KSV-0052
+#   severity: HIGH
+#   short_code: allow-role-clusterrolebindings-associate-privileged-cluster-role
+#   recommended_action: "Create a role which does not permit to create role clusterrolebindings and associate to privileged cluster role"
+#   input:
+#     selector:
+#     - type: rbac
 package builtin.kubernetes.KSV052
 
 import data.lib.kubernetes
 import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV052",
-	"avd_id": "AVD-KSV-0052",
-	"title": "Do not allow role to create ClusterRoleBindings and association with privileged role",
-	"short_code": "allow-role-clusterrolebindings-associate-privileged-cluster-role",
-	"severity": "HIGH",
-	"description": "Check whether role permits creating role ClusterRoleBindings and association with privileged cluster role",
-	"recommended_actions": "Create a role which does not permit to create role clusterrolebindings and associate to privileged cluster role",
-	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "rbac"}],
-}
 
 readKinds := ["Role", "ClusterRole"]
 

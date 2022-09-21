@@ -1,3 +1,18 @@
+# METADATA
+# title: "Container images from public registries used"
+# description: "Container images must not start with an empty prefix or a defined public registry domain."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV034
+#   avd_id: AVD-KSV-0034
+#   severity: MEDIUM
+#   short_code: no-public-registries
+#   recommended_action: "Use images from private registries."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV034
 
 import data.lib.kubernetes
@@ -5,23 +20,6 @@ import data.lib.result
 import data.lib.utils
 
 default failPublicRegistry = false
-
-__rego_metadata__ := {
-	"id": "KSV034",
-	"avd_id": "AVD-KSV-0034",
-	"title": "Container images from public registries used",
-	"short_code": "no-public-registries",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "Container images must not start with an empty prefix or a defined public registry domain.",
-	"recommended_actions": "Use images from private registries.",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # list of untrusted public registries
 untrusted_public_registries = [

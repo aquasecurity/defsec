@@ -1,25 +1,22 @@
+# METADATA
+# title: "Ensure that the --audit-log-maxage argument is set to 30 or as appropriate"
+# description: "Retain the logs for at least 30 days or as appropriate."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0020
+#   avd_id: AVD-KCV-0020
+#   severity: LOW
+#   short_code: ensure-audit-log-maxage-argument-is-set-to-30-or-as-appropriate
+#   recommended_action: "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and set the --audit-log-maxage parameter to 30 or as an appropriate number of days."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0020
 
 import data.lib.kubernetes
 import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0020",
-	"avd_id": "AVD-KCV-0020",
-	"title": "Ensure that the --audit-log-maxage argument is set to 30 or as appropriate",
-	"short_code": "ensure-audit-log-maxage-argument-is-set-to-30-or-as-appropriate",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Retain the logs for at least 30 days or as appropriate.",
-	"recommended_actions": "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and set the --audit-log-maxage parameter to 30 or as an appropriate number of days.",
-	"url": "https://www.cisecurity.org/benchmark/kubernetes",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 check_flag[container] {
 	container := kubernetes.containers[_]

@@ -1,3 +1,18 @@
+# METADATA
+# title: "Memory not limited"
+# description: "Enforcing memory limits prevents DoS via resource exhaustion."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV018
+#   avd_id: AVD-KSV-0018
+#   severity: LOW
+#   short_code: limit-memory
+#   recommended_action: "Set a limit value under 'containers[].resources.limits.memory'."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV018
 
 import data.lib.kubernetes
@@ -5,24 +20,6 @@ import data.lib.result
 import data.lib.utils
 
 default failLimitsMemory = false
-
-__rego_metadata__ := {
-	"id": "KSV018",
-	"avd_id": "AVD-KSV-0018",
-	"title": "Memory not limited",
-	"short_code": "limit-memory",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Enforcing memory limits prevents DoS via resource exhaustion.",
-	"recommended_actions": "Set a limit value under 'containers[].resources.limits.memory'.",
-	"url": "https://kubesec.io/basics/containers-resources-limits-memory/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # getLimitsMemoryContainers returns all containers which have set resources.limits.memory
 getLimitsMemoryContainers[container] {

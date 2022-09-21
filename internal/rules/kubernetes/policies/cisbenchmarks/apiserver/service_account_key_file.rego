@@ -1,25 +1,22 @@
+# METADATA
+# title: "Ensure that the --service-account-key-file argument is set as appropriate"
+# description: "Explicitly set a service account public key file for service accounts on the apiserver."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0025
+#   avd_id: AVD-KCV-0025
+#   severity: LOW
+#   short_code: ensure-service-account-key-file-argument-is-set-as-appropriate
+#   recommended_action: "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and set the --service-account-key-file parameter to the public key file for service accounts."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0025
 
 import data.lib.kubernetes
 import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0025",
-	"avd_id": "AVD-KCV-0025",
-	"title": "Ensure that the --service-account-key-file argument is set as appropriate",
-	"short_code": "ensure-service-account-key-file-argument-is-set-as-appropriate",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Explicitly set a service account public key file for service accounts on the apiserver.",
-	"recommended_actions": "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and set the --service-account-key-file parameter to the public key file for service accounts.",
-	"url": "https://www.cisecurity.org/benchmark/kubernetes",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 check_flag[container] {
 	container := kubernetes.containers[_]

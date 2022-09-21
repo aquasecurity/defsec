@@ -1,23 +1,21 @@
+# METADATA
+# title: "RUN using 'wget' and 'curl'"
+# description: "Avoid using both 'wget' and 'curl' since these tools have the same effect."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: DS014
+#   avd_id: AVD-DS-0014
+#   severity: LOW
+#   short_code: standardise-remote-get
+#   recommended_action: "Pick one util, either 'wget' or 'curl'"
+#   input:
+#     selector:
+#     - type: dockerfile
 package builtin.dockerfile.DS014
 
 import data.lib.docker
-
-__rego_metadata__ := {
-	"id": "DS014",
-	"avd_id": "AVD-DS-0014",
-	"title": "RUN using 'wget' and 'curl'",
-	"short_code": "standardise-remote-get",
-	"severity": "LOW",
-	"type": "Dockerfile Security Check",
-	"description": "Avoid using both 'wget' and 'curl' since these tools have the same effect.",
-	"recommended_actions": "Pick one util, either 'wget' or 'curl'",
-	"url": "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "dockerfile"}],
-}
 
 deny[res] {
 	wget := get_tool_usage(docker.run[_], "wget")

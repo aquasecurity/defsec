@@ -1,23 +1,21 @@
+# METADATA
+# title: "'dnf clean all' missing"
+# description: "Cached package data should be cleaned after installation to reduce image size."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: DS019
+#   avd_id: AVD-DS-0019
+#   severity: HIGH
+#   short_code: purge-dnf-package-cache
+#   recommended_action: "Add 'dnf clean all' to Dockerfile"
+#   input:
+#     selector:
+#     - type: dockerfile
 package builtin.dockerfile.DS019
 
 import data.lib.docker
-
-__rego_metadata__ := {
-	"id": "DS019",
-	"avd_id": "AVD-DS-0019",
-	"title": "'dnf clean all' missing",
-	"short_code": "purge-dnf-package-cache",
-	"severity": "HIGH",
-	"type": "Dockerfile Security Check",
-	"description": "Cached package data should be cleaned after installation to reduce image size.",
-	"recommended_actions": "Add 'dnf clean all' to Dockerfile",
-	"url": "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "dockerfile"}],
-}
 
 install_regex := `(dnf install)|(dnf in)|(dnf reinstall)|(dnf rei)|(dnf install-n)|(dnf install-na)|(dnf install-nevra)`
 

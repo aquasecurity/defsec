@@ -1,3 +1,18 @@
+# METADATA
+# title: "SELinux custom options set"
+# description: "Setting a custom SELinux user or role option should be forbidden."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV025
+#   avd_id: AVD-KSV-0025
+#   severity: MEDIUM
+#   short_code: no-custom-selinux-options
+#   recommended_action: "Do not set 'spec.securityContext.seLinuxOptions', spec.containers[*].securityContext.seLinuxOptions and spec.initContainers[*].securityContext.seLinuxOptions."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV025
 
 import data.lib.kubernetes
@@ -5,24 +20,6 @@ import data.lib.result
 import data.lib.utils
 
 default failSELinux = false
-
-__rego_metadata__ := {
-	"id": "KSV025",
-	"avd_id": "AVD-KSV-0025",
-	"title": "SELinux custom options set",
-	"short_code": "no-custom-selinux-options",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "Setting a custom SELinux user or role option should be forbidden.",
-	"recommended_actions": "Do not set 'spec.securityContext.seLinuxOptions', spec.containers[*].securityContext.seLinuxOptions and spec.initContainers[*].securityContext.seLinuxOptions.",
-	"url": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 allowed_selinux_types := ["container_t", "container_init_t", "container_kvm_t"]
 

@@ -1,3 +1,18 @@
+# METADATA
+# title: "Unsafe sysctl options set"
+# description: "Sysctls can disable security mechanisms or affect all containers on a host, and should be disallowed except for an allowed 'safe' subset. A sysctl is considered safe if it is namespaced in the container or the Pod, and it is isolated from other Pods or processes on the same Node."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV026
+#   avd_id: AVD-KSV-0026
+#   severity: MEDIUM
+#   short_code: no-unsafe-sysctl
+#   recommended_action: "Do not set 'spec.securityContext.sysctls' or set to values in an allowed subset"
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV026
 
 import data.lib.kubernetes
@@ -5,24 +20,6 @@ import data.lib.result
 import data.lib.utils
 
 default failSysctls = false
-
-__rego_metadata__ := {
-	"id": "KSV026",
-	"avd_id": "AVD-KSV-0026",
-	"title": "Unsafe sysctl options set",
-	"short_code": "no-unsafe-sysctl",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "Sysctls can disable security mechanisms or affect all containers on a host, and should be disallowed except for an allowed 'safe' subset. A sysctl is considered safe if it is namespaced in the container or the Pod, and it is isolated from other Pods or processes on the same Node.",
-	"recommended_actions": "Do not set 'spec.securityContext.sysctls' or set to values in an allowed subset",
-	"url": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # Add allowed sysctls
 allowed_sysctls = {

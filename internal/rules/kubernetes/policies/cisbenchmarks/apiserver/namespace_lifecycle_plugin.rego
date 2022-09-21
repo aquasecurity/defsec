@@ -1,25 +1,22 @@
+# METADATA
+# title: "Ensure that the admission control plugin NamespaceLifecycle is set"
+# description: "Reject creating objects in a namespace that is undergoing termination."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0015
+#   avd_id: AVD-KCV-0015
+#   severity: LOW
+#   short_code: ensure-admission-control-plugin-namespace-lifecycle-is-set
+#   recommended_action: "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and set the --disable-admission-plugins parameter to ensure it does not include NamespaceLifecycle."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0015
 
 import data.lib.kubernetes
 import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0015",
-	"avd_id": "AVD-KCV-0015",
-	"title": "Ensure that the admission control plugin NamespaceLifecycle is set",
-	"short_code": "ensure-admission-control-plugin-namespace-lifecycle-is-set",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Reject creating objects in a namespace that is undergoing termination.",
-	"recommended_actions": "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and set the --disable-admission-plugins parameter to ensure it does not include NamespaceLifecycle.",
-	"url": "https://www.cisecurity.org/benchmark/kubernetes",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 check_flag[container] {
 	container := kubernetes.containers[_]

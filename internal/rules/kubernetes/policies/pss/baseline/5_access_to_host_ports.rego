@@ -1,27 +1,24 @@
+# METADATA
+# title: "Access to host ports"
+# description: "HostPorts should be disallowed, or at minimum restricted to a known list."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV024
+#   avd_id: AVD-KSV-0024
+#   severity: HIGH
+#   short_code: no-host-port-access
+#   recommended_action: "Do not set spec.containers[*].ports[*].hostPort and spec.initContainers[*].ports[*].hostPort."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV024
 
 import data.lib.kubernetes
 import data.lib.result
 
 default failHostPorts = false
-
-__rego_metadata__ := {
-	"id": "KSV024",
-	"avd_id": "AVD-KSV-0024",
-	"title": "Access to host ports",
-	"short_code": "no-host-port-access",
-	"version": "v1.0.0",
-	"severity": "HIGH",
-	"type": "Kubernetes Security Check",
-	"description": "HostPorts should be disallowed, or at minimum restricted to a known list.",
-	"recommended_actions": "Do not set spec.containers[*].ports[*].hostPort and spec.initContainers[*].ports[*].hostPort.",
-	"url": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # Add allowed host ports to this set
 allowed_host_ports = set()

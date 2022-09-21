@@ -1,3 +1,18 @@
+# METADATA
+# title: "CPU not limited"
+# description: "Enforcing CPU limits prevents DoS via resource exhaustion."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV011
+#   avd_id: AVD-KSV-0011
+#   severity: LOW
+#   short_code: limit-cpu
+#   recommended_action: "Set a limit value under 'containers[].resources.limits.cpu'."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV011
 
 import data.lib.kubernetes
@@ -5,24 +20,6 @@ import data.lib.result
 import data.lib.utils
 
 default failLimitsCPU = false
-
-__rego_metadata__ := {
-	"id": "KSV011",
-	"avd_id": "AVD-KSV-0011",
-	"title": "CPU not limited",
-	"short_code": "limit-cpu",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Enforcing CPU limits prevents DoS via resource exhaustion.",
-	"recommended_actions": "Set a limit value under 'containers[].resources.limits.cpu'.",
-	"url": "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # getLimitsCPUContainers returns all containers which have set resources.limits.cpu
 getLimitsCPUContainers[container] {

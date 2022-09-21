@@ -1,27 +1,24 @@
+# METADATA
+# title: "Root file system is not read-only"
+# description: "An immutable root file system prevents applications from writing to their local disk. This can limit intrusions, as attackers will not be able to tamper with the file system or write foreign executables to disk."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV014
+#   avd_id: AVD-KSV-0014
+#   severity: LOW
+#   short_code: use-readonly-filesystem
+#   recommended_action: "Change 'containers[].securityContext.readOnlyRootFilesystem' to 'true'."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV014
 
 import data.lib.kubernetes
 import data.lib.result
 
 default failReadOnlyRootFilesystem = false
-
-__rego_metadata__ := {
-	"id": "KSV014",
-	"avd_id": "AVD-KSV-0014",
-	"title": "Root file system is not read-only",
-	"short_code": "use-readonly-filesystem",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "An immutable root file system prevents applications from writing to their local disk. This can limit intrusions, as attackers will not be able to tamper with the file system or write foreign executables to disk.",
-	"recommended_actions": "Change 'containers[].securityContext.readOnlyRootFilesystem' to 'true'.",
-	"url": "https://kubesec.io/basics/containers-securitycontext-readonlyrootfilesystem-true/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # getReadOnlyRootFilesystemContainers returns all containers that have
 # securityContext.readOnlyFilesystem set to true.

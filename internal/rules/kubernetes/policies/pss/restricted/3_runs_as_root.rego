@@ -1,3 +1,18 @@
+# METADATA
+# title: "Runs as root user"
+# description: "'runAsNonRoot' forces the running image to run as a non-root user to ensure least privileges."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV012
+#   avd_id: AVD-KSV-0012
+#   severity: MEDIUM
+#   short_code: no-root
+#   recommended_action: "Set 'containers[].securityContext.runAsNonRoot' to true."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV012
 
 import data.lib.kubernetes
@@ -5,24 +20,6 @@ import data.lib.result
 import data.lib.utils
 
 default checkRunAsNonRoot = false
-
-__rego_metadata__ := {
-	"id": "KSV012",
-	"avd_id": "AVD-KSV-0012",
-	"title": "Runs as root user",
-	"short_code": "no-root",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "'runAsNonRoot' forces the running image to run as a non-root user to ensure least privileges.",
-	"recommended_actions": "Set 'containers[].securityContext.runAsNonRoot' to true.",
-	"url": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # getNonRootContainers returns the names of all containers which have
 # securityContext.runAsNonRoot set to true.

@@ -1,25 +1,22 @@
+# METADATA
+# title: "Ensure that the admission control plugin AlwaysPullImages is set"
+# description: "Always pull images."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV0012
+#   avd_id: AVD-KCV-0012
+#   severity: LOW
+#   short_code: ensure-admission-control-plugin-always-pull-images-is-set
+#   recommended_action: "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and set the --enable-admission-plugins parameter to include AlwaysPullImages."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0012
 
 import data.lib.kubernetes
 import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KSV0012",
-	"avd_id": "AVD-KCV-0012",
-	"title": "Ensure that the admission control plugin AlwaysPullImages is set",
-	"short_code": "ensure-admission-control-plugin-always-pull-images-is-set",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Always pull images.",
-	"recommended_actions": "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and set the --enable-admission-plugins parameter to include AlwaysPullImages.",
-	"url": "https://www.cisecurity.org/benchmark/kubernetes",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 check_flag[container] {
 	container := kubernetes.containers[_]

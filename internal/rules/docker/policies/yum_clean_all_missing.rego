@@ -1,23 +1,21 @@
+# METADATA
+# title: "'yum clean all' missing"
+# description: "You should use 'yum clean all' after using a 'yum install' command to clean package cached data and reduce image size."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: DS015
+#   avd_id: AVD-DS-0015
+#   severity: HIGH
+#   short_code: purge-yum-package-cache
+#   recommended_action: "Add 'yum clean all' to Dockerfile"
+#   input:
+#     selector:
+#     - type: dockerfile
 package builtin.dockerfile.DS015
 
 import data.lib.docker
-
-__rego_metadata__ := {
-	"id": "DS015",
-	"avd_id": "AVD-DS-0015",
-	"title": "'yum clean all' missing",
-	"short_code": "purge-yum-package-cache",
-	"severity": "HIGH",
-	"type": "Dockerfile Security Check",
-	"description": "You should use 'yum clean all' after using a 'yum install' command to clean package cached data and reduce image size.",
-	"recommended_actions": "Add 'yum clean all' to Dockerfile",
-	"url": "https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "dockerfile"}],
-}
 
 get_yum[output] {
 	run := docker.run[_]

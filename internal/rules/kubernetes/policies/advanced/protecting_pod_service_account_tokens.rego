@@ -1,26 +1,23 @@
+# METADATA
+# title: "Protecting Pod service account tokens"
+# description: "ensure that Pod specifications disable the secret token being mounted by setting automountServiceAccountToken: false"
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV036
+#   avd_id: AVD-KSV-0036
+#   severity: MEDIUM
+#   short_code: no-auto-mount-service-token
+#   recommended_action: "Disable the mounting of service account secret token by setting automountServiceAccountToken to false"
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV036
 
 import data.lib.kubernetes
 import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV036",
-	"avd_id": "AVD-KSV-0036",
-	"title": "Protecting Pod service account tokens",
-	"short_code": "no-auto-mount-service-token",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "ensure that Pod specifications disable the secret token being mounted by setting automountServiceAccountToken: false",
-	"recommended_actions": "Disable the mounting of service account secret token by setting automountServiceAccountToken to false",
-	"url": "https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#serviceaccount-admission-controller",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 mountServiceAccountToken(spec) {
 	utils.has_key(spec, "automountServiceAccountToken")

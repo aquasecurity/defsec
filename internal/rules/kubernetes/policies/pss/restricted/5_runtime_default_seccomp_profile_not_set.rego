@@ -1,24 +1,23 @@
+# METADATA
+# title: "Default Seccomp profile not set"
+# description: "The RuntimeDefault/Localhost seccomp profile must be required, or allow specific additional profiles."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV030
+#   avd_id: AVD-KSV-0030
+#   severity: LOW
+#   short_code: use-default-seccomp
+#   recommended_action: "Set 'spec.securityContext.seccompProfile.type', 'spec.containers[*].securityContext.seccompProfile' and 'spec.initContainers[*].securityContext.seccompProfile' to 'RuntimeDefault' or undefined."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV030
 
 import data.lib.kubernetes
 import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV030",
-	"avd_id": "AVD-KSV-0030",
-	"title": "Default Seccomp profile not set",
-	"short_code": "use-default-seccomp",
-	"severity": "LOW",
-	"description": "The RuntimeDefault/Localhost seccomp profile must be required, or allow specific additional profiles.",
-	"recommended_actions": "Set 'spec.securityContext.seccompProfile.type', 'spec.containers[*].securityContext.seccompProfile' and 'spec.initContainers[*].securityContext.seccompProfile' to 'RuntimeDefault' or undefined.",
-	"url": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 getType(target) = type {
 	context := getOr(target, "securityContext", {})

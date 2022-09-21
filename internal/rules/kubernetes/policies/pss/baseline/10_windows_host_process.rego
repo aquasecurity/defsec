@@ -1,24 +1,23 @@
+# METADATA
+# title: "HostProcess container defined"
+# description: "Windows pods offer the ability to run HostProcess containers which enable privileged access to the Windows node."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV103
+#   avd_id: AVD-KSV-0103
+#   severity: MEDIUM
+#   short_code: no-hostprocess-containers
+#   recommended_action: "Do not enable 'hostProcess' on any securityContext"
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV103
 
 import data.lib.kubernetes
 import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV103",
-	"avd_id": "AVD-KSV-0103",
-	"title": "HostProcess container defined",
-	"short_code": "no-hostprocess-containers",
-	"severity": "MEDIUM",
-	"description": "Windows pods offer the ability to run HostProcess containers which enable privileged access to the Windows node.",
-	"recommended_actions": "Do not enable 'hostProcess' on any securityContext",
-	"url": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 failHostProcess[spec] {
 	spec := input.spec

@@ -1,23 +1,21 @@
+# METADATA
+# title: "Multiple CMD instructions listed"
+# description: "There can only be one CMD instruction in a Dockerfile. If you list more than one CMD then only the last CMD will take effect."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: DS016
+#   avd_id: AVD-DS-0016
+#   severity: HIGH
+#   short_code: only-one-cmd
+#   recommended_action: "Dockefile should only have one CMD instruction. Remove all the other CMD instructions"
+#   input:
+#     selector:
+#     - type: dockerfile
 package builtin.dockerfile.DS016
 
 import data.lib.docker
-
-__rego_metadata__ := {
-	"id": "DS016",
-	"avd_id": "AVD-DS-0016",
-	"title": "Multiple CMD instructions listed",
-	"short_code": "only-one-cmd",
-	"severity": "HIGH",
-	"type": "Dockerfile Security Check",
-	"description": "There can only be one CMD instruction in a Dockerfile. If you list more than one CMD then only the last CMD will take effect.",
-	"recommended_actions": "Dockefile should only have one CMD instruction. Remove all the other CMD instructions",
-	"url": "https://docs.docker.com/engine/reference/builder/#cmd",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "dockerfile"}],
-}
 
 deny[res] {
 	cmds := docker.stage_cmd[name]

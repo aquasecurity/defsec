@@ -32,6 +32,12 @@
               "type": "string"
             }
           },
+          "resourceNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "verbs": {
             "type": "array",
             "items": {

@@ -1,26 +1,23 @@
+# METADATA
+# title: "Non-ephemeral volume types used"
+# description: "In addition to restricting HostPath volumes, usage of non-ephemeral volume types should be limited to those defined through PersistentVolumes."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV028
+#   avd_id: AVD-KSV-0028
+#   severity: LOW
+#   short_code: no-non-ephemeral-volumes
+#   recommended_action: "Do not Set 'spec.volumes[*]' to any of the disallowed volume types."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV028
 
 import data.lib.kubernetes
 import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV028",
-	"avd_id": "AVD-KSV-0028",
-	"title": "Non-ephemeral volume types used",
-	"short_code": "no-non-ephemeral-volumes",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "In addition to restricting HostPath volumes, usage of non-ephemeral volume types should be limited to those defined through PersistentVolumes.",
-	"recommended_actions": "Do not Set 'spec.volumes[*]' to any of the disallowed volume types.",
-	"url": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # Add disallowed volume type
 disallowed_volume_types = [

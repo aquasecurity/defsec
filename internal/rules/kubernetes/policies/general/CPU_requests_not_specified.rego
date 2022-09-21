@@ -1,3 +1,18 @@
+# METADATA
+# title: "CPU requests not specified"
+# description: "When containers have resource requests specified, the scheduler can make better decisions about which nodes to place pods on, and how to deal with resource contention."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV015
+#   avd_id: AVD-KSV-0015
+#   severity: LOW
+#   short_code: no-unspecified-cpu-requests
+#   recommended_action: "Set 'containers[].resources.requests.cpu'."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV015
 
 import data.lib.kubernetes
@@ -5,24 +20,6 @@ import data.lib.result
 import data.lib.utils
 
 default failRequestsCPU = false
-
-__rego_metadata__ := {
-	"id": "KSV015",
-	"avd_id": "AVD-KSV-0015",
-	"title": "CPU requests not specified",
-	"short_code": "no-unspecified-cpu-requests",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "When containers have resource requests specified, the scheduler can make better decisions about which nodes to place pods on, and how to deal with resource contention.",
-	"recommended_actions": "Set 'containers[].resources.requests.cpu'.",
-	"url": "https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # getRequestsCPUContainers returns all containers which have set resources.requests.cpu
 getRequestsCPUContainers[container] {

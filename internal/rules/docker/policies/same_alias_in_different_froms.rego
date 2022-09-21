@@ -1,23 +1,21 @@
+# METADATA
+# title: "Duplicate aliases defined in different FROMs"
+# description: "Different FROMs can't have the same alias defined."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: DS012
+#   avd_id: AVD-DS-0012
+#   severity: CRITICAL
+#   short_code: no-duplicate-alias
+#   recommended_action: "Change aliases to make them different"
+#   input:
+#     selector:
+#     - type: dockerfile
 package builtin.dockerfile.DS012
 
 import data.lib.docker
-
-__rego_metadata__ := {
-	"id": "DS012",
-	"avd_id": "AVD-DS-0012",
-	"title": "Duplicate aliases defined in different FROMs",
-	"short_code": "no-duplicate-alias",
-	"severity": "CRITICAL",
-	"type": "Dockerfile Security Check",
-	"description": "Different FROMs can't have the same alias defined.",
-	"recommended_actions": "Change aliases to make them different",
-	"url": "https://docs.docker.com/develop/develop-images/multistage-build/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "dockerfile"}],
-}
 
 get_duplicate_alias[output] {
 	output1 := get_aliased_name[_]

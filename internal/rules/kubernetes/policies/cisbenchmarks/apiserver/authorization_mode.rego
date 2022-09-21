@@ -1,25 +1,22 @@
+# METADATA
+# title: "Ensure that the --authorization-mode argument is not set to AlwaysAllow"
+# description: "Do not always authorize all requests."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0007
+#   avd_id: AVD-KCV-0007
+#   severity: LOW
+#   short_code: ensure-authorization-mode-argument-is-not-set-to-alwaysallow
+#   recommended_action: "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and set the --authorization-mode parameter to values other than AlwaysAllow. "
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0007
 
 import data.lib.kubernetes
 import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0007",
-	"avd_id": "AVD-KCV-0007",
-	"title": "Ensure that the --authorization-mode argument is not set to AlwaysAllow",
-	"short_code": "ensure-authorization-mode-argument-is-not-set-to-alwaysallow",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Do not always authorize all requests.",
-	"recommended_actions": "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and set the --authorization-mode parameter to values other than AlwaysAllow. ",
-	"url": "https://www.cisecurity.org/benchmark/kubernetes",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 check_flag[container] {
 	container := kubernetes.containers[_]

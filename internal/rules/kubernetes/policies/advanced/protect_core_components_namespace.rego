@@ -1,26 +1,23 @@
+# METADATA
+# title: "User Pods should not be placed in kube-system namespace"
+# description: "ensure that User pods are not placed in kube-system namespace"
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV037
+#   avd_id: AVD-KSV-0037
+#   severity: MEDIUM
+#   short_code: no-user-pods-in-system-namespace
+#   recommended_action: "Deploy the use pods into a designated namespace which is not kube-system."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV037
 
 import data.lib.kubernetes
 import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV037",
-	"avd_id": "AVD-KSV-0037",
-	"title": "User Pods should not be placed in kube-system namespace",
-	"short_code": "no-user-pods-in-system-namespace",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "ensure that User pods are not placed in kube-system namespace",
-	"recommended_actions": "Deploy the use pods into a designated namespace which is not kube-system.",
-	"url": "https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 systemNamespaceInUse(metadata, spec) {
 	kubernetes.namespace == "kube-system"

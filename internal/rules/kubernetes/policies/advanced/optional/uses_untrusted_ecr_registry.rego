@@ -1,3 +1,18 @@
+# METADATA
+# title: "All container images must start with an ECR domain"
+# description: "Container images from non-ECR registries should be forbidden."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV035
+#   avd_id: AVD-KSV-0035
+#   severity: MEDIUM
+#   short_code: no-untrusted-ecr-domain
+#   recommended_action: "Container image should be used from Amazon container Registry"
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV035
 
 import data.lib.kubernetes
@@ -5,23 +20,6 @@ import data.lib.result
 import data.lib.utils
 
 default failTrustedECRRegistry = false
-
-__rego_metadata__ := {
-	"id": "KSV035",
-	"avd_id": "AVD-KSV-0035",
-	"title": "All container images must start with an ECR domain",
-	"short_code": "no-untrusted-ecr-domain",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "Container images from non-ECR registries should be forbidden.",
-	"recommended_actions": "Container image should be used from Amazon container Registry",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # list of trusted ECR registries
 trusted_ecr_registries = [

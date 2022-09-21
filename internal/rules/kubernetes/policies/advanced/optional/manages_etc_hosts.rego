@@ -1,25 +1,23 @@
+# METADATA
+# title: "hostAliases is set"
+# description: "Managing /etc/hosts aliases can prevent the container engine from modifying the file after a pod’s containers have already been started."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV007
+#   avd_id: AVD-KSV-0007
+#   severity: LOW
+#   short_code: no-hostaliases
+#   recommended_action: "Do not set 'spec.template.spec.hostAliases'."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV007
 
 import data.lib.kubernetes
 import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV007",
-	"avd_id": "AVD-KSV-0007",
-	"title": "hostAliases is set",
-	"short_code": "no-hostaliases",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Managing /etc/hosts aliases can prevent the container engine from modifying the file after a pod’s containers have already been started.",
-	"recommended_actions": "Do not set 'spec.template.spec.hostAliases'.",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # failHostAliases is true if spec.hostAliases is set (on all controllers)
 failHostAliases[spec] {

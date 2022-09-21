@@ -1,3 +1,18 @@
+# METADATA
+# title: "All container images must start with a GCR domain"
+# description: "Containers should only use images from trusted GCR registries."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV033
+#   avd_id: AVD-KSV-0033
+#   severity: MEDIUM
+#   short_code: use-gcr-domain
+#   recommended_action: "Use images from trusted GCR registries."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV033
 
 import data.lib.kubernetes
@@ -5,23 +20,6 @@ import data.lib.result
 import data.lib.utils
 
 default failTrustedGCRRegistry = false
-
-__rego_metadata__ := {
-	"id": "KSV033",
-	"avd_id": "AVD-KSV-0033",
-	"title": "All container images must start with a GCR domain",
-	"short_code": "use-gcr-domain",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "Containers should only use images from trusted GCR registries.",
-	"recommended_actions": "Use images from trusted GCR registries.",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # list of trusted GCR registries
 trusted_gcr_registries = [
