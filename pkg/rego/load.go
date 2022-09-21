@@ -168,10 +168,10 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 		schemaSet := ast.NewSchemaSet()
 		schemaSet.Put(ast.MustParseRef("schema.input"), s.inputSchema)
 		compiler.WithSchemas(schemaSet)
-	}
-	compiler.Compile(s.policies)
-	if compiler.Failed() {
-		return compiler.Errors
+		compiler.Compile(s.policies)
+		if compiler.Failed() {
+			return compiler.Errors
+		}
 	}
 	s.compiler = compiler
 	s.retriever = retriever
