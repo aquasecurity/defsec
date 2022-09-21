@@ -6,8 +6,6 @@ import (
 	"io/fs"
 	"sync"
 
-	"github.com/aquasecurity/defsec/pkg/rego/schemas"
-
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/framework"
@@ -110,8 +108,8 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 	for path, file := range files {
 		inputs = append(inputs, rego.Input{
 			Path:     path,
+			FS:       fs,
 			Contents: file,
-			Type:     types.SourceJSON,
 		})
 	}
 
@@ -131,7 +129,6 @@ func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (scan.Res
 	return s.scanRego(ctx, fs, rego.Input{
 		Path:     path,
 		Contents: parsed,
-		Type:     types.SourceJSON,
 	})
 }
 
@@ -141,7 +138,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	if s.regoScanner != nil {
 		return s.regoScanner, nil
 	}
-	regoScanner := rego.NewScanner(schemas.Anything, s.options...)
+	regoScanner := rego.NewScanner(types.SourceJSON, s.options...)
 	regoScanner.SetParentDebugLogger(s.debug)
 	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err

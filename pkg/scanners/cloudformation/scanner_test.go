@@ -75,7 +75,7 @@ deny[res] {
 		Explanation:    "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself.",
 		Impact:         "",
 		Resolution:     "Change the '--from' so that it will not refer to itself",
-		Provider:       "defsec",
+		Provider:       "cloud",
 		Service:        "general",
 		Links:          []string{"https://docs.docker.com/develop/develop-images/multistage-build/"},
 		Severity:       "CRITICAL",

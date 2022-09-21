@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/aquasecurity/defsec/pkg/rego/schemas"
+	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/framework"
 
@@ -143,7 +143,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	if s.regoScanner != nil {
 		return s.regoScanner, nil
 	}
-	regoScanner := rego.NewScanner(schemas.Cloud, s.options...)
+	regoScanner := rego.NewScanner(types.SourceCloud, s.options...)
 	regoScanner.SetParentDebugLogger(s.debug)
 	if s.enableEmbeddedLibraries {
 		if err := regoScanner.LoadEmbeddedLibraries(); err != nil {

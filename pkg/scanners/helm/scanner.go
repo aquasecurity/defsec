@@ -8,8 +8,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/aquasecurity/defsec/pkg/rego/schemas"
-
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/framework"
@@ -163,7 +161,7 @@ func (s *Scanner) getScanResults(path string, ctx context.Context, target fs.FS)
 		return nil, nil
 	}
 
-	regoScanner := rego.NewScanner(schemas.Helm, s.options...)
+	regoScanner := rego.NewScanner(types.SourceKubernetes, s.options...)
 	policyFS := target
 	if s.policyFS != nil {
 		policyFS = s.policyFS
@@ -182,7 +180,7 @@ func (s *Scanner) getScanResults(path string, ctx context.Context, target fs.FS)
 			fileResults, err := regoScanner.ScanInput(ctx, rego.Input{
 				Path:     file.TemplateFilePath,
 				Contents: manifest,
-				Type:     types.SourceKubernetes,
+				FS:       target,
 			})
 			if err != nil {
 				return nil, fmt.Errorf("scanning error: %w", err)

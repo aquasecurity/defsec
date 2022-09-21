@@ -7,10 +7,16 @@ type Schema string
 var (
 	None     Schema = ""
 	Anything Schema = `{}`
+
 	//go:embed dockerfile.json
 	Dockerfile Schema
-	Cloud      Schema = `{}`
-	Helm       Schema = `{}`
-	Kubernetes Schema = `{}`
-	RBAC       Schema = `{}`
+
+	//go:embed kubernetes.json
+	Kubernetes Schema
+
+	//go:embed rbac.json
+	RBAC Schema
+
+	//go:embed cloud.json
+	Cloud Schema
 )

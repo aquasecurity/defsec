@@ -1,3 +1,8 @@
+# METADATA
+# custom:
+#   input:
+#     selector:
+#     - type: dockerfile
 package lib.docker
 
 from[instruction] {

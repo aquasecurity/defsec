@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/severity"
 
@@ -272,6 +274,10 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 				if selectorMap, ok := rawSelector.(map[string]interface{}); ok {
 					if rawType, ok := selectorMap["type"]; ok {
 						selector.Type = fmt.Sprintf("%s", rawType)
+						// handle backward compatibility for "defsec" source type which is now "cloud"
+						if selector.Type == string(types.SourceDefsec) {
+							selector.Type = string(types.SourceCloud)
+						}
 					}
 				}
 				options.Selectors = append(options.Selectors, selector)
