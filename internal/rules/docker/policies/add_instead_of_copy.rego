@@ -33,5 +33,5 @@ get_add[output] {
 deny[res] {
 	output := get_add[_]
 	msg := sprintf("Consider using 'COPY %s' command instead of 'ADD %s'", [output.args, output.args])
-	res := docker.result(msg, output.cmd)
+	res := result.new(msg, output.cmd)
 }

@@ -25,5 +25,5 @@ get_apt_get_dist_upgrade[run] {
 deny[res] {
 	cmd := get_apt_get_dist_upgrade[_]
 	msg := "'apt-get dist-upgrade' should not be used in Dockerfile"
-	res := docker.result(msg, cmd)
+	res := result.new(msg, cmd)
 }

@@ -18,7 +18,6 @@
 package builtin.kubernetes.KSV008
 
 import data.lib.kubernetes
-import data.lib.result
 
 default failHostIPC = false
 

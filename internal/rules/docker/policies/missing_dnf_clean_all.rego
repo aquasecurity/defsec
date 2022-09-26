@@ -37,7 +37,7 @@ get_dnf[output] {
 deny[res] {
 	output := get_dnf[_]
 	msg := sprintf("'dnf clean all' is missed: %s", [output.arg])
-	res := docker.result(msg, output.cmd)
+	res := result.new(msg, output.cmd)
 }
 
 contains_clean_after_dnf(cmd) {

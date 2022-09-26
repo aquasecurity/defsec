@@ -16,7 +16,6 @@
 package builtin.kubernetes.KSV105
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
 
 failRootUserId[securityContext] {

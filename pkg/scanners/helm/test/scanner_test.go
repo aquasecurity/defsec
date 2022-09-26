@@ -155,7 +155,6 @@ func Test_helm_scanner_with_custom_policies(t *testing.T) {
 	regoRule := `
 package user.kubernetes.ID001
 
-import data.lib.result
 
 __rego_metadata__ := {
     "id": "ID001",

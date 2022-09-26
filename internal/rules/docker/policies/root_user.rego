@@ -40,11 +40,11 @@ fail_last_user_root[lastUser] {
 deny[res] {
 	fail_user_count
 	msg := "Specify at least 1 USER command in Dockerfile with non-root user as argument"
-	res := docker.result(msg, {})
+	res := result.new(msg, {})
 }
 
 deny[res] {
 	cmd := fail_last_user_root[_]
 	msg := "Last USER command in Dockerfile should not be 'root'"
-	res := docker.result(msg, cmd)
+	res := result.new(msg, cmd)
 }

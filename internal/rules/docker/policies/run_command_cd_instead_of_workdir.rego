@@ -31,5 +31,5 @@ get_cd[output] {
 deny[res] {
 	output := get_cd[_]
 	msg := sprintf("RUN should not be used to change directory: '%s'. Use 'WORKDIR' statement instead.", [output.args])
-	res := docker.result(msg, output.cmd)
+	res := result.new(msg, output.cmd)
 }

@@ -16,7 +16,6 @@
 package builtin.kubernetes.KSV048
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
 
 workloads := ["deployments", "daemonsets", "statefulsets", "replicationcontrollers", "replicasets", "jobs", "cronjobs"]

@@ -29,5 +29,5 @@ fail_port_check[expose] {
 deny[res] {
 	cmd := fail_port_check[_]
 	msg := "Port 22 should not be exposed in Dockerfile"
-	res := docker.result(msg, cmd)
+	res := result.new(msg, cmd)
 }

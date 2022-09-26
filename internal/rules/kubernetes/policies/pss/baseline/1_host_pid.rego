@@ -16,7 +16,6 @@
 package builtin.kubernetes.KSV010
 
 import data.lib.kubernetes
-import data.lib.result
 
 default failHostPID = false
 

@@ -156,6 +156,7 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 	schemaSet := ast.NewSchemaSet()
 	schemaSet.Put(ast.MustParseRef("schema.input"), map[string]interface{}{})
 	compiler.WithSchemas(schemaSet)
+	compiler.WithCapabilities(ast.CapabilitiesForThisVersion())
 	compiler.Compile(s.policies)
 	if compiler.Failed() {
 		return compiler.Errors

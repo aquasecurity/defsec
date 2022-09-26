@@ -25,5 +25,5 @@ get_maintainer[mntnr] {
 deny[res] {
 	mntnr := get_maintainer[_]
 	msg := sprintf("MAINTAINER should not be used: 'MAINTAINER %s'", [mntnr.Value[0]])
-	res := docker.result(msg, mntnr)
+	res := result.new(msg, mntnr)
 }

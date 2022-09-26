@@ -31,5 +31,5 @@ get_work_dir[output] {
 deny[res] {
 	output := get_work_dir[_]
 	msg := sprintf("WORKDIR path '%s' should be absolute", [output.arg])
-	res := docker.result(msg, output.cmd)
+	res := result.new(msg, output.cmd)
 }

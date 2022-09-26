@@ -426,8 +426,6 @@ resource "aws_s3_bucket" "my-bucket" {
 		"/rules/test.rego": `
 package defsec.abcdefg
 
-import data.lib.result
-
 __rego_metadata__ := {
 	"id": "TEST123",
 	"avd_id": "AVD-TEST-0123",
@@ -511,7 +509,6 @@ resource "aws_sqs_queue_policy" "bad_example" {
 #     - type: cloud
 package defsec.abcdefg
 
-import data.lib.result
 
 deny[res] {
 	queue := input.aws.sqs.queues[_]
@@ -592,7 +589,6 @@ TASK_DEFINITION
 		"/rules/test.rego": `
 package defsec.abcdefg
 
-import data.lib.result
 
 __rego_metadata__ := {
 	"id": "TEST123",

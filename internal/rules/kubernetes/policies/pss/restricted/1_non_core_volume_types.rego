@@ -16,7 +16,6 @@
 package builtin.kubernetes.KSV028
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
 
 # Add disallowed volume type

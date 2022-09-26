@@ -49,5 +49,5 @@ get_aliased_name[output] {
 deny[res] {
 	output := get_duplicate_alias[_]
 	msg := sprintf("Duplicate aliases '%s' are found in different FROMs", [output.alias])
-	res := docker.result(msg, output.cmd)
+	res := result.new(msg, output.cmd)
 }

@@ -16,7 +16,6 @@
 package builtin.kubernetes.KSV022
 
 import data.lib.kubernetes
-import data.lib.result
 
 default failAdditionalCaps = false
 

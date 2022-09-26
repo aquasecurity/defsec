@@ -16,7 +16,6 @@
 package builtin.kubernetes.KCV0047
 
 import data.lib.kubernetes
-import data.lib.result
 
 checkFlag[container] {
 	container := kubernetes.containers[_]

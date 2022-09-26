@@ -21,7 +21,7 @@ import data.lib.docker
 deny[res] {
 	output := get_apt_get[_]
 	msg := sprintf("'-y' flag is missed: '%s'", [output.arg])
-	res := docker.result(msg, output.cmd)
+	res := result.new(msg, output.cmd)
 }
 
 get_apt_get[output] {

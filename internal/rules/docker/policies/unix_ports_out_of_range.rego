@@ -30,5 +30,5 @@ invalid_ports[output] {
 deny[res] {
 	output := invalid_ports[_]
 	msg := sprintf("'EXPOSE' contains port which is out of range [0, 65535]: %d", [output.port])
-	res := docker.result(msg, output.cmd)
+	res := result.new(msg, output.cmd)
 }

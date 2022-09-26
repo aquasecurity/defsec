@@ -126,6 +126,7 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 	options := []func(*rego.Rego){
 		rego.Query(metadataQuery),
 		rego.Compiler(m.compiler),
+		rego.Capabilities(nil),
 	}
 	// support dynamic metadata fields
 	for _, in := range inputs {
@@ -133,7 +134,11 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 	}
 
 	instance := rego.New(options...)
-	set, err := instance.Eval(ctx)
+	prepared, err := instance.PrepareForEval(ctx)
+	if err != nil {
+		return nil, err
+	}
+	set, err := prepared.Eval(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -254,8 +259,13 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 		instance := rego.New(
 			rego.Query(inputOptionQuery),
 			rego.Compiler(m.compiler),
+			rego.Capabilities(nil),
 		)
-		set, err := instance.Eval(ctx)
+		prepared, err := instance.PrepareForEval(ctx)
+		if err != nil {
+			return options
+		}
+		set, err := prepared.Eval(ctx)
 		if err != nil {
 			return options
 		}

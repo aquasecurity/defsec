@@ -27,7 +27,7 @@ deny[res] {
 	cmd := wget[0]
 
 	msg := "Shouldn't use both curl and wget"
-	res := docker.result(msg, cmd)
+	res := result.new(msg, cmd)
 }
 
 # chained commands

@@ -16,7 +16,6 @@
 package builtin.kubernetes.KSV006
 
 import data.lib.kubernetes
-import data.lib.result
 
 name = input.metadata.name
 

@@ -21,5 +21,5 @@ deny[res] {
 	entrypoints := docker.stage_entrypoints[name]
 	count(entrypoints) > 1
 	msg := sprintf("There are %d duplicate ENTRYPOINT instructions for stage '%s'", [count(entrypoints), name])
-	res := docker.result(msg, entrypoints[1])
+	res := result.new(msg, entrypoints[1])
 }

@@ -34,5 +34,5 @@ get_sudo[run] {
 deny[res] {
 	cmd := get_sudo[_]
 	msg := "Using 'sudo' in Dockerfile should be avoided"
-	res := docker.result(msg, cmd)
+	res := result.new(msg, cmd)
 }
