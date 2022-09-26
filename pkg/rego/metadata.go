@@ -32,6 +32,8 @@ type StaticMetadata struct {
 	InputOptions       InputOptions
 	Package            string
 	Frameworks         map[framework.Framework][]string
+	Provider           string
+	Service            string
 }
 
 type InputOptions struct {
@@ -46,8 +48,14 @@ type Selector struct {
 func (m StaticMetadata) ToRule() scan.Rule {
 
 	provider := "generic"
-	if len(m.InputOptions.Selectors) > 0 {
+	if m.Provider != "" {
+		provider = m.Provider
+	} else if len(m.InputOptions.Selectors) > 0 {
 		provider = m.InputOptions.Selectors[0].Type
+	}
+	service := "general"
+	if m.Service != "" {
+		service = m.Service
 	}
 
 	return scan.Rule{
@@ -59,7 +67,7 @@ func (m StaticMetadata) ToRule() scan.Rule {
 		Impact:      "",
 		Resolution:  m.RecommendedActions,
 		Provider:    providers.Provider(provider),
-		Service:     "general",
+		Service:     service,
 		Links:       m.References,
 		Severity:    severity.Severity(m.Severity),
 		RegoPackage: m.Package,
@@ -108,6 +116,7 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		if err := m.fromAnnotation(&metadata, annotation); err != nil {
 			return nil, err
 		}
+		return &metadata, nil
 	}
 
 	// otherwise, try to read metadata from the rego module itself - we used to do this before annotations were a thing
@@ -172,6 +181,12 @@ func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata
 	}
 	if raw, ok := meta["description"]; ok {
 		metadata.Description = fmt.Sprintf("%s", raw)
+	}
+	if raw, ok := meta["service"]; ok {
+		metadata.Service = fmt.Sprintf("%s", raw)
+	}
+	if raw, ok := meta["provider"]; ok {
+		metadata.Service = fmt.Sprintf("%s", raw)
 	}
 	if raw, ok := meta["recommended_actions"]; ok {
 		metadata.RecommendedActions = fmt.Sprintf("%s", raw)

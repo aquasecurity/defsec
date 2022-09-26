@@ -1,10 +1,7 @@
 package iam
 
 import (
-	"encoding/json"
-
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
-
 	"github.com/liamg/iamgo"
 )
 
@@ -38,17 +35,14 @@ type Document struct {
 
 func (d Document) ToRego() interface{} {
 	m := d.GetMetadata()
-	var value interface{}
-	if doc, err := d.Parsed.MarshalJSON(); err == nil {
-		_ = json.Unmarshal(doc, &value)
-	}
+	doc, _ := d.Parsed.MarshalJSON()
 	return map[string]interface{}{
 		"filepath":  m.Range().GetFilename(),
 		"startline": m.Range().GetStartLine(),
 		"endline":   m.Range().GetEndLine(),
 		"managed":   m.IsManaged(),
 		"explicit":  m.IsExplicit(),
-		"value":     value,
+		"value":     string(doc),
 		"fskey":     defsecTypes.CreateFSKey(m.Range().GetFS()),
 	}
 }

@@ -10,10 +10,10 @@ type Kubernetes struct {
 
 type NetworkPolicy struct {
 	defsecTypes.Metadata
-	Spec Spec
+	Spec NetworkPolicySpec
 }
 
-type Spec struct {
+type NetworkPolicySpec struct {
 	defsecTypes.Metadata
 	Egress  Egress
 	Ingress Ingress

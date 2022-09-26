@@ -3,7 +3,7 @@
 # description: "ensure that User pods are not placed in kube-system namespace"
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema.input
 # custom:
 #   id: KSV037
 #   avd_id: AVD-KSV-0037
