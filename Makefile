@@ -12,9 +12,11 @@ test-no-localstack:
 rego: fmt-rego test-rego
 
 .PHONY: fmt-rego
+fmt-rego:
 	opa fmt -w internal/rules
 
 .PHONY: test-rego
+test-rego:
 	go test --run Test_AllRegoRules ./test
 
 .PHONY: typos
