@@ -35,4 +35,4 @@ jobs:
             exit 1
           fi
       - name: OPA Test
-        run: opa test internal/rules --explain fails
+        run: make test-rego

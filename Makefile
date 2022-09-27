@@ -9,8 +9,12 @@ test-no-localstack:
 	go test $$(go list ./... | grep -v internal/adapters/cloud/aws | awk -F'github.com/aquasecurity/defsec/' '{print "./"$$2}')
 
 .PHONY: rego
-rego:
+rego: fmt-rego test-rego
+
+.PHONY: fmt-rego
 	opa fmt -w internal/rules
+
+.PHONY: test-rego
 	go test --run Test_AllRegoRules ./test
 
 .PHONY: typos
