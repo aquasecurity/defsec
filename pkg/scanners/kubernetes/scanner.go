@@ -104,7 +104,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	if s.regoScanner != nil {
 		return s.regoScanner, nil
 	}
-	regoScanner := rego.NewScanner(s.options...)
+	regoScanner := rego.NewScanner(types.SourceKubernetes, s.options...)
 	regoScanner.SetParentDebugLogger(s.debug)
 	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
@@ -144,8 +144,8 @@ func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (scan.Re
 		for _, content := range k8sFiles {
 			inputs = append(inputs, rego.Input{
 				Path:     path,
+				FS:       target,
 				Contents: content,
-				Type:     types.SourceKubernetes,
 			})
 		}
 	}

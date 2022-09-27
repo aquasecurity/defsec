@@ -1,3 +1,8 @@
+# METADATA
+# custom:
+#   input:
+#     selector:
+#     - type: dockerfile
 package lib.docker
 
 from[instruction] {
@@ -67,13 +72,4 @@ user[instruction] {
 workdir[instruction] {
 	instruction := input.Stages[_].Commands[_]
 	instruction.Cmd == "workdir"
-}
-
-result(msg, cmd) = result {
-	result := {
-		"msg": msg,
-		"startline": object.get(cmd, "StartLine", 0),
-		"endline": object.get(cmd, "EndLine", 0),
-		"filepath": object.get(cmd, "Path", ""),
-	}
 }

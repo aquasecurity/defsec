@@ -1,25 +1,21 @@
+# METADATA
+# title: "Ensure that the --anonymous-auth argument is set to false"
+# description: "Disable anonymous requests to the API server."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0001
+#   avd_id: AVD-KCV-0001
+#   severity: MEDIUM
+#   short_code: ensure-anonymous-auth-argument-is-false
+#   recommended_action: "Set '--anonymous-auth' to 'false'."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0001
 
 import data.lib.kubernetes
-import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0001",
-	"avd_id": "AVD-KCV-0001",
-	"title": "Ensure that the --anonymous-auth argument is set to false",
-	"short_code": "ensure-anonymous-auth-argument-is-false",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "Disable anonymous requests to the API server.",
-	"recommended_actions": "Set '--anonymous-auth' to 'false'.",
-	"url": "https://www.cisecurity.org/benchmark/kubernetes",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 check_flag[container] {
 	container := kubernetes.containers[_]

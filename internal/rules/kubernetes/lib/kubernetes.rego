@@ -1,3 +1,10 @@
+# METADATA
+# custom:
+#   library: true
+#   input:
+#     selector:
+#     - type: kubernetes
+#     - type: rbac
 package lib.kubernetes
 
 default is_gatekeeper = false

@@ -1,28 +1,27 @@
+# METADATA
+# title: "'apt-get' missing '-y' to avoid manual input"
+# description: "'apt-get' calls should use the flag '-y' to avoid manual user input."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   schema_version: 1
+#   id: DS021
+#   avd_id: AVD-DS-0021
+#   severity: HIGH
+#   short_code: use-apt-auto-confirm
+#   recommended_action: "Add '-y' flag to 'apt-get'"
+#   input:
+#     selector:
+#     - type: dockerfile
 package builtin.dockerfile.DS021
 
 import data.lib.docker
 
-__rego_metadata__ := {
-	"id": "DS021",
-	"avd_id": "AVD-DS-0021",
-	"title": "'apt-get' missing '-y' to avoid manual input",
-	"short_code": "use-apt-auto-confirm",
-	"severity": "HIGH",
-	"type": "Dockerfile Security Check",
-	"description": "'apt-get' calls should use the flag '-y' to avoid manual user input.",
-	"recommended_actions": "Add '-y' flag to 'apt-get'",
-	"url": "https://docs.docker.com/engine/reference/builder/#run",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "dockerfile"}],
-}
-
 deny[res] {
 	output := get_apt_get[_]
 	msg := sprintf("'-y' flag is missed: '%s'", [output.arg])
-	res := docker.result(msg, output.cmd)
+	res := result.new(msg, output.cmd)
 }
 
 get_apt_get[output] {

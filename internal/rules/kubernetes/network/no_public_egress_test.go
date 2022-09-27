@@ -24,7 +24,7 @@ func TestCheckNoPublicEgress(t *testing.T) {
 			input: []kubernetes.NetworkPolicy{
 				{
 					Metadata: defsecTypes.NewTestMetadata(),
-					Spec: kubernetes.Spec{
+					Spec: kubernetes.NetworkPolicySpec{
 						Metadata: defsecTypes.NewTestMetadata(),
 						Egress: kubernetes.Egress{
 							Metadata: defsecTypes.NewTestMetadata(),
@@ -42,7 +42,7 @@ func TestCheckNoPublicEgress(t *testing.T) {
 			input: []kubernetes.NetworkPolicy{
 				{
 					Metadata: defsecTypes.NewTestMetadata(),
-					Spec: kubernetes.Spec{
+					Spec: kubernetes.NetworkPolicySpec{
 						Metadata: defsecTypes.NewTestMetadata(),
 						Egress: kubernetes.Egress{
 							Metadata: defsecTypes.NewTestMetadata(),

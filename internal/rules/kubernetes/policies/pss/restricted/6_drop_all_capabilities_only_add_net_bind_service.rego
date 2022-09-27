@@ -1,24 +1,22 @@
+# METADATA
+# title: "Container capabilities must only include NET_BIND_SERVICE"
+# description: "Containers must drop ALL capabilities, and are only permitted to add back the NET_BIND_SERVICE capability."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV106
+#   avd_id: AVD-KSV-0106
+#   severity: LOW
+#   short_code: drop-caps-add-bind-svc
+#   recommended_action: "Set 'spec.containers[*].securityContext.capabilities.drop' to 'ALL' and only add 'NET_BIND_SERVICE' to 'spec.containers[*].securityContext.capabilities.add'."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV106
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV106",
-	"avd_id": "AVD-KSV-0106",
-	"title": "Container capabilities must only include NET_BIND_SERVICE",
-	"short_code": "drop-caps-add-bind-svc",
-	"severity": "LOW",
-	"description": "Containers must drop ALL capabilities, and are only permitted to add back the NET_BIND_SERVICE capability.",
-	"recommended_actions": "Set 'spec.containers[*].securityContext.capabilities.drop' to 'ALL' and only add 'NET_BIND_SERVICE' to 'spec.containers[*].securityContext.capabilities.add'.",
-	"url": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 hasDropAll(container) {
 	container.securityContext.capabilities.drop[_] == "ALL"

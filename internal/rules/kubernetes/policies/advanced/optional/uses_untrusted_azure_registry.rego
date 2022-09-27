@@ -1,27 +1,24 @@
+# METADATA
+# title: "All container images must start with the *.azurecr.io domain"
+# description: "Containers should only use images from trusted registries."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV032
+#   avd_id: AVD-KSV-0032
+#   severity: MEDIUM
+#   short_code: use-azure-image-prefix
+#   recommended_action: "Use images from trusted Azure registries."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV032
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
 
 default failTrustedAzureRegistry = false
-
-__rego_metadata__ := {
-	"id": "KSV032",
-	"avd_id": "AVD-KSV-0032",
-	"title": "All container images must start with the *.azurecr.io domain",
-	"short_code": "use-azure-image-prefix",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "Containers should only use images from trusted registries.",
-	"recommended_actions": "Use images from trusted Azure registries.",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # getContainersWithTrustedAzureRegistry returns a list of containers
 # with image from a trusted Azure registry

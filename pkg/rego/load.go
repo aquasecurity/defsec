@@ -1,6 +1,7 @@
 package rego
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"io/fs"
@@ -33,7 +34,9 @@ func (s *Scanner) loadPoliciesFromDirs(target fs.FS, paths []string) (map[string
 			if err != nil {
 				return err
 			}
-			module, err := ast.ParseModuleWithOpts(path, string(data), ast.ParserOptions{})
+			module, err := ast.ParseModuleWithOpts(path, string(data), ast.ParserOptions{
+				ProcessAnnotation: true,
+			})
 			if err != nil {
 				return err
 			}
@@ -54,7 +57,9 @@ func (s *Scanner) loadPoliciesFromReaders(readers []io.Reader) (map[string]*ast.
 		if err != nil {
 			return nil, err
 		}
-		module, err := ast.ParseModuleWithOpts(moduleName, string(data), ast.ParserOptions{})
+		module, err := ast.ParseModuleWithOpts(moduleName, string(data), ast.ParserOptions{
+			ProcessAnnotation: true,
+		})
 		if err != nil {
 			return nil, err
 		}
@@ -147,14 +152,59 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 	}
 	s.store = store
 
+	return s.compilePolicies()
+}
+
+func (s *Scanner) compilePolicies() error {
 	compiler := ast.NewCompiler()
+	schemaSet := ast.NewSchemaSet()
+	schemaSet.Put(ast.MustParseRef("schema.input"), map[string]interface{}{})
+	compiler.WithSchemas(schemaSet)
+	compiler.WithCapabilities(ast.CapabilitiesForThisVersion())
 	compiler.Compile(s.policies)
 	if compiler.Failed() {
 		return compiler.Errors
 	}
+	retriever := NewMetadataRetriever(compiler)
+
+	if err := s.filterModules(retriever); err != nil {
+		return err
+	}
+	if s.inputSchema != nil {
+		schemaSet := ast.NewSchemaSet()
+		schemaSet.Put(ast.MustParseRef("schema.input"), s.inputSchema)
+		compiler.WithSchemas(schemaSet)
+		compiler.Compile(s.policies)
+		if compiler.Failed() {
+			return compiler.Errors
+		}
+	}
 	s.compiler = compiler
+	s.retriever = retriever
+	return nil
+}
 
-	s.retriever = NewMetadataRetriever(compiler)
+func (s *Scanner) filterModules(retriever *MetadataRetriever) error {
 
+	filtered := make(map[string]*ast.Module)
+	for name, module := range s.policies {
+		meta, err := retriever.RetrieveMetadata(context.TODO(), module)
+		if err != nil {
+			return err
+		}
+		if len(meta.InputOptions.Selectors) == 0 {
+			s.debug.Log("WARNING: Module %s has no input selectors - it will be loaded for all inputs!", name)
+			filtered[name] = module
+			continue
+		}
+		for _, selector := range meta.InputOptions.Selectors {
+			if selector.Type == string(s.sourceType) {
+				filtered[name] = module
+				break
+			}
+		}
+	}
+
+	s.policies = filtered
 	return nil
 }

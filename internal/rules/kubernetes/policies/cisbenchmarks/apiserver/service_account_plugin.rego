@@ -1,25 +1,21 @@
+# METADATA
+# title: "Ensure that the admission control plugin ServiceAccount is set"
+# description: "Automate service accounts management."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0014
+#   avd_id: AVD-KCV-0014
+#   severity: LOW
+#   short_code: ensure-admission-control-plugin-service-account-is-set
+#   recommended_action: "Follow the documentation and create ServiceAccount objects as per your environment. Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the master node and ensure that the --disable-admission-plugins parameter is set to a value that does not include ServiceAccount."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0014
 
 import data.lib.kubernetes
-import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0014",
-	"avd_id": "AVD-KCV-0014",
-	"title": "Ensure that the admission control plugin ServiceAccount is set",
-	"short_code": "ensure-admission-control-plugin-service-account-is-set",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Automate service accounts management.",
-	"recommended_actions": "Follow the documentation and create ServiceAccount objects as per your environment. Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the master node and ensure that the --disable-admission-plugins parameter is set to a value that does not include ServiceAccount.",
-	"url": "https://www.cisecurity.org/benchmark/kubernetes",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 check_flag[container] {
 	container := kubernetes.containers[_]

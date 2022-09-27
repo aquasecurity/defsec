@@ -1,25 +1,21 @@
+# METADATA
+# title: "Ensure that the admission control plugin NodeRestriction is set"
+# description: "Limit the Node and Pod objects that a kubelet could modify."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0016
+#   avd_id: AVD-KCV-0016
+#   severity: LOW
+#   short_code: ensure-admission-control-plugin-node-restriction-is-set
+#   recommended_action: "Follow the Kubernetes documentation and configure NodeRestriction plug-in on kubelets. Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the master node and set the --enable-admission-plugins parameter to a value that includes NodeRestriction."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0016
 
 import data.lib.kubernetes
-import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0016",
-	"avd_id": "AVD-KCV-0016",
-	"title": "Ensure that the admission control plugin NodeRestriction is set",
-	"short_code": "ensure-admission-control-plugin-node-restriction-is-set",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Limit the Node and Pod objects that a kubelet could modify.",
-	"recommended_actions": "Follow the Kubernetes documentation and configure NodeRestriction plug-in on kubelets. Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the master node and set the --enable-admission-plugins parameter to a value that includes NodeRestriction.",
-	"url": "https://www.cisecurity.org/benchmark/kubernetes",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 check_flag[container] {
 	container := kubernetes.containers[_]

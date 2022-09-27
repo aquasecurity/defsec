@@ -1,28 +1,24 @@
+# METADATA
+# title: "Runs with low user ID"
+# description: "Force the container to run with user ID > 10000 to avoid conflicts with the host’s user table."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV020
+#   avd_id: AVD-KSV-0020
+#   severity: LOW
+#   short_code: use-high-uid
+#   recommended_action: "Set 'containers[].securityContext.runAsUser' to an integer > 10000."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV020
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
 
 default failRunAsUser = false
-
-__rego_metadata__ := {
-	"id": "KSV020",
-	"avd_id": "AVD-KSV-0020",
-	"title": "Runs with low user ID",
-	"short_code": "use-high-uid",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Force the container to run with user ID > 10000 to avoid conflicts with the host’s user table.",
-	"recommended_actions": "Set 'containers[].securityContext.runAsUser' to an integer > 10000.",
-	"url": "https://kubesec.io/basics/containers-securitycontext-runasuser/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # getUserIdContainers returns the names of all containers which have
 # securityContext.runAsUser less than or equal to 100000.

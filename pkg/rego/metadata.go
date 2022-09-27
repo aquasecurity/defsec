@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/severity"
 
@@ -20,7 +22,6 @@ import (
 type StaticMetadata struct {
 	ID                 string
 	AVDID              string
-	Type               string
 	Title              string
 	ShortCode          string
 	Description        string
@@ -31,6 +32,9 @@ type StaticMetadata struct {
 	InputOptions       InputOptions
 	Package            string
 	Frameworks         map[framework.Framework][]string
+	Provider           string
+	Service            string
+	Library            bool
 }
 
 type InputOptions struct {
@@ -45,8 +49,14 @@ type Selector struct {
 func (m StaticMetadata) ToRule() scan.Rule {
 
 	provider := "generic"
-	if len(m.InputOptions.Selectors) > 0 {
+	if m.Provider != "" {
+		provider = m.Provider
+	} else if len(m.InputOptions.Selectors) > 0 {
 		provider = m.InputOptions.Selectors[0].Type
+	}
+	service := "general"
+	if m.Service != "" {
+		service = m.Service
 	}
 
 	return scan.Rule{
@@ -58,7 +68,7 @@ func (m StaticMetadata) ToRule() scan.Rule {
 		Impact:      "",
 		Resolution:  m.RecommendedActions,
 		Provider:    providers.Provider(provider),
-		Service:     "general",
+		Service:     service,
 		Links:       m.References,
 		Severity:    severity.Severity(m.Severity),
 		RegoPackage: m.Package,
@@ -76,14 +86,24 @@ func NewMetadataRetriever(compiler *ast.Compiler) *MetadataRetriever {
 	}
 }
 
-func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Module, inputs ...Input) (*StaticMetadata, error) {
+func (m *MetadataRetriever) findPackageAnnotation(module *ast.Module) *ast.Annotations {
+	annotationSet := m.compiler.GetAnnotationSet()
+	if annotationSet == nil {
+		return nil
+	}
+	for _, annotation := range annotationSet.Flatten() {
+		if annotation.GetPackage().Path.String() != module.Package.Path.String() || annotation.Annotations.Scope != "package" {
+			continue
+		}
+		return annotation.Annotations
+	}
+	return nil
+}
 
-	namespace := getModuleNamespace(module)
-	metadataQuery := fmt.Sprintf("data.%s.__rego_metadata__", namespace)
+func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Module, inputs ...Input) (*StaticMetadata, error) {
 
 	metadata := StaticMetadata{
 		ID:           "N/A",
-		Type:         "N/A",
 		Title:        "N/A",
 		Severity:     "UNKNOWN",
 		Description:  fmt.Sprintf("Rego module: %s", module.Package.Path.String()),
@@ -92,9 +112,22 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		Frameworks:   make(map[framework.Framework][]string),
 	}
 
+	// read metadata from official rego annotations if possible
+	if annotation := m.findPackageAnnotation(module); annotation != nil {
+		if err := m.fromAnnotation(&metadata, annotation); err != nil {
+			return nil, err
+		}
+		return &metadata, nil
+	}
+
+	// otherwise, try to read metadata from the rego module itself - we used to do this before annotations were a thing
+	namespace := getModuleNamespace(module)
+	metadataQuery := fmt.Sprintf("data.%s.__rego_metadata__", namespace)
+
 	options := []func(*rego.Rego){
 		rego.Query(metadataQuery),
 		rego.Compiler(m.compiler),
+		rego.Capabilities(nil),
 	}
 	// support dynamic metadata fields
 	for _, in := range inputs {
@@ -148,13 +181,24 @@ func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata
 	if raw, ok := meta["severity"]; ok {
 		metadata.Severity = strings.ToUpper(fmt.Sprintf("%s", raw))
 	}
-	if raw, ok := meta["type"]; ok {
-		metadata.Type = fmt.Sprintf("%s", raw)
-	}
 	if raw, ok := meta["description"]; ok {
 		metadata.Description = fmt.Sprintf("%s", raw)
 	}
+	if raw, ok := meta["service"]; ok {
+		metadata.Service = fmt.Sprintf("%s", raw)
+	}
+	if raw, ok := meta["provider"]; ok {
+		metadata.Service = fmt.Sprintf("%s", raw)
+	}
+	if raw, ok := meta["library"]; ok {
+		if lib, ok := raw.(bool); ok {
+			metadata.Library = lib
+		}
+	}
 	if raw, ok := meta["recommended_actions"]; ok {
+		metadata.RecommendedActions = fmt.Sprintf("%s", raw)
+	}
+	if raw, ok := meta["recommended_action"]; ok {
 		metadata.RecommendedActions = fmt.Sprintf("%s", raw)
 	}
 	if raw, ok := meta["url"]; ok {
@@ -172,6 +216,26 @@ func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata
 	return nil
 }
 
+func (m *MetadataRetriever) fromAnnotation(metadata *StaticMetadata, annotation *ast.Annotations) error {
+	metadata.Title = annotation.Title
+	metadata.Description = annotation.Description
+	for _, resource := range annotation.RelatedResources {
+		if !resource.Ref.IsAbs() {
+			continue
+		}
+		metadata.References = append(metadata.References, resource.Ref.String())
+	}
+	if custom := annotation.Custom; custom != nil {
+		if err := m.updateMetadata(custom, metadata); err != nil {
+			return err
+		}
+	}
+	if len(annotation.RelatedResources) > 0 {
+		metadata.PrimaryURL = annotation.RelatedResources[0].Ref.String()
+	}
+	return nil
+}
+
 func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.Module) InputOptions {
 
 	options := InputOptions{
@@ -179,42 +243,62 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 		Selectors: nil,
 	}
 
-	namespace := getModuleNamespace(module)
-	inputOptionQuery := fmt.Sprintf("data.%s.__rego_input__", namespace)
-	instance := rego.New(
-		rego.Query(inputOptionQuery),
-		rego.Compiler(m.compiler),
-	)
-	set, err := instance.Eval(ctx)
-	if err != nil {
-		return options
+	var metadata map[string]interface{}
+
+	// read metadata from official rego annotations if possible
+	if annotation := m.findPackageAnnotation(module); annotation != nil && annotation.Custom != nil {
+		if input, ok := annotation.Custom["input"]; ok {
+			if mapped, ok := input.(map[string]interface{}); ok {
+				metadata = mapped
+			}
+		}
 	}
 
-	if len(set) != 1 {
-		return options
-	}
-	if len(set[0].Expressions) != 1 {
-		return options
-	}
-	expression := set[0].Expressions[0]
-	meta, ok := expression.Value.(map[string]interface{})
-	if !ok {
-		return options
+	if metadata == nil {
+
+		namespace := getModuleNamespace(module)
+		inputOptionQuery := fmt.Sprintf("data.%s.__rego_input__", namespace)
+		instance := rego.New(
+			rego.Query(inputOptionQuery),
+			rego.Compiler(m.compiler),
+			rego.Capabilities(nil),
+		)
+		set, err := instance.Eval(ctx)
+		if err != nil {
+			return options
+		}
+
+		if len(set) != 1 {
+			return options
+		}
+		if len(set[0].Expressions) != 1 {
+			return options
+		}
+		expression := set[0].Expressions[0]
+		meta, ok := expression.Value.(map[string]interface{})
+		if !ok {
+			return options
+		}
+		metadata = meta
 	}
 
-	if raw, ok := meta["combine"]; ok {
+	if raw, ok := metadata["combine"]; ok {
 		if combine, ok := raw.(bool); ok {
 			options.Combined = combine
 		}
 	}
 
-	if raw, ok := meta["selector"]; ok {
+	if raw, ok := metadata["selector"]; ok {
 		if each, ok := raw.([]interface{}); ok {
 			for _, rawSelector := range each {
 				var selector Selector
 				if selectorMap, ok := rawSelector.(map[string]interface{}); ok {
 					if rawType, ok := selectorMap["type"]; ok {
 						selector.Type = fmt.Sprintf("%s", rawType)
+						// handle backward compatibility for "defsec" source type which is now "cloud"
+						if selector.Type == string(types.SourceDefsec) {
+							selector.Type = string(types.SourceCloud)
+						}
 					}
 				}
 				options.Selectors = append(options.Selectors, selector)

@@ -1,27 +1,23 @@
+# METADATA
+# title: "SYS_ADMIN capability added"
+# description: "SYS_ADMIN gives the processes running inside the container privileges that are equivalent to root."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV005
+#   avd_id: AVD-KSV-0005
+#   severity: HIGH
+#   short_code: no-sysadmin-capability
+#   recommended_action: "Remove the SYS_ADMIN capability from 'containers[].securityContext.capabilities.add'."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV005
 
 import data.lib.kubernetes
-import data.lib.result
 
 default failCapsSysAdmin = false
-
-__rego_metadata__ := {
-	"id": "KSV005",
-	"avd_id": "AVD-KSV-0005",
-	"title": "SYS_ADMIN capability added",
-	"short_code": "no-sysadmin-capability",
-	"version": "v1.0.0",
-	"severity": "HIGH",
-	"type": "Kubernetes Security Check",
-	"description": "SYS_ADMIN gives the processes running inside the container privileges that are equivalent to root.",
-	"recommended_actions": "Remove the SYS_ADMIN capability from 'containers[].securityContext.capabilities.add'.",
-	"url": "https://kubesec.io/basics/containers-securitycontext-capabilities-add-index-sys-admin/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # getCapsSysAdmin returns the names of all containers which include
 # 'SYS_ADMIN' in securityContext.capabilities.add.

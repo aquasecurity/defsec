@@ -1,24 +1,22 @@
+# METADATA
+# title: "Do not allow update/create of a malicious pod"
+# description: "Check whether role permits update/create of a malicious pod"
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV048
+#   avd_id: AVD-KSV-0048
+#   severity: HIGH
+#   short_code: deny-create-update-malicious-pod
+#   recommended_action: "Create a role which does not permit update/create of a malicious pod"
+#   input:
+#     selector:
+#     - type: rbac
 package builtin.kubernetes.KSV048
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV048",
-	"avd_id": "AVD-KSV-0048",
-	"title": "Do not allow update/create of a malicious pod",
-	"short_code": "deny-create-update-malicious-pod",
-	"severity": "HIGH",
-	"description": "Check whether role permits update/create of a malicious pod",
-	"recommended_actions": "Create a role which does not permit update/create of a malicious pod",
-	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "rbac"}],
-}
 
 workloads := ["deployments", "daemonsets", "statefulsets", "replicationcontrollers", "replicasets", "jobs", "cronjobs"]
 

@@ -9,8 +9,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/aquasecurity/defsec/pkg/types"
-
 	"github.com/aquasecurity/defsec/pkg/terraform"
 
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -160,7 +158,6 @@ func (h *hclModuleRuleJob) Run() (results scan.Results, err error) {
 func (h *regoJob) Run() (results scan.Results, err error) {
 	regoResults, err := h.scanner.ScanInput(context.TODO(), rego.Input{
 		Contents: h.state.ToRego(),
-		Type:     types.SourceDefsec,
 		Path:     h.basePath,
 	})
 	if err != nil {

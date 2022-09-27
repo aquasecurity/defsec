@@ -1,25 +1,21 @@
+# METADATA
+# title: "Ensure that the --authorization-mode argument includes Node"
+# description: "Restrict kubelet nodes to reading only objects associated with them."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0008
+#   avd_id: AVD-KCV-0008
+#   severity: LOW
+#   short_code: ensure-authorization-mode-argument-includes-node
+#   recommended_action: "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and set the --authorization-mode parameter to a value that includes Node."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0008
 
 import data.lib.kubernetes
-import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0008",
-	"avd_id": "AVD-KCV-0008",
-	"title": "Ensure that the --authorization-mode argument includes Node",
-	"short_code": "ensure-authorization-mode-argument-includes-node",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Restrict kubelet nodes to reading only objects associated with them.",
-	"recommended_actions": "Edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml on the Control Plane node and set the --authorization-mode parameter to a value that includes Node.",
-	"url": "https://www.cisecurity.org/benchmark/kubernetes",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 check_flag[container] {
 	container := kubernetes.containers[_]

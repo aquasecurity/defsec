@@ -1,24 +1,22 @@
+# METADATA
+# title: "Do not allow getting shell on pods"
+# description: "Check whether role permits getting shell on pods"
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV053
+#   avd_id: AVD-KSV-0053
+#   severity: HIGH
+#   short_code: no-getting-shell-pods
+#   recommended_action: "Create a role which does not permit getting shell on pods"
+#   input:
+#     selector:
+#     - type: rbac
 package builtin.kubernetes.KSV053
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV053",
-	"avd_id": "AVD-KSV-0053",
-	"title": "Do not allow getting shell on pods",
-	"short_code": "no-getting-shell-pods",
-	"severity": "HIGH",
-	"description": "Check whether role permits getting shell on pods",
-	"recommended_actions": "Create a role which does not permit getting shell on pods",
-	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "rbac"}],
-}
 
 readKinds := ["Role", "ClusterRole"]
 

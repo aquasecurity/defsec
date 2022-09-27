@@ -1,26 +1,22 @@
+# METADATA
+# title: "Selector usage in network policies"
+# description: "ensure that network policies selectors are applied to pods or namespaces to restricted ingress and egress traffic within the pod network"
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV038
+#   avd_id: AVD-KSV-0038
+#   severity: MEDIUM
+#   short_code: selector-usage-in-network-policies
+#   recommended_action: "create network policies and ensure that pods are selected using the podSelector and/or the namespaceSelector options"
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV038
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV038",
-	"avd_id": "AVD-KSV-0038",
-	"title": "Selector usage in network policies",
-	"short_code": "selector-usage-in-network-policies",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "ensure that network policies selectors are applied to pods or namespaces to restricted ingress and egress traffic within the pod network",
-	"recommended_actions": "create network policies and ensure that pods are selected using the podSelector and/or the namespaceSelector options",
-	"url": "https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 hasSelector(spec) {
 	kubernetes.has_field(spec, "podSelector")

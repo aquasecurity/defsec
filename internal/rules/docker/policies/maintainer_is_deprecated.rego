@@ -1,23 +1,21 @@
+# METADATA
+# title: "Deprecated MAINTAINER used"
+# description: "MAINTAINER has been deprecated since Docker 1.13.0."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: DS022
+#   avd_id: AVD-DS-0022
+#   severity: HIGH
+#   short_code: no-maintainer
+#   recommended_action: "Use LABEL instead of MAINTAINER"
+#   input:
+#     selector:
+#     - type: dockerfile
 package builtin.dockerfile.DS022
 
 import data.lib.docker
-
-__rego_metadata__ := {
-	"id": "DS022",
-	"avd_id": "AVD-DS-0022",
-	"title": "Deprecated MAINTAINER used",
-	"short_code": "no-maintainer",
-	"severity": "HIGH",
-	"type": "Dockerfile Security Check",
-	"description": "MAINTAINER has been deprecated since Docker 1.13.0.",
-	"recommended_actions": "Use LABEL instead of MAINTAINER",
-	"url": "https://docs.docker.com/engine/deprecated/#maintainer-in-dockerfile",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "dockerfile"}],
-}
 
 get_maintainer[mntnr] {
 	mntnr := input.Stages[_].Commands[_]
@@ -27,5 +25,5 @@ get_maintainer[mntnr] {
 deny[res] {
 	mntnr := get_maintainer[_]
 	msg := sprintf("MAINTAINER should not be used: 'MAINTAINER %s'", [mntnr.Value[0]])
-	res := docker.result(msg, mntnr)
+	res := result.new(msg, mntnr)
 }

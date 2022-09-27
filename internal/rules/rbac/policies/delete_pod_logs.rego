@@ -1,24 +1,22 @@
+# METADATA
+# title: "Do not allow deletion of pod logs"
+# description: "Used to cover attacker’s tracks, but most clusters ship logs quickly off-cluster."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV042
+#   avd_id: AVD-KSV-0042
+#   severity: MEDIUM
+#   short_code: no-delete-pod-logs
+#   recommended_action: "Remove verbs 'delete' and 'deletecollection' for resource 'pods/log' for Role and ClusterRole"
+#   input:
+#     selector:
+#     - type: rbac
 package builtin.kubernetes.KSV042
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV042",
-	"avd_id": "AVD-KSV-0042",
-	"title": "Do not allow deletion of pod logs",
-	"short_code": "no-delete-pod-logs",
-	"severity": "MEDIUM",
-	"description": "Used to cover attacker’s tracks, but most clusters ship logs quickly off-cluster.",
-	"recommended_actions": "Remove verbs 'delete' and 'deletecollection' for resource 'pods/log' for Role and ClusterRole",
-	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "rbac"}],
-}
 
 readVerbs := ["delete", "deletecollection", "*"]
 

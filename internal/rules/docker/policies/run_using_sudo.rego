@@ -1,23 +1,21 @@
+# METADATA
+# title: "RUN using 'sudo'"
+# description: "Avoid using 'RUN' with 'sudo' commands, as it can lead to unpredictable behavior."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: DS010
+#   avd_id: AVD-DS-0010
+#   severity: CRITICAL
+#   short_code: no-sudo-run
+#   recommended_action: "Don't use sudo"
+#   input:
+#     selector:
+#     - type: dockerfile
 package builtin.dockerfile.DS010
 
 import data.lib.docker
-
-__rego_metadata__ := {
-	"id": "DS010",
-	"avd_id": "AVD-DS-0010",
-	"title": "RUN using 'sudo'",
-	"short_code": "no-sudo-run",
-	"severity": "CRITICAL",
-	"type": "Dockerfile Security Check",
-	"description": "Avoid using 'RUN' with 'sudo' commands, as it can lead to unpredictable behavior.",
-	"recommended_actions": "Don't use sudo",
-	"url": "https://docs.docker.com/engine/reference/builder/#run",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "dockerfile"}],
-}
 
 has_sudo(commands) {
 	parts = split(commands, "&&")
@@ -36,5 +34,5 @@ get_sudo[run] {
 deny[res] {
 	cmd := get_sudo[_]
 	msg := "Using 'sudo' in Dockerfile should be avoided"
-	res := docker.result(msg, cmd)
+	res := result.new(msg, cmd)
 }

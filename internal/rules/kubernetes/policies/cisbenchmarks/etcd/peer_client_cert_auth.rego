@@ -1,25 +1,21 @@
+# METADATA
+# title: "Ensure that the --peer-client-cert-auth argument is set to true"
+# description: "etcd should be configured for peer authentication."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0046
+#   avd_id: AVD-KCV-0046
+#   severity: LOW
+#   short_code: ensure-peer-client-cert-auth-argument-is-set-to-true
+#   recommended_action: "Edit the etcd pod specification file /etc/kubernetes/manifests/etcd.yaml on the master node and set the below parameter."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0046
 
 import data.lib.kubernetes
-import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0046",
-	"avd_id": "AVD-KCV-0046",
-	"title": "Ensure that the --peer-client-cert-auth argument is set to true",
-	"short_code": "ensure-peer-client-cert-auth-argument-is-set-to-true",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "etcd should be configured for peer authentication.",
-	"recommended_actions": "Edit the etcd pod specification file /etc/kubernetes/manifests/etcd.yaml on the master node and set the below parameter.",
-	"url": "<cisbench>",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 checkFlag[container] {
 	container := kubernetes.containers[_]

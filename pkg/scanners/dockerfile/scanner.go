@@ -110,8 +110,8 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 	for path, dfile := range files {
 		inputs = append(inputs, rego.Input{
 			Path:     path,
+			FS:       fs,
 			Contents: dfile.ToRego(),
-			Type:     types.SourceDockerfile,
 		})
 	}
 
@@ -131,7 +131,6 @@ func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (scan.Res
 	return s.scanRego(ctx, fs, rego.Input{
 		Path:     path,
 		Contents: dockerfile.ToRego(),
-		Type:     types.SourceDockerfile,
 	})
 }
 
@@ -141,7 +140,8 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	if s.regoScanner != nil {
 		return s.regoScanner, nil
 	}
-	regoScanner := rego.NewScanner(s.options...)
+
+	regoScanner := rego.NewScanner(types.SourceDockerfile, s.options...)
 	regoScanner.SetParentDebugLogger(s.debug)
 	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err

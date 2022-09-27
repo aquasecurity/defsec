@@ -1,24 +1,22 @@
+# METADATA
+# title: "No wildcard resource roles"
+# description: "Check whether role permits specific verb on wildcard resources"
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV046
+#   avd_id: AVD-KSV-0046
+#   severity: CRITICAL
+#   short_code: no-wildcard-resource-role
+#   recommended_action: "Create a role which does not permit specific verb on wildcard resources"
+#   input:
+#     selector:
+#     - type: rbac
 package builtin.kubernetes.KSV046
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV046",
-	"avd_id": "AVD-KSV-0046",
-	"title": "No wildcard resource roles",
-	"short_code": "no-wildcard-resource-role",
-	"severity": "CRITICAL",
-	"description": "Check whether role permits specific verb on wildcard resources",
-	"recommended_actions": "Create a role which does not permit specific verb on wildcard resources",
-	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "rbac"}],
-}
 
 readVerbs := ["create", "update", "delete", "deletecollection", "impersonate", "*", "list", "get"]
 

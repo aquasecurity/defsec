@@ -1,24 +1,22 @@
+# METADATA
+# title: "Do not allow management of RBAC resources"
+# description: "An effective level of access equivalent to cluster-admin should not be provided."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV050
+#   avd_id: AVD-KSV-0050
+#   severity: CRITICAL
+#   short_code: no-manage-rbac-resources
+#   recommended_action: "Remove write permission verbs for resource 'roles' and 'rolebindings'"
+#   input:
+#     selector:
+#     - type: rbac
 package builtin.kubernetes.KSV050
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
-
-__rego_metadata__ := {
-	"id": "KSV050",
-	"avd_id": "AVD-KSV-0050",
-	"title": "Do not allow management of RBAC resources",
-	"short_code": "no-manage-rbac-resources",
-	"severity": "CRITICAL",
-	"description": "An effective level of access equivalent to cluster-admin should not be provided.",
-	"recommended_actions": "Remove write permission verbs for resource 'roles' and 'rolebindings'",
-	"url": "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "rbac"}],
-}
 
 readVerbs := ["create", "update", "delete", "deletecollection", "impersonate", "*"]
 

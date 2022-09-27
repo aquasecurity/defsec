@@ -1,22 +1,21 @@
+# METADATA
+# title: "Port 22 exposed"
+# description: "Exposing port 22 might allow users to SSH into the container."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: DS004
+#   avd_id: AVD-DS-0004
+#   severity: MEDIUM
+#   short_code: no-ssh-port
+#   recommended_action: "Remove 'EXPOSE 22' statement from the Dockerfile"
+#   input:
+#     selector:
+#     - type: dockerfile
 package builtin.dockerfile.DS004
 
 import data.lib.docker
-
-__rego_metadata__ := {
-	"id": "DS004",
-	"avd_id": "AVD-DS-0004",
-	"title": "Port 22 exposed",
-	"short_code": "no-ssh-port",
-	"severity": "MEDIUM",
-	"type": "Dockerfile Security Check",
-	"description": "Exposing port 22 might allow users to SSH into the container.",
-	"recommended_actions": "Remove 'EXPOSE 22' statement from the Dockerfile",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "dockerfile"}],
-}
 
 # deny_list contains the port numbers which needs to be denied.
 denied_ports := ["22", "22/tcp", "22/udp"]
@@ -30,5 +29,5 @@ fail_port_check[expose] {
 deny[res] {
 	cmd := fail_port_check[_]
 	msg := "Port 22 should not be exposed in Dockerfile"
-	res := docker.result(msg, cmd)
+	res := result.new(msg, cmd)
 }

@@ -1,28 +1,24 @@
+# METADATA
+# title: "Runs with low group ID"
+# description: "Force the container to run with group ID > 10000 to avoid conflicts with the host’s user table."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV021
+#   avd_id: AVD-KSV-0021
+#   severity: LOW
+#   short_code: use-high-gid
+#   recommended_action: "Set 'containers[].securityContext.runAsGroup' to an integer > 10000."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV021
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
 
 default failRunAsGroup = false
-
-__rego_metadata__ := {
-	"id": "KSV021",
-	"avd_id": "AVD-KSV-0021",
-	"title": "Runs with low group ID",
-	"short_code": "use-high-gid",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Force the container to run with group ID > 10000 to avoid conflicts with the host’s user table.",
-	"recommended_actions": "Set 'containers[].securityContext.runAsGroup' to an integer > 10000.",
-	"url": "https://kubesec.io/basics/containers-securitycontext-runasuser/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # getGroupIdContainers returns the names of all containers which have
 # securityContext.runAsGroup less than or equal to 10000.

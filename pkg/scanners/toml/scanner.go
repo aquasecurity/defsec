@@ -109,7 +109,7 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, path string) (scan.Resul
 		inputs = append(inputs, rego.Input{
 			Path:     path,
 			Contents: file,
-			Type:     types.SourceTOML,
+			FS:       fs,
 		})
 	}
 
@@ -129,7 +129,6 @@ func (s *Scanner) ScanFile(ctx context.Context, fs fs.FS, path string) (scan.Res
 	return s.scanRego(ctx, fs, rego.Input{
 		Path:     path,
 		Contents: parsed,
-		Type:     types.SourceTOML,
 	})
 }
 
@@ -139,7 +138,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	if s.regoScanner != nil {
 		return s.regoScanner, nil
 	}
-	regoScanner := rego.NewScanner(s.options...)
+	regoScanner := rego.NewScanner(types.SourceTOML, s.options...)
 	regoScanner.SetParentDebugLogger(s.debug)
 	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err

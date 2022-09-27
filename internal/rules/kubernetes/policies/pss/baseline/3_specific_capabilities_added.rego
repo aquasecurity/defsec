@@ -1,27 +1,23 @@
+# METADATA
+# title: "Non-default capabilities added"
+# description: "Adding NET_RAW or capabilities beyond the default set must be disallowed."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV022
+#   avd_id: AVD-KSV-0022
+#   severity: MEDIUM
+#   short_code: no-non-default-capabilities
+#   recommended_action: "Do not set spec.containers[*].securityContext.capabilities.add and spec.initContainers[*].securityContext.capabilities.add"
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV022
 
 import data.lib.kubernetes
-import data.lib.result
 
 default failAdditionalCaps = false
-
-__rego_metadata__ := {
-	"id": "KSV022",
-	"avd_id": "AVD-KSV-0022",
-	"title": "Non-default capabilities added",
-	"short_code": "no-non-default-capabilities",
-	"version": "v1.0.0",
-	"severity": "MEDIUM",
-	"type": "Kubernetes Security Check",
-	"description": "Adding NET_RAW or capabilities beyond the default set must be disallowed.",
-	"recommended_actions": "Do not set spec.containers[*].securityContext.capabilities.add and spec.initContainers[*].securityContext.capabilities.add",
-	"url": "https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # Add allowed capabilities to this set
 allowed_caps = set()

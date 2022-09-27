@@ -1,25 +1,21 @@
+# METADATA
+# title: "Ensure that the admission control plugin EventRateLimit is set"
+# description: "Limit the rate at which the API server accepts requests."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0010
+#   avd_id: AVD-KCV-0010
+#   severity: LOW
+#   short_code: ensure-admission-control-plugin-event-rate-limit-is-set
+#   recommended_action: "Follow the Kubernetes documentation and set the desired limits in a configuration file. Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml and set the below parameters."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0010
 
 import data.lib.kubernetes
-import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0010",
-	"avd_id": "AVD-KCV-0010",
-	"title": "Ensure that the admission control plugin EventRateLimit is set",
-	"short_code": "ensure-admission-control-plugin-event-rate-limit-is-set",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Limit the rate at which the API server accepts requests.",
-	"recommended_actions": "Follow the Kubernetes documentation and set the desired limits in a configuration file. Then, edit the API server pod specification file /etc/kubernetes/manifests/kube-apiserver.yaml and set the below parameters.",
-	"url": "https://www.cisecurity.org/benchmark/kubernetes",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 check_flag[container] {
 	container := kubernetes.containers[_]

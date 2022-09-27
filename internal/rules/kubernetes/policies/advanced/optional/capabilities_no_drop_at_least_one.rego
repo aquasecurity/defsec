@@ -1,28 +1,24 @@
+# METADATA
+# title: "Unused capabilities should be dropped (drop any)"
+# description: "Security best practices require containers to run with minimal required capabilities."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV004
+#   avd_id: AVD-KSV-0004
+#   severity: LOW
+#   short_code: drop-unused-capabilities
+#   recommended_action: "Specify at least one unneeded capability in 'containers[].securityContext.capabilities.drop'"
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV004
 
 import data.lib.kubernetes
-import data.lib.result
 import data.lib.utils
 
 default failCapsDropAny = false
-
-__rego_metadata__ := {
-	"id": "KSV004",
-	"avd_id": "AVD-KSV-0004",
-	"title": "Unused capabilities should be dropped (drop any)",
-	"short_code": "drop-unused-capabilities",
-	"version": "v0.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Security best practices require containers to run with minimal required capabilities.",
-	"recommended_actions": "Specify at least one unneeded capability in 'containers[].securityContext.capabilities.drop'",
-	"url": "https://kubesec.io/basics/containers-securitycontext-capabilities-drop-index-all/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # getCapsDropAnyContainers returns names of all containers
 # which set securityContext.capabilities.drop

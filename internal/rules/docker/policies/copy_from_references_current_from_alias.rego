@@ -1,23 +1,21 @@
+# METADATA
+# title: "COPY '--from' referring to the current image"
+# description: "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: DS006
+#   avd_id: AVD-DS-0006
+#   severity: CRITICAL
+#   short_code: no-self-referencing-copy-from
+#   recommended_action: "Change the '--from' so that it will not refer to itself"
+#   input:
+#     selector:
+#     - type: dockerfile
 package builtin.dockerfile.DS006
 
 import data.lib.docker
-
-__rego_metadata__ := {
-	"id": "DS006",
-	"avd_id": "AVD-DS-0006",
-	"title": "COPY '--from' referring to the current image",
-	"short_code": "no-self-referencing-copy-from",
-	"severity": "CRITICAL",
-	"type": "Dockerfile Security Check",
-	"description": "COPY '--from' should not mention the current FROM alias, since it is impossible to copy from itself.",
-	"recommended_actions": "Change the '--from' so that it will not refer to itself",
-	"url": "https://docs.docker.com/develop/develop-images/multistage-build/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "dockerfile"}],
-}
 
 get_alias_from_copy[output] {
 	copies := docker.stage_copies[stage]
@@ -50,5 +48,5 @@ is_alias_current_from_alias(current_name, current_alias) = allow {
 deny[res] {
 	output := get_alias_from_copy[_]
 	msg := sprintf("'COPY --from' should not mention current alias '%s' since it is impossible to copy from itself", [output.args])
-	res := docker.result(msg, output.cmd)
+	res := result.new(msg, output.cmd)
 }

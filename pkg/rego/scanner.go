@@ -9,6 +9,8 @@ import (
 	"io/fs"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/rego/schemas"
+
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
@@ -37,6 +39,8 @@ type Scanner struct {
 	retriever      *MetadataRetriever
 	policyFS       fs.FS
 	frameworks     []framework.Framework
+	inputSchema    interface{} // unmarshalled into this from a json schema document
+	sourceType     types.Source
 }
 
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
@@ -103,8 +107,26 @@ type DynamicMetadata struct {
 	EndLine   int
 }
 
-func NewScanner(options ...options.ScannerOption) *Scanner {
+var schemaMap = map[types.Source]schemas.Schema{
+	types.SourceDefsec:     schemas.Cloud,
+	types.SourceCloud:      schemas.Cloud,
+	types.SourceKubernetes: schemas.Kubernetes,
+	types.SourceRbac:       schemas.RBAC,
+	types.SourceDockerfile: schemas.Dockerfile,
+	types.SourceTOML:       schemas.Anything,
+	types.SourceYAML:       schemas.Anything,
+	types.SourceJSON:       schemas.Anything,
+}
+
+func NewScanner(source types.Source, options ...options.ScannerOption) *Scanner {
+
+	schema, ok := schemaMap[source]
+	if !ok {
+		panic("unknown source type: " + source)
+	}
+
 	s := &Scanner{
+		sourceType: source,
 		ruleNamespaces: map[string]struct{}{
 			"builtin":   {},
 			"appshield": {},
@@ -114,6 +136,12 @@ func NewScanner(options ...options.ScannerOption) *Scanner {
 	}
 	for _, opt := range options {
 		opt(s)
+	}
+	if schema != schemas.None {
+		err := json.Unmarshal([]byte(schema), &s.inputSchema)
+		if err != nil {
+			panic(err)
+		}
 	}
 	return s
 }
@@ -136,6 +164,12 @@ func (s *Scanner) runQuery(ctx context.Context, query string, input interface{},
 		rego.Store(s.store),
 		rego.Runtime(s.runtimeValues),
 		rego.Trace(trace),
+	}
+
+	if s.inputSchema != nil {
+		schemaSet := ast.NewSchemaSet()
+		schemaSet.Put(ast.MustParseRef("schema.input"), s.inputSchema)
+		regoOptions = append(regoOptions, rego.Schemas(schemaSet))
 	}
 
 	if input != nil {
@@ -165,10 +199,9 @@ func (s *Scanner) runQuery(ctx context.Context, query string, input interface{},
 }
 
 type Input struct {
-	Path     string       `json:"path"`
-	FS       fs.FS        `json:"-"`
-	Contents interface{}  `json:"contents"`
-	Type     types.Source `json:"type"`
+	Path     string      `json:"path"`
+	FS       fs.FS       `json:"-"`
+	Contents interface{} `json:"contents"`
 }
 
 func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results, error) {
@@ -176,7 +209,6 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 	s.debug.Log("Scanning %d inputs...", len(inputs))
 
 	var results scan.Results
-	var filteredInputs []Input
 
 	for _, module := range s.policies {
 
@@ -197,26 +229,7 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 			return nil, err
 		}
 
-		if len(staticMeta.InputOptions.Selectors) > 0 {
-			filteredInputs = nil
-			for _, in := range inputs {
-				var match bool
-				for _, selector := range staticMeta.InputOptions.Selectors {
-					if selector.Type == string(in.Type) {
-						match = true
-						break
-					}
-				}
-				if match {
-					filteredInputs = append(filteredInputs, in)
-				}
-			}
-		} else {
-			filteredInputs = make([]Input, len(inputs))
-			copy(filteredInputs, inputs)
-		}
-
-		if len(filteredInputs) == 0 {
+		if len(inputs) == 0 {
 			continue
 		}
 
@@ -230,7 +243,7 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 			}
 			usedRules[ruleName] = struct{}{}
 			if isEnforcedRule(ruleName) {
-				ruleResults, err := s.applyRule(ctx, namespace, ruleName, filteredInputs, staticMeta.InputOptions.Combined)
+				ruleResults, err := s.applyRule(ctx, namespace, ruleName, inputs, staticMeta.InputOptions.Combined)
 				if err != nil {
 					return nil, err
 				}

@@ -1,24 +1,21 @@
+# METADATA
+# title: "Tiller Is Deployed"
+# description: "Check if Helm Tiller component is deployed."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV102
+#   avd_id: AVD-KSV-0102
+#   severity: CRITICAL
+#   short_code: no-tiller
+#   recommended_action: "Migrate to Helm v3 which no longer has Tiller component"
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV102
 
 import data.lib.kubernetes
-import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KSV102",
-	"avd_id": "AVD-KSV-0102",
-	"title": "Tiller Is Deployed",
-	"short_code": "no-tiller",
-	"version": "v1.0.0",
-	"severity": "CRITICAL",
-	"type": "Kubernetes Security Check",
-	"description": "Check if Helm Tiller component is deployed.",
-	"recommended_actions": "Migrate to Helm v3 which no longer has Tiller component",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # Get all containers and check kubernetes metadata for tiller
 tillerDeployed[container] {

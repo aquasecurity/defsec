@@ -6,6 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/aquasecurity/defsec/pkg/types"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -29,7 +31,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -40,11 +42,11 @@ deny {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
+		FS: srcFS,
 	})
 	require.NoError(t, err)
 
-	assert.Equal(t, 1, len(results.GetFailed()))
+	require.Equal(t, 1, len(results.GetFailed()))
 	assert.Equal(t, 0, len(results.GetPassed()))
 	assert.Equal(t, 0, len(results.GetIgnored()))
 
@@ -64,7 +66,7 @@ warn {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -75,7 +77,6 @@ warn {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -97,7 +98,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -108,7 +109,6 @@ deny {
 		Contents: map[string]interface{}{
 			"evil": false,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -141,7 +141,7 @@ exception[ns] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -152,7 +152,6 @@ exception[ns] {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -190,7 +189,7 @@ exception[ns] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -201,7 +200,6 @@ exception[ns] {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -228,7 +226,7 @@ exception[rules] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -239,7 +237,6 @@ exception[rules] {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -265,7 +262,7 @@ exception[rules] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -276,7 +273,6 @@ exception[rules] {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -300,7 +296,7 @@ deny_evil {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -311,7 +307,6 @@ deny_evil {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -332,7 +327,7 @@ deny[msg] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -343,7 +338,6 @@ deny[msg] {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -371,7 +365,7 @@ deny[res] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -382,7 +376,6 @@ deny[res] {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -414,7 +407,7 @@ deny[res] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -425,7 +418,6 @@ deny[res] {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -469,7 +461,7 @@ deny[res] {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -480,7 +472,6 @@ deny[res] {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -509,7 +500,7 @@ func Test_RegoScanning_WithMatchingInputSelector(t *testing.T) {
 package defsec.test
 
 __rego_input__ := {
-	"selector": [{"type": "testing"}],
+	"selector": [{"type": "json"}],
 }
 
 deny {
@@ -519,7 +510,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -530,7 +521,6 @@ deny {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "testing",
 	})
 	require.NoError(t, err)
 
@@ -554,7 +544,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -565,7 +555,6 @@ deny {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "not-a-match",
 	})
 	require.NoError(t, err)
 
@@ -586,7 +575,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -597,7 +586,6 @@ deny {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -622,7 +610,7 @@ deny {
 
 	traceBuffer := bytes.NewBuffer([]byte{})
 
-	scanner := NewScanner(options.ScannerWithTrace(traceBuffer))
+	scanner := NewScanner(types.SourceJSON, options.ScannerWithTrace(traceBuffer))
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -633,7 +621,6 @@ deny {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -657,7 +644,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner(options.ScannerWithPerResultTracing(true))
+	scanner := NewScanner(types.SourceJSON, options.ScannerWithPerResultTracing(true))
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -668,7 +655,6 @@ deny {
 		Contents: map[string]interface{}{
 			"evil": true,
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 
@@ -678,6 +664,7 @@ deny {
 
 	assert.Greater(t, len(results.GetFailed()[0].Traces()), 0)
 }
+
 func Test_dynamicMetadata(t *testing.T) {
 
 	srcFS := testutil.CreateFS(t, map[string]string{
@@ -695,7 +682,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -706,11 +693,11 @@ deny {
 		Contents: map[string]interface{}{
 			"text": "dynamic",
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 	assert.Equal(t, results[0].Rule().Summary, "i am dynamic")
 }
+
 func Test_staticMetadata(t *testing.T) {
 
 	srcFS := testutil.CreateFS(t, map[string]string{
@@ -728,7 +715,7 @@ deny {
 `,
 	})
 
-	scanner := NewScanner()
+	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -739,8 +726,105 @@ deny {
 		Contents: map[string]interface{}{
 			"text": "test",
 		},
-		Type: "???",
 	})
 	require.NoError(t, err)
 	assert.Equal(t, results[0].Rule().Summary, "i am static")
+}
+
+func Test_annotationMetadata(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `# METADATA
+# title: i am a title
+# description: i am a description
+# related_resources:
+# - https://google.com
+# custom:
+#   id: EG123
+#   avd_id: AVD-EG-0123
+#   severity: LOW
+#   recommended_action: have a cup of tea
+package defsec.test
+
+deny {
+  input.text
+}
+
+`,
+		"policies/test2.rego": `# METADATA
+# title: i am another title
+package defsec.test2
+
+deny {
+  input.blah
+}
+
+`,
+	})
+
+	scanner := NewScanner(types.SourceJSON)
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{
+		Path: "/evil.lol",
+		Contents: map[string]interface{}{
+			"text": "test",
+		},
+	})
+	require.NoError(t, err)
+	require.Len(t, results.GetFailed(), 1)
+	failure := results.GetFailed()[0].Rule()
+	assert.Equal(t, "i am a title", failure.Summary)
+	assert.Equal(t, "i am a description", failure.Explanation)
+	require.Len(t, failure.Links, 1)
+	assert.Equal(t, "https://google.com", failure.Links[0])
+	assert.Equal(t, "AVD-EG-0123", failure.AVDID)
+	assert.Equal(t, severity.Low, failure.Severity)
+	assert.Equal(t, "have a cup of tea", failure.Resolution)
+}
+
+func Test_RegoScanning_WithInvalidInputSchema(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `# METADATA
+# schemas:
+# - input: schema["input"]
+package defsec.test
+
+deny {
+    input.evil == "lol"
+}
+`,
+	})
+
+	scanner := NewScanner(types.SourceDockerfile)
+	assert.ErrorContains(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+		"undefined ref: input.evil",
+	)
+}
+
+func Test_RegoScanning_WithValidInputSchema(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `# METADATA
+# schemas:
+# - input: schema["input"]
+package defsec.test
+
+deny {
+    input.Stages[0].Commands[0].Cmd == "lol"
+}
+`,
+	})
+
+	scanner := NewScanner(types.SourceDockerfile)
+	assert.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
 }

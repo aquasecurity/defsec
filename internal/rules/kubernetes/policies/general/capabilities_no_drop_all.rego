@@ -1,27 +1,23 @@
+# METADATA
+# title: "Default capabilities not dropped"
+# description: "The container should drop all default capabilities and add only those that are needed for its execution."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KSV003
+#   avd_id: AVD-KSV-0003
+#   severity: LOW
+#   short_code: drop-default-capabilities
+#   recommended_action: "Add 'ALL' to containers[].securityContext.capabilities.drop."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KSV003
 
 import data.lib.kubernetes
-import data.lib.result
 
 default checkCapsDropAll = false
-
-__rego_metadata__ := {
-	"id": "KSV003",
-	"avd_id": "AVD-KSV-0003",
-	"title": "Default capabilities not dropped",
-	"short_code": "drop-default-capabilities",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "The container should drop all default capabilities and add only those that are needed for its execution.",
-	"recommended_actions": "Add 'ALL' to containers[].securityContext.capabilities.drop.",
-	"url": "https://kubesec.io/basics/containers-securitycontext-capabilities-drop-index-all/",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 # Get all containers which include 'ALL' in security.capabilities.drop
 getCapsDropAllContainers[container] {

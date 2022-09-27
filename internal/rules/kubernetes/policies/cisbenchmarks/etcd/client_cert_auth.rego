@@ -1,25 +1,21 @@
+# METADATA
+# title: "Ensure that the --client-cert-auth argument is set to true"
+# description: "Enable client authentication on etcd service."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0043
+#   avd_id: AVD-KCV-0043
+#   severity: LOW
+#   short_code: ensure-client-cert-auth-argument-is-set-to-true
+#   recommended_action: "Edit the etcd pod specification file /etc/kubernetes/manifests/etcd.yaml on the master node and set the below parameter."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0043
 
 import data.lib.kubernetes
-import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0043",
-	"avd_id": "AVD-KCV-0043",
-	"title": "Ensure that the --client-cert-auth argument is set to true",
-	"short_code": "ensure-client-cert-auth-argument-is-set-to-true",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "Enable client authentication on etcd service.",
-	"recommended_actions": "Edit the etcd pod specification file /etc/kubernetes/manifests/etcd.yaml on the master node and set the below parameter.",
-	"url": "<cisbench>",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 checkFlag[container] {
 	container := kubernetes.containers[_]

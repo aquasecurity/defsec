@@ -1,25 +1,21 @@
+# METADATA
+# title: "Ensure that the --DenyServiceExternalIPs is not set"
+# description: "This admission controller rejects all net-new usage of the Service field externalIPs."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# custom:
+#   id: KCV0003
+#   avd_id: AVD-KCV-0003
+#   severity: LOW
+#   short_code: Ensure-deny-service-external-ips-is-not-set
+#   recommended_action: "Edit the API server pod specification file $apiserverconf on the control plane node and remove the `DenyServiceExternalIPs` from enabled admission plugins."
+#   input:
+#     selector:
+#     - type: kubernetes
 package builtin.kubernetes.KCV0003
 
 import data.lib.kubernetes
-import data.lib.result
-
-__rego_metadata__ := {
-	"id": "KCV0003",
-	"avd_id": "AVD-KCV-0003",
-	"title": "Ensure that the --DenyServiceExternalIPs is not set",
-	"short_code": "Ensure-deny-service-external-ips-is-not-set",
-	"version": "v1.0.0",
-	"severity": "LOW",
-	"type": "Kubernetes Security Check",
-	"description": "This admission controller rejects all net-new usage of the Service field externalIPs.",
-	"recommended_actions": "Edit the API server pod specification file $apiserverconf on the control plane node and remove the `DenyServiceExternalIPs` from enabled admission plugins.",
-	"url": "https://www.cisecurity.org/benchmark/kubernetes",
-}
-
-__rego_input__ := {
-	"combine": false,
-	"selector": [{"type": "kubernetes"}],
-}
 
 check_flag[container] {
 	container := kubernetes.containers[_]
