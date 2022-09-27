@@ -29,7 +29,7 @@ test_eval_k8s_api_with_data_match {
 			"backoffLimit": 4,
 		},
 	}
-		with recommendedVersions as recommendedVersions_mock_data
+		 with recommendedVersions as recommendedVersions_mock_data
 
 	count(r) > 0
 }
@@ -56,7 +56,7 @@ test_eval_k8s_api_with_data_do_not_match {
 			"backoffLimit": 4,
 		},
 	}
-		with recommendedVersions as recommendedVersions_mock_data
+		 with recommendedVersions as recommendedVersions_mock_data
 
 	count(r) == 0
 }

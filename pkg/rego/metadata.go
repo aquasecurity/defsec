@@ -34,6 +34,7 @@ type StaticMetadata struct {
 	Frameworks         map[framework.Framework][]string
 	Provider           string
 	Service            string
+	Library            bool
 }
 
 type InputOptions struct {
@@ -192,6 +193,11 @@ func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata
 	}
 	if raw, ok := meta["provider"]; ok {
 		metadata.Service = fmt.Sprintf("%s", raw)
+	}
+	if raw, ok := meta["library"]; ok {
+		if lib, ok := raw.(bool); ok {
+			metadata.Library = lib
+		}
 	}
 	if raw, ok := meta["recommended_actions"]; ok {
 		metadata.RecommendedActions = fmt.Sprintf("%s", raw)

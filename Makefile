@@ -11,7 +11,7 @@ test-no-localstack:
 .PHONY: rego
 rego:
 	opa fmt -w internal/rules
-	opa test internal/rules
+	go test --run Test_AllRegoRules ./test
 
 .PHONY: typos
 typos:

@@ -1,5 +1,6 @@
 # METADATA
 # custom:
+#   library: true
 #   input:
 #     selector:
 #     - type: kubernetes
