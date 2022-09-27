@@ -34,5 +34,10 @@ jobs:
             echo "$files"
             exit 1
           fi
+      - uses: actions/setup-go@v3
+        with:
+          go-version-file: go.mod
+          cache: true
+          cache-dependency-path: go.sum
       - name: OPA Test
         run: make test-rego
