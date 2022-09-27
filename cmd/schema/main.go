@@ -17,9 +17,7 @@ import (
 const schemaPath = "pkg/rego/schemas/cloud.json"
 
 type Schema struct {
-	Schema     string               `json:"$schema"` // always https://json-schema.org/draft/2020-12/schema
-	ID         string               `json:"$id"`     // https://github.com/aquasecurity/defsec/tree/master/pkg/rego/schemas/cloud.json
-	Type       string               `json:"type"`    // object
+	Type       string               `json:"type"` // object
 	Properties map[string]Property  `json:"properties,omitempty"`
 	Defs       map[string]*Property `json:"definitions,omitempty"`
 }
@@ -49,8 +47,6 @@ type builder struct {
 func newBuilder() *builder {
 	return &builder{
 		schema: Schema{
-			Schema:     "", //"https://json-schema.org/draft/2020-12/schema",
-			ID:         "", //"https://github.com/aquasecurity/defsec/tree/master/pkg/rego/schemas/cloud.json",
 			Properties: nil,
 			Defs:       nil,
 		},
@@ -72,7 +68,6 @@ func (b *builder) fromInput(inputValue reflect.Value) error {
 		return err
 	}
 	if prop == nil {
-		return nil
 		return fmt.Errorf("property is nil")
 	}
 	b.schema.Properties = prop.Properties
@@ -95,10 +90,6 @@ func (b *builder) readProperty(name string, parent, inputType reflect.Type, inde
 
 	if inputType.Kind() == reflect.Ptr {
 		inputType = inputType.Elem()
-	}
-
-	if indent == 1 && name != "AWS" {
-		return nil, nil
 	}
 
 	switch inputType.String() {

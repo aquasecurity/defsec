@@ -820,3 +820,101 @@ resource "aws_security_group" "example_security_group" {
 	assert.Equal(t, "1.2.3.4", cidr0["value"])
 	assert.Equal(t, "5.6.7.8", cidr1["value"])
 }
+
+// PoC for replacing Go with Rego: AVD-AWS-0001
+func Test_RegoRules(t *testing.T) {
+
+	fs := testutil.CreateFS(t, map[string]string{
+		"/code/main.tf": `
+resource "aws_apigatewayv2_stage" "bad_example" {
+  api_id = aws_apigatewayv2_api.example.id
+  name   = "example-stage"
+}
+`,
+		"/rules/test.rego": `# METADATA
+# schemas:
+# - input: schema.input
+# custom:
+#   avd_id: AVD-AWS-0001
+package builtin.cloud.AWS0001
+
+deny[res] {
+	api := input.aws.apigateway.v1.apis[_]
+	stage := api.stages[_]
+	isManaged(stage)
+	stage.accesslogging.cloudwatchloggrouparn.value == ""
+	res := result.new("Access logging is not configured.", stage.accesslogging.cloudwatchloggrouparn)
+}
+
+deny[res] {
+	api := input.aws.apigateway.v2.apis[_]
+	stage := api.stages[_]
+	isManaged(stage)
+	stage.accesslogging.cloudwatchloggrouparn.value == ""
+	res := result.new("Access logging is not configured.", stage.accesslogging.cloudwatchloggrouparn)
+}
+`,
+	})
+
+	debugLog := bytes.NewBuffer([]byte{})
+	scanner := New(
+		options.ScannerWithDebug(debugLog),
+		options.ScannerWithPolicyFilesystem(fs),
+		options.ScannerWithPolicyDirs("rules"),
+		ScannerWithRegoOnly(true),
+	)
+
+	results, err := scanner.ScanFS(context.TODO(), fs, "code")
+	require.NoError(t, err)
+
+	require.Len(t, results.GetFailed(), 1)
+
+	failure := results.GetFailed()[0]
+
+	assert.Equal(t, "AVD-AWS-0001", failure.Rule().AVDID)
+
+	actualCode, err := failure.GetCode()
+	require.NoError(t, err)
+	for i := range actualCode.Lines {
+		actualCode.Lines[i].Highlighted = ""
+	}
+	assert.Equal(t, []scan.Line{
+		{
+			Number:     2,
+			Content:    "resource \"aws_apigatewayv2_stage\" \"bad_example\" {",
+			IsCause:    true,
+			FirstCause: true,
+			LastCause:  false,
+			Annotation: "",
+		},
+		{
+			Number:     3,
+			Content:    "  api_id = aws_apigatewayv2_api.example.id",
+			IsCause:    true,
+			FirstCause: false,
+			LastCause:  false,
+			Annotation: "",
+		},
+		{
+			Number:     4,
+			Content:    "  name   = \"example-stage\"",
+			IsCause:    true,
+			FirstCause: false,
+			LastCause:  false,
+			Annotation: "",
+		},
+		{
+			Number:     5,
+			Content:    "}",
+			IsCause:    true,
+			FirstCause: false,
+			LastCause:  true,
+			Annotation: "",
+		},
+	}, actualCode.Lines)
+
+	if t.Failed() {
+		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
+	}
+
+}

@@ -6,6 +6,58 @@ import (
 	"github.com/open-policy-agent/opa/types"
 )
 
+func init() {
+	rego.RegisterBuiltin2(&rego.Function{
+		Name: "result.new",
+		Decl: types.NewFunction(types.Args(types.S, types.A), types.A),
+	},
+		createResult,
+	)
+
+	rego.RegisterBuiltin1(&rego.Function{
+		Name: "isManaged",
+		Decl: types.NewFunction(types.Args(types.A), types.B),
+	},
+		func(c rego.BuiltinContext, resource *ast.Term) (*ast.Term, error) {
+			metadata, err := createResult(c, ast.StringTerm(""), resource)
+			if err != nil {
+				return nil, err
+			}
+			return metadata.Get(ast.StringTerm("managed")), nil
+		},
+	)
+}
+
+func createResult(_ rego.BuiltinContext, msg, cause *ast.Term) (*ast.Term, error) {
+
+	metadata := map[string]*ast.Term{
+		"msg":       msg,
+		"startline": ast.IntNumberTerm(0),
+		"endline":   ast.IntNumberTerm(0),
+		"filepath":  ast.StringTerm(""),
+		"explicit":  ast.BooleanTerm(false),
+		"managed":   ast.BooleanTerm(true),
+		"fskey":     ast.StringTerm(""),
+		"resource":  ast.StringTerm(""),
+	}
+
+	// universal
+	if defsec := cause.Get(ast.StringTerm("__defsec_metadata")); defsec != nil {
+		metadata = updateMetadata(metadata, defsec)
+	} else { // docker...
+		metadata = updateMetadata(metadata, cause)
+	}
+
+	var values [][2]*ast.Term
+	for key, val := range metadata {
+		values = append(values, [2]*ast.Term{
+			ast.StringTerm(key),
+			val,
+		})
+	}
+	return ast.ObjectTerm(values...), nil
+}
+
 func updateMetadata(metadata map[string]*ast.Term, input *ast.Term) map[string]*ast.Term {
 	if term := input.Get(ast.StringTerm("startline")); term != nil {
 		metadata["startline"] = term
@@ -38,41 +90,4 @@ func updateMetadata(metadata map[string]*ast.Term, input *ast.Term) map[string]*
 		metadata["resource"] = term
 	}
 	return metadata
-}
-
-func init() {
-	rego.RegisterBuiltin2(&rego.Function{
-		Name: "result.new",
-		Decl: types.NewFunction(types.Args(types.S, types.A), types.A),
-	},
-		func(_ rego.BuiltinContext, msg, cause *ast.Term) (*ast.Term, error) {
-
-			metadata := map[string]*ast.Term{
-				"msg":       msg,
-				"startline": ast.IntNumberTerm(0),
-				"endline":   ast.IntNumberTerm(0),
-				"filepath":  ast.StringTerm(""),
-				"explicit":  ast.BooleanTerm(false),
-				"managed":   ast.BooleanTerm(true),
-				"fskey":     ast.StringTerm(""),
-				"resource":  ast.StringTerm(""),
-			}
-
-			// universal
-			if defsec := cause.Get(ast.StringTerm("__defsec_metadata")); defsec != nil {
-				metadata = updateMetadata(metadata, defsec)
-			} else { // docker...
-				metadata = updateMetadata(metadata, cause)
-			}
-
-			var values [][2]*ast.Term
-			for key, val := range metadata {
-				values = append(values, [2]*ast.Term{
-					ast.StringTerm(key),
-					val,
-				})
-			}
-			return ast.ObjectTerm(values...), nil
-		},
-	)
 }
