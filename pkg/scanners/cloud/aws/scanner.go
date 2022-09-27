@@ -41,7 +41,6 @@ type Scanner struct {
 	frameworks          []framework.Framework
 	concurrencyStrategy concurrency.Strategy
 	policyDirs          []string
-	policyNamespaces    []string
 	policyReaders       []io.Reader
 	policyFS            fs.FS
 	useEmbedded         bool
