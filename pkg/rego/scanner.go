@@ -177,11 +177,7 @@ func (s *Scanner) runQuery(ctx context.Context, query string, input interface{},
 	}
 
 	instance := rego.New(regoOptions...)
-	prepared, err := instance.PrepareForEval(ctx)
-	if err != nil {
-		return nil, nil, err
-	}
-	set, err := prepared.Eval(ctx)
+	set, err := instance.Eval(ctx)
 	if err != nil {
 		return nil, nil, err
 	}

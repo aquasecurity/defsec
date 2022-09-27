@@ -37,7 +37,7 @@ func init() {
 	_ = json.Unmarshal([]byte(schemas.Anything), &schema)
 	schemaSet.Put(ast.MustParseRef("schema.input"), schema)
 	compiler.WithSchemas(schemaSet)
-	compiler.WithCapabilities(nil) //ast.CapabilitiesForThisVersion())
+	compiler.WithCapabilities(nil)
 	compiler.Compile(modules)
 	if compiler.Failed() {
 		// we should panic as the embedded rego policies are syntactically incorrect...

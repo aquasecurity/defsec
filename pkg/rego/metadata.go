@@ -135,11 +135,7 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 	}
 
 	instance := rego.New(options...)
-	prepared, err := instance.PrepareForEval(ctx)
-	if err != nil {
-		return nil, err
-	}
-	set, err := prepared.Eval(ctx)
+	set, err := instance.Eval(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -267,11 +263,7 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 			rego.Compiler(m.compiler),
 			rego.Capabilities(nil),
 		)
-		prepared, err := instance.PrepareForEval(ctx)
-		if err != nil {
-			return options
-		}
-		set, err := prepared.Eval(ctx)
+		set, err := instance.Eval(ctx)
 		if err != nil {
 			return options
 		}
