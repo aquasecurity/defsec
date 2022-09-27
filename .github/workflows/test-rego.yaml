@@ -21,11 +21,11 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup OPA
         run: |
-          curl -L -o opa_darwin_arm64_static https://openpolicyagent.org/downloads/latest/opa_darwin_arm64
-          curl -L -o checksum https://openpolicyagent.org/downloads/latest/opa_darwin_arm64.sha256
+          curl -L -o opa_linux_amd64 https://openpolicyagent.org/downloads/latest/opa_linux_amd64
+          curl -L -o checksum https://openpolicyagent.org/downloads/latest/opa_linux_amd64.sha256
           sha256sum -c checksum
-          chmod 755 ./opa_darwin_arm64
-          sudo mv ./opa_darwin_arm64 /usr/local/bin/opa
+          chmod 755 ./opa_linux_amd64
+          sudo mv ./opa_linux_amd64 /usr/local/bin/opa
       - name: OPA Format
         run: |
           files=$(opa fmt --list . | grep -v vendor || true)
