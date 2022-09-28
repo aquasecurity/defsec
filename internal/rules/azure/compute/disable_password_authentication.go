@@ -29,7 +29,7 @@ var CheckDisablePasswordAuthentication = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, vm := range s.Azure.Compute.LinuxVirtualMachines {
-			if vm.IsUnmanaged() {
+			if vm.Metadata.IsUnmanaged() {
 				continue
 			}
 			if vm.OSProfileLinuxConfig.DisablePasswordAuthentication.IsFalse() {

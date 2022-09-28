@@ -18,7 +18,7 @@ func (c CloudTrail) MultiRegionTrails() (multiRegionTrails []Trail) {
 }
 
 type Trail struct {
-	defsecTypes.Metadata
+	Metadata                  defsecTypes.Metadata
 	Name                      defsecTypes.StringValue
 	EnableLogFileValidation   defsecTypes.BoolValue
 	IsMultiRegion             defsecTypes.BoolValue
@@ -30,13 +30,13 @@ type Trail struct {
 }
 
 type EventSelector struct {
-	defsecTypes.Metadata
+	Metadata      defsecTypes.Metadata
 	DataResources []DataResource
 	ReadWriteType defsecTypes.StringValue // ReadOnly, WriteOnly, All. Default value is All for TF.
 }
 
 type DataResource struct {
-	defsecTypes.Metadata
-	Type   defsecTypes.StringValue     //  You can specify only the following value: "AWS::S3::Object", "AWS::Lambda::Function" and "AWS::DynamoDB::Table".
-	Values defsecTypes.StringValueList // List of ARNs/partial ARNs - e.g. arn:aws:s3:::<bucket name>/ for all objects in a bucket, arn:aws:s3:::<bucket name>/key for specific objects
+	Metadata defsecTypes.Metadata
+	Type     defsecTypes.StringValue   //  You can specify only the following value: "AWS::S3::Object", "AWS::Lambda::Function" and "AWS::DynamoDB::Table".
+	Values   []defsecTypes.StringValue // List of ARNs/partial ARNs - e.g. arn:aws:s3:::<bucket name>/ for all objects in a bucket, arn:aws:s3:::<bucket name>/key for specific objects
 }

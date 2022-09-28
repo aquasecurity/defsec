@@ -83,7 +83,6 @@ func adaptClusterInstance(resource *terraform.Block, modules terraform.Modules) 
 	}
 
 	return rds.ClusterInstance{
-		Metadata:          resource.GetMetadata(),
 		ClusterIdentifier: clusterId,
 		Instance:          adaptInstance(resource, modules),
 	}

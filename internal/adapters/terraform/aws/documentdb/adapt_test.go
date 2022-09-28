@@ -102,8 +102,8 @@ func TestLines(t *testing.T) {
 	cluster := adapted.Clusters[0]
 	instance := cluster.Instances[0]
 
-	assert.Equal(t, 2, cluster.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 7, cluster.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, cluster.Metadata.Range().GetStartLine())
+	assert.Equal(t, 7, cluster.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, cluster.Identifier.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, cluster.Identifier.GetMetadata().Range().GetEndLine())
@@ -117,8 +117,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 6, cluster.StorageEncrypted.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 6, cluster.StorageEncrypted.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 9, instance.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 14, instance.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 9, instance.Metadata.Range().GetStartLine())
+	assert.Equal(t, 14, instance.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 13, instance.KMSKeyID.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 13, instance.KMSKeyID.GetMetadata().Range().GetEndLine())

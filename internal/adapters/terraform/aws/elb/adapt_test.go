@@ -131,8 +131,8 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.LoadBalancers, 1)
 	loadBalancer := adapted.LoadBalancers[0]
 
-	assert.Equal(t, 2, loadBalancer.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 13, loadBalancer.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, loadBalancer.Metadata.Range().GetStartLine())
+	assert.Equal(t, 13, loadBalancer.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 4, loadBalancer.Internal.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 4, loadBalancer.Internal.GetMetadata().Range().GetEndLine())
@@ -143,8 +143,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 6, loadBalancer.DropInvalidHeaderFields.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 6, loadBalancer.DropInvalidHeaderFields.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 15, loadBalancer.Listeners[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 23, loadBalancer.Listeners[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 15, loadBalancer.Listeners[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 23, loadBalancer.Listeners[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 17, loadBalancer.Listeners[0].Protocol.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 17, loadBalancer.Listeners[0].Protocol.GetMetadata().Range().GetEndLine())
@@ -152,8 +152,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 18, loadBalancer.Listeners[0].TLSPolicy.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 18, loadBalancer.Listeners[0].TLSPolicy.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 20, loadBalancer.Listeners[0].DefaultActions[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 22, loadBalancer.Listeners[0].DefaultActions[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 20, loadBalancer.Listeners[0].DefaultActions[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 22, loadBalancer.Listeners[0].DefaultActions[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 21, loadBalancer.Listeners[0].DefaultActions[0].Type.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 21, loadBalancer.Listeners[0].DefaultActions[0].Type.GetMetadata().Range().GetEndLine())

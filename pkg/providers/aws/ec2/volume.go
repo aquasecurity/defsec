@@ -5,12 +5,12 @@ import (
 )
 
 type Volume struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	Encryption Encryption
 }
 
 type Encryption struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Enabled  defsecTypes.BoolValue
 	KMSKeyID defsecTypes.StringValue
 }

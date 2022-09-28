@@ -9,6 +9,6 @@ type Config struct {
 }
 
 type ConfigurationAggregrator struct {
-	defsecTypes.Metadata
+	Metadata         defsecTypes.Metadata
 	SourceAllRegions defsecTypes.BoolValue
 }

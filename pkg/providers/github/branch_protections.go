@@ -5,7 +5,7 @@ import (
 )
 
 type BranchProtection struct {
-	defsecTypes.Metadata
+	Metadata             defsecTypes.Metadata
 	RequireSignedCommits defsecTypes.BoolValue
 }
 

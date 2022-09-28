@@ -48,5 +48,5 @@ func (t *FileContext) GetResourcesByType(names ...string) []*Resource {
 func (t *FileContext) Metadata() defsecTypes.Metadata {
 	rng := defsecTypes.NewRange(t.filepath, 1, len(t.lines), "", nil)
 
-	return defsecTypes.NewMetadata(rng, NewCFReference("Template", rng))
+	return defsecTypes.NewMetadata(rng, NewCFReference("Template", rng).String())
 }

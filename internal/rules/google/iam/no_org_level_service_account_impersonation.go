@@ -32,7 +32,7 @@ var CheckNoOrgLevelServiceAccountImpersonation = rules.Register(
 	func(s *state.State) (results scan.Results) {
 		for _, org := range s.Google.IAM.Organizations {
 			for _, member := range org.Members {
-				if member.IsUnmanaged() {
+				if member.Metadata.IsUnmanaged() {
 					continue
 				}
 				if member.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {
@@ -46,7 +46,7 @@ var CheckNoOrgLevelServiceAccountImpersonation = rules.Register(
 
 			}
 			for _, binding := range org.Bindings {
-				if binding.IsUnmanaged() {
+				if binding.Metadata.IsUnmanaged() {
 					continue
 				}
 				if binding.Role.IsOneOf("roles/iam.serviceAccountUser", "roles/iam.serviceAccountTokenCreator") {

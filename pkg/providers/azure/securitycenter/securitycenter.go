@@ -10,7 +10,7 @@ type SecurityCenter struct {
 }
 
 type Contact struct {
-	defsecTypes.Metadata
+	Metadata                 defsecTypes.Metadata
 	EnableAlertNotifications defsecTypes.BoolValue
 	Phone                    defsecTypes.StringValue
 }
@@ -21,6 +21,6 @@ const (
 )
 
 type SubscriptionPricing struct {
-	defsecTypes.Metadata
-	Tier defsecTypes.StringValue
+	Metadata defsecTypes.Metadata
+	Tier     defsecTypes.StringValue
 }

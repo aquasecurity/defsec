@@ -11,7 +11,7 @@ type RDS struct {
 }
 
 type Cluster struct {
-	defsecTypes.Metadata
+	Metadata                  defsecTypes.Metadata
 	BackupRetentionPeriodDays defsecTypes.IntValue
 	ReplicationSourceARN      defsecTypes.StringValue
 	PerformanceInsights       PerformanceInsights
@@ -21,13 +21,13 @@ type Cluster struct {
 }
 
 type Encryption struct {
-	defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
 	EncryptStorage defsecTypes.BoolValue
 	KMSKeyID       defsecTypes.StringValue
 }
 
 type Instance struct {
-	defsecTypes.Metadata
+	Metadata                  defsecTypes.Metadata
 	BackupRetentionPeriodDays defsecTypes.IntValue
 	ReplicationSourceARN      defsecTypes.StringValue
 	PerformanceInsights       PerformanceInsights
@@ -36,13 +36,12 @@ type Instance struct {
 }
 
 type ClusterInstance struct {
-	defsecTypes.Metadata
 	Instance
 	ClusterIdentifier defsecTypes.StringValue
 }
 
 type PerformanceInsights struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Enabled  defsecTypes.BoolValue
 	KMSKeyID defsecTypes.StringValue
 }

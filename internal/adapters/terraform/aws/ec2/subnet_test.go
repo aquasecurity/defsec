@@ -82,8 +82,8 @@ func TestSubnetLines(t *testing.T) {
 	require.Len(t, adapted.Subnets, 1)
 	subnet := adapted.Subnets[0]
 
-	assert.Equal(t, 2, subnet.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 5, subnet.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, subnet.Metadata.Range().GetStartLine())
+	assert.Equal(t, 5, subnet.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 4, subnet.MapPublicIpOnLaunch.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 4, subnet.MapPublicIpOnLaunch.GetMetadata().Range().GetEndLine())

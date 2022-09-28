@@ -10,19 +10,19 @@ type EMR struct {
 }
 
 type Cluster struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Settings ClusterSettings
 }
 
 type ClusterSettings struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	Name         defsecTypes.StringValue
 	ReleaseLabel defsecTypes.StringValue
 	ServiceRole  defsecTypes.StringValue
 }
 
 type SecurityConfiguration struct {
-	defsecTypes.Metadata
+	Metadata      defsecTypes.Metadata
 	Name          defsecTypes.StringValue
 	Configuration defsecTypes.StringValue
 }

@@ -22,9 +22,10 @@ type Attribute struct {
 	module       string
 	ctx          *context.Context
 	metadata     defsecTypes.Metadata
+	reference    Reference
 }
 
-func NewAttribute(attr *hcl.Attribute, ctx *context.Context, module string, parent defsecTypes.Metadata, parentRef *Reference, moduleSource string, moduleFS fs.FS) *Attribute {
+func NewAttribute(attr *hcl.Attribute, ctx *context.Context, module string, parent defsecTypes.Metadata, parentRef Reference, moduleSource string, moduleFS fs.FS) *Attribute {
 	rng := defsecTypes.NewRange(
 		attr.Range.Filename,
 		attr.Range.Start.Line,
@@ -32,12 +33,14 @@ func NewAttribute(attr *hcl.Attribute, ctx *context.Context, module string, pare
 		moduleSource,
 		moduleFS,
 	)
-	metadata := defsecTypes.NewMetadata(rng, extendReference(parentRef, attr.Name))
+	reference := extendReference(parentRef, attr.Name)
+	metadata := defsecTypes.NewMetadata(rng, reference.String())
 	return &Attribute{
 		hclAttribute: attr,
 		ctx:          ctx,
 		module:       module,
 		metadata:     metadata.WithParent(parent),
+		reference:    reference,
 	}
 }
 
@@ -853,6 +856,8 @@ func createDotReferenceFromTraversal(parentRef string, traversals ...hcl.Travers
 				refParts = append(refParts, part.Name)
 			case hcl.TraverseIndex:
 				key = part.Key
+			default:
+				panic(fmt.Sprintf("%#v", traversals))
 			}
 		}
 	}
@@ -871,8 +876,7 @@ func (a *Attribute) ReferencesBlock(b *Block) bool {
 		return false
 	}
 	for _, ref := range a.AllReferences() {
-		metadata := b.GetMetadata()
-		if ref.RefersTo(metadata.Reference()) {
+		if ref.RefersTo(b.reference) {
 			return true
 		}
 	}
@@ -968,7 +972,7 @@ func (a *Attribute) IsResourceBlockReference(resourceType string) bool {
 	return false
 }
 
-func (a *Attribute) References(r defsecTypes.Reference) bool {
+func (a *Attribute) References(r Reference) bool {
 	if a == nil {
 		return false
 	}

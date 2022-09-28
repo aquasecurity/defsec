@@ -5,7 +5,7 @@ import (
 )
 
 type API struct {
-	defsecTypes.Metadata
+	Metadata            defsecTypes.Metadata
 	Name                defsecTypes.StringValue
 	TracingEnabled      defsecTypes.BoolValue
 	DomainConfiguration DomainConfiguration
@@ -14,23 +14,23 @@ type API struct {
 }
 
 type ApiAuth struct {
-	defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
 	ApiKeyRequired defsecTypes.BoolValue
 }
 
 type AccessLogging struct {
-	defsecTypes.Metadata
+	Metadata              defsecTypes.Metadata
 	CloudwatchLogGroupARN defsecTypes.StringValue
 }
 
 type DomainConfiguration struct {
-	defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
 	Name           defsecTypes.StringValue
 	SecurityPolicy defsecTypes.StringValue
 }
 
 type RESTMethodSettings struct {
-	defsecTypes.Metadata
+	Metadata           defsecTypes.Metadata
 	CacheDataEncrypted defsecTypes.BoolValue
 	LoggingEnabled     defsecTypes.BoolValue
 	DataTraceEnabled   defsecTypes.BoolValue

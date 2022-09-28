@@ -5,6 +5,6 @@ import (
 )
 
 type ProjectMetadata struct {
-	defsecTypes.Metadata
+	Metadata      defsecTypes.Metadata
 	EnableOSLogin defsecTypes.BoolValue
 }

@@ -78,8 +78,8 @@ func TestLines(t *testing.T) {
 	user := adapted.Users[0]
 	policy := adapted.PasswordPolicy
 
-	assert.Equal(t, 2, policy.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 8, policy.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, policy.Metadata.Range().GetStartLine())
+	assert.Equal(t, 8, policy.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, policy.MinimumLength.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, policy.MinimumLength.GetMetadata().Range().GetEndLine())
@@ -96,33 +96,33 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 7, policy.RequireSymbols.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 7, policy.RequireSymbols.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 10, group.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 13, group.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 10, group.Metadata.Range().GetStartLine())
+	assert.Equal(t, 13, group.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 11, group.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 11, group.Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 15, group.Policies[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 34, group.Policies[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 15, group.Policies[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 34, group.Policies[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 16, group.Policies[0].Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 16, group.Policies[0].Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 19, group.Policies[0].Document.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 33, group.Policies[0].Document.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 19, group.Policies[0].Document.Metadata.Range().GetStartLine())
+	assert.Equal(t, 33, group.Policies[0].Document.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 36, user.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 39, user.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 36, user.Metadata.Range().GetStartLine())
+	assert.Equal(t, 39, user.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 37, user.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 37, user.Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 41, user.Policies[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 58, user.Policies[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 41, user.Policies[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 58, user.Policies[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 42, user.Policies[0].Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 42, user.Policies[0].Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 46, user.Policies[0].Document.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 57, user.Policies[0].Document.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 46, user.Policies[0].Document.Metadata.Range().GetStartLine())
+	assert.Equal(t, 57, user.Policies[0].Document.Metadata.Range().GetEndLine())
 }

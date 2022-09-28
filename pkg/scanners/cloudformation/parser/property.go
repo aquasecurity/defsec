@@ -121,12 +121,12 @@ func (p *Property) Metadata() defsecTypes.Metadata {
 		}
 	}
 	ref := NewCFReferenceWithValue(p.parentRange, *base, p.logicalId)
-	return defsecTypes.NewMetadata(p.Range(), ref)
+	return defsecTypes.NewMetadata(p.Range(), ref.String())
 }
 
 func (p *Property) MetadataWithValue(resolvedValue *Property) defsecTypes.Metadata {
 	ref := NewCFReferenceWithValue(p.parentRange, *resolvedValue, p.logicalId)
-	return defsecTypes.NewMetadata(p.Range(), ref)
+	return defsecTypes.NewMetadata(p.Range(), ref.String())
 }
 
 func (p *Property) isFunction() bool {

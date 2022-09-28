@@ -1,7 +1,10 @@
 package types
 
 import (
+	"encoding/json"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -76,4 +79,16 @@ func Test_StringValueStartsWith(t *testing.T) {
 			assert.Equal(t, tC.expected, val.StartsWith(tC.prefix, options...))
 		})
 	}
+}
+
+func Test_StringJSON(t *testing.T) {
+	val := String("hello world", NewMetadata(NewRange("main.tf", 123, 123, "", nil), ""))
+	data, err := json.Marshal(val)
+	require.NoError(t, err)
+
+	var restored StringValue
+	err = json.Unmarshal(data, &restored)
+	require.NoError(t, err)
+
+	assert.Equal(t, val, restored)
 }

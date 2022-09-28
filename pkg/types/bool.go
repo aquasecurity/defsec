@@ -4,24 +4,42 @@ import (
 	"encoding/json"
 )
 
-type BoolValue interface {
-	metadataProvider
-	Value() bool
-	IsTrue() bool
-	IsFalse() bool
-}
-
-type boolValue struct {
+type BoolValue struct {
 	BaseAttribute
 	value bool
 }
 
-func (b *boolValue) MarshalJSON() ([]byte, error) {
-	return json.Marshal(b.value)
+func (b BoolValue) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]interface{}{
+		"value":    b.value,
+		"metadata": b.metadata,
+	})
+}
+
+func (b *BoolValue) UnmarshalJSON(data []byte) error {
+	var keys map[string]interface{}
+	if err := json.Unmarshal(data, &keys); err != nil {
+		return err
+	}
+	if keys["value"] != nil {
+		b.value = keys["value"].(bool)
+	}
+	if keys["metadata"] != nil {
+		raw, err := json.Marshal(keys["metadata"])
+		if err != nil {
+			return err
+		}
+		var m Metadata
+		if err := json.Unmarshal(raw, &m); err != nil {
+			return err
+		}
+		b.metadata = m
+	}
+	return nil
 }
 
 func Bool(value bool, metadata Metadata) BoolValue {
-	return &boolValue{
+	return BoolValue{
 		value:         value,
 		BaseAttribute: BaseAttribute{metadata: metadata},
 	}
@@ -29,45 +47,45 @@ func Bool(value bool, metadata Metadata) BoolValue {
 
 func BoolDefault(value bool, metadata Metadata) BoolValue {
 	b := Bool(value, metadata)
-	b.(*boolValue).BaseAttribute.metadata.isDefault = true
+	b.BaseAttribute.metadata.isDefault = true
 	return b
 }
 
 func BoolUnresolvable(m Metadata) BoolValue {
 	b := Bool(false, m)
-	b.(*boolValue).BaseAttribute.metadata.isUnresolvable = true
+	b.BaseAttribute.metadata.isUnresolvable = true
 	return b
 }
 
 func BoolExplicit(value bool, metadata Metadata) BoolValue {
 	b := Bool(value, metadata)
-	b.(*boolValue).BaseAttribute.metadata.isExplicit = true
+	b.BaseAttribute.metadata.isExplicit = true
 	return b
 }
 
-func (b *boolValue) Value() bool {
+func (b BoolValue) Value() bool {
 	return b.value
 }
 
-func (b *boolValue) GetRawValue() interface{} {
+func (b BoolValue) GetRawValue() interface{} {
 	return b.value
 }
 
-func (b *boolValue) IsTrue() bool {
+func (b BoolValue) IsTrue() bool {
 	if b.metadata.isUnresolvable {
 		return false
 	}
 	return b.Value()
 }
 
-func (b *boolValue) IsFalse() bool {
+func (b BoolValue) IsFalse() bool {
 	if b.metadata.isUnresolvable {
 		return false
 	}
 	return !b.Value()
 }
 
-func (s *boolValue) ToRego() interface{} {
+func (s BoolValue) ToRego() interface{} {
 	return map[string]interface{}{
 		"filepath":  s.metadata.Range().GetFilename(),
 		"startline": s.metadata.Range().GetStartLine(),
@@ -76,6 +94,6 @@ func (s *boolValue) ToRego() interface{} {
 		"explicit":  s.metadata.isExplicit,
 		"value":     s.Value(),
 		"fskey":     CreateFSKey(s.metadata.Range().GetFS()),
-		"resource":  s.metadata.Reference().String(),
+		"resource":  s.metadata.Reference(),
 	}
 }

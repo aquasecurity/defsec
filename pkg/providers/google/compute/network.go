@@ -5,7 +5,7 @@ import (
 )
 
 type Network struct {
-	types.Metadata
+	Metadata    types.Metadata
 	Firewall    *Firewall
 	Subnetworks []SubNetwork
 }

@@ -14,45 +14,32 @@ const (
 )
 
 func String(str string, m Metadata) StringValue {
-	return &stringValue{
+	return StringValue{
 		value:         str,
 		BaseAttribute: BaseAttribute{metadata: m},
 	}
 }
 func StringDefault(value string, m Metadata) StringValue {
 	b := String(value, m)
-	b.(*stringValue).BaseAttribute.metadata.isDefault = true
+	b.BaseAttribute.metadata.isDefault = true
 	return b
 }
 
 func StringUnresolvable(m Metadata) StringValue {
 	b := String("", m)
-	b.(*stringValue).BaseAttribute.metadata.isUnresolvable = true
+	b.BaseAttribute.metadata.isUnresolvable = true
 	return b
 }
 
 func StringExplicit(value string, m Metadata) StringValue {
 	b := String(value, m)
-	b.(*stringValue).BaseAttribute.metadata.isExplicit = true
+	b.BaseAttribute.metadata.isExplicit = true
 	return b
 }
 
 type StringValueList []StringValue
 
-type StringValue interface {
-	metadataProvider
-	Value() string
-	IsEmpty() bool
-	IsNotEmpty() bool
-	IsOneOf(values ...string) bool
-	EqualTo(value string, equalityOptions ...StringEqualityOption) bool
-	NotEqualTo(value string, equalityOptions ...StringEqualityOption) bool
-	StartsWith(prefix string, equalityOptions ...StringEqualityOption) bool
-	EndsWith(suffix string, equalityOptions ...StringEqualityOption) bool
-	Contains(value string, equalityOptions ...StringEqualityOption) bool
-}
-
-type stringValue struct {
+type StringValue struct {
 	BaseAttribute
 	value string
 }
@@ -66,11 +53,36 @@ func (l StringValueList) AsStrings() (output []string) {
 
 type stringCheckFunc func(string, string) bool
 
-func (v *stringValue) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.value)
+func (b StringValue) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]interface{}{
+		"value":    b.value,
+		"metadata": b.metadata,
+	})
 }
 
-func (s *stringValue) ToRego() interface{} {
+func (b *StringValue) UnmarshalJSON(data []byte) error {
+	var keys map[string]interface{}
+	if err := json.Unmarshal(data, &keys); err != nil {
+		return err
+	}
+	if keys["value"] != nil {
+		b.value = keys["value"].(string)
+	}
+	if keys["metadata"] != nil {
+		raw, err := json.Marshal(keys["metadata"])
+		if err != nil {
+			return err
+		}
+		var m Metadata
+		if err := json.Unmarshal(raw, &m); err != nil {
+			return err
+		}
+		b.metadata = m
+	}
+	return nil
+}
+
+func (s StringValue) ToRego() interface{} {
 	return map[string]interface{}{
 		"filepath":  s.metadata.Range().GetFilename(),
 		"startline": s.metadata.Range().GetStartLine(),
@@ -79,11 +91,11 @@ func (s *stringValue) ToRego() interface{} {
 		"explicit":  s.metadata.isExplicit,
 		"value":     s.Value(),
 		"fskey":     CreateFSKey(s.metadata.Range().GetFS()),
-		"resource":  s.metadata.Reference().String(),
+		"resource":  s.metadata.Reference(),
 	}
 }
 
-func (s *stringValue) IsOneOf(values ...string) bool {
+func (s StringValue) IsOneOf(values ...string) bool {
 	if s.metadata.isUnresolvable {
 		return false
 	}
@@ -95,33 +107,33 @@ func (s *stringValue) IsOneOf(values ...string) bool {
 	return false
 }
 
-func (s *stringValue) GetMetadata() Metadata {
+func (s StringValue) GetMetadata() Metadata {
 	return s.metadata
 }
 
-func (s *stringValue) Value() string {
+func (s StringValue) Value() string {
 	return s.value
 }
 
-func (b *stringValue) GetRawValue() interface{} {
+func (b StringValue) GetRawValue() interface{} {
 	return b.value
 }
 
-func (s *stringValue) IsEmpty() bool {
+func (s StringValue) IsEmpty() bool {
 	if s.metadata.isUnresolvable {
 		return false
 	}
 	return s.value == ""
 }
 
-func (s *stringValue) IsNotEmpty() bool {
+func (s StringValue) IsNotEmpty() bool {
 	if s.metadata.isUnresolvable {
 		return false
 	}
 	return s.value != ""
 }
 
-func (s *stringValue) EqualTo(value string, equalityOptions ...StringEqualityOption) bool {
+func (s StringValue) EqualTo(value string, equalityOptions ...StringEqualityOption) bool {
 	if s.metadata.isUnresolvable {
 		return false
 	}
@@ -129,7 +141,7 @@ func (s *stringValue) EqualTo(value string, equalityOptions ...StringEqualityOpt
 	return s.executePredicate(value, func(a, b string) bool { return a == b }, equalityOptions...)
 }
 
-func (s *stringValue) NotEqualTo(value string, equalityOptions ...StringEqualityOption) bool {
+func (s StringValue) NotEqualTo(value string, equalityOptions ...StringEqualityOption) bool {
 	if s.metadata.isUnresolvable {
 		return false
 	}
@@ -137,7 +149,7 @@ func (s *stringValue) NotEqualTo(value string, equalityOptions ...StringEquality
 	return !s.EqualTo(value, equalityOptions...)
 }
 
-func (s *stringValue) StartsWith(prefix string, equalityOptions ...StringEqualityOption) bool {
+func (s StringValue) StartsWith(prefix string, equalityOptions ...StringEqualityOption) bool {
 	if s.metadata.isUnresolvable {
 		return false
 	}
@@ -145,21 +157,21 @@ func (s *stringValue) StartsWith(prefix string, equalityOptions ...StringEqualit
 	return s.executePredicate(prefix, strings.HasPrefix, equalityOptions...)
 }
 
-func (s *stringValue) EndsWith(suffix string, equalityOptions ...StringEqualityOption) bool {
+func (s StringValue) EndsWith(suffix string, equalityOptions ...StringEqualityOption) bool {
 	if s.metadata.isUnresolvable {
 		return false
 	}
 	return s.executePredicate(suffix, strings.HasSuffix, equalityOptions...)
 }
 
-func (s *stringValue) Contains(value string, equalityOptions ...StringEqualityOption) bool {
+func (s StringValue) Contains(value string, equalityOptions ...StringEqualityOption) bool {
 	if s.metadata.isUnresolvable {
 		return false
 	}
 	return s.executePredicate(value, strings.Contains, equalityOptions...)
 }
 
-func (s *stringValue) executePredicate(value string, fn stringCheckFunc, equalityOptions ...StringEqualityOption) bool {
+func (s StringValue) executePredicate(value string, fn stringCheckFunc, equalityOptions ...StringEqualityOption) bool {
 	subjectString := s.value
 	searchString := value
 

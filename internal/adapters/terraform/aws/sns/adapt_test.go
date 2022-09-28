@@ -74,8 +74,8 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Topics, 1)
 	topic := adapted.Topics[0]
 
-	assert.Equal(t, 2, topic.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 4, topic.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, topic.Metadata.Range().GetStartLine())
+	assert.Equal(t, 4, topic.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, topic.Encryption.KMSKeyID.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, topic.Encryption.KMSKeyID.GetMetadata().Range().GetEndLine())

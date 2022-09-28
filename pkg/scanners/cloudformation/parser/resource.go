@@ -82,7 +82,7 @@ func (r *Resource) SourceFormat() SourceFormat {
 }
 
 func (r *Resource) Metadata() defsecTypes.Metadata {
-	return defsecTypes.NewMetadata(r.Range(), NewCFReference(r.id, r.rng))
+	return defsecTypes.NewMetadata(r.Range(), NewCFReference(r.id, r.rng).String())
 }
 
 func (r *Resource) properties() map[string]*Property {

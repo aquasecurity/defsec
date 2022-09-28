@@ -29,11 +29,10 @@ func (r regoResult) GetMetadata() defsecTypes.Metadata {
 		return defsecTypes.NewUnmanagedMetadata()
 	}
 	rng := defsecTypes.NewRangeWithFSKey(r.Filepath, r.StartLine, r.EndLine, "", r.FSKey, r.FS)
-	ref := defsecTypes.NewNamedReference(r.Resource)
 	if r.Explicit {
-		return defsecTypes.NewExplicitMetadata(rng, ref)
+		return defsecTypes.NewExplicitMetadata(rng, r.Resource)
 	}
-	return defsecTypes.NewMetadata(rng, ref)
+	return defsecTypes.NewMetadata(rng, r.Resource)
 }
 
 func (r regoResult) GetRawValue() interface{} {

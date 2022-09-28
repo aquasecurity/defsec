@@ -219,20 +219,20 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Repositories, 1)
 	repo := adapted.Repositories[0]
 
-	assert.Equal(t, 6, repo.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 18, repo.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 6, repo.Metadata.Range().GetStartLine())
+	assert.Equal(t, 18, repo.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 8, repo.ImageTagsImmutable.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 8, repo.ImageTagsImmutable.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 10, repo.ImageScanning.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 12, repo.ImageScanning.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 10, repo.ImageScanning.Metadata.Range().GetStartLine())
+	assert.Equal(t, 12, repo.ImageScanning.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 11, repo.ImageScanning.ScanOnPush.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 11, repo.ImageScanning.ScanOnPush.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 14, repo.Encryption.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 17, repo.Encryption.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 14, repo.Encryption.Metadata.Range().GetStartLine())
+	assert.Equal(t, 17, repo.Encryption.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 15, repo.Encryption.Type.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 15, repo.Encryption.Type.GetMetadata().Range().GetEndLine())
@@ -240,9 +240,9 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 2, repo.Encryption.KMSKeyID.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 4, repo.Encryption.KMSKeyID.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 20, repo.Policies[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 51, repo.Policies[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 20, repo.Policies[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 51, repo.Policies[0].Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 23, repo.Policies[0].Document.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 50, repo.Policies[0].Document.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 23, repo.Policies[0].Document.Metadata.Range().GetStartLine())
+	assert.Equal(t, 50, repo.Policies[0].Document.Metadata.Range().GetEndLine())
 }

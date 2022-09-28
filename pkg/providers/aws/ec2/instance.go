@@ -6,7 +6,7 @@ import (
 )
 
 type Instance struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	MetadataOptions MetadataOptions
 	UserData        defsecTypes.StringValue
 	SecurityGroups  []SecurityGroup
@@ -15,12 +15,12 @@ type Instance struct {
 }
 
 type BlockDevice struct {
-	defsecTypes.Metadata
+	Metadata  defsecTypes.Metadata
 	Encrypted defsecTypes.BoolValue
 }
 
 type MetadataOptions struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	HttpTokens   defsecTypes.StringValue
 	HttpEndpoint defsecTypes.StringValue
 }

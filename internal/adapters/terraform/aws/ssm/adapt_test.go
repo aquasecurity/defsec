@@ -101,8 +101,8 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Secrets, 1)
 	secret := adapted.Secrets[0]
 
-	assert.Equal(t, 6, secret.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 9, secret.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 6, secret.Metadata.Range().GetStartLine())
+	assert.Equal(t, 9, secret.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 2, secret.KMSKeyID.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 4, secret.KMSKeyID.GetMetadata().Range().GetEndLine())

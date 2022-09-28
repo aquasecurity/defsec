@@ -102,15 +102,15 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Projects, 1)
 	project := adapted.Projects[0]
 
-	assert.Equal(t, 2, project.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 14, project.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, project.Metadata.Range().GetStartLine())
+	assert.Equal(t, 14, project.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 3, project.ArtifactSettings.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 5, project.ArtifactSettings.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 3, project.ArtifactSettings.Metadata.Range().GetStartLine())
+	assert.Equal(t, 5, project.ArtifactSettings.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 7, project.SecondaryArtifactSettings[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 9, project.SecondaryArtifactSettings[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 7, project.SecondaryArtifactSettings[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 9, project.SecondaryArtifactSettings[0].Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 11, project.SecondaryArtifactSettings[1].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 13, project.SecondaryArtifactSettings[1].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 11, project.SecondaryArtifactSettings[1].Metadata.Range().GetStartLine())
+	assert.Equal(t, 13, project.SecondaryArtifactSettings[1].Metadata.Range().GetEndLine())
 }

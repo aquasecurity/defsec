@@ -30,7 +30,7 @@ var CheckNoPublicEgress = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, policy := range s.Kubernetes.NetworkPolicies {
-			if policy.IsUnmanaged() {
+			if policy.Metadata.IsUnmanaged() {
 				continue
 			}
 			for _, destination := range policy.Spec.Egress.DestinationCIDRs {

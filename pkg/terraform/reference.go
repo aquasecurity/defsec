@@ -3,8 +3,6 @@ package terraform
 import (
 	"fmt"
 
-	"github.com/aquasecurity/defsec/pkg/types"
-
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -17,14 +15,14 @@ type Reference struct {
 	parent    string
 }
 
-func extendReference(ref *Reference, name string) *Reference {
-	child := *ref
+func extendReference(ref Reference, name string) Reference {
+	child := ref
 	child.remainder = make([]string, len(ref.remainder))
 	if len(ref.remainder) > 0 {
 		copy(child.remainder, ref.remainder)
 	}
 	child.remainder = append(child.remainder, name)
-	return &child
+	return child
 }
 
 func newReference(parts []string, parentKey string) (*Reference, error) {
@@ -67,30 +65,30 @@ func newReference(parts []string, parentKey string) (*Reference, error) {
 	return &ref, nil
 }
 
-func (r *Reference) BlockType() Type {
+func (r Reference) BlockType() Type {
 	return r.blockType
 }
 
-func (r *Reference) TypeLabel() string {
+func (r Reference) TypeLabel() string {
 	return r.typeLabel
 }
 
-func (r *Reference) NameLabel() string {
+func (r Reference) NameLabel() string {
 	return r.nameLabel
 }
 
-func (r *Reference) HumanReadable() string {
+func (r Reference) HumanReadable() string {
 	if r.parent == "" {
 		return r.String()
 	}
 	return fmt.Sprintf("%s:%s", r.parent, r.String())
 }
 
-func (r *Reference) LogicalID() string {
+func (r Reference) LogicalID() string {
 	return r.String()
 }
 
-func (r *Reference) String() string {
+func (r Reference) String() string {
 
 	base := r.typeLabel
 	if r.nameLabel != "" {
@@ -116,8 +114,8 @@ func (r *Reference) String() string {
 	return base
 }
 
-func (r *Reference) RefersTo(a types.Reference) bool {
-	other := a.(*Reference)
+func (r Reference) RefersTo(a Reference) bool {
+	other := a
 
 	if r.BlockType() != other.BlockType() {
 		return false
@@ -134,10 +132,10 @@ func (r *Reference) RefersTo(a types.Reference) bool {
 	return true
 }
 
-func (r *Reference) SetKey(key cty.Value) {
+func (r Reference) SetKey(key cty.Value) {
 	r.key = key
 }
-func (r *Reference) KeyBracketed() string {
+func (r Reference) KeyBracketed() string {
 	if r.key.IsNull() || !r.key.IsKnown() {
 		return ""
 	}
@@ -152,11 +150,11 @@ func (r *Reference) KeyBracketed() string {
 		return ""
 	}
 }
-func (r *Reference) RawKey() cty.Value {
+func (r Reference) RawKey() cty.Value {
 	return r.key
 }
 
-func (r *Reference) Key() string {
+func (r Reference) Key() string {
 	switch r.key.Type() {
 	case cty.Number:
 		f := r.key.AsBigFloat()

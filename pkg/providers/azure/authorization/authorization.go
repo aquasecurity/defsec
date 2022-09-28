@@ -9,12 +9,12 @@ type Authorization struct {
 }
 
 type RoleDefinition struct {
-	defsecTypes.Metadata
+	Metadata         defsecTypes.Metadata
 	Permissions      []Permission
 	AssignableScopes []defsecTypes.StringValue
 }
 
 type Permission struct {
-	defsecTypes.Metadata
-	Actions []defsecTypes.StringValue
+	Metadata defsecTypes.Metadata
+	Actions  []defsecTypes.StringValue
 }

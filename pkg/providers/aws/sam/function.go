@@ -6,7 +6,7 @@ import (
 )
 
 type Function struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	FunctionName    defsecTypes.StringValue
 	Tracing         defsecTypes.StringValue
 	ManagedPolicies []defsecTypes.StringValue
@@ -19,7 +19,7 @@ const (
 )
 
 type Permission struct {
-	defsecTypes.Metadata
+	Metadata  defsecTypes.Metadata
 	Principal defsecTypes.StringValue
 	SourceARN defsecTypes.StringValue
 }

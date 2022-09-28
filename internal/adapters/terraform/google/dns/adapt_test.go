@@ -134,14 +134,14 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.ManagedZones, 1)
 	zone := adapted.ManagedZones[0]
 
-	assert.Equal(t, 2, zone.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 13, zone.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, zone.Metadata.Range().GetStartLine())
+	assert.Equal(t, 13, zone.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 7, zone.DNSSec.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 7, zone.DNSSec.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 8, zone.DNSSec.DefaultKeySpecs.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 11, zone.DNSSec.DefaultKeySpecs.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 8, zone.DNSSec.DefaultKeySpecs.Metadata.Range().GetStartLine())
+	assert.Equal(t, 11, zone.DNSSec.DefaultKeySpecs.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 9, zone.DNSSec.DefaultKeySpecs.KeySigningKey.Algorithm.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 9, zone.DNSSec.DefaultKeySpecs.KeySigningKey.Algorithm.GetMetadata().Range().GetEndLine())

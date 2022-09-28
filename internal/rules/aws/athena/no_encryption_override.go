@@ -37,7 +37,7 @@ var CheckNoEncryptionOverride = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, workgroup := range s.AWS.Athena.Workgroups {
-			if workgroup.IsUnmanaged() {
+			if workgroup.Metadata.IsUnmanaged() {
 				continue
 			}
 			if workgroup.EnforceConfiguration.IsFalse() {

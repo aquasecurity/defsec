@@ -29,7 +29,7 @@ var CheckEnableHttp2 = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, service := range s.Azure.AppService.Services {
-			if service.IsUnmanaged() {
+			if service.Metadata.IsUnmanaged() {
 				continue
 			}
 			if service.Site.EnableHTTP2.IsFalse() {

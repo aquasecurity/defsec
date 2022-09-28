@@ -223,23 +223,23 @@ func TestLines(t *testing.T) {
 	cluster := adapted.Clusters[0]
 	taskDefinition := adapted.TaskDefinitions[0]
 
-	assert.Equal(t, 2, cluster.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 9, cluster.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, cluster.Metadata.Range().GetStartLine())
+	assert.Equal(t, 9, cluster.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 5, cluster.Settings.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 8, cluster.Settings.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 5, cluster.Settings.Metadata.Range().GetStartLine())
+	assert.Equal(t, 8, cluster.Settings.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 7, cluster.Settings.ContainerInsightsEnabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 7, cluster.Settings.ContainerInsightsEnabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 11, taskDefinition.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 33, taskDefinition.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 11, taskDefinition.Metadata.Range().GetStartLine())
+	assert.Equal(t, 33, taskDefinition.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 26, taskDefinition.Volumes[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 32, taskDefinition.Volumes[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 26, taskDefinition.Volumes[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 32, taskDefinition.Volumes[0].Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 29, taskDefinition.Volumes[0].EFSVolumeConfiguration.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 31, taskDefinition.Volumes[0].EFSVolumeConfiguration.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 29, taskDefinition.Volumes[0].EFSVolumeConfiguration.Metadata.Range().GetStartLine())
+	assert.Equal(t, 31, taskDefinition.Volumes[0].EFSVolumeConfiguration.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 30, taskDefinition.Volumes[0].EFSVolumeConfiguration.TransitEncryptionEnabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 30, taskDefinition.Volumes[0].EFSVolumeConfiguration.TransitEncryptionEnabled.GetMetadata().Range().GetEndLine())

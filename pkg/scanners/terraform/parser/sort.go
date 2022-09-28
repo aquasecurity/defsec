@@ -31,7 +31,7 @@ type counter struct {
 
 func (c *counter) countBlockRecursion(block *terraform.Block, blocks terraform.Blocks, count int) int {
 	metadata := block.GetMetadata()
-	if cached, ok := c.cache[metadata.Reference().String()]; ok {
+	if cached, ok := c.cache[metadata.Reference()]; ok {
 		return cached
 	}
 	var maxCount int
@@ -53,6 +53,6 @@ func (c *counter) countBlockRecursion(block *terraform.Block, blocks terraform.B
 		maxCount++
 	}
 	result := maxCount + count
-	c.cache[metadata.Reference().String()] = result
+	c.cache[metadata.Reference()] = result
 	return result
 }

@@ -240,12 +240,12 @@ func TestResult_GetCode(t *testing.T) {
 			require.NoError(t, system.WriteFile(test.filename, []byte(test.source), os.ModePerm))
 			meta := defsecTypes.NewMetadata(
 				defsecTypes.NewRange(test.filename, test.start, test.end, "", system),
-				defsecTypes.NewNamedReference("test"),
+				"",
 			)
 			if test.outerStart > 0 {
 				meta = meta.WithParent(defsecTypes.NewMetadata(
 					defsecTypes.NewRange(test.filename, test.outerStart, test.outerEnd, "", system),
-					defsecTypes.NewNamedReference("test"),
+					"",
 				))
 			}
 			result := &Result{

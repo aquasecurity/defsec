@@ -35,7 +35,7 @@ Requests are logged on a best-effort basis.`,
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, account := range s.Azure.Storage.Accounts {
-			if account.IsUnmanaged() || len(account.Queues) == 0 {
+			if account.Metadata.IsUnmanaged() || len(account.Queues) == 0 {
 				continue
 			}
 			if account.QueueProperties.EnableLogging.IsFalse() {

@@ -178,8 +178,8 @@ func TestLines(t *testing.T) {
 	cluster := adapted.Clusters[0]
 	securityGroup := adapted.SecurityGroups[0]
 
-	assert.Equal(t, 6, cluster.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 11, cluster.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 6, cluster.Metadata.Range().GetStartLine())
+	assert.Equal(t, 11, cluster.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 8, cluster.Encryption.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 8, cluster.Encryption.Enabled.GetMetadata().Range().GetEndLine())
@@ -190,8 +190,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 10, cluster.SubnetGroupName.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 10, cluster.SubnetGroupName.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 13, securityGroup.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 16, securityGroup.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 13, securityGroup.Metadata.Range().GetStartLine())
+	assert.Equal(t, 16, securityGroup.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 15, securityGroup.Description.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 15, securityGroup.Description.GetMetadata().Range().GetEndLine())

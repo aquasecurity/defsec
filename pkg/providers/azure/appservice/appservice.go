@@ -10,7 +10,7 @@ type AppService struct {
 }
 
 type Service struct {
-	defsecTypes.Metadata
+	Metadata         defsecTypes.Metadata
 	EnableClientCert defsecTypes.BoolValue
 	Identity         struct {
 		Type defsecTypes.StringValue
@@ -25,6 +25,6 @@ type Service struct {
 }
 
 type FunctionApp struct {
-	defsecTypes.Metadata
+	Metadata  defsecTypes.Metadata
 	HTTPSOnly defsecTypes.BoolValue
 }

@@ -9,7 +9,7 @@ type Elasticsearch struct {
 }
 
 type Domain struct {
-	defsecTypes.Metadata
+	Metadata          defsecTypes.Metadata
 	DomainName        defsecTypes.StringValue
 	LogPublishing     LogPublishing
 	TransitEncryption TransitEncryption
@@ -18,22 +18,22 @@ type Domain struct {
 }
 
 type Endpoint struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	EnforceHTTPS defsecTypes.BoolValue
 	TLSPolicy    defsecTypes.StringValue
 }
 
 type LogPublishing struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	AuditEnabled defsecTypes.BoolValue
 }
 
 type TransitEncryption struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }
 
 type AtRestEncryption struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }

@@ -9,7 +9,7 @@ type Kinesis struct {
 }
 
 type Stream struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	Encryption Encryption
 }
 
@@ -18,7 +18,7 @@ const (
 )
 
 type Encryption struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Type     defsecTypes.StringValue
 	KMSKeyID defsecTypes.StringValue
 }

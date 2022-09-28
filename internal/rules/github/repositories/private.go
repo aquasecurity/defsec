@@ -34,7 +34,7 @@ You can do this by either setting <code>private</code> attribute to 'true' or <c
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, repo := range s.GitHub.Repositories {
-			if repo.IsUnmanaged() {
+			if repo.Metadata.IsUnmanaged() {
 				continue
 			}
 			if repo.Public.IsTrue() {

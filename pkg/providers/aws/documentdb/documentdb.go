@@ -14,7 +14,7 @@ const (
 )
 
 type Cluster struct {
-	defsecTypes.Metadata
+	Metadata          defsecTypes.Metadata
 	Identifier        defsecTypes.StringValue
 	EnabledLogExports []defsecTypes.StringValue
 	Instances         []Instance
@@ -23,6 +23,6 @@ type Cluster struct {
 }
 
 type Instance struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	KMSKeyID defsecTypes.StringValue
 }

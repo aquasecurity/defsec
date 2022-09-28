@@ -9,7 +9,7 @@ type IAM struct {
 }
 
 type Organization struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Folders  []Folder
 	Projects []Project
 	Members  []Member
@@ -17,7 +17,7 @@ type Organization struct {
 }
 
 type Folder struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Folders  []Folder
 	Projects []Project
 	Members  []Member
@@ -25,21 +25,21 @@ type Folder struct {
 }
 
 type Project struct {
-	defsecTypes.Metadata
+	Metadata          defsecTypes.Metadata
 	AutoCreateNetwork defsecTypes.BoolValue
 	Members           []Member
 	Bindings          []Binding
 }
 
 type Binding struct {
-	defsecTypes.Metadata
+	Metadata                      defsecTypes.Metadata
 	Members                       []defsecTypes.StringValue
 	Role                          defsecTypes.StringValue
 	IncludesDefaultServiceAccount defsecTypes.BoolValue
 }
 
 type Member struct {
-	defsecTypes.Metadata
+	Metadata              defsecTypes.Metadata
 	Member                defsecTypes.StringValue
 	Role                  defsecTypes.StringValue
 	DefaultServiceAccount defsecTypes.BoolValue

@@ -9,7 +9,7 @@ type DNS struct {
 }
 
 type ManagedZone struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	DNSSec     DNSSec
 	Visibility defsecTypes.StringValue
 }
@@ -19,18 +19,18 @@ func (m ManagedZone) IsPrivate() bool {
 }
 
 type DNSSec struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	Enabled         defsecTypes.BoolValue
 	DefaultKeySpecs KeySpecs
 }
 
 type KeySpecs struct {
-	defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
 	KeySigningKey  Key
 	ZoneSigningKey Key
 }
 
 type Key struct {
-	defsecTypes.Metadata
+	Metadata  defsecTypes.Metadata
 	Algorithm defsecTypes.StringValue
 }

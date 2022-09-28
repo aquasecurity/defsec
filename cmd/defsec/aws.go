@@ -58,8 +58,13 @@ func scanAWS(stdout, stderr io.Writer) error {
 
 	scanner := aws.New(opts...)
 
+	st, err := scanner.CreateState(context.TODO())
+	if err != nil {
+		return err
+	}
+
 	// Execute the filesystem based scanners
-	results, err := scanner.Scan(context.TODO())
+	results, err := scanner.Scan(context.TODO(), st)
 	if err != nil {
 		return err
 	}

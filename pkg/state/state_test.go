@@ -1,7 +1,10 @@
 package state
 
 import (
+	"encoding/json"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
@@ -19,11 +22,11 @@ func Test_RegoConversion(t *testing.T) {
 					{
 						Metadata: defsecTypes.NewMetadata(
 							defsecTypes.NewRange("main.tf", 2, 4, "", nil),
-							defsecTypes.NewNamedReference("aws_s3_bucket.example"),
+							"aws_s3_bucket.example",
 						),
 						Name: defsecTypes.String("my-bucket", defsecTypes.NewMetadata(
 							defsecTypes.NewRange("main.tf", 3, 3, "", nil),
-							defsecTypes.NewNamedReference("aws_s3_bucket.example.bucket"),
+							"aws_s3_bucket.example.bucket",
 						)),
 					},
 				},
@@ -60,4 +63,32 @@ func Test_RegoConversion(t *testing.T) {
 			},
 		},
 	}, converted)
+}
+
+func Test_JSONPersistenceOfData(t *testing.T) {
+	s := State{
+		AWS: aws.AWS{
+			S3: s3.S3{
+				Buckets: []s3.Bucket{
+					{
+						Metadata: defsecTypes.NewMetadata(
+							defsecTypes.NewRange("main.tf", 2, 4, "", nil),
+							"aws_s3_bucket.example",
+						),
+						Name: defsecTypes.String("my-bucket", defsecTypes.NewMetadata(
+							defsecTypes.NewRange("main.tf", 3, 3, "", nil),
+							"aws_s3_bucket.example.bucket",
+						)),
+					},
+				},
+			},
+		},
+	}
+	data, err := json.Marshal(s)
+	require.NoError(t, err)
+
+	var restored State
+	require.NoError(t, json.Unmarshal(data, &restored))
+
+	assert.Equal(t, s, restored)
 }

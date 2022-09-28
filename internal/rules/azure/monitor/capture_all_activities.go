@@ -42,7 +42,7 @@ var CheckCaptureAllActivities = rules.Register(
 			"Action", "Write", "Delete",
 		}
 		for _, profile := range s.Azure.Monitor.LogProfiles {
-			if profile.IsUnmanaged() {
+			if profile.Metadata.IsUnmanaged() {
 				continue
 			}
 			var failed bool

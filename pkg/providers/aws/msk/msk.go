@@ -9,7 +9,7 @@ type MSK struct {
 }
 
 type Cluster struct {
-	defsecTypes.Metadata
+	Metadata            defsecTypes.Metadata
 	EncryptionInTransit EncryptionInTransit
 	Logging             Logging
 }
@@ -21,33 +21,33 @@ const (
 )
 
 type EncryptionInTransit struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	ClientBroker defsecTypes.StringValue
 }
 
 type Logging struct {
-	defsecTypes.Metadata
-	Broker BrokerLogging
+	Metadata defsecTypes.Metadata
+	Broker   BrokerLogging
 }
 
 type BrokerLogging struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	S3         S3Logging
 	Cloudwatch CloudwatchLogging
 	Firehose   FirehoseLogging
 }
 
 type S3Logging struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }
 
 type CloudwatchLogging struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }
 
 type FirehoseLogging struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }

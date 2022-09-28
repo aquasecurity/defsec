@@ -73,8 +73,8 @@ func TestLines(t *testing.T) {
 	adapted := Adapt(modules)
 	aggregator := adapted.ConfigurationAggregrator
 
-	assert.Equal(t, 2, aggregator.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 9, aggregator.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, aggregator.Metadata.Range().GetStartLine())
+	assert.Equal(t, 9, aggregator.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 7, aggregator.SourceAllRegions.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 7, aggregator.SourceAllRegions.GetMetadata().Range().GetEndLine())

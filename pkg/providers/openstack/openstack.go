@@ -20,7 +20,7 @@ type Firewall struct {
 }
 
 type FirewallRule struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	Source          defsecTypes.StringValue
 	Destination     defsecTypes.StringValue
 	SourcePort      defsecTypes.StringValue
@@ -29,6 +29,6 @@ type FirewallRule struct {
 }
 
 type Instance struct {
-	defsecTypes.Metadata
+	Metadata      defsecTypes.Metadata
 	AdminPassword defsecTypes.StringValue
 }

@@ -309,38 +309,38 @@ func TestLines(t *testing.T) {
 	cluster := adapted.KubernetesClusters[0]
 	loadBalancer := adapted.LoadBalancers[0]
 
-	assert.Equal(t, 6, droplet.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 8, droplet.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 6, droplet.Metadata.Range().GetStartLine())
+	assert.Equal(t, 8, droplet.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 7, droplet.SSHKeys[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 7, droplet.SSHKeys[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 10, firewall.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 19, firewall.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 10, firewall.Metadata.Range().GetStartLine())
+	assert.Equal(t, 19, firewall.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 12, firewall.OutboundRules[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 14, firewall.OutboundRules[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 12, firewall.OutboundRules[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 14, firewall.OutboundRules[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 13, firewall.OutboundRules[0].DestinationAddresses[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 13, firewall.OutboundRules[0].DestinationAddresses[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 16, firewall.InboundRules[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 18, firewall.InboundRules[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 16, firewall.InboundRules[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 18, firewall.InboundRules[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 17, firewall.InboundRules[0].SourceAddresses[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 17, firewall.InboundRules[0].SourceAddresses[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 21, loadBalancer.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 27, loadBalancer.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 21, loadBalancer.Metadata.Range().GetStartLine())
+	assert.Equal(t, 27, loadBalancer.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 23, loadBalancer.ForwardingRules[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 26, loadBalancer.ForwardingRules[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 23, loadBalancer.ForwardingRules[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 26, loadBalancer.ForwardingRules[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 25, loadBalancer.ForwardingRules[0].EntryProtocol.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 25, loadBalancer.ForwardingRules[0].EntryProtocol.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 29, cluster.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 33, cluster.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 29, cluster.Metadata.Range().GetStartLine())
+	assert.Equal(t, 33, cluster.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 31, cluster.SurgeUpgrade.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 31, cluster.SurgeUpgrade.GetMetadata().Range().GetEndLine())

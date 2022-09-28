@@ -9,7 +9,7 @@ type Container struct {
 }
 
 type KubernetesCluster struct {
-	defsecTypes.Metadata
+	Metadata                    defsecTypes.Metadata
 	NetworkProfile              NetworkProfile
 	EnablePrivateCluster        defsecTypes.BoolValue
 	APIServerAuthorizedIPRanges []defsecTypes.StringValue
@@ -18,21 +18,21 @@ type KubernetesCluster struct {
 }
 
 type RoleBasedAccessControl struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }
 
 type AddonProfile struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	OMSAgent OMSAgent
 }
 
 type OMSAgent struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }
 
 type NetworkProfile struct {
-	defsecTypes.Metadata
+	Metadata      defsecTypes.Metadata
 	NetworkPolicy defsecTypes.StringValue // "", "calico", "azure"
 }

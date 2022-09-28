@@ -9,7 +9,7 @@ type Storage struct {
 }
 
 type Account struct {
-	defsecTypes.Metadata
+	Metadata          defsecTypes.Metadata
 	NetworkRules      []NetworkRule
 	EnforceHTTPS      defsecTypes.BoolValue
 	Containers        []Container
@@ -19,17 +19,17 @@ type Account struct {
 }
 
 type Queue struct {
-	defsecTypes.Metadata
-	Name defsecTypes.StringValue
+	Metadata defsecTypes.Metadata
+	Name     defsecTypes.StringValue
 }
 
 type QueueProperties struct {
-	defsecTypes.Metadata
+	Metadata      defsecTypes.Metadata
 	EnableLogging defsecTypes.BoolValue
 }
 
 type NetworkRule struct {
-	defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
 	Bypass         []defsecTypes.StringValue
 	AllowByDefault defsecTypes.BoolValue
 }
@@ -41,6 +41,6 @@ const (
 )
 
 type Container struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	PublicAccess defsecTypes.StringValue
 }

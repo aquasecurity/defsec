@@ -203,8 +203,8 @@ func TestLines(t *testing.T) {
 	replicationGroup := adapted.ReplicationGroups[0]
 	securityGroup := adapted.SecurityGroups[0]
 
-	assert.Equal(t, 2, cluster.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 12, cluster.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, cluster.Metadata.Range().GetStartLine())
+	assert.Equal(t, 12, cluster.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 4, cluster.Engine.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 4, cluster.Engine.GetMetadata().Range().GetEndLine())
@@ -215,8 +215,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 11, cluster.SnapshotRetentionLimit.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 11, cluster.SnapshotRetentionLimit.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 14, replicationGroup.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 19, replicationGroup.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 14, replicationGroup.Metadata.Range().GetStartLine())
+	assert.Equal(t, 19, replicationGroup.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 17, replicationGroup.TransitEncryptionEnabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 17, replicationGroup.TransitEncryptionEnabled.GetMetadata().Range().GetEndLine())
@@ -224,8 +224,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 18, replicationGroup.AtRestEncryptionEnabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 18, replicationGroup.AtRestEncryptionEnabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 25, securityGroup.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 29, securityGroup.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 25, securityGroup.Metadata.Range().GetStartLine())
+	assert.Equal(t, 29, securityGroup.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 28, securityGroup.Description.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 28, securityGroup.Description.GetMetadata().Range().GetEndLine())

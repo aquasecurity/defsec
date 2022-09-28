@@ -32,7 +32,7 @@ Microsoft will notify the security contact directly in the event of a security i
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, contact := range s.Azure.SecurityCenter.Contacts {
-			if contact.IsUnmanaged() {
+			if contact.Metadata.IsUnmanaged() {
 				continue
 			}
 			if contact.EnableAlertNotifications.IsFalse() {

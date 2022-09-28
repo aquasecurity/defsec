@@ -1,6 +1,7 @@
 package types
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -12,7 +13,7 @@ type metadataProvider interface {
 
 type Metadata struct {
 	rnge           Range
-	ref            Reference
+	ref            string
 	isManaged      bool
 	isDefault      bool
 	isExplicit     bool
@@ -20,17 +21,66 @@ type Metadata struct {
 	parent         *Metadata
 }
 
-func (m *Metadata) ToRego() interface{} {
-	if m.rnge == nil {
-		return map[string]interface{}{
-			"managed":  m.isManaged,
-			"explicit": m.isExplicit,
+func (m Metadata) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]interface{}{
+		"range":        m.rnge,
+		"ref":          m.ref,
+		"managed":      m.isManaged,
+		"default":      m.isDefault,
+		"explicit":     m.isExplicit,
+		"unresolvable": m.isUnresolvable,
+		"parent":       m.parent,
+	})
+}
+
+func (m *Metadata) UnmarshalJSON(data []byte) error {
+	var keys map[string]interface{}
+	if err := json.Unmarshal(data, &keys); err != nil {
+		return err
+	}
+	if keys["range"] != nil {
+		raw, err := json.Marshal(keys["range"])
+		if err != nil {
+			return err
+		}
+		var r Range
+		if err := json.Unmarshal(raw, &r); err != nil {
+			return err
+		}
+		m.rnge = r
+	}
+	if keys["ref"] != nil {
+		m.ref = keys["ref"].(string)
+	}
+	if keys["managed"] != nil {
+		m.isManaged = keys["managed"].(bool)
+	}
+	if keys["default"] != nil {
+		m.isDefault = keys["default"].(bool)
+	}
+	if keys["explicit"] != nil {
+		m.isExplicit = keys["explicit"].(bool)
+	}
+	if keys["unresolvable"] != nil {
+		m.isUnresolvable = keys["unresolvable"].(bool)
+	}
+	if keys["parent"] != nil {
+		if _, ok := keys["parent"].(map[string]interface{}); ok {
+			raw, err := json.Marshal(keys["parent"])
+			if err != nil {
+				return err
+			}
+			var parent Metadata
+			if err := json.Unmarshal(raw, &parent); err != nil {
+				return err
+			}
+			m.parent = &parent
 		}
 	}
-	refStr := ""
-	if ref := m.Reference(); ref != nil {
-		refStr = ref.String()
-	}
+	return nil
+}
+
+func (m *Metadata) ToRego() interface{} {
 	return map[string]interface{}{
 		"filepath":  m.Range().GetFilename(),
 		"startline": m.Range().GetStartLine(),
@@ -38,17 +88,11 @@ func (m *Metadata) ToRego() interface{} {
 		"managed":   m.isManaged,
 		"explicit":  m.isExplicit,
 		"fskey":     CreateFSKey(m.Range().GetFS()),
-		"resource":  refStr,
+		"resource":  m.Reference(),
 	}
 }
 
-func NewMetadata(r Range, ref Reference) Metadata {
-	if r == nil {
-		panic("range is nil")
-	}
-	if ref == nil {
-		panic("reference is nil")
-	}
+func NewMetadata(r Range, ref string) Metadata {
 	return Metadata{
 		rnge:      r,
 		ref:       ref,
@@ -56,13 +100,13 @@ func NewMetadata(r Range, ref Reference) Metadata {
 	}
 }
 
-func NewUnresolvableMetadata(r Range, ref Reference) Metadata {
+func NewUnresolvableMetadata(r Range, ref string) Metadata {
 	unres := NewMetadata(r, ref)
 	unres.isUnresolvable = true
 	return unres
 }
 
-func NewExplicitMetadata(r Range, ref Reference) Metadata {
+func NewExplicitMetadata(r Range, ref string) Metadata {
 	m := NewMetadata(r, ref)
 	m.isExplicit = true
 	return m
@@ -90,21 +134,21 @@ func (m Metadata) IsMultiLine() bool {
 }
 
 func NewUnmanagedMetadata() Metadata {
-	m := NewMetadata(NewRange("", 0, 0, "", nil), &FakeReference{})
+	m := NewMetadata(NewRange("", 0, 0, "", nil), "")
 	m.isManaged = false
 	return m
 }
 
 func NewTestMetadata() Metadata {
-	return NewMetadata(NewRange("test.test", 123, 123, "", nil), &FakeReference{})
+	return NewMetadata(NewRange("test.test", 123, 123, "", nil), "")
 }
 
 func NewApiMetadata(provider string, parts ...string) Metadata {
-	return NewMetadata(NewRange(fmt.Sprintf("/%s/%s", provider, strings.Join(parts, "/")), 0, 0, "", nil), &FakeReference{})
+	return NewMetadata(NewRange(fmt.Sprintf("/%s/%s", provider, strings.Join(parts, "/")), 0, 0, "", nil), "")
 }
 
 func NewRemoteMetadata(id string) Metadata {
-	return NewMetadata(NewRange(id, 0, 0, "remote", nil), NewNamedReference(id))
+	return NewMetadata(NewRange(id, 0, 0, "remote", nil), id)
 }
 
 func (m Metadata) IsDefault() bool {
@@ -120,17 +164,14 @@ func (m Metadata) IsExplicit() bool {
 }
 
 func (m Metadata) String() string {
-	return m.ref.String()
+	return m.ref
 }
 
-func (m Metadata) Reference() Reference {
+func (m Metadata) Reference() string {
 	return m.ref
 }
 
 func (m Metadata) Range() Range {
-	if m.rnge == nil {
-		return NewRange("unknown", 0, 0, "", nil)
-	}
 	return m.rnge
 }
 

@@ -9,7 +9,7 @@ type Cloudfront struct {
 }
 
 type Distribution struct {
-	defsecTypes.Metadata
+	Metadata               defsecTypes.Metadata
 	WAFID                  defsecTypes.StringValue
 	Logging                Logging
 	DefaultCacheBehaviour  CacheBehaviour
@@ -18,12 +18,12 @@ type Distribution struct {
 }
 
 type Logging struct {
-	defsecTypes.Metadata
-	Bucket defsecTypes.StringValue
+	Metadata defsecTypes.Metadata
+	Bucket   defsecTypes.StringValue
 }
 
 type CacheBehaviour struct {
-	defsecTypes.Metadata
+	Metadata             defsecTypes.Metadata
 	ViewerProtocolPolicy defsecTypes.StringValue
 }
 
@@ -38,6 +38,6 @@ const (
 )
 
 type ViewerCertificate struct {
-	defsecTypes.Metadata
+	Metadata               defsecTypes.Metadata
 	MinimumProtocolVersion defsecTypes.StringValue
 }

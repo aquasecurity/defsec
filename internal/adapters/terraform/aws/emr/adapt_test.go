@@ -106,8 +106,8 @@ func TestLines(t *testing.T) {
 
 	securityConfiguration := adapted.SecurityConfiguration[0]
 
-	assert.Equal(t, 2, securityConfiguration.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 22, securityConfiguration.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, securityConfiguration.Metadata.Range().GetStartLine())
+	assert.Equal(t, 22, securityConfiguration.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 5, securityConfiguration.Configuration.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 21, securityConfiguration.Configuration.GetMetadata().Range().GetEndLine())

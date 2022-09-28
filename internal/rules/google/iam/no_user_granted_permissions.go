@@ -37,7 +37,7 @@ Permissions should be granted on roles, groups, services accounts instead.`,
 	func(s *state.State) (results scan.Results) {
 		for _, project := range s.Google.IAM.AllProjects() {
 			for _, member := range project.Members {
-				if member.IsUnmanaged() {
+				if member.Metadata.IsUnmanaged() {
 					continue
 				}
 				if member.Member.StartsWith("user:") {
@@ -67,7 +67,7 @@ Permissions should be granted on roles, groups, services accounts instead.`,
 
 		for _, folder := range s.Google.IAM.AllFolders() {
 			for _, member := range folder.Members {
-				if member.IsUnmanaged() {
+				if member.Metadata.IsUnmanaged() {
 					continue
 				}
 				if member.Member.StartsWith("user:") {
@@ -97,7 +97,7 @@ Permissions should be granted on roles, groups, services accounts instead.`,
 
 		for _, org := range s.Google.IAM.Organizations {
 			for _, member := range org.Members {
-				if member.IsUnmanaged() {
+				if member.Metadata.IsUnmanaged() {
 					continue
 				}
 				if member.Member.StartsWith("user:") {

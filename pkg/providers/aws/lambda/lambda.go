@@ -9,7 +9,7 @@ type Lambda struct {
 }
 
 type Function struct {
-	defsecTypes.Metadata
+	Metadata    defsecTypes.Metadata
 	Tracing     Tracing
 	Permissions []Permission
 }
@@ -20,12 +20,12 @@ const (
 )
 
 type Tracing struct {
-	defsecTypes.Metadata
-	Mode defsecTypes.StringValue
+	Metadata defsecTypes.Metadata
+	Mode     defsecTypes.StringValue
 }
 
 type Permission struct {
-	defsecTypes.Metadata
+	Metadata  defsecTypes.Metadata
 	Principal defsecTypes.StringValue
 	SourceARN defsecTypes.StringValue
 }

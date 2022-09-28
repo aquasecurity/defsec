@@ -31,7 +31,7 @@ var CheckLimitAuthorizedIps = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, cluster := range s.Azure.Container.KubernetesClusters {
-			if cluster.IsUnmanaged() {
+			if cluster.Metadata.IsUnmanaged() {
 				continue
 			}
 			if cluster.EnablePrivateCluster.IsTrue() {

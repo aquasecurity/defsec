@@ -35,7 +35,7 @@ This check will warn if the minimum TLS is not set to TLS1_2.`,
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, account := range s.Azure.Storage.Accounts {
-			if account.IsUnmanaged() {
+			if account.Metadata.IsUnmanaged() {
 				continue
 			}
 			if account.MinimumTLSVersion.NotEqualTo("TLS1_2") {

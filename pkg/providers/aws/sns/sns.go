@@ -20,12 +20,12 @@ func NewTopic(arn string, metadata defsecTypes.Metadata) *Topic {
 }
 
 type Topic struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	ARN        defsecTypes.StringValue
 	Encryption Encryption
 }
 
 type Encryption struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	KMSKeyID defsecTypes.StringValue
 }

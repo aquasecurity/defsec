@@ -15,26 +15,26 @@ type IAM struct {
 }
 
 type ServerCertificate struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	Expiration defsecTypes.TimeValue
 }
 
 type Policy struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Name     defsecTypes.StringValue
 	Document Document
 	Builtin  defsecTypes.BoolValue
 }
 
 type Document struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Parsed   iamgo.Document
 	IsOffset bool
 	HasRefs  bool
 }
 
 func (d Document) ToRego() interface{} {
-	m := d.GetMetadata()
+	m := d.Metadata
 	doc, _ := d.Parsed.MarshalJSON()
 	return map[string]interface{}{
 		"filepath":  m.Range().GetFilename(),
@@ -48,14 +48,14 @@ func (d Document) ToRego() interface{} {
 }
 
 type Group struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Name     defsecTypes.StringValue
 	Users    []User
 	Policies []Policy
 }
 
 type User struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	Name       defsecTypes.StringValue
 	Groups     []Group
 	Policies   []Policy
@@ -65,16 +65,16 @@ type User struct {
 }
 
 func (u *User) HasLoggedIn() bool {
-	return u.LastAccess != nil && u.LastAccess.GetMetadata().IsResolvable() && !u.LastAccess.IsNever()
+	return u.LastAccess.GetMetadata().IsResolvable() && !u.LastAccess.IsNever()
 }
 
 type MFADevice struct {
-	defsecTypes.Metadata
+	Metadata  defsecTypes.Metadata
 	IsVirtual defsecTypes.BoolValue
 }
 
 type AccessKey struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	AccessKeyId  defsecTypes.StringValue
 	Active       defsecTypes.BoolValue
 	CreationDate defsecTypes.TimeValue
@@ -82,13 +82,13 @@ type AccessKey struct {
 }
 
 type Role struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Name     defsecTypes.StringValue
 	Policies []Policy
 }
 
 func (d Document) MetadataFromIamGo(r ...iamgo.Range) defsecTypes.Metadata {
-	m := d.GetMetadata()
+	m := d.Metadata
 	if d.HasRefs {
 		return m
 	}

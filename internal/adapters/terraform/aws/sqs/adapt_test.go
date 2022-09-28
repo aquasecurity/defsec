@@ -129,12 +129,12 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Queues, 1)
 	queue := adapted.Queues[0]
 
-	assert.Equal(t, 2, queue.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 15, queue.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, queue.Metadata.Range().GetStartLine())
+	assert.Equal(t, 15, queue.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, queue.Encryption.KMSKeyID.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, queue.Encryption.KMSKeyID.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 5, queue.Policies[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 14, queue.Policies[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 5, queue.Policies[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 14, queue.Policies[0].Metadata.Range().GetEndLine())
 }

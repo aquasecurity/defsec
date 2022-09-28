@@ -166,8 +166,8 @@ func TestLines(t *testing.T) {
 	binding := adapted.Buckets[0].Bindings[0]
 	member := adapted.Buckets[0].Members[0]
 
-	assert.Equal(t, 2, bucket.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 6, bucket.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, bucket.Metadata.Range().GetStartLine())
+	assert.Equal(t, 6, bucket.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, bucket.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, bucket.Name.GetMetadata().Range().GetEndLine())
@@ -178,8 +178,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 5, bucket.EnableUniformBucketLevelAccess.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 5, bucket.EnableUniformBucketLevelAccess.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 8, binding.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 14, binding.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 8, binding.Metadata.Range().GetStartLine())
+	assert.Equal(t, 14, binding.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 10, binding.Role.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 10, binding.Role.GetMetadata().Range().GetEndLine())
@@ -187,8 +187,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 11, binding.Members[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 13, binding.Members[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 16, member.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 20, member.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 16, member.Metadata.Range().GetStartLine())
+	assert.Equal(t, 20, member.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 17, member.Member.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 17, member.Member.GetMetadata().Range().GetEndLine())

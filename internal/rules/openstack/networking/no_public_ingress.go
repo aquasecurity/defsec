@@ -31,7 +31,7 @@ var CheckNoPublicIngress = rules.Register(
 	func(s *state.State) (results scan.Results) {
 		for _, group := range s.OpenStack.Networking.SecurityGroups {
 			for _, rule := range group.Rules {
-				if rule.IsUnmanaged() || rule.IsIngress.IsFalse() {
+				if rule.Metadata.IsUnmanaged() || rule.IsIngress.IsFalse() {
 					continue
 				}
 				if cidr.IsPublic(rule.CIDR.Value()) && cidr.CountAddresses(rule.CIDR.Value()) > 1 {

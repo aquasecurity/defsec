@@ -12,17 +12,17 @@ type ECS struct {
 }
 
 type Cluster struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Settings ClusterSettings
 }
 
 type ClusterSettings struct {
-	defsecTypes.Metadata
+	Metadata                 defsecTypes.Metadata
 	ContainerInsightsEnabled defsecTypes.BoolValue
 }
 
 type TaskDefinition struct {
-	defsecTypes.Metadata
+	Metadata             defsecTypes.Metadata
 	Volumes              []Volume
 	ContainerDefinitions []ContainerDefinition
 }
@@ -87,7 +87,7 @@ func (j containerDefinitionJSON) convert(metadata defsecTypes.Metadata) Containe
 }
 
 type ContainerDefinition struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	Name         defsecTypes.StringValue
 	Image        defsecTypes.StringValue
 	CPU          defsecTypes.IntValue
@@ -109,11 +109,11 @@ type PortMapping struct {
 }
 
 type Volume struct {
-	defsecTypes.Metadata
+	Metadata               defsecTypes.Metadata
 	EFSVolumeConfiguration EFSVolumeConfiguration
 }
 
 type EFSVolumeConfiguration struct {
-	defsecTypes.Metadata
+	Metadata                 defsecTypes.Metadata
 	TransitEncryptionEnabled defsecTypes.BoolValue
 }

@@ -29,7 +29,7 @@ var CheckNoRsaSha1 = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, zone := range s.Google.DNS.ManagedZones {
-			if zone.IsUnmanaged() {
+			if zone.Metadata.IsUnmanaged() {
 				continue
 			}
 			if zone.DNSSec.DefaultKeySpecs.KeySigningKey.Algorithm.EqualTo("rsasha1") {

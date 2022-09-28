@@ -9,6 +9,6 @@ type Compute struct {
 }
 
 type Instance struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	UserData defsecTypes.StringValue // not b64 encoded pls
 }

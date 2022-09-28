@@ -117,8 +117,8 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Buckets, 1)
 	bucket := adapted.Buckets[0]
 
-	assert.Equal(t, 2, bucket.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 12, bucket.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, bucket.Metadata.Range().GetStartLine())
+	assert.Equal(t, 12, bucket.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, bucket.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, bucket.Name.GetMetadata().Range().GetEndLine())
@@ -129,14 +129,14 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 7, bucket.ForceDestroy.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 7, bucket.ForceDestroy.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 9, bucket.Versioning.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 11, bucket.Versioning.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 9, bucket.Versioning.Metadata.Range().GetStartLine())
+	assert.Equal(t, 11, bucket.Versioning.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 10, bucket.Versioning.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 10, bucket.Versioning.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 14, bucket.Objects[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 17, bucket.Objects[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 14, bucket.Objects[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 17, bucket.Objects[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 16, bucket.Objects[0].ACL.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 16, bucket.Objects[0].ACL.GetMetadata().Range().GetEndLine())

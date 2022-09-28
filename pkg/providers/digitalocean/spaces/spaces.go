@@ -9,7 +9,7 @@ type Spaces struct {
 }
 
 type Bucket struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	Name         defsecTypes.StringValue
 	Objects      []Object
 	ACL          defsecTypes.StringValue
@@ -18,11 +18,11 @@ type Bucket struct {
 }
 
 type Versioning struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }
 
 type Object struct {
-	defsecTypes.Metadata
-	ACL defsecTypes.StringValue
+	Metadata defsecTypes.Metadata
+	ACL      defsecTypes.StringValue
 }

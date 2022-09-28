@@ -43,7 +43,6 @@ func Test_adaptDisks(t *testing.T) {
 					Encryption: compute.DiskEncryption{
 						Metadata:   defsecTypes.NewTestMetadata(),
 						KMSKeyLink: defsecTypes.String("something", defsecTypes.NewTestMetadata()),
-						RawKey:     nil,
 					},
 				},
 				{
@@ -78,7 +77,6 @@ func Test_adaptDisks(t *testing.T) {
 					Encryption: compute.DiskEncryption{
 						Metadata:   defsecTypes.NewTestMetadata(),
 						KMSKeyLink: defsecTypes.String("google_kms_crypto_key.my_crypto_key", defsecTypes.NewTestMetadata()),
-						RawKey:     nil,
 					},
 				},
 			},

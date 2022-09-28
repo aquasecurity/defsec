@@ -33,7 +33,7 @@ The default action of the Network ACL should be set to deny for when IPs are not
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, vault := range s.Azure.KeyVault.Vaults {
-			if vault.IsUnmanaged() {
+			if vault.Metadata.IsUnmanaged() {
 				continue
 			}
 			if vault.NetworkACLs.DefaultAction.NotEqualTo("Deny") {

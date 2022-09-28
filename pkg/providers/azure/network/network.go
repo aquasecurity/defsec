@@ -10,12 +10,12 @@ type Network struct {
 }
 
 type SecurityGroup struct {
-	defsecTypes.Metadata
-	Rules []SecurityGroupRule
+	Metadata defsecTypes.Metadata
+	Rules    []SecurityGroupRule
 }
 
 type SecurityGroupRule struct {
-	defsecTypes.Metadata
+	Metadata             defsecTypes.Metadata
 	Outbound             defsecTypes.BoolValue
 	Allow                defsecTypes.BoolValue
 	SourceAddresses      []defsecTypes.StringValue
@@ -26,9 +26,9 @@ type SecurityGroupRule struct {
 }
 
 type PortRange struct {
-	defsecTypes.Metadata
-	Start int
-	End   int
+	Metadata defsecTypes.Metadata
+	Start    int
+	End      int
 }
 
 func (r PortRange) Includes(port int) bool {
@@ -36,12 +36,12 @@ func (r PortRange) Includes(port int) bool {
 }
 
 type NetworkWatcherFlowLog struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	RetentionPolicy RetentionPolicy
 }
 
 type RetentionPolicy struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
-	Days    defsecTypes.IntValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
+	Days     defsecTypes.IntValue
 }

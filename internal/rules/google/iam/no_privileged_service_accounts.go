@@ -38,7 +38,7 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 	func(s *state.State) (results scan.Results) {
 		for _, project := range s.Google.IAM.AllProjects() {
 			for _, member := range project.Members {
-				if member.IsUnmanaged() {
+				if member.Metadata.IsUnmanaged() {
 					continue
 				}
 				if member.Member.StartsWith("serviceAccount:") {
@@ -54,7 +54,7 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 				}
 			}
 			for _, binding := range project.Bindings {
-				if binding.IsUnmanaged() {
+				if binding.Metadata.IsUnmanaged() {
 					continue
 				}
 				if isRolePrivileged(binding.Role.Value()) {
@@ -74,7 +74,7 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 		}
 		for _, folder := range s.Google.IAM.AllFolders() {
 			for _, member := range folder.Members {
-				if member.IsUnmanaged() {
+				if member.Metadata.IsUnmanaged() {
 					continue
 				}
 				if member.Member.StartsWith("serviceAccount:") {
@@ -90,7 +90,7 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 				}
 			}
 			for _, binding := range folder.Bindings {
-				if binding.IsUnmanaged() {
+				if binding.Metadata.IsUnmanaged() {
 					continue
 				}
 				if isRolePrivileged(binding.Role.Value()) {
@@ -112,7 +112,7 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 
 		for _, org := range s.Google.IAM.Organizations {
 			for _, member := range org.Members {
-				if member.IsUnmanaged() {
+				if member.Metadata.IsUnmanaged() {
 					continue
 				}
 				if member.Member.StartsWith("serviceAccount:") {
@@ -128,7 +128,7 @@ var CheckNoPrivilegedServiceAccounts = rules.Register(
 				}
 			}
 			for _, binding := range org.Bindings {
-				if binding.IsUnmanaged() {
+				if binding.Metadata.IsUnmanaged() {
 					continue
 				}
 				if isRolePrivileged(binding.Role.Value()) {

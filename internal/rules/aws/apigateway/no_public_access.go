@@ -30,7 +30,7 @@ var CheckNoPublicAccess = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, api := range s.AWS.APIGateway.V1.APIs {
-			if api.IsUnmanaged() {
+			if api.Metadata.IsUnmanaged() {
 				continue
 			}
 			for _, resource := range api.Resources {
