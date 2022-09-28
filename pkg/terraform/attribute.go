@@ -856,8 +856,6 @@ func createDotReferenceFromTraversal(parentRef string, traversals ...hcl.Travers
 				refParts = append(refParts, part.Name)
 			case hcl.TraverseIndex:
 				key = part.Key
-			default:
-				panic(fmt.Sprintf("%#v", traversals))
 			}
 		}
 	}
