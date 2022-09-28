@@ -6,11 +6,6 @@ import (
 	"strings"
 )
 
-type metadataProvider interface {
-	GetMetadata() Metadata
-	GetRawValue() interface{}
-}
-
 type Metadata struct {
 	rnge           Range
 	ref            string

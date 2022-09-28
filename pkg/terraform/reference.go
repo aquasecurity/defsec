@@ -132,7 +132,7 @@ func (r Reference) RefersTo(a Reference) bool {
 	return true
 }
 
-func (r Reference) SetKey(key cty.Value) {
+func (r *Reference) SetKey(key cty.Value) {
 	r.key = key
 }
 func (r Reference) KeyBracketed() string {
