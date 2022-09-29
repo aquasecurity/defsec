@@ -16,10 +16,14 @@ func isRegoFile(name string) bool {
 	return strings.HasSuffix(name, bundle.RegoExt) && !strings.HasSuffix(name, "_test"+bundle.RegoExt)
 }
 
+func sanitisePath(path string) string {
+	return strings.TrimPrefix(strings.TrimPrefix(filepath.ToSlash(path), "./"), "/")
+}
+
 func (s *Scanner) loadPoliciesFromDirs(target fs.FS, paths []string) (map[string]*ast.Module, error) {
 	modules := make(map[string]*ast.Module)
 	for _, path := range paths {
-		if err := fs.WalkDir(target, filepath.ToSlash(path), func(path string, info fs.DirEntry, err error) error {
+		if err := fs.WalkDir(target, sanitisePath(path), func(path string, info fs.DirEntry, err error) error {
 			if err != nil {
 				return err
 			}

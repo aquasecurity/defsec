@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/types"
@@ -35,6 +36,41 @@ deny {
 	require.NoError(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{
+		Path: "/evil.lol",
+		Contents: map[string]interface{}{
+			"evil": true,
+		},
+		FS: srcFS,
+	})
+	require.NoError(t, err)
+
+	require.Equal(t, 1, len(results.GetFailed()))
+	assert.Equal(t, 0, len(results.GetPassed()))
+	assert.Equal(t, 0, len(results.GetIgnored()))
+
+	assert.Equal(t, "/evil.lol", results.GetFailed()[0].Metadata().Range().GetFilename())
+	assert.False(t, results.GetFailed()[0].IsWarning())
+}
+
+func Test_RegoScanning_AbsolutePolicyPath_Deny(t *testing.T) {
+
+	tmp := t.TempDir()
+	require.NoError(t, os.Mkdir(filepath.Join(tmp, "policies"), 0755))
+	require.NoError(t, os.WriteFile(filepath.Join(tmp, "policies", "test.rego"), []byte(`package defsec.test
+
+deny {
+    input.evil
+}`), 0600))
+
+	srcFS := os.DirFS(tmp)
+
+	scanner := NewScanner(types.SourceJSON)
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"/policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
