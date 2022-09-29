@@ -9,7 +9,7 @@ type SSM struct {
 }
 
 type Secret struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	KMSKeyID defsecTypes.StringValue
 }
 

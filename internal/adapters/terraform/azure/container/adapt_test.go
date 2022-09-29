@@ -196,8 +196,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 3, cluster.EnablePrivateCluster.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, cluster.EnablePrivateCluster.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 5, cluster.NetworkProfile.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 7, cluster.NetworkProfile.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 5, cluster.NetworkProfile.Metadata.Range().GetStartLine())
+	assert.Equal(t, 7, cluster.NetworkProfile.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 6, cluster.NetworkProfile.NetworkPolicy.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 6, cluster.NetworkProfile.NetworkPolicy.GetMetadata().Range().GetEndLine())
@@ -205,17 +205,17 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 9, cluster.APIServerAuthorizedIPRanges[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 11, cluster.APIServerAuthorizedIPRanges[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 13, cluster.AddonProfile.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 17, cluster.AddonProfile.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 13, cluster.AddonProfile.Metadata.Range().GetStartLine())
+	assert.Equal(t, 17, cluster.AddonProfile.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 14, cluster.AddonProfile.OMSAgent.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 16, cluster.AddonProfile.OMSAgent.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 14, cluster.AddonProfile.OMSAgent.Metadata.Range().GetStartLine())
+	assert.Equal(t, 16, cluster.AddonProfile.OMSAgent.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 15, cluster.AddonProfile.OMSAgent.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 15, cluster.AddonProfile.OMSAgent.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 19, cluster.RoleBasedAccessControl.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 21, cluster.RoleBasedAccessControl.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 19, cluster.RoleBasedAccessControl.Metadata.Range().GetStartLine())
+	assert.Equal(t, 21, cluster.RoleBasedAccessControl.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 20, cluster.RoleBasedAccessControl.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 20, cluster.RoleBasedAccessControl.Enabled.GetMetadata().Range().GetEndLine())

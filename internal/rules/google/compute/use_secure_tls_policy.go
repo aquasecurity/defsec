@@ -29,7 +29,7 @@ var CheckUseSecureTlsPolicy = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, policy := range s.Google.Compute.SSLPolicies {
-			if policy.IsUnmanaged() {
+			if policy.Metadata.IsUnmanaged() {
 				continue
 			}
 			if policy.MinimumTLSVersion.NotEqualTo("TLS_1_2") {

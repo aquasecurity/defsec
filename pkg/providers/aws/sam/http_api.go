@@ -5,7 +5,7 @@ import (
 )
 
 type HttpAPI struct {
-	defsecTypes.Metadata
+	Metadata             defsecTypes.Metadata
 	Name                 defsecTypes.StringValue
 	AccessLogging        AccessLogging
 	DefaultRouteSettings RouteSettings
@@ -13,7 +13,7 @@ type HttpAPI struct {
 }
 
 type RouteSettings struct {
-	defsecTypes.Metadata
+	Metadata               defsecTypes.Metadata
 	LoggingEnabled         defsecTypes.BoolValue
 	DataTraceEnabled       defsecTypes.BoolValue
 	DetailedMetricsEnabled defsecTypes.BoolValue

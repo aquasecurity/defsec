@@ -29,7 +29,7 @@ var CheckSecurityGroupHasDescription = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, group := range s.OpenStack.Networking.SecurityGroups {
-			if group.IsUnmanaged() {
+			if group.Metadata.IsUnmanaged() {
 				continue
 			}
 			if group.Description.IsEmpty() {

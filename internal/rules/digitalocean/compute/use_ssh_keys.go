@@ -31,7 +31,7 @@ var CheckUseSshKeys = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, droplet := range s.DigitalOcean.Compute.Droplets {
-			if droplet.IsUnmanaged() {
+			if droplet.Metadata.IsUnmanaged() {
 				continue
 			}
 			if len(droplet.SSHKeys) == 0 {

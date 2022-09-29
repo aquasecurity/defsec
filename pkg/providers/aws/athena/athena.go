@@ -10,13 +10,13 @@ type Athena struct {
 }
 
 type Database struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	Name       defsecTypes.StringValue
 	Encryption EncryptionConfiguration
 }
 
 type Workgroup struct {
-	defsecTypes.Metadata
+	Metadata             defsecTypes.Metadata
 	Name                 defsecTypes.StringValue
 	Encryption           EncryptionConfiguration
 	EnforceConfiguration defsecTypes.BoolValue
@@ -30,6 +30,6 @@ const (
 )
 
 type EncryptionConfiguration struct {
-	defsecTypes.Metadata
-	Type defsecTypes.StringValue
+	Metadata defsecTypes.Metadata
+	Type     defsecTypes.StringValue
 }

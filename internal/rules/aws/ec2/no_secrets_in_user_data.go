@@ -43,7 +43,7 @@ var CheckNoSecretsInUserData = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, instance := range s.AWS.EC2.Instances {
-			if instance.IsUnmanaged() {
+			if instance.Metadata.IsUnmanaged() {
 				continue
 			}
 			if result := scanner.Scan(instance.UserData.Value()); result.TransgressionFound {

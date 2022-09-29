@@ -5,7 +5,7 @@ import (
 )
 
 type Firewall struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	Name         defsecTypes.StringValue
 	IngressRules []IngressRule
 	EgressRules  []EgressRule
@@ -14,7 +14,7 @@ type Firewall struct {
 }
 
 type FirewallRule struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Enforced defsecTypes.BoolValue
 	IsAllow  defsecTypes.BoolValue
 	Protocol defsecTypes.StringValue
@@ -22,13 +22,13 @@ type FirewallRule struct {
 }
 
 type IngressRule struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	FirewallRule
 	SourceRanges []defsecTypes.StringValue
 }
 
 type EgressRule struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	FirewallRule
 	DestinationRanges []defsecTypes.StringValue
 }

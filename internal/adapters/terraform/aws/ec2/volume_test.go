@@ -101,8 +101,8 @@ func TestVolumeLines(t *testing.T) {
 	require.Len(t, adapted.Volumes, 1)
 	volume := adapted.Volumes[0]
 
-	assert.Equal(t, 2, volume.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 5, volume.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, volume.Metadata.Range().GetStartLine())
+	assert.Equal(t, 5, volume.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 4, volume.Encryption.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 4, volume.Encryption.Enabled.GetMetadata().Range().GetEndLine())

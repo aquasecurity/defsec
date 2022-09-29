@@ -80,11 +80,11 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Clusters, 1)
 	cluster := adapted.Clusters[0]
 
-	assert.Equal(t, 2, cluster.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 6, cluster.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, cluster.Metadata.Range().GetStartLine())
+	assert.Equal(t, 6, cluster.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 3, cluster.Logging.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 3, cluster.Logging.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 3, cluster.Logging.Metadata.Range().GetStartLine())
+	assert.Equal(t, 3, cluster.Logging.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, cluster.Logging.Audit.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, cluster.Logging.Audit.GetMetadata().Range().GetEndLine())

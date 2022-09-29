@@ -5,7 +5,7 @@ import (
 )
 
 type PasswordPolicy struct {
-	defsecTypes.Metadata
+	Metadata             defsecTypes.Metadata
 	ReusePreventionCount defsecTypes.IntValue
 	RequireLowercase     defsecTypes.BoolValue
 	RequireUppercase     defsecTypes.BoolValue

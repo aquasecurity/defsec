@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/fs"
 	"path/filepath"
+	"reflect"
 	"strings"
 
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
@@ -109,7 +110,7 @@ func (r *Result) AbsolutePath(fsRoot string, metadata defsecTypes.Metadata) stri
 		fsRoot += "/"
 	}
 
-	if metadata.IsUnmanaged() || metadata.Range() == nil {
+	if metadata.IsUnmanaged() {
 		return ""
 	}
 	rng := metadata.Range()
@@ -127,7 +128,7 @@ func (r *Result) RelativePathTo(fsRoot, to string, metadata defsecTypes.Metadata
 		fsRoot += "/"
 	}
 
-	if metadata.IsUnmanaged() || metadata.Range() == nil {
+	if metadata.IsUnmanaged() {
 		return absolute
 	}
 	rng := metadata.Range()
@@ -176,14 +177,13 @@ func (r *Results) filterStatus(status Status) Results {
 	return filtered
 }
 
-func (r *Results) Add(description string, source MetadataProvider) {
+func (r *Results) Add(description string, source interface{}) {
 	result := Result{
 		description: description,
 	}
-	result.metadata = source.GetMetadata()
+	result.metadata = getMetadataFromSource(source)
 	if result.metadata.IsExplicit() {
-		annotationStr := rawToString(source.GetRawValue())
-		result.annotation = annotationStr
+		result.annotation = getAnnotation(source)
 	}
 	rnge := result.metadata.Range()
 	result.fsPath = rnge.GetLocalFilename()
@@ -198,46 +198,65 @@ func (r *Results) AddRego(description string, namespace string, rule string, tra
 		warning:       rule == "warn" || strings.HasPrefix(rule, "warn_"),
 		traces:        traces,
 	}
-	result.metadata = source.GetMetadata()
+	result.metadata = getMetadataFromSource(source)
 	if result.metadata.IsExplicit() {
-		annotationStr := rawToString(source.GetRawValue())
-		result.annotation = annotationStr
+		result.annotation = getAnnotation(source)
 	}
 	rnge := result.metadata.Range()
 	result.fsPath = rnge.GetLocalFilename()
 	*r = append(*r, result)
 }
 
-func (r *Results) AddPassed(source MetadataProvider, descriptions ...string) {
+func (r *Results) AddPassed(source interface{}, descriptions ...string) {
 	res := Result{
 		description: strings.Join(descriptions, " "),
 		status:      StatusPassed,
 	}
-	res.metadata = source.GetMetadata()
+	res.metadata = getMetadataFromSource(source)
 	rnge := res.metadata.Range()
 	res.fsPath = rnge.GetLocalFilename()
 	*r = append(*r, res)
 }
 
-func (r *Results) AddPassedRego(namespace string, rule string, traces []string, source MetadataProvider) {
+func getMetadataFromSource(source interface{}) defsecTypes.Metadata {
+	if provider, ok := source.(MetadataProvider); ok {
+		return provider.GetMetadata()
+	}
+
+	metaValue := reflect.ValueOf(source)
+	if metaValue.Kind() == reflect.Ptr {
+		metaValue = metaValue.Elem()
+	}
+	metaVal := metaValue.FieldByName("Metadata")
+	return metaVal.Interface().(defsecTypes.Metadata)
+}
+
+func getAnnotation(source interface{}) string {
+	if provider, ok := source.(MetadataProvider); ok {
+		return rawToString(provider.GetRawValue())
+	}
+	return ""
+}
+
+func (r *Results) AddPassedRego(namespace string, rule string, traces []string, source interface{}) {
 	res := Result{
 		status:        StatusPassed,
 		regoNamespace: namespace,
 		regoRule:      rule,
 		traces:        traces,
 	}
-	res.metadata = source.GetMetadata()
+	res.metadata = getMetadataFromSource(source)
 	rnge := res.metadata.Range()
 	res.fsPath = rnge.GetLocalFilename()
 	*r = append(*r, res)
 }
 
-func (r *Results) AddIgnored(source MetadataProvider, descriptions ...string) {
+func (r *Results) AddIgnored(source interface{}, descriptions ...string) {
 	res := Result{
 		description: strings.Join(descriptions, " "),
 		status:      StatusIgnored,
 	}
-	res.metadata = source.GetMetadata()
+	res.metadata = getMetadataFromSource(source)
 	rnge := res.metadata.Range()
 	res.fsPath = rnge.GetLocalFilename()
 	*r = append(*r, res)
@@ -252,7 +271,7 @@ func (r *Results) SetRule(rule Rule) {
 func (r *Results) SetSourceAndFilesystem(source string, f fs.FS, logicalSource bool) {
 	for i := range *r {
 		m := (*r)[i].Metadata()
-		if m.IsUnmanaged() || m.Range() == nil {
+		if m.IsUnmanaged() {
 			continue
 		}
 		rng := m.Range()

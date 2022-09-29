@@ -10,7 +10,7 @@ type Storage struct {
 }
 
 type Bucket struct {
-	defsecTypes.Metadata
+	Metadata                       defsecTypes.Metadata
 	Name                           defsecTypes.StringValue
 	Location                       defsecTypes.StringValue
 	EnableUniformBucketLevelAccess defsecTypes.BoolValue
@@ -20,6 +20,6 @@ type Bucket struct {
 }
 
 type BucketEncryption struct {
-	defsecTypes.Metadata
+	Metadata          defsecTypes.Metadata
 	DefaultKMSKeyName defsecTypes.StringValue
 }

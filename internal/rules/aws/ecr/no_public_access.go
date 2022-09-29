@@ -43,7 +43,7 @@ var CheckNoPublicAccess = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, repo := range s.AWS.ECR.Repositories {
-			if repo.IsUnmanaged() {
+			if repo.Metadata.IsUnmanaged() {
 				continue
 			}
 			for _, policyDocument := range repo.Policies {

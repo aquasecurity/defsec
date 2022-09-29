@@ -13,7 +13,7 @@ const (
 )
 
 type Key struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	Usage           defsecTypes.StringValue
 	RotationEnabled defsecTypes.BoolValue
 }

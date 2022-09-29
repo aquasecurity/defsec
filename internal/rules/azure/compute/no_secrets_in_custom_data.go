@@ -32,7 +32,7 @@ var CheckNoSecretsInCustomData = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, vm := range s.Azure.Compute.LinuxVirtualMachines {
-			if vm.IsUnmanaged() {
+			if vm.Metadata.IsUnmanaged() {
 				continue
 			}
 			if result := scanner.Scan(vm.CustomData.Value()); result.TransgressionFound {
@@ -45,7 +45,7 @@ var CheckNoSecretsInCustomData = rules.Register(
 			}
 		}
 		for _, vm := range s.Azure.Compute.WindowsVirtualMachines {
-			if vm.IsUnmanaged() {
+			if vm.Metadata.IsUnmanaged() {
 				continue
 			}
 			if result := scanner.Scan(vm.CustomData.Value()); result.TransgressionFound {

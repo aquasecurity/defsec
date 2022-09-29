@@ -16,7 +16,7 @@ const (
 )
 
 type LoadBalancer struct {
-	defsecTypes.Metadata
+	Metadata                defsecTypes.Metadata
 	Type                    defsecTypes.StringValue
 	DropInvalidHeaderFields defsecTypes.BoolValue
 	Internal                defsecTypes.BoolValue
@@ -24,13 +24,13 @@ type LoadBalancer struct {
 }
 
 type Listener struct {
-	defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
 	Protocol       defsecTypes.StringValue
 	TLSPolicy      defsecTypes.StringValue
 	DefaultActions []Action
 }
 
 type Action struct {
-	defsecTypes.Metadata
-	Type defsecTypes.StringValue
+	Metadata defsecTypes.Metadata
+	Type     defsecTypes.StringValue
 }

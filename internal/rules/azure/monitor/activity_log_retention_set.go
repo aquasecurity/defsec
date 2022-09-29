@@ -31,7 +31,7 @@ var CheckActivityLogRetentionSet = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, profile := range s.Azure.Monitor.LogProfiles {
-			if profile.IsUnmanaged() {
+			if profile.Metadata.IsUnmanaged() {
 				continue
 			}
 			if profile.RetentionPolicy.Enabled.IsFalse() {

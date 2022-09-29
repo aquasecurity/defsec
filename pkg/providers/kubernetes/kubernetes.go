@@ -9,30 +9,30 @@ type Kubernetes struct {
 }
 
 type NetworkPolicy struct {
-	defsecTypes.Metadata
-	Spec NetworkPolicySpec
+	Metadata defsecTypes.Metadata
+	Spec     NetworkPolicySpec
 }
 
 type NetworkPolicySpec struct {
-	defsecTypes.Metadata
-	Egress  Egress
-	Ingress Ingress
+	Metadata defsecTypes.Metadata
+	Egress   Egress
+	Ingress  Ingress
 }
 
 type Egress struct {
-	defsecTypes.Metadata
+	Metadata         defsecTypes.Metadata
 	Ports            []Port
 	DestinationCIDRs []defsecTypes.StringValue
 }
 
 type Ingress struct {
-	defsecTypes.Metadata
+	Metadata    defsecTypes.Metadata
 	Ports       []Port
 	SourceCIDRs []defsecTypes.StringValue
 }
 
 type Port struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Number   defsecTypes.StringValue // e.g. "http" or "80"
 	Protocol defsecTypes.StringValue
 }

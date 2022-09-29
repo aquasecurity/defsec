@@ -31,7 +31,7 @@ var CheckBucketEncryptionCustomerKey = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, bucket := range s.Google.Storage.Buckets {
-			if bucket.IsUnmanaged() {
+			if bucket.Metadata.IsUnmanaged() {
 				continue
 			}
 			if bucket.Encryption.DefaultKMSKeyName.IsEmpty() {

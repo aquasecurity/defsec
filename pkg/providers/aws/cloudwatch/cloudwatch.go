@@ -20,7 +20,7 @@ func (w CloudWatch) GetLogGroupByArn(arn string) (logGroup *LogGroup) {
 
 func (w CloudWatch) GetAlarmByMetricName(metricName string) (alarm *Alarm) {
 	for _, alarm := range w.Alarms {
-		if alarm.MetricName != nil && alarm.MetricName.EqualTo(metricName) {
+		if alarm.MetricName.EqualTo(metricName) {
 			return &alarm
 		}
 	}
@@ -28,7 +28,7 @@ func (w CloudWatch) GetAlarmByMetricName(metricName string) (alarm *Alarm) {
 }
 
 type Alarm struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	AlarmName  defsecTypes.StringValue
 	MetricName defsecTypes.StringValue
 	Dimensions []AlarmDimension
@@ -36,25 +36,25 @@ type Alarm struct {
 }
 
 type AlarmDimension struct {
-	defsecTypes.Metadata
-	Name  defsecTypes.StringValue
-	Value defsecTypes.StringValue
+	Metadata defsecTypes.Metadata
+	Name     defsecTypes.StringValue
+	Value    defsecTypes.StringValue
 }
 
 type MetricFilter struct {
-	defsecTypes.Metadata
+	Metadata      defsecTypes.Metadata
 	FilterName    defsecTypes.StringValue
 	FilterPattern defsecTypes.StringValue
 }
 
 type MetricDataQuery struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	Expression defsecTypes.StringValue
 	ID         defsecTypes.StringValue
 }
 
 type LogGroup struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	Arn             defsecTypes.StringValue
 	Name            defsecTypes.StringValue
 	KMSKeyID        defsecTypes.StringValue

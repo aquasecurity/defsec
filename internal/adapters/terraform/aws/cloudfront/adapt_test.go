@@ -131,29 +131,29 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Distributions, 1)
 	distribution := adapted.Distributions[0]
 
-	assert.Equal(t, 2, distribution.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 21, distribution.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, distribution.Metadata.Range().GetStartLine())
+	assert.Equal(t, 21, distribution.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 3, distribution.Logging.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 5, distribution.Logging.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 3, distribution.Logging.Metadata.Range().GetStartLine())
+	assert.Equal(t, 5, distribution.Logging.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 7, distribution.WAFID.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 7, distribution.WAFID.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 9, distribution.DefaultCacheBehaviour.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 11, distribution.DefaultCacheBehaviour.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 9, distribution.DefaultCacheBehaviour.Metadata.Range().GetStartLine())
+	assert.Equal(t, 11, distribution.DefaultCacheBehaviour.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 10, distribution.DefaultCacheBehaviour.ViewerProtocolPolicy.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 10, distribution.DefaultCacheBehaviour.ViewerProtocolPolicy.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 13, distribution.OrdererCacheBehaviours[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 15, distribution.OrdererCacheBehaviours[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 13, distribution.OrdererCacheBehaviours[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 15, distribution.OrdererCacheBehaviours[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 14, distribution.OrdererCacheBehaviours[0].ViewerProtocolPolicy.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 14, distribution.OrdererCacheBehaviours[0].ViewerProtocolPolicy.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 17, distribution.ViewerCertificate.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 20, distribution.ViewerCertificate.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 17, distribution.ViewerCertificate.Metadata.Range().GetStartLine())
+	assert.Equal(t, 20, distribution.ViewerCertificate.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 19, distribution.ViewerCertificate.MinimumProtocolVersion.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 19, distribution.ViewerCertificate.MinimumProtocolVersion.GetMetadata().Range().GetEndLine())

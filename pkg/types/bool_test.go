@@ -1,12 +1,15 @@
 package types
 
 import (
+	"encoding/json"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 
 	"github.com/stretchr/testify/assert"
 )
 
-var fakeMetadata = NewMetadata(NewRange("main.tf", 123, 123, "", nil), &FakeReference{})
+var fakeMetadata = NewMetadata(NewRange("main.tf", 123, 123, "", nil), "")
 
 func Test_BoolValueIsTrue(t *testing.T) {
 	testCases := []struct {
@@ -28,4 +31,16 @@ func Test_BoolValueIsTrue(t *testing.T) {
 			assert.Equal(t, tC.expected, val.IsTrue())
 		})
 	}
+}
+
+func Test_BoolJSON(t *testing.T) {
+	val := Bool(true, NewMetadata(NewRange("main.tf", 123, 123, "", nil), ""))
+	data, err := json.Marshal(val)
+	require.NoError(t, err)
+
+	var restored BoolValue
+	err = json.Unmarshal(data, &restored)
+	require.NoError(t, err)
+
+	assert.Equal(t, val, restored)
 }

@@ -124,11 +124,11 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Clusters, 1)
 	cluster := adapted.Clusters[0]
 
-	assert.Equal(t, 2, cluster.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 18, cluster.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, cluster.Metadata.Range().GetStartLine())
+	assert.Equal(t, 18, cluster.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 3, cluster.Encryption.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 8, cluster.Encryption.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 3, cluster.Encryption.Metadata.Range().GetStartLine())
+	assert.Equal(t, 8, cluster.Encryption.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 4, cluster.Encryption.Secrets.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 4, cluster.Encryption.Secrets.GetMetadata().Range().GetEndLine())
@@ -136,8 +136,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 6, cluster.Encryption.KMSKeyID.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 6, cluster.Encryption.KMSKeyID.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 10, cluster.Logging.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 10, cluster.Logging.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 10, cluster.Logging.Metadata.Range().GetStartLine())
+	assert.Equal(t, 10, cluster.Logging.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 10, cluster.Logging.API.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 10, cluster.Logging.API.GetMetadata().Range().GetEndLine())

@@ -3,22 +3,25 @@ package aws
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"io/fs"
 	"os"
 	"runtime"
 	"sync"
 
+	adapter "github.com/aquasecurity/defsec/internal/adapters/cloud"
+	cloudoptions "github.com/aquasecurity/defsec/internal/adapters/cloud/options"
+	"github.com/aquasecurity/defsec/pkg/errs"
+
+	"github.com/aquasecurity/defsec/pkg/state"
+
 	"github.com/aquasecurity/defsec/pkg/rego"
 	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
-	"github.com/aquasecurity/defsec/pkg/concurrency"
-	"github.com/aquasecurity/defsec/pkg/errs"
-
-	adapter "github.com/aquasecurity/defsec/internal/adapters/cloud"
-	cloudoptions "github.com/aquasecurity/defsec/internal/adapters/cloud/options"
 	"github.com/aquasecurity/defsec/internal/rules"
+	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/debug"
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/progress"
@@ -117,8 +120,8 @@ func New(opts ...options.ScannerOption) *Scanner {
 	return s
 }
 
-func (s *Scanner) Scan(ctx context.Context) (results scan.Results, err error) {
-	state, err := adapter.Adapt(ctx, cloudoptions.Options{
+func (s *Scanner) CreateState(ctx context.Context) (*state.State, error) {
+	cloudState, err := adapter.Adapt(ctx, cloudoptions.Options{
 		ProgressTracker:     s.progressTracker,
 		Region:              s.region,
 		Endpoint:            s.endpoint,
@@ -134,18 +137,22 @@ func (s *Scanner) Scan(ctx context.Context) (results scan.Results, err error) {
 			return nil, err
 		}
 	}
+	return cloudState, nil
+}
 
-	regoScanner, err := s.initRegoScanner()
+func (s *Scanner) ScanWithStateRefresh(ctx context.Context) (results scan.Results, err error) {
+	cloudState, err := s.CreateState(ctx)
 	if err != nil {
 		return nil, err
 	}
-	regoResults, err := regoScanner.ScanInput(ctx, rego.Input{
-		Contents: state.ToRego(),
-	})
-	if err != nil {
-		return nil, err
+	return s.Scan(ctx, cloudState)
+}
+
+func (s *Scanner) Scan(ctx context.Context, cloudState *state.State) (results scan.Results, err error) {
+
+	if cloudState == nil {
+		return nil, fmt.Errorf("cloud state is nil")
 	}
-	results = append(results, regoResults...)
 
 	for _, rule := range rules.GetFrameworkRules(s.frameworks...) {
 		select {
@@ -156,13 +163,24 @@ func (s *Scanner) Scan(ctx context.Context) (results scan.Results, err error) {
 		if rule.Rule().RegoPackage != "" {
 			continue
 		}
-		ruleResults := rule.Evaluate(state)
+		ruleResults := rule.Evaluate(cloudState)
 		if len(ruleResults) > 0 {
 			s.debug.Log("Found %d results for %s", len(ruleResults), rule.Rule().AVDID)
 			results = append(results, ruleResults...)
 		}
 	}
-	return results, err
+
+	regoScanner, err := s.initRegoScanner()
+	if err != nil {
+		return nil, err
+	}
+	regoResults, err := regoScanner.ScanInput(ctx, rego.Input{
+		Contents: cloudState.ToRego(),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return append(results, regoResults...), nil
 }
 
 func (s *Scanner) initRegoScanner() (*rego.Scanner, error) {

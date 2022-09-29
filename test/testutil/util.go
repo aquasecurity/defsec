@@ -67,12 +67,47 @@ func AssertDefsecEqual(t *testing.T, expected interface{}, actual interface{}) {
 		require.NoError(t, json.Unmarshal(expectedJson, &expectedSlice))
 		var actualSlice []map[string]interface{}
 		require.NoError(t, json.Unmarshal(actualJson, &actualSlice))
+		expectedSlice = purgeMetadataSlice(expectedSlice)
+		actualSlice = purgeMetadataSlice(actualSlice)
 		assert.Equal(t, expectedSlice, actualSlice, "defsec adapted and expected values do not match")
 	} else {
 		var expectedMap map[string]interface{}
 		require.NoError(t, json.Unmarshal(expectedJson, &expectedMap))
 		var actualMap map[string]interface{}
 		require.NoError(t, json.Unmarshal(actualJson, &actualMap))
+		expectedMap = purgeMetadata(expectedMap)
+		actualMap = purgeMetadata(actualMap)
 		assert.Equal(t, expectedMap, actualMap, "defsec adapted and expected values do not match")
 	}
+}
+
+func purgeMetadata(input map[string]interface{}) map[string]interface{} {
+	for k, v := range input {
+		if k == "metadata" || k == "Metadata" {
+			delete(input, k)
+			continue
+		}
+		if v, ok := v.(map[string]interface{}); ok {
+			input[k] = purgeMetadata(v)
+		}
+		if v, ok := v.([]interface{}); ok {
+			if len(v) > 0 {
+				if _, ok := v[0].(map[string]interface{}); ok {
+					maps := make([]map[string]interface{}, len(v))
+					for i := range v {
+						maps[i] = v[i].(map[string]interface{})
+					}
+					input[k] = purgeMetadataSlice(maps)
+				}
+			}
+		}
+	}
+	return input
+}
+
+func purgeMetadataSlice(input []map[string]interface{}) []map[string]interface{} {
+	for i := range input {
+		input[i] = purgeMetadata(input[i])
+	}
+	return input
 }

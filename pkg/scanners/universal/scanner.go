@@ -7,6 +7,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/scanners/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/scanners/helm"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
+	"github.com/aquasecurity/defsec/pkg/state"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/json"
 	"github.com/aquasecurity/defsec/pkg/scanners/toml"
@@ -73,11 +74,11 @@ func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, dir string) (scan.Result
 	return results, nil
 }
 
-func (s *Scanner) Scan(ctx context.Context) (scan.Results, error) {
+func (s *Scanner) Scan(ctx context.Context, cloud *state.State) (scan.Results, error) {
 	var results scan.Results
 
 	for _, inner := range s.apiScanners {
-		innerResults, err := inner.Scan(ctx)
+		innerResults, err := inner.Scan(ctx, cloud)
 		if err != nil {
 			return nil, err
 		}

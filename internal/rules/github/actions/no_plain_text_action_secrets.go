@@ -32,7 +32,7 @@ var CheckNoPlainTextActionEnvironmentSecrets = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, environmentSecret := range s.GitHub.EnvironmentSecrets {
-			if environmentSecret.IsUnmanaged() {
+			if environmentSecret.Metadata.IsUnmanaged() {
 				continue
 			}
 			if environmentSecret.PlainTextValue.IsNotEmpty() {

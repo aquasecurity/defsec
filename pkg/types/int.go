@@ -4,26 +4,42 @@ import (
 	"encoding/json"
 )
 
-type IntValue interface {
-	metadataProvider
-	Value() int
-	EqualTo(i int) bool
-	NotEqualTo(i int) bool
-	LessThan(i int) bool
-	GreaterThan(i int) bool
-}
-
-type intValue struct {
+type IntValue struct {
 	BaseAttribute
 	value int
 }
 
-func (v *intValue) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.value)
+func (b IntValue) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]interface{}{
+		"value":    b.value,
+		"metadata": b.metadata,
+	})
+}
+
+func (b *IntValue) UnmarshalJSON(data []byte) error {
+	var keys map[string]interface{}
+	if err := json.Unmarshal(data, &keys); err != nil {
+		return err
+	}
+	if keys["value"] != nil {
+		b.value = int(keys["value"].(float64))
+	}
+	if keys["metadata"] != nil {
+		raw, err := json.Marshal(keys["metadata"])
+		if err != nil {
+			return err
+		}
+		var m Metadata
+		if err := json.Unmarshal(raw, &m); err != nil {
+			return err
+		}
+		b.metadata = m
+	}
+	return nil
 }
 
 func Int(value int, m Metadata) IntValue {
-	return &intValue{
+	return IntValue{
 		value:         value,
 		BaseAttribute: BaseAttribute{metadata: m},
 	}
@@ -35,63 +51,63 @@ func IntFromInt32(value int32, m Metadata) IntValue {
 
 func IntDefault(value int, m Metadata) IntValue {
 	b := Int(value, m)
-	b.(*intValue).BaseAttribute.metadata.isDefault = true
+	b.BaseAttribute.metadata.isDefault = true
 	return b
 }
 
 func IntUnresolvable(m Metadata) IntValue {
 	b := Int(0, m)
-	b.(*intValue).BaseAttribute.metadata.isUnresolvable = true
+	b.BaseAttribute.metadata.isUnresolvable = true
 	return b
 }
 
 func IntExplicit(value int, m Metadata) IntValue {
 	b := Int(value, m)
-	b.(*intValue).BaseAttribute.metadata.isExplicit = true
+	b.BaseAttribute.metadata.isExplicit = true
 	return b
 }
 
-func (b *intValue) GetMetadata() Metadata {
+func (b IntValue) GetMetadata() Metadata {
 	return b.metadata
 }
 
-func (b *intValue) Value() int {
+func (b IntValue) Value() int {
 	return b.value
 }
 
-func (b *intValue) GetRawValue() interface{} {
+func (b IntValue) GetRawValue() interface{} {
 	return b.value
 }
 
-func (b *intValue) NotEqualTo(i int) bool {
+func (b IntValue) NotEqualTo(i int) bool {
 	if b.metadata.isUnresolvable {
 		return false
 	}
 	return b.value != i
 }
 
-func (b *intValue) EqualTo(i int) bool {
+func (b IntValue) EqualTo(i int) bool {
 	if b.metadata.isUnresolvable {
 		return false
 	}
 	return b.value == i
 }
 
-func (b *intValue) LessThan(i int) bool {
+func (b IntValue) LessThan(i int) bool {
 	if b.metadata.isUnresolvable {
 		return false
 	}
 	return b.value < i
 }
 
-func (b *intValue) GreaterThan(i int) bool {
+func (b IntValue) GreaterThan(i int) bool {
 	if b.metadata.isUnresolvable {
 		return false
 	}
 	return b.value > i
 }
 
-func (s *intValue) ToRego() interface{} {
+func (s IntValue) ToRego() interface{} {
 	return map[string]interface{}{
 		"filepath":  s.metadata.Range().GetFilename(),
 		"startline": s.metadata.Range().GetStartLine(),
@@ -100,6 +116,6 @@ func (s *intValue) ToRego() interface{} {
 		"explicit":  s.metadata.isExplicit,
 		"value":     s.Value(),
 		"fskey":     CreateFSKey(s.metadata.Range().GetFS()),
-		"resource":  s.metadata.Reference().String(),
+		"resource":  s.metadata.Reference(),
 	}
 }

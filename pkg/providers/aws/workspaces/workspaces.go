@@ -9,17 +9,17 @@ type WorkSpaces struct {
 }
 
 type WorkSpace struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	RootVolume Volume
 	UserVolume Volume
 }
 
 type Volume struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	Encryption Encryption
 }
 
 type Encryption struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }

@@ -54,6 +54,14 @@ func StructToRego(inputValue reflect.Value) map[string]interface{} {
 		if metadata, ok := returns[0].Interface().(types.Metadata); ok {
 			output["__defsec_metadata"] = metadata.ToRego()
 		}
+	} else {
+		metaVal := inputValue.FieldByName("Metadata")
+		if metaVal.Kind() == reflect.Struct {
+			if meta, ok := metaVal.Interface().(types.Metadata); ok {
+				output["__defsec_metadata"] = meta.ToRego()
+			}
+		}
+
 	}
 
 	return output

@@ -5,7 +5,7 @@ import (
 )
 
 type Repository struct {
-	defsecTypes.Metadata
+	Metadata            defsecTypes.Metadata
 	Public              defsecTypes.BoolValue
 	VulnerabilityAlerts defsecTypes.BoolValue
 	Archived            defsecTypes.BoolValue

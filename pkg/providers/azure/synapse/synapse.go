@@ -9,6 +9,6 @@ type Synapse struct {
 }
 
 type Workspace struct {
-	defsecTypes.Metadata
+	Metadata                    defsecTypes.Metadata
 	EnableManagedVirtualNetwork defsecTypes.BoolValue
 }

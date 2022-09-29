@@ -9,7 +9,7 @@ type EKS struct {
 }
 
 type Cluster struct {
-	defsecTypes.Metadata
+	Metadata            defsecTypes.Metadata
 	Logging             Logging
 	Encryption          Encryption
 	PublicAccessEnabled defsecTypes.BoolValue
@@ -17,7 +17,7 @@ type Cluster struct {
 }
 
 type Logging struct {
-	defsecTypes.Metadata
+	Metadata          defsecTypes.Metadata
 	API               defsecTypes.BoolValue
 	Audit             defsecTypes.BoolValue
 	Authenticator     defsecTypes.BoolValue
@@ -26,7 +26,7 @@ type Logging struct {
 }
 
 type Encryption struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Secrets  defsecTypes.BoolValue
 	KMSKeyID defsecTypes.StringValue
 }

@@ -35,7 +35,7 @@ Microsoft recommends that you always require secure transfer for all of your sto
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, account := range s.Azure.Storage.Accounts {
-			if account.IsUnmanaged() {
+			if account.Metadata.IsUnmanaged() {
 				continue
 			}
 			if account.EnforceHTTPS.IsFalse() {

@@ -135,17 +135,17 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Functions, 1)
 	function := adapted.Functions[0]
 
-	assert.Equal(t, 2, function.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 11, function.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, function.Metadata.Range().GetStartLine())
+	assert.Equal(t, 11, function.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 8, function.Tracing.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 10, function.Tracing.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 8, function.Tracing.Metadata.Range().GetStartLine())
+	assert.Equal(t, 10, function.Tracing.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 9, function.Tracing.Mode.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 9, function.Tracing.Mode.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 13, function.Permissions[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 19, function.Permissions[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 13, function.Permissions[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 19, function.Permissions[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 17, function.Permissions[0].Principal.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 17, function.Permissions[0].Principal.GetMetadata().Range().GetEndLine())

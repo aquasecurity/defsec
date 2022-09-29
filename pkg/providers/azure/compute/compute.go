@@ -11,32 +11,32 @@ type Compute struct {
 }
 
 type VirtualMachine struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	CustomData defsecTypes.StringValue // NOT base64 encoded
 }
 
 type LinuxVirtualMachine struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	VirtualMachine
 	OSProfileLinuxConfig OSProfileLinuxConfig
 }
 
 type WindowsVirtualMachine struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	VirtualMachine
 }
 
 type OSProfileLinuxConfig struct {
-	defsecTypes.Metadata
+	Metadata                      defsecTypes.Metadata
 	DisablePasswordAuthentication defsecTypes.BoolValue
 }
 
 type ManagedDisk struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	Encryption Encryption
 }
 
 type Encryption struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }

@@ -233,23 +233,23 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Instances, 1)
 	instance := adapted.Instances[0]
 
-	assert.Equal(t, 2, instance.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 41, instance.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, instance.Metadata.Range().GetStartLine())
+	assert.Equal(t, 41, instance.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 4, instance.DatabaseVersion.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 4, instance.DatabaseVersion.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 6, instance.Settings.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 40, instance.Settings.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 6, instance.Settings.Metadata.Range().GetStartLine())
+	assert.Equal(t, 40, instance.Settings.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 7, instance.Settings.Backups.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 9, instance.Settings.Backups.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 7, instance.Settings.Backups.Metadata.Range().GetStartLine())
+	assert.Equal(t, 9, instance.Settings.Backups.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 8, instance.Settings.Backups.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 8, instance.Settings.Backups.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 11, instance.Settings.IPConfiguration.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 18, instance.Settings.IPConfiguration.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 11, instance.Settings.IPConfiguration.Metadata.Range().GetStartLine())
+	assert.Equal(t, 18, instance.Settings.IPConfiguration.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 12, instance.Settings.IPConfiguration.EnableIPv4.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 12, instance.Settings.IPConfiguration.EnableIPv4.GetMetadata().Range().GetEndLine())

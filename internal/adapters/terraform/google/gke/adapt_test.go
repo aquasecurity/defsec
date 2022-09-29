@@ -332,17 +332,17 @@ func TestLines(t *testing.T) {
 	cluster := adapted.Clusters[0]
 	nodePool := cluster.NodePools[0]
 
-	assert.Equal(t, 2, cluster.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 44, cluster.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, cluster.Metadata.Range().GetStartLine())
+	assert.Equal(t, 44, cluster.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 49, cluster.NodeConfig.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 59, cluster.NodeConfig.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 49, cluster.NodeConfig.Metadata.Range().GetStartLine())
+	assert.Equal(t, 59, cluster.NodeConfig.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 50, cluster.NodeConfig.EnableLegacyEndpoints.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 52, cluster.NodeConfig.EnableLegacyEndpoints.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 9, cluster.PodSecurityPolicy.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 11, cluster.PodSecurityPolicy.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 9, cluster.PodSecurityPolicy.Metadata.Range().GetStartLine())
+	assert.Equal(t, 11, cluster.PodSecurityPolicy.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 10, cluster.PodSecurityPolicy.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 10, cluster.PodSecurityPolicy.Enabled.GetMetadata().Range().GetEndLine())
@@ -362,17 +362,17 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 18, cluster.LoggingService.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 18, cluster.LoggingService.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 20, cluster.MasterAuth.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 24, cluster.MasterAuth.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 20, cluster.MasterAuth.Metadata.Range().GetStartLine())
+	assert.Equal(t, 24, cluster.MasterAuth.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 21, cluster.MasterAuth.ClientCertificate.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 23, cluster.MasterAuth.ClientCertificate.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 21, cluster.MasterAuth.ClientCertificate.Metadata.Range().GetStartLine())
+	assert.Equal(t, 23, cluster.MasterAuth.ClientCertificate.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 22, cluster.MasterAuth.ClientCertificate.IssueCertificate.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 22, cluster.MasterAuth.ClientCertificate.IssueCertificate.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 26, cluster.MasterAuthorizedNetworks.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 30, cluster.MasterAuthorizedNetworks.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 26, cluster.MasterAuthorizedNetworks.Metadata.Range().GetStartLine())
+	assert.Equal(t, 30, cluster.MasterAuthorizedNetworks.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 28, cluster.MasterAuthorizedNetworks.CIDRs[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 28, cluster.MasterAuthorizedNetworks.CIDRs[0].GetMetadata().Range().GetEndLine())
@@ -380,26 +380,26 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 32, cluster.ResourceLabels.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 34, cluster.ResourceLabels.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 36, cluster.PrivateCluster.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 38, cluster.PrivateCluster.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 36, cluster.PrivateCluster.Metadata.Range().GetStartLine())
+	assert.Equal(t, 38, cluster.PrivateCluster.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 37, cluster.PrivateCluster.EnablePrivateNodes.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 37, cluster.PrivateCluster.EnablePrivateNodes.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 40, cluster.NetworkPolicy.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 42, cluster.NetworkPolicy.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 40, cluster.NetworkPolicy.Metadata.Range().GetStartLine())
+	assert.Equal(t, 42, cluster.NetworkPolicy.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 41, cluster.NetworkPolicy.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 41, cluster.NetworkPolicy.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 43, cluster.IPAllocationPolicy.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 43, cluster.IPAllocationPolicy.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 43, cluster.IPAllocationPolicy.Metadata.Range().GetStartLine())
+	assert.Equal(t, 43, cluster.IPAllocationPolicy.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 46, nodePool.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 64, nodePool.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 46, nodePool.Metadata.Range().GetStartLine())
+	assert.Equal(t, 64, nodePool.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 49, nodePool.NodeConfig.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 59, nodePool.NodeConfig.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 49, nodePool.NodeConfig.Metadata.Range().GetStartLine())
+	assert.Equal(t, 59, nodePool.NodeConfig.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 53, nodePool.NodeConfig.ServiceAccount.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 53, nodePool.NodeConfig.ServiceAccount.GetMetadata().Range().GetEndLine())
@@ -407,14 +407,14 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 54, nodePool.NodeConfig.ImageType.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 54, nodePool.NodeConfig.ImageType.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 56, nodePool.NodeConfig.WorkloadMetadataConfig.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 58, nodePool.NodeConfig.WorkloadMetadataConfig.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 56, nodePool.NodeConfig.WorkloadMetadataConfig.Metadata.Range().GetStartLine())
+	assert.Equal(t, 58, nodePool.NodeConfig.WorkloadMetadataConfig.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 57, nodePool.NodeConfig.WorkloadMetadataConfig.NodeMetadata.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 57, nodePool.NodeConfig.WorkloadMetadataConfig.NodeMetadata.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 60, nodePool.Management.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 63, nodePool.Management.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 60, nodePool.Management.Metadata.Range().GetStartLine())
+	assert.Equal(t, 63, nodePool.Management.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 61, nodePool.Management.EnableAutoRepair.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 61, nodePool.Management.EnableAutoRepair.GetMetadata().Range().GetEndLine())

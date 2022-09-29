@@ -6,7 +6,7 @@ import (
 )
 
 type StateMachine struct {
-	defsecTypes.Metadata
+	Metadata             defsecTypes.Metadata
 	Name                 defsecTypes.StringValue
 	LoggingConfiguration LoggingConfiguration
 	ManagedPolicies      []defsecTypes.StringValue
@@ -15,11 +15,11 @@ type StateMachine struct {
 }
 
 type LoggingConfiguration struct {
-	defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
 	LoggingEnabled defsecTypes.BoolValue
 }
 
 type TracingConfiguration struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }

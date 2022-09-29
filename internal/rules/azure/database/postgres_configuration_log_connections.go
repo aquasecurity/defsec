@@ -31,7 +31,7 @@ var CheckPostgresConfigurationLogConnections = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, server := range s.Azure.Database.PostgreSQLServers {
-			if server.IsUnmanaged() {
+			if server.Metadata.IsUnmanaged() {
 				continue
 			}
 			if server.Config.LogConnections.IsFalse() {

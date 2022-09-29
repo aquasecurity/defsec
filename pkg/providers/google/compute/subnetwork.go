@@ -5,7 +5,7 @@ import (
 )
 
 type SubNetwork struct {
-	defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
 	Name           defsecTypes.StringValue
 	EnableFlowLogs defsecTypes.BoolValue
 }

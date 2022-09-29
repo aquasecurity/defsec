@@ -5,12 +5,12 @@ import (
 )
 
 type Action struct {
-	defsecTypes.Metadata
+	Metadata           defsecTypes.Metadata
 	EnvironmentSecrets []EnvironmentSecret
 }
 
 type EnvironmentSecret struct {
-	defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
 	Repository     defsecTypes.StringValue
 	Environment    defsecTypes.StringValue
 	SecretName     defsecTypes.StringValue

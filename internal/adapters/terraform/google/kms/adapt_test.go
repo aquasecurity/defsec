@@ -114,11 +114,11 @@ func TestLines(t *testing.T) {
 
 	key := adapted.KeyRings[0].Keys[0]
 
-	assert.Equal(t, 2, adapted.KeyRings[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 4, adapted.KeyRings[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, adapted.KeyRings[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 4, adapted.KeyRings[0].Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 6, key.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 10, key.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 6, key.Metadata.Range().GetStartLine())
+	assert.Equal(t, 10, key.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 9, key.RotationPeriodSeconds.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 9, key.RotationPeriodSeconds.GetMetadata().Range().GetEndLine())

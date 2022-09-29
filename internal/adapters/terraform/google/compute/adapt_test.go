@@ -102,11 +102,11 @@ func TestLines(t *testing.T) {
 	ssslPolicy := adapted.SSLPolicies[0]
 	metadata := adapted.ProjectMetadata
 
-	assert.Equal(t, 2, disk.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 9, disk.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, disk.Metadata.Range().GetStartLine())
+	assert.Equal(t, 9, disk.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 5, disk.Encryption.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 8, disk.Encryption.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 5, disk.Encryption.Metadata.Range().GetStartLine())
+	assert.Equal(t, 8, disk.Encryption.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 6, disk.Encryption.KMSKeyLink.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 6, disk.Encryption.KMSKeyLink.GetMetadata().Range().GetEndLine())
@@ -114,14 +114,14 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 7, disk.Encryption.RawKey.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 7, disk.Encryption.RawKey.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 11, instance.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 43, instance.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 11, instance.Metadata.Range().GetStartLine())
+	assert.Equal(t, 43, instance.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 12, instance.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 12, instance.Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 14, instance.BootDisks[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 17, instance.BootDisks[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 14, instance.BootDisks[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 17, instance.BootDisks[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 15, instance.BootDisks[0].Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 15, instance.BootDisks[0].Name.GetMetadata().Range().GetEndLine())
@@ -129,8 +129,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 16, instance.BootDisks[0].Encryption.KMSKeyLink.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 16, instance.BootDisks[0].Encryption.KMSKeyLink.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 19, instance.ShieldedVM.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 23, instance.ShieldedVM.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 19, instance.ShieldedVM.Metadata.Range().GetStartLine())
+	assert.Equal(t, 23, instance.ShieldedVM.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 20, instance.ShieldedVM.IntegrityMonitoringEnabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 20, instance.ShieldedVM.IntegrityMonitoringEnabled.GetMetadata().Range().GetEndLine())
@@ -141,8 +141,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 22, instance.ShieldedVM.SecureBootEnabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 22, instance.ShieldedVM.SecureBootEnabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 11, instance.ServiceAccount.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 43, instance.ServiceAccount.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 11, instance.ServiceAccount.Metadata.Range().GetStartLine())
+	assert.Equal(t, 43, instance.ServiceAccount.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 33, instance.ServiceAccount.Email.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 33, instance.ServiceAccount.Email.GetMetadata().Range().GetEndLine())
@@ -162,20 +162,20 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 38, instance.EnableSerialPort.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 42, instance.EnableSerialPort.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 45, metadata.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 49, metadata.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 45, metadata.Metadata.Range().GetStartLine())
+	assert.Equal(t, 49, metadata.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 51, network.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 52, network.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 51, network.Metadata.Range().GetStartLine())
+	assert.Equal(t, 52, network.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 54, network.Firewall.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 62, network.Firewall.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 54, network.Firewall.Metadata.Range().GetStartLine())
+	assert.Equal(t, 62, network.Firewall.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 55, network.Firewall.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 55, network.Firewall.Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 54, network.Firewall.IngressRules[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 62, network.Firewall.IngressRules[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 54, network.Firewall.IngressRules[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 62, network.Firewall.IngressRules[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 57, network.Firewall.IngressRules[0].SourceRanges[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 57, network.Firewall.IngressRules[0].SourceRanges[0].GetMetadata().Range().GetEndLine())
@@ -186,8 +186,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 60, network.Firewall.IngressRules[0].Ports[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 60, network.Firewall.IngressRules[0].Ports[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 64, network.Subnetworks[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 72, network.Subnetworks[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 64, network.Subnetworks[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 72, network.Subnetworks[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 65, network.Subnetworks[0].Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 65, network.Subnetworks[0].Name.GetMetadata().Range().GetEndLine())
@@ -195,8 +195,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 67, network.Subnetworks[0].EnableFlowLogs.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 71, network.Subnetworks[0].EnableFlowLogs.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 74, ssslPolicy.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 78, ssslPolicy.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 74, ssslPolicy.Metadata.Range().GetStartLine())
+	assert.Equal(t, 78, ssslPolicy.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 75, ssslPolicy.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 75, ssslPolicy.Name.GetMetadata().Range().GetEndLine())

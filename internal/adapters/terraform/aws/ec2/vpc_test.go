@@ -263,17 +263,17 @@ func TestVPCLines(t *testing.T) {
 	securityGroup := adapted.SecurityGroups[0]
 	networkACL := adapted.NetworkACLs[0]
 
-	assert.Equal(t, 2, defaultVPC.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 3, defaultVPC.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, defaultVPC.Metadata.Range().GetStartLine())
+	assert.Equal(t, 3, defaultVPC.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 9, securityGroup.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 24, securityGroup.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 9, securityGroup.Metadata.Range().GetStartLine())
+	assert.Equal(t, 24, securityGroup.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 11, securityGroup.Description.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 11, securityGroup.Description.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 13, securityGroup.IngressRules[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 19, securityGroup.IngressRules[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 13, securityGroup.IngressRules[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 19, securityGroup.IngressRules[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 14, securityGroup.IngressRules[0].Description.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 14, securityGroup.IngressRules[0].Description.GetMetadata().Range().GetEndLine())
@@ -281,20 +281,20 @@ func TestVPCLines(t *testing.T) {
 	assert.Equal(t, 18, securityGroup.IngressRules[0].CIDRs[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 18, securityGroup.IngressRules[0].CIDRs[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 26, securityGroup.IngressRules[1].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 36, securityGroup.IngressRules[1].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 26, securityGroup.IngressRules[1].Metadata.Range().GetStartLine())
+	assert.Equal(t, 36, securityGroup.IngressRules[1].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 32, securityGroup.IngressRules[1].CIDRs[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 35, securityGroup.IngressRules[1].CIDRs[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 21, securityGroup.EgressRules[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 23, securityGroup.EgressRules[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 21, securityGroup.EgressRules[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 23, securityGroup.EgressRules[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 22, securityGroup.EgressRules[0].CIDRs[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 22, securityGroup.EgressRules[0].CIDRs[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 38, networkACL.Rules[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 45, networkACL.Rules[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 38, networkACL.Rules[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 45, networkACL.Rules[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 39, networkACL.Rules[0].Type.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 39, networkACL.Rules[0].Type.GetMetadata().Range().GetEndLine())

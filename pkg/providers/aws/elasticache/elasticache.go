@@ -11,19 +11,19 @@ type ElastiCache struct {
 }
 
 type Cluster struct {
-	defsecTypes.Metadata
+	Metadata               defsecTypes.Metadata
 	Engine                 defsecTypes.StringValue
 	NodeType               defsecTypes.StringValue
 	SnapshotRetentionLimit defsecTypes.IntValue // days
 }
 
 type ReplicationGroup struct {
-	defsecTypes.Metadata
+	Metadata                 defsecTypes.Metadata
 	TransitEncryptionEnabled defsecTypes.BoolValue
 	AtRestEncryptionEnabled  defsecTypes.BoolValue
 }
 
 type SecurityGroup struct {
-	defsecTypes.Metadata
+	Metadata    defsecTypes.Metadata
 	Description defsecTypes.StringValue
 }

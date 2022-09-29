@@ -34,7 +34,7 @@ var CheckEnableStandardSubscription = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, sub := range s.Azure.SecurityCenter.Subscriptions {
-			if sub.IsUnmanaged() {
+			if sub.Metadata.IsUnmanaged() {
 				continue
 			}
 			if sub.Tier.EqualTo(securitycenter.TierFree) {

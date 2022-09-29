@@ -10,14 +10,14 @@ type APIGateway struct {
 }
 
 type API struct {
-	defsecTypes.Metadata
+	Metadata  defsecTypes.Metadata
 	Name      defsecTypes.StringValue
 	Stages    []Stage
 	Resources []Resource
 }
 
 type Stage struct {
-	defsecTypes.Metadata
+	Metadata           defsecTypes.Metadata
 	Name               defsecTypes.StringValue
 	AccessLogging      AccessLogging
 	XRayTracingEnabled defsecTypes.BoolValue
@@ -25,17 +25,17 @@ type Stage struct {
 }
 
 type Resource struct {
-	defsecTypes.Metadata
-	Methods []Method
+	Metadata defsecTypes.Metadata
+	Methods  []Method
 }
 
 type AccessLogging struct {
-	defsecTypes.Metadata
+	Metadata              defsecTypes.Metadata
 	CloudwatchLogGroupARN defsecTypes.StringValue
 }
 
 type RESTMethodSettings struct {
-	defsecTypes.Metadata
+	Metadata           defsecTypes.Metadata
 	Method             defsecTypes.StringValue
 	CacheDataEncrypted defsecTypes.BoolValue
 	CacheEnabled       defsecTypes.BoolValue
@@ -49,14 +49,14 @@ const (
 )
 
 type Method struct {
-	defsecTypes.Metadata
+	Metadata          defsecTypes.Metadata
 	HTTPMethod        defsecTypes.StringValue
 	AuthorizationType defsecTypes.StringValue
 	APIKeyRequired    defsecTypes.BoolValue
 }
 
 type DomainName struct {
-	defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
 	Name           defsecTypes.StringValue
 	SecurityPolicy defsecTypes.StringValue
 }

@@ -31,7 +31,7 @@ var CheckAutoUpgrade = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, kc := range s.DigitalOcean.Compute.KubernetesClusters {
-			if kc.IsUnmanaged() {
+			if kc.Metadata.IsUnmanaged() {
 				continue
 			}
 			if kc.AutoUpgrade.IsFalse() {

@@ -17,25 +17,25 @@ const (
 )
 
 type API struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	Name         defsecTypes.StringValue
 	ProtocolType defsecTypes.StringValue
 	Stages       []Stage
 }
 
 type Stage struct {
-	defsecTypes.Metadata
+	Metadata      defsecTypes.Metadata
 	Name          defsecTypes.StringValue
 	AccessLogging AccessLogging
 }
 
 type AccessLogging struct {
-	defsecTypes.Metadata
+	Metadata              defsecTypes.Metadata
 	CloudwatchLogGroupARN defsecTypes.StringValue
 }
 
 type DomainName struct {
-	defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
 	Name           defsecTypes.StringValue
 	SecurityPolicy defsecTypes.StringValue
 }

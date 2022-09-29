@@ -9,5 +9,5 @@ type Classic struct {
 }
 
 type DBSecurityGroup struct {
-	types.Metadata
+	Metadata types.Metadata
 }

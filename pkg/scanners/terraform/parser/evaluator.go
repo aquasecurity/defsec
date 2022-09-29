@@ -256,13 +256,13 @@ func (e *evaluator) expandBlockForEaches(blocks terraform.Blocks) terraform.Bloc
 
 				clones = append(clones, clone.Values())
 				metadata := clone.GetMetadata()
-				e.ctx.SetByDot(clone.Values(), metadata.Reference().String())
+				e.ctx.SetByDot(clone.Values(), metadata.Reference())
 			})
 			metadata := block.GetMetadata()
 			if len(clones) == 0 {
-				e.ctx.SetByDot(cty.EmptyTupleVal, metadata.Reference().String())
+				e.ctx.SetByDot(cty.EmptyTupleVal, metadata.Reference())
 			} else {
-				e.ctx.SetByDot(cty.TupleVal(clones), metadata.Reference().String())
+				e.ctx.SetByDot(cty.TupleVal(clones), metadata.Reference())
 			}
 			e.debug.Log("Expanded block '%s' into %d clones via 'for_each' attribute.", block.LocalName(), len(clones))
 		}
@@ -295,13 +295,13 @@ func (e *evaluator) expandBlockCounts(blocks terraform.Blocks) terraform.Blocks 
 			block.TypeLabel()
 			countFiltered = append(countFiltered, clone)
 			metadata := clone.GetMetadata()
-			e.ctx.SetByDot(clone.Values(), metadata.Reference().String())
+			e.ctx.SetByDot(clone.Values(), metadata.Reference())
 		}
 		metadata := block.GetMetadata()
 		if len(clones) == 0 {
-			e.ctx.SetByDot(cty.EmptyTupleVal, metadata.Reference().String())
+			e.ctx.SetByDot(cty.EmptyTupleVal, metadata.Reference())
 		} else {
-			e.ctx.SetByDot(cty.TupleVal(clones), metadata.Reference().String())
+			e.ctx.SetByDot(cty.TupleVal(clones), metadata.Reference())
 		}
 		e.debug.Log("Expanded block '%s' into %d clones via 'count' attribute.", block.LocalName(), len(clones))
 	}

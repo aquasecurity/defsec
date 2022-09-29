@@ -40,7 +40,7 @@ For example, information about active sessions could help diagose a compromise o
 	func(s *state.State) (results scan.Results) {
 		for _, cluster := range s.AWS.RDS.Clusters {
 			for _, instance := range cluster.Instances {
-				if instance.IsUnmanaged() {
+				if instance.Metadata.IsUnmanaged() {
 					continue
 				}
 				if instance.PerformanceInsights.Enabled.IsFalse() {
@@ -54,7 +54,7 @@ For example, information about active sessions could help diagose a compromise o
 			}
 		}
 		for _, instance := range s.AWS.RDS.Instances {
-			if instance.IsUnmanaged() {
+			if instance.Metadata.IsUnmanaged() {
 				continue
 			}
 			if instance.PerformanceInsights.Enabled.IsFalse() {

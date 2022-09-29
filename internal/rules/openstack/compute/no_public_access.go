@@ -30,7 +30,7 @@ var CheckNoPublicAccess = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, rule := range s.OpenStack.Compute.Firewall.AllowRules {
-			if rule.IsUnmanaged() {
+			if rule.Metadata.IsUnmanaged() {
 				continue
 			}
 			if rule.Enabled.IsFalse() {

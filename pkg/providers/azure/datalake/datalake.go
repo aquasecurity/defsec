@@ -9,6 +9,6 @@ type DataLake struct {
 }
 
 type Store struct {
-	defsecTypes.Metadata
+	Metadata         defsecTypes.Metadata
 	EnableEncryption defsecTypes.BoolValue
 }

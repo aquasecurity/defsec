@@ -38,7 +38,7 @@ var CheckEnableAtRestEncryption = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, workgroup := range s.AWS.Athena.Workgroups {
-			if workgroup.IsUnmanaged() {
+			if workgroup.Metadata.IsUnmanaged() {
 				continue
 			}
 			if workgroup.Encryption.Type.EqualTo(athena.EncryptionTypeNone) {
@@ -51,7 +51,7 @@ var CheckEnableAtRestEncryption = rules.Register(
 			}
 		}
 		for _, database := range s.AWS.Athena.Databases {
-			if database.IsUnmanaged() {
+			if database.Metadata.IsUnmanaged() {
 				continue
 			}
 			if database.Encryption.Type.EqualTo(athena.EncryptionTypeNone) {

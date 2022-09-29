@@ -33,7 +33,7 @@ Shielded GKE Nodes provide strong, verifiable node identity and integrity to inc
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, cluster := range s.Google.GKE.Clusters {
-			if cluster.IsUnmanaged() {
+			if cluster.Metadata.IsUnmanaged() {
 				continue
 			}
 			if cluster.EnableShieldedNodes.IsFalse() {

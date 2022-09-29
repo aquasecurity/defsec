@@ -76,8 +76,8 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Streams, 1)
 	stream := adapted.Streams[0]
 
-	assert.Equal(t, 2, stream.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 5, stream.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, stream.Metadata.Range().GetStartLine())
+	assert.Equal(t, 5, stream.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, stream.Encryption.Type.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, stream.Encryption.Type.GetMetadata().Range().GetEndLine())

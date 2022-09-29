@@ -12,30 +12,30 @@ type Database struct {
 }
 
 type MariaDBServer struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Server
 }
 
 type MySQLServer struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Server
 }
 
 type PostgreSQLServer struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Server
 	Config PostgresSQLConfig
 }
 
 type PostgresSQLConfig struct {
-	defsecTypes.Metadata
+	Metadata             defsecTypes.Metadata
 	LogCheckpoints       defsecTypes.BoolValue
 	ConnectionThrottling defsecTypes.BoolValue
 	LogConnections       defsecTypes.BoolValue
 }
 
 type Server struct {
-	defsecTypes.Metadata
+	Metadata                  defsecTypes.Metadata
 	EnableSSLEnforcement      defsecTypes.BoolValue
 	MinimumTLSVersion         defsecTypes.StringValue
 	EnablePublicNetworkAccess defsecTypes.BoolValue
@@ -43,26 +43,26 @@ type Server struct {
 }
 
 type MSSQLServer struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Server
 	ExtendedAuditingPolicies []ExtendedAuditingPolicy
 	SecurityAlertPolicies    []SecurityAlertPolicy
 }
 
 type SecurityAlertPolicy struct {
-	defsecTypes.Metadata
+	Metadata           defsecTypes.Metadata
 	EmailAddresses     []defsecTypes.StringValue
 	DisabledAlerts     []defsecTypes.StringValue
 	EmailAccountAdmins defsecTypes.BoolValue
 }
 
 type ExtendedAuditingPolicy struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	RetentionInDays defsecTypes.IntValue
 }
 
 type FirewallRule struct {
-	defsecTypes.Metadata
-	StartIP defsecTypes.StringValue
-	EndIP   defsecTypes.StringValue
+	Metadata defsecTypes.Metadata
+	StartIP  defsecTypes.StringValue
+	EndIP    defsecTypes.StringValue
 }

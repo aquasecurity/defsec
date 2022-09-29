@@ -38,7 +38,7 @@ var CheckNoFolderLevelDefaultServiceAccountAssignment = rules.Register(
 	func(s *state.State) (results scan.Results) {
 		for _, folder := range s.Google.IAM.AllFolders() {
 			for _, member := range folder.Members {
-				if member.IsUnmanaged() {
+				if member.Metadata.IsUnmanaged() {
 					continue
 				}
 				if member.DefaultServiceAccount.IsTrue() {
@@ -57,7 +57,7 @@ var CheckNoFolderLevelDefaultServiceAccountAssignment = rules.Register(
 
 			}
 			for _, binding := range folder.Bindings {
-				if binding.IsUnmanaged() {
+				if binding.Metadata.IsUnmanaged() {
 					continue
 				}
 				if binding.IncludesDefaultServiceAccount.IsTrue() {

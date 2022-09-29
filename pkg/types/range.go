@@ -1,26 +1,14 @@
 package types
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/fs"
 	"path/filepath"
 )
 
-type Range interface {
-	GetFilename() string
-	GetLocalFilename() string
-	GetSourcePrefix() string
-	GetFS() fs.FS
-	GetFSKey() string
-	GetStartLine() int
-	GetEndLine() int
-	String() string
-	IsMultiLine() bool
-	LineCount() int
-}
-
-func NewRange(filename string, startLine int, endLine int, sourcePrefix string, srcFS fs.FS) baseRange {
-	r := baseRange{
+func NewRange(filename string, startLine int, endLine int, sourcePrefix string, srcFS fs.FS) Range {
+	r := Range{
 		filename:     filename,
 		startLine:    startLine,
 		endLine:      endLine,
@@ -32,8 +20,8 @@ func NewRange(filename string, startLine int, endLine int, sourcePrefix string, 
 }
 
 func NewRangeWithLogicalSource(filename string, startLine int, endLine int, sourcePrefix string,
-	srcFS fs.FS) baseRange {
-	r := baseRange{
+	srcFS fs.FS) Range {
+	r := Range{
 		filename:        filename,
 		startLine:       startLine,
 		endLine:         endLine,
@@ -45,8 +33,8 @@ func NewRangeWithLogicalSource(filename string, startLine int, endLine int, sour
 	return r
 }
 
-func NewRangeWithFSKey(filename string, startLine int, endLine int, sourcePrefix string, fsKey string, fs fs.FS) baseRange {
-	r := baseRange{
+func NewRangeWithFSKey(filename string, startLine int, endLine int, sourcePrefix string, fsKey string, fs fs.FS) Range {
+	r := Range{
 		filename:     filename,
 		startLine:    startLine,
 		endLine:      endLine,
@@ -57,7 +45,7 @@ func NewRangeWithFSKey(filename string, startLine int, endLine int, sourcePrefix
 	return r
 }
 
-type baseRange struct {
+type Range struct {
 	filename        string
 	startLine       int
 	endLine         int
@@ -67,18 +55,55 @@ type baseRange struct {
 	fsKey           string
 }
 
-func (r baseRange) GetFSKey() string {
+func (r Range) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]interface{}{
+		"filename":        r.filename,
+		"startLine":       r.startLine,
+		"endLine":         r.endLine,
+		"sourcePrefix":    r.sourcePrefix,
+		"fsKey":           r.fsKey,
+		"isLogicalSource": r.isLogicalSource,
+	})
+}
+
+func (r *Range) UnmarshalJSON(data []byte) error {
+	var keys map[string]interface{}
+	if err := json.Unmarshal(data, &keys); err != nil {
+		return err
+	}
+	if keys["filename"] != nil {
+		r.filename = keys["filename"].(string)
+	}
+	if keys["startLine"] != nil {
+		r.startLine = int(keys["startLine"].(float64))
+	}
+	if keys["endLine"] != nil {
+		r.endLine = int(keys["endLine"].(float64))
+	}
+	if keys["sourcePrefix"] != nil {
+		r.sourcePrefix = keys["sourcePrefix"].(string)
+	}
+	if keys["fsKey"] != nil {
+		r.fsKey = keys["fsKey"].(string)
+	}
+	if keys["isLogicalSource"] != nil {
+		r.isLogicalSource = keys["isLogicalSource"].(bool)
+	}
+	return nil
+}
+
+func (r Range) GetFSKey() string {
 	return r.fsKey
 }
 
-func (r baseRange) LineCount() int {
+func (r Range) LineCount() int {
 	if r.endLine == 0 {
 		return 0
 	}
 	return (r.endLine - r.startLine) + 1
 }
 
-func (r baseRange) GetFilename() string {
+func (r Range) GetFilename() string {
 	if r.sourcePrefix == "" {
 		return r.filename
 	}
@@ -88,23 +113,23 @@ func (r baseRange) GetFilename() string {
 	return filepath.Join(r.sourcePrefix, r.filename)
 }
 
-func (r baseRange) GetLocalFilename() string {
+func (r Range) GetLocalFilename() string {
 	return r.filename
 }
 
-func (r baseRange) GetStartLine() int {
+func (r Range) GetStartLine() int {
 	return r.startLine
 }
 
-func (r baseRange) GetEndLine() int {
+func (r Range) GetEndLine() int {
 	return r.endLine
 }
 
-func (r baseRange) IsMultiLine() bool {
+func (r Range) IsMultiLine() bool {
 	return r.startLine < r.endLine
 }
 
-func (r baseRange) String() string {
+func (r Range) String() string {
 	if r.startLine != r.endLine {
 		return fmt.Sprintf("%s:%d-%d", r.GetFilename(), r.startLine, r.endLine)
 	}
@@ -114,10 +139,10 @@ func (r baseRange) String() string {
 	return fmt.Sprintf("%s:%d", r.GetFilename(), r.startLine)
 }
 
-func (r baseRange) GetFS() fs.FS {
+func (r Range) GetFS() fs.FS {
 	return r.fs
 }
 
-func (r baseRange) GetSourcePrefix() string {
+func (r Range) GetSourcePrefix() string {
 	return r.sourcePrefix
 }

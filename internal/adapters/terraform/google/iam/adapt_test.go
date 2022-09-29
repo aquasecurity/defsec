@@ -194,17 +194,17 @@ func TestLines(t *testing.T) {
 	binding := adapted.Organizations[0].Bindings[0]
 	member := adapted.Organizations[0].Members[0]
 
-	assert.Equal(t, 6, project.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 11, project.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 6, project.Metadata.Range().GetStartLine())
+	assert.Equal(t, 11, project.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 10, project.AutoCreateNetwork.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 10, project.AutoCreateNetwork.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 13, folder.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 16, folder.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 13, folder.Metadata.Range().GetStartLine())
+	assert.Equal(t, 16, folder.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 18, folder.Bindings[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 24, folder.Bindings[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 18, folder.Bindings[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 24, folder.Bindings[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 20, folder.Bindings[0].Role.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 20, folder.Bindings[0].Role.GetMetadata().Range().GetEndLine())
@@ -212,8 +212,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 21, folder.Bindings[0].Members[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 23, folder.Bindings[0].Members[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 26, folder.Members[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 30, folder.Members[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 26, folder.Members[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 30, folder.Members[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 29, folder.Members[0].Member.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 29, folder.Members[0].Member.GetMetadata().Range().GetEndLine())
@@ -221,8 +221,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 28, folder.Members[0].Role.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 28, folder.Members[0].Role.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 32, member.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 36, member.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 32, member.Metadata.Range().GetStartLine())
+	assert.Equal(t, 36, member.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 34, member.Role.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 34, member.Role.GetMetadata().Range().GetEndLine())
@@ -230,8 +230,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 35, member.Member.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 35, member.Member.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 38, binding.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 45, binding.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 38, binding.Metadata.Range().GetStartLine())
+	assert.Equal(t, 45, binding.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 40, binding.Role.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 40, binding.Role.GetMetadata().Range().GetEndLine())

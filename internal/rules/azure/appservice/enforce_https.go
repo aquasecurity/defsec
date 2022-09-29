@@ -32,7 +32,7 @@ var CheckEnforceHttps = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, functionApp := range s.Azure.AppService.FunctionApps {
-			if functionApp.IsUnmanaged() {
+			if functionApp.Metadata.IsUnmanaged() {
 				continue
 			}
 			if functionApp.HTTPSOnly.IsFalse() {

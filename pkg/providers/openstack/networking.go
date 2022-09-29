@@ -9,7 +9,7 @@ type Networking struct {
 }
 
 type SecurityGroup struct {
-	defsecTypes.Metadata
+	Metadata    defsecTypes.Metadata
 	Name        defsecTypes.StringValue
 	Description defsecTypes.StringValue
 	Rules       []SecurityGroupRule
@@ -17,7 +17,7 @@ type SecurityGroup struct {
 
 // SecurityGroupRule describes https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs/resources/networking_secgroup_rule_v2
 type SecurityGroupRule struct {
-	defsecTypes.Metadata
+	Metadata  defsecTypes.Metadata
 	IsIngress defsecTypes.BoolValue
 	EtherType defsecTypes.IntValue    // 4 or 6 for ipv4/ipv6
 	Protocol  defsecTypes.StringValue // e.g. tcp

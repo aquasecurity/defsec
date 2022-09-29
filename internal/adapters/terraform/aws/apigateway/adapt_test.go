@@ -187,14 +187,14 @@ func TestLines(t *testing.T) {
 	apiV2 := adapted.V2.APIs[0]
 	domainName := adapted.V1.DomainNames[0]
 
-	assert.Equal(t, 2, apiV1.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 5, apiV1.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, apiV1.Metadata.Range().GetStartLine())
+	assert.Equal(t, 5, apiV1.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, apiV1.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, apiV1.Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 11, apiV1.Resources[0].Methods[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 17, apiV1.Resources[0].Methods[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 11, apiV1.Resources[0].Methods[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 17, apiV1.Resources[0].Methods[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 14, apiV1.Resources[0].Methods[0].HTTPMethod.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 14, apiV1.Resources[0].Methods[0].HTTPMethod.GetMetadata().Range().GetEndLine())
@@ -205,8 +205,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 16, apiV1.Resources[0].Methods[0].APIKeyRequired.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 16, apiV1.Resources[0].Methods[0].APIKeyRequired.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 19, apiV2.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 22, apiV2.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 19, apiV2.Metadata.Range().GetStartLine())
+	assert.Equal(t, 22, apiV2.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 20, apiV2.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 20, apiV2.Name.GetMetadata().Range().GetEndLine())
@@ -214,20 +214,20 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 21, apiV2.ProtocolType.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 21, apiV2.ProtocolType.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 24, apiV2.Stages[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 30, apiV2.Stages[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 24, apiV2.Stages[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 30, apiV2.Stages[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 26, apiV2.Stages[0].Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 26, apiV2.Stages[0].Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 27, apiV2.Stages[0].AccessLogging.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 29, apiV2.Stages[0].AccessLogging.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 27, apiV2.Stages[0].AccessLogging.Metadata.Range().GetStartLine())
+	assert.Equal(t, 29, apiV2.Stages[0].AccessLogging.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 28, apiV2.Stages[0].AccessLogging.CloudwatchLogGroupARN.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 28, apiV2.Stages[0].AccessLogging.CloudwatchLogGroupARN.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 32, domainName.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 35, domainName.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 32, domainName.Metadata.Range().GetStartLine())
+	assert.Equal(t, 35, domainName.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 33, domainName.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 33, domainName.Name.GetMetadata().Range().GetEndLine())

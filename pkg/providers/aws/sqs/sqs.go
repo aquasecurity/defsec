@@ -10,14 +10,14 @@ type SQS struct {
 }
 
 type Queue struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	QueueURL   defsecTypes.StringValue
 	Encryption Encryption
 	Policies   []iam.Policy
 }
 
 type Encryption struct {
-	defsecTypes.Metadata
+	Metadata          defsecTypes.Metadata
 	KMSKeyID          defsecTypes.StringValue
 	ManagedEncryption defsecTypes.BoolValue
 }

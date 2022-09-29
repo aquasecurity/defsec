@@ -32,7 +32,7 @@ var CheckNoSensitiveInfo = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, instance := range s.CloudStack.Compute.Instances {
-			if instance.IsUnmanaged() {
+			if instance.Metadata.IsUnmanaged() {
 				continue
 			}
 			if scanner.Scan(instance.UserData.Value()).TransgressionFound {

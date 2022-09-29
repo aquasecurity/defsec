@@ -34,7 +34,7 @@ Setting an retention policy will help ensure as much information is available fo
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, flowLog := range s.Azure.Network.NetworkWatcherFlowLogs {
-			if flowLog.IsUnmanaged() {
+			if flowLog.Metadata.IsUnmanaged() {
 				continue
 			}
 			if flowLog.RetentionPolicy.Enabled.IsFalse() {

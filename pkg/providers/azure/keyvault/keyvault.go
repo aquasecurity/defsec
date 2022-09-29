@@ -9,7 +9,7 @@ type KeyVault struct {
 }
 
 type Vault struct {
-	defsecTypes.Metadata
+	Metadata                defsecTypes.Metadata
 	Secrets                 []Secret
 	Keys                    []Key
 	EnablePurgeProtection   defsecTypes.BoolValue
@@ -18,17 +18,17 @@ type Vault struct {
 }
 
 type NetworkACLs struct {
-	defsecTypes.Metadata
+	Metadata      defsecTypes.Metadata
 	DefaultAction defsecTypes.StringValue
 }
 
 type Key struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	ExpiryDate defsecTypes.TimeValue
 }
 
 type Secret struct {
-	defsecTypes.Metadata
+	Metadata    defsecTypes.Metadata
 	ContentType defsecTypes.StringValue
 	ExpiryDate  defsecTypes.TimeValue
 }

@@ -35,7 +35,7 @@ Managed private endpoints are private endpoints created in a Managed Virtual Net
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, workspace := range s.Azure.Synapse.Workspaces {
-			if workspace.IsUnmanaged() {
+			if workspace.Metadata.IsUnmanaged() {
 				continue
 			}
 			if workspace.EnableManagedVirtualNetwork.IsFalse() {

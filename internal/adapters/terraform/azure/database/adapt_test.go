@@ -347,8 +347,8 @@ func TestLines(t *testing.T) {
 	mysql := adapted.MySQLServers[0]
 	mssql := adapted.MSSQLServers[0]
 
-	assert.Equal(t, 2, postgres.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 6, postgres.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, postgres.Metadata.Range().GetStartLine())
+	assert.Equal(t, 6, postgres.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, postgres.EnablePublicNetworkAccess.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, postgres.EnablePublicNetworkAccess.GetMetadata().Range().GetEndLine())
@@ -368,8 +368,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 23, postgres.Config.ConnectionThrottling.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 23, postgres.Config.ConnectionThrottling.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 26, postgres.FirewallRules[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 31, postgres.FirewallRules[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 26, postgres.FirewallRules[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 31, postgres.FirewallRules[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 29, postgres.FirewallRules[0].StartIP.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 29, postgres.FirewallRules[0].StartIP.GetMetadata().Range().GetEndLine())
@@ -377,8 +377,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 30, postgres.FirewallRules[0].EndIP.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 30, postgres.FirewallRules[0].EndIP.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 33, mariadb.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 36, mariadb.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 33, mariadb.Metadata.Range().GetStartLine())
+	assert.Equal(t, 36, mariadb.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 34, mariadb.EnablePublicNetworkAccess.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 34, mariadb.EnablePublicNetworkAccess.GetMetadata().Range().GetEndLine())
@@ -386,8 +386,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 35, mariadb.EnableSSLEnforcement.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 35, mariadb.EnableSSLEnforcement.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 38, mariadb.FirewallRules[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 43, mariadb.FirewallRules[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 38, mariadb.FirewallRules[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 43, mariadb.FirewallRules[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 41, mariadb.FirewallRules[0].StartIP.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 41, mariadb.FirewallRules[0].StartIP.GetMetadata().Range().GetEndLine())
@@ -395,8 +395,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 42, mariadb.FirewallRules[0].EndIP.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 42, mariadb.FirewallRules[0].EndIP.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 45, mysql.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 49, mysql.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 45, mysql.Metadata.Range().GetStartLine())
+	assert.Equal(t, 49, mysql.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 46, mysql.EnablePublicNetworkAccess.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 46, mysql.EnablePublicNetworkAccess.GetMetadata().Range().GetEndLine())
@@ -407,8 +407,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 48, mysql.MinimumTLSVersion.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 48, mysql.MinimumTLSVersion.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 51, mysql.FirewallRules[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 55, mysql.FirewallRules[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 51, mysql.FirewallRules[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 55, mysql.FirewallRules[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 53, mysql.FirewallRules[0].StartIP.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 53, mysql.FirewallRules[0].StartIP.GetMetadata().Range().GetEndLine())
@@ -416,8 +416,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 54, mysql.FirewallRules[0].EndIP.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 54, mysql.FirewallRules[0].EndIP.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 57, mssql.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 61, mssql.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 57, mssql.Metadata.Range().GetStartLine())
+	assert.Equal(t, 61, mssql.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 59, mssql.EnablePublicNetworkAccess.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 59, mssql.EnablePublicNetworkAccess.GetMetadata().Range().GetEndLine())
@@ -425,8 +425,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 60, mssql.MinimumTLSVersion.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 60, mssql.MinimumTLSVersion.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 63, mssql.FirewallRules[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 68, mssql.FirewallRules[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 63, mssql.FirewallRules[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 68, mssql.FirewallRules[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 66, mssql.FirewallRules[0].StartIP.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 66, mssql.FirewallRules[0].StartIP.GetMetadata().Range().GetEndLine())
@@ -434,8 +434,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 67, mssql.FirewallRules[0].EndIP.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 67, mssql.FirewallRules[0].EndIP.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 70, mssql.SecurityAlertPolicies[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 80, mssql.SecurityAlertPolicies[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 70, mssql.SecurityAlertPolicies[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 80, mssql.SecurityAlertPolicies[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 72, mssql.SecurityAlertPolicies[0].DisabledAlerts[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 75, mssql.SecurityAlertPolicies[0].DisabledAlerts[0].GetMetadata().Range().GetEndLine())
@@ -446,8 +446,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 77, mssql.SecurityAlertPolicies[0].EmailAddresses[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 79, mssql.SecurityAlertPolicies[0].EmailAddresses[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 82, mssql.ExtendedAuditingPolicies[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 85, mssql.ExtendedAuditingPolicies[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 82, mssql.ExtendedAuditingPolicies[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 85, mssql.ExtendedAuditingPolicies[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 84, mssql.ExtendedAuditingPolicies[0].RetentionInDays.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 84, mssql.ExtendedAuditingPolicies[0].RetentionInDays.GetMetadata().Range().GetEndLine())

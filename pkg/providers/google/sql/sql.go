@@ -32,20 +32,20 @@ const (
 )
 
 type DatabaseInstance struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	DatabaseVersion defsecTypes.StringValue
 	Settings        Settings
 	IsReplica       defsecTypes.BoolValue
 }
 
 type Settings struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	Flags           Flags
 	Backups         Backups
 	IPConfiguration IPConfiguration
 }
 type Flags struct {
-	defsecTypes.Metadata
+	Metadata                        defsecTypes.Metadata
 	LogTempFileSize                 defsecTypes.IntValue
 	LocalInFile                     defsecTypes.BoolValue
 	ContainedDatabaseAuthentication defsecTypes.BoolValue
@@ -59,12 +59,12 @@ type Flags struct {
 }
 
 type Backups struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }
 
 type IPConfiguration struct {
-	defsecTypes.Metadata
+	Metadata           defsecTypes.Metadata
 	RequireTLS         defsecTypes.BoolValue
 	EnableIPv4         defsecTypes.BoolValue
 	AuthorizedNetworks []struct {
