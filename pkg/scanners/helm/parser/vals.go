@@ -2,7 +2,7 @@ package parser
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/url"
 	"os"
 	"strings"
@@ -93,7 +93,7 @@ func mergeMaps(a, b map[string]interface{}) map[string]interface{} {
 // readFile load a file from stdin, the local directory, or a remote file with a url.
 func readFile(filePath string) ([]byte, error) {
 	if strings.TrimSpace(filePath) == "-" {
-		return ioutil.ReadAll(os.Stdin)
+		return io.ReadAll(os.Stdin)
 	}
 	u, _ := url.Parse(filePath)
 
@@ -109,6 +109,6 @@ func readFile(filePath string) ([]byte, error) {
 		}
 		return data.Bytes(), err
 	} else {
-		return ioutil.ReadFile(filePath)
+		return os.ReadFile(filePath)
 	}
 }

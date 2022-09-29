@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -182,7 +181,7 @@ func (p *Parser) extractChartName(chartPath string) error {
 
 func (p *Parser) RenderedChartFiles() ([]ChartFile, error) {
 
-	tempDir, err := ioutil.TempDir(os.TempDir(), "defsec")
+	tempDir, err := os.MkdirTemp(os.TempDir(), "defsec")
 	if err != nil {
 		return nil, err
 	}

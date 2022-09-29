@@ -5,7 +5,6 @@ import (
 	"context"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"path/filepath"
 	"strings"
 
@@ -79,7 +78,7 @@ func (p *Parser) ParseFile(_ context.Context, fs fs.FS, path string) ([]interfac
 	}
 	defer func() { _ = f.Close() }()
 
-	contents, err := ioutil.ReadAll(f)
+	contents, err := io.ReadAll(f)
 	if err != nil {
 		return nil, err
 	}

@@ -74,8 +74,8 @@ func TestResult_GetCode(t *testing.T) {
 					Content: `resource "aws_s3_bucket" "something" {`,
 				},
 				{
-					Number: 2,
-					Content: `	bucket = "something"`,
+					Number:     2,
+					Content:    `	bucket = "something"`,
 					IsCause:    true,
 					FirstCause: true,
 					LastCause:  true,
