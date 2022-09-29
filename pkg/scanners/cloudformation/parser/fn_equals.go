@@ -18,5 +18,4 @@ func ResolveEquals(property *Property) (resolved *Property, success bool) {
 	propA, _ := refValue[0].resolveValue()
 	propB, _ := refValue[1].resolveValue()
 	return property.deriveResolved(cftypes.Bool, propA.EqualTo(propB.RawValue())), true
-
 }

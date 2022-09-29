@@ -4,7 +4,6 @@ import (
 	"context"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"path/filepath"
 	"sync"
 
@@ -118,7 +117,7 @@ func (s *Scanner) ScanReader(ctx context.Context, filename string, reader io.Rea
 	if err := memfs.MkdirAll(filepath.Base(filename), 0o700); err != nil {
 		return nil, err
 	}
-	data, err := ioutil.ReadAll(reader)
+	data, err := io.ReadAll(reader)
 	if err != nil {
 		return nil, err
 	}

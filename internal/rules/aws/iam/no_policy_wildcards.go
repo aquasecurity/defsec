@@ -94,7 +94,7 @@ func checkPolicy(src iam.Document, results scan.Results) scan.Results {
 	return results
 }
 
-//nolint
+// nolint
 func checkStatement(src iam.Document, statement iamgo.Statement, results scan.Results) scan.Results {
 	effect, _ := statement.Effect()
 	if effect != iamgo.EffectAllow {

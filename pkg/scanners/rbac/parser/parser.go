@@ -5,7 +5,6 @@ import (
 	"context"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"path/filepath"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
@@ -79,7 +78,7 @@ func (p *Parser) required(fs fs.FS, path string) bool {
 		return false
 	}
 	defer func() { _ = f.Close() }()
-	if data, err := ioutil.ReadAll(f); err == nil {
+	if data, err := io.ReadAll(f); err == nil {
 		return detection.IsType(path, bytes.NewReader(data), detection.FileTypeRbac)
 	}
 	return false
