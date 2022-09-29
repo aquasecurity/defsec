@@ -146,6 +146,7 @@ func (p *Property) RawValue() interface{} {
 }
 
 func (p *Property) AsRawStrings() ([]string, error) {
+
 	if len(p.ctx.lines) < p.rng.GetEndLine() {
 		return p.ctx.lines, nil
 	}
@@ -266,7 +267,7 @@ func (p *Property) GetProperty(path string) *Property {
 		}
 	}
 
-	return nil
+	return &Property{}
 }
 
 func (p *Property) deriveResolved(propType cftypes.CfType, propValue interface{}) *Property {
@@ -358,6 +359,9 @@ func (p *Property) SetLogicalResource(id string) {
 }
 
 func (p *Property) GetJsonBytes(squashList ...bool) []byte {
+	if p.IsNil() {
+		return []byte{}
+	}
 	lines, err := p.AsRawStrings()
 	if err != nil {
 		return nil

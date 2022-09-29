@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"path/filepath"
 	"strings"
 
@@ -92,7 +91,7 @@ func (p *Parser) required(fs fs.FS, path string) bool {
 		return false
 	}
 	defer func() { _ = f.Close() }()
-	if data, err := ioutil.ReadAll(f); err == nil {
+	if data, err := io.ReadAll(f); err == nil {
 		return detection.IsType(path, bytes.NewReader(data), detection.FileTypeKubernetes)
 	}
 	return false
@@ -100,7 +99,7 @@ func (p *Parser) required(fs fs.FS, path string) bool {
 
 func (p *Parser) Parse(r io.Reader, path string) ([]interface{}, error) {
 
-	contents, err := ioutil.ReadAll(r)
+	contents, err := io.ReadAll(r)
 	if err != nil {
 		return nil, err
 	}

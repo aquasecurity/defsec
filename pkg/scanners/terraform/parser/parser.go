@@ -4,7 +4,6 @@ import (
 	"context"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
@@ -153,7 +152,7 @@ func (p *Parser) ParseFile(_ context.Context, fullPath string) error {
 	}
 	defer func() { _ = f.Close() }()
 
-	data, err := ioutil.ReadAll(f)
+	data, err := io.ReadAll(f)
 	if err != nil {
 		return err
 	}

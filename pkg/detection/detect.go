@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"path/filepath"
 	"strings"
 
@@ -81,7 +80,7 @@ func init() {
 				return false
 			}
 
-			data, err := ioutil.ReadAll(r)
+			data, err := io.ReadAll(r)
 			if err != nil {
 				return false
 			}
@@ -114,7 +113,7 @@ func init() {
 			return false
 		}
 
-		data, err := ioutil.ReadAll(r)
+		data, err := io.ReadAll(r)
 		if err != nil {
 			return false
 		}
@@ -169,7 +168,7 @@ func init() {
 			return false
 		}
 
-		contents, err := ioutil.ReadAll(r)
+		contents, err := io.ReadAll(r)
 		if err != nil {
 			return false
 		}
@@ -233,7 +232,7 @@ func init() {
 			return false
 		}
 
-		contents, err := ioutil.ReadAll(r)
+		contents, err := io.ReadAll(r)
 		if err != nil {
 			return false
 		}
@@ -308,7 +307,7 @@ func ensureSeeker(r io.Reader) io.ReadSeeker {
 	if seeker, ok := r.(io.ReadSeeker); ok {
 		return seeker
 	}
-	if data, err := ioutil.ReadAll(r); err == nil {
+	if data, err := io.ReadAll(r); err == nil {
 		return bytes.NewReader(data)
 	}
 	return nil

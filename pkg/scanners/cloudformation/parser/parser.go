@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"path/filepath"
 	"strings"
 
@@ -85,7 +84,7 @@ func (p *Parser) Required(fs fs.FS, path string) bool {
 		return false
 	}
 	defer func() { _ = f.Close() }()
-	if data, err := ioutil.ReadAll(f); err == nil {
+	if data, err := io.ReadAll(f); err == nil {
 		return detection.IsType(path, bytes.NewReader(data), detection.FileTypeCloudFormation)
 	}
 	return false
@@ -117,7 +116,7 @@ func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (context 
 	}
 	defer func() { _ = f.Close() }()
 
-	content, err := ioutil.ReadAll(f)
+	content, err := io.ReadAll(f)
 	if err != nil {
 		return nil, err
 	}

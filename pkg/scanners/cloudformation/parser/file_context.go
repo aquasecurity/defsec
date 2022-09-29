@@ -21,6 +21,7 @@ type FileContext struct {
 	Resources    map[string]*Resource   `json:"Resources" yaml:"Resources"`
 	Globals      map[string]*Resource   `json:"Globals" yaml:"Globals"`
 	Mappings     map[string]interface{} `json:"Mappings,omitempty" yaml:"Mappings"`
+	Conditions   map[string]Property    `json:"Conditions,omitempty" yaml:"Conditions"`
 }
 
 func (t *FileContext) GetResourceByLogicalID(name string) *Resource {
