@@ -27,6 +27,6 @@ type State struct {
 	Oracle       oracle.Oracle
 }
 
-func (s *State) ToRego() interface{} {
-	return convert.StructToRego(reflect.ValueOf(s))
+func (a *State) ToRego() interface{} {
+	return convert.StructToRego(reflect.ValueOf(a))
 }
