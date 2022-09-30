@@ -7,7 +7,7 @@ import (
 
 type TimeValue struct {
 	BaseAttribute
-	value *time.Time
+	value time.Time
 }
 
 func (b TimeValue) MarshalJSON() ([]byte, error) {
@@ -24,7 +24,7 @@ func (b *TimeValue) UnmarshalJSON(data []byte) error {
 	}
 	if keys["value"] != nil {
 		if ti, err := time.Parse(time.RFC3339, keys["value"].(string)); err == nil {
-			b.value = &ti
+			b.value = ti
 		}
 	}
 	if keys["metadata"] != nil {
@@ -43,7 +43,7 @@ func (b *TimeValue) UnmarshalJSON(data []byte) error {
 
 func Time(value time.Time, m Metadata) TimeValue {
 	return TimeValue{
-		value:         &value,
+		value:         value,
 		BaseAttribute: BaseAttribute{metadata: m},
 	}
 }
@@ -66,7 +66,7 @@ func TimeUnresolvable(m Metadata) TimeValue {
 	return b
 }
 
-func (t TimeValue) Value() *time.Time {
+func (t TimeValue) Value() time.Time {
 	return t.value
 }
 
@@ -75,9 +75,6 @@ func (t TimeValue) GetRawValue() interface{} {
 }
 
 func (t TimeValue) IsNever() bool {
-	if t.value == nil {
-		return false
-	}
 	if t.GetMetadata().isUnresolvable {
 		return false
 	}
@@ -88,17 +85,11 @@ func (t TimeValue) Before(i time.Time) bool {
 	if t.metadata.isUnresolvable {
 		return false
 	}
-	if t.value == nil {
-		return false
-	}
 	return t.value.Before(i)
 }
 
 func (t TimeValue) After(i time.Time) bool {
 	if t.metadata.isUnresolvable {
-		return false
-	}
-	if t.value == nil {
 		return false
 	}
 	return t.value.After(i)
