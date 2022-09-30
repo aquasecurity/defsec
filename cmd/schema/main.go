@@ -27,6 +27,7 @@ var rootCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(generateCmd)
+	rootCmd.AddCommand(verifyCmd)
 }
 
 var generateCmd = &cobra.Command{

@@ -15,5 +15,4 @@ jobs:
         cache: true
         cache-dependency-path: go.sum
 
-    - name: Run full tests
-      run: go run ./cmd/schema verify
+    - run: go run ./cmd/schema verify
