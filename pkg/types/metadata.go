@@ -14,6 +14,7 @@ type Metadata struct {
 	isExplicit     bool
 	isUnresolvable bool
 	parent         *Metadata
+	internal       interface{}
 }
 
 func (m Metadata) MarshalJSON() ([]byte, error) {
@@ -112,6 +113,10 @@ func (m Metadata) WithParent(p Metadata) Metadata {
 	return m
 }
 
+func (m *Metadata) SetParentPtr(p *Metadata) {
+	m.parent = p
+}
+
 func (m Metadata) Parent() *Metadata {
 	return m.parent
 }
@@ -122,6 +127,15 @@ func (m Metadata) Root() Metadata {
 		meta = meta.Parent()
 	}
 	return *meta
+}
+
+func (m Metadata) WithInternal(internal interface{}) Metadata {
+	m.internal = internal
+	return m
+}
+
+func (m Metadata) Internal() interface{} {
+	return m.internal
 }
 
 func (m Metadata) IsMultiLine() bool {
@@ -192,4 +206,12 @@ func (m Metadata) GetMetadata() Metadata {
 
 func (m Metadata) GetRawValue() interface{} {
 	return nil
+}
+
+func (m *Metadata) SetReference(ref string) {
+	m.ref = ref
+}
+
+func (m *Metadata) SetRange(r Range) {
+	m.rnge = r
 }
