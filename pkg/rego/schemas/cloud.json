@@ -197,27 +197,15 @@
       "properties": {
         "active": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "arn": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -239,11 +227,7 @@
       "properties": {
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "resources": {
           "type": "array",
@@ -285,11 +269,7 @@
       "properties": {
         "cloudwatchloggrouparn": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -298,19 +278,11 @@
       "properties": {
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "securitypolicy": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -319,27 +291,15 @@
       "properties": {
         "apikeyrequired": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "authorizationtype": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "httpmethod": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -348,27 +308,15 @@
       "properties": {
         "cachedataencrypted": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "cacheenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "method": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -393,11 +341,7 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "restmethodsettings": {
           "type": "array",
@@ -408,11 +352,7 @@
         },
         "xraytracingenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -421,19 +361,11 @@
       "properties": {
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "protocoltype": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "stages": {
           "type": "array",
@@ -468,11 +400,7 @@
       "properties": {
         "cloudwatchloggrouparn": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -481,19 +409,11 @@
       "properties": {
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "securitypolicy": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -506,11 +426,7 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -542,11 +458,7 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -555,11 +467,7 @@
       "properties": {
         "type": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -572,19 +480,11 @@
         },
         "enforceconfiguration": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -593,11 +493,7 @@
       "properties": {
         "viewerprotocolpolicy": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -637,11 +533,7 @@
         },
         "wafid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -650,11 +542,7 @@
       "properties": {
         "bucket": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -663,11 +551,7 @@
       "properties": {
         "minimumprotocolversion": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -688,21 +572,13 @@
       "properties": {
         "type": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "values": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         }
       }
@@ -719,11 +595,7 @@
         },
         "readwritetype": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -732,27 +604,15 @@
       "properties": {
         "bucketname": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "cloudwatchlogsloggrouparn": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "enablelogfilevalidation": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "eventselectors": {
           "type": "array",
@@ -763,35 +623,19 @@
         },
         "islogging": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "ismultiregion": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -800,11 +644,7 @@
       "properties": {
         "alarmname": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "dimensions": {
           "type": "array",
@@ -815,11 +655,7 @@
         },
         "metricname": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "metrics": {
           "type": "array",
@@ -835,19 +671,11 @@
       "properties": {
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "value": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -875,19 +703,11 @@
       "properties": {
         "arn": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "metricfilters": {
           "type": "array",
@@ -898,19 +718,11 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "retentionindays": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         }
       }
     },
@@ -919,19 +731,11 @@
       "properties": {
         "expression": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "id": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -940,19 +744,11 @@
       "properties": {
         "filtername": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "filterpattern": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -961,11 +757,7 @@
       "properties": {
         "encryptionenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1011,11 +803,7 @@
       "properties": {
         "sourceallregions": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1026,20 +814,12 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "identifier": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "instances": {
           "type": "array",
@@ -1050,19 +830,11 @@
         },
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "storageencrypted": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1083,11 +855,7 @@
       "properties": {
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -1096,11 +864,7 @@
       "properties": {
         "pointintimerecovery": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "serversideencryption": {
           "type": "object",
@@ -1132,19 +896,11 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -1153,11 +909,7 @@
       "properties": {
         "pointintimerecovery": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "serversideencryption": {
           "type": "object",
@@ -1170,11 +922,7 @@
       "properties": {
         "encrypted": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1244,19 +992,11 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -1287,11 +1027,7 @@
         },
         "userdata": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -1300,11 +1036,7 @@
       "properties": {
         "associatepublicip": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "ebsblockdevices": {
           "type": "array",
@@ -1319,11 +1051,7 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "rootblockdevice": {
           "type": "object",
@@ -1331,11 +1059,7 @@
         },
         "userdata": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -1353,19 +1077,11 @@
       "properties": {
         "httpendpoint": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "httptokens": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -1374,11 +1090,7 @@
       "properties": {
         "isdefaultrule": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "rules": {
           "type": "array",
@@ -1394,38 +1106,22 @@
       "properties": {
         "action": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "cidrs": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "protocol": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "type": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -1434,11 +1130,7 @@
       "properties": {
         "description": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "egressrules": {
           "type": "array",
@@ -1456,19 +1148,11 @@
         },
         "isdefault": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "vpcid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -1479,20 +1163,12 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "description": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -1501,11 +1177,7 @@
       "properties": {
         "mappubliciponlaunch": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1514,19 +1186,11 @@
       "properties": {
         "id": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "isdefault": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "securitygroups": {
           "type": "array",
@@ -1563,19 +1227,11 @@
       "properties": {
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "type": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -1584,11 +1240,7 @@
       "properties": {
         "scanonpush": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1605,11 +1257,7 @@
         },
         "imagetagsimmutable": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "policies": {
           "type": "array",
@@ -1634,11 +1282,7 @@
       "properties": {
         "containerinsightsenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1647,11 +1291,7 @@
       "properties": {
         "cpu": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "environment": {
           "type": "array",
@@ -1662,35 +1302,19 @@
         },
         "essential": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "image": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "memory": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "portmappings": {
           "type": "array",
@@ -1701,11 +1325,7 @@
         },
         "privileged": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1733,11 +1353,7 @@
       "properties": {
         "transitencryptionenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1757,19 +1373,11 @@
       "properties": {
         "containerport": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "hostport": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         }
       }
     },
@@ -1818,11 +1426,7 @@
       "properties": {
         "encrypted": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1841,20 +1445,12 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "publicaccessenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1875,19 +1471,11 @@
       "properties": {
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "secrets": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1896,43 +1484,23 @@
       "properties": {
         "api": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "audit": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "authenticator": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "controllermanager": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "scheduler": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -1941,27 +1509,15 @@
       "properties": {
         "engine": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "nodetype": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "snapshotretentionlimit": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         }
       }
     },
@@ -1996,19 +1552,11 @@
       "properties": {
         "atrestencryptionenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "transitencryptionenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2017,11 +1565,7 @@
       "properties": {
         "description": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2030,11 +1574,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2047,11 +1587,7 @@
         },
         "domainname": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "endpoint": {
           "type": "object",
@@ -2084,19 +1620,11 @@
       "properties": {
         "enforcehttps": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "tlspolicy": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2105,11 +1633,7 @@
       "properties": {
         "auditenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2118,11 +1642,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2131,11 +1651,7 @@
       "properties": {
         "type": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2163,19 +1679,11 @@
         },
         "protocol": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "tlspolicy": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2184,19 +1692,11 @@
       "properties": {
         "dropinvalidheaderfields": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "internal": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "listeners": {
           "type": "array",
@@ -2207,11 +1707,7 @@
         },
         "type": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2229,27 +1725,15 @@
       "properties": {
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "releaselabel": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "servicerole": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2277,19 +1761,11 @@
       "properties": {
         "configuration": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2298,35 +1774,19 @@
       "properties": {
         "accesskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "active": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "creationdate": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.TimeValue"
         },
         "lastaccess": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.TimeValue"
         }
       }
     },
@@ -2361,11 +1821,7 @@
       "properties": {
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "policies": {
           "type": "array",
@@ -2432,11 +1888,7 @@
       "properties": {
         "isvirtual": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2445,59 +1897,31 @@
       "properties": {
         "maxagedays": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "minimumlength": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "requirelowercase": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "requirenumbers": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "requiresymbols": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "requireuppercase": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "reusepreventioncount": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         }
       }
     },
@@ -2506,11 +1930,7 @@
       "properties": {
         "builtin": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "document": {
           "type": "object",
@@ -2518,11 +1938,7 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2531,11 +1947,7 @@
       "properties": {
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "policies": {
           "type": "array",
@@ -2551,11 +1963,7 @@
       "properties": {
         "expiration": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.TimeValue"
         }
       }
     },
@@ -2578,11 +1986,7 @@
         },
         "lastaccess": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.TimeValue"
         },
         "mfadevices": {
           "type": "array",
@@ -2593,11 +1997,7 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "policies": {
           "type": "array",
@@ -2613,19 +2013,11 @@
       "properties": {
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "type": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2667,19 +2059,11 @@
       "properties": {
         "rotationenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "usage": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2716,19 +2100,11 @@
       "properties": {
         "principal": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "sourcearn": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2737,11 +2113,7 @@
       "properties": {
         "mode": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2754,11 +2126,7 @@
         },
         "publicaccess": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2767,19 +2135,11 @@
       "properties": {
         "audit": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "general": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2817,11 +2177,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2843,11 +2199,7 @@
       "properties": {
         "clientbroker": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2856,11 +2208,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2890,11 +2238,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2903,11 +2247,7 @@
       "properties": {
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "logging": {
           "type": "object",
@@ -2915,11 +2255,7 @@
         },
         "storageencrypted": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2928,11 +2264,7 @@
       "properties": {
         "audit": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2965,11 +2297,7 @@
       "properties": {
         "backupretentionperioddays": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "encryption": {
           "type": "object",
@@ -2988,19 +2316,11 @@
         },
         "publicaccess": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "replicationsourcearn": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3009,11 +2329,7 @@
       "properties": {
         "clusteridentifier": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "instance": {
           "type": "object",
@@ -3029,19 +2345,11 @@
       "properties": {
         "encryptstorage": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3050,11 +2358,7 @@
       "properties": {
         "backupretentionperioddays": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "encryption": {
           "type": "object",
@@ -3066,19 +2370,11 @@
         },
         "publicaccess": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "replicationsourcearn": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3087,19 +2383,11 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3135,11 +2423,7 @@
         },
         "subnetgroupname": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3148,19 +2432,11 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3188,11 +2464,7 @@
       "properties": {
         "description": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3201,11 +2473,7 @@
       "properties": {
         "acl": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "bucketpolicies": {
           "type": "array",
@@ -3224,11 +2492,7 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "publicaccessblock": {
           "type": "object",
@@ -3245,27 +2509,15 @@
       "properties": {
         "algorithm": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3274,19 +2526,11 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "targetbucket": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3295,35 +2539,19 @@
       "properties": {
         "blockpublicacls": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "blockpublicpolicy": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "ignorepublicacls": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "restrictpublicbuckets": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -3344,19 +2572,11 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "mfadelete": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -3373,11 +2593,7 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "restmethodsettings": {
           "type": "object",
@@ -3385,11 +2601,7 @@
         },
         "tracingenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -3398,11 +2610,7 @@
       "properties": {
         "cloudwatchloggrouparn": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3415,11 +2623,7 @@
         },
         "locationpath": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3428,19 +2632,11 @@
       "properties": {
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "securitypolicy": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3449,21 +2645,13 @@
       "properties": {
         "functionname": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "managedpolicies": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "policies": {
@@ -3475,11 +2663,7 @@
         },
         "tracing": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3500,11 +2684,7 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3513,19 +2693,11 @@
       "properties": {
         "applicationid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "semanticversion": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3534,11 +2706,7 @@
       "properties": {
         "loggingenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -3547,35 +2715,19 @@
       "properties": {
         "cachedataencrypted": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "datatraceenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "loggingenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "metricsenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -3584,27 +2736,15 @@
       "properties": {
         "datatraceenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "detailedmetricsenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "loggingenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -3660,19 +2800,11 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "kmsmasterkeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3685,11 +2817,7 @@
         },
         "tablename": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3704,20 +2832,12 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "policies": {
           "type": "array",
@@ -3737,11 +2857,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -3750,11 +2866,7 @@
       "properties": {
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3775,11 +2887,7 @@
       "properties": {
         "arn": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "encryption": {
           "type": "object",
@@ -3792,19 +2900,11 @@
       "properties": {
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "managedencryption": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -3824,11 +2924,7 @@
         },
         "queueurl": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3861,11 +2957,7 @@
       "properties": {
         "kmskeyid": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3874,11 +2966,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -3997,11 +3085,7 @@
       "properties": {
         "httpsonly": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -4014,11 +3098,7 @@
         },
         "enableclientcert": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "identity": {
           "type": "object",
@@ -4035,11 +3115,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -4048,11 +3124,7 @@
       "properties": {
         "type": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -4061,19 +3133,11 @@
       "properties": {
         "enablehttp2": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "minimumtlsversion": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -4096,11 +3160,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         }
       }
@@ -4112,11 +3172,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "permissions": {
@@ -4159,11 +3215,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -4194,11 +3246,7 @@
       "properties": {
         "disablepasswordauthentication": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -4207,11 +3255,7 @@
       "properties": {
         "customdata": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -4256,20 +3300,12 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "enableprivatecluster": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "networkprofile": {
           "type": "object",
@@ -4286,11 +3322,7 @@
       "properties": {
         "networkpolicy": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -4299,11 +3331,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -4312,11 +3340,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -4358,11 +3382,7 @@
       "properties": {
         "retentionindays": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         }
       }
     },
@@ -4371,19 +3391,11 @@
       "properties": {
         "endip": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "startip": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -4446,27 +3458,15 @@
       "properties": {
         "connectionthrottling": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "logcheckpoints": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "logconnections": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -4477,30 +3477,18 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "emailaccountadmins": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "emailaddresses": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         }
       }
@@ -4510,19 +3498,11 @@
       "properties": {
         "enablepublicnetworkaccess": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "enablesslenforcement": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "firewallrules": {
           "type": "array",
@@ -4533,11 +3513,7 @@
         },
         "minimumtlsversion": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -4558,11 +3534,7 @@
       "properties": {
         "enablepublicnetwork": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -4583,11 +3555,7 @@
       "properties": {
         "enableencryption": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -4596,11 +3564,7 @@
       "properties": {
         "expirydate": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.TimeValue"
         }
       }
     },
@@ -4621,11 +3585,7 @@
       "properties": {
         "defaultaction": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -4634,19 +3594,11 @@
       "properties": {
         "contenttype": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "expirydate": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.TimeValue"
         }
       }
     },
@@ -4655,11 +3607,7 @@
       "properties": {
         "enablepurgeprotection": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "keys": {
           "type": "array",
@@ -4681,11 +3629,7 @@
         },
         "softdeleteretentiondays": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         }
       }
     },
@@ -4696,22 +3640,14 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "locations": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "retentionpolicy": {
@@ -4737,19 +3673,11 @@
       "properties": {
         "days": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -4797,19 +3725,11 @@
       "properties": {
         "days": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -4830,21 +3750,13 @@
       "properties": {
         "allow": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "destinationaddresses": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "destinationports": {
@@ -4856,29 +3768,17 @@
         },
         "outbound": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "protocol": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "sourceaddresses": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "sourceports": {
@@ -4895,19 +3795,11 @@
       "properties": {
         "enablealertnotifications": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "phone": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -4935,11 +3827,7 @@
       "properties": {
         "tier": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -4955,19 +3843,11 @@
         },
         "enforcehttps": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "minimumtlsversion": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "networkrules": {
           "type": "array",
@@ -4994,11 +3874,7 @@
       "properties": {
         "publicaccess": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -5007,21 +3883,13 @@
       "properties": {
         "allowbydefault": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "bypass": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         }
       }
@@ -5031,11 +3899,7 @@
       "properties": {
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -5044,11 +3908,7 @@
       "properties": {
         "enablelogging": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -5081,11 +3941,7 @@
       "properties": {
         "enablemanagedvirtualnetwork": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -5115,11 +3971,7 @@
       "properties": {
         "userdata": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -5176,11 +4028,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         }
       }
@@ -5209,11 +4057,7 @@
       "properties": {
         "entryprotocol": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -5224,11 +4068,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         }
       }
@@ -5238,19 +4078,11 @@
       "properties": {
         "autoupgrade": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "surgeupgrade": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -5273,11 +4105,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         }
       }
@@ -5287,27 +4115,15 @@
       "properties": {
         "acl": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "forcedestroy": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "objects": {
           "type": "array",
@@ -5327,11 +4143,7 @@
       "properties": {
         "acl": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -5352,11 +4164,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -5365,11 +4173,7 @@
       "properties": {
         "requiresignedcommits": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -5378,43 +4182,23 @@
       "properties": {
         "encryptedvalue": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "environment": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "plaintextvalue": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "repository": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "secretname": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -5449,27 +4233,15 @@
       "properties": {
         "archived": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "public": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "vulnerabilityalerts": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -5515,27 +4287,15 @@
       "properties": {
         "domain": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "role": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "specialgroup": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -5563,11 +4323,7 @@
         },
         "id": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -5617,11 +4373,7 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -5630,19 +4382,11 @@
       "properties": {
         "kmskeylink": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "rawkey": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BytesValue"
         }
       }
     },
@@ -5653,11 +4397,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "firewallrule": {
@@ -5685,32 +4425,20 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "sourcetags": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "targettags": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         }
       }
@@ -5720,38 +4448,22 @@
       "properties": {
         "enforced": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "isallow": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "ports": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "integer"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
           }
         },
         "protocol": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -5766,11 +4478,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         }
       }
@@ -5794,35 +4502,19 @@
         },
         "canipforward": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "enableprojectsshkeyblocking": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "enableserialport": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "networkinterfaces": {
           "type": "array",
@@ -5833,11 +4525,7 @@
         },
         "osloginenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "serviceaccount": {
           "type": "object",
@@ -5870,19 +4558,11 @@
       "properties": {
         "haspublicip": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "natip": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "network": {
           "type": "object",
@@ -5899,11 +4579,7 @@
       "properties": {
         "enableoslogin": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -5912,27 +4588,15 @@
       "properties": {
         "minimumtlsversion": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "profile": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -5941,29 +4605,17 @@
       "properties": {
         "email": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "isdefault": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "scopes": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         }
       }
@@ -5973,27 +4625,15 @@
       "properties": {
         "integritymonitoringenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "securebootenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "vtpmenabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -6002,19 +4642,11 @@
       "properties": {
         "enableflowlogs": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -6039,11 +4671,7 @@
         },
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -6052,11 +4680,7 @@
       "properties": {
         "algorithm": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -6082,11 +4706,7 @@
         },
         "visibility": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -6095,11 +4715,7 @@
       "properties": {
         "issuecertificate": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -6108,19 +4724,11 @@
       "properties": {
         "enablelegacyabac": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "enableshieldednodes": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "ipallocationpolicy": {
           "type": "object",
@@ -6128,11 +4736,7 @@
         },
         "loggingservice": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "masterauth": {
           "type": "object",
@@ -6144,11 +4748,7 @@
         },
         "monitoringservice": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "networkpolicy": {
           "type": "object",
@@ -6175,19 +4775,11 @@
         },
         "removedefaultnodepool": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "resourcelabels": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "object"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.MapValue"
         }
       }
     },
@@ -6208,11 +4800,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -6221,19 +4809,11 @@
       "properties": {
         "enableautorepair": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "enableautoupgrade": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -6246,19 +4826,11 @@
         },
         "password": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "username": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -6269,20 +4841,12 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -6291,11 +4855,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -6304,27 +4864,15 @@
       "properties": {
         "enablelegacyendpoints": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "imagetype": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "serviceaccount": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "workloadmetadataconfig": {
           "type": "object",
@@ -6350,11 +4898,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -6363,11 +4907,7 @@
       "properties": {
         "enableprivatenodes": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -6376,11 +4916,7 @@
       "properties": {
         "nodemetadata": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -6389,30 +4925,18 @@
       "properties": {
         "includesdefaultserviceaccount": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "members": {
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "role": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -6466,27 +4990,15 @@
       "properties": {
         "defaultserviceaccount": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "member": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "role": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -6528,11 +5040,7 @@
       "properties": {
         "autocreatenetwork": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "bindings": {
           "type": "array",
@@ -6567,11 +5075,7 @@
       "properties": {
         "rotationperiodseconds": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         }
       }
     },
@@ -6592,11 +5096,7 @@
       "properties": {
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -6605,19 +5105,11 @@
       "properties": {
         "databaseversion": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "isreplica": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "settings": {
           "type": "object",
@@ -6630,83 +5122,43 @@
       "properties": {
         "containeddatabaseauthentication": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "crossdbownershipchaining": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "localinfile": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "logcheckpoints": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "logconnections": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "logdisconnections": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "loglockwaits": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "logmindurationstatement": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "logminmessages": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "logtempfilesize": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         }
       }
     },
@@ -6722,19 +5174,11 @@
         },
         "enableipv4": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "requiretls": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -6743,19 +5187,11 @@
       "properties": {
         "cidr": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -6800,11 +5236,7 @@
         },
         "enableuniformbucketlevelaccess": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "encryption": {
           "type": "object",
@@ -6812,11 +5244,7 @@
         },
         "location": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "members": {
           "type": "array",
@@ -6827,11 +5255,7 @@
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -6840,11 +5264,7 @@
       "properties": {
         "defaultkmskeyname": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -6867,11 +5287,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         },
         "ports": {
@@ -6897,11 +5313,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              }
-            }
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
         }
       }
@@ -6945,19 +5357,11 @@
       "properties": {
         "number": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "protocol": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -7001,43 +5405,23 @@
       "properties": {
         "destination": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "destinationport": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "enabled": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "source": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "sourceport": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -7046,11 +5430,7 @@
       "properties": {
         "adminpassword": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -7084,19 +5464,11 @@
       "properties": {
         "description": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "name": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "rules": {
           "type": "array",
@@ -7112,51 +5484,27 @@
       "properties": {
         "cidr": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "ethertype": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "isingress": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "portmax": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "portmin": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "integer"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
         "protocol": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -7165,11 +5513,7 @@
       "properties": {
         "pool": {
           "type": "object",
-          "properties": {
-            "value": {
-              "type": "string"
-            }
-          }
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -7191,6 +5535,180 @@
         "compute": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.oracle.Compute"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.types.BoolValue": {
+      "type": "object",
+      "properties": {
+        "endline": {
+          "type": "integer"
+        },
+        "explicit": {
+          "type": "boolean"
+        },
+        "filepath": {
+          "type": "string"
+        },
+        "fskey": {
+          "type": "string"
+        },
+        "managed": {
+          "type": "boolean"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "startline": {
+          "type": "integer"
+        },
+        "value": {
+          "type": "boolean"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.types.BytesValue": {
+      "type": "object",
+      "properties": {
+        "endline": {
+          "type": "integer"
+        },
+        "explicit": {
+          "type": "boolean"
+        },
+        "filepath": {
+          "type": "string"
+        },
+        "fskey": {
+          "type": "string"
+        },
+        "managed": {
+          "type": "boolean"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "startline": {
+          "type": "integer"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.types.IntValue": {
+      "type": "object",
+      "properties": {
+        "endline": {
+          "type": "integer"
+        },
+        "explicit": {
+          "type": "boolean"
+        },
+        "filepath": {
+          "type": "string"
+        },
+        "fskey": {
+          "type": "string"
+        },
+        "managed": {
+          "type": "boolean"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "startline": {
+          "type": "integer"
+        },
+        "value": {
+          "type": "integer"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.types.MapValue": {
+      "type": "object",
+      "properties": {
+        "endline": {
+          "type": "integer"
+        },
+        "explicit": {
+          "type": "boolean"
+        },
+        "filepath": {
+          "type": "string"
+        },
+        "fskey": {
+          "type": "string"
+        },
+        "managed": {
+          "type": "boolean"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "startline": {
+          "type": "integer"
+        },
+        "value": {
+          "type": "object"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.types.StringValue": {
+      "type": "object",
+      "properties": {
+        "endline": {
+          "type": "integer"
+        },
+        "explicit": {
+          "type": "boolean"
+        },
+        "filepath": {
+          "type": "string"
+        },
+        "fskey": {
+          "type": "string"
+        },
+        "managed": {
+          "type": "boolean"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "startline": {
+          "type": "integer"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.types.TimeValue": {
+      "type": "object",
+      "properties": {
+        "endline": {
+          "type": "integer"
+        },
+        "explicit": {
+          "type": "boolean"
+        },
+        "filepath": {
+          "type": "string"
+        },
+        "fskey": {
+          "type": "string"
+        },
+        "managed": {
+          "type": "boolean"
+        },
+        "resource": {
+          "type": "string"
+        },
+        "startline": {
+          "type": "integer"
+        },
+        "value": {
+          "type": "string"
         }
       }
     }
