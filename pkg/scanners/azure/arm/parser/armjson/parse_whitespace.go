@@ -1,12 +1,15 @@
 package armjson
 
-import "io"
+import (
+	"errors"
+	"io"
+)
 
 func (p *parser) parseWhitespace() error {
 	for {
 		b, err := p.peeker.Peek()
 		if err != nil {
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				return nil
 			}
 			return err

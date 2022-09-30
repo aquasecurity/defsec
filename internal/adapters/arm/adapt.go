@@ -16,6 +16,5 @@ func Adapt(ctx context.Context, deployment scanner.Deployment) *state.State {
 }
 
 func adaptAzure(deployment scanner.Deployment) azure.Azure {
-	return azure.Azure{
-	}
+	return azure.Azure{}
 }

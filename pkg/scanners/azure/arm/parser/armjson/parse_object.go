@@ -28,17 +28,12 @@ func (p *parser) parseObject(parentMetadata *types.Metadata) (Node, error) {
 	}
 
 	var nextComments []Node
+	return p.iterateObject(nextComments, metadata, n)
 
-	/*
-		{
-			"a": "b", // whatever
-			"c": "d"
-		}
+}
 
-
-	*/
-
-	// for each key/val
+// nolint: cyclop
+func (p *parser) iterateObject(nextComments []Node, metadata *types.Metadata, n *node) (Node, error) {
 	for {
 
 		if err := p.parseWhitespace(); err != nil {
@@ -145,5 +140,4 @@ func (p *parser) parseObject(parentMetadata *types.Metadata) (Node, error) {
 		n.content = append(n.content, key, val)
 
 	}
-
 }

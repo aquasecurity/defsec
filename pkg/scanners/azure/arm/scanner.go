@@ -26,7 +26,6 @@ var _ options.ConfigurableScanner = (*Scanner)(nil)
 type Scanner struct {
 	scannerOptions []options.ScannerOption
 	parserOptions  []options.ParserOption
-	debugWriter    io.Writer
 	debug          debug.Logger
 	frameworks     []framework.Framework
 }

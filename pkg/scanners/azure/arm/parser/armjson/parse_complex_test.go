@@ -37,10 +37,8 @@ func Test_Complex(t *testing.T) {
 }
 
 type Resource struct {
-	Line    int
-	id      string
-	comment string
-	inner   resourceInner
+	Line  int
+	inner resourceInner
 }
 
 type resourceInner struct {
@@ -67,10 +65,8 @@ func (p *Parameter) UnmarshalJSONWithMetadata(node Node) error {
 }
 
 type Property struct {
-	name    string
-	comment string
-	Line    int
-	inner   propertyInner
+	Line  int
+	inner propertyInner
 }
 
 type CFType string
@@ -91,7 +87,6 @@ type Temp struct {
 }
 
 type FileContext struct {
-	filepath   string
 	Parameters map[string]*Parameter `json:"Parameters" yaml:"Parameters"`
 	Resources  map[string]*Resource  `json:"Resources" yaml:"Resources"`
 }

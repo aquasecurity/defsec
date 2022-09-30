@@ -17,6 +17,7 @@ var escapes = map[rune]string{
 	't':  "\t",
 }
 
+// nolint: cyclop
 func (p *parser) parseString(parentMetadata *types.Metadata) (Node, error) {
 
 	n, _ := p.newNode(KindString, parentMetadata)
@@ -41,6 +42,7 @@ func (p *parser) parseString(parentMetadata *types.Metadata) (Node, error) {
 		if err != nil {
 			return nil, err
 		}
+		// nolint: gocritic
 		if inHex {
 			switch {
 			case c >= 'a' && c <= 'f', c >= 'A' && c <= 'F', c >= '0' && c <= '9':
