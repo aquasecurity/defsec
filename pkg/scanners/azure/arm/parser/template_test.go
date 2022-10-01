@@ -2,6 +2,7 @@ package parser
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 
 	types2 "github.com/aquasecurity/defsec/pkg/scanners/azure"
@@ -15,7 +16,7 @@ import (
 )
 
 func Test_JSONUnmarshal(t *testing.T) {
-	data, err := os.ReadFile("testdata/example.json")
+	data, err := os.ReadFile(filepath.Join("testdata", "example.json"))
 	require.NoError(t, err)
 	var target Template
 	metadata := types.NewTestMetadata()
