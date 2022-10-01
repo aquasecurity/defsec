@@ -130,6 +130,9 @@ func (v *Value) UnmarshalJSONWithMetadata(node armjson.Node) error {
 		if err := comment.Decode(&str); err != nil {
 			return err
 		}
+		// remove `\r` from comment when running windows
+		str = strings.ReplaceAll(str, "\r", "")
+
 		v.Comments = append(v.Comments, str)
 	}
 	return nil
