@@ -70,8 +70,8 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.FileSystems, 1)
 	fileSystem := adapted.FileSystems[0]
 
-	assert.Equal(t, 2, fileSystem.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 6, fileSystem.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, fileSystem.Metadata.Range().GetStartLine())
+	assert.Equal(t, 6, fileSystem.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 4, fileSystem.Encrypted.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 4, fileSystem.Encrypted.GetMetadata().Range().GetEndLine())

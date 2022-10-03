@@ -39,7 +39,6 @@ func TestCheckNoPublicDbAccess(t *testing.T) {
 						Metadata: defsecTypes.NewTestMetadata(),
 						Instances: []rds.ClusterInstance{
 							{
-								Metadata: defsecTypes.NewTestMetadata(),
 								Instance: rds.Instance{
 									Metadata:     defsecTypes.NewTestMetadata(),
 									PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),

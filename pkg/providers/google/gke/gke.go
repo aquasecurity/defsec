@@ -9,7 +9,7 @@ type GKE struct {
 }
 
 type Cluster struct {
-	defsecTypes.Metadata
+	Metadata                 defsecTypes.Metadata
 	NodePools                []NodePool
 	IPAllocationPolicy       IPAllocationPolicy
 	MasterAuthorizedNetworks MasterAuthorizedNetworks
@@ -27,7 +27,7 @@ type Cluster struct {
 }
 
 type NodeConfig struct {
-	defsecTypes.Metadata
+	Metadata               defsecTypes.Metadata
 	ImageType              defsecTypes.StringValue
 	WorkloadMetadataConfig WorkloadMetadataConfig
 	ServiceAccount         defsecTypes.StringValue
@@ -35,56 +35,56 @@ type NodeConfig struct {
 }
 
 type WorkloadMetadataConfig struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	NodeMetadata defsecTypes.StringValue
 }
 
 type MasterAuth struct {
-	defsecTypes.Metadata
+	Metadata          defsecTypes.Metadata
 	ClientCertificate ClientCertificate
 	Username          defsecTypes.StringValue
 	Password          defsecTypes.StringValue
 }
 
 type ClientCertificate struct {
-	defsecTypes.Metadata
+	Metadata         defsecTypes.Metadata
 	IssueCertificate defsecTypes.BoolValue
 }
 
 type PodSecurityPolicy struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }
 
 type PrivateCluster struct {
-	defsecTypes.Metadata
+	Metadata           defsecTypes.Metadata
 	EnablePrivateNodes defsecTypes.BoolValue
 }
 
 type NetworkPolicy struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }
 
 type MasterAuthorizedNetworks struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
-	CIDRs   []defsecTypes.StringValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
+	CIDRs    []defsecTypes.StringValue
 }
 
 type IPAllocationPolicy struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
 }
 
 type NodePool struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	Management Management
 	NodeConfig NodeConfig
 }
 
 type Management struct {
-	defsecTypes.Metadata
+	Metadata          defsecTypes.Metadata
 	EnableAutoRepair  defsecTypes.BoolValue
 	EnableAutoUpgrade defsecTypes.BoolValue
 }

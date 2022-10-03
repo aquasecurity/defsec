@@ -12,38 +12,38 @@ type Compute struct {
 }
 
 type Firewall struct {
-	defsecTypes.Metadata
+	Metadata      defsecTypes.Metadata
 	OutboundRules []OutboundFirewallRule
 	InboundRules  []InboundFirewallRule
 }
 
 type KubernetesCluster struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	SurgeUpgrade defsecTypes.BoolValue
 	AutoUpgrade  defsecTypes.BoolValue
 }
 
 type LoadBalancer struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	ForwardingRules []ForwardingRule
 }
 
 type ForwardingRule struct {
-	defsecTypes.Metadata
+	Metadata      defsecTypes.Metadata
 	EntryProtocol defsecTypes.StringValue
 }
 
 type OutboundFirewallRule struct {
-	defsecTypes.Metadata
+	Metadata             defsecTypes.Metadata
 	DestinationAddresses []defsecTypes.StringValue
 }
 
 type InboundFirewallRule struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	SourceAddresses []defsecTypes.StringValue
 }
 
 type Droplet struct {
-	defsecTypes.Metadata
-	SSHKeys []defsecTypes.StringValue
+	Metadata defsecTypes.Metadata
+	SSHKeys  []defsecTypes.StringValue
 }

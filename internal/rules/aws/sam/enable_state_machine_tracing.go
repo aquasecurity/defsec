@@ -31,7 +31,7 @@ var CheckEnableStateMachineTracing = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, stateMachine := range s.AWS.SAM.StateMachines {
-			if stateMachine.IsUnmanaged() {
+			if stateMachine.Metadata.IsUnmanaged() {
 				continue
 			}
 

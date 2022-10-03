@@ -47,14 +47,3 @@ func Test_cloudformation_scanning_with_debug(t *testing.T) {
 	// check debug is as expected
 	assert.Greater(t, len(debugWriter.String()), 0)
 }
-
-func Test_cloudformation_scanning_with_ignores_has_expected_errors(t *testing.T) {
-
-	cfScanner := cloudformation.New()
-
-	results, err := cfScanner.ScanFS(context.TODO(), os.DirFS("./examples/ignores"), ".")
-	require.NoError(t, err)
-
-	assert.Greater(t, len(results.GetFailed()), 0)
-	assert.Greater(t, len(results.GetIgnored()), 0)
-}

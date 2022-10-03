@@ -31,7 +31,7 @@ var CheckUseServiceAccount = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, cluster := range s.Google.GKE.Clusters {
-			if cluster.IsManaged() {
+			if cluster.Metadata.IsManaged() {
 				if cluster.RemoveDefaultNodePool.IsFalse() {
 					if cluster.NodeConfig.ServiceAccount.IsEmpty() {
 						results.Add(

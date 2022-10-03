@@ -29,6 +29,7 @@ type Block struct {
 	metadata     defsecTypes.Metadata
 	moduleSource string
 	moduleFS     fs.FS
+	reference    Reference
 }
 
 func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, parentBlock *Block, moduleSource string,
@@ -78,7 +79,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 		}
 	}
 
-	metadata := defsecTypes.NewMetadata(rng, ref)
+	metadata := defsecTypes.NewMetadata(rng, ref.String())
 
 	if parentBlock != nil {
 		metadata = metadata.WithParent(parentBlock.metadata)
@@ -95,6 +96,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 		moduleFS:     moduleFS,
 		parentBlock:  parentBlock,
 		metadata:     metadata,
+		reference:    *ref,
 	}
 
 	var children Blocks
@@ -115,7 +117,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 	b.childBlocks = children
 
 	for _, attr := range b.createAttributes() {
-		b.attributes = append(b.attributes, NewAttribute(attr, ctx, moduleName, metadata, ref, moduleSource, moduleFS))
+		b.attributes = append(b.attributes, NewAttribute(attr, ctx, moduleName, metadata, *ref, moduleSource, moduleFS))
 	}
 
 	return &b
@@ -123,6 +125,10 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 
 func (b *Block) ID() string {
 	return b.id
+}
+
+func (b *Block) Reference() Reference {
+	return b.reference
 }
 
 func (b *Block) GetMetadata() defsecTypes.Metadata {
@@ -137,7 +143,7 @@ func (b *Block) InjectBlock(block *Block, name string) {
 	block.hclBlock.Labels = []string{}
 	block.hclBlock.Type = name
 	for attrName, attr := range block.Attributes() {
-		b.context.Root().SetByDot(attr.Value(), fmt.Sprintf("%s.%s.%s", b.metadata.Reference().String(), name, attrName))
+		b.context.Root().SetByDot(attr.Value(), fmt.Sprintf("%s.%s.%s", b.reference.String(), name, attrName))
 	}
 	b.childBlocks = append(b.childBlocks, block)
 }
@@ -319,7 +325,7 @@ func (b *Block) GetNestedAttribute(name string) *Attribute {
 
 // LocalName is the name relative to the current module
 func (b *Block) LocalName() string {
-	return b.metadata.Reference().String()
+	return b.reference.String()
 }
 
 func (b *Block) FullName() string {

@@ -158,32 +158,32 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Clusters, 1)
 	cluster := adapted.Clusters[0]
 
-	assert.Equal(t, 2, cluster.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 29, cluster.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, cluster.Metadata.Range().GetStartLine())
+	assert.Equal(t, 29, cluster.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 6, cluster.EncryptionInTransit.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 9, cluster.EncryptionInTransit.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 6, cluster.EncryptionInTransit.Metadata.Range().GetStartLine())
+	assert.Equal(t, 9, cluster.EncryptionInTransit.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 12, cluster.Logging.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 28, cluster.Logging.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 12, cluster.Logging.Metadata.Range().GetStartLine())
+	assert.Equal(t, 28, cluster.Logging.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 13, cluster.Logging.Broker.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 27, cluster.Logging.Broker.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 13, cluster.Logging.Broker.Metadata.Range().GetStartLine())
+	assert.Equal(t, 27, cluster.Logging.Broker.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 14, cluster.Logging.Broker.Cloudwatch.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 17, cluster.Logging.Broker.Cloudwatch.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 14, cluster.Logging.Broker.Cloudwatch.Metadata.Range().GetStartLine())
+	assert.Equal(t, 17, cluster.Logging.Broker.Cloudwatch.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 15, cluster.Logging.Broker.Cloudwatch.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 15, cluster.Logging.Broker.Cloudwatch.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 18, cluster.Logging.Broker.Firehose.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 21, cluster.Logging.Broker.Firehose.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 18, cluster.Logging.Broker.Firehose.Metadata.Range().GetStartLine())
+	assert.Equal(t, 21, cluster.Logging.Broker.Firehose.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 19, cluster.Logging.Broker.Firehose.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 19, cluster.Logging.Broker.Firehose.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 22, cluster.Logging.Broker.S3.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 26, cluster.Logging.Broker.S3.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 22, cluster.Logging.Broker.S3.Metadata.Range().GetStartLine())
+	assert.Equal(t, 26, cluster.Logging.Broker.S3.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 23, cluster.Logging.Broker.S3.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 23, cluster.Logging.Broker.S3.Enabled.GetMetadata().Range().GetEndLine())

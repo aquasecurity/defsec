@@ -32,7 +32,7 @@ var CheckNoProjectLevelDefaultServiceAccountAssignment = rules.Register(
 	func(s *state.State) (results scan.Results) {
 		for _, project := range s.Google.IAM.AllProjects() {
 			for _, binding := range project.Bindings {
-				if binding.IsUnmanaged() {
+				if binding.Metadata.IsUnmanaged() {
 					continue
 				}
 				if binding.IncludesDefaultServiceAccount.IsTrue() {
@@ -55,7 +55,7 @@ var CheckNoProjectLevelDefaultServiceAccountAssignment = rules.Register(
 				}
 			}
 			for _, member := range project.Members {
-				if member.IsUnmanaged() {
+				if member.Metadata.IsUnmanaged() {
 					continue
 				}
 				if member.DefaultServiceAccount.IsTrue() {

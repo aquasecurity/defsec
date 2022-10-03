@@ -5,7 +5,7 @@ import (
 )
 
 type PublicAccessBlock struct {
-	defsecTypes.Metadata
+	Metadata              defsecTypes.Metadata
 	BlockPublicACLs       defsecTypes.BoolValue
 	BlockPublicPolicy     defsecTypes.BoolValue
 	IgnorePublicACLs      defsecTypes.BoolValue

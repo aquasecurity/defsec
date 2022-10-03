@@ -221,11 +221,11 @@ func TestLines(t *testing.T) {
 	rule := securityGroup.Rules[0]
 	watcher := adapted.NetworkWatcherFlowLogs[0]
 
-	assert.Equal(t, 2, securityGroup.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 4, securityGroup.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, securityGroup.Metadata.Range().GetStartLine())
+	assert.Equal(t, 4, securityGroup.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 6, rule.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 16, rule.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 6, rule.Metadata.Range().GetStartLine())
+	assert.Equal(t, 16, rule.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 9, rule.Outbound.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 9, rule.Outbound.GetMetadata().Range().GetEndLine())
@@ -236,11 +236,11 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 11, rule.Protocol.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 11, rule.Protocol.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 12, rule.SourcePorts[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 12, rule.SourcePorts[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 12, rule.SourcePorts[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 12, rule.SourcePorts[0].Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 13, rule.DestinationPorts[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 13, rule.DestinationPorts[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 13, rule.DestinationPorts[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 13, rule.DestinationPorts[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 14, rule.SourceAddresses[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 14, rule.SourceAddresses[0].GetMetadata().Range().GetEndLine())
@@ -248,11 +248,11 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 15, rule.DestinationAddresses[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 15, rule.DestinationAddresses[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 18, watcher.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 26, watcher.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 18, watcher.Metadata.Range().GetStartLine())
+	assert.Equal(t, 26, watcher.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 22, watcher.RetentionPolicy.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 25, watcher.RetentionPolicy.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 22, watcher.RetentionPolicy.Metadata.Range().GetStartLine())
+	assert.Equal(t, 25, watcher.RetentionPolicy.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 23, watcher.RetentionPolicy.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 23, watcher.RetentionPolicy.Enabled.GetMetadata().Range().GetEndLine())

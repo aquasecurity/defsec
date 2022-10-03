@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
+	"github.com/aquasecurity/defsec/pkg/state"
 )
 
 type WriteFileFS interface {
@@ -25,5 +26,5 @@ type APIScanner interface {
 	Name() string
 
 	// Scan scans an API and returns results
-	Scan(ctx context.Context) (scan.Results, error)
+	Scan(ctx context.Context, cloud *state.State) (scan.Results, error)
 }

@@ -13,6 +13,6 @@ type Compute struct {
 }
 
 type AddressReservation struct {
-	defsecTypes.Metadata
-	Pool defsecTypes.StringValue // e.g. public-pool
+	Metadata defsecTypes.Metadata
+	Pool     defsecTypes.StringValue // e.g. public-pool
 }

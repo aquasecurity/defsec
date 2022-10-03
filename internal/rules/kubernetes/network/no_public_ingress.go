@@ -30,7 +30,7 @@ var CheckNoPublicIngress = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, policy := range s.Kubernetes.NetworkPolicies {
-			if policy.IsUnmanaged() {
+			if policy.Metadata.IsUnmanaged() {
 				continue
 			}
 			for _, source := range policy.Spec.Ingress.SourceCIDRs {

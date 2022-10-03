@@ -9,14 +9,14 @@ type Monitor struct {
 }
 
 type LogProfile struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	RetentionPolicy RetentionPolicy
 	Categories      []defsecTypes.StringValue
 	Locations       []defsecTypes.StringValue
 }
 
 type RetentionPolicy struct {
-	defsecTypes.Metadata
-	Enabled defsecTypes.BoolValue
-	Days    defsecTypes.IntValue
+	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
+	Days     defsecTypes.IntValue
 }

@@ -121,12 +121,12 @@ func (p *Property) Metadata() defsecTypes.Metadata {
 		}
 	}
 	ref := NewCFReferenceWithValue(p.parentRange, *base, p.logicalId)
-	return defsecTypes.NewMetadata(p.Range(), ref)
+	return defsecTypes.NewMetadata(p.Range(), ref.String())
 }
 
 func (p *Property) MetadataWithValue(resolvedValue *Property) defsecTypes.Metadata {
 	ref := NewCFReferenceWithValue(p.parentRange, *resolvedValue, p.logicalId)
-	return defsecTypes.NewMetadata(p.Range(), ref)
+	return defsecTypes.NewMetadata(p.Range(), ref.String())
 }
 
 func (p *Property) isFunction() bool {
@@ -146,6 +146,7 @@ func (p *Property) RawValue() interface{} {
 }
 
 func (p *Property) AsRawStrings() ([]string, error) {
+
 	if len(p.ctx.lines) < p.rng.GetEndLine() {
 		return p.ctx.lines, nil
 	}
@@ -266,7 +267,7 @@ func (p *Property) GetProperty(path string) *Property {
 		}
 	}
 
-	return nil
+	return &Property{}
 }
 
 func (p *Property) deriveResolved(propType cftypes.CfType, propValue interface{}) *Property {
@@ -358,6 +359,9 @@ func (p *Property) SetLogicalResource(id string) {
 }
 
 func (p *Property) GetJsonBytes(squashList ...bool) []byte {
+	if p.IsNil() {
+		return []byte{}
+	}
 	lines, err := p.AsRawStrings()
 	if err != nil {
 		return nil

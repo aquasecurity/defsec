@@ -31,7 +31,7 @@ var CheckEnableDiskEncryption = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, disk := range s.Azure.Compute.ManagedDisks {
-			if disk.IsUnmanaged() {
+			if disk.Metadata.IsUnmanaged() {
 				continue
 			}
 			if disk.Encryption.Enabled.IsFalse() {

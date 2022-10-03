@@ -10,18 +10,18 @@ type Redshift struct {
 }
 
 type SecurityGroup struct {
-	defsecTypes.Metadata
+	Metadata    defsecTypes.Metadata
 	Description defsecTypes.StringValue
 }
 
 type Cluster struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	Encryption      Encryption
 	SubnetGroupName defsecTypes.StringValue
 }
 
 type Encryption struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Enabled  defsecTypes.BoolValue
 	KMSKeyID defsecTypes.StringValue
 }

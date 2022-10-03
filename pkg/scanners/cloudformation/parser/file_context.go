@@ -21,6 +21,7 @@ type FileContext struct {
 	Resources    map[string]*Resource   `json:"Resources" yaml:"Resources"`
 	Globals      map[string]*Resource   `json:"Globals" yaml:"Globals"`
 	Mappings     map[string]interface{} `json:"Mappings,omitempty" yaml:"Mappings"`
+	Conditions   map[string]Property    `json:"Conditions,omitempty" yaml:"Conditions"`
 }
 
 func (t *FileContext) GetResourceByLogicalID(name string) *Resource {
@@ -48,5 +49,5 @@ func (t *FileContext) GetResourcesByType(names ...string) []*Resource {
 func (t *FileContext) Metadata() defsecTypes.Metadata {
 	rng := defsecTypes.NewRange(t.filepath, 1, len(t.lines), "", nil)
 
-	return defsecTypes.NewMetadata(rng, NewCFReference("Template", rng))
+	return defsecTypes.NewMetadata(rng, NewCFReference("Template", rng).String())
 }

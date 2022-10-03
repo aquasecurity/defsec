@@ -94,18 +94,18 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.WorkSpaces, 1)
 	workspace := adapted.WorkSpaces[0]
 
-	assert.Equal(t, 2, workspace.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 5, workspace.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, workspace.Metadata.Range().GetStartLine())
+	assert.Equal(t, 5, workspace.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 3, workspace.RootVolume.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 3, workspace.RootVolume.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 3, workspace.RootVolume.Metadata.Range().GetStartLine())
+	assert.Equal(t, 3, workspace.RootVolume.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 3, workspace.RootVolume.Encryption.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 3, workspace.RootVolume.Encryption.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 3, workspace.RootVolume.Encryption.Metadata.Range().GetStartLine())
+	assert.Equal(t, 3, workspace.RootVolume.Encryption.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 4, workspace.UserVolume.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 4, workspace.UserVolume.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 4, workspace.UserVolume.Metadata.Range().GetStartLine())
+	assert.Equal(t, 4, workspace.UserVolume.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 4, workspace.UserVolume.Encryption.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 4, workspace.UserVolume.Encryption.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 4, workspace.UserVolume.Encryption.Metadata.Range().GetStartLine())
+	assert.Equal(t, 4, workspace.UserVolume.Encryption.Metadata.Range().GetEndLine())
 }

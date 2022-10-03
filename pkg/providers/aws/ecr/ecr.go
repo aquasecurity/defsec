@@ -10,7 +10,7 @@ type ECR struct {
 }
 
 type Repository struct {
-	defsecTypes.Metadata
+	Metadata           defsecTypes.Metadata
 	ImageScanning      ImageScanning
 	ImageTagsImmutable defsecTypes.BoolValue
 	Policies           []iam.Policy
@@ -18,7 +18,7 @@ type Repository struct {
 }
 
 type ImageScanning struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	ScanOnPush defsecTypes.BoolValue
 }
 
@@ -28,7 +28,7 @@ const (
 )
 
 type Encryption struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Type     defsecTypes.StringValue
 	KMSKeyID defsecTypes.StringValue
 }

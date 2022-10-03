@@ -41,7 +41,7 @@ var CheckNoFunctionPolicyWildcards = rules.Register(
 	func(s *state.State) (results scan.Results) {
 
 		for _, function := range s.AWS.SAM.Functions {
-			if function.IsUnmanaged() {
+			if function.Metadata.IsUnmanaged() {
 				continue
 			}
 

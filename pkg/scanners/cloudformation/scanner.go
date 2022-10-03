@@ -185,13 +185,10 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 			if len(evalResult) > 0 {
 				s.debug.Log("Found %d results for %s", len(evalResult), rule.Rule().AVDID)
 				for _, scanResult := range evalResult {
-					if isIgnored(scanResult) {
-						scanResult.OverrideStatus(scan.StatusIgnored)
-					}
 
 					ref := scanResult.Metadata().Reference()
 
-					if ref == nil && scanResult.Metadata().Parent() != nil {
+					if ref == "" && scanResult.Metadata().Parent() != nil {
 						ref = scanResult.Metadata().Parent().Reference()
 					}
 
@@ -213,16 +210,12 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 	return append(results, regoResults...), nil
 }
 
-type logicalIDProvider interface {
-	LogicalID() string
-}
-
-func getDescription(scanResult scan.Result, location logicalIDProvider) string {
+func getDescription(scanResult scan.Result, ref string) string {
 	switch scanResult.Status() {
 	case scan.StatusPassed:
-		return fmt.Sprintf("Resource '%s' passed check: %s", location.LogicalID(), scanResult.Rule().Summary)
+		return fmt.Sprintf("Resource '%s' passed check: %s", ref, scanResult.Rule().Summary)
 	case scan.StatusIgnored:
-		return fmt.Sprintf("Resource '%s' had check ignored: %s", location.LogicalID(), scanResult.Rule().Summary)
+		return fmt.Sprintf("Resource '%s' had check ignored: %s", ref, scanResult.Rule().Summary)
 	default:
 		return scanResult.Description()
 	}

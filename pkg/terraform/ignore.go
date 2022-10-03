@@ -49,9 +49,6 @@ func (ignore Ignore) Covering(modules Modules, m defsecTypes.Metadata, workspace
 
 	metaHierarchy := &m
 	for metaHierarchy != nil {
-		if metaHierarchy.Range() == nil {
-			break
-		}
 		if ignore.Range.GetFilename() != metaHierarchy.Range().GetFilename() {
 			metaHierarchy = metaHierarchy.Parent()
 			continue

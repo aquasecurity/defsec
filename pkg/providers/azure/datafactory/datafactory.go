@@ -9,6 +9,6 @@ type DataFactory struct {
 }
 
 type Factory struct {
-	defsecTypes.Metadata
+	Metadata            defsecTypes.Metadata
 	EnablePublicNetwork defsecTypes.BoolValue
 }

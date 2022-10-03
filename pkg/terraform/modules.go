@@ -99,11 +99,10 @@ func (m Modules) GetBlockByIgnoreRange(blockMetadata *types.Metadata) *Block {
 	for _, module := range m {
 		for _, block := range module.GetBlocks() {
 			metadata := block.GetMetadata()
-			if blockMetadata.Reference().RefersTo(metadata.Reference()) {
+			if blockMetadata.Reference() == metadata.Reference() {
 				return block
 			}
 		}
 	}
-
 	return nil
 }

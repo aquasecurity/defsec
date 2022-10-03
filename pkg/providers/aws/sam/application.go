@@ -5,13 +5,13 @@ import (
 )
 
 type Application struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	LocationPath defsecTypes.StringValue
 	Location     Location
 }
 
 type Location struct {
-	defsecTypes.Metadata
+	Metadata        defsecTypes.Metadata
 	ApplicationID   defsecTypes.StringValue
 	SemanticVersion defsecTypes.StringValue
 }

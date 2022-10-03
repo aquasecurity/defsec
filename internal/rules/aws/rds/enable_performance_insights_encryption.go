@@ -40,7 +40,7 @@ The encryption key specified in ` + "`" + `performance_insights_kms_key_id` + "`
 	func(s *state.State) (results scan.Results) {
 		for _, cluster := range s.AWS.RDS.Clusters {
 			for _, instance := range cluster.Instances {
-				if instance.IsUnmanaged() {
+				if instance.Metadata.IsUnmanaged() {
 					continue
 				}
 				if instance.PerformanceInsights.Enabled.IsFalse() {
@@ -56,7 +56,7 @@ The encryption key specified in ` + "`" + `performance_insights_kms_key_id` + "`
 			}
 		}
 		for _, instance := range s.AWS.RDS.Instances {
-			if instance.IsUnmanaged() {
+			if instance.Metadata.IsUnmanaged() {
 				continue
 			}
 			if instance.PerformanceInsights.Enabled.IsFalse() {

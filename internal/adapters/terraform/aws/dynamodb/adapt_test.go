@@ -159,11 +159,11 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Tables, 1)
 	table := adapted.Tables[0]
 
-	assert.Equal(t, 2, table.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 13, table.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, table.Metadata.Range().GetStartLine())
+	assert.Equal(t, 13, table.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 5, table.ServerSideEncryption.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 8, table.ServerSideEncryption.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 5, table.ServerSideEncryption.Metadata.Range().GetStartLine())
+	assert.Equal(t, 8, table.ServerSideEncryption.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 6, table.ServerSideEncryption.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 6, table.ServerSideEncryption.Enabled.GetMetadata().Range().GetEndLine())

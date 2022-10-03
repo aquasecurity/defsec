@@ -9,7 +9,7 @@ type BigQuery struct {
 }
 
 type Dataset struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	ID           defsecTypes.StringValue
 	AccessGrants []AccessGrant
 }
@@ -19,7 +19,7 @@ const (
 )
 
 type AccessGrant struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	Role         defsecTypes.StringValue
 	Domain       defsecTypes.StringValue
 	SpecialGroup defsecTypes.StringValue

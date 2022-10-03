@@ -36,7 +36,7 @@ var CheckRequireSymbolsInPasswords = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		policy := s.AWS.IAM.PasswordPolicy
-		if policy.IsUnmanaged() {
+		if policy.Metadata.IsUnmanaged() {
 			return
 		}
 

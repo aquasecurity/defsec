@@ -38,7 +38,7 @@ var CheckEnableAccessLogging = rules.Register(
 	func(s *state.State) (results scan.Results) {
 		for _, api := range s.AWS.APIGateway.V1.APIs {
 			for _, stage := range api.Stages {
-				if stage.IsUnmanaged() {
+				if stage.Metadata.IsUnmanaged() {
 					continue
 				}
 				if stage.AccessLogging.CloudwatchLogGroupARN.IsEmpty() {
@@ -53,7 +53,7 @@ var CheckEnableAccessLogging = rules.Register(
 		}
 		for _, api := range s.AWS.APIGateway.V2.APIs {
 			for _, stage := range api.Stages {
-				if stage.IsUnmanaged() {
+				if stage.Metadata.IsUnmanaged() {
 					continue
 				}
 				if stage.AccessLogging.CloudwatchLogGroupARN.IsEmpty() {

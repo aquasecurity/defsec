@@ -90,9 +90,7 @@ func Test_Adapt(t *testing.T) {
 						},
 						Instances: []rds.ClusterInstance{
 							{
-								Metadata: defsecTypes.NewTestMetadata(),
 								Instance: rds.Instance{
-
 									Metadata:                  defsecTypes.NewTestMetadata(),
 									BackupRetentionPeriodDays: defsecTypes.Int(0, defsecTypes.NewTestMetadata()),
 									ReplicationSourceARN:      defsecTypes.String("", defsecTypes.NewTestMetadata()),
@@ -255,8 +253,8 @@ func TestLines(t *testing.T) {
 	instance := adapted.Instances[0]
 	classic := adapted.Classic
 
-	assert.Equal(t, 2, cluster.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 7, cluster.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, cluster.Metadata.Range().GetStartLine())
+	assert.Equal(t, 7, cluster.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, cluster.BackupRetentionPeriodDays.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, cluster.BackupRetentionPeriodDays.GetMetadata().Range().GetEndLine())
@@ -270,8 +268,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 6, cluster.ReplicationSourceARN.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 6, cluster.ReplicationSourceARN.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 9, cluster.Instances[0].Instance.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 16, cluster.Instances[0].Instance.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 9, cluster.Instances[0].Instance.Metadata.Range().GetStartLine())
+	assert.Equal(t, 16, cluster.Instances[0].Instance.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 2, cluster.Instances[0].ClusterIdentifier.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 7, cluster.Instances[0].ClusterIdentifier.GetMetadata().Range().GetEndLine())
@@ -291,11 +289,11 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 15, cluster.Instances[0].Instance.Encryption.KMSKeyID.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 15, cluster.Instances[0].Instance.Encryption.KMSKeyID.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 18, classic.DBSecurityGroups[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 19, classic.DBSecurityGroups[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 18, classic.DBSecurityGroups[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 19, classic.DBSecurityGroups[0].Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 21, instance.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 28, instance.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 21, instance.Metadata.Range().GetStartLine())
+	assert.Equal(t, 28, instance.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 22, instance.PublicAccess.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 22, instance.PublicAccess.GetMetadata().Range().GetEndLine())

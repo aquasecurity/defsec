@@ -9,13 +9,13 @@ type MQ struct {
 }
 
 type Broker struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	PublicAccess defsecTypes.BoolValue
 	Logging      Logging
 }
 
 type Logging struct {
-	defsecTypes.Metadata
-	General defsecTypes.BoolValue
-	Audit   defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	General  defsecTypes.BoolValue
+	Audit    defsecTypes.BoolValue
 }

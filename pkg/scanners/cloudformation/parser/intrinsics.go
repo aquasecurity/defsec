@@ -23,7 +23,10 @@ func init() {
 		"Fn::GetAZs":      GetAzs,
 		"Fn::Cidr":        GetCidr,
 		"Fn::ImportValue": ImportPlaceholder,
-		// "Fn::If":        PassthroughResolution,
+		"Fn::If":          ResolveIf,
+		"Fn::And":         ResolveAnd,
+		"Fn::Or":          ResolveOr,
+		"Fn::Not":         ResolveNot,
 	}
 }
 

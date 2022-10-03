@@ -9,6 +9,6 @@ type EFS struct {
 }
 
 type FileSystem struct {
-	defsecTypes.Metadata
+	Metadata  defsecTypes.Metadata
 	Encrypted defsecTypes.BoolValue
 }

@@ -5,13 +5,13 @@ import (
 )
 
 type Disk struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	Name       defsecTypes.StringValue
 	Encryption DiskEncryption
 }
 
 type DiskEncryption struct {
-	defsecTypes.Metadata
+	Metadata   defsecTypes.Metadata
 	RawKey     defsecTypes.BytesValue
 	KMSKeyLink defsecTypes.StringValue
 }

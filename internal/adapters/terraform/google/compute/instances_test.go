@@ -94,7 +94,6 @@ func Test_adaptInstances(t *testing.T) {
 							Encryption: compute.DiskEncryption{
 								Metadata:   defsecTypes.NewTestMetadata(),
 								KMSKeyLink: defsecTypes.String("something", defsecTypes.NewTestMetadata()),
-								RawKey:     nil,
 							},
 						},
 					},

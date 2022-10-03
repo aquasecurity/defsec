@@ -12,45 +12,41 @@ type CFReference struct {
 	resolvedValue Property
 }
 
-func NewCFReference(id string, resourceRange defsecTypes.Range) defsecTypes.Reference {
-	return &CFReference{
+func NewCFReference(id string, resourceRange defsecTypes.Range) CFReference {
+	return CFReference{
 		logicalId:     id,
 		resourceRange: resourceRange,
 	}
 }
 
-func NewCFReferenceWithValue(resourceRange defsecTypes.Range, resolvedValue Property, logicalId string) defsecTypes.Reference {
-	return &CFReference{
+func NewCFReferenceWithValue(resourceRange defsecTypes.Range, resolvedValue Property, logicalId string) CFReference {
+	return CFReference{
 		resourceRange: resourceRange,
 		resolvedValue: resolvedValue,
 		logicalId:     logicalId,
 	}
 }
 
-func (cf *CFReference) String() string {
+func (cf CFReference) String() string {
 	return cf.resourceRange.String()
 }
 
-func (cf *CFReference) LogicalID() string {
+func (cf CFReference) LogicalID() string {
 	return cf.logicalId
 }
 
-func (cf *CFReference) RefersTo(r defsecTypes.Reference) bool {
-	return false
-}
-
-func (cf *CFReference) ResourceRange() defsecTypes.Range {
+func (cf CFReference) ResourceRange() defsecTypes.Range {
 	return cf.resourceRange
 }
 
-func (cf *CFReference) PropertyRange() defsecTypes.Range {
+func (cf CFReference) PropertyRange() defsecTypes.Range {
 	if cf.resolvedValue.IsNotNil() {
 		return cf.resolvedValue.Range()
 	}
-	return nil
+	return defsecTypes.Range{}
 }
 
-func (cf *CFReference) DisplayValue() string {
+func (cf CFReference) DisplayValue() string {
 	if cf.resolvedValue.IsNotNil() {
 		return fmt.Sprintf("%v", cf.resolvedValue.RawValue())
 	}

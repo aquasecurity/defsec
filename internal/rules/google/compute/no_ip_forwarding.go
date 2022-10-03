@@ -29,7 +29,7 @@ var CheckNoIpForwarding = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, instance := range s.Google.Compute.Instances {
-			if instance.IsUnmanaged() {
+			if instance.Metadata.IsUnmanaged() {
 				continue
 			}
 			if instance.CanIPForward.IsTrue() {

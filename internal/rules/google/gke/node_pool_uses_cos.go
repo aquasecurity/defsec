@@ -30,7 +30,7 @@ var CheckNodePoolUsesCos = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, cluster := range s.Google.GKE.Clusters {
-			if cluster.IsManaged() {
+			if cluster.Metadata.IsManaged() {
 				if cluster.NodeConfig.ImageType.NotEqualTo("") && cluster.NodeConfig.ImageType.NotEqualTo("COS_CONTAINERD", types.IgnoreCase) && cluster.NodeConfig.ImageType.NotEqualTo("COS", types.IgnoreCase) {
 					results.Add(
 						"Cluster is not configuring node pools to use the COS containerd image type by default.",

@@ -68,8 +68,8 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Keys, 1)
 	key := adapted.Keys[0]
 
-	assert.Equal(t, 2, key.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 5, key.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, key.Metadata.Range().GetStartLine())
+	assert.Equal(t, 5, key.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, key.RotationEnabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, key.RotationEnabled.GetMetadata().Range().GetEndLine())

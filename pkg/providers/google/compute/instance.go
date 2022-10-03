@@ -5,7 +5,7 @@ import (
 )
 
 type Instance struct {
-	defsecTypes.Metadata
+	Metadata                    defsecTypes.Metadata
 	Name                        defsecTypes.StringValue
 	NetworkInterfaces           []NetworkInterface
 	ShieldedVM                  ShieldedVMConfig
@@ -19,14 +19,14 @@ type Instance struct {
 }
 
 type ServiceAccount struct {
-	defsecTypes.Metadata
+	Metadata  defsecTypes.Metadata
 	Email     defsecTypes.StringValue
 	IsDefault defsecTypes.BoolValue
 	Scopes    []defsecTypes.StringValue
 }
 
 type NetworkInterface struct {
-	defsecTypes.Metadata
+	Metadata    defsecTypes.Metadata
 	Network     *Network
 	SubNetwork  *SubNetwork
 	HasPublicIP defsecTypes.BoolValue
@@ -34,7 +34,7 @@ type NetworkInterface struct {
 }
 
 type ShieldedVMConfig struct {
-	defsecTypes.Metadata
+	Metadata                   defsecTypes.Metadata
 	SecureBootEnabled          defsecTypes.BoolValue
 	IntegrityMonitoringEnabled defsecTypes.BoolValue
 	VTPMEnabled                defsecTypes.BoolValue

@@ -105,11 +105,11 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Brokers, 1)
 	broker := adapted.Brokers[0]
 
-	assert.Equal(t, 2, broker.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 8, broker.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, broker.Metadata.Range().GetStartLine())
+	assert.Equal(t, 8, broker.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 3, broker.Logging.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 5, broker.Logging.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 3, broker.Logging.Metadata.Range().GetStartLine())
+	assert.Equal(t, 5, broker.Logging.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 4, broker.Logging.General.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 4, broker.Logging.General.GetMetadata().Range().GetEndLine())

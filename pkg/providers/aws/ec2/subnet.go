@@ -5,6 +5,6 @@ import (
 )
 
 type Subnet struct {
-	defsecTypes.Metadata
+	Metadata            defsecTypes.Metadata
 	MapPublicIpOnLaunch defsecTypes.BoolValue
 }

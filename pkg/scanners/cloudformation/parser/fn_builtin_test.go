@@ -10,11 +10,9 @@ import (
 func Test_cidr_generator(t *testing.T) {
 
 	original := &Property{
-		ctx:         nil,
-		name:        "cidr",
-		comment:     "",
-		rng:         nil,
-		parentRange: nil,
+		ctx:     nil,
+		name:    "cidr",
+		comment: "",
 		Inner: PropertyInner{
 			Type:  "",
 			Value: nil,
@@ -39,11 +37,9 @@ func Test_cidr_generator(t *testing.T) {
 
 func Test_cidr_generator_8_bits(t *testing.T) {
 	original := &Property{
-		ctx:         nil,
-		name:        "cidr",
-		comment:     "",
-		rng:         nil,
-		parentRange: nil,
+		ctx:     nil,
+		name:    "cidr",
+		comment: "",
 		Inner: PropertyInner{
 			Type:  "",
 			Value: nil,

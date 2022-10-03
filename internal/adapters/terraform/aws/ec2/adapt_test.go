@@ -137,17 +137,17 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 	require.Len(t, adapted.Instances, 1)
 	instance := adapted.Instances[0]
 
-	assert.Equal(t, 2, instance.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 22, instance.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, instance.Metadata.Range().GetStartLine())
+	assert.Equal(t, 22, instance.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 6, instance.RootBlockDevice.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 8, instance.RootBlockDevice.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 6, instance.RootBlockDevice.Metadata.Range().GetStartLine())
+	assert.Equal(t, 8, instance.RootBlockDevice.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 7, instance.RootBlockDevice.Encrypted.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 7, instance.RootBlockDevice.Encrypted.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 10, instance.MetadataOptions.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 13, instance.MetadataOptions.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 10, instance.MetadataOptions.Metadata.Range().GetStartLine())
+	assert.Equal(t, 13, instance.MetadataOptions.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 11, instance.MetadataOptions.HttpTokens.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 11, instance.MetadataOptions.HttpTokens.GetMetadata().Range().GetEndLine())
@@ -155,8 +155,8 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 	assert.Equal(t, 12, instance.MetadataOptions.HttpEndpoint.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 12, instance.MetadataOptions.HttpEndpoint.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 15, instance.EBSBlockDevices[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 17, instance.EBSBlockDevices[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 15, instance.EBSBlockDevices[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 17, instance.EBSBlockDevices[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 16, instance.EBSBlockDevices[0].Encrypted.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 16, instance.EBSBlockDevices[0].Encrypted.GetMetadata().Range().GetEndLine())

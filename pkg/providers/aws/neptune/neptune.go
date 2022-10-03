@@ -9,13 +9,13 @@ type Neptune struct {
 }
 
 type Cluster struct {
-	defsecTypes.Metadata
+	Metadata         defsecTypes.Metadata
 	Logging          Logging
 	StorageEncrypted defsecTypes.BoolValue
 	KMSKeyID         defsecTypes.StringValue
 }
 
 type Logging struct {
-	defsecTypes.Metadata
-	Audit defsecTypes.BoolValue
+	Metadata defsecTypes.Metadata
+	Audit    defsecTypes.BoolValue
 }

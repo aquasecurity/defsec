@@ -33,7 +33,7 @@ Purge protection can only be enabled once soft-delete is enabled. It can be turn
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, vault := range s.Azure.KeyVault.Vaults {
-			if vault.IsUnmanaged() {
+			if vault.Metadata.IsUnmanaged() {
 				continue
 			}
 			if vault.EnablePurgeProtection.IsFalse() {

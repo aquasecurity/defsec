@@ -3,7 +3,6 @@ package test
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 	"path/filepath"
@@ -131,7 +130,7 @@ func addFilesToMemFS(memfs *memoryfs.FS, typePolicy bool, folderName string) err
 			if strings.Contains(fpath, filepath.FromSlash("/lib/")) {
 				return nil
 			}
-			data, err := ioutil.ReadFile(fpath)
+			data, err := os.ReadFile(fpath)
 			if err != nil {
 				return err
 			}

@@ -210,8 +210,8 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Accounts, 2) //+orphans holder
 	account := adapted.Accounts[0]
 
-	assert.Equal(t, 7, account.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 27, account.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 7, account.Metadata.Range().GetStartLine())
+	assert.Equal(t, 27, account.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 10, account.EnforceHTTPS.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 10, account.EnforceHTTPS.GetMetadata().Range().GetEndLine())
@@ -219,14 +219,14 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 11, account.MinimumTLSVersion.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 11, account.MinimumTLSVersion.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 13, account.QueueProperties.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 21, account.QueueProperties.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 13, account.QueueProperties.Metadata.Range().GetStartLine())
+	assert.Equal(t, 21, account.QueueProperties.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 14, account.QueueProperties.EnableLogging.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 20, account.QueueProperties.EnableLogging.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 23, account.NetworkRules[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 26, account.NetworkRules[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 23, account.NetworkRules[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 26, account.NetworkRules[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 24, account.NetworkRules[0].AllowByDefault.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 24, account.NetworkRules[0].AllowByDefault.GetMetadata().Range().GetEndLine())
@@ -234,8 +234,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 25, account.NetworkRules[0].Bypass[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 25, account.NetworkRules[0].Bypass[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 29, account.NetworkRules[1].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 35, account.NetworkRules[1].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 29, account.NetworkRules[1].Metadata.Range().GetStartLine())
+	assert.Equal(t, 35, account.NetworkRules[1].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 33, account.NetworkRules[1].AllowByDefault.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 33, account.NetworkRules[1].AllowByDefault.GetMetadata().Range().GetEndLine())
@@ -243,8 +243,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 34, account.NetworkRules[1].Bypass[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 34, account.NetworkRules[1].Bypass[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 37, account.Containers[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 41, account.Containers[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 37, account.Containers[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 41, account.Containers[0].Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 40, account.Containers[0].PublicAccess.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 40, account.Containers[0].PublicAccess.GetMetadata().Range().GetEndLine())

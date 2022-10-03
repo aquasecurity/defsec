@@ -5,13 +5,13 @@ import (
 )
 
 type NetworkACL struct {
-	defsecTypes.Metadata
+	Metadata      defsecTypes.Metadata
 	Rules         []NetworkACLRule
 	IsDefaultRule defsecTypes.BoolValue
 }
 
 type SecurityGroup struct {
-	defsecTypes.Metadata
+	Metadata     defsecTypes.Metadata
 	IsDefault    defsecTypes.BoolValue
 	Description  defsecTypes.StringValue
 	IngressRules []SecurityGroupRule
@@ -20,13 +20,13 @@ type SecurityGroup struct {
 }
 
 type SecurityGroupRule struct {
-	defsecTypes.Metadata
+	Metadata    defsecTypes.Metadata
 	Description defsecTypes.StringValue
 	CIDRs       []defsecTypes.StringValue
 }
 
 type VPC struct {
-	defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
 	ID             defsecTypes.StringValue
 	IsDefault      defsecTypes.BoolValue
 	SecurityGroups []SecurityGroup
@@ -43,7 +43,7 @@ const (
 )
 
 type NetworkACLRule struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Type     defsecTypes.StringValue
 	Action   defsecTypes.StringValue
 	Protocol defsecTypes.StringValue

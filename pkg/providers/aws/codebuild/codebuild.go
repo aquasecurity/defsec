@@ -9,12 +9,12 @@ type CodeBuild struct {
 }
 
 type Project struct {
-	defsecTypes.Metadata
+	Metadata                  defsecTypes.Metadata
 	ArtifactSettings          ArtifactSettings
 	SecondaryArtifactSettings []ArtifactSettings
 }
 
 type ArtifactSettings struct {
-	defsecTypes.Metadata
+	Metadata          defsecTypes.Metadata
 	EncryptionEnabled defsecTypes.BoolValue
 }

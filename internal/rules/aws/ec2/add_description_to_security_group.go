@@ -40,7 +40,7 @@ Simplifies auditing, debugging, and managing security groups.`,
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, group := range s.AWS.EC2.SecurityGroups {
-			if group.IsUnmanaged() {
+			if group.Metadata.IsUnmanaged() {
 				continue
 			}
 			if group.Description.IsEmpty() {

@@ -33,7 +33,6 @@ func getClustersAndInstances(ctx parser.FileContext) (clusters []rds.Cluster, or
 			for key, cluster := range clusterMap {
 				if key == clusterID.AsString() {
 					cluster.Instances = append(cluster.Instances, rds.ClusterInstance{
-						Metadata:          r.Metadata(),
 						Instance:          instance,
 						ClusterIdentifier: clusterID.AsStringValue(),
 					})

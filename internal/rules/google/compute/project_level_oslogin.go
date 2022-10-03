@@ -28,7 +28,7 @@ var CheckProjectLevelOslogin = rules.Register(
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results scan.Results) {
-		if s.Google.Compute.ProjectMetadata.IsManaged() {
+		if s.Google.Compute.ProjectMetadata.Metadata.IsManaged() {
 			if s.Google.Compute.ProjectMetadata.EnableOSLogin.IsFalse() {
 				results.Add(
 					"OS Login is disabled at project level.",

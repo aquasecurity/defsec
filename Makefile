@@ -11,6 +11,10 @@ test-no-localstack:
 .PHONY: rego
 rego: fmt-rego test-rego
 
+.PHONY: schema
+schema:
+	go run ./cmd/schema generate
+
 .PHONY: fmt-rego
 fmt-rego:
 	opa fmt -w internal/rules

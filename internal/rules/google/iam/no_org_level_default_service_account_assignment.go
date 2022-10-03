@@ -32,7 +32,7 @@ var CheckNoOrgLevelDefaultServiceAccountAssignment = rules.Register(
 	func(s *state.State) (results scan.Results) {
 		for _, org := range s.Google.IAM.Organizations {
 			for _, binding := range org.Bindings {
-				if binding.IsUnmanaged() {
+				if binding.Metadata.IsUnmanaged() {
 					continue
 				}
 				if binding.IncludesDefaultServiceAccount.IsTrue() {
@@ -55,7 +55,7 @@ var CheckNoOrgLevelDefaultServiceAccountAssignment = rules.Register(
 				}
 			}
 			for _, member := range org.Members {
-				if member.IsUnmanaged() {
+				if member.Metadata.IsUnmanaged() {
 					continue
 				}
 				if isMemberDefaultServiceAccount(member.Member.Value()) {

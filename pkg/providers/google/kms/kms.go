@@ -9,11 +9,11 @@ type KMS struct {
 }
 
 type KeyRing struct {
-	defsecTypes.Metadata
-	Keys []Key
+	Metadata defsecTypes.Metadata
+	Keys     []Key
 }
 
 type Key struct {
-	defsecTypes.Metadata
+	Metadata              defsecTypes.Metadata
 	RotationPeriodSeconds defsecTypes.IntValue
 }

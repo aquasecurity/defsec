@@ -43,7 +43,6 @@ func TestCheckEnablePerformanceInsightsEncryption(t *testing.T) {
 						Metadata: defsecTypes.NewTestMetadata(),
 						Instances: []rds.ClusterInstance{
 							{
-								Metadata: defsecTypes.NewTestMetadata(),
 								Instance: rds.Instance{
 									Metadata: defsecTypes.NewTestMetadata(),
 									PerformanceInsights: rds.PerformanceInsights{

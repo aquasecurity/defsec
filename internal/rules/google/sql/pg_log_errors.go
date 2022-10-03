@@ -33,7 +33,7 @@ var CheckPgLogErrors = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, instance := range s.Google.SQL.Instances {
-			if instance.IsUnmanaged() {
+			if instance.Metadata.IsUnmanaged() {
 				continue
 			}
 			if instance.DatabaseFamily() != sql.DatabaseFamilyPostgres {

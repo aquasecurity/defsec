@@ -119,14 +119,12 @@ func (c *Module) GetReferencedBlock(referringAttr *Attribute, parentBlock *Block
 			}
 		}
 		for _, block := range c.blocks {
-			metadata := block.GetMetadata()
-			if ref.RefersTo(metadata.Reference()) {
+			if ref.RefersTo(block.reference) {
 				return block, nil
 			}
 			kref := *ref
-			parentMetadata := parentBlock.GetMetadata()
-			kref.SetKey(parentMetadata.Reference().(*Reference).RawKey())
-			if kref.RefersTo(metadata.Reference()) {
+			kref.SetKey(parentBlock.reference.RawKey())
+			if kref.RefersTo(block.reference) {
 				return block, nil
 			}
 		}
@@ -166,14 +164,13 @@ func (c *Module) GetReferencingBlocks(originalBlock *Block, referencingType stri
 		if attr == nil {
 			continue
 		}
-		metadata := originalBlock.GetMetadata()
-		if attr.References(metadata.Reference()) {
+		if attr.References(originalBlock.reference) {
 			results = append(results, block)
 		} else {
 			for _, ref := range attr.AllReferences() {
 				if ref.TypeLabel() == "each" {
 					fe := block.GetAttribute("for_each")
-					if fe.References(metadata.Reference()) {
+					if fe.References(originalBlock.reference) {
 						results = append(results, block)
 					}
 				}

@@ -124,9 +124,6 @@ func ScannerWithSkipDownloaded(skip bool) options.ScannerOption {
 		if tf, ok := s.(ConfigurableTerraformScanner); ok {
 			tf.AddExecutorOptions(executor.OptionWithResultsFilter(func(results scan.Results) scan.Results {
 				for i, result := range results {
-					if result.Range() == nil {
-						continue
-					}
 					prefix := result.Range().GetSourcePrefix()
 					switch {
 					case prefix == "":

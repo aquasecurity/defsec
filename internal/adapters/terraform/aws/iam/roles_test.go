@@ -56,15 +56,15 @@ func Test_adaptRoles(t *testing.T) {
 
 	require.Len(t, role.Policies, 1)
 	policy := role.Policies[0]
-	assert.Equal(t, 1, policy.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 6, policy.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 1, policy.Metadata.Range().GetStartLine())
+	assert.Equal(t, 6, policy.Metadata.Range().GetEndLine())
 	assert.True(t, policy.Name.EqualTo("test_policy"))
 	assert.Equal(t, policy.Name.GetMetadata().Range().GetStartLine(), 2)
 	assert.Equal(t, policy.Name.GetMetadata().Range().GetEndLine(), 2)
 
 	doc := policy.Document
-	assert.Equal(t, 25, doc.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 34, doc.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 25, doc.Metadata.Range().GetStartLine())
+	assert.Equal(t, 34, doc.Metadata.Range().GetEndLine())
 
 	statements, r := doc.Parsed.Statements()
 	require.Len(t, statements, 1)

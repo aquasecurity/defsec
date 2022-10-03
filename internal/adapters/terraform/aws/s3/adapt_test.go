@@ -335,11 +335,11 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Buckets, 1)
 	bucket := adapted.Buckets[0]
 
-	assert.Equal(t, 2, bucket.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 4, bucket.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, bucket.Metadata.Range().GetStartLine())
+	assert.Equal(t, 4, bucket.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 6, bucket.PublicAccessBlock.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 13, bucket.PublicAccessBlock.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 6, bucket.PublicAccessBlock.Metadata.Range().GetStartLine())
+	assert.Equal(t, 13, bucket.PublicAccessBlock.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 9, bucket.PublicAccessBlock.RestrictPublicBuckets.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 9, bucket.PublicAccessBlock.RestrictPublicBuckets.GetMetadata().Range().GetEndLine())
@@ -356,8 +356,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 17, bucket.ACL.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 17, bucket.ACL.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 20, bucket.Encryption.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 29, bucket.Encryption.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 20, bucket.Encryption.Metadata.Range().GetStartLine())
+	assert.Equal(t, 29, bucket.Encryption.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 25, bucket.Encryption.KMSKeyId.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 25, bucket.Encryption.KMSKeyId.GetMetadata().Range().GetEndLine())
@@ -365,21 +365,21 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 26, bucket.Encryption.Algorithm.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 26, bucket.Encryption.Algorithm.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 31, bucket.Logging.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 36, bucket.Logging.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 31, bucket.Logging.Metadata.Range().GetStartLine())
+	assert.Equal(t, 36, bucket.Logging.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 34, bucket.Logging.TargetBucket.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 34, bucket.Logging.TargetBucket.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 38, bucket.Versioning.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 43, bucket.Versioning.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 38, bucket.Versioning.Metadata.Range().GetStartLine())
+	assert.Equal(t, 43, bucket.Versioning.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 41, bucket.Versioning.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 41, bucket.Versioning.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 47, bucket.BucketPolicies[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 47, bucket.BucketPolicies[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 47, bucket.BucketPolicies[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 47, bucket.BucketPolicies[0].Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 50, bucket.BucketPolicies[0].Document.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 62, bucket.BucketPolicies[0].Document.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 50, bucket.BucketPolicies[0].Document.Metadata.Range().GetStartLine())
+	assert.Equal(t, 62, bucket.BucketPolicies[0].Document.Metadata.Range().GetEndLine())
 }

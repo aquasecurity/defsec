@@ -89,8 +89,8 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Trails, 1)
 	trail := adapted.Trails[0]
 
-	assert.Equal(t, 2, trail.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 8, trail.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, trail.Metadata.Range().GetStartLine())
+	assert.Equal(t, 8, trail.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, trail.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, trail.Name.GetMetadata().Range().GetEndLine())

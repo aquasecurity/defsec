@@ -31,7 +31,7 @@ The compute instance has the ability to be reached from outside, you might want 
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, reservation := range s.Oracle.Compute.AddressReservations {
-			if reservation.IsUnmanaged() {
+			if reservation.Metadata.IsUnmanaged() {
 				continue
 			}
 			if reservation.Pool.EqualTo("public-ippool") { // TODO: future improvement: we need to see what this IP is used for before flagging

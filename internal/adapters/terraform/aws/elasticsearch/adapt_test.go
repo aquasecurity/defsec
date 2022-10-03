@@ -138,26 +138,26 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Domains, 1)
 	domain := adapted.Domains[0]
 
-	assert.Equal(t, 2, domain.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 23, domain.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 2, domain.Metadata.Range().GetStartLine())
+	assert.Equal(t, 23, domain.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, domain.DomainName.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, domain.DomainName.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 5, domain.TransitEncryption.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 7, domain.TransitEncryption.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 5, domain.TransitEncryption.Metadata.Range().GetStartLine())
+	assert.Equal(t, 7, domain.TransitEncryption.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 6, domain.TransitEncryption.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 6, domain.TransitEncryption.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 9, domain.AtRestEncryption.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 11, domain.AtRestEncryption.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 9, domain.AtRestEncryption.Metadata.Range().GetStartLine())
+	assert.Equal(t, 11, domain.AtRestEncryption.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 10, domain.AtRestEncryption.Enabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 10, domain.AtRestEncryption.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 13, domain.Endpoint.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 16, domain.Endpoint.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 13, domain.Endpoint.Metadata.Range().GetStartLine())
+	assert.Equal(t, 16, domain.Endpoint.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 14, domain.Endpoint.EnforceHTTPS.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 14, domain.Endpoint.EnforceHTTPS.GetMetadata().Range().GetEndLine())
@@ -165,8 +165,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 15, domain.Endpoint.TLSPolicy.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 15, domain.Endpoint.TLSPolicy.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 18, domain.LogPublishing.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 22, domain.LogPublishing.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 18, domain.LogPublishing.Metadata.Range().GetStartLine())
+	assert.Equal(t, 22, domain.LogPublishing.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 21, domain.LogPublishing.AuditEnabled.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 21, domain.LogPublishing.AuditEnabled.GetMetadata().Range().GetEndLine())

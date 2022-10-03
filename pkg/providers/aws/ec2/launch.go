@@ -5,7 +5,7 @@ import (
 )
 
 type LaunchConfiguration struct {
-	defsecTypes.Metadata
+	Metadata          defsecTypes.Metadata
 	Name              defsecTypes.StringValue
 	AssociatePublicIP defsecTypes.BoolValue
 	RootBlockDevice   *BlockDevice
@@ -15,7 +15,7 @@ type LaunchConfiguration struct {
 }
 
 type LaunchTemplate struct {
-	defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Instance
 }
 

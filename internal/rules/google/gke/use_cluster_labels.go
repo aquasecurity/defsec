@@ -29,7 +29,7 @@ var CheckUseClusterLabels = rules.Register(
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, cluster := range s.Google.GKE.Clusters {
-			if cluster.IsUnmanaged() {
+			if cluster.Metadata.IsUnmanaged() {
 				continue
 			}
 			if cluster.ResourceLabels.Len() == 0 {

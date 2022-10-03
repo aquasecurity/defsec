@@ -114,7 +114,7 @@ func ConvertTerraformDocument(modules terraform.Modules, block *terraform.Block)
 	return &wrappedDocument{Document: builder.Build(), Source: block}, nil
 }
 
-//nolint
+// nolint
 func parseStatement(statementBlock *terraform.Block) iamgo.Statement {
 
 	metadata := statementBlock.GetMetadata()
@@ -217,7 +217,7 @@ func findAllPolicies(modules terraform.Modules, parentBlock *terraform.Block, at
 			if b.Type() != "data" || b.TypeLabel() != "aws_iam_policy_document" {
 				continue
 			}
-			if ref.RefersTo(b.GetMetadata().Reference()) {
+			if ref.RefersTo(b.Reference()) {
 				document, err := ConvertTerraformDocument(modules, b)
 				if err != nil {
 					continue
@@ -226,8 +226,8 @@ func findAllPolicies(modules terraform.Modules, parentBlock *terraform.Block, at
 				continue
 			}
 			kref := *ref
-			kref.SetKey(parentBlock.GetMetadata().Reference().(*terraform.Reference).RawKey())
-			if kref.RefersTo(b.GetMetadata().Reference()) {
+			kref.SetKey(parentBlock.Reference().RawKey())
+			if kref.RefersTo(b.Reference()) {
 				document, err := ConvertTerraformDocument(modules, b)
 				if err != nil {
 					continue
