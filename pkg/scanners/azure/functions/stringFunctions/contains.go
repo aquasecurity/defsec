@@ -29,7 +29,7 @@ func Contains(args ...interface{}) interface{} {
 			}
 		}
 	case map[string]interface{}:
-		for key, _ := range cType {
+		for key := range cType {
 			if key == itemToFind {
 				return true
 			}
