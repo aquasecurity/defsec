@@ -35,7 +35,9 @@ func adaptLogProfile(resource azure.Resource) monitor.LogProfile {
 	return monitor.LogProfile{
 		Metadata: resource.Metadata,
 		RetentionPolicy: monitor.RetentionPolicy{
-			Enabled: resource.Properties.GetMapValue("retentionPolicy").GetMapValue("enabled").AsBoolValue(false, resource.Metadata),
+			Metadata: resource.Metadata,
+			Enabled:  resource.Properties.GetMapValue("retentionPolicy").GetMapValue("enabled").AsBoolValue(false, resource.Metadata),
+			Days:     resource.Properties.GetMapValue("retentionPolicy").GetMapValue("days").AsIntValue(0, resource.Metadata),
 		},
 		Categories: categoriesList,
 		Locations:  locationsList,
