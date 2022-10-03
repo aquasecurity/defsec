@@ -16,6 +16,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/arm/securitycenter"
 	"github.com/aquasecurity/defsec/internal/adapters/arm/storage"
 	"github.com/aquasecurity/defsec/internal/adapters/arm/synapse"
+
 	"github.com/aquasecurity/defsec/pkg/providers/azure"
 	scanner "github.com/aquasecurity/defsec/pkg/scanners/azure"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -29,6 +30,7 @@ func Adapt(ctx context.Context, deployment scanner.Deployment) *state.State {
 }
 
 func adaptAzure(deployment scanner.Deployment) azure.Azure {
+
 	return azure.Azure{
 		AppService:     appservice.Adapt(deployment),
 		Authorization:  authorization.Adapt(deployment),
@@ -44,4 +46,5 @@ func adaptAzure(deployment scanner.Deployment) azure.Azure {
 		Storage:        storage.Adapt(deployment),
 		Synapse:        synapse.Adapt(deployment),
 	}
+
 }
