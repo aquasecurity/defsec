@@ -37,15 +37,6 @@ func lex(expression string) ([]Token, error) {
 	return lexer.Lex()
 }
 
-func (l *lexer) peek() rune {
-	r, _, err := l.reader.ReadRune()
-	if err != nil {
-		return 0
-	}
-	_ = l.reader.UnreadRune()
-	return r
-}
-
 func (l *lexer) unread() {
 	_ = l.reader.UnreadRune()
 }
