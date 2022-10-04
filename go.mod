@@ -1,6 +1,6 @@
 module github.com/aquasecurity/defsec
 
-go 1.18
+go 1.19
 
 require (
 	github.com/BurntSushi/toml v1.2.0
@@ -74,6 +74,8 @@ require (
 	gopkg.in/yaml.v3 v3.0.1
 	helm.sh/helm/v3 v3.9.3
 )
+
+require k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9
 
 require (
 	cloud.google.com/go v0.99.0 // indirect
@@ -240,7 +242,6 @@ require (
 	k8s.io/klog/v2 v2.60.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20220627174259-011e075b9cb8 // indirect
 	k8s.io/kubectl v0.24.2 // indirect
-	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9 // indirect
 	oras.land/oras-go v1.2.0 // indirect
 	sigs.k8s.io/json v0.0.0-20211208200746-9f7c6b3444d2 // indirect
 	sigs.k8s.io/kustomize/api v0.11.4 // indirect
