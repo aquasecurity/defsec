@@ -10,6 +10,7 @@ import (
 
 	"github.com/aquasecurity/defsec/pkg/debug"
 	"github.com/aquasecurity/defsec/pkg/scanners/azure"
+	"github.com/aquasecurity/defsec/pkg/scanners/azure/resolver"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 
@@ -116,9 +117,7 @@ func (p *Parser) parseFile(r io.Reader, filename string) (*azure.Deployment, err
 	root := types.NewMetadata(
 		types.NewRange(filename, 0, 0, "", p.targetFS),
 		"",
-	)
-	// this will be uncommented when function resolution is implemented
-	// .		WithInternal(azure.NewResolver())
+	).WithInternal(resolver.NewResolver())
 
 	if err := armjson.Unmarshal(data, &template, &root); err != nil {
 		return nil, fmt.Errorf("failed to parse template: %w", err)
@@ -137,10 +136,9 @@ func (p *Parser) convertTemplate(template Template) *azure.Deployment {
 		Outputs:     nil,
 	}
 
-	// this will be uncommented when function resolution is implemented
-	// if resolver, ok := template.Metadata.Internal().(azure.Resolver); ok {
-	// 	resolver.SetDeployment(&deployment)
-	// }
+	if r, ok := template.Metadata.Internal().(resolver.Resolver); ok {
+		r.SetDeployment(&deployment)
+	}
 
 	// TODO: the references passed here should probably not be the name - maybe params.NAME.DefaultValue?
 	for name, param := range template.Parameters {
