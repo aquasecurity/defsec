@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline
 # custom:
 #   id: KSV024
 #   avd_id: AVD-KSV-0024

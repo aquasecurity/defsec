@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run
 # custom:
 #   id: DS017
 #   avd_id: AVD-DS-0017

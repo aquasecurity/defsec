@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://docs.docker.com/engine/reference/builder/#healthcheck
 # custom:
 #   id: DS023
 #   avd_id: AVD-DS-0023

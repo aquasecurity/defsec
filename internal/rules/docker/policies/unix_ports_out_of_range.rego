@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://docs.docker.com/engine/reference/builder/#expose
 # custom:
 #   id: DS008
 #   avd_id: AVD-DS-0008

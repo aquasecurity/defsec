@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://www.cisecurity.org/benchmark/kubernetes
 # custom:
 #   id: KSV0012
 #   avd_id: AVD-KCV-0012

@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://docs.docker.com/engine/deprecated/#maintainer-in-dockerfile
 # custom:
 #   id: DS022
 #   avd_id: AVD-DS-0022
