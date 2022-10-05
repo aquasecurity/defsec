@@ -43,6 +43,12 @@ var generalFuncs = map[string]func(...interface{}) interface{}{
 	"union:":          Union,
 	"uniqueString":    UniqueString,
 	"uri":             Uri,
+	"coalesce":        Coalesce,
+	"equals":          Equals,
+	"greater":         Greater,
+	"greaterOrEquals": GreaterOrEquals,
+	"less":            Less,
+	"lessOrEquals":    LessOrEquals,
 }
 
 func Evaluate(deploymentProvider DeploymentData, name string, args ...interface{}) interface{} {
