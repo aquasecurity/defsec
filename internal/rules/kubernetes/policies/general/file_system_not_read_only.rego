@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://kubesec.io/basics/containers-securitycontext-readonlyrootfilesystem-true/
 # custom:
 #   id: KSV014
 #   avd_id: AVD-KSV-0014

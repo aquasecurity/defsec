@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://kubesec.io/basics/containers-securitycontext-capabilities-drop-index-all/
 # custom:
 #   id: KSV004
 #   avd_id: AVD-KSV-0004

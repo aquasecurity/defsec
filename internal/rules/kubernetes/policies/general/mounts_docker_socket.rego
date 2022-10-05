@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://kubesec.io/basics/spec-volumes-hostpath-path-var-run-docker-sock/
 # custom:
 #   id: KSV006
 #   avd_id: AVD-KSV-0006

@@ -165,6 +165,7 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 	return &metadata, nil
 }
 
+// nolint
 func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata *StaticMetadata) error {
 	if raw, ok := meta["id"]; ok {
 		metadata.ID = fmt.Sprintf("%s", raw)
@@ -211,6 +212,19 @@ func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata
 		}
 		for fw, sections := range frameworks {
 			metadata.Frameworks[framework.Framework(fw)] = sections
+		}
+	}
+	if raw, ok := meta["related_resources"]; ok {
+		if relatedResources, ok := raw.([]interface{}); ok {
+			for _, relatedResource := range relatedResources {
+				if relatedResourceMap, ok := relatedResource.(map[string]interface{}); ok {
+					if raw, ok := relatedResourceMap["ref"]; ok {
+						metadata.References = append(metadata.References, fmt.Sprintf("%s", raw))
+					}
+				} else if relatedResourceString, ok := relatedResource.(string); ok {
+					metadata.References = append(metadata.References, fmt.Sprintf("%s", relatedResourceString))
+				}
+			}
 		}
 	}
 	return nil

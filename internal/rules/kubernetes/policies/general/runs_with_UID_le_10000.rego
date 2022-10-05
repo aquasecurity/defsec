@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://kubesec.io/basics/containers-securitycontext-runasuser/
 # custom:
 #   id: KSV020
 #   avd_id: AVD-KSV-0020

@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema.input
+# related_resources:
+# - https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/
 # custom:
 #   id: KSV037
 #   avd_id: AVD-KSV-0037

@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://kubernetes.io/docs/concepts/configuration/overview/#container-images
 # custom:
 #   id: KSV013
 #   avd_id: AVD-KSV-0013

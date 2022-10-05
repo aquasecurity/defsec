@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://kubesec.io/basics/containers-resources-limits-memory/
 # custom:
 #   id: KSV018
 #   avd_id: AVD-KSV-0018
