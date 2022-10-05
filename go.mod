@@ -12,7 +12,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.16.16
 	github.com/aws/aws-sdk-go-v2/config v1.17.8
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.21
-	github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.15.18
+	github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.16.0
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.20
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.18
 	github.com/aws/aws-sdk-go-v2/service/athena v1.18.10
@@ -60,7 +60,7 @@ require (
 	github.com/moby/buildkit v0.10.3
 	github.com/olekukonko/tablewriter v0.0.5
 	// using this commit to avoid a bug in the latest version - replace when > v0.44.0 is released
-	github.com/open-policy-agent/opa v0.44.1-0.20220927105354-00e835a7cc15
+	github.com/open-policy-agent/opa v0.39.0
 	github.com/owenrumney/go-sarif/v2 v2.1.2
 	github.com/owenrumney/squealer v1.0.1-0.20220510063705-c0be93f0edea
 	github.com/sirupsen/logrus v1.9.0
@@ -72,7 +72,7 @@ require (
 	golang.org/x/text v0.3.7
 	golang.org/x/tools v0.1.10
 	gopkg.in/yaml.v3 v3.0.1
-	helm.sh/helm/v3 v3.9.3
+	helm.sh/helm/v3 v3.6.3
 )
 
 require k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9
@@ -93,7 +93,6 @@ require (
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
-	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.8 // indirect
@@ -118,6 +117,7 @@ require (
 	github.com/containerd/typeurl v1.0.2 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/deislabs/oras v0.11.1 // indirect
 	github.com/dlclark/regexp2 v1.4.0 // indirect
 	github.com/docker/cli v20.10.17+incompatible // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
@@ -206,7 +206,6 @@ require (
 	github.com/shopspring/decimal v1.2.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	github.com/tchap/go-patricia/v2 v2.3.1 // indirect
 	github.com/ulikunitz/xz v0.5.8 // indirect
 	github.com/xanzy/ssh-agent v0.3.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
@@ -242,7 +241,7 @@ require (
 	k8s.io/klog/v2 v2.60.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20220627174259-011e075b9cb8 // indirect
 	k8s.io/kubectl v0.24.2 // indirect
-	oras.land/oras-go v1.2.0 // indirect
+	rsc.io/letsencrypt v0.0.3 // indirect
 	sigs.k8s.io/json v0.0.0-20211208200746-9f7c6b3444d2 // indirect
 	sigs.k8s.io/kustomize/api v0.11.4 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.13.6 // indirect
