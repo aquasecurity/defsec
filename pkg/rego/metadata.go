@@ -165,6 +165,7 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 	return &metadata, nil
 }
 
+// nolint
 func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata *StaticMetadata) error {
 	if raw, ok := meta["id"]; ok {
 		metadata.ID = fmt.Sprintf("%s", raw)
