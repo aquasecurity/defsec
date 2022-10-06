@@ -53,7 +53,6 @@ var generalFuncs = map[string]func(...interface{}) interface{}{
 	"uniqueString":      UniqueString,
 	"uri":               Uri,
 	"utcNow":            UTCNow,
-
 }
 
 func Evaluate(deploymentProvider DeploymentData, name string, args ...interface{}) interface{} {
