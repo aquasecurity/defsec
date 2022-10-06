@@ -42,7 +42,7 @@ func DateTimeAdd(args ...interface{}) interface{} {
 	return baseTime.Format(time.RFC3339)
 }
 
-type ISO8601Duration struct {
+type Iso8601Duration struct {
 	Y int
 	M int
 	W int
@@ -53,9 +53,9 @@ type ISO8601Duration struct {
 	TS int
 }
 
-func parseISO8601(from string) (ISO8601Duration, error) {
+func parseISO8601(from string) (Iso8601Duration, error) {
 	var match []string
-	var d ISO8601Duration
+	var d Iso8601Duration
 
 	if pattern.MatchString(from) {
 		match = pattern.FindStringSubmatch(from)
@@ -96,7 +96,7 @@ func parseISO8601(from string) (ISO8601Duration, error) {
 	return d, nil
 }
 
-func (d ISO8601Duration) timeDuration() time.Duration {
+func (d Iso8601Duration) timeDuration() time.Duration {
 	var dur time.Duration
 	dur += time.Duration(d.TH) * time.Hour
 	dur += time.Duration(d.TM) * time.Minute

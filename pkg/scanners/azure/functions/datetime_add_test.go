@@ -43,23 +43,23 @@ func Test_ISO8601DurationParse(t *testing.T) {
 	tests := []struct {
 		name     string
 		args     string
-		expected ISO8601Duration
+		expected Iso8601Duration
 	}{
 
 		{
 			name:     "parse 1 year",
 			args:     "P1Y",
-			expected: ISO8601Duration{Y: 1},
+			expected: Iso8601Duration{Y: 1},
 		},
 		{
 			name:     "parse 3 months",
 			args:     "P3M",
-			expected: ISO8601Duration{M: 3},
+			expected: Iso8601Duration{M: 3},
 		},
 		{
 			name:     "parse 12 hours",
 			args:     "PT12H",
-			expected: ISO8601Duration{TH: 12},
+			expected: Iso8601Duration{TH: 12},
 		},
 	}
 	for _, tt := range tests {
