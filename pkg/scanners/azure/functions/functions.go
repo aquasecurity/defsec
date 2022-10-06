@@ -8,9 +8,11 @@ var deploymentFuncs = map[string]func(dp DeploymentData, args ...interface{}) in
 }
 var generalFuncs = map[string]func(...interface{}) interface{}{
 
+	"and":               And,
 	"array":             Array,
 	"base64":            Base64,
 	"base64ToJson":      Base64ToJson,
+	"bool":              Bool,
 	"coalesce":          Coalesce,
 	"concat":            Concat,
 	"contains":          Contains,
@@ -23,10 +25,12 @@ var generalFuncs = map[string]func(...interface{}) interface{}{
 	"empty":             Empty,
 	"endsWith":          EndsWith,
 	"equals":            Equals,
+	"false":             False,
 	"format":            Format,
 	"greater":           Greater,
 	"greaterOrEquals":   GreaterOrEquals,
 	"guid":              Guid,
+	"if":                If,
 	"indexOf":           IndexOf,
 	"intersection":      Intersection,
 	"join":              Join,
@@ -37,6 +41,8 @@ var generalFuncs = map[string]func(...interface{}) interface{}{
 	"max":               Max,
 	"min":               Min,
 	"newGuid":           NewGuid,
+	"not":               Not,
+	"or":                Or,
 	"padLeft":           PadLeft,
 	"range":             Range,
 	"replace":           Replace,
@@ -48,11 +54,13 @@ var generalFuncs = map[string]func(...interface{}) interface{}{
 	"toLower":           ToLower,
 	"toUpper":           ToUpper,
 	"trim":              Trim,
+	"true":              True,
 	"union":             Union,
 	"union:":            Union,
 	"uniqueString":      UniqueString,
 	"uri":               Uri,
 	"utcNow":            UTCNow,
+
 }
 
 func Evaluate(deploymentProvider DeploymentData, name string, args ...interface{}) interface{} {
