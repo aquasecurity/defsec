@@ -70,3 +70,15 @@ func Test_JSON(t *testing.T) {
 	require.NoError(t, formatter.Output(results))
 	assert.Equal(t, want, buffer.String())
 }
+
+func Test_JSONWithEmptyResults(t *testing.T) {
+	want := `{
+	"results": []
+}
+`
+	buffer := bytes.NewBuffer([]byte{})
+	formatter := New().AsJSON().WithWriter(buffer).Build()
+	var results scan.Results
+	require.NoError(t, formatter.Output(results))
+	assert.Equal(t, want, buffer.String())
+}
