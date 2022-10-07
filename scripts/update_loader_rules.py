@@ -15,7 +15,7 @@ addLine('import (')
 
 
 for f in glob.glob(f'./policies/*/*'):
-    f = f.replace('./policies/', '_ "github.com/aquasecurity/defsec/policies/') + '"'
+    f = f.replace('./internal/rules/', '_ "github.com/aquasecurity/defsec/internal/rules/') + '"'
     addLine(f)
 
 addLine(')')
