@@ -309,8 +309,6 @@ func Test_FileScanExampleWithResultFunction(t *testing.T) {
 	results, err := NewScanner(
 		options.ScannerWithDebug(os.Stdout),
 		options.ScannerWithTrace(os.Stdout),
-		options.ScannerWithPolicyFilesystem(os.DirFS("../../../internal/rules")),
-		options.ScannerWithPolicyDirs("kubernetes/lib"),
 		options.ScannerWithPolicyReader(strings.NewReader(`package defsec
 
 import data.lib.kubernetes
