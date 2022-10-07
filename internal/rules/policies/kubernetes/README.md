@@ -16,10 +16,10 @@ mkdir myPolicy
 ```
 2. Download the main library and the desired checks(s) into "myPolicy" directory - in this example we use the "host_ipc" check only
 ```
-wget https://github.com/aquasecurity/defsec/raw/master/internal/rules/kubernetes/lib/kubernetes.rego
-wget https://github.com/aquasecurity/defsec/raw/master/internal/rules/kubernetes/lib/utils.rego
-wget https://github.com/aquasecurity/defsec/raw/master/internal/rules/defsec/lib/defsec.rego
-wget https://github.com/aquasecurity/defsec/raw/master/internal/rules/kubernetes/policies/pss/baseline/1_host_ipc.rego
+wget https://github.com/aquasecurity/defsec/raw/master/policies/kubernetes/lib/kubernetes.rego
+wget https://github.com/aquasecurity/defsec/raw/master/policies/kubernetes/lib/utils.rego
+wget https://github.com/aquasecurity/defsec/raw/master/policies/defsec/lib/defsec.rego
+wget https://github.com/aquasecurity/defsec/raw/master/policies/kubernetes/policies/pss/baseline/1_host_ipc.rego
 ```
 3. Download an example of a non-compliant kubernetes deployment (in yaml format) 
 ```
