@@ -17,7 +17,7 @@ schema:
 
 .PHONY: fmt-rego
 fmt-rego:
-	opa fmt -w policies
+	opa fmt -w internal/rules/policies
 
 .PHONY: test-rego
 test-rego:
