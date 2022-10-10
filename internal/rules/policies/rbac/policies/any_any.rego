@@ -4,6 +4,8 @@
 # scope: package
 # schemas:
 # - input: schema["input"]
+# related_resources:
+# - https://kubernetes.io/docs/concepts/security/rbac-good-practices/
 # custom:
 #   id: KSV044
 #   avd_id: AVD-KSV-0044

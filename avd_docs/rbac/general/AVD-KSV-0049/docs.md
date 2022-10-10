@@ -7,4 +7,7 @@ Some workloads leverage configmaps to store sensitive data or configuration para
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
+### Links
+- https://kubernetes.io/docs/concepts/security/rbac-good-practices/
+
 

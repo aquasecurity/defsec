@@ -7,4 +7,7 @@ Check whether role permits managing secrets
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
+### Links
+- https://kubernetes.io/docs/concepts/security/rbac-good-practices/
+
 

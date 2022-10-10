@@ -7,4 +7,7 @@ Check whether role permits allowing users in a rolebinding to add other users to
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
+### Links
+- https://kubernetes.io/docs/concepts/security/rbac-good-practices/
+
 

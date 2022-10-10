@@ -7,4 +7,7 @@ Check whether role permits creating role bindings and associating to privileged 
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
+### Links
+- https://kubernetes.io/docs/concepts/security/rbac-good-practices/
+
 
