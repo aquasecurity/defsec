@@ -131,6 +131,11 @@ func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, e
 
 	dbInstanceMetadata := a.CreateMetadata("db:" + *dbInstance.DBInstanceIdentifier)
 
+	engine := rds.EngineAurora
+	if dbInstance.Engine != nil {
+		engine = *dbInstance.Engine
+	}
+
 	instance := &rds.Instance{
 		Metadata:                  dbInstanceMetadata,
 		BackupRetentionPeriodDays: defsecTypes.IntFromInt32(dbInstance.BackupRetentionPeriod, dbInstanceMetadata),
@@ -140,8 +145,10 @@ func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, e
 			dbInstance.PerformanceInsightsKMSKeyId,
 			dbInstanceMetadata,
 		),
-		Encryption:   getInstanceEncryption(dbInstance.StorageEncrypted, dbInstance.KmsKeyId, dbInstanceMetadata),
-		PublicAccess: defsecTypes.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
+		Encryption:     getInstanceEncryption(dbInstance.StorageEncrypted, dbInstance.KmsKeyId, dbInstanceMetadata),
+		PublicAccess:   defsecTypes.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
+		Engine:         defsecTypes.String(engine, dbInstanceMetadata),
+		IAMAuthEnabled: defsecTypes.Bool(dbInstance.IAMDatabaseAuthenticationEnabled, dbInstanceMetadata),
 	}
 
 	return instance, nil
@@ -150,6 +157,11 @@ func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, e
 func (a *adapter) adaptCluster(dbCluster types.DBCluster) (*rds.Cluster, error) {
 
 	dbClusterMetadata := a.CreateMetadata("cluster:" + *dbCluster.DBClusterIdentifier)
+
+	engine := rds.EngineAurora
+	if dbCluster.Engine != nil {
+		engine = *dbCluster.Engine
+	}
 
 	cluster := &rds.Cluster{
 		Metadata:                  dbClusterMetadata,
@@ -162,6 +174,7 @@ func (a *adapter) adaptCluster(dbCluster types.DBCluster) (*rds.Cluster, error) 
 		),
 		Encryption:   getInstanceEncryption(dbCluster.StorageEncrypted, dbCluster.KmsKeyId, dbClusterMetadata),
 		PublicAccess: defsecTypes.Bool(aws.ToBool(dbCluster.PubliclyAccessible), dbClusterMetadata),
+		Engine:       defsecTypes.String(engine, dbClusterMetadata),
 	}
 
 	return cluster, nil

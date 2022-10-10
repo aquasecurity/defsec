@@ -71,6 +71,7 @@ func Test_Adapt(t *testing.T) {
 							KMSKeyID:       defsecTypes.String("kms_key_2", defsecTypes.NewTestMetadata()),
 						},
 						PublicAccess: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						Engine:       defsecTypes.String(rds.EngineAurora, defsecTypes.NewTestMetadata()),
 					},
 				},
 				Clusters: []rds.Cluster{
@@ -105,11 +106,13 @@ func Test_Adapt(t *testing.T) {
 										KMSKeyID:       defsecTypes.String("kms_key_0", defsecTypes.NewTestMetadata()),
 									},
 									PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+									Engine:       defsecTypes.String(rds.EngineAurora, defsecTypes.NewTestMetadata()),
 								},
 								ClusterIdentifier: defsecTypes.String("aws_rds_cluster.example", defsecTypes.NewTestMetadata()),
 							},
 						},
 						PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						Engine:       defsecTypes.String(rds.EngineAuroraMysql, defsecTypes.NewTestMetadata()),
 					},
 				},
 				Classic: rds.Classic{
@@ -158,7 +161,9 @@ func Test_adaptInstance(t *testing.T) {
 					EncryptStorage: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					KMSKeyID:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
-				PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				PublicAccess:   defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				Engine:         defsecTypes.String(rds.EngineAurora, defsecTypes.NewTestMetadata()),
+				IAMAuthEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}
@@ -199,6 +204,7 @@ func Test_adaptCluster(t *testing.T) {
 					KMSKeyID:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
 				PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				Engine:       defsecTypes.String(rds.EngineAurora, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

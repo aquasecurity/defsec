@@ -1,5 +1,5 @@
 
-Evaluate k8s deprecated and removed APIs.
+apiVersion and kind has been deprecated
 
 ### Impact
 <!-- Add Impact here -->
@@ -7,5 +7,4 @@ Evaluate k8s deprecated and removed APIs.
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
-### Links
-- https://kubernetes.io/docs/reference/using-api/deprecation-guide/
+

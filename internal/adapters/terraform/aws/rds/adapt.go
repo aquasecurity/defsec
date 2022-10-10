@@ -52,6 +52,7 @@ func getClusters(modules terraform.Modules) (clusters []rds.Cluster) {
 				KMSKeyID:       defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			},
 			PublicAccess: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+			Engine:       defsecTypes.StringUnresolvable(defsecTypes.NewUnmanagedMetadata()),
 		}
 		for _, orphan := range orphanResources {
 			orphanage.Instances = append(orphanage.Instances, adaptClusterInstance(orphan, modules))
@@ -109,6 +110,8 @@ func adaptInstance(resource *terraform.Block, modules terraform.Modules) rds.Ins
 		PerformanceInsights:       adaptPerformanceInsights(resource),
 		Encryption:                adaptEncryption(resource),
 		PublicAccess:              resource.GetAttribute("publicly_accessible").AsBoolValueOrDefault(false, resource),
+		Engine:                    resource.GetAttribute("engine").AsStringValueOrDefault(rds.EngineAurora, resource),
+		IAMAuthEnabled:            resource.GetAttribute("iam_database_authentication_enabled").AsBoolValueOrDefault(false, resource),
 	}
 }
 
@@ -132,6 +135,7 @@ func adaptCluster(resource *terraform.Block, modules terraform.Modules) (rds.Clu
 		Instances:                 clusterInstances,
 		Encryption:                adaptEncryption(resource),
 		PublicAccess:              defsecTypes.Bool(public, resource.GetMetadata()),
+		Engine:                    resource.GetAttribute("engine").AsStringValueOrDefault(rds.EngineAurora, resource),
 	}, ids
 }
 

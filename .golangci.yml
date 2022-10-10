@@ -12,7 +12,6 @@ linters:
     - unused
     - varcheck
     - bodyclose
-    - contextcheck
     - cyclop
     - durationcheck
     - errname

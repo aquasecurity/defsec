@@ -52,7 +52,7 @@ PSS has 14 controls that are grouped into three standards: Baseline, Restricted 
  | 8-/proc Mount Type	     | 13-The Allowed Proc Mount types for the container                |
  | 9-Sysctls	              | 16-The sysctl profile used by containers                         |
 
-The REGO rules are available [here](https://github.com/aquasecurity/defsec/tree/master/internal/rules/kubernetes/policies/pss)
+The REGO rules are available [here](https://github.com/aquasecurity/defsec/tree/master/policies/kubernetes/policies/pss)
 
 ### PSS - Restricted
 
@@ -64,7 +64,7 @@ The REGO rules are available [here](https://github.com/aquasecurity/defsec/tree/
  | 4-Non-root groups       | 7-Allocating an FSGroup that owns the Pod's volumes. 9-The user and group IDs of the container                   |
  | 5-Seccomp               | 15-The seccomp profile used by containers                                                                        |
 
-The REGO rules are available [here](https://github.com/aquasecurity/defsec/tree/master/internal/rules/kubernetes/policies/pss)
+The REGO rules are available [here](https://github.com/aquasecurity/defsec/tree/master/policies/kubernetes/policies/pss)
 
 ## Optional best practices
 
@@ -78,4 +78,4 @@ Top Examples:
 | Block public registries                  | container(s).image != null or docker.io prefix |
 | HostPath volume mounted with docker.sock | hostPath.path != /var/run/docker.sock          |
 
-Additional REGO rules available [here](https://github.com/aquasecurity/defsec/tree/master/internal/rules/kubernetes/policies/advanced/optional)
+Additional REGO rules available [here](https://github.com/aquasecurity/defsec/tree/master/policies/kubernetes/policies/advanced/optional)

@@ -1,4 +1,4 @@
-DYNAMIC_REGO_FOLDER=./internal/rules/kubernetes/policies/dynamic
+DYNAMIC_REGO_FOLDER=./internal/rules/policies/kubernetes/policies/dynamic
 
 .PHONY: test
 test:
@@ -17,7 +17,7 @@ schema:
 
 .PHONY: fmt-rego
 fmt-rego:
-	opa fmt -w internal/rules
+	opa fmt -w internal/rules/policies
 
 .PHONY: test-rego
 test-rego:

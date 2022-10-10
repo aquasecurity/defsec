@@ -8,6 +8,6 @@ Do not use self-signed certificates for TLS.
 {{ remediationActions }}
 
 ### Links
-- <cisbench>
+- https://www.cisecurity.org/benchmark/kubernetes
 
 

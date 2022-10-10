@@ -8,6 +8,6 @@ Use individual service account credentials for each controller.
 {{ remediationActions }}
 
 ### Links
-- <cisbench>
+- https://www.cisecurity.org/benchmark/kubernetes
 
 

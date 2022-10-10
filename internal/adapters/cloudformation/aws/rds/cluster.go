@@ -25,6 +25,11 @@ func getClusters(ctx parser.FileContext) (clusters map[string]rds.Cluster) {
 				KMSKeyID:       defsecTypes.StringDefault("", clusterResource.Metadata()),
 			},
 			PublicAccess: defsecTypes.BoolDefault(false, clusterResource.Metadata()),
+			Engine:       defsecTypes.StringDefault(rds.EngineAurora, clusterResource.Metadata()),
+		}
+
+		if engineProp := clusterResource.GetProperty("Engine"); engineProp.IsString() {
+			cluster.Engine = engineProp.AsStringValue()
 		}
 
 		if backupProp := clusterResource.GetProperty("BackupRetentionPeriod"); backupProp.IsInt() {

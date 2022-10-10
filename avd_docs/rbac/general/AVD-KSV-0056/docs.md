@@ -7,4 +7,7 @@ The ability to control which pods get service traffic directed to them allows fo
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
+### Links
+- https://kubernetes.io/docs/concepts/security/rbac-good-practices/
+
 

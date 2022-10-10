@@ -8,6 +8,6 @@ Do not bind the scheduler service to non-loopback insecure addresses.
 {{ remediationActions }}
 
 ### Links
-- <cisbench>
+- https://www.cisecurity.org/benchmark/kubernetes
 
 

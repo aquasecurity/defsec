@@ -8,6 +8,6 @@ Disable profiling, if not needed.
 {{ remediationActions }}
 
 ### Links
-- <cisbench>
+- https://www.cisecurity.org/benchmark/kubernetes
 
 

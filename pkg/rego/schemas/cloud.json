@@ -2303,6 +2303,10 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.rds.Encryption"
         },
+        "engine": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "instances": {
           "type": "array",
           "items": {
@@ -2363,6 +2367,14 @@
         "encryption": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.rds.Encryption"
+        },
+        "engine": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "iamauthenabled": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "performanceinsights": {
           "type": "object",

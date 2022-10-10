@@ -8,6 +8,6 @@ Enable kubelet server certificate rotation on controller-manager.
 {{ remediationActions }}
 
 ### Links
-- <cisbench>
+- https://www.cisecurity.org/benchmark/kubernetes
 
 
