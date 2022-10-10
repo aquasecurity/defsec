@@ -19,8 +19,8 @@
 package builtin.aws.rds.aws0176
 
 deny[res] {
-    engines := ["postgres", "mysql"]
-    instance := input.aws.rds.instances[_]
-    instance.engine.value == engines[_]
+	engines := ["postgres", "mysql"]
+	instance := input.aws.rds.instances[_]
+	instance.engine.value == engines[_]
 	res := result.new("Instance does not have IAM Authentication enabled", instance)
 }
