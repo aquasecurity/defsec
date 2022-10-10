@@ -7,7 +7,4 @@ Check whether role permits privilege escalation from node proxy
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
-### Links
-- https://kubernetes.io/docs/concepts/security/rbac-good-practices/
-
 

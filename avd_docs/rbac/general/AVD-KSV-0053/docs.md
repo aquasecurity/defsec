@@ -7,7 +7,4 @@ Check whether role permits getting shell on pods
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
-### Links
-- https://kubernetes.io/docs/concepts/security/rbac-good-practices/
-
 

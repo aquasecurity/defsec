@@ -8,6 +8,6 @@ Configure TLS encryption for the etcd service.
 {{ remediationActions }}
 
 ### Links
-- <cisbench>
+- https://www.cisecurity.org/benchmark/kubernetes
 
 

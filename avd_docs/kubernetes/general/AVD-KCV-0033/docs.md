@@ -8,6 +8,6 @@ Activate garbage collector on pod termination, as appropriate.
 {{ remediationActions }}
 
 ### Links
-- <cisbench>
+- https://www.cisecurity.org/benchmark/kubernetes
 
 

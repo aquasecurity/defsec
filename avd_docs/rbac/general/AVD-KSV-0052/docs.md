@@ -7,7 +7,4 @@ Check whether role permits creating role ClusterRoleBindings and association wit
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
-### Links
-- https://kubernetes.io/docs/concepts/security/rbac-good-practices/
-
 
