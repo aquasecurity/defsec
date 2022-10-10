@@ -112,6 +112,7 @@ func adaptInstance(resource *terraform.Block, modules terraform.Modules) rds.Ins
 		PublicAccess:              resource.GetAttribute("publicly_accessible").AsBoolValueOrDefault(false, resource),
 		Engine:                    resource.GetAttribute("engine").AsStringValueOrDefault(rds.EngineAurora, resource),
 		IAMAuthEnabled:            resource.GetAttribute("iam_database_authentication_enabled").AsBoolValueOrDefault(false, resource),
+		DeletionProtection:        resource.GetAttribute("deletion_protection").AsBoolValueOrDefault(false, resource),
 	}
 }
 
