@@ -22,11 +22,24 @@ type Cluster struct {
 }
 
 const (
-	EngineAurora           = "aurora"
-	EngineAuroraMysql      = "aurora-mysql"
-	EngineAuroraPostgresql = "aurora-postgresql"
-	EngineMySQL            = "mysql"
-	EnginePostgres         = "postgres"
+	EngineAurora             = "aurora"
+	EngineAuroraMysql        = "aurora-mysql"
+	EngineAuroraPostgresql   = "aurora-postgresql"
+	EngineMySQL              = "mysql"
+	EnginePostgres           = "postgres"
+	EngineCustomOracleEE     = "custom-oracle-ee"
+	EngineOracleEE           = "oracle-ee"
+	EngineOracleEECDB        = "oracle-ee-cdb"
+	EngineOracleSE2          = "oracle-se2"
+	EngineOracleSE2CDB       = "oracle-se2-cdb"
+	EngineSQLServerEE        = "sqlserver-ee"
+	EngineSQLServerSE        = "sqlserver-se"
+	EngineSQLServerEX        = "sqlserver-ex"
+	EngineSQLServerWEB       = "sqlserver-web"
+	EngineMariaDB            = "mariadb"
+	EngineCustomSQLServerEE  = "custom-sqlserver-ee"
+	EngineCustomSQLServerSE  = "custom-sqlserver-se"
+	EngineCustomSQLServerWEB = "custom-sqlserver-web"
 )
 
 type Encryption struct {
