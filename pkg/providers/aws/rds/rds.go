@@ -18,7 +18,16 @@ type Cluster struct {
 	Instances                 []ClusterInstance
 	Encryption                Encryption
 	PublicAccess              defsecTypes.BoolValue
+	Engine                    defsecTypes.StringValue
 }
+
+const (
+	EngineAurora           = "aurora"
+	EngineAuroraMysql      = "aurora-mysql"
+	EngineAuroraPostgresql = "aurora-postgresql"
+	EngineMySQL            = "mysql"
+	EnginePostgres         = "postgres"
+)
 
 type Encryption struct {
 	Metadata       defsecTypes.Metadata
@@ -33,6 +42,8 @@ type Instance struct {
 	PerformanceInsights       PerformanceInsights
 	Encryption                Encryption
 	PublicAccess              defsecTypes.BoolValue
+	Engine                    defsecTypes.StringValue
+	IAMAuthEnabled            defsecTypes.BoolValue
 }
 
 type ClusterInstance struct {
