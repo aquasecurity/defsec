@@ -25,9 +25,10 @@ func getClustersAndInstances(ctx parser.FileContext) (clusters []rds.Cluster, or
 				EncryptStorage: r.GetBoolProperty("StorageEncrypted"),
 				KMSKeyID:       r.GetStringProperty("KmsKeyId"),
 			},
-			PublicAccess:   r.GetBoolProperty("PubliclyAccessible", true),
-			Engine:         r.GetStringProperty("Engine"),
-			IAMAuthEnabled: r.GetBoolProperty("EnableIAMDatabaseAuthentication"),
+			PublicAccess:       r.GetBoolProperty("PubliclyAccessible", true),
+			Engine:             r.GetStringProperty("Engine"),
+			IAMAuthEnabled:     r.GetBoolProperty("EnableIAMDatabaseAuthentication"),
+			DeletionProtection: r.GetBoolProperty("DeletionProtection", false),
 		}
 
 		if clusterID := r.GetProperty("DBClusterIdentifier"); clusterID.IsString() {

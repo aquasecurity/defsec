@@ -145,10 +145,11 @@ func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, e
 			dbInstance.PerformanceInsightsKMSKeyId,
 			dbInstanceMetadata,
 		),
-		Encryption:     getInstanceEncryption(dbInstance.StorageEncrypted, dbInstance.KmsKeyId, dbInstanceMetadata),
-		PublicAccess:   defsecTypes.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
-		Engine:         defsecTypes.String(engine, dbInstanceMetadata),
-		IAMAuthEnabled: defsecTypes.Bool(dbInstance.IAMDatabaseAuthenticationEnabled, dbInstanceMetadata),
+		Encryption:         getInstanceEncryption(dbInstance.StorageEncrypted, dbInstance.KmsKeyId, dbInstanceMetadata),
+		PublicAccess:       defsecTypes.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
+		Engine:             defsecTypes.String(engine, dbInstanceMetadata),
+		IAMAuthEnabled:     defsecTypes.Bool(dbInstance.IAMDatabaseAuthenticationEnabled, dbInstanceMetadata),
+		DeletionProtection: defsecTypes.Bool(dbInstance.DeletionProtection, dbInstanceMetadata),
 	}
 
 	return instance, nil

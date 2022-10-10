@@ -57,6 +57,7 @@ type Instance struct {
 	PublicAccess              defsecTypes.BoolValue
 	Engine                    defsecTypes.StringValue
 	IAMAuthEnabled            defsecTypes.BoolValue
+	DeletionProtection        defsecTypes.BoolValue
 }
 
 type ClusterInstance struct {
