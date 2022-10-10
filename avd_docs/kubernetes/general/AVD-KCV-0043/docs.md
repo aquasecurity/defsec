@@ -8,6 +8,6 @@ Enable client authentication on etcd service.
 {{ remediationActions }}
 
 ### Links
-- <cisbench>
+- https://www.cisecurity.org/benchmark/kubernetes
 
 

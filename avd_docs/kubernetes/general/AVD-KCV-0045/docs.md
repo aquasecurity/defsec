@@ -8,6 +8,6 @@ etcd should be configured to make use of TLS encryption for peer connections.
 {{ remediationActions }}
 
 ### Links
-- <cisbench>
+- https://www.cisecurity.org/benchmark/kubernetes
 
 

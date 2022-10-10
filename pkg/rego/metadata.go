@@ -189,7 +189,7 @@ func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata
 		metadata.Service = fmt.Sprintf("%s", raw)
 	}
 	if raw, ok := meta["provider"]; ok {
-		metadata.Service = fmt.Sprintf("%s", raw)
+		metadata.Provider = fmt.Sprintf("%s", raw)
 	}
 	if raw, ok := meta["library"]; ok {
 		if lib, ok := raw.(bool); ok {

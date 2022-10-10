@@ -8,6 +8,6 @@ etcd should be configured for peer authentication.
 {{ remediationActions }}
 
 ### Links
-- <cisbench>
+- https://www.cisecurity.org/benchmark/kubernetes
 
 

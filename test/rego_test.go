@@ -3,10 +3,13 @@ package test
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/aquasecurity/defsec/pkg/rego/schemas"
 
 	"github.com/stretchr/testify/assert"
 
@@ -15,6 +18,51 @@ import (
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/stretchr/testify/require"
 )
+
+func Test_AllRegoCloudRulesMatchSchema(t *testing.T) {
+
+	// load all the tests first
+	baseModules := make(map[string]*ast.Module)
+	require.NoError(t, filepath.Walk("../internal/rules/policies/cloud", func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+		if filepath.Ext(path) != ".rego" {
+			return nil
+		}
+
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		module, err := ast.ParseModuleWithOpts(path, string(data), ast.ParserOptions{
+			ProcessAnnotation: true,
+		})
+		if err != nil {
+			return err
+		}
+
+		if strings.HasSuffix(path, "_test.rego") {
+			return nil
+		}
+
+		baseModules[path] = module
+		return nil
+	}))
+
+	compiler := ast.NewCompiler()
+	schemaSet := ast.NewSchemaSet()
+	var schema interface{}
+	require.NoError(t, json.Unmarshal([]byte(schemas.Cloud), &schema))
+	schemaSet.Put(ast.MustParseRef("schema.input"), schema)
+	compiler.WithSchemas(schemaSet)
+	compiler.WithCapabilities(ast.CapabilitiesForThisVersion())
+	compiler.Compile(baseModules)
+	assert.False(t, compiler.Failed(), "compilation failed: %s", compiler.Errors)
+}
 
 func Test_AllRegoRules(t *testing.T) {
 

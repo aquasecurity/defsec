@@ -8,6 +8,6 @@ Allow pods to verify the API server's serving certificate before establishing co
 {{ remediationActions }}
 
 ### Links
-- <cisbench>
+- https://www.cisecurity.org/benchmark/kubernetes
 
 

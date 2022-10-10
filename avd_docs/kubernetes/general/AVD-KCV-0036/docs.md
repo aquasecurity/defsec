@@ -8,6 +8,6 @@ Explicitly set a service account private key file for service accounts on the co
 {{ remediationActions }}
 
 ### Links
-- <cisbench>
+- https://www.cisecurity.org/benchmark/kubernetes
 
 

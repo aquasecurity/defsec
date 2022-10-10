@@ -1,8 +1,7 @@
 
 Set the instance to not be publicly accessible
 
-```yaml
----
+```yaml---
 Resources:
   GoodExample:
     Properties:
