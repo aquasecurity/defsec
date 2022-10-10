@@ -51,7 +51,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-getter v1.6.2
 	github.com/hashicorp/go-uuid v1.0.3
-	github.com/hashicorp/hcl/v2 v2.13.0
+	github.com/hashicorp/hcl/v2 v2.14.1
 	github.com/liamg/iamgo v0.0.9
 	github.com/liamg/jfather v0.0.7
 	github.com/liamg/memoryfs v1.4.3
@@ -75,7 +75,10 @@ require (
 	helm.sh/helm/v3 v3.9.3
 )
 
-require k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9
+require (
+	github.com/aws/smithy-go v1.13.3
+	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9
+)
 
 require (
 	cloud.google.com/go v0.99.0 // indirect
@@ -109,7 +112,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.17 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.11.23 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.13.6 // indirect
-	github.com/aws/smithy-go v1.13.3 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
