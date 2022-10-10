@@ -23,4 +23,3 @@ test_when_not_applicable {
 	}]}}}
 	count(r) == 0
 }
-
