@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"github.com/aquasecurity/defsec/pkg/rego/schemas"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/aquasecurity/defsec/pkg/rego/schemas"
 
 	"github.com/stretchr/testify/assert"
 
