@@ -19,7 +19,15 @@ func DateTimeAdd(args ...interface{}) interface{} {
 		return nil
 	}
 
-	baseTime, err := time.Parse(time.RFC3339, base)
+	format := time.RFC3339
+	if len(args) == 3 {
+		if providedFormat, ok := args[2].(string); ok {
+			format = convertFormat(providedFormat)
+		}
+
+	}
+
+	baseTime, err := time.Parse(format, base)
 	if err != nil {
 		return nil
 	}
@@ -32,11 +40,8 @@ func DateTimeAdd(args ...interface{}) interface{} {
 	timeDuration := duration.timeDuration()
 	baseTime = baseTime.Add(timeDuration)
 
-	if len(args) == 3 {
-		format, ok := args[2].(string)
-		if ok {
-			return baseTime.Format(format)
-		}
+	if ok {
+		return baseTime.Format(format)
 	}
 
 	return baseTime.Format(time.RFC3339)
