@@ -12,24 +12,24 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.16.16
 	github.com/aws/aws-sdk-go-v2/config v1.17.8
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.21
-	github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.15.18
+	github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.16.0
 	github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.20
 	github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.18
 	github.com/aws/aws-sdk-go-v2/service/athena v1.18.10
 	github.com/aws/aws-sdk-go-v2/service/cloudfront v1.20.5
-	github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.18.1
+	github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.18.2
 	github.com/aws/aws-sdk-go-v2/service/cloudwatch v1.21.6
 	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.15.20
 	github.com/aws/aws-sdk-go-v2/service/codebuild v1.19.17
 	github.com/aws/aws-sdk-go-v2/service/docdb v1.19.11
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.17.1
-	github.com/aws/aws-sdk-go-v2/service/ec2 v1.61.0
+	github.com/aws/aws-sdk-go-v2/service/ec2 v1.63.1
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.17.18
-	github.com/aws/aws-sdk-go-v2/service/ecs v1.18.22
+	github.com/aws/aws-sdk-go-v2/service/ecs v1.18.23
 	github.com/aws/aws-sdk-go-v2/service/efs v1.17.15
 	github.com/aws/aws-sdk-go-v2/service/eks v1.22.1
 	github.com/aws/aws-sdk-go-v2/service/elasticache v1.22.10
-	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.18.19
+	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.18.20
 	github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.10
 	github.com/aws/aws-sdk-go-v2/service/emr v1.20.11
 	github.com/aws/aws-sdk-go-v2/service/iam v1.18.19
@@ -57,7 +57,7 @@ require (
 	github.com/liamg/memoryfs v1.4.3
 	github.com/liamg/tml v0.6.0
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/moby/buildkit v0.10.3
+	github.com/moby/buildkit v0.10.4
 	github.com/olekukonko/tablewriter v0.0.5
 	// using this commit to avoid a bug in the latest version - replace when > v0.44.0 is released
 	github.com/open-policy-agent/opa v0.44.1-0.20220927105354-00e835a7cc15
