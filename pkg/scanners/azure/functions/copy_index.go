@@ -1,15 +1,25 @@
 package functions
 
-var counter int
+var loopCounter = map[string]int{}
 
 func CopyIndex(args ...interface{}) interface{} {
-
-	if len(args) != 0 {
-		return nil
+	loopName := "default"
+	offset := 1
+	if len(args) > 0 {
+		if providedLoopName, ok := args[0].(string); ok {
+			loopName = providedLoopName
+		}
 	}
-	// this is a very blunt implementation of copyIndex as it
-	// does not know which resource is being counted so just gives an incrementing
-	// number for each call
-	counter++
-	return counter
+	if len(args) > 1 {
+		if providedOffset, ok := args[1].(int); ok {
+			offset = providedOffset
+		}
+	}
+
+	if _, ok := loopCounter[loopName]; !ok {
+		loopCounter[loopName] = 0
+	}
+
+	loopCounter[loopName] += offset
+	return loopCounter[loopName]
 }
