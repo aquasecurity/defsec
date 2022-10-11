@@ -25,7 +25,7 @@ const (
 	FileTypeTOML           FileType = "toml"
 	FileTypeJSON           FileType = "json"
 	FileTypeHelm           FileType = "helm"
-	FileTypeAzureARM       FileType = "azurearm"
+	FileTypeAzureARM       FileType = "azure-arm"
 )
 
 var matchers = map[FileType]func(name string, r io.ReadSeeker) bool{}
