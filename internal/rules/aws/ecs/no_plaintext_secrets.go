@@ -2,10 +2,9 @@ package ecs
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/severity"
-
-	"github.com/aquasecurity/defsec/internal/security"
 
 	"github.com/aquasecurity/defsec/pkg/state"
 
@@ -53,7 +52,7 @@ var CheckNoPlaintextSecrets = rules.Register(
 		for _, definition := range s.AWS.ECS.TaskDefinitions {
 			for _, container := range definition.ContainerDefinitions {
 				for _, env := range container.Environment {
-					if result := scanner.Scan(env.Value); result.TransgressionFound || security.IsSensitiveAttribute(env.Name) {
+					if result := scanner.Scan(env.Value); result.TransgressionFound || isSensitiveAttribute(env.Name) {
 						results.Add(
 							fmt.Sprintf("Container definition contains a potentially sensitive environment variable '%s': %s", env.Name, result.Description),
 							container,
@@ -67,3 +66,38 @@ var CheckNoPlaintextSecrets = rules.Register(
 		return
 	},
 )
+
+var sensitiveAttributeTokens = []string{
+	"password",
+	"secret",
+	"private_key",
+	"aws_access_key_id",
+	"aws_secret_access_key",
+	"token",
+	"api_key",
+}
+
+var whitelistTokens = []string{
+	"token_type",
+	"version",
+}
+
+func isSensitiveAttribute(name string) bool {
+	name = strings.ToLower(name)
+
+	for _, criterionToken := range sensitiveAttributeTokens {
+		if name == criterionToken {
+			return true
+		}
+		if strings.Contains(name, criterionToken) {
+			for _, exclusionToken := range whitelistTokens {
+				if strings.HasSuffix(name, exclusionToken) {
+					return false
+				}
+			}
+			return true
+		}
+	}
+
+	return false
+}
