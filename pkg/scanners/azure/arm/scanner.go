@@ -106,8 +106,8 @@ func (s *Scanner) scanDeployments(ctx context.Context, deployments []azure.Deplo
 				continue
 			}
 			ruleResults := rule.Evaluate(cloudState)
+			s.debug.Log("Found %d results for %s", len(ruleResults), rule.Rule().AVDID)
 			if len(ruleResults) > 0 {
-				s.debug.Log("Found %d results for %s", len(ruleResults), rule.Rule().AVDID)
 				results = append(results, ruleResults...)
 			}
 		}
