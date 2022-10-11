@@ -150,7 +150,8 @@ func init() {
 			return false
 		}
 
-		return sniff.ContentType != "" && (sniff.Parameters != nil || sniff.Resources != nil)
+		return (sniff.Parameters != nil && len(sniff.Parameters) > 0) ||
+			(sniff.Resources != nil && len(sniff.Resources) > 0)
 	}
 
 	matchers[FileTypeDockerfile] = func(name string, _ io.ReadSeeker) bool {
