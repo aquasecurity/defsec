@@ -4,6 +4,7 @@ import (
 	"context"
 	"io/fs"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/azure/arm"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/scanners/helm"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
@@ -50,6 +51,7 @@ func New(opts ...options.ScannerOption) *Scanner {
 			yaml.NewScanner(opts...),
 			toml.NewScanner(opts...),
 			helm.New(opts...),
+			arm.New(opts...),
 		},
 		apiScanners: []nestableAPIScanners{
 			aws.New(opts...),
