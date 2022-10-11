@@ -2,13 +2,14 @@ package resolver
 
 import (
 	"testing"
+	"time"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/azure"
 	"github.com/aquasecurity/defsec/pkg/types"
 	"github.com/stretchr/testify/require"
 )
 
-func Test_resolveFormatFunc(t *testing.T) {
+func Test_resolveFunc(t *testing.T) {
 
 	tests := []struct {
 		name     string
@@ -39,6 +40,11 @@ func Test_resolveFormatFunc(t *testing.T) {
 			name:     "format with nested base64",
 			expr:     "format('the base64 of \"hello, world\" is {0}', base64('hello, world'))",
 			expected: "the base64 of \"hello, world\" is aGVsbG8sIHdvcmxk",
+		},
+		{
+			name:     "dateTimeAdd with add a day",
+			expr:     "dateTimeAdd(utcNow('yyyy-MM-dd'), 'P1D', 'yyyy-MM-dd')",
+			expected: time.Now().UTC().AddDate(0, 0, 1).Format("2006-01-02"),
 		},
 	}
 

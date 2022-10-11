@@ -23,6 +23,22 @@ func Test_CopyIndex(t *testing.T) {
 			args:     []interface{}{},
 			expected: 3,
 		},
+		{
+			name:     "CopyIndex with loopName",
+			args:     []interface{}{"loop1"},
+			expected: 1,
+		},
+		{
+			name: "CopyIndex with same lo" +
+				"opName",
+			args:     []interface{}{"loop1"},
+			expected: 2,
+		},
+		{
+			name:     "CopyIndex with loopName",
+			args:     []interface{}{"loop2", 10},
+			expected: 10,
+		},
 	}
 
 	for _, tt := range tests {
