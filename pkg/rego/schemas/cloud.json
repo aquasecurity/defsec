@@ -1184,6 +1184,10 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.ec2.VPC": {
       "type": "object",
       "properties": {
+        "flowlogsenabled": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
         "id": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
