@@ -1,6 +1,8 @@
 package azure
 
 import (
+	"os"
+
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 
@@ -52,10 +54,7 @@ type Decorator struct {
 type Scope string
 
 const (
-	ScopeResourceGroup   Scope = "resourceGroup"
-	ScopeSubscription    Scope = "subscription"
-	ScopeTenant          Scope = "tenant"
-	ScopeManagementGroup Scope = "managementGroup"
+	ScopeResourceGroup Scope = "resourceGroup"
 )
 
 func (d *Deployment) GetResourcesByType(t string) []Resource {
@@ -96,4 +95,85 @@ func (d *Deployment) GetVariable(variableName string) interface{} {
 		}
 	}
 	return nil
+}
+
+func (d *Deployment) GetEnvVariable(envVariableName string) interface{} {
+
+	if envVariable, exists := os.LookupEnv(envVariableName); exists {
+		return envVariable
+	}
+	return nil
+}
+
+func (d *Deployment) GetOutput(outputName string) interface{} {
+
+	for _, output := range d.Outputs {
+		if output.Name == outputName {
+			return output.Value.Raw()
+		}
+	}
+	return nil
+}
+
+func (d *Deployment) GetDeployment() interface{} {
+
+	type template struct {
+		Schema         string                 `json:"$schema"`
+		ContentVersion string                 `json:"contentVersion"`
+		Parameters     map[string]interface{} `json:"parameters"`
+		Variables      map[string]interface{} `json:"variables"`
+		Resources      []interface{}          `json:"resources"`
+		Outputs        map[string]interface{} `json:"outputs"`
+	}
+
+	type templateLink struct {
+		URI string `json:"uri"`
+	}
+
+	type properties struct {
+		TemplateLink      templateLink           `json:"templateLink"`
+		Template          template               `json:"template"`
+		TemplateHash      string                 `json:"templateHash"`
+		Parameters        map[string]interface{} `json:"parameters"`
+		Mode              string                 `json:"mode"`
+		ProvisioningState string                 `json:"provisioningState"`
+	}
+
+	deploymentShell := struct {
+		Name       string     `json:"name"`
+		Properties properties `json:"properties"`
+	}{
+		Name: "Placeholder Deployment",
+		Properties: properties{
+			TemplateLink: templateLink{
+				URI: "https://placeholder.com",
+			},
+			Template: template{
+				Schema:         "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+				ContentVersion: "",
+				Parameters:     make(map[string]interface{}),
+				Variables:      make(map[string]interface{}),
+				Resources:      make([]interface{}, 0),
+				Outputs:        make(map[string]interface{}),
+			},
+		},
+	}
+
+	for _, parameter := range d.Parameters {
+		deploymentShell.Properties.Template.Parameters[parameter.Name] = parameter.Value.Raw()
+	}
+
+	for _, variable := range d.Variables {
+		deploymentShell.Properties.Template.Variables[variable.Name] = variable.Value.Raw()
+	}
+
+	for _, resource := range d.Resources {
+		deploymentShell.Properties.Template.Resources = append(deploymentShell.Properties.Template.Resources, resource)
+	}
+
+	for _, output := range d.Outputs {
+		deploymentShell.Properties.Template.Outputs[output.Name] = output.Value.Raw()
+	}
+
+	return deploymentShell
 }
