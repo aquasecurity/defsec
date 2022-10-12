@@ -19,18 +19,20 @@ func adaptVPCs(modules terraform.Modules) []ec2.VPC {
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("aws_default_vpc") {
 			vpcs = append(vpcs, ec2.VPC{
-				Metadata:       resource.GetMetadata(),
-				ID:             defsecTypes.StringUnresolvable(resource.GetMetadata()),
-				IsDefault:      defsecTypes.Bool(true, resource.GetMetadata()),
-				SecurityGroups: nil,
+				Metadata:        resource.GetMetadata(),
+				ID:              defsecTypes.StringUnresolvable(resource.GetMetadata()),
+				IsDefault:       defsecTypes.Bool(true, resource.GetMetadata()),
+				SecurityGroups:  nil,
+				FlowLogsEnabled: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 			})
 		}
 		for _, resource := range module.GetResourcesByType("aws_vpc") {
 			vpcs = append(vpcs, ec2.VPC{
-				Metadata:       resource.GetMetadata(),
-				ID:             defsecTypes.StringUnresolvable(resource.GetMetadata()),
-				IsDefault:      defsecTypes.Bool(false, resource.GetMetadata()),
-				SecurityGroups: nil,
+				Metadata:        resource.GetMetadata(),
+				ID:              defsecTypes.StringUnresolvable(resource.GetMetadata()),
+				IsDefault:       defsecTypes.Bool(false, resource.GetMetadata()),
+				SecurityGroups:  nil,
+				FlowLogsEnabled: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 			})
 		}
 	}

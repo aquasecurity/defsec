@@ -1,5 +1,5 @@
 
-Ensure IAM Database Authentication is enabled for RDS database instances to manage database acces
+Ensure IAM Database Authentication is enabled for RDS database instances to manage database access
 
 ### Impact
 <!-- Add Impact here -->

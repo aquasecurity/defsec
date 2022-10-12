@@ -3,7 +3,7 @@ package ec2
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
 
@@ -14,39 +14,36 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCheckNoDefaultVpc(t *testing.T) {
+func TestCheckRequireVPCFlowLogs(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    ec2.EC2
 		expected bool
 	}{
 		{
-			name: "default AWS VPC",
+			name: "VPC without flow logs enabled",
 			input: ec2.EC2{
 				VPCs: []ec2.VPC{
 					{
-						Metadata:  types.NewTestMetadata(),
-						IsDefault: types.Bool(true, types.NewTestMetadata()),
+						Metadata:        defsecTypes.NewTestMetadata(),
+						ID:              defsecTypes.String("vpc-12345678", defsecTypes.NewTestMetadata()),
+						FlowLogsEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
 			expected: true,
 		},
 		{
-			name: "vpc but not default AWS VPC",
+			name: "VPC with flow logs enabled",
 			input: ec2.EC2{
 				VPCs: []ec2.VPC{
 					{
-						Metadata:  types.NewTestMetadata(),
-						IsDefault: types.Bool(false, types.NewTestMetadata()),
+						Metadata:        defsecTypes.NewTestMetadata(),
+						ID:              defsecTypes.String("vpc-12345678", defsecTypes.NewTestMetadata()),
+						FlowLogsEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
-			expected: false,
-		},
-		{
-			name:     "no default AWS VPC",
-			input:    ec2.EC2{},
 			expected: false,
 		},
 	}
@@ -54,10 +51,10 @@ func TestCheckNoDefaultVpc(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			var testState state.State
 			testState.AWS.EC2 = test.input
-			results := CheckNoDefaultVpc.Evaluate(&testState)
+			results := CheckRequireVPCFlowLogs.Evaluate(&testState)
 			var found bool
 			for _, result := range results {
-				if result.Status() == scan.StatusFailed && result.Rule().LongID() == CheckNoDefaultVpc.Rule().LongID() {
+				if result.Status() == scan.StatusFailed && result.Rule().LongID() == CheckRequireVPCFlowLogs.Rule().LongID() {
 					found = true
 				}
 			}

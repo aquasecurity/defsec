@@ -26,10 +26,11 @@ type SecurityGroupRule struct {
 }
 
 type VPC struct {
-	Metadata       defsecTypes.Metadata
-	ID             defsecTypes.StringValue
-	IsDefault      defsecTypes.BoolValue
-	SecurityGroups []SecurityGroup
+	Metadata        defsecTypes.Metadata
+	ID              defsecTypes.StringValue
+	IsDefault       defsecTypes.BoolValue
+	SecurityGroups  []SecurityGroup
+	FlowLogsEnabled defsecTypes.BoolValue
 }
 
 const (
