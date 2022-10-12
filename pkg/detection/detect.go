@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/azure/arm/parser/armjson"
+	"github.com/aquasecurity/defsec/pkg/types"
 	"gopkg.in/yaml.v3"
 )
 
@@ -23,6 +25,7 @@ const (
 	FileTypeTOML           FileType = "toml"
 	FileTypeJSON           FileType = "json"
 	FileTypeHelm           FileType = "helm"
+	FileTypeAzureARM       FileType = "azure-arm"
 )
 
 var matchers = map[FileType]func(name string, r io.ReadSeeker) bool{}
@@ -125,6 +128,30 @@ func init() {
 			return false
 		}
 		return sniff.Resources != nil
+	}
+
+	matchers[FileTypeAzureARM] = func(name string, r io.ReadSeeker) bool {
+
+		if resetReader(r) == nil {
+			return false
+		}
+
+		data, err := io.ReadAll(r)
+		if err != nil {
+			return false
+		}
+		sniff := struct {
+			ContentType string                 `json:"contentType"`
+			Parameters  map[string]interface{} `json:"parameters"`
+			Resources   []interface{}          `json:"resources"`
+		}{}
+		metadata := types.NewUnmanagedMetadata()
+		if err := armjson.Unmarshal(data, &sniff, &metadata); err != nil {
+			return false
+		}
+
+		return (sniff.Parameters != nil && len(sniff.Parameters) > 0) ||
+			(sniff.Resources != nil && len(sniff.Resources) > 0)
 	}
 
 	matchers[FileTypeDockerfile] = func(name string, _ io.ReadSeeker) bool {

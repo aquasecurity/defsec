@@ -2,13 +2,17 @@ package arm
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"io/fs"
+	"sync"
 
 	"github.com/aquasecurity/defsec/internal/adapters/arm"
+	"github.com/aquasecurity/defsec/pkg/rego"
 	"github.com/aquasecurity/defsec/pkg/rules"
 	"github.com/aquasecurity/defsec/pkg/scanners/azure"
 	"github.com/aquasecurity/defsec/pkg/state"
+	"github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
 
@@ -28,6 +32,13 @@ type Scanner struct {
 	parserOptions  []options.ParserOption
 	debug          debug.Logger
 	frameworks     []framework.Framework
+	skipRequired   bool
+	regoOnly       bool
+	loadEmbedded   bool
+	policyDirs     []string
+	policyReaders  []io.Reader
+	regoScanner    *rego.Scanner
+	sync.Mutex
 }
 
 func New(opts ...options.ScannerOption) *Scanner {
@@ -41,18 +52,7 @@ func New(opts ...options.ScannerOption) *Scanner {
 }
 
 func (s *Scanner) Name() string {
-	// TODO implement me
-	panic("implement me")
-}
-
-func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, dir string) (scan.Results, error) {
-	// TODO implement me
-	p := parser.New(fs, s.parserOptions...)
-	deployments, err := p.ParseFS(ctx, dir)
-	if err != nil {
-		return nil, err
-	}
-	return s.scanDeployments(ctx, deployments)
+	return "Azure ARM"
 }
 
 func (s *Scanner) SetDebugWriter(writer io.Writer) {
@@ -60,62 +60,82 @@ func (s *Scanner) SetDebugWriter(writer io.Writer) {
 	s.parserOptions = append(s.parserOptions, options.ParserWithDebug(writer))
 }
 
-func (s *Scanner) SetTraceWriter(writer io.Writer) {
-	// TODO implement me
-	panic("implement me")
+func (s *Scanner) SetPolicyDirs(dirs ...string) {
+	s.policyDirs = dirs
 }
 
-func (s *Scanner) SetPerResultTracingEnabled(b bool) {
-	// TODO implement me
-	panic("implement me")
+func (s *Scanner) SetSkipRequiredCheck(skipRequired bool) {
+	s.skipRequired = skipRequired
 }
-
-func (s *Scanner) SetPolicyDirs(s2 ...string) {
-	// TODO implement me
-	panic("implement me")
-}
-
-func (s *Scanner) SetDataDirs(s2 ...string) {
-	// TODO implement me
-	panic("implement me")
-}
-
-func (s *Scanner) SetPolicyNamespaces(s2 ...string) {
-	// TODO implement me
-	panic("implement me")
-}
-
-func (s *Scanner) SetSkipRequiredCheck(b bool) {
-	// TODO implement me
-	panic("implement me")
-}
-
 func (s *Scanner) SetPolicyReaders(readers []io.Reader) {
-	// TODO implement me
-	panic("implement me")
+	s.policyReaders = readers
 }
 
-func (s *Scanner) SetPolicyFilesystem(fs fs.FS) {
-	// TODO implement me
-	panic("implement me")
+func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
+	// handled by rego when option is passed on
 }
 
-func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
-	// TODO implement me
-	panic("implement me")
+func (s *Scanner) SetUseEmbeddedPolicies(loadEmbedded bool) {
+	s.loadEmbedded = loadEmbedded
 }
 
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 	s.frameworks = frameworks
 }
 
-func (s *Scanner) scanDeployments(ctx context.Context, deployments []azure.Deployment) (scan.Results, error) {
+func (s *Scanner) SetTraceWriter(io.Writer)        {}
+func (s *Scanner) SetPerResultTracingEnabled(bool) {}
+func (s *Scanner) SetDataDirs(...string)           {}
+func (s *Scanner) SetPolicyNamespaces(...string)   {}
+
+func (s *Scanner) initRegoScanner(srcFS fs.FS) error {
+	s.Lock()
+	defer s.Unlock()
+	if s.regoScanner != nil {
+		return nil
+	}
+	regoScanner := rego.NewScanner(types.SourceCloud, s.scannerOptions...)
+	regoScanner.SetParentDebugLogger(s.debug)
+	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
+		return err
+	}
+	s.regoScanner = regoScanner
+	return nil
+}
+
+func (s *Scanner) ScanFS(ctx context.Context, fs fs.FS, dir string) (scan.Results, error) {
+	p := parser.New(fs, s.parserOptions...)
+	deployments, err := p.ParseFS(ctx, dir)
+	if err != nil {
+		return nil, err
+	}
+	if err := s.initRegoScanner(fs); err != nil {
+		return nil, err
+	}
+
+	return s.scanDeployments(ctx, deployments, fs)
+}
+
+func (s *Scanner) scanDeployments(ctx context.Context, deployments []azure.Deployment, f fs.FS) (scan.Results, error) {
 
 	var results scan.Results
 
 	for _, deployment := range deployments {
-		// TODO: adapt each deployment into a state
-		cloudState := s.adaptDeployment(ctx, deployment)
+
+		result, err := s.scanDeployment(ctx, deployment, f)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, result...)
+	}
+
+	return results, nil
+}
+
+func (s *Scanner) scanDeployment(ctx context.Context, deployment azure.Deployment, fs fs.FS) (scan.Results, error) {
+	var results scan.Results
+	deploymentState := s.adaptDeployment(ctx, deployment)
+	if !s.regoOnly {
 		for _, rule := range rules.GetRegistered(s.frameworks...) {
 			select {
 			case <-ctx.Done():
@@ -125,15 +145,24 @@ func (s *Scanner) scanDeployments(ctx context.Context, deployments []azure.Deplo
 			if rule.Rule().RegoPackage != "" {
 				continue
 			}
-			ruleResults := rule.Evaluate(cloudState)
+			ruleResults := rule.Evaluate(deploymentState)
+			s.debug.Log("Found %d results for %s", len(ruleResults), rule.Rule().AVDID)
 			if len(ruleResults) > 0 {
-				s.debug.Log("Found %d results for %s", len(ruleResults), rule.Rule().AVDID)
 				results = append(results, ruleResults...)
 			}
 		}
 	}
 
-	return results, nil
+	regoResults, err := s.regoScanner.ScanInput(ctx, rego.Input{
+		Path:     deployment.Metadata.Range().GetFilename(),
+		FS:       fs,
+		Contents: deploymentState.ToRego(),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("rego scan error: %w", err)
+	}
+
+	return append(results, regoResults...), nil
 }
 
 func (s *Scanner) adaptDeployment(ctx context.Context, deployment azure.Deployment) *state.State {

@@ -118,7 +118,9 @@ func (r *Result) GetCode(opts ...CodeOption) (*Code, error) {
 	outerRange := innerRange
 	metadata := r.Metadata()
 	for {
-		if parent := metadata.Parent(); parent != nil && parent.Range().GetFilename() == metadata.Range().GetFilename() {
+		if parent := metadata.Parent(); parent != nil &&
+			parent.Range().GetFilename() == metadata.Range().GetFilename() &&
+			parent.Range().GetStartLine() > 0 {
 			outerRange = parent.Range()
 			metadata = *parent
 			continue
