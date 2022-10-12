@@ -10,7 +10,7 @@ import (
 
 var CheckRequireVPCFlowLogs = rules.Register(
 	scan.Rule{
-		AVDID:       "AVD-AWS-0164",
+		AVDID:       "AVD-AWS-0178",
 		Aliases:     []string{"aws-autoscaling-enable-at-rest-encryption"},
 		Provider:    providers.AWSProvider,
 		Service:     "ec2",

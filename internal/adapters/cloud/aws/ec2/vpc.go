@@ -152,16 +152,12 @@ func (a *adapter) adaptVPC(v types.Vpc) (*ec2.VPC, error) {
 		Metadata:        vpcMetadata,
 		ID:              defsecTypes.String(*v.VpcId, vpcMetadata),
 		IsDefault:       defsecTypes.BoolDefault(false, vpcMetadata),
-		CIDRBlock:       defsecTypes.String("", vpcMetadata),
 		FlowLogsEnabled: defsecTypes.BoolDefault(false, vpcMetadata),
 		SecurityGroups:  nil, // we link these up afterwards
 	}
 
 	if v.IsDefault != nil {
 		vpc.IsDefault = defsecTypes.BoolDefault(*v.IsDefault, vpcMetadata)
-	}
-	if v.CidrBlock != nil {
-		vpc.CIDRBlock = defsecTypes.String(*v.CidrBlock, vpcMetadata)
 	}
 
 	logs, err := a.client.DescribeFlowLogs(a.Context(), &ec2api.DescribeFlowLogsInput{

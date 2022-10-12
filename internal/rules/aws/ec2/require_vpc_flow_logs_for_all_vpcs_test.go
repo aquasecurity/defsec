@@ -27,7 +27,6 @@ func TestCheckRequireVPCFlowLogs(t *testing.T) {
 					{
 						Metadata:        defsecTypes.NewTestMetadata(),
 						ID:              defsecTypes.String("vpc-12345678", defsecTypes.NewTestMetadata()),
-						CIDRBlock:       defsecTypes.String("0.0.0.0/0", defsecTypes.NewTestMetadata()),
 						FlowLogsEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					},
 				},
@@ -41,7 +40,6 @@ func TestCheckRequireVPCFlowLogs(t *testing.T) {
 					{
 						Metadata:        defsecTypes.NewTestMetadata(),
 						ID:              defsecTypes.String("vpc-12345678", defsecTypes.NewTestMetadata()),
-						CIDRBlock:       defsecTypes.String("0.0.0.0/0", defsecTypes.NewTestMetadata()),
 						FlowLogsEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
