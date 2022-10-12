@@ -23,7 +23,6 @@ func adaptVPCs(modules terraform.Modules) []ec2.VPC {
 				ID:              defsecTypes.StringUnresolvable(resource.GetMetadata()),
 				IsDefault:       defsecTypes.Bool(true, resource.GetMetadata()),
 				SecurityGroups:  nil,
-				CIDRBlock:       defsecTypes.StringDefault("", resource.GetMetadata()),
 				FlowLogsEnabled: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 			})
 		}
@@ -33,7 +32,6 @@ func adaptVPCs(modules terraform.Modules) []ec2.VPC {
 				ID:              defsecTypes.StringUnresolvable(resource.GetMetadata()),
 				IsDefault:       defsecTypes.Bool(false, resource.GetMetadata()),
 				SecurityGroups:  nil,
-				CIDRBlock:       defsecTypes.StringDefault("", resource.GetMetadata()),
 				FlowLogsEnabled: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 			})
 		}
