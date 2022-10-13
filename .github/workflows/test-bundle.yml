@@ -1,0 +1,23 @@
+name: test rego
+on:
+  pull_request:
+env:
+  GO_VERSION: "1.18"
+jobs:
+  opa-tests:
+    name: OPA tests
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Build bundle
+        run: make bundle
+      - name: Setup OPA
+        run: |
+          curl -L -o opa_linux_amd64 https://openpolicyagent.org/downloads/latest/opa_linux_amd64
+          curl -L -o checksum https://openpolicyagent.org/downloads/latest/opa_linux_amd64.sha256
+          sha256sum -c checksum
+          chmod 755 ./opa_linux_amd64
+          sudo mv ./opa_linux_amd64 /usr/local/bin/opa
+      - name: Check bundle
+        run: opa inspect bundle.tar.gz

@@ -40,7 +40,7 @@ func Test_ManifestValidity(t *testing.T) {
 
 	require.Equal(t, "[GITHUB_SHA]", m.Revision)
 	require.Len(t, m.Roots, 1)
-	require.Equal(t, "policies", m.Roots[0])
+	require.Equal(t, "", m.Roots[0])
 
 	cmd := exec.Command("scripts/bundle.sh")
 	cmd.Env = append(os.Environ(), "GITHUB_REF=refs/tags/v1.2.3")
@@ -84,7 +84,7 @@ func Test_ManifestValidity(t *testing.T) {
 	require.NoError(t, json.NewDecoder(mf).Decode(&m2))
 	assert.Equal(t, "1.2.3", m2.Revision)
 	assert.Len(t, m2.Roots, 1)
-	assert.Equal(t, "policies", m2.Roots[0])
+	assert.Equal(t, "", m2.Roots[0])
 
 	policies, err := mfs.ReadDir("./policies")
 	require.NoError(t, err)
