@@ -1,4 +1,4 @@
-name: test rego
+name: test rego bundle
 on:
   pull_request:
 env:
