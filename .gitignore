@@ -16,3 +16,5 @@ vendor/
 .idea/
 *.iml
 .vscode/
+bundle/
+bundle.tar.gz
