@@ -1,4 +1,4 @@
 {
   "revision" : "[GITHUB_SHA]",
-  "roots": ["policies]
+  "roots": ["policies"]
 }

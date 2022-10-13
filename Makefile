@@ -68,3 +68,7 @@ adapter-lint:
 .PHONY: outdated-api-updated
 outdated-api-updated:
 	sed -i.bak "s|recommendedVersions :=.*|recommendedVersions := $(OUTDATE_API_DATA)|" $(DYNAMIC_REGO_FOLDER)/outdated_api.rego && rm $(DYNAMIC_REGO_FOLDER)/outdated_api.rego.bak
+
+.PHONY: bundle
+bundle:
+	./scripts/bundle.sh
