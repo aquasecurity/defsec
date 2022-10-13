@@ -43,6 +43,8 @@ type Scanner struct {
 	sourceType     types.Source
 }
 
+func (s *Scanner) SetRegoOnly(bool) {}
+
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 	s.frameworks = frameworks
 }

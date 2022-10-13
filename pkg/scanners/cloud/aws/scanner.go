@@ -49,6 +49,9 @@ type Scanner struct {
 	useEmbedded         bool
 }
 
+func (s *Scanner) SetRegoOnly(bool) {
+}
+
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 	s.frameworks = frameworks
 }

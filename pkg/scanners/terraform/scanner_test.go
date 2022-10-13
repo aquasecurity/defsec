@@ -197,7 +197,7 @@ deny[cause] {
 		options.ScannerWithDebug(debugLog),
 		options.ScannerWithPolicyFilesystem(fs),
 		options.ScannerWithPolicyDirs("rules"),
-		ScannerWithRegoOnly(true),
+		options.ScannerWithRegoOnly(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
@@ -401,7 +401,7 @@ deny[cause] {
 	scanner := New(
 		options.ScannerWithDebug(debugLog),
 		options.ScannerWithPolicyDirs("rules"),
-		ScannerWithRegoOnly(true),
+		options.ScannerWithRegoOnly(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
@@ -455,7 +455,7 @@ deny[res] {
 	scanner := New(
 		options.ScannerWithDebug(debugLog),
 		options.ScannerWithPolicyDirs("rules"),
-		ScannerWithRegoOnly(true),
+		options.ScannerWithRegoOnly(true),
 		ScannerWithEmbeddedLibraries(true),
 	)
 
@@ -527,7 +527,7 @@ deny[res] {
 		options.ScannerWithDebug(debugLog),
 		options.ScannerWithTrace(debugLog),
 		options.ScannerWithPolicyDirs("rules"),
-		ScannerWithRegoOnly(true),
+		options.ScannerWithRegoOnly(true),
 		ScannerWithEmbeddedLibraries(true),
 	)
 
@@ -619,7 +619,7 @@ deny[res] {
 	scanner := New(
 		options.ScannerWithDebug(debugLog),
 		options.ScannerWithPolicyDirs("rules"),
-		ScannerWithRegoOnly(true),
+		options.ScannerWithRegoOnly(true),
 		ScannerWithEmbeddedLibraries(true),
 	)
 
@@ -861,7 +861,7 @@ deny[res] {
 		options.ScannerWithDebug(debugLog),
 		options.ScannerWithPolicyFilesystem(fs),
 		options.ScannerWithPolicyDirs("rules"),
-		ScannerWithRegoOnly(true),
+		options.ScannerWithRegoOnly(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")

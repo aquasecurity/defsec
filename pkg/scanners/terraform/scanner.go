@@ -51,6 +51,10 @@ type Scanner struct {
 	frameworks   []framework.Framework
 }
 
+func (s *Scanner) SetRegoOnly(regoOnly bool) {
+	s.executorOpt = append(s.executorOpt, executor.OptionWithRegoOnly(regoOnly))
+}
+
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 	s.frameworks = frameworks
 }

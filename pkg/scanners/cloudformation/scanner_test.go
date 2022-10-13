@@ -60,7 +60,7 @@ deny[res] {
 `,
 	})
 
-	scanner := New(options.ScannerWithPolicyDirs("rules"), ScannerWithRegoOnly(true))
+	scanner := New(options.ScannerWithPolicyDirs("rules"), options.ScannerWithRegoOnly(true))
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
 	require.NoError(t, err)

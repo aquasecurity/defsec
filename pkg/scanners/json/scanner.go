@@ -38,6 +38,9 @@ type Scanner struct {
 	frameworks   []framework.Framework
 }
 
+func (s *Scanner) SetRegoOnly(bool) {
+}
+
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 	s.frameworks = frameworks
 }

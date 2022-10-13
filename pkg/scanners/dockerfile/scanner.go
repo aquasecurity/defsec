@@ -36,6 +36,9 @@ type Scanner struct {
 	sync.Mutex
 }
 
+func (s *Scanner) SetRegoOnly(bool) {
+}
+
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 	s.frameworks = frameworks
 }
