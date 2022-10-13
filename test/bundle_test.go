@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"encoding/json"
+	"errors"
 	"io"
 	"os"
 	"os/exec"
@@ -58,7 +59,7 @@ func Test_ManifestValidity(t *testing.T) {
 
 	for {
 		header, err := tarReader.Next()
-		if err == io.EOF {
+		if errors.Is(err, io.EOF) {
 			break
 		}
 		require.NoError(t, err)
@@ -68,7 +69,7 @@ func Test_ManifestValidity(t *testing.T) {
 			require.NoError(t, mfs.MkdirAll(header.Name, 0755))
 		case tar.TypeReg:
 			buffer := bytes.NewBuffer([]byte{})
-			_, err = io.Copy(buffer, tarReader)
+			_, err = io.CopyN(buffer, tarReader, header.Size)
 			require.NoError(t, err)
 			require.NoError(t, mfs.WriteFile(header.Name, buffer.Bytes(), 0644))
 		default:
