@@ -26,7 +26,6 @@ import (
 )
 
 var _ scanners.FSScanner = (*Scanner)(nil)
-var _ ConfigurableCloudFormationScanner = (*Scanner)(nil)
 
 type Scanner struct {
 	debug         debug.Logger

@@ -193,14 +193,6 @@ func ScannerWithDownloadsAllowed(allowed bool) options.ScannerOption {
 	}
 }
 
-func ScannerWithRegoOnly(regoOnly bool) options.ScannerOption {
-	return func(s options.ConfigurableScanner) {
-		if tf, ok := s.(ConfigurableTerraformScanner); ok {
-			tf.AddExecutorOptions(executor.OptionWithRegoOnly(regoOnly))
-		}
-	}
-}
-
 func ScannerWithEmbeddedLibraries(embedded bool) options.ScannerOption {
 	return func(s options.ConfigurableScanner) {
 		if tf, ok := s.(ConfigurableTerraformScanner); ok {

@@ -41,6 +41,10 @@ type Scanner struct {
 	sync.Mutex
 }
 
+func (s *Scanner) SetRegoOnly(regoOnly bool) {
+	s.regoOnly = regoOnly
+}
+
 func New(opts ...options.ScannerOption) *Scanner {
 	scanner := &Scanner{
 		scannerOptions: opts,
