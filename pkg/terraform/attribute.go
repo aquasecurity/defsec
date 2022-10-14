@@ -376,6 +376,10 @@ func (a *Attribute) listContains(val cty.Value, stringToLookFor string, ignoreCa
 
 	valueSlice := val.AsValueSlice()
 	for _, value := range valueSlice {
+		if value.IsNull() || !value.IsKnown() {
+			// there is nothing we can do with this value
+			continue
+		}
 		stringToTest := value
 		if value.Type().IsObjectType() || value.Type().IsMapType() {
 			valueMap := value.AsValueMap()
