@@ -96,16 +96,16 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 		s.debug.Log("Overriding filesystem for policies!")
 		srcFS = s.policyFS
 	}
-	loadedLibs, errLoad := loadEmbeddedLibraries()
-	if errLoad != nil {
-		return fmt.Errorf("failed to load embedded rego libraries: %w", errLoad)
-	}
-	for name, policy := range loadedLibs {
-		s.policies[name] = policy
-	}
-	s.debug.Log("Loaded %d embedded libraries.", len(loadedLibs))
 
 	if loadEmbedded {
+		loadedLibs, errLoad := loadEmbeddedLibraries()
+		if errLoad != nil {
+			return fmt.Errorf("failed to load embedded rego libraries: %w", errLoad)
+		}
+		for name, policy := range loadedLibs {
+			s.policies[name] = policy
+		}
+		s.debug.Log("Loaded %d embedded libraries.", len(loadedLibs))
 		loaded, err := loadEmbeddedPolicies()
 		if err != nil {
 			return fmt.Errorf("failed to load embedded rego policies: %w", err)
