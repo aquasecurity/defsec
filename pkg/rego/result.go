@@ -106,6 +106,19 @@ func parseLineNumber(raw interface{}) int {
 
 func (s *Scanner) convertResults(set rego.ResultSet, input Input, namespace string, rule string, traces []string) scan.Results {
 	var results scan.Results
+
+	offset := 0
+	if input.Contents != nil {
+		if xx, ok := input.Contents.(map[string]interface{}); ok {
+			if md, ok := xx["__defsec_metadata"]; ok {
+				if md2, ok := md.(map[string]interface{}); ok {
+					if sl, ok := md2["offset"]; ok {
+						offset, _ = sl.(int)
+					}
+				}
+			}
+		}
+	}
 	for _, result := range set {
 		for _, expression := range result.Expressions {
 			values, ok := expression.Value.([]interface{})
@@ -118,6 +131,8 @@ func (s *Scanner) convertResults(set rego.ResultSet, input Input, namespace stri
 				if regoResult.Message == "" {
 					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
 				}
+				regoResult.StartLine += offset
+				regoResult.EndLine += offset
 				results.AddRego(regoResult.Message, namespace, rule, traces, regoResult)
 				continue
 			}
@@ -131,6 +146,8 @@ func (s *Scanner) convertResults(set rego.ResultSet, input Input, namespace stri
 				if regoResult.Message == "" {
 					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
 				}
+				regoResult.StartLine += offset
+				regoResult.EndLine += offset
 				results.AddRego(regoResult.Message, namespace, rule, traces, regoResult)
 			}
 		}

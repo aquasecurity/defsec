@@ -202,6 +202,46 @@ spec:
 	assert.Greater(t, len(results.GetFailed()), 0)
 }
 
+func Test_FileScan_MultiManifests(t *testing.T) {
+	file := `
+---
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: hello1-cpu-limit
+spec: 
+  containers: 
+  - command: ["sh", "-c", "echo 'Hello1' && sleep 1h"]
+    image: busybox
+    name: hello1
+---
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: hello2-cpu-limit
+spec: 
+  containers: 
+  - command: ["sh", "-c", "echo 'Hello2' && sleep 1h"]
+    image: busybox
+    name: hello2
+`
+
+	results, err := NewScanner(options.ScannerWithEmbeddedPolicies(true)).ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(file))
+	require.NoError(t, err)
+
+	assert.Greater(t, len(results.GetFailed()), 1)
+	fileLines := strings.Split(file, "\n")
+	for _, failure := range results.GetFailed() {
+		actualCode, err := failure.GetCode()
+		require.NoError(t, err)
+		assert.Greater(t, len(actualCode.Lines), 0)
+		for _, line := range actualCode.Lines {
+			assert.Greater(t, len(fileLines), line.Number)
+			assert.Equal(t, line.Content, fileLines[line.Number-1])
+		}
+	}
+}
+
 func Test_FileScanWithPolicyReader(t *testing.T) {
 
 	results, err := NewScanner(options.ScannerWithPolicyReader(strings.NewReader(`package defsec
