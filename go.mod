@@ -64,12 +64,12 @@ require (
 	github.com/owenrumney/go-sarif/v2 v2.1.2
 	github.com/owenrumney/squealer v1.0.1-0.20220510063705-c0be93f0edea
 	github.com/sirupsen/logrus v1.9.0
-	github.com/spf13/cobra v1.5.0
+	github.com/spf13/cobra v1.6.0
 	github.com/stretchr/testify v1.8.0
 	github.com/zclconf/go-cty v1.10.0
 	github.com/zclconf/go-cty-yaml v1.0.2
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e
-	golang.org/x/text v0.3.7
+	golang.org/x/text v0.3.8
 	golang.org/x/tools v0.1.12
 	gopkg.in/yaml.v3 v3.0.1
 	helm.sh/helm/v3 v3.10.0
@@ -161,7 +161,7 @@ require (
 	github.com/hashicorp/go-version v1.2.0 // indirect
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/imdario/mergo v0.3.12 // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/jmoiron/sqlx v1.3.5 // indirect

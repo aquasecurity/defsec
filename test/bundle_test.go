@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -24,6 +25,9 @@ type manifest struct {
 }
 
 func Test_ManifestValidity(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("Skipping on windows as it doesn't build a bundle on Windows anyway")
+	}
 
 	_ = os.RemoveAll("../bundle")
 	_ = os.Remove("../bundle.tar.gz")
