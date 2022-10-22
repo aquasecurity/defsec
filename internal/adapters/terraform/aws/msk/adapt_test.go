@@ -31,6 +31,7 @@ func Test_adaptCluster(t *testing.T) {
 						client_broker = "TLS"
 						in_cluster = true
 					}
+					encryption_at_rest_kms_key_arn = "foo-bar-key"
 				}
 			  
 				logging_info {
@@ -57,6 +58,11 @@ func Test_adaptCluster(t *testing.T) {
 				EncryptionInTransit: msk.EncryptionInTransit{
 					Metadata:     defsecTypes.NewTestMetadata(),
 					ClientBroker: defsecTypes.String("TLS", defsecTypes.NewTestMetadata()),
+				},
+				EncryptionAtRest: msk.EncryptionAtRest{
+					Metadata:  defsecTypes.NewTestMetadata(),
+					KMSKeyARN: defsecTypes.String("foo-bar-key", defsecTypes.NewTestMetadata()),
+					Enabled:   defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 				Logging: msk.Logging{
 					Metadata: defsecTypes.NewTestMetadata(),
@@ -131,6 +137,7 @@ func TestLines(t *testing.T) {
 				client_broker = "TLS"
 				in_cluster = true
 			}
+			encryption_at_rest_kms_key_arn = "foo-bar-key"	
 		}
 	  
 		logging_info {
@@ -159,32 +166,35 @@ func TestLines(t *testing.T) {
 	cluster := adapted.Clusters[0]
 
 	assert.Equal(t, 2, cluster.Metadata.Range().GetStartLine())
-	assert.Equal(t, 29, cluster.Metadata.Range().GetEndLine())
+	assert.Equal(t, 30, cluster.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 6, cluster.EncryptionInTransit.Metadata.Range().GetStartLine())
 	assert.Equal(t, 9, cluster.EncryptionInTransit.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 12, cluster.Logging.Metadata.Range().GetStartLine())
-	assert.Equal(t, 28, cluster.Logging.Metadata.Range().GetEndLine())
+	assert.Equal(t, 10, cluster.EncryptionAtRest.Metadata.Range().GetStartLine())
+	assert.Equal(t, 10, cluster.EncryptionAtRest.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 13, cluster.Logging.Broker.Metadata.Range().GetStartLine())
-	assert.Equal(t, 27, cluster.Logging.Broker.Metadata.Range().GetEndLine())
+	assert.Equal(t, 13, cluster.Logging.Metadata.Range().GetStartLine())
+	assert.Equal(t, 29, cluster.Logging.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 14, cluster.Logging.Broker.Cloudwatch.Metadata.Range().GetStartLine())
-	assert.Equal(t, 17, cluster.Logging.Broker.Cloudwatch.Metadata.Range().GetEndLine())
+	assert.Equal(t, 14, cluster.Logging.Broker.Metadata.Range().GetStartLine())
+	assert.Equal(t, 28, cluster.Logging.Broker.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 15, cluster.Logging.Broker.Cloudwatch.Enabled.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 15, cluster.Logging.Broker.Cloudwatch.Enabled.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 15, cluster.Logging.Broker.Cloudwatch.Metadata.Range().GetStartLine())
+	assert.Equal(t, 18, cluster.Logging.Broker.Cloudwatch.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 18, cluster.Logging.Broker.Firehose.Metadata.Range().GetStartLine())
-	assert.Equal(t, 21, cluster.Logging.Broker.Firehose.Metadata.Range().GetEndLine())
+	assert.Equal(t, 16, cluster.Logging.Broker.Cloudwatch.Enabled.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 16, cluster.Logging.Broker.Cloudwatch.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 19, cluster.Logging.Broker.Firehose.Enabled.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 19, cluster.Logging.Broker.Firehose.Enabled.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 19, cluster.Logging.Broker.Firehose.Metadata.Range().GetStartLine())
+	assert.Equal(t, 22, cluster.Logging.Broker.Firehose.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 22, cluster.Logging.Broker.S3.Metadata.Range().GetStartLine())
-	assert.Equal(t, 26, cluster.Logging.Broker.S3.Metadata.Range().GetEndLine())
+	assert.Equal(t, 20, cluster.Logging.Broker.Firehose.Enabled.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 20, cluster.Logging.Broker.Firehose.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 23, cluster.Logging.Broker.S3.Enabled.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 23, cluster.Logging.Broker.S3.Enabled.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 23, cluster.Logging.Broker.S3.Metadata.Range().GetStartLine())
+	assert.Equal(t, 27, cluster.Logging.Broker.S3.Metadata.Range().GetEndLine())
+
+	assert.Equal(t, 24, cluster.Logging.Broker.S3.Enabled.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 24, cluster.Logging.Broker.S3.Enabled.GetMetadata().Range().GetEndLine())
 }

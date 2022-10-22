@@ -11,6 +11,7 @@ type MSK struct {
 type Cluster struct {
 	Metadata            defsecTypes.Metadata
 	EncryptionInTransit EncryptionInTransit
+	EncryptionAtRest    EncryptionAtRest
 	Logging             Logging
 }
 
@@ -23,6 +24,12 @@ const (
 type EncryptionInTransit struct {
 	Metadata     defsecTypes.Metadata
 	ClientBroker defsecTypes.StringValue
+}
+
+type EncryptionAtRest struct {
+	Metadata  defsecTypes.Metadata
+	KMSKeyARN defsecTypes.StringValue
+	Enabled   defsecTypes.BoolValue
 }
 
 type Logging struct {

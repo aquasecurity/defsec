@@ -29,6 +29,11 @@ func adaptCluster(resource *terraform.Block) msk.Cluster {
 			Metadata:     resource.GetMetadata(),
 			ClientBroker: defsecTypes.StringDefault("TLS_PLAINTEXT", resource.GetMetadata()),
 		},
+		EncryptionAtRest: msk.EncryptionAtRest{
+			Metadata:  resource.GetMetadata(),
+			KMSKeyARN: defsecTypes.StringDefault("", resource.GetMetadata()),
+			Enabled:   defsecTypes.BoolDefault(false, resource.GetMetadata()),
+		},
 		Logging: msk.Logging{
 			Metadata: resource.GetMetadata(),
 			Broker: msk.BrokerLogging{
@@ -55,6 +60,12 @@ func adaptCluster(resource *terraform.Block) msk.Cluster {
 			if clientBrokerAttr := encryptionInTransitBlock.GetAttribute("client_broker"); clientBrokerAttr.IsNotNil() {
 				cluster.EncryptionInTransit.ClientBroker = clientBrokerAttr.AsStringValueOrDefault("TLS", encryptionInTransitBlock)
 			}
+		}
+
+		if encryptionAtRestAttr := encryptBlock.GetAttribute("encryption_at_rest_kms_key_arn"); encryptionAtRestAttr.IsNotNil() {
+			cluster.EncryptionAtRest.Metadata = encryptionAtRestAttr.GetMetadata()
+			cluster.EncryptionAtRest.KMSKeyARN = encryptionAtRestAttr.AsStringValueOrDefault("", encryptBlock)
+			cluster.EncryptionAtRest.Enabled = defsecTypes.Bool(true, encryptionAtRestAttr.GetMetadata())
 		}
 	}
 
