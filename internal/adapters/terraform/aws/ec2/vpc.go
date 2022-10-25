@@ -18,25 +18,31 @@ func adaptVPCs(modules terraform.Modules) []ec2.VPC {
 	var vpcs []ec2.VPC
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("aws_default_vpc") {
-			vpcs = append(vpcs, ec2.VPC{
-				Metadata:        resource.GetMetadata(),
-				ID:              defsecTypes.StringUnresolvable(resource.GetMetadata()),
-				IsDefault:       defsecTypes.Bool(true, resource.GetMetadata()),
-				SecurityGroups:  nil,
-				FlowLogsEnabled: defsecTypes.BoolDefault(false, resource.GetMetadata()),
-			})
+			vpcs = append(vpcs, adaptVPC(modules, resource, true))
 		}
 		for _, resource := range module.GetResourcesByType("aws_vpc") {
-			vpcs = append(vpcs, ec2.VPC{
-				Metadata:        resource.GetMetadata(),
-				ID:              defsecTypes.StringUnresolvable(resource.GetMetadata()),
-				IsDefault:       defsecTypes.Bool(false, resource.GetMetadata()),
-				SecurityGroups:  nil,
-				FlowLogsEnabled: defsecTypes.BoolDefault(false, resource.GetMetadata()),
-			})
+			vpcs = append(vpcs, adaptVPC(modules, resource, false))
 		}
 	}
 	return vpcs
+}
+
+func adaptVPC(modules terraform.Modules, block *terraform.Block, def bool) ec2.VPC {
+	var hasFlowLogs bool
+	for _, flow := range modules.GetResourcesByType("aws_flow_log") {
+		vpcAttr := flow.GetAttribute("vpc_id")
+		if vpcAttr.ReferencesBlock(block) {
+			hasFlowLogs = true
+			break
+		}
+	}
+	return ec2.VPC{
+		Metadata:        block.GetMetadata(),
+		ID:              defsecTypes.StringUnresolvable(block.GetMetadata()),
+		IsDefault:       defsecTypes.Bool(def, block.GetMetadata()),
+		SecurityGroups:  nil,
+		FlowLogsEnabled: defsecTypes.BoolDefault(hasFlowLogs, block.GetMetadata()),
+	}
 }
 
 func (a *sgAdapter) adaptSecurityGroups(modules terraform.Modules) []ec2.SecurityGroup {
