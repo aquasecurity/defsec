@@ -126,10 +126,6 @@ func addFilesToMemFS(memfs *memoryfs.FS, typePolicy bool, folderName string) err
 			if typePolicy && !isRegoFile(info.Name()) {
 				return nil
 			}
-			// ignore embedded lib rego to avoid duplicate default definition
-			if strings.Contains(fpath, filepath.FromSlash("/lib/")) {
-				return nil
-			}
 			data, err := os.ReadFile(fpath)
 			if err != nil {
 				return err
