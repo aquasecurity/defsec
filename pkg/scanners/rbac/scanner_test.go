@@ -475,8 +475,8 @@ rules:
 	assert.Greater(t, len(results.GetFailed()), 0)
 
 	firstResult := results.GetFailed()[0]
-	assert.Equal(t, 2, firstResult.Metadata().Range().GetStartLine())
-	assert.Equal(t, 2, firstResult.Metadata().Range().GetEndLine())
+	assert.Equal(t, 4, firstResult.Metadata().Range().GetStartLine())
+	assert.Equal(t, 4, firstResult.Metadata().Range().GetEndLine())
 	assert.Equal(t, "chartname/template/serviceAccount.yaml", firstResult.Metadata().Range().GetFilename())
 }
 

@@ -22,6 +22,7 @@ const (
 type ManifestNode struct {
 	StartLine int
 	EndLine   int
+	Offset    int
 	Value     interface{}
 	Type      TagType
 	Path      string
@@ -46,6 +47,7 @@ func (r *ManifestNode) ToRego() interface{} {
 			"startline": r.StartLine,
 			"endline":   r.EndLine,
 			"filepath":  r.Path,
+			"offset":    r.Offset,
 		}
 		for key, node := range r.Value.(map[string]ManifestNode) {
 			output[key] = node.ToRego()

@@ -8,6 +8,7 @@ import (
 	"io"
 	"io/fs"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
@@ -118,19 +119,19 @@ func (p *Parser) Parse(r io.Reader, path string) ([]interface{}, error) {
 
 	var results []interface{}
 
-	marker := "\n---\n"
-	altMarker := "\r\n---\r\n"
-	if bytes.Contains(contents, []byte(altMarker)) {
-		marker = altMarker
-	}
-
-	for _, partial := range strings.Split(string(contents), marker) {
+	re := regexp.MustCompile(`(?m:^---\r?\n)`)
+	pos := 0
+	for _, partial := range re.Split(string(contents), -1) {
 		var result Manifest
 		result.Path = path
 		if err := yaml.Unmarshal([]byte(partial), &result); err != nil {
 			return nil, fmt.Errorf("unmarshal yaml: %w", err)
 		}
-		results = append(results, result.ToRego())
+		if result.Content != nil {
+			result.Content.Offset = pos
+			results = append(results, result.ToRego())
+		}
+		pos += len(strings.Split(partial, "\n"))
 	}
 
 	return results, nil
