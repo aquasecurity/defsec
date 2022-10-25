@@ -23,6 +23,9 @@ func Test_AdaptVPC(t *testing.T) {
 		{
 			name: "defined",
 			terraform: `
+			resource "aws_flow_log" "this" {
+				vpc_id = aws_vpc.main.id
+			}
 			resource "aws_default_vpc" "default" {
 				tags = {
 				  Name = "Default VPC"
@@ -84,7 +87,7 @@ func Test_AdaptVPC(t *testing.T) {
 						Metadata:        defsecTypes.NewTestMetadata(),
 						IsDefault:       defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						ID:              defsecTypes.String("", defsecTypes.NewTestMetadata()),
-						FlowLogsEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						FlowLogsEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 				SecurityGroups: []ec2.SecurityGroup{
