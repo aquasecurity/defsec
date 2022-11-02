@@ -37,6 +37,16 @@ graph TD;
     dfparser --> rules
 ```
 
+## Scanning Overview
+
+The diagram below shows the process for parsing -> adapting -> scanning -> reporting.
+
+> Note: Source code files (Terraform, CloudFormation) come in on a filesystem. AWS cloud scanning is done with AWS Creds being passed by Trivy
+
+
+
+![Scanning Overview](.github/images/scanner_process.svg)
+
 ## Project Layout
 
 The directory structure is broken down as follows:
