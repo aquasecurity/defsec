@@ -17,6 +17,9 @@ func isRegoFile(name string) bool {
 }
 
 func sanitisePath(path string) string {
+	vol := filepath.VolumeName(path)
+	path = strings.TrimPrefix(path, vol)
+
 	return strings.TrimPrefix(strings.TrimPrefix(filepath.ToSlash(path), "./"), "/")
 }
 
