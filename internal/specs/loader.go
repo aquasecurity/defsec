@@ -9,7 +9,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const ComplainceFolder = "compliance"
+const ComplianceFolder = "compliance"
 
 var (
 	//go:embed compliance
@@ -18,15 +18,15 @@ var (
 
 var complianceSpecMap map[string]string
 
-// LoadIstioSpecs compliance specs specs
+// Load compliance specs
 func init() {
-	dir, _ := complainceFS.ReadDir(ComplainceFolder)
+	dir, _ := complainceFS.ReadDir(ComplianceFolder)
 	complianceSpecMap = make(map[string]string, 0)
 	for _, r := range dir {
 		if !strings.Contains(r.Name(), ".yaml") {
 			continue
 		}
-		file, err := complainceFS.Open(fmt.Sprintf("%s/%s", ComplainceFolder, r.Name()))
+		file, err := complainceFS.Open(fmt.Sprintf("%s/%s", ComplianceFolder, r.Name()))
 		if err != nil {
 			panic(err)
 		}

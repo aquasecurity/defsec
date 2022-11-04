@@ -33,7 +33,12 @@ type Scanner struct {
 	options       []options.ScannerOption
 	loadEmbedded  bool
 	frameworks    []framework.Framework
+	spec          string
 	sync.Mutex
+}
+
+func (s *Scanner) SetSpec(spec string) {
+	s.spec = spec
 }
 
 func (s *Scanner) SetRegoOnly(bool) {

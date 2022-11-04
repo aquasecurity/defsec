@@ -42,6 +42,7 @@ type Scanner struct {
 	endpoint            string
 	services            []string
 	frameworks          []framework.Framework
+	spec                string
 	concurrencyStrategy concurrency.Strategy
 	policyDirs          []string
 	policyReaders       []io.Reader
@@ -54,6 +55,10 @@ func (s *Scanner) SetRegoOnly(bool) {
 
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 	s.frameworks = frameworks
+}
+
+func (s *Scanner) SetSpec(spec string) {
+	s.spec = spec
 }
 
 func (s *Scanner) Name() string {
@@ -157,7 +162,7 @@ func (s *Scanner) Scan(ctx context.Context, cloudState *state.State) (results sc
 		return nil, fmt.Errorf("cloud state is nil")
 	}
 
-	for _, rule := range rules.GetFrameworkRules(s.frameworks...) {
+	for _, rule := range s.getRegisteredRules() {
 		select {
 		case <-ctx.Done():
 			return nil, ctx.Err()
@@ -184,6 +189,16 @@ func (s *Scanner) Scan(ctx context.Context, cloudState *state.State) (results sc
 		return nil, err
 	}
 	return append(results, regoResults...), nil
+}
+
+func (s *Scanner) getRegisteredRules() []rules.RegisteredRule {
+	var regRules []rules.RegisteredRule
+	if len(s.frameworks) > 0 { // Only for maintaining backwards compat
+		regRules = rules.GetFrameworkRules(s.frameworks...)
+	} else {
+		regRules = rules.GetSpecRules(s.spec)
+	}
+	return regRules
 }
 
 func (s *Scanner) initRegoScanner() (*rego.Scanner, error) {
