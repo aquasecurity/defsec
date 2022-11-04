@@ -10,17 +10,17 @@ import (
 func TestScanner_GetRegisteredRules(t *testing.T) {
 	testCases := []struct {
 		name    string
-		scanner Scanner
+		scanner *Scanner
 	}{
 		{
 			name: "get framework rules",
-			scanner: Scanner{
+			scanner: &Scanner{
 				frameworks: []framework.Framework{framework.CIS_AWS_1_2},
 			},
 		},
 		{
 			name: "get spec rules",
-			scanner: Scanner{
+			scanner: &Scanner{
 				spec: "awscis1.2",
 			},
 		},

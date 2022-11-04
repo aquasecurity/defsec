@@ -123,7 +123,7 @@ func (r *registry) getSpecRules(spec string) []RegisteredRule {
 
 	var complianceSpec cs.ComplianceSpec
 	specContent := specs.GetSpec(spec)
-	yaml.Unmarshal([]byte(specContent), &complianceSpec)
+	_ = yaml.Unmarshal([]byte(specContent), &complianceSpec)
 
 	registered := r.getFrameworkRules(framework.ALL)
 	for _, rule := range registered {

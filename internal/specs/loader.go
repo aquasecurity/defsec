@@ -47,7 +47,7 @@ func init() {
 	}
 }
 
-// Get Spec By Name
+// GetSpec returns the spec content
 func GetSpec(name string) string {
 	return complianceSpecMap[name]
 }
