@@ -93,7 +93,7 @@ spec:
       checks:
         - id: AVD-KSV-0038
       severity: 'MEDIUM'
-    - name: Use CNI plugin that supports NetworkPolicy API
+    - name: Use CNI plugin that supports NetworkPolicy API (Manual)
       description: 'Control check whether check cni plugin installed'
       id: '3.0'
       defaultStatus: 'FAIL'
@@ -113,7 +113,7 @@ spec:
       checks:
         - id: AVD-KSV-0039
       severity: 'MEDIUM'
-    - name: Control plan disable insecure port
+    - name: Control plan disable insecure port (Manual)
       description: 'Control check whether control plan disable insecure port'
       id: '5.0'
       defaultStatus: 'FAIL'
@@ -125,7 +125,7 @@ spec:
       checks:
         - id: AVD-KCV-0030
       severity: 'CRITICAL'
-    - name: Ensure kube config file permission
+    - name: Ensure kube config file permission (Manual)
       description: 'Control check whether kube config file permissions'
       id: '6.0'
       defaultStatus: 'FAIL'
@@ -155,7 +155,7 @@ spec:
       checks:
         - id: AVD-KCV-0008
       severity: 'CRITICAL'
-    - name: Audit policy is configure
+    - name: Audit policy is configure (Manual)
       description: 'Control check whether audit policy is configure'
       id: '8.0'
       defaultStatus: 'FAIL'
