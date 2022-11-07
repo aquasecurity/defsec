@@ -15,6 +15,11 @@ func getClusters(ctx parser.FileContext) (clusters []msk.Cluster) {
 				Metadata:     r.Metadata(),
 				ClientBroker: defsecTypes.StringDefault("TLS", r.Metadata()),
 			},
+			EncryptionAtRest: msk.EncryptionAtRest{
+				Metadata:  r.Metadata(),
+				KMSKeyARN: defsecTypes.StringDefault("", r.Metadata()),
+				Enabled:   defsecTypes.BoolDefault(false, r.Metadata()),
+			},
 			Logging: msk.Logging{
 				Metadata: r.Metadata(),
 				Broker: msk.BrokerLogging{
@@ -41,6 +46,15 @@ func getClusters(ctx parser.FileContext) (clusters []msk.Cluster) {
 				ClientBroker: encProp.GetStringProperty("ClientBroker", "TLS"),
 			}
 		}
+
+		if encAtRestProp := r.GetProperty("EncryptionInfo.EncryptionAtRest"); encAtRestProp.IsNotNil() {
+			cluster.EncryptionAtRest = msk.EncryptionAtRest{
+				Metadata:  encAtRestProp.Metadata(),
+				KMSKeyARN: encAtRestProp.GetStringProperty("DataVolumeKMSKeyId", ""),
+				Enabled:   defsecTypes.BoolDefault(true, encAtRestProp.Metadata()),
+			}
+		}
+
 		if loggingProp := r.GetProperty("LoggingInfo"); loggingProp.IsNotNil() {
 			cluster.Logging.Metadata = loggingProp.Metadata()
 			if brokerLoggingProp := loggingProp.GetProperty("BrokerLogs"); brokerLoggingProp.IsNotNil() {
