@@ -8,7 +8,7 @@ __rego_metadata__ := {
 	"avd_id": "AVD-KSV-0107",
 	"title": "Evaluate k8s deprecated and removed APIs",
 	"short_code": "evaluate-k8s-deprecated-removed-apis",
-	"severity": "HIGH",
+	"severity": "LOW",
 	"description": sprintf("apiVersion '%s' and kind '%s' has been deprecated on: '%s' and planned for removal on:'%s'", [recommend[_].apiVersion, recommend[_].kind, recommend[_].deprecation_version, recommend[_].removed_version]),
 	"recommended_actions": sprintf("It recommended to move to the new replacement API:'%s'", [recommend[_].replacement_version]),
 	"url": sprintf("%s", [recommend[_].ref]),
