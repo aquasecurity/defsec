@@ -21,7 +21,7 @@ func Test_Scanning_Plan(t *testing.T) {
 			failedResults = append(failedResults, r)
 		}
 	}
-	assert.Len(t, results, 13)
-	assert.Len(t, failedResults, 9)
+	assert.Len(t, results, 14)
+	assert.Len(t, failedResults, 10)
 
 }

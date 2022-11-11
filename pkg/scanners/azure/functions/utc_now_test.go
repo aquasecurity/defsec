@@ -20,14 +20,14 @@ func Test_UTCNow(t *testing.T) {
 			args: []interface{}{
 				"d",
 			},
-			expected: fmt.Sprintf("%d", time.Now().Day()),
+			expected: fmt.Sprintf("%d", time.Now().UTC().Day()),
 		},
 		{
 			name: "utc now date",
 			args: []interface{}{
 				"yyyy-M-d",
 			},
-			expected: fmt.Sprintf("%d-%d-%d", time.Now().Year(), time.Now().Month(), time.Now().Day()),
+			expected: fmt.Sprintf("%d-%d-%d", time.Now().Year(), time.Now().Month(), time.Now().UTC().Day()),
 		},
 	}
 

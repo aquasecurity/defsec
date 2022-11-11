@@ -41,7 +41,8 @@ With versioning you can recover more easily from both unintended user actions an
 	},
 	func(s *state.State) (results scan.Results) {
 		for _, bucket := range s.AWS.S3.Buckets {
-			if !bucket.Versioning.Enabled.IsTrue() {
+			// Versioning check changed as Object lock can be configured on versioned buckets only
+			if !bucket.Versioning.Enabled.IsTrue() && !bucket.ObjectLockConfiguration.Enabled.IsTrue() {
 				results.Add(
 					"Bucket does not have versioning enabled",
 					bucket.Versioning.Enabled,

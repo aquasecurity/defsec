@@ -14,14 +14,15 @@ type adapter struct {
 func (a *adapter) adaptBuckets() []s3.Bucket {
 	for _, block := range a.modules.GetResourcesByType("aws_s3_bucket") {
 		bucket := &s3.Bucket{
-			Metadata:          block.GetMetadata(),
-			Name:              block.GetAttribute("bucket").AsStringValueOrDefault("", block),
-			PublicAccessBlock: nil,
-			BucketPolicies:    nil,
-			Encryption:        getEncryption(block, a),
-			Versioning:        getVersioning(block, a),
-			Logging:           getLogging(block, a),
-			ACL:               getBucketAcl(block, a),
+			Metadata:                block.GetMetadata(),
+			Name:                    block.GetAttribute("bucket").AsStringValueOrDefault("", block),
+			PublicAccessBlock:       nil,
+			BucketPolicies:          nil,
+			Encryption:              getEncryption(block, a),
+			Versioning:              getVersioning(block, a),
+			Logging:                 getLogging(block, a),
+			ACL:                     getBucketAcl(block, a),
+			ObjectLockConfiguration: getObjectLockConfiguration(block, a),
 		}
 		a.bucketMap[block.ID()] = bucket
 	}
@@ -232,4 +233,19 @@ func hasLogging(b *terraform.Block) defsecTypes.BoolValue {
 		return defsecTypes.Bool(true, targetBucket.GetMetadata())
 	}
 	return defsecTypes.BoolDefault(false, b.GetMetadata())
+}
+
+func getObjectLockConfiguration(block *terraform.Block, a *adapter) s3.ObjectLockConfiguration {
+	if block.HasChild("object_lock_configuration") {
+		return s3.ObjectLockConfiguration{
+			Metadata: block.GetMetadata(),
+			Enabled:  defsecTypes.BoolDefault(false, block.GetMetadata()),
+			// DefaultRetention
+		}
+	}
+	return s3.ObjectLockConfiguration{
+		Metadata: block.GetMetadata(),
+		Enabled:  defsecTypes.BoolDefault(false, block.GetMetadata()),
+		// DefaultRetention: defsecTypes.DefaultRetention
+	}
 }

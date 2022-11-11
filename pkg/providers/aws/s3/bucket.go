@@ -6,14 +6,15 @@ import (
 )
 
 type Bucket struct {
-	Metadata          defsecTypes.Metadata
-	Name              defsecTypes.StringValue
-	PublicAccessBlock *PublicAccessBlock
-	BucketPolicies    []iam.Policy
-	Encryption        Encryption
-	Versioning        Versioning
-	Logging           Logging
-	ACL               defsecTypes.StringValue
+	Metadata                defsecTypes.Metadata
+	Name                    defsecTypes.StringValue
+	PublicAccessBlock       *PublicAccessBlock
+	BucketPolicies          []iam.Policy
+	Encryption              Encryption
+	Versioning              Versioning
+	Logging                 Logging
+	ACL                     defsecTypes.StringValue
+	ObjectLockConfiguration ObjectLockConfiguration
 }
 
 func (b *Bucket) HasPublicExposureACL() bool {
@@ -46,4 +47,17 @@ type Encryption struct {
 	Enabled   defsecTypes.BoolValue
 	Algorithm defsecTypes.StringValue
 	KMSKeyId  defsecTypes.StringValue
+}
+
+type DefaultRetention struct {
+	Mode  defsecTypes.StringValue
+	Days  defsecTypes.IntValue
+	Years defsecTypes.IntValue
+	Token defsecTypes.StringValue
+}
+
+type ObjectLockConfiguration struct {
+	Metadata         defsecTypes.Metadata
+	Enabled          defsecTypes.BoolValue
+	DefaultRetention DefaultRetention
 }
