@@ -27,8 +27,9 @@ func getBuckets(cfFile parser.FileContext) []s3.Bucket {
 				Enabled:   hasVersioning(r),
 				MFADelete: defsecTypes.BoolUnresolvable(r.Metadata()),
 			},
-			Logging: getLogging(r),
-			ACL:     convertAclValue(r.GetStringProperty("AccessControl", "private")),
+			Logging:                 getLogging(r),
+			ACL:                     convertAclValue(r.GetStringProperty("AccessControl", "private")),
+			ObjectLockConfiguration: getObjectLockConfiguration(r, cfFile),
 		}
 
 		buckets = append(buckets, s3b)
@@ -111,4 +112,18 @@ func getEncryption(r *parser.Resource, _ parser.FileContext) s3.Encryption {
 	}
 
 	return encryption
+}
+
+func getObjectLockConfiguration(r *parser.Resource, _ parser.FileContext) s3.ObjectLockConfiguration {
+	objectlockconfigs := s3.ObjectLockConfiguration{
+		Metadata: r.Metadata(),
+		Enabled:  defsecTypes.BoolDefault(false, r.Metadata()),
+		// DefaultRetention: defsecTypes.StringDefault("", r.Metadata()),
+	}
+	objectLockEnabledBoolProp := r.GetBoolProperty("ObjectLockEnabled", false)
+	objectLockEnabledStringProp := r.GetStringProperty("ObjectLockConfiguration.ObjectLockEnabled", "")
+	if objectLockEnabledBoolProp.IsTrue() && objectLockEnabledStringProp.EqualTo("Enabled") {
+		objectlockconfigs.Enabled = defsecTypes.Bool(true, r.Metadata())
+	}
+	return objectlockconfigs
 }
