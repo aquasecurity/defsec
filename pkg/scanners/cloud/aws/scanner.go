@@ -192,13 +192,10 @@ func (s *Scanner) Scan(ctx context.Context, cloudState *state.State) (results sc
 }
 
 func (s *Scanner) getRegisteredRules() []rules.RegisteredRule {
-	var regRules []rules.RegisteredRule
 	if len(s.frameworks) > 0 { // Only for maintaining backwards compat
-		regRules = rules.GetFrameworkRules(s.frameworks...)
-	} else {
-		regRules = rules.GetSpecRules(s.spec)
+		return rules.GetFrameworkRules(s.frameworks...)
 	}
-	return regRules
+	return rules.GetSpecRules(s.spec)
 }
 
 func (s *Scanner) initRegoScanner() (*rego.Scanner, error) {
