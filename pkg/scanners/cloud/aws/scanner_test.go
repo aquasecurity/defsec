@@ -24,6 +24,13 @@ func TestScanner_GetRegisteredRules(t *testing.T) {
 				spec: "awscis1.2",
 			},
 		},
+		{
+			name: "invalid spec",
+			scanner: &Scanner{
+				spec: "invalid spec",
+				// we still expect default rules to work
+			},
+		},
 	}
 
 	for _, tc := range testCases {
