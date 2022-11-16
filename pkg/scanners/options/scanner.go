@@ -19,6 +19,7 @@ type ConfigurableScanner interface {
 	SetPolicyFilesystem(fs.FS)
 	SetUseEmbeddedPolicies(bool)
 	SetFrameworks(frameworks []framework.Framework)
+	SetSpec(spec string)
 	SetRegoOnly(regoOnly bool)
 }
 
@@ -27,6 +28,12 @@ type ScannerOption func(s ConfigurableScanner)
 func ScannerWithFrameworks(frameworks ...framework.Framework) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetFrameworks(frameworks)
+	}
+}
+
+func ScannerWithSpec(spec string) ScannerOption {
+	return func(s ConfigurableScanner) {
+		s.SetSpec(spec)
 	}
 }
 

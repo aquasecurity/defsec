@@ -38,11 +38,16 @@ type Scanner struct {
 	loadEmbedded  bool
 	options       []options.ScannerOption
 	frameworks    []framework.Framework
+	spec          string
 	sync.Mutex
 }
 
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 	s.frameworks = frameworks
+}
+
+func (s *Scanner) SetSpec(spec string) {
+	s.spec = spec
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {

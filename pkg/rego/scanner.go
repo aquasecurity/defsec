@@ -39,8 +39,13 @@ type Scanner struct {
 	retriever      *MetadataRetriever
 	policyFS       fs.FS
 	frameworks     []framework.Framework
+	spec           string
 	inputSchema    interface{} // unmarshalled into this from a json schema document
 	sourceType     types.Source
+}
+
+func (s *Scanner) SetSpec(spec string) {
+	s.spec = spec
 }
 
 func (s *Scanner) SetRegoOnly(bool) {}
