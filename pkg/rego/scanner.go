@@ -124,7 +124,7 @@ func NewScanner(source types.Source, options ...options.ScannerOption) *Scanner 
 
 	schema, ok := schemaMap[source]
 	if !ok {
-		panic("unknown source type: " + source)
+		schema = schemas.Anything
 	}
 
 	s := &Scanner{
