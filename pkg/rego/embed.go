@@ -32,7 +32,6 @@ func init() {
 	RegisterRegoRules(modules)
 }
 
-// This function is exported for trivy-plugin-aqua purposes only
 func RegisterRegoRules(modules map[string]*ast.Module) {
 	ctx := context.TODO()
 
@@ -73,7 +72,6 @@ func loadEmbeddedLibraries() (map[string]*ast.Module, error) {
 	return RecurseEmbeddedModules(rules.EmbeddedLibraryFileSystem, ".")
 }
 
-// This function is exported for trivy-plugin-aqua purposes only
 func RecurseEmbeddedModules(fs embed.FS, dir string) (map[string]*ast.Module, error) {
 	if strings.HasSuffix(dir, "policies/advanced/optional") {
 		return nil, nil
