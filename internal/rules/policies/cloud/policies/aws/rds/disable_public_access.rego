@@ -21,5 +21,5 @@ package builtin.aws.rds.aws0180
 deny[res] {
 	instance := input.aws.rds.instances[_]
 	instance.publicaccess.value
-	res := result.new("Instance does not have Deletion Protection disabled", instance.publicaccess)
+	res := result.new("Instance has Public Access enabled", instance.publicaccess)
 }
