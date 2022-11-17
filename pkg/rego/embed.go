@@ -29,6 +29,11 @@ func init() {
 		modules[name] = policy
 	}
 
+	RegisterRegoRules(modules)
+}
+
+// This function is exported for trivy-plugin-aqua purposes only
+func RegisterRegoRules(modules map[string]*ast.Module) {
 	ctx := context.TODO()
 
 	compiler := ast.NewCompiler()
@@ -61,14 +66,15 @@ func init() {
 }
 
 func loadEmbeddedPolicies() (map[string]*ast.Module, error) {
-	return recurseEmbeddedModules(rules.EmbeddedPolicyFileSystem, ".")
+	return RecurseEmbeddedModules(rules.EmbeddedPolicyFileSystem, ".")
 }
 
 func loadEmbeddedLibraries() (map[string]*ast.Module, error) {
-	return recurseEmbeddedModules(rules.EmbeddedLibraryFileSystem, ".")
+	return RecurseEmbeddedModules(rules.EmbeddedLibraryFileSystem, ".")
 }
 
-func recurseEmbeddedModules(fs embed.FS, dir string) (map[string]*ast.Module, error) {
+// This function is exported for trivy-plugin-aqua purposes only
+func RecurseEmbeddedModules(fs embed.FS, dir string) (map[string]*ast.Module, error) {
 	if strings.HasSuffix(dir, "policies/advanced/optional") {
 		return nil, nil
 	}
@@ -80,7 +86,7 @@ func recurseEmbeddedModules(fs embed.FS, dir string) (map[string]*ast.Module, er
 	}
 	for _, entry := range entries {
 		if entry.IsDir() {
-			subs, err := recurseEmbeddedModules(fs, strings.Join([]string{dir, entry.Name()}, "/"))
+			subs, err := RecurseEmbeddedModules(fs, strings.Join([]string{dir, entry.Name()}, "/"))
 			if err != nil {
 				return nil, err
 			}
