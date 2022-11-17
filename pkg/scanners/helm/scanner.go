@@ -40,6 +40,11 @@ type Scanner struct {
 	policyFS      fs.FS
 	skipRequired  bool
 	frameworks    []framework.Framework
+	spec          string
+}
+
+func (s *Scanner) SetSpec(spec string) {
+	s.spec = spec
 }
 
 func (s *Scanner) SetRegoOnly(bool) {

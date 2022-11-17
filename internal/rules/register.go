@@ -3,9 +3,12 @@ package rules
 import (
 	"sync"
 
+	"github.com/aquasecurity/defsec/internal/specs"
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/state"
+	cs "github.com/aquasecurity/trivy/pkg/compliance/spec"
+	"gopkg.in/yaml.v3"
 )
 
 type RegisteredRule struct {
@@ -113,6 +116,33 @@ func (r *registry) getFrameworkRules(fw ...framework.Framework) []RegisteredRule
 	return registered
 }
 
+func (r *registry) getSpecRules(spec string) []RegisteredRule {
+	r.RLock()
+	defer r.RUnlock()
+	var specRules []RegisteredRule
+
+	var complianceSpec cs.ComplianceSpec
+	specContent := specs.GetSpec(spec)
+	if err := yaml.Unmarshal([]byte(specContent), &complianceSpec); err != nil {
+		return nil
+	}
+
+	registered := r.getFrameworkRules(framework.ALL)
+	for _, rule := range registered {
+		for _, csRule := range complianceSpec.Spec.Controls {
+			if len(csRule.Checks) > 0 {
+				for _, c := range csRule.Checks {
+					if rule.Rule().AVDID == c.ID {
+						specRules = append(specRules, rule)
+					}
+				}
+			}
+		}
+	}
+
+	return specRules
+}
+
 func (r *registry) Reset() {
 	r.Lock()
 	defer r.Unlock()
@@ -121,4 +151,12 @@ func (r *registry) Reset() {
 
 func GetFrameworkRules(fw ...framework.Framework) []RegisteredRule {
 	return coreRegistry.getFrameworkRules(fw...)
+}
+
+func GetSpecRules(spec string) []RegisteredRule {
+	if len(spec) > 0 {
+		return coreRegistry.getSpecRules(spec)
+	}
+
+	return GetFrameworkRules()
 }

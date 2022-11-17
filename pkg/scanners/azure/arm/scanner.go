@@ -38,7 +38,12 @@ type Scanner struct {
 	policyDirs     []string
 	policyReaders  []io.Reader
 	regoScanner    *rego.Scanner
+	spec           string
 	sync.Mutex
+}
+
+func (s *Scanner) SetSpec(spec string) {
+	s.spec = spec
 }
 
 func (s *Scanner) SetRegoOnly(regoOnly bool) {
