@@ -338,7 +338,6 @@ func bootstrapBucketEncryption(t *testing.T, api *s3api.Client, ctx context.Cont
 					ApplyServerSideEncryptionByDefault: &s3types.ServerSideEncryptionByDefault{
 						SSEAlgorithm: s3types.ServerSideEncryptionAes256,
 					},
-					BucketKeyEnabled: true,
 				},
 			},
 		},
