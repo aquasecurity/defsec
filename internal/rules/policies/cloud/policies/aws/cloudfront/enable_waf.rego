@@ -7,7 +7,7 @@
 # related_resources:
 # - https://docs.aws.amazon.com/waf/latest/developerguide/cloudfront-features.html
 # custom:
-#   avd_id: AVD-AWS-0180
+#   avd_id: AVD-AWS-0185
 #   provider: aws
 #   service: cloudfront
 #   severity: HIGH
@@ -16,7 +16,7 @@
 #   input:
 #     selector:
 #     - type: cloud
-package builtin.aws.cloudfront.aws0180
+package builtin.aws.cloudfront.aws0185
 
 deny[res] {
 	dist := input.aws.cloudfront.distributions[_]

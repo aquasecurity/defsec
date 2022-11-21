@@ -1,4 +1,4 @@
-package builtin.aws.cloudfront.aws0180
+package builtin.aws.cloudfront.aws0185
 
 test_detects_when_disabled {
 	r := deny with input as {"aws": {"cloudfront": {"distributions": [{"wafid": {"value": ""}}]}}}
