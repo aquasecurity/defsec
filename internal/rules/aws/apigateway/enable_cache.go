@@ -10,7 +10,7 @@ import (
 
 var CheckEnableCache = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0179",
+		AVDID:      "AVD-AWS-0190",
 		Provider:   providers.AWSProvider,
 		Service:    "api-gateway",
 		ShortCode:  "enable-cache",
