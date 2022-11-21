@@ -7,7 +7,7 @@
 # related_resources:
 # - https://docs.aws.amazon.com/awscloudtrail/latest/userguide/encrypting-cloudtrail-log-files-with-aws-kms.html
 # custom:
-#   avd_id: AVD-AWS-0180
+#   avd_id: AVD-AWS-0187
 #   provider: aws
 #   service: cloudtrail
 #   severity: HIGH
@@ -16,7 +16,7 @@
 #   input:
 #     selector:
 #     - type: cloud
-package builtin.aws.cloudtrail.aws0180
+package builtin.aws.cloudtrail.aws0187
 
 deny[res] {
 	trail := input.aws.cloudtrail.trails[_]

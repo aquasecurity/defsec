@@ -1,4 +1,4 @@
-package builtin.aws.cloudtrail.aws0180
+package builtin.aws.cloudtrail.aws0187
 
 test_detects_when_decrypted {
 	r := deny with input as {"aws": {"cloudtrail": {"trails": [{"kmskeyid": {"value": ""}}]}}}
