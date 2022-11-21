@@ -7,7 +7,7 @@
 # related_resources:
 # - https://docs.aws.amazon.com/documentdb/latest/developerguide/encryption-at-rest.html
 # custom:
-#   avd_id: AVD-AWS-0180
+#   avd_id: AVD-AWS-0189
 #   provider: aws
 #   service: documentdb
 #   severity: HIGH
@@ -16,7 +16,7 @@
 #   input:
 #     selector:
 #     - type: cloud
-package builtin.aws.documentdb.aws0180
+package builtin.aws.documentdb.aws0189
 
 deny[res] {
 	cluster := input.aws.documentdb.clusters[_]

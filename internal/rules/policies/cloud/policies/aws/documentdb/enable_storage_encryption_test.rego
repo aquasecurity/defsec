@@ -1,4 +1,4 @@
-package builtin.aws.documentdb.aws0180
+package builtin.aws.documentdb.aws0189
 
 test_detects_when_decrypted {
 	r := deny with input as {"aws": {"documentdb": {"clusters": [{"storageencrypted": {"value": false}}]}}}
