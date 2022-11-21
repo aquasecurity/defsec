@@ -7,7 +7,7 @@
 # related_resources:
 # - https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html
 # custom:
-#   avd_id: AVD-AWS-0181
+#   avd_id: AVD-AWS-0188
 #   provider: aws
 #   service: cloudtrail
 #   severity: HIGH
@@ -16,7 +16,7 @@
 #   input:
 #     selector:
 #     - type: cloud
-package builtin.aws.cloudtrail.aws0181
+package builtin.aws.cloudtrail.aws0188
 
 deny[res] {
 	trail := input.aws.cloudtrail.trails[_]

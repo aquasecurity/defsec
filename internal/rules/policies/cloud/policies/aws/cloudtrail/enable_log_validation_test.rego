@@ -1,4 +1,4 @@
-package builtin.aws.cloudtrail.aws0181
+package builtin.aws.cloudtrail.aws0188
 
 test_detects_when_disabled {
 	r := deny with input as {"aws": {"cloudtrail": {"trails": [{"enablelogfilevalidation": {"value": false}}]}}}
