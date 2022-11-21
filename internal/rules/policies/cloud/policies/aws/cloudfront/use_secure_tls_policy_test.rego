@@ -1,4 +1,4 @@
-package builtin.aws.cloudfront.aws0181
+package builtin.aws.cloudfront.aws0186
 
 test_unsecure_tls_policy {
 	r := deny with input as {"aws": {"cloudfront": {"distributions": [{"viewercertificate": {"minimumprotocolversion": {"value": "TLSv1.0"}}}]}}}

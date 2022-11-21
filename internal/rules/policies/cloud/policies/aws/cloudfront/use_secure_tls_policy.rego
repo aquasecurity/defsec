@@ -7,7 +7,7 @@
 # related_resources:
 # - https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html
 # custom:
-#   avd_id: AVD-AWS-0181
+#   avd_id: AVD-AWS-0186
 #   provider: aws
 #   service: cloudfront
 #   severity: HIGH
@@ -16,7 +16,7 @@
 #   input:
 #     selector:
 #     - type: cloud
-package builtin.aws.cloudfront.aws0181
+package builtin.aws.cloudfront.aws0186
 
 deny[res] {
 	dist := input.aws.cloudfront.distributions[_]
