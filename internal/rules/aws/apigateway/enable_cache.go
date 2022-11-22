@@ -10,16 +10,15 @@ import (
 
 var CheckEnableCache = rules.Register(
 	scan.Rule{
-		AVDID:      "AVD-AWS-0190",
-		Provider:   providers.AWSProvider,
-		Service:    "api-gateway",
-		ShortCode:  "enable-cache",
-		Summary:    "Ensure that response caching is enabled for your Amazon API Gateway REST APIs.",
-		Impact:     "Reduce the number of calls made to your API endpoint and also improve the latency of requests to your API with response caching.",
-		Resolution: "Enable cache",
-		Explanation: "A REST API in API Gateway is a collection of resources and methods that are integrated with backend HTTP endpoints, Lambda functions, or other AWS services.You can enable API caching in Amazon API Gateway to cache your endpoint responses." +
-			"With caching, you can reduce the number of calls made to your endpoint and also improve the latency of requests to your API.",
-		Links: []string{"https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html"},
+		AVDID:       "AVD-AWS-0190",
+		Provider:    providers.AWSProvider,
+		Service:     "api-gateway",
+		ShortCode:   "enable-cache",
+		Summary:     "Ensure that response caching is enabled for your Amazon API Gateway REST APIs.",
+		Impact:      "Reduce the number of calls made to your API endpoint and also improve the latency of requests to your API with response caching.",
+		Resolution:  "Enable cache",
+		Explanation: "A REST API in API Gateway is a collection of resources and methods that are integrated with backend HTTP endpoints, Lambda functions, or other AWS services. You can enable API caching in Amazon API Gateway to cache your endpoint responses. With caching, you can reduce the number of calls made to your endpoint and also improve the latency of requests to your API.",
+		Links:       []string{"https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-caching.html"},
 		Terraform: &scan.EngineMetadata{
 			GoodExamples:        terraformEnableCacheGoodExamples,
 			BadExamples:         terraformEnableCacheBadExamples,

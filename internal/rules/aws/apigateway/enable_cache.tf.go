@@ -42,7 +42,7 @@ var terraformEnableCacheBadExamples = []string{
    settings {
      metrics_enabled = true
      logging_level   = "INFO"
-     caching_enabled = true
+     caching_enabled = false
    }
  }
  `,
