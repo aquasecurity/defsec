@@ -16,6 +16,7 @@ func TestLoadSpecs(t *testing.T) {
 		{name: "nsa spec", specName: "nsa", wantSpecPath: "./compliance/nsa-1.0.yaml"},
 		{name: "awscis1.2", specName: "awscis1.2", wantSpecPath: "./compliance/aws-cis-1.2.yaml"},
 		{name: "awscis1.4", specName: "awscis1.4", wantSpecPath: "./compliance/aws-cis-1.4.yaml"},
+		{name: "awscis1.2 by filepath", specName: "@./compliance/aws-cis-1.2.yaml", wantSpecPath: "./compliance/aws-cis-1.2.yaml"},
 		{name: "bogus spec", specName: "foobarbaz"},
 	}
 

@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	"gopkg.in/yaml.v3"
@@ -49,5 +50,12 @@ func init() {
 
 // GetSpec returns the spec content
 func GetSpec(name string) string {
-	return complianceSpecMap[name]
+	if spec, ok := complianceSpecMap[name]; ok { // use embedded spec
+		return spec
+	}
+	spec, err := os.ReadFile(strings.TrimPrefix(name, "@")) // use custom spec by filepath
+	if err != nil {
+		return ""
+	}
+	return string(spec)
 }
