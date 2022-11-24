@@ -194,6 +194,8 @@ func (a *adapter) getBucketEncryption(bucketName *string, metadata defsecTypes.M
 	if encryption.ServerSideEncryptionConfiguration != nil && len(encryption.ServerSideEncryptionConfiguration.Rules) > 0 {
 		defaultEncryption := encryption.ServerSideEncryptionConfiguration.Rules[0]
 		algorithm := defaultEncryption.ApplyServerSideEncryptionByDefault.SSEAlgorithm
+                bucketEncryption.Enabled = defsecTypes.Bool(defaultEncryption.BucketKeyEnabled, metadata)
+		algorithm := defaultEncryption.ApplyServerSideEncryptionByDefault.SSEAlgorithm
 		if algorithm != "" {
 			bucketEncryption.Enabled = defsecTypes.Bool(true, metadata)
 		}
