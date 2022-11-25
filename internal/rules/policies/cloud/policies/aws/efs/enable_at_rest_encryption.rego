@@ -16,7 +16,7 @@
 #   input:
 #     selector:
 #     - type: cloud
-package builtin.aws.efs.aws0193
+package builtin.aws.efs.aws0194
 
 deny[res] {
 	fs := input.aws.efs.filesystems[_]
