@@ -1,5 +1,5 @@
 
-apiVersion '' and kind '' has been deprecated on: '' and planned for removal on:''
+piVersion and kind has been deprecated
 
 ### Impact
 <!-- Add Impact here -->
