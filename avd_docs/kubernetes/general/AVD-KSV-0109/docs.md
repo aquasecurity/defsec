@@ -2,7 +2,7 @@
 Storing secrets in configMaps is unsafe
 
 ### Impact
-<!-- Add Impact here -->
+Unsafe storage of secret content in configMaps could lead to the information being compromised.
 
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
