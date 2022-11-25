@@ -3,7 +3,11 @@
 # description: "Ensures RDS instances are not launched into the public cloud."
 # scope: package
 # schemas:
+<<<<<<< HEAD:rules/cloud/policies/aws/rds/disable_public_access.rego
 # - input: schema["cloud"]
+=======
+# - input: schema.input
+>>>>>>> 7bd3f317 (Added policy to check public access key for rds (#1057)):internal/rules/policies/cloud/policies/aws/rds/disable_public_access.rego
 # related_resources:
 # - http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.html
 # custom:
