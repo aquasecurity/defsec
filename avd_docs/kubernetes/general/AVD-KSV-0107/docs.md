@@ -7,7 +7,4 @@ apiVersion '' and kind '' has been deprecated on: '' and planned for removal on:
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
-### Links
-- 
-
 
