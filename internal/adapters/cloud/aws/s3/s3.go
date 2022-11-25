@@ -194,12 +194,11 @@ func (a *adapter) getBucketEncryption(bucketName *string, metadata defsecTypes.M
 	if encryption.ServerSideEncryptionConfiguration != nil && len(encryption.ServerSideEncryptionConfiguration.Rules) > 0 {
 		defaultEncryption := encryption.ServerSideEncryptionConfiguration.Rules[0]
 		algorithm := defaultEncryption.ApplyServerSideEncryptionByDefault.SSEAlgorithm
-                bucketEncryption.Enabled = defsecTypes.Bool(defaultEncryption.BucketKeyEnabled, metadata)
-		algorithm := defaultEncryption.ApplyServerSideEncryptionByDefault.SSEAlgorithm
+		bucketEncryption.Algorithm = defsecTypes.StringDefault(string(algorithm), metadata)
+		bucketEncryption.Enabled = defsecTypes.Bool(defaultEncryption.BucketKeyEnabled, metadata)
 		if algorithm != "" {
 			bucketEncryption.Enabled = defsecTypes.Bool(true, metadata)
 		}
-		bucketEncryption.Algorithm = defsecTypes.StringDefault(string(algorithm), metadata)
 		kmsKeyId := defaultEncryption.ApplyServerSideEncryptionByDefault.KMSMasterKeyID
 		if kmsKeyId != nil {
 			bucketEncryption.KMSKeyId = defsecTypes.StringDefault(*kmsKeyId, metadata)
