@@ -7,7 +7,4 @@ apiVersion and kind has been deprecated
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
-### Links
-- 
-
 
