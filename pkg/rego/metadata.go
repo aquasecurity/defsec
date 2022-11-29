@@ -254,18 +254,19 @@ func (m *MetadataRetriever) getEngineMetadata(schema string, meta map[string]int
 	}
 
 	var em scan.EngineMetadata
-	if sMap["good_examples"] != nil {
-		em.GoodExamples = []string{fmt.Sprintf("%s", sMap["good_examples"])}
+	if val, ok := sMap["good_examples"].(string); ok {
+		em.GoodExamples = []string{val}
 	}
-	if sMap["bad_examples"] != nil {
-		em.BadExamples = []string{fmt.Sprintf("%s", sMap["bad_examples"])}
+	if val, ok := sMap["bad_examples"].(string); ok {
+		em.BadExamples = []string{val}
 	}
-	if sMap["links"] != nil {
-		em.Links = []string{fmt.Sprintf("%s", sMap["links"])}
+	if val, ok := sMap["links"].(string); ok {
+		em.Links = []string{val}
 	}
-	if sMap["remediation_markdown"] != nil {
-		em.RemediationMarkdown = fmt.Sprintf("%s", sMap["remediation_markdown"])
+	if val, ok := sMap["remediation_markdown"].(string); ok {
+		em.RemediationMarkdown = val
 	}
+
 	return &em, nil
 }
 

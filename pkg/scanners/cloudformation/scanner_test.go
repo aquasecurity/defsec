@@ -79,8 +79,8 @@ deny[res] {
 		Service:        "general",
 		Links:          []string{"https://docs.docker.com/develop/develop-images/multistage-build/"},
 		Severity:       "CRITICAL",
-		Terraform:      (*scan.EngineMetadata)(nil),
-		CloudFormation: (*scan.EngineMetadata)(nil),
+		Terraform:      &scan.EngineMetadata{},
+		CloudFormation: &scan.EngineMetadata{},
 		CustomChecks: scan.CustomChecks{
 			Terraform: (*scan.TerraformCustomCheck)(nil),
 		},
