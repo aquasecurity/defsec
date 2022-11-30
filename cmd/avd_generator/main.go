@@ -62,6 +62,7 @@ func writeDocsFile(meta rules.RegisteredRule) {
 			if err != nil {
 				fail("error occurred creating the Terraform file for %s", docpath)
 			}
+			defer func() { _ = file.Close() }()
 
 			if err := tmpl.Execute(file, meta.Rule()); err != nil {
 				fail("error occurred generating the document %v", err)
@@ -80,6 +81,7 @@ func writeDocsFile(meta rules.RegisteredRule) {
 			if err != nil {
 				fail("error occurred creating the CloudFormation file for %s", docpath)
 			}
+			defer func() { _ = file.Close() }()
 
 			if err := tmpl.Execute(file, meta.Rule()); err != nil {
 				fail("error occurred generating the document %v", err)
