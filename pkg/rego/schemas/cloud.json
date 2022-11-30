@@ -621,6 +621,10 @@
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudtrail.EventSelector"
           }
         },
+        "includeglobalserviceevents": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
         "islogging": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
