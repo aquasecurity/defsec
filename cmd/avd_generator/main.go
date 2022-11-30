@@ -53,35 +53,41 @@ func writeDocsFile(meta rules.RegisteredRule) {
 	fmt.Printf("Generating docs file for policy %s\n", meta.Rule().AVDID)
 
 	if meta.Rule().Terraform != nil {
-		tmpl, err := template.New("terraform").Parse(terraformMarkdownTemplate)
-		if err != nil {
-			fail("error occurred creating the template %v\n", err)
-		}
-		file, err := os.Create(filepath.Join(docpath, "Terraform.md"))
-		if err != nil {
-			fail("error occurred creating the Terraform file for %s", docpath)
-		}
+		if len(meta.Rule().Terraform.GoodExamples) > 0 || len(meta.Rule().Terraform.Links) > 0 {
+			tmpl, err := template.New("terraform").Parse(terraformMarkdownTemplate)
+			if err != nil {
+				fail("error occurred creating the template %v\n", err)
+			}
+			file, err := os.Create(filepath.Join(docpath, "Terraform.md"))
+			if err != nil {
+				fail("error occurred creating the Terraform file for %s", docpath)
+			}
+			defer func() { _ = file.Close() }()
 
-		if err := tmpl.Execute(file, meta.Rule()); err != nil {
-			fail("error occurred generating the document %v", err)
+			if err := tmpl.Execute(file, meta.Rule()); err != nil {
+				fail("error occurred generating the document %v", err)
+			}
+			fmt.Printf("Generating Terraform file for policy %s\n", meta.Rule().AVDID)
 		}
-		fmt.Printf("Generating Terraform file for policy %s\n", meta.Rule().AVDID)
 	}
 
 	if meta.Rule().CloudFormation != nil {
-		tmpl, err := template.New("cloudformation").Parse(cloudformationMarkdownTemplate)
-		if err != nil {
-			fail("error occurred creating the template %v\n", err)
-		}
-		file, err := os.Create(filepath.Join(docpath, "CloudFormation.md"))
-		if err != nil {
-			fail("error occurred creating the CloudFormation file for %s", docpath)
-		}
+		if len(meta.Rule().CloudFormation.GoodExamples) > 0 || len(meta.Rule().CloudFormation.Links) > 0 {
+			tmpl, err := template.New("cloudformation").Parse(cloudformationMarkdownTemplate)
+			if err != nil {
+				fail("error occurred creating the template %v\n", err)
+			}
+			file, err := os.Create(filepath.Join(docpath, "CloudFormation.md"))
+			if err != nil {
+				fail("error occurred creating the CloudFormation file for %s", docpath)
+			}
+			defer func() { _ = file.Close() }()
 
-		if err := tmpl.Execute(file, meta.Rule()); err != nil {
-			fail("error occurred generating the document %v", err)
+			if err := tmpl.Execute(file, meta.Rule()); err != nil {
+				fail("error occurred generating the document %v", err)
+			}
+			fmt.Printf("Generating CloudFormation file for policy %s\n", meta.Rule().AVDID)
 		}
-		fmt.Printf("Generating CloudFormation file for policy %s\n", meta.Rule().AVDID)
 	}
 }
 

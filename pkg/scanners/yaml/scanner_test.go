@@ -78,8 +78,8 @@ deny[res] {
 		Service:        "general",
 		Links:          []string{"https://example.com"},
 		Severity:       "CRITICAL",
-		Terraform:      (*scan.EngineMetadata)(nil),
-		CloudFormation: (*scan.EngineMetadata)(nil),
+		Terraform:      &scan.EngineMetadata{},
+		CloudFormation: &scan.EngineMetadata{},
 		CustomChecks: scan.CustomChecks{
 			Terraform: (*scan.TerraformCustomCheck)(nil)},
 		RegoPackage: "data.builtin.yaml.lol",

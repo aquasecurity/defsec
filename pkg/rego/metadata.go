@@ -35,6 +35,8 @@ type StaticMetadata struct {
 	Provider           string
 	Service            string
 	Library            bool
+	CloudFormation     *scan.EngineMetadata
+	Terraform          *scan.EngineMetadata
 }
 
 type InputOptions struct {
@@ -60,19 +62,21 @@ func (m StaticMetadata) ToRule() scan.Rule {
 	}
 
 	return scan.Rule{
-		AVDID:       m.AVDID,
-		Aliases:     []string{m.ID},
-		ShortCode:   m.ShortCode,
-		Summary:     m.Title,
-		Explanation: m.Description,
-		Impact:      "",
-		Resolution:  m.RecommendedActions,
-		Provider:    providers.Provider(provider),
-		Service:     service,
-		Links:       m.References,
-		Severity:    severity.Severity(m.Severity),
-		RegoPackage: m.Package,
-		Frameworks:  m.Frameworks,
+		AVDID:          m.AVDID,
+		Aliases:        []string{m.ID},
+		ShortCode:      m.ShortCode,
+		Summary:        m.Title,
+		Explanation:    m.Description,
+		Impact:         "",
+		Resolution:     m.RecommendedActions,
+		Provider:       providers.Provider(provider),
+		Service:        service,
+		Links:          m.References,
+		Severity:       severity.Severity(m.Severity),
+		RegoPackage:    m.Package,
+		Frameworks:     m.Frameworks,
+		CloudFormation: m.CloudFormation,
+		Terraform:      m.Terraform,
 	}
 }
 
@@ -227,7 +231,43 @@ func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata
 			}
 		}
 	}
+
+	var err error
+	if metadata.CloudFormation, err = m.getEngineMetadata("cloud_formation", meta); err != nil {
+		return err
+	}
+
+	if metadata.Terraform, err = m.getEngineMetadata("terraform", meta); err != nil {
+		return err
+	}
+
 	return nil
+}
+
+func (m *MetadataRetriever) getEngineMetadata(schema string, meta map[string]interface{}) (*scan.EngineMetadata, error) {
+	var sMap map[string]interface{}
+	if raw, ok := meta[schema]; ok {
+		sMap, ok = raw.(map[string]interface{})
+		if !ok {
+			return nil, fmt.Errorf("failed to parse %s metadata: not an object", schema)
+		}
+	}
+
+	var em scan.EngineMetadata
+	if val, ok := sMap["good_examples"].(string); ok {
+		em.GoodExamples = []string{val}
+	}
+	if val, ok := sMap["bad_examples"].(string); ok {
+		em.BadExamples = []string{val}
+	}
+	if val, ok := sMap["links"].(string); ok {
+		em.Links = []string{val}
+	}
+	if val, ok := sMap["remediation_markdown"].(string); ok {
+		em.RemediationMarkdown = val
+	}
+
+	return &em, nil
 }
 
 func (m *MetadataRetriever) fromAnnotation(metadata *StaticMetadata, annotation *ast.Annotations) error {
