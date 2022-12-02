@@ -21,15 +21,11 @@ package builtin.aws.redshift.aws0202
 deny[res] {
 	cluster := input.aws.redshift.clusters[_]
 	not  cluster.encryption.enabled.value
-	res := {"msg":"Cluster does not have encryption enabled.", "value": cluster.encryption.enabled}
+	res := result.new("Cluster does not have encryption enabled.", cluster.encryption.enabled)
     
 }{
     cluster := input.aws.redshift.clusters[_]
+	cluster.encryption.enabled.value
     cluster.encryption.kmskeyid.value == ""
-	res := {"msg":"Cluster does not use a customer managed encryption key.","value": cluster.encryption.kmskeyid}
-
-}
-
-deny [res] {
-    
+	res := result.new("Cluster does not use a customer managed encryption key.", cluster.encryption.kmskeyid)
 }
