@@ -21,7 +21,5 @@ package builtin.aws.cloudtrail.aws0200
 deny[res] {
     trail := input.aws.cloudtrail.trails[_]
 	not trail.includeglobalserviceevents.value
-    # not trail.islogging.value
-    #not trail.ismultiregion.value 
 	res := result.new("trail is not global enable", trail.includeglobalserviceevents) 
 }
