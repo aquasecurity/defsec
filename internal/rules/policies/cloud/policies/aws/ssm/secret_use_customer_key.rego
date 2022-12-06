@@ -18,6 +18,8 @@
 #     - type: cloud
 package builtin.aws.ssm.aws0203
 
+import github.com.aquasecurity.defsec.pkg.providers.aws.kms.kms.rego
+
 deny[res] {
 	secret := input.aws.ssm.secrets[_]
 	secret.kmskeyid.value == ""
@@ -25,6 +27,6 @@ deny[res] {
 }{
     secret := input.aws.ssm.secrets[_]
 	secret.kmskeyid.value != ""
-    secret.kmskeyid.value == "aws/secretsmanager"
+	is_aws_managed(secret.kmskeyid.value) == true
 	res := result.new("Secret explicitly uses the default key.", secret.kmskeyid)
 }
