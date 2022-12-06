@@ -6,11 +6,55 @@ test_detects_when_empty {
 }
 
 test_when_default {
-	r := deny with input as {"aws": {"ssm": {"secrets": [{"kmskeyid": {"value": "aws/secretsmanager"}}]}}}
+	r := deny with input as {
+			"aws":{
+				"ssm":{
+					"secrets":[
+						{
+						"kmskeyid":{
+							"value":"arn:aws:kms:us-east1:111122223333:key/123"
+						}
+						}
+					]
+				},
+				"kms":{
+					"keys":[
+						{
+						"manager":{
+							"resource":"arn:aws:kms:us-east1:111122223333:key/123",
+							"value":"AWS"
+						}
+						}
+					]
+				}
+			}
+			}
 	count(r) == 1
 }
 
 test_when_not_empty_or_default {
-	r := deny with input as {"aws": {"ssm": {"secrets": [{"kmskeyid": {"value": "key123"}}]}}}
-	count(r) == 0
+    r := deny with input as {
+			"aws":{
+				"ssm":{
+					"secrets":[
+						{
+						"kmskeyid":{
+							"value":"arn:aws:kms:us-east1:111122223333:key/123"
+						}
+						}
+					]
+				},
+				"kms":{
+					"keys":[
+						{
+						"manager":{
+							"resource":"arn:aws:kms:us-east1:111122223333:key/123",
+							"value":"CUSTOMER"
+						}
+						}
+					]
+				}
+			}
+			}
+	count(r) == 0	
 }
