@@ -2061,6 +2061,10 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.kms.Key": {
       "type": "object",
       "properties": {
+        "manager": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "rotationenabled": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
