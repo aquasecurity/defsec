@@ -9,3 +9,4 @@ test_when_enabled {
 	r := deny with input as {"aws": {"elasticsearch": {"domains": [{"logpublishing": {"auditenabled": {"value": true}}}]}}}
 	count(r) == 0
 }
+
