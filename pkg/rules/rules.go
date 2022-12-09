@@ -62,6 +62,7 @@ import (
 	_ "github.com/aquasecurity/defsec/rules/cloud/policies/google/kms"
 	_ "github.com/aquasecurity/defsec/rules/cloud/policies/google/sql"
 	_ "github.com/aquasecurity/defsec/rules/cloud/policies/google/storage"
+	_ "github.com/aquasecurity/defsec/rules/cloud/policies/nifcloud/computing"
 	_ "github.com/aquasecurity/defsec/rules/cloud/policies/openstack/compute"
 	_ "github.com/aquasecurity/defsec/rules/cloud/policies/openstack/networking"
 	_ "github.com/aquasecurity/defsec/rules/cloud/policies/oracle/compute"
