@@ -309,6 +309,12 @@ spec:
         security concerns.
       checks: null
       severity: HIGH
+    - id: 5.1.1
+      name: Ensure that the cluster-admin role is only used where required
+      description: The RBAC role cluster-admin provides wide-ranging powers over the environment and should be used only where and when needed.
+      checks:
+        - id: AVD-KSV-0111
+      severity: HIGH
     - id: 5.1.2
       name: Minimize access to secrets
       description: The Kubernetes API stores secrets, which may be service account
