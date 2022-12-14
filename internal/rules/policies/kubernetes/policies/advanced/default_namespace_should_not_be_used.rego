@@ -9,9 +9,9 @@
 # custom:
 #   id: KSV110
 #   avd_id: AVD-KSV-0110
-#   severity: MEDIUM
+#   severity: LOW
 #   short_code: default-namespace-should-not-be-inuse
-#   recommended_action: "namespaces are created to allow for appropriate segregation of Kubernetes resources and that all new resources are created in a specific namespace"
+#   recommended_action: "Ensure that namespaces are created to allow for appropriate segregation of Kubernetes resources and that all new resources are created in a specific namespace."
 #   input:
 #     selector:
 #     - type: kubernetes
