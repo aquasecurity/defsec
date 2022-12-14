@@ -23,7 +23,6 @@ test_cluster_role_admin__used_with_non_system_role_binding {
 	count(r) == 1
 }
 
- 
 test_no_cluster_role_admin_is_used {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
