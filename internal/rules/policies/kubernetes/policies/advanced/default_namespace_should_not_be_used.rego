@@ -18,17 +18,16 @@
 package builtin.kubernetes.KSV110
 
 import data.lib.kubernetes
-import data.lib.utils
 
 workloads := ["pod", "replicaset", "replicationcontroller", "statefulset", "daemonset", "cronjob", "job"]
 
-defaultNamespaceInUse(kubeInput) {
-	lower(kubeInput.kind) == workloads[_]
-	kubeInput.metadata.namespace == "default"
+defaultNamespaceInUse {
+	lower(kubernetes.kind) == workloads[_]
+	kubernetes.namespace == "default"
 }
 
 deny[res] {
-	defaultNamespaceInUse(input)
-	msg := sprintf("%s '%s' should not be set with 'default' namespace", [input.kind, input.metadata.name])
+	defaultNamespaceInUse
+	msg := sprintf("%s '%s' should not be set with 'default' namespace", [kubernetes.kind, kubernetes.name])
 	res := result.new(msg, input.spec)
 }
