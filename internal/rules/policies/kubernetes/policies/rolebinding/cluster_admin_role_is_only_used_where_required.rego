@@ -31,5 +31,5 @@ clusterAdminRoleInUse(bindingInput) {
 deny[res] {
 	clusterAdminRoleInUse(input)
 	msg := sprintf("%s '%s' with role 'cluster-admin' should be used only when required", [input.kind, input.metadata.name])
-	res := result.new(msg, input.roleRef)
+	res := result.new(msg, input.metadata)
 }
