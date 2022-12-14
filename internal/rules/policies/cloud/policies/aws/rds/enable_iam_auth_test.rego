@@ -21,6 +21,5 @@ test_when_not_applicable {
 		"engine": {"value": "aurora"},
 		"iamauthenabled": {"value": false},
 	}]}}}
-
 	count(r) == 0
 }
