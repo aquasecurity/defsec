@@ -288,6 +288,27 @@ spec:
       checks:
         - id: AVD-KCV-0047
       severity: HIGH
+    - id: 3.1.1
+      name: Client certificate authentication should not be used for users (Manual)
+      description: Kubernetes provides the option to use client certificates for user
+        authentication. However as there is no way to revoke these certificates
+        when a user leaves an organization or loses their credential, they are
+        not suitable for this purpose.
+      checks: null
+      severity: HIGH
+    - id: 3.2.1
+      name: Ensure that a minimal audit policy is created (Manual)
+      description: Kubernetes can audit the details of requests made to the API
+        server. The --audit- policy-file flag must be set for this logging to be
+        enabled.
+      checks: null
+      severity: HIGH
+    - id: 3.2.2
+      name: Ensure that the audit policy covers key security concerns (Manual)
+      description: Ensure that the audit policy created for the cluster covers key
+        security concerns.
+      checks: null
+      severity: HIGH
     - id: 5.1.2
       name: Minimize access to secrets
       description: The Kubernetes API stores secrets, which may be service account
