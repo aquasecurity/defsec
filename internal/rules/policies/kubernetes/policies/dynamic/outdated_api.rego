@@ -57,6 +57,7 @@ recommend[info] {
 		"apiVersion": input.apiVersion,
 		"kind": input.kind,
 	}
+
 	info := merge(base, extra)
 }
 
