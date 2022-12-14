@@ -5,7 +5,6 @@ test_detects_when_disabled {
 		"engine": {"value": "postgres"},
 		"iamauthenabled": {"value": false},
 	}]}}}
-
 	count(r) == 1
 }
 
@@ -14,7 +13,6 @@ test_when_enabled {
 		"engine": {"value": "postgres"},
 		"iamauthenabled": {"value": true},
 	}]}}}
-
 	count(r) == 0
 }
 
