@@ -21,10 +21,10 @@ import data.lib.kubernetes
 
 roleBindings := ["clusterrolebinding", "rolebinding"]
 
-clusterAdminRoleInUse(inputRolebinding) {
-	lower(input.kind) == roleBindings[_]
-	inputRolebinding.roleRef.name == "cluster-admin"
-	inputRolebinding.subjects[_].name != "system:masters"
+clusterAdminRoleInUse(roleBinding) {
+	lower(kubernetes.kind) == roleBindings[_]
+	roleBinding.roleRef.name == "cluster-admin"
+	roleBinding.subjects[_].name != "system:masters"
 }
 
 deny[res] {
