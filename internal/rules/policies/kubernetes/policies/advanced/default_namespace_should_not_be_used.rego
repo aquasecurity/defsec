@@ -10,7 +10,7 @@
 #   id: KSV110
 #   avd_id: AVD-KSV-0110
 #   severity: LOW
-#   short_code: default-namespace-should-not-be-inuse
+#   short_code: default-namespace-should-not-be-used
 #   recommended_action: "Ensure that namespaces are created to allow for appropriate segregation of Kubernetes resources and that all new resources are created in a specific namespace."
 #   input:
 #     selector:
@@ -19,15 +19,12 @@ package builtin.kubernetes.KSV110
 
 import data.lib.kubernetes
 
-workloads := ["pod", "replicaset", "replicationcontroller", "statefulset", "daemonset", "cronjob", "job"]
-
 defaultNamespaceInUse {
-	lower(kubernetes.kind) == workloads[_]
 	kubernetes.namespace == "default"
 }
 
 deny[res] {
 	defaultNamespaceInUse
 	msg := sprintf("%s '%s' should not be set with 'default' namespace", [kubernetes.kind, kubernetes.name])
-	res := result.new(msg, input.spec)
+	res := result.new(msg, input.metadata.namespace)
 }

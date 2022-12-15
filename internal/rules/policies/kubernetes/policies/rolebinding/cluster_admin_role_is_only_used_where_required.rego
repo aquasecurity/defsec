@@ -10,7 +10,7 @@
 #   id: KSV111
 #   avd_id: AVD-KSV-0111
 #   severity: MEDIUM
-#   short_code: cluster-admin0-role-only-used-where-required"
+#   short_code: cluster-admin-role-only-used-where-required"
 #   recommended_action: "Identify all clusterrolebindings to the cluster-admin role. Check if they are used and if they need this role or if they could use a role with fewer privileges."
 #   input:
 #     selector:
@@ -21,14 +21,14 @@ import data.lib.kubernetes
 
 roleBindings := ["clusterrolebinding", "rolebinding"]
 
-clusterAdminRoleInUse(bindingInput) {
+clusterAdminRoleInUse {
 	lower(kubernetes.kind) == roleBindings[_]
-	bindingInput.roleRef.name == "cluster-admin"
+	input.roleRef.name == "cluster-admin"
 	not startswith(kubernetes.name, "system:")
 }
 
 deny[res] {
-	clusterAdminRoleInUse(input)
+	clusterAdminRoleInUse
 	msg := sprintf("%s '%s' with role 'cluster-admin' should be used only when required", [kubernetes.kind, kubernetes.name])
 	res := result.new(msg, input.metadata)
 }
