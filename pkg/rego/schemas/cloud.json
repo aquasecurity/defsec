@@ -5556,6 +5556,10 @@
         "computing": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.computing.Computing"
+        },
+        "sslcertificate": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.sslcertificate.SSLCertificate"
         }
       }
     },
@@ -5636,6 +5640,27 @@
         "description": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.sslcertificate.SSLCertificate": {
+      "type": "object",
+      "properties": {
+        "servercertificates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.sslcertificate.ServerCertificate"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.sslcertificate.ServerCertificate": {
+      "type": "object",
+      "properties": {
+        "expiration": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.TimeValue"
         }
       }
     },
