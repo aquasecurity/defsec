@@ -76,12 +76,21 @@ func (a *adapter) adaptRestAPIV1(restAPI agTypes.RestApi) (*v1.API, error) {
 	if restAPI.Name != nil {
 		name = defsecTypes.String(*restAPI.Name, metadata)
 	}
+	// minimumcompressionsize := defsecTypes.IntDefault(0, metadata)
+	// if restAPI.MinimumCompressionSize != nil {
+	// 	minimumcompressionsize = defsecTypes.Int(int(*restAPI.MinimumCompressionSize), metadata)
+	// }
 
+	minimumcompressionsize := defsecTypes.IntDefault(0, metadata)
+	if restAPI.MinimumCompressionSize != nil {
+		minimumcompressionsize = defsecTypes.Int(int(*restAPI.MinimumCompressionSize), metadata)
+	}
 	return &v1.API{
-		Metadata:  metadata,
-		Name:      name,
-		Stages:    stages,
-		Resources: resources,
+		Metadata:               metadata,
+		Name:                   name,
+		Stages:                 stages,
+		Resources:              resources,
+		MinimumCompressionSize: minimumcompressionsize,
 	}, nil
 }
 

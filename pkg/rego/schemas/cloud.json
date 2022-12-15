@@ -225,6 +225,10 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.apigateway.v1.API": {
       "type": "object",
       "properties": {
+        "minimumcompressionsize": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
+        },
         "name": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
