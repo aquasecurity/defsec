@@ -21,14 +21,16 @@ import data.lib.kubernetes
 
 roleBindings := ["clusterrolebinding", "rolebinding"]
 
-clusterAdminRoleInUse(bindingInput) {
+default clusterAdminRoleInUse = false
+
+clusterAdminRoleInUse {
 	lower(kubernetes.kind) == roleBindings[_]
-	bindingInput.roleRef.name == "cluster-admin"
+	input.roleRef.name == "cluster-admin"
 	not startswith(kubernetes.name, "system:")
 }
 
 deny[res] {
-	clusterAdminRoleInUse(input)
+	clusterAdminRoleInUse
 	msg := sprintf("%s '%s' with role 'cluster-admin' should be used only when required", [kubernetes.kind, kubernetes.name])
 	res := result.new(msg, input.metadata)
 }

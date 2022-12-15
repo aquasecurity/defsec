@@ -19,6 +19,8 @@ package builtin.kubernetes.KSV110
 
 import data.lib.kubernetes
 
+default defaultNamespaceInUse = false
+
 defaultNamespaceInUse {
 	kubernetes.namespace == "default"
 }
