@@ -20,6 +20,6 @@ package builtin.aws.apigateway.aws0219
 
 deny[res] {
 	api := input.aws.apigateway.v1.apis[_]
-	not api.minimumcompressionsize.value
-	res := result.new("API Gateway does not have content encoding enabled", api.minimumcompressionsize)
+	not api.minimumcompressionsize
+	res := result.new("API Gateway does not have content encoding enabled", api)
 }
