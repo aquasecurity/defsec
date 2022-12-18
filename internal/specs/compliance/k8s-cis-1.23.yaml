@@ -13,6 +13,57 @@ spec:
       checks:
         - id: AVD-KCV-0001
       severity: MEDIUM
+    - id: 1.2.2
+      name: Ensure that the --token-auth-file parameter is not set
+      description: Do not use token based authentication.
+      checks:
+        - id: AVD-KCV-0002
+      severity: LOW
+    - id: 1.2.3
+      name: Ensure that the --DenyServiceExternalIPs is not set
+      description: This admission controller rejects all net-new usage of the Service
+        field externalIPs.
+      checks:
+        - id: AVD-KCV-0003
+      severity: LOW
+    - id: 1.2.4
+      name: Ensure that the --kubelet-https argument is set to true
+      description: Use https for kubelet connections.
+      checks:
+        - id: AVD-KCV-0004
+      severity: LOW
+    - id: 1.2.5
+      name: Ensure that the --kubelet-client-certificate and --kubelet-client-key
+        arguments are set as appropriate
+      description: Enable certificate based kubelet authentication.
+      checks:
+        - id: AVD-KCV-0005
+      severity: HIGH
+    - id: 1.2.6
+      name: Ensure that the --kubelet-certificate-authority argument is set as
+        appropriate
+      description: Verify kubelets certificate before establishing connection.
+      checks:
+        - id: AVD-KCV-0006
+      severity: HIGH
+    - id: 1.2.7
+      name: Ensure that the --authorization-mode argument is not set to AlwaysAllow
+      description: Do not always authorize all requests.
+      checks:
+        - id: AVD-KCV-0007
+      severity: LOW
+    - id: 1.2.8
+      name: Ensure that the --authorization-mode argument includes Node
+      description: Restrict kubelet nodes to reading only objects associated with them.
+      checks:
+        - id: AVD-KCV-0008
+      severity: HIGH
+    - id: 1.2.9
+      name: Ensure that the --authorization-mode argument includes RBAC
+      description: Turn on Role Based Access Control.
+      checks:
+        - id: AVD-KCV-0009
+      severity: HIGH
     - id: 1.2.10
       name: Ensure that the admission control plugin EventRateLimit is set
       description: Limit the rate at which the API server accepts requests.
@@ -78,12 +129,6 @@ spec:
       checks:
         - id: AVD-KCV-0019
       severity: LOW
-    - id: 1.2.2
-      name: Ensure that the --token-auth-file parameter is not set
-      description: Do not use token based authentication.
-      checks:
-        - id: AVD-KCV-0002
-      severity: LOW
     - id: 1.2.20
       name: Ensure that the --audit-log-maxage argument is set to 30 or as appropriate
       description: Retain the logs for at least 30 days or as appropriate.
@@ -111,19 +156,19 @@ spec:
         - id: AVD-KCV-0024
       severity: LOW
     - id: 1.2.25
+      name: Ensure that the --service-account-key-file argument is set as appropriate
+      description: Explicitly set a service account public key file for service
+        accounts on the apiserver.
+      checks:
+        - id: AVD-KCV-0025
+      severity: LOW
+    - id: 1.2.26
       name: Ensure that the --etcd-certfile and --etcd-keyfile arguments are set as
         appropriate
       description: etcd should be configured to make use of TLS encryption for client
         connections.
       checks:
         - id: AVD-KCV-0026
-      severity: LOW
-    - id: 1.2.25
-      name: Ensure that the --service-account-key-file argument is set as appropriate
-      description: Explicitly set a service account public key file for service
-        accounts on the apiserver.
-      checks:
-        - id: AVD-KCV-0025
       severity: LOW
     - id: 1.2.27
       name: Ensure that the --tls-cert-file and --tls-private-key-file arguments are
@@ -145,13 +190,6 @@ spec:
       checks:
         - id: AVD-KCV-0029
       severity: LOW
-    - id: 1.2.3
-      name: Ensure that the --DenyServiceExternalIPs is not set
-      description: This admission controller rejects all net-new usage of the Service
-        field externalIPs.
-      checks:
-        - id: AVD-KCV-0003
-      severity: LOW
     - id: 1.2.30
       name: Ensure that the --encryption-provider-config argument is set as
         appropriate
@@ -159,44 +197,6 @@ spec:
       checks:
         - id: AVD-KCV-0030
       severity: LOW
-    - id: 1.2.4
-      name: Ensure that the --kubelet-https argument is set to true
-      description: Use https for kubelet connections.
-      checks:
-        - id: AVD-KCV-0004
-      severity: LOW
-    - id: 1.2.5
-      name: Ensure that the --kubelet-client-certificate and --kubelet-client-key
-        arguments are set as appropriate
-      description: Enable certificate based kubelet authentication.
-      checks:
-        - id: AVD-KCV-0005
-      severity: HIGH
-    - id: 1.2.6
-      name: Ensure that the --kubelet-certificate-authority argument is set as
-        appropriate
-      description: Verify kubelets certificate before establishing connection.
-      checks:
-        - id: AVD-KCV-0006
-      severity: HIGH
-    - id: 1.2.7
-      name: Ensure that the --authorization-mode argument is not set to AlwaysAllow
-      description: Do not always authorize all requests.
-      checks:
-        - id: AVD-KCV-0007
-      severity: LOW
-    - id: 1.2.8
-      name: Ensure that the --authorization-mode argument includes Node
-      description: Restrict kubelet nodes to reading only objects associated with them.
-      checks:
-        - id: AVD-KCV-0008
-      severity: HIGH
-    - id: 1.2.9
-      name: Ensure that the --authorization-mode argument includes RBAC
-      description: Turn on Role Based Access Control.
-      checks:
-        - id: AVD-KCV-0009
-      severity: HIGH
     - id: 1.3.1
       name: Ensure that the --terminated-pod-gc-threshold argument is set as
         appropriate
