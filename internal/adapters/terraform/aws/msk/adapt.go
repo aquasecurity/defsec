@@ -28,11 +28,19 @@ func adaptCluster(resource *terraform.Block) msk.Cluster {
 		EncryptionInTransit: msk.EncryptionInTransit{
 			Metadata:     resource.GetMetadata(),
 			ClientBroker: defsecTypes.StringDefault("TLS_PLAINTEXT", resource.GetMetadata()),
+			InCluster:    defsecTypes.Bool(true, resource.GetMetadata()),
 		},
 		EncryptionAtRest: msk.EncryptionAtRest{
 			Metadata:  resource.GetMetadata(),
 			KMSKeyARN: defsecTypes.StringDefault("", resource.GetMetadata()),
 			Enabled:   defsecTypes.BoolDefault(false, resource.GetMetadata()),
+		},
+		ClientAuthentication: msk.ClientAuthentication{
+			Metadata: resource.GetMetadata(),
+			Unauthenticated: msk.Unauthenticated{
+				Metadeta: resource.GetMetadata(),
+				Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
+			},
 		},
 		Logging: msk.Logging{
 			Metadata: resource.GetMetadata(),

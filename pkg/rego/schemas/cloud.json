@@ -2176,6 +2176,15 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.msk.ClientAuthentication": {
+      "type": "object",
+      "properties": {
+        "unauthenticated": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.msk.Unauthenticated"
+        }
+      }
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.msk.CloudwatchLogging": {
       "type": "object",
       "properties": {
@@ -2188,6 +2197,10 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.msk.Cluster": {
       "type": "object",
       "properties": {
+        "clientauthentication": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.msk.ClientAuthentication"
+        },
         "encryptionatrest": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.msk.EncryptionAtRest"
@@ -2221,6 +2234,10 @@
         "clientbroker": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "incluster": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2255,6 +2272,15 @@
       }
     },
     "github.com.aquasecurity.defsec.pkg.providers.aws.msk.S3Logging": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.msk.Unauthenticated": {
       "type": "object",
       "properties": {
         "enabled": {

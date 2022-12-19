@@ -9,10 +9,11 @@ type MSK struct {
 }
 
 type Cluster struct {
-	Metadata            defsecTypes.Metadata
-	EncryptionInTransit EncryptionInTransit
-	EncryptionAtRest    EncryptionAtRest
-	Logging             Logging
+	Metadata             defsecTypes.Metadata
+	EncryptionInTransit  EncryptionInTransit
+	EncryptionAtRest     EncryptionAtRest
+	Logging              Logging
+	ClientAuthentication ClientAuthentication
 }
 
 const (
@@ -24,6 +25,7 @@ const (
 type EncryptionInTransit struct {
 	Metadata     defsecTypes.Metadata
 	ClientBroker defsecTypes.StringValue
+	InCluster    defsecTypes.BoolValue
 }
 
 type EncryptionAtRest struct {
@@ -56,5 +58,15 @@ type CloudwatchLogging struct {
 
 type FirehoseLogging struct {
 	Metadata defsecTypes.Metadata
+	Enabled  defsecTypes.BoolValue
+}
+
+type ClientAuthentication struct {
+	Metadata        defsecTypes.Metadata
+	Unauthenticated Unauthenticated
+}
+
+type Unauthenticated struct {
+	Metadeta defsecTypes.Metadata
 	Enabled  defsecTypes.BoolValue
 }

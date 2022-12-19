@@ -69,15 +69,22 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterInfo) (*msk.Cluster, erro
 	metadata := a.CreateMetadataFromARN(*apiCluster.ClusterArn)
 
 	var encInTransitClientBroker, encAtRestKMSKeyId string
-	var encAtRestEnabled bool
+	var encAtRestEnabled, encInTransitInCluster, UnauthenticatedEnabled bool
 	if apiCluster.EncryptionInfo != nil {
 		if apiCluster.EncryptionInfo.EncryptionInTransit != nil {
 			encInTransitClientBroker = string(apiCluster.EncryptionInfo.EncryptionInTransit.ClientBroker)
 		}
 
+		if apiCluster.EncryptionInfo.EncryptionInTransit != nil {
+			encInTransitInCluster = bool(apiCluster.EncryptionInfo.EncryptionInTransit.InCluster)
+		}
+
 		if apiCluster.EncryptionInfo.EncryptionAtRest != nil {
 			encAtRestKMSKeyId = *apiCluster.EncryptionInfo.EncryptionAtRest.DataVolumeKMSKeyId
 			encAtRestEnabled = true
+		}
+		if apiCluster.ClientAuthentication.Unauthenticated != nil {
+			UnauthenticatedEnabled = bool(apiCluster.ClientAuthentication.Unauthenticated.Enabled)
 		}
 	}
 
@@ -100,11 +107,19 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterInfo) (*msk.Cluster, erro
 		EncryptionInTransit: msk.EncryptionInTransit{
 			Metadata:     metadata,
 			ClientBroker: defsecTypes.String(encInTransitClientBroker, metadata),
+			InCluster:    defsecTypes.Bool(encInTransitInCluster, metadata),
 		},
 		EncryptionAtRest: msk.EncryptionAtRest{
 			Metadata:  metadata,
 			KMSKeyARN: defsecTypes.String(encAtRestKMSKeyId, metadata),
 			Enabled:   defsecTypes.Bool(encAtRestEnabled, metadata),
+		},
+		ClientAuthentication: msk.ClientAuthentication{
+			Metadata: metadata,
+			Unauthenticated: msk.Unauthenticated{
+				Metadeta: metadata,
+				Enabled:  defsecTypes.Bool(UnauthenticatedEnabled, metadata),
+			},
 		},
 		Logging: msk.Logging{
 			Metadata: metadata,

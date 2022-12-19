@@ -14,11 +14,19 @@ func getClusters(ctx parser.FileContext) (clusters []msk.Cluster) {
 			EncryptionInTransit: msk.EncryptionInTransit{
 				Metadata:     r.Metadata(),
 				ClientBroker: defsecTypes.StringDefault("TLS", r.Metadata()),
+				InCluster:    defsecTypes.Bool(true, r.Metadata()),
 			},
 			EncryptionAtRest: msk.EncryptionAtRest{
 				Metadata:  r.Metadata(),
 				KMSKeyARN: defsecTypes.StringDefault("", r.Metadata()),
 				Enabled:   defsecTypes.BoolDefault(false, r.Metadata()),
+			},
+			ClientAuthentication: msk.ClientAuthentication{
+				Metadata: r.Metadata(),
+				Unauthenticated: msk.Unauthenticated{
+					Metadeta: r.Metadata(),
+					Enabled:  defsecTypes.BoolDefault(false, r.Metadata()),
+				},
 			},
 			Logging: msk.Logging{
 				Metadata: r.Metadata(),
