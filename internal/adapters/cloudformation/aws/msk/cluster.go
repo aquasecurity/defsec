@@ -11,6 +11,16 @@ func getClusters(ctx parser.FileContext) (clusters []msk.Cluster) {
 
 		cluster := msk.Cluster{
 			Metadata: r.Metadata(),
+			BrokerNodeGroupInfo: msk.BrokerNodeGroupInfo{
+				Metadata: r.Metadata(),
+				ConnectivityInfo: msk.ConnectivityInfo{
+					Metadata: r.Metadata(),
+					PublicAccess: msk.PublicAccess{
+						Metadata: r.Metadata(),
+						Type:     defsecTypes.StringDefault("DISABLED", r.Metadata()),
+					},
+				},
+			},
 			EncryptionInTransit: msk.EncryptionInTransit{
 				Metadata:     r.Metadata(),
 				ClientBroker: defsecTypes.StringDefault("TLS", r.Metadata()),
@@ -24,7 +34,7 @@ func getClusters(ctx parser.FileContext) (clusters []msk.Cluster) {
 			ClientAuthentication: msk.ClientAuthentication{
 				Metadata: r.Metadata(),
 				Unauthenticated: msk.Unauthenticated{
-					Metadeta: r.Metadata(),
+					Metadata: r.Metadata(),
 					Enabled:  defsecTypes.BoolDefault(false, r.Metadata()),
 				},
 			},
@@ -48,10 +58,22 @@ func getClusters(ctx parser.FileContext) (clusters []msk.Cluster) {
 			},
 		}
 
+		if brokerNodeProp := r.GetProperty("BrokerNodeGroupInfo"); brokerNodeProp.IsNotNil() {
+			cluster.BrokerNodeGroupInfo.Metadata = brokerNodeProp.Metadata()
+			if connectInfoProp := brokerNodeProp.GetProperty("ConnectivityInfo"); connectInfoProp.IsNotNil() {
+				cluster.BrokerNodeGroupInfo.ConnectivityInfo.Metadata = connectInfoProp.Metadata()
+				if publicAcessProp := connectInfoProp.GetProperty("PublicAccess"); publicAcessProp.IsNotNil() {
+					cluster.BrokerNodeGroupInfo.ConnectivityInfo.PublicAccess.Metadata = publicAcessProp.Metadata()
+					cluster.BrokerNodeGroupInfo.ConnectivityInfo.PublicAccess.Type = publicAcessProp.GetStringProperty("Type", "DISABLED")
+				}
+			}
+		}
+
 		if encProp := r.GetProperty("EncryptionInfo.EncryptionInTransit"); encProp.IsNotNil() {
 			cluster.EncryptionInTransit = msk.EncryptionInTransit{
 				Metadata:     encProp.Metadata(),
 				ClientBroker: encProp.GetStringProperty("ClientBroker", "TLS"),
+				InCluster:    encProp.GetBoolProperty("InCluster", true),
 			}
 		}
 
@@ -60,6 +82,14 @@ func getClusters(ctx parser.FileContext) (clusters []msk.Cluster) {
 				Metadata:  encAtRestProp.Metadata(),
 				KMSKeyARN: encAtRestProp.GetStringProperty("DataVolumeKMSKeyId", ""),
 				Enabled:   defsecTypes.BoolDefault(true, encAtRestProp.Metadata()),
+			}
+		}
+
+		if clientAuthProp := r.GetProperty("ClientAuthentication"); clientAuthProp.IsNotNil() {
+			cluster.ClientAuthentication.Metadata = clientAuthProp.Metadata()
+			if unauthProp := clientAuthProp.GetProperty("Unauthenticated"); unauthProp.IsNotNil() {
+				cluster.ClientAuthentication.Unauthenticated.Metadata = unauthProp.Metadata()
+				cluster.ClientAuthentication.Unauthenticated.Enabled = unauthProp.GetBoolProperty("Enabled", false)
 			}
 		}
 

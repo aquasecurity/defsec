@@ -25,6 +25,16 @@ func adaptClusters(modules terraform.Modules) []msk.Cluster {
 func adaptCluster(resource *terraform.Block) msk.Cluster {
 	cluster := msk.Cluster{
 		Metadata: resource.GetMetadata(),
+		BrokerNodeGroupInfo: msk.BrokerNodeGroupInfo{
+			Metadata: resource.GetMetadata(),
+			ConnectivityInfo: msk.ConnectivityInfo{
+				Metadata: resource.GetMetadata(),
+				PublicAccess: msk.PublicAccess{
+					Metadata: resource.GetMetadata(),
+					Type:     defsecTypes.StringDefault("DISABLED", resource.GetMetadata()),
+				},
+			},
+		},
 		EncryptionInTransit: msk.EncryptionInTransit{
 			Metadata:     resource.GetMetadata(),
 			ClientBroker: defsecTypes.StringDefault("TLS_PLAINTEXT", resource.GetMetadata()),
@@ -38,7 +48,7 @@ func adaptCluster(resource *terraform.Block) msk.Cluster {
 		ClientAuthentication: msk.ClientAuthentication{
 			Metadata: resource.GetMetadata(),
 			Unauthenticated: msk.Unauthenticated{
-				Metadeta: resource.GetMetadata(),
+				Metadata: resource.GetMetadata(),
 				Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 			},
 		},
@@ -62,11 +72,25 @@ func adaptCluster(resource *terraform.Block) msk.Cluster {
 		},
 	}
 
+	if brokerNodeBlock := resource.GetBlock("broker_node_group_info"); brokerNodeBlock.IsNotNil() {
+		cluster.BrokerNodeGroupInfo.Metadata = brokerNodeBlock.GetMetadata()
+		if connectBlock := resource.GetBlock("connectivity_info"); connectBlock.IsNotNil() {
+			cluster.BrokerNodeGroupInfo.ConnectivityInfo.Metadata = connectBlock.GetMetadata()
+			if publicAccessBlock := resource.GetAttribute("public_access"); publicAccessBlock.IsNotNil() {
+				cluster.BrokerNodeGroupInfo.ConnectivityInfo.PublicAccess.Metadata = publicAccessBlock.GetMetadata()
+				cluster.BrokerNodeGroupInfo.ConnectivityInfo.PublicAccess.Type = defsecTypes.String("DISABLED", publicAccessBlock.GetMetadata())
+			}
+		}
+	}
+
 	if encryptBlock := resource.GetBlock("encryption_info"); encryptBlock.IsNotNil() {
 		if encryptionInTransitBlock := encryptBlock.GetBlock("encryption_in_transit"); encryptionInTransitBlock.IsNotNil() {
 			cluster.EncryptionInTransit.Metadata = encryptionInTransitBlock.GetMetadata()
 			if clientBrokerAttr := encryptionInTransitBlock.GetAttribute("client_broker"); clientBrokerAttr.IsNotNil() {
 				cluster.EncryptionInTransit.ClientBroker = clientBrokerAttr.AsStringValueOrDefault("TLS", encryptionInTransitBlock)
+			}
+			if inClusterAttr := encryptionInTransitBlock.GetAttribute("in_cluster"); inClusterAttr.IsNotNil() {
+				cluster.EncryptionInTransit.InCluster = inClusterAttr.AsBoolValueOrDefault(true, encryptionInTransitBlock)
 			}
 		}
 
@@ -74,6 +98,14 @@ func adaptCluster(resource *terraform.Block) msk.Cluster {
 			cluster.EncryptionAtRest.Metadata = encryptionAtRestAttr.GetMetadata()
 			cluster.EncryptionAtRest.KMSKeyARN = encryptionAtRestAttr.AsStringValueOrDefault("", encryptBlock)
 			cluster.EncryptionAtRest.Enabled = defsecTypes.Bool(true, encryptionAtRestAttr.GetMetadata())
+		}
+	}
+
+	if clientauthBlock := resource.GetBlock("client_authentication"); clientauthBlock.IsNotNil() {
+		cluster.ClientAuthentication.Metadata = clientauthBlock.GetMetadata()
+		if unathAttr := clientauthBlock.GetAttribute("unauthenticated"); unathAttr.IsNotNil() {
+			cluster.ClientAuthentication.Unauthenticated.Metadata = unathAttr.GetMetadata()
+			cluster.ClientAuthentication.Unauthenticated.Enabled = defsecTypes.Bool(false, unathAttr.GetMetadata())
 		}
 	}
 

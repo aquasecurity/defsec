@@ -14,6 +14,7 @@ type Cluster struct {
 	EncryptionAtRest     EncryptionAtRest
 	Logging              Logging
 	ClientAuthentication ClientAuthentication
+	BrokerNodeGroupInfo  BrokerNodeGroupInfo
 }
 
 const (
@@ -67,6 +68,21 @@ type ClientAuthentication struct {
 }
 
 type Unauthenticated struct {
-	Metadeta defsecTypes.Metadata
+	Metadata defsecTypes.Metadata
 	Enabled  defsecTypes.BoolValue
+}
+
+type BrokerNodeGroupInfo struct {
+	Metadata         defsecTypes.Metadata
+	ConnectivityInfo ConnectivityInfo
+}
+
+type ConnectivityInfo struct {
+	Metadata     defsecTypes.Metadata
+	PublicAccess PublicAccess
+}
+
+type PublicAccess struct {
+	Metadata defsecTypes.Metadata
+	Type     defsecTypes.StringValue
 }
