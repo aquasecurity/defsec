@@ -2084,6 +2084,10 @@
         "tracing": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.lambda.Tracing"
+        },
+        "vpcconfig": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.lambda.VpcConfig"
         }
       }
     },
@@ -2116,6 +2120,15 @@
       "type": "object",
       "properties": {
         "mode": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.lambda.VpcConfig": {
+      "type": "object",
+      "properties": {
+        "vpcid": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }

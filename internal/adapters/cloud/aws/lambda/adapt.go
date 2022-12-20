@@ -79,6 +79,11 @@ func (a *adapter) adaptFunction(function types.FunctionConfiguration) (*lambda.F
 		tracingMode = string(function.TracingConfig.Mode)
 	}
 
+	var VpcId string
+	if function.VpcConfig != nil {
+		VpcId = string(*function.VpcConfig.VpcId)
+	}
+
 	var permissions []lambda.Permission
 	if output, err := a.api.GetPolicy(a.Context(), &lambdaapi.GetPolicyInput{
 		FunctionName: function.FunctionName,
@@ -129,6 +134,10 @@ func (a *adapter) adaptFunction(function types.FunctionConfiguration) (*lambda.F
 		Tracing: lambda.Tracing{
 			Metadata: metadata,
 			Mode:     defsecTypes.String(tracingMode, metadata),
+		},
+		VpcConfig: lambda.VpcConfig{
+			Metadata: metadata,
+			VpcId:    defsecTypes.String(VpcId, metadata),
 		},
 		Permissions: permissions,
 	}, nil
