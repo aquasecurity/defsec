@@ -10,7 +10,7 @@
 #   avd_id: AVD-AWS-0302
 #   provider: aws
 #   service: msk
-#   severity: HIGH
+#   severity: LOW
 #   short_code: enable_transit_cluster_encryption
 #   recommended_action: "Enable TLS encryption within the cluster for all MSK clusters"
 #   input:
