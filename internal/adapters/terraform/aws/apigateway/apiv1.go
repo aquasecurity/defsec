@@ -39,10 +39,11 @@ func adaptAPIsV1(modules terraform.Modules) []v1.API {
 
 	for _, apiBlock := range modules.GetResourcesByType("aws_api_gateway_rest_api") {
 		api := v1.API{
-			Metadata:  apiBlock.GetMetadata(),
-			Name:      apiBlock.GetAttribute("name").AsStringValueOrDefault("", apiBlock),
-			Stages:    nil,
-			Resources: adaptAPIResourcesV1(modules, apiBlock),
+			Metadata:                  apiBlock.GetMetadata(),
+			Name:                      apiBlock.GetAttribute("name").AsStringValueOrDefault("", apiBlock),
+			Stages:                    nil,
+			Resources:                 adaptAPIResourcesV1(modules, apiBlock),
+			DisableExecuteApiEndpoint: apiBlock.GetAttribute("disable_execute_api_endpoint").AsBoolValueOrDefault(false, apiBlock),
 		}
 
 		for _, stageBlock := range modules.GetReferencingResources(apiBlock, "aws_api_gateway_stage", "rest_api_id") {
@@ -79,7 +80,9 @@ func adaptStageV1(stageBlock *terraform.Block, modules terraform.Modules) v1.Sta
 			Metadata:              stageBlock.GetMetadata(),
 			CloudwatchLogGroupARN: defsecTypes.StringDefault("", stageBlock.GetMetadata()),
 		},
-		XRayTracingEnabled: stageBlock.GetAttribute("xray_tracing_enabled").AsBoolValueOrDefault(false, stageBlock),
+		XRayTracingEnabled:  stageBlock.GetAttribute("xray_tracing_enabled").AsBoolValueOrDefault(false, stageBlock),
+		CacheClusterEnabled: stageBlock.GetAttribute("cache_cluster_enabled").AsBoolValueOrDefault(false, stageBlock),
+		WebAclArn:           defsecTypes.StringDefault("", stageBlock.GetMetadata()),
 	}
 	for _, methodSettings := range modules.GetReferencingResources(stageBlock, "aws_api_gateway_method_settings", "stage_name") {
 
@@ -110,6 +113,6 @@ func adaptStageV1(stageBlock *terraform.Block, modules terraform.Modules) v1.Sta
 		stage.AccessLogging.Metadata = stageBlock.GetMetadata()
 		stage.AccessLogging.CloudwatchLogGroupARN = defsecTypes.StringDefault("", stageBlock.GetMetadata())
 	}
-
+	stage.WebAclArn = stageBlock.GetAttribute("web_acl_arn").AsStringValueOrDefault("", stageBlock)
 	return stage
 }

@@ -10,18 +10,21 @@ type APIGateway struct {
 }
 
 type API struct {
-	Metadata  defsecTypes.Metadata
-	Name      defsecTypes.StringValue
-	Stages    []Stage
-	Resources []Resource
+	Metadata                  defsecTypes.Metadata
+	Name                      defsecTypes.StringValue
+	Stages                    []Stage
+	Resources                 []Resource
+	DisableExecuteApiEndpoint defsecTypes.BoolValue
 }
 
 type Stage struct {
-	Metadata           defsecTypes.Metadata
-	Name               defsecTypes.StringValue
-	AccessLogging      AccessLogging
-	XRayTracingEnabled defsecTypes.BoolValue
-	RESTMethodSettings []RESTMethodSettings
+	Metadata            defsecTypes.Metadata
+	Name                defsecTypes.StringValue
+	AccessLogging       AccessLogging
+	XRayTracingEnabled  defsecTypes.BoolValue
+	RESTMethodSettings  []RESTMethodSettings
+	CacheClusterEnabled defsecTypes.BoolValue
+	WebAclArn           defsecTypes.StringValue
 }
 
 type Resource struct {

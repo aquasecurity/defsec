@@ -225,6 +225,10 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.apigateway.v1.API": {
       "type": "object",
       "properties": {
+        "disableexecuteapiendpoint": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
         "name": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
@@ -339,6 +343,10 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.apigateway.v1.AccessLogging"
         },
+        "cacheclusterenabled": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
         "name": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
@@ -349,6 +357,10 @@
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.apigateway.v1.RESTMethodSettings"
           }
+        },
+        "webaclarn": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "xraytracingenabled": {
           "type": "object",

@@ -78,10 +78,11 @@ func (a *adapter) adaptRestAPIV1(restAPI agTypes.RestApi) (*v1.API, error) {
 	}
 
 	return &v1.API{
-		Metadata:  metadata,
-		Name:      name,
-		Stages:    stages,
-		Resources: resources,
+		Metadata:                  metadata,
+		Name:                      name,
+		Stages:                    stages,
+		Resources:                 resources,
+		DisableExecuteApiEndpoint: defsecTypes.Bool(restAPI.DisableExecuteApiEndpoint, metadata),
 	}, nil
 }
 
@@ -108,6 +109,11 @@ func (a *adapter) adaptStageV1(restAPI agTypes.RestApi, stage agTypes.Stage) v1.
 		name = defsecTypes.String(*stage.StageName, metadata)
 	}
 
+	var WebAclArn string
+	if stage.WebAclArn != nil {
+		WebAclArn = *stage.WebAclArn
+	}
+
 	return v1.Stage{
 		Metadata: metadata,
 		Name:     name,
@@ -115,8 +121,10 @@ func (a *adapter) adaptStageV1(restAPI agTypes.RestApi, stage agTypes.Stage) v1.
 			Metadata:              metadata,
 			CloudwatchLogGroupARN: defsecTypes.String(logARN, metadata),
 		},
-		RESTMethodSettings: methodSettings,
-		XRayTracingEnabled: defsecTypes.Bool(stage.TracingEnabled, metadata),
+		RESTMethodSettings:  methodSettings,
+		XRayTracingEnabled:  defsecTypes.Bool(stage.TracingEnabled, metadata),
+		CacheClusterEnabled: defsecTypes.Bool(stage.CacheClusterEnabled, metadata),
+		WebAclArn:           defsecTypes.String(WebAclArn, metadata),
 	}
 }
 
