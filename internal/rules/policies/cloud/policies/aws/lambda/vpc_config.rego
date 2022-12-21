@@ -10,7 +10,7 @@
 #   avd_id: AVD-AWS-0305
 #   provider: aws
 #   service: lambda
-#   severity: HIGH
+#   severity: LOW
 #   short_code: vpc_config
 #   recommended_action: "Update the Lambda function with a VPC configuration."
 #   input:
