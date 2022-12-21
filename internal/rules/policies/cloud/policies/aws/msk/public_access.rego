@@ -10,7 +10,7 @@
 #   avd_id: AVD-AWS-0304
 #   provider: aws
 #   service: msk
-#   severity: HIGH
+#   severity: LOW
 #   short_code: public_access
 #   recommended_action: "Check for public access feature within the cluster for all MSK clusters"
 #   input:
