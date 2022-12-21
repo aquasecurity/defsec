@@ -10,7 +10,7 @@
 #   avd_id: AVD-AWS-0301
 #   provider: aws
 #   service: msk
-#   severity: HIGH
+#   severity: LOW
 #   short_code: enable_in_transit_encryption
 #   recommended_action: "Enable only TLS encryption between the client and broker for all MSK clusters"
 #   input:
