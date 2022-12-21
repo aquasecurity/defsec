@@ -10,7 +10,7 @@
 #   avd_id: AVD-AWS-0303
 #   provider: aws
 #   service: msk
-#   severity: HIGH
+#   severity: LOW
 #   short_code: enable_unauth_access
 #   recommended_action: "Ensure that MSK clusters does not have unauthenticated access enabled."
 #   input:
