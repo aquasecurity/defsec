@@ -11,7 +11,7 @@
 #   provider: aws
 #   service: apigateway
 #   severity: LOW
-#   short_code: enable_web_acl
+#   short_code: enable_waf
 #   recommended_action: "Associate API Gateway API with Web Application Firewall"
 #   input:
 #     selector:
@@ -21,6 +21,6 @@ package builtin.aws.apigateway.aws0310
 deny[res] {
 	api := input.aws.apigateway.v1.apis[_]
     stage := api.stages[_]
-	not stage.webaclarn
+	stage.webaclarn.value == ""
 	res := result.new("API Gateway Stage does not have WAF enabled", stage)
 }

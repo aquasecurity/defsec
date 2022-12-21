@@ -1,7 +1,7 @@
 package builtin.aws.apigateway.aws0310
 
 test_detects_when_disabled {
-	r := deny with input as {"aws": {"apigateway": {"v1": {"apis": [{"stages": [{}]}]}}}}
+	r := deny with input as {"aws": {"apigateway": {"v1": {"apis": [{"stages": [{"webaclarn": {"value": ""}}]}]}}}}
 	count(r) == 1
 }
 
