@@ -14,7 +14,7 @@
 #   recommended_action: "Create a role which does not permit wildcard verb on wildcard resource"
 #   input:
 #     selector:
-#     - type: rbac
+#     - type: kubernetes
 package builtin.kubernetes.KSV044
 
 import data.lib.kubernetes

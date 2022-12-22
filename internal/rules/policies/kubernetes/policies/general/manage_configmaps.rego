@@ -14,7 +14,7 @@
 #   recommended_action: "Remove write permission verbs for resource 'configmaps'"
 #   input:
 #     selector:
-#     - type: rbac
+#     - type: kubernetes
 package builtin.kubernetes.KSV049
 
 import data.lib.kubernetes

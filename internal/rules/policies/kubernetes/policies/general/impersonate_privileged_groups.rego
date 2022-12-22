@@ -14,7 +14,7 @@
 #   recommended_action: "Create a role which does not permit to impersonate privileged groups if not needed"
 #   input:
 #     selector:
-#     - type: rbac
+#     - type: kubernetes
 package builtin.kubernetes.KSV043
 
 import data.lib.kubernetes

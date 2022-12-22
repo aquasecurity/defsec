@@ -14,7 +14,7 @@
 #   recommended_action: "Create a role which does not permit privilege escalation from node proxy"
 #   input:
 #     selector:
-#     - type: rbac
+#     - type: kubernetes
 package builtin.kubernetes.KSV047
 
 import data.lib.kubernetes

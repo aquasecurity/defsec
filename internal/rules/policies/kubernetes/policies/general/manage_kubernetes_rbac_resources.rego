@@ -14,7 +14,7 @@
 #   recommended_action: "Remove write permission verbs for resource 'roles' and 'rolebindings'"
 #   input:
 #     selector:
-#     - type: rbac
+#     - type: kubernetes
 package builtin.kubernetes.KSV050
 
 import data.lib.kubernetes
