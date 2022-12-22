@@ -21,6 +21,7 @@ type ConfigurableScanner interface {
 	SetFrameworks(frameworks []framework.Framework)
 	SetSpec(spec string)
 	SetRegoOnly(regoOnly bool)
+	SetInputSchema(schema interface{})
 }
 
 type ScannerOption func(s ConfigurableScanner)

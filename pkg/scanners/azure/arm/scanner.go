@@ -92,6 +92,10 @@ func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 	s.frameworks = frameworks
 }
 
+func (s *Scanner) SetInputSchema(_ interface{}) {
+	// handled by rego when option is passed on
+}
+
 func (s *Scanner) SetTraceWriter(io.Writer)        {}
 func (s *Scanner) SetPerResultTracingEnabled(bool) {}
 func (s *Scanner) SetDataDirs(...string)           {}

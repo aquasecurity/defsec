@@ -122,6 +122,10 @@ func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on
 }
 
+func (s *Scanner) SetInputSchema(_ interface{}) {
+	// handled by rego when option is passed on
+}
+
 type Metrics struct {
 	Parser   parser.Metrics
 	Executor executor.Metrics

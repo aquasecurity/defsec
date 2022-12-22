@@ -114,6 +114,10 @@ func (s *Scanner) SetPolicyFilesystem(policyFS fs.FS) {
 	s.policyFS = policyFS
 }
 
+func (s *Scanner) SetInputSchema(_ interface{}) {
+	// handled by rego when option is passed on
+}
+
 func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, path string) (scan.Results, error) {
 
 	var results []scan.Result

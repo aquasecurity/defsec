@@ -89,6 +89,10 @@ func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
 	s.useEmbedded = b
 }
 
+func (s *Scanner) SetInputSchema(_ interface{}) {
+	// handled by rego when option is passed on
+}
+
 func (s *Scanner) SetTraceWriter(writer io.Writer)   {}
 func (s *Scanner) SetPerResultTracingEnabled(b bool) {}
 func (s *Scanner) SetDataDirs(s2 ...string)          {}

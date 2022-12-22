@@ -106,6 +106,10 @@ func (s *Scanner) SetSkipRequiredCheck(_ bool) {
 	// NOTE: Skip required option not applicable for rego.
 }
 
+func (s *Scanner) SetInputSchema(schema interface{}) {
+	s.inputSchema = schema
+}
+
 type DynamicMetadata struct {
 	Warning   bool
 	Filepath  string
