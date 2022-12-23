@@ -21,5 +21,5 @@ package builtin.aws.lambda.aws0305
 deny[res] {
 	function := input.aws.lambda.functions[_]
     function.vpcconfig.vpcid.value == ""
-	res := result.new("Function is not being launched into a VPC'", function.vpcconfig.vpcid)
+	res := result.new("Function is not being launched into a VPC", function.vpcconfig.vpcid)
 }
