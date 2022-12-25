@@ -19,7 +19,7 @@ package builtin.kubernetes.KCV0056
 
 import data.lib.kubernetes
 
-validate_spec_permission(sp) := {"ContainerNetworkInterfaceFilePermissions": permission} {
+validate_cni_permission(sp) := {"ContainerNetworkInterfaceFilePermissions": permission} {
 	sp.kind == "Nodeinfo"
 	sp.type == "master"
 	permission := sp.info.ContainerNetworkInterfaceFilePermissions[_]
@@ -27,7 +27,7 @@ validate_spec_permission(sp) := {"ContainerNetworkInterfaceFilePermissions": per
 }
 
 deny[res] {
-	output := validate_spec_permission(input)
+	output := validate_cni_permission(input)
 	msg := "Ensure that the Container Network Interface specification file permissions is set to 600 or more restrictive"
 	res := result.new(msg, output)
 }

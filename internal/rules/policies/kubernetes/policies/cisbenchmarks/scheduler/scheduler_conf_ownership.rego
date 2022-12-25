@@ -19,7 +19,7 @@ package builtin.kubernetes.KCV0063
 
 import data.lib.kubernetes
 
-validate_spec_ownership(sp) := {"SchedulerConfFileOwnership": ownership} {
+validate_conf_ownership(sp) := {"SchedulerConfFileOwnership": ownership} {
 	sp.kind == "Nodeinfo"
 	sp.type == "master"
 	ownership := sp.info.SchedulerConfFileOwnership[_]
@@ -27,7 +27,7 @@ validate_spec_ownership(sp) := {"SchedulerConfFileOwnership": ownership} {
 }
 
 deny[res] {
-	output := validate_spec_ownership(input)
+	output := validate_conf_ownership(input)
 	msg := "Ensure that the scheduler config  file ownership is set to root:root"
 	res := result.new(msg, output)
 }

@@ -19,7 +19,7 @@ package builtin.kubernetes.KCV0059
 
 import data.lib.kubernetes
 
-validate_spec_ownership(sp) := {"EtcdDataDirectoryOwnership": ownership} {
+validate_data_dir_ownership(sp) := {"EtcdDataDirectoryOwnership": ownership} {
 	sp.kind == "Nodeinfo"
 	sp.type == "master"
 	ownership := sp.info.EtcdDataDirectoryOwnership[_]
@@ -27,7 +27,7 @@ validate_spec_ownership(sp) := {"EtcdDataDirectoryOwnership": ownership} {
 }
 
 deny[res] {
-	output := validate_spec_ownership(input)
+	output := validate_data_dir_ownership(input)
 	msg := "Ensure that the etcd data directory ownership is set to etcd:etcd"
 	res := result.new(msg, output)
 }

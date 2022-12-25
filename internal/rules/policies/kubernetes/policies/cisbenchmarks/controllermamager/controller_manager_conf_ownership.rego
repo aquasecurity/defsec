@@ -19,7 +19,7 @@ package builtin.kubernetes.KCV0065
 
 import data.lib.kubernetes
 
-validate_spec_ownership(sp) := {"ControllerManagerConfFileOwnership": ownership} {
+validate_conf_ownership(sp) := {"ControllerManagerConfFileOwnership": ownership} {
 	sp.kind == "Nodeinfo"
 	sp.type == "master"
 	ownership := sp.info.ControllerManagerConfFileOwnership[_]
@@ -27,7 +27,7 @@ validate_spec_ownership(sp) := {"ControllerManagerConfFileOwnership": ownership}
 }
 
 deny[res] {
-	output := validate_spec_ownership(input)
+	output := validate_conf_ownership(input)
 	msg := "Ensure that the controller-manager config file ownership is set to root:root"
 	res := result.new(msg, output)
 }

@@ -19,7 +19,7 @@ package builtin.kubernetes.KCV0062
 
 import data.lib.kubernetes
 
-validate_spec_permission(sp) := {"SchedulerConfFilePermissions": permission} {
+validate_conf_permission(sp) := {"SchedulerConfFilePermissions": permission} {
 	sp.kind == "Nodeinfo"
 	sp.type == "master"
 	permission := sp.info.SchedulerConfFilePermissions[_]
@@ -27,7 +27,7 @@ validate_spec_permission(sp) := {"SchedulerConfFilePermissions": permission} {
 }
 
 deny[res] {
-	output := validate_spec_permission(input)
+	output := validate_conf_permission(input)
 	msg := "Ensure that the scheduler config file permissions is set to 600 or more restrictive"
 	res := result.new(msg, output)
 }
