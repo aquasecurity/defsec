@@ -19,14 +19,15 @@ package builtin.kubernetes.KCV0048
 
 import data.lib.kubernetes
 
-validate_spec_permission {
-	input.kind == "Nodeinfo"
-	input.type == "master"
-	input.info.kubeAPIServerSpecFilePermission[_] > 600
+validate_spec_permission(sp) := {"kubeAPIServerSpecFilePermission": permission} {
+	sp.kind == "Nodeinfo"
+	sp.type == "master"
+	permission := sp.info.kubeAPIServerSpecFilePermission[_]
+	permission > 600
 }
 
 deny[res] {
-	validate_spec_permission
+	output := validate_spec_permission(input)
 	msg := "Ensure that the API server pod specification file permissions are set to 600 or more restrictive"
-	res := result.new(msg, input.info.kubeAPIServerSpecFilePermission)
+	res := result.new(msg, output)
 }
