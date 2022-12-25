@@ -22,7 +22,7 @@ import data.lib.kubernetes
 validate_spec_permission {
 	input.kind == "Nodeinfo"
 	input.type == "master"
-    input.info.kubeAPIServerSpecFilePermission[_] > 600
+	input.info.kubeAPIServerSpecFilePermission[_] > 600
 }
 
 deny[res] {
