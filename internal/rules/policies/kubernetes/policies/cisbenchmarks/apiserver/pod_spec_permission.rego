@@ -28,6 +28,6 @@ validate_spec_permission(sp) := {"kubeAPIServerSpecFilePermission": permission} 
 
 deny[res] {
 	output := validate_spec_permission(input)
-	msg := "Ensure that the API server pod specification file permissions are set to 600 or more restrictive"
+	msg := "Ensure that the API server pod specification file permissions is set to 600 or more restrictive"
 	res := result.new(msg, output)
 }

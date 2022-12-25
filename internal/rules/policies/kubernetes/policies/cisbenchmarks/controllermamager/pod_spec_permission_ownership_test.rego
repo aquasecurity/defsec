@@ -1,0 +1,23 @@
+package builtin.kubernetes.KCV0051
+
+test_validate_spec_ownership_equal_root_root {
+	r := deny with input as {
+		"apiVersion": "v1",
+		"kind": "Nodeinfo",
+		"type": "master",
+		"info": {"kubeControllerManagerSpecFileOwnership": ["root:root"]},
+	}
+
+	count(r) == 0
+}
+
+test_validate_spec_ownership_equal_user {
+	r := deny with input as {
+		"apiVersion": "v1",
+		"kind": "Nodeinfo",
+		"type": "master",
+		"info": {"kubeControllerManagerSpecFileOwnership": ["user:user"]},
+	}
+
+	count(r) == 1
+}
