@@ -5,7 +5,7 @@ test_validate_spec_ownership_equal_root_root {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubeEtcdSpecFileOwnership": ["root:root"]},
+		"info": {"kubeEtcdSpecFileOwnership": {"values": ["root:root"]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_spec_ownership_equal_user {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubeEtcdSpecFileOwnership": ["user:user"]},
+		"info": {"kubeEtcdSpecFileOwnership": {"values": ["user:user"]}},
 	}
 
 	count(r) == 1

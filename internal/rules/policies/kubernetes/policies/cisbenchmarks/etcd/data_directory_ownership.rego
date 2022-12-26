@@ -22,7 +22,7 @@ import data.lib.kubernetes
 validate_data_dir_ownership(sp) := {"etcdDataDirectoryOwnership": ownership} {
 	sp.kind == "NodeInfo"
 	sp.type == "master"
-	ownership := sp.info.etcdDataDirectoryOwnership[_]
+	ownership := sp.info.etcdDataDirectoryOwnership.values[_]
 	not ownership == "etcd:etcd"
 }
 

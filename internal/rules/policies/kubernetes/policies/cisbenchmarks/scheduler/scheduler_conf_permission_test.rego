@@ -5,7 +5,7 @@ test_validate_scheduler_config_permission_equal_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"schedulerConfFilePermissions": [600]},
+		"info": {"schedulerConfFilePermissions": {"values": [600]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_scheduler_config_permission_lower_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"schedulerConfFilePermissions": [500]},
+		"info": {"schedulerConfFilePermissions": {"values": [500]}},
 	}
 
 	count(r) == 0
@@ -27,7 +27,7 @@ test_validate_scheduler_config_permission_higher_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"schedulerConfFilePermissions": [700]},
+		"info": {"schedulerConfFilePermissions": {"values": [700]}},
 	}
 
 	count(r) == 1

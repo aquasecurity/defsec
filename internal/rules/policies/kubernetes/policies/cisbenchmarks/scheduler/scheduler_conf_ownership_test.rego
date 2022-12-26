@@ -5,7 +5,7 @@ test_validate_scheduler_config_ownership_equal_root_root {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"schedulerConfFileOwnership": ["root:root"]},
+		"info": {"schedulerConfFileOwnership": {"values": ["root:root"]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_scheduler_config_ownership_equal_user {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"schedulerConfFileOwnership": ["user:user"]},
+		"info": {"schedulerConfFileOwnership": {"values": ["user:user"]}},
 	}
 
 	count(r) == 1

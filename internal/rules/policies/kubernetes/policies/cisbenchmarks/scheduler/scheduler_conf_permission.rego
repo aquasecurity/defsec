@@ -22,7 +22,7 @@ import data.lib.kubernetes
 validate_conf_permission(sp) := {"schedulerConfFilePermissions": permission} {
 	sp.kind == "NodeInfo"
 	sp.type == "master"
-	permission := sp.info.schedulerConfFilePermissions[_]
+	permission := sp.info.schedulerConfFilePermissions.values[_]
 	permission > 600
 }
 

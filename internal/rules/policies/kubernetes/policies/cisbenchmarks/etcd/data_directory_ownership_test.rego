@@ -5,7 +5,7 @@ test_validate_data_directory_ownership_equal_root_root {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"etcdDataDirectoryOwnership": ["etcd:etcd"]},
+		"info": {"etcdDataDirectoryOwnership": {"values": ["etcd:etcd"]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_data_directory_ownership_equal_user {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"etcdDataDirectoryOwnership": ["user:user"]},
+		"info": {"etcdDataDirectoryOwnership": {"values": ["user:user"]}},
 	}
 
 	count(r) == 1

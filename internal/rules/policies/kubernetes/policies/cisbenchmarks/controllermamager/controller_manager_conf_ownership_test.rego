@@ -5,7 +5,7 @@ test_validate_controller_manager_config_ownership_equal_root_root {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"controllerManagerConfFileOwnership": ["root:root"]},
+		"info": {"controllerManagerConfFileOwnership": {"values": ["root:root"]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_controller_manager_config_ownership_equal_user {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"controllerManagerConfFileOwnership": ["user:user"]},
+		"info": {"controllerManagerConfFileOwnership": {"values": ["user:user"]}},
 	}
 
 	count(r) == 1

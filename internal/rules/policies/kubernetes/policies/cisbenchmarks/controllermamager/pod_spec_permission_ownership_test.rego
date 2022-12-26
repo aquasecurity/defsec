@@ -5,7 +5,7 @@ test_validate_spec_ownership_equal_root_root {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubeControllerManagerSpecFileOwnership": ["root:root"]},
+		"info": {"kubeControllerManagerSpecFileOwnership": {"values": ["root:root"]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_spec_ownership_equal_user {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubeControllerManagerSpecFileOwnership": ["user:user"]},
+		"info": {"kubeControllerManagerSpecFileOwnership": {"values": ["user:user"]}},
 	}
 
 	count(r) == 1
