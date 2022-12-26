@@ -5,7 +5,7 @@ test_validate_spec_permission_equal_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"containerNetworkInterfaceFilePermissions": [600, 600]},
+		"info": {"containerNetworkInterfaceFilePermissions": {"values": [600, 600]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_spec_permission_lower_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"containerNetworkInterfaceFilePermissions": [500, 600]},
+		"info": {"containerNetworkInterfaceFilePermissions": {"values": [500, 600]}},
 	}
 
 	count(r) == 0
@@ -27,7 +27,7 @@ test_validate_spec_permission_higher_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"containerNetworkInterfaceFilePermissions": [700, 600]},
+		"info": {"containerNetworkInterfaceFilePermissions": {"values": [700, 600]}},
 	}
 
 	count(r) == 1

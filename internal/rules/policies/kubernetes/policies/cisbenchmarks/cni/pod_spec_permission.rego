@@ -22,7 +22,7 @@ import data.lib.kubernetes
 validate_cni_permission(sp) := {"containerNetworkInterfaceFilePermissions": permission} {
 	sp.kind == "NodeInfo"
 	sp.type == "master"
-	permission := sp.info.containerNetworkInterfaceFilePermissions[_]
+	permission := sp.info.containerNetworkInterfaceFilePermissions.values[_]
 	permission > 600
 }
 

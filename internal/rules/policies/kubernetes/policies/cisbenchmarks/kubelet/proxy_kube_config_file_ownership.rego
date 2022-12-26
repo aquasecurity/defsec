@@ -25,7 +25,7 @@ validate_service_file_ownership(sp) := {"kubeconfigFileExistsOwnership": ownersh
 	sp.kind == "NodeInfo"
 	sp.type == types[_]
 	count(sp.info.kubeconfigFileExistsOwnership) > 0
-	ownership := sp.info.kubeconfigFileExistsOwnership[_]
+	ownership := sp.info.kubeconfigFileExistsOwnership.values[_]
 	not ownership == "root:root"
 }
 

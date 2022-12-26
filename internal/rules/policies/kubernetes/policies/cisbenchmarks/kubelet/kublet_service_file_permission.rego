@@ -24,7 +24,7 @@ types := ["master", "worker"]
 validate_service_file_permission(sp) := {"kubeletServiceFilePermissions": permission} {
 	sp.kind == "NodeInfo"
 	sp.type == types[_]
-	permission := sp.info.kubeletServiceFilePermissions[_]
+	permission := sp.info.kubeletServiceFilePermissions.values[_]
 	permission > 600
 }
 

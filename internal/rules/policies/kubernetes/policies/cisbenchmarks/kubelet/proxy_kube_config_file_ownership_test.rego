@@ -5,7 +5,7 @@ test_validate_kube_config_ownership_equal_root_root {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubeconfigFileExistsOwnership": ["root:root"]},
+		"info": {"kubeconfigFileExistsOwnership": {"values": ["root:root"]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_kube_config_ownership_no_results {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubeconfigFileExistsOwnership": []},
+		"info": {"kubeconfigFileExistsOwnership": {"values": []}},
 	}
 
 	count(r) == 0
@@ -27,7 +27,7 @@ test_validate_kube_config_ownership_equal_user {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "worker",
-		"info": {"kubeconfigFileExistsOwnership": ["user:user"]},
+		"info": {"kubeconfigFileExistsOwnership": {"values": ["user:user"]}},
 	}
 
 	count(r) == 1

@@ -24,7 +24,7 @@ types := ["master", "worker"]
 validate_service_file_ownership(sp) := {"kubeletServiceFileOwnership": ownership} {
 	sp.kind == "NodeInfo"
 	sp.type == types[_]
-	ownership := sp.info.kubeletServiceFileOwnership[_]
+	ownership := sp.info.kubeletServiceFileOwnership.values[_]
 	not ownership == "root:root"
 }
 

@@ -5,7 +5,7 @@ test_validate_service_file_permission_equal_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubeletServiceFilePermissions": [600]},
+		"info": {"kubeletServiceFilePermissions": {"values": [600]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_service_file_permission_lower_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "worker",
-		"info": {"kubeletServiceFilePermissions": [500]},
+		"info": {"kubeletServiceFilePermissions": {"values": [500]}},
 	}
 
 	count(r) == 0
@@ -27,7 +27,7 @@ test_validate_service_file_permission_higher_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubeletServiceFilePermissions": [700]},
+		"info": {"kubeletServiceFilePermissions": {"values": [700]}},
 	}
 
 	count(r) == 1

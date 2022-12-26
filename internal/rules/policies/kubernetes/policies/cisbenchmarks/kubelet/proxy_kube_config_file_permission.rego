@@ -25,7 +25,7 @@ validate_service_file_permission(sp) := {"kubeconfigFileExistsPermissions": perm
 	sp.kind == "NodeInfo"
 	sp.type == types[_]
 	count(sp.info.kubeconfigFileExistsPermissions) > 0
-	permission := sp.info.kubeconfigFileExistsPermissions[_]
+	permission := sp.info.kubeconfigFileExistsPermissions.values[_]
 	permission > 600
 }
 

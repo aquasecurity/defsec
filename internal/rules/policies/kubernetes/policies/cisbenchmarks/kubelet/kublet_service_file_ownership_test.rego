@@ -5,7 +5,7 @@ test_validate_service_file_ownership_equal_root_root {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubeletServiceFileOwnership": ["root:root"]},
+		"info": {"kubeletServiceFileOwnership": {"values": ["root:root"]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_service_file_ownership_equal_user {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "worker",
-		"info": {"kubeletServiceFileOwnership": ["user:user"]},
+		"info": {"kubeletServiceFileOwnership": {"values": ["user:user"]}},
 	}
 
 	count(r) == 1
