@@ -20,7 +20,7 @@ package builtin.kubernetes.KCV0052
 import data.lib.kubernetes
 
 validate_spec_permission(sp) := {"kubeSchedulerSpecFilePermission": permission} {
-	sp.kind == "Nodeinfo"
+	sp.kind == "NodeInfo"
 	sp.type == "master"
 	permission := sp.info.kubeSchedulerSpecFilePermission[_]
 	permission > 600

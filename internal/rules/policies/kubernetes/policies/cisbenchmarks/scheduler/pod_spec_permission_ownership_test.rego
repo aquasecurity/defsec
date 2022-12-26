@@ -3,7 +3,7 @@ package builtin.kubernetes.KCV0053
 test_validate_spec_ownership_equal_root_root {
 	r := deny with input as {
 		"apiVersion": "v1",
-		"kind": "Nodeinfo",
+		"kind": "NodeInfo",
 		"type": "master",
 		"info": {"kubeSchedulerSpecFileOwnership": ["root:root"]},
 	}
@@ -14,7 +14,7 @@ test_validate_spec_ownership_equal_root_root {
 test_validate_spec_ownership_equal_user {
 	r := deny with input as {
 		"apiVersion": "v1",
-		"kind": "Nodeinfo",
+		"kind": "NodeInfo",
 		"type": "master",
 		"info": {"kubeSchedulerSpecFileOwnership": ["user:user"]},
 	}

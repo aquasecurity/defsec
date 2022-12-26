@@ -20,7 +20,7 @@ package builtin.kubernetes.KCV0055
 import data.lib.kubernetes
 
 validate_spec_ownership(sp) := {"kubeEtcdSpecFileOwnership": ownership} {
-	sp.kind == "Nodeinfo"
+	sp.kind == "NodeInfo"
 	sp.type == "master"
 	ownership := sp.info.kubeEtcdSpecFileOwnership[_]
 	not ownership == "root:root"

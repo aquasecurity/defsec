@@ -3,9 +3,9 @@ package builtin.kubernetes.KCV0064
 test_validate_controller_manager_config_permission_equal_600 {
 	r := deny with input as {
 		"apiVersion": "v1",
-		"kind": "Nodeinfo",
+		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"ControllerManagerConfFilePermissions": [600]},
+		"info": {"controllerManagerConfFilePermissions": [600]},
 	}
 
 	count(r) == 0
@@ -14,9 +14,9 @@ test_validate_controller_manager_config_permission_equal_600 {
 test_validate_controller_manager_config_permission_lower_600 {
 	r := deny with input as {
 		"apiVersion": "v1",
-		"kind": "Nodeinfo",
+		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"ControllerManagerConfFilePermissions": [500]},
+		"info": {"controllerManagerConfFilePermissions": [500]},
 	}
 
 	count(r) == 0
@@ -25,9 +25,9 @@ test_validate_controller_manager_config_permission_lower_600 {
 test_validate_controller_manager_config_permission_higher_600 {
 	r := deny with input as {
 		"apiVersion": "v1",
-		"kind": "Nodeinfo",
+		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"ControllerManagerConfFilePermissions": [700]},
+		"info": {"controllerManagerConfFilePermissions": [700]},
 	}
 
 	count(r) == 1

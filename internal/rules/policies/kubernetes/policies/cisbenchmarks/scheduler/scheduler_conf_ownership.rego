@@ -19,10 +19,10 @@ package builtin.kubernetes.KCV0063
 
 import data.lib.kubernetes
 
-validate_conf_ownership(sp) := {"SchedulerConfFileOwnership": ownership} {
-	sp.kind == "Nodeinfo"
+validate_conf_ownership(sp) := {"schedulerConfFileOwnership": ownership} {
+	sp.kind == "NodeInfo"
 	sp.type == "master"
-	ownership := sp.info.SchedulerConfFileOwnership[_]
+	ownership := sp.info.schedulerConfFileOwnership[_]
 	not ownership == "root:root"
 }
 

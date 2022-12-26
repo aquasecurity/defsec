@@ -19,10 +19,10 @@ package builtin.kubernetes.KCV0064
 
 import data.lib.kubernetes
 
-validate_conf_permission(sp) := {"ControllerManagerConfFilePermissions": permission} {
-	sp.kind == "Nodeinfo"
+validate_conf_permission(sp) := {"controllerManagerConfFilePermissions": permission} {
+	sp.kind == "NodeInfo"
 	sp.type == "master"
-	permission := sp.info.ControllerManagerConfFilePermissions[_]
+	permission := sp.info.controllerManagerConfFilePermissions[_]
 	permission > 600
 }
 

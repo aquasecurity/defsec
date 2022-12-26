@@ -20,7 +20,7 @@ package builtin.kubernetes.KCV0054
 import data.lib.kubernetes
 
 validate_spec_permission(sp) := {"kubeEtcdSpecFilePermission": permission} {
-	sp.kind == "Nodeinfo"
+	sp.kind == "NodeInfo"
 	sp.type == "master"
 	permission := sp.info.kubeEtcdSpecFilePermission[_]
 	permission > 600

@@ -20,7 +20,7 @@ package builtin.kubernetes.KCV0050
 import data.lib.kubernetes
 
 validate_spec_permission(sp) := {"kubeControllerManagerSpecFilePermission": permission} {
-	sp.kind == "Nodeinfo"
+	sp.kind == "NodeInfo"
 	sp.type == "master"
 	permission := sp.info.kubeControllerManagerSpecFilePermission[_]
 	permission > 600

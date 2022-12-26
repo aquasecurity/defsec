@@ -3,9 +3,9 @@ package builtin.kubernetes.KCV0068
 test_validate_pki_cert_permission_lower_600 {
 	r := deny with input as {
 		"apiVersion": "v1",
-		"kind": "Nodeinfo",
+		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"KubernetesPKICertificateFilePermissions": [500]},
+		"info": {"kubernetesPKICertificateFilePermissions": [500]},
 	}
 
 	count(r) == 0
@@ -14,9 +14,9 @@ test_validate_pki_cert_permission_lower_600 {
 test_validate_pki_cert_permission_bigger_600 {
 	r := deny with input as {
 		"apiVersion": "v1",
-		"kind": "Nodeinfo",
+		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"KubernetesPKICertificateFilePermissions": [700]},
+		"info": {"kubernetesPKICertificateFilePermissions": [700]},
 	}
 
 	count(r) == 1

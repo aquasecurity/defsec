@@ -19,10 +19,10 @@ package builtin.kubernetes.KCV0060
 
 import data.lib.kubernetes
 
-validate_conf_permission(sp) := {"AdminConfFilePermissions": permission} {
-	sp.kind == "Nodeinfo"
+validate_conf_permission(sp) := {"adminConfFilePermissions": permission} {
+	sp.kind == "NodeInfo"
 	sp.type == "master"
-	permission := sp.info.AdminConfFilePermissions[_]
+	permission := sp.info.adminConfFilePermissions[_]
 	permission > 600
 }
 

@@ -19,10 +19,10 @@ package builtin.kubernetes.KCV0068
 
 import data.lib.kubernetes
 
-validate_pki_cert_permission(sp) := {"KubernetesPKICertificateFilePermissions": permission} {
-	sp.kind == "Nodeinfo"
+validate_pki_cert_permission(sp) := {"kubernetesPKICertificateFilePermissions": permission} {
+	sp.kind == "NodeInfo"
 	sp.type == "master"
-	permission := sp.info.KubernetesPKICertificateFilePermissions[_]
+	permission := sp.info.kubernetesPKICertificateFilePermissions[_]
 	permission > 600
 }
 

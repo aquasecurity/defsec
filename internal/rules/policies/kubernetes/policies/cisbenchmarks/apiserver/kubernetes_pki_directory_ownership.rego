@@ -19,10 +19,10 @@ package builtin.kubernetes.KCV0066
 
 import data.lib.kubernetes
 
-validate_pki_directory_ownership(sp) := {"KubePKIDirectoryFileOwnership": ownership} {
-	sp.kind == "Nodeinfo"
+validate_pki_directory_ownership(sp) := {"kubePKIDirectoryFileOwnership": ownership} {
+	sp.kind == "NodeInfo"
 	sp.type == "master"
-	ownership := sp.info.KubePKIDirectoryFileOwnership[_]
+	ownership := sp.info.kubePKIDirectoryFileOwnership[_]
 	not ownership == "root:root"
 }
 

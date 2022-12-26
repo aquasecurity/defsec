@@ -3,7 +3,7 @@ package builtin.kubernetes.KCV0052
 test_validate_spec_permission_equal_600 {
 	r := deny with input as {
 		"apiVersion": "v1",
-		"kind": "Nodeinfo",
+		"kind": "NodeInfo",
 		"type": "master",
 		"info": {"kubeSchedulerSpecFilePermission": [600]},
 	}
@@ -14,7 +14,7 @@ test_validate_spec_permission_equal_600 {
 test_validate_spec_permission_lower_600 {
 	r := deny with input as {
 		"apiVersion": "v1",
-		"kind": "Nodeinfo",
+		"kind": "NodeInfo",
 		"type": "master",
 		"info": {"kubeSchedulerSpecFilePermission": [500]},
 	}
@@ -25,7 +25,7 @@ test_validate_spec_permission_lower_600 {
 test_validate_spec_permission_higher_600 {
 	r := deny with input as {
 		"apiVersion": "v1",
-		"kind": "Nodeinfo",
+		"kind": "NodeInfo",
 		"type": "master",
 		"info": {"kubeSchedulerSpecFilePermission": [700]},
 	}

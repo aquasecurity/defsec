@@ -21,10 +21,10 @@ import data.lib.kubernetes
 
 types := ["master", "worker"]
 
-validate_service_file_ownership(sp) := {"KubeletServiceFileOwnership": ownership} {
-	sp.kind == "Nodeinfo"
+validate_service_file_ownership(sp) := {"kubeletServiceFileOwnership": ownership} {
+	sp.kind == "NodeInfo"
 	sp.type == types[_]
-	ownership := sp.info.KubeletServiceFileOwnership[_]
+	ownership := sp.info.kubeletServiceFileOwnership[_]
 	not ownership == "root:root"
 }
 

@@ -19,10 +19,10 @@ package builtin.kubernetes.KCV0056
 
 import data.lib.kubernetes
 
-validate_cni_permission(sp) := {"ContainerNetworkInterfaceFilePermissions": permission} {
-	sp.kind == "Nodeinfo"
+validate_cni_permission(sp) := {"containerNetworkInterfaceFilePermissions": permission} {
+	sp.kind == "NodeInfo"
 	sp.type == "master"
-	permission := sp.info.ContainerNetworkInterfaceFilePermissions[_]
+	permission := sp.info.containerNetworkInterfaceFilePermissions[_]
 	permission > 600
 }
 

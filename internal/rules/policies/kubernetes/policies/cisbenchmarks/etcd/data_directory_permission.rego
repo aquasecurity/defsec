@@ -19,10 +19,10 @@ package builtin.kubernetes.KCV0058
 
 import data.lib.kubernetes
 
-validate_spec_permission(sp) := {"EtcdDataDirectoryPermissions": permission} {
-	sp.kind == "Nodeinfo"
+validate_spec_permission(sp) := {"etcdDataDirectoryPermissions": permission} {
+	sp.kind == "NodeInfo"
 	sp.type == "master"
-	permission := sp.info.EtcdDataDirectoryPermissions[_]
+	permission := sp.info.etcdDataDirectoryPermissions[_]
 	permission > 700
 }
 

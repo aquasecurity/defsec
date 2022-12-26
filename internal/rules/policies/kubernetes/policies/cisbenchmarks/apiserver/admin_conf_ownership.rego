@@ -19,10 +19,10 @@ package builtin.kubernetes.KCV0061
 
 import data.lib.kubernetes
 
-validate_conf_ownership(sp) := {"AdminConfFileOwnership": ownership} {
-	sp.kind == "Nodeinfo"
+validate_conf_ownership(sp) := {"adminConfFileOwnership": ownership} {
+	sp.kind == "NodeInfo"
 	sp.type == "master"
-	ownership := sp.info.AdminConfFileOwnership[_]
+	ownership := sp.info.adminConfFileOwnership[_]
 	not ownership == "root:root"
 }
 

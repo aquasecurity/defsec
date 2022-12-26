@@ -19,10 +19,10 @@ package builtin.kubernetes.KCV0059
 
 import data.lib.kubernetes
 
-validate_data_dir_ownership(sp) := {"EtcdDataDirectoryOwnership": ownership} {
-	sp.kind == "Nodeinfo"
+validate_data_dir_ownership(sp) := {"etcdDataDirectoryOwnership": ownership} {
+	sp.kind == "NodeInfo"
 	sp.type == "master"
-	ownership := sp.info.EtcdDataDirectoryOwnership[_]
+	ownership := sp.info.etcdDataDirectoryOwnership[_]
 	not ownership == "etcd:etcd"
 }
 
