@@ -491,6 +491,14 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.CacheBehaviour": {
       "type": "object",
       "properties": {
+        "compress": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
+        "fieldlevelencryptionid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "viewerprotocolpolicy": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"

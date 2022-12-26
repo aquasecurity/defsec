@@ -36,8 +36,10 @@ func getDefaultCacheBehaviour(r *parser.Resource) cloudfront.CacheBehaviour {
 	defaultCache := r.GetProperty("DistributionConfig.DefaultCacheBehavior")
 	if defaultCache.IsNil() {
 		return cloudfront.CacheBehaviour{
-			Metadata:             r.Metadata(),
-			ViewerProtocolPolicy: types.StringDefault("allow-all", r.Metadata()),
+			Metadata:               r.Metadata(),
+			ViewerProtocolPolicy:   types.StringDefault("allow-all", r.Metadata()),
+			FieldLevelEncryptionId: types.StringDefault("", r.Metadata()),
+			Compress:               types.BoolDefault(true, r.Metadata()),
 		}
 	}
 	protoProp := r.GetProperty("DistributionConfig.DefaultCacheBehavior.ViewerProtocolPolicy")
@@ -47,9 +49,25 @@ func getDefaultCacheBehaviour(r *parser.Resource) cloudfront.CacheBehaviour {
 			ViewerProtocolPolicy: types.StringDefault("allow-all", r.Metadata()),
 		}
 	}
+	encrypProp := r.GetProperty("DistributionConfig.DefaultCacheBehavior.FieldLevelEncryptionId")
+	if encrypProp.IsNotString() {
+		return cloudfront.CacheBehaviour{
+			Metadata:               r.Metadata(),
+			FieldLevelEncryptionId: types.StringDefault("", r.Metadata()),
+		}
+	}
+	compressProp := r.GetProperty("DistributionConfig.DefaultCacheBehavior.Compress")
+	if compressProp.IsNotBool() {
+		return cloudfront.CacheBehaviour{
+			Metadata: r.Metadata(),
+			Compress: types.BoolDefault(true, r.Metadata()),
+		}
+	}
 
 	return cloudfront.CacheBehaviour{
-		Metadata:             r.Metadata(),
-		ViewerProtocolPolicy: protoProp.AsStringValue(),
+		Metadata:               r.Metadata(),
+		ViewerProtocolPolicy:   protoProp.AsStringValue(),
+		FieldLevelEncryptionId: encrypProp.AsStringValue(),
+		Compress:               compressProp.AsBoolValue(),
 	}
 }

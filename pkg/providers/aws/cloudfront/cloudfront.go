@@ -23,8 +23,10 @@ type Logging struct {
 }
 
 type CacheBehaviour struct {
-	Metadata             defsecTypes.Metadata
-	ViewerProtocolPolicy defsecTypes.StringValue
+	Metadata               defsecTypes.Metadata
+	ViewerProtocolPolicy   defsecTypes.StringValue
+	FieldLevelEncryptionId defsecTypes.StringValue
+	Compress               defsecTypes.BoolValue
 }
 
 const (

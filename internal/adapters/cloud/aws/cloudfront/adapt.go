@@ -85,9 +85,12 @@ func (a *adapter) adaptDistribution(distribution types.DistributionSummary) (*cl
 		loggingBucket = *config.DistributionConfig.Logging.Bucket
 	}
 
-	var defaultCacheBehaviour string
+	var defaultCacheBehaviour, fieldLevelEncryptionId string
+	var compress bool
 	if config.DistributionConfig.DefaultCacheBehavior != nil {
 		defaultCacheBehaviour = string(config.DistributionConfig.DefaultCacheBehavior.ViewerProtocolPolicy)
+		fieldLevelEncryptionId = *config.DistributionConfig.DefaultCacheBehavior.FieldLevelEncryptionId
+		compress = *config.DistributionConfig.DefaultCacheBehavior.Compress
 	}
 
 	var cacheBehaviours []cloudfront.CacheBehaviour
@@ -111,8 +114,10 @@ func (a *adapter) adaptDistribution(distribution types.DistributionSummary) (*cl
 			Bucket:   defsecTypes.String(loggingBucket, metadata),
 		},
 		DefaultCacheBehaviour: cloudfront.CacheBehaviour{
-			Metadata:             metadata,
-			ViewerProtocolPolicy: defsecTypes.String(defaultCacheBehaviour, metadata),
+			Metadata:               metadata,
+			ViewerProtocolPolicy:   defsecTypes.String(defaultCacheBehaviour, metadata),
+			FieldLevelEncryptionId: defsecTypes.String(fieldLevelEncryptionId, metadata),
+			Compress:               defsecTypes.Bool(compress, metadata),
 		},
 		OrdererCacheBehaviours: cacheBehaviours,
 		ViewerCertificate: cloudfront.ViewerCertificate{

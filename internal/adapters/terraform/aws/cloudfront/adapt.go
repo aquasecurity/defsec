@@ -32,8 +32,10 @@ func adaptDistribution(resource *terraform.Block) cloudfront.Distribution {
 			Bucket:   types.StringDefault("", resource.GetMetadata()),
 		},
 		DefaultCacheBehaviour: cloudfront.CacheBehaviour{
-			Metadata:             resource.GetMetadata(),
-			ViewerProtocolPolicy: types.String("allow-all", resource.GetMetadata()),
+			Metadata:               resource.GetMetadata(),
+			ViewerProtocolPolicy:   types.String("allow-all", resource.GetMetadata()),
+			FieldLevelEncryptionId: types.String("", resource.GetMetadata()),
+			Compress:               types.Bool(true, resource.GetMetadata()),
 		},
 		OrdererCacheBehaviours: nil,
 		ViewerCertificate: cloudfront.ViewerCertificate{
@@ -54,6 +56,10 @@ func adaptDistribution(resource *terraform.Block) cloudfront.Distribution {
 		distribution.DefaultCacheBehaviour.Metadata = defaultCacheBlock.GetMetadata()
 		viewerProtocolPolicyAttr := defaultCacheBlock.GetAttribute("viewer_protocol_policy")
 		distribution.DefaultCacheBehaviour.ViewerProtocolPolicy = viewerProtocolPolicyAttr.AsStringValueOrDefault("allow-all", defaultCacheBlock)
+		fieldLevelEncryptionIdAttr := defaultCacheBlock.GetAttribute("field_level_encryption_id")
+		distribution.DefaultCacheBehaviour.FieldLevelEncryptionId = fieldLevelEncryptionIdAttr.AsStringValueOrDefault("", defaultCacheBlock)
+		compressAttr := defaultCacheBlock.GetAttribute("compress")
+		distribution.DefaultCacheBehaviour.Compress = compressAttr.AsBoolValueOrDefault(true, defaultCacheBlock)
 	}
 
 	orderedCacheBlocks := resource.GetBlocks("ordered_cache_behavior")
