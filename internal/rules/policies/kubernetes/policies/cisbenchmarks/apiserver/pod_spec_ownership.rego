@@ -22,7 +22,7 @@ import data.lib.kubernetes
 validate_spec_ownership(sp) := {"kubeAPIServerSpecFileOwnership": ownership} {
 	sp.kind == "NodeInfo"
 	sp.type == "master"
-	ownership := sp.info.kubeAPIServerSpecFileOwnership[_]
+	ownership := sp.info.kubeAPIServerSpecFileOwnership.values[_]
 	not ownership == "root:root"
 }
 

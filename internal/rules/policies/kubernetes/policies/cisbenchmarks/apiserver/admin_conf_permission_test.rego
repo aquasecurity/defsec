@@ -5,7 +5,7 @@ test_validate_admin_config_permission_equal_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"adminConfFilePermissions": [600]},
+		"info": {"adminConfFilePermissions": {"values": [600]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_admin_config_permission_lower_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"adminConfFilePermissions": [500]},
+		"info": {"adminConfFilePermissions": {"values": [600]}},
 	}
 
 	count(r) == 0
@@ -27,7 +27,7 @@ test_validate_admin_config_permission_higher_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"adminConfFilePermissions": [700]},
+		"info": {"adminConfFilePermissions": {"values": [700]}},
 	}
 
 	count(r) == 1

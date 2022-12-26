@@ -22,7 +22,7 @@ import data.lib.kubernetes
 validate_conf_permission(sp) := {"adminConfFilePermissions": permission} {
 	sp.kind == "NodeInfo"
 	sp.type == "master"
-	permission := sp.info.adminConfFilePermissions[_]
+	permission := sp.info.adminConfFilePermissions.values[_]
 	permission > 600
 }
 

@@ -5,7 +5,7 @@ test_validate_admin_config_ownership_equal_root_root {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"adminConfFileOwnership": ["root:root"]},
+		"info": {"adminConfFileOwnership": {"values": ["root:root"]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_admin_config_ownership_equal_user {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"adminConfFileOwnership": ["user:user"]},
+		"info": {"adminConfFileOwnership": {"values": ["user:user"]}},
 	}
 
 	count(r) == 1

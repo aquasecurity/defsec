@@ -5,7 +5,7 @@ test_validate_spec_permission_equal_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubeAPIServerSpecFilePermission": [600]},
+		"info": {"kubeAPIServerSpecFilePermission": {"values": [600]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_spec_permission_lower_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubeAPIServerSpecFilePermission": [500]},
+		"info": {"kubeAPIServerSpecFilePermission": {"values": [500]}},
 	}
 
 	count(r) == 0
@@ -27,7 +27,7 @@ test_validate_spec_permission_higher_600 {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubeAPIServerSpecFilePermission": [700]},
+		"info": {"kubeAPIServerSpecFilePermission": {"values": [700]}},
 	}
 
 	count(r) == 1

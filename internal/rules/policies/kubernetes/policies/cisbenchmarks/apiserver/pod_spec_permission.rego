@@ -22,7 +22,7 @@ import data.lib.kubernetes
 validate_spec_permission(sp) := {"kubeAPIServerSpecFilePermission": permission} {
 	sp.kind == "NodeInfo"
 	sp.type == "master"
-	permission := sp.info.kubeAPIServerSpecFilePermission[_]
+	permission := sp.info.kubeAPIServerSpecFilePermission.values[_]
 	permission > 600
 }
 

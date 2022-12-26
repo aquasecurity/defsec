@@ -22,7 +22,7 @@ import data.lib.kubernetes
 validate_pki_directory_ownership(sp) := {"kubePKIDirectoryFileOwnership": ownership} {
 	sp.kind == "NodeInfo"
 	sp.type == "master"
-	ownership := sp.info.kubePKIDirectoryFileOwnership[_]
+	ownership := sp.info.kubePKIDirectoryFileOwnership.values[_]
 	not ownership == "root:root"
 }
 

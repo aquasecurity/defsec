@@ -22,7 +22,7 @@ import data.lib.kubernetes
 validate_pki_key_permission(sp) := {"kubePKIKeyFilePermissions": permission} {
 	sp.kind == "NodeInfo"
 	sp.type == "master"
-	permission := sp.info.kubePKIKeyFilePermissions[_]
+	permission := sp.info.kubePKIKeyFilePermissions.values[_]
 	permission > 600
 }
 

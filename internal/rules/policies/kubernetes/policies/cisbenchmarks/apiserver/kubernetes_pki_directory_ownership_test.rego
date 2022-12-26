@@ -5,7 +5,7 @@ test_validate_pki_directory_ownership_equal_root_root {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubePKIDirectoryFileOwnership": ["root:root"]},
+		"info": {"kubePKIDirectoryFileOwnership": {"values": ["root:root"]}},
 	}
 
 	count(r) == 0
@@ -16,7 +16,7 @@ test_validate_pki_directory_ownership_equal_user {
 		"apiVersion": "v1",
 		"kind": "NodeInfo",
 		"type": "master",
-		"info": {"kubePKIDirectoryFileOwnership": ["user:user"]},
+		"info": {"kubePKIDirectoryFileOwnership": {"values": ["user:user"]}},
 	}
 
 	count(r) == 1

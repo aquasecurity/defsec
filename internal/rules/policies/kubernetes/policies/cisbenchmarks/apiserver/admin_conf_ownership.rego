@@ -22,7 +22,7 @@ import data.lib.kubernetes
 validate_conf_ownership(sp) := {"adminConfFileOwnership": ownership} {
 	sp.kind == "NodeInfo"
 	sp.type == "master"
-	ownership := sp.info.adminConfFileOwnership[_]
+	ownership := sp.info.adminConfFileOwnership.values[_]
 	not ownership == "root:root"
 }
 
