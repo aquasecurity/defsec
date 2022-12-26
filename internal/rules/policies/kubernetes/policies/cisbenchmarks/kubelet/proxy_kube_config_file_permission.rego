@@ -31,6 +31,6 @@ validate_service_file_permission(sp) := {"kubeconfigFileExistsPermissions": perm
 
 deny[res] {
 	output := validate_service_file_permission(input)
-	msg := "If proxy kubeconfig file exists ensure permissions are set to 600 or more restrictive"
+	msg := "Ensure kubeconfig file permissions are set to 600 or more restrictive if exists"
 	res := result.new(msg, output)
 }

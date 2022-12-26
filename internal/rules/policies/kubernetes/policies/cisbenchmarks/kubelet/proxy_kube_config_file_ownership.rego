@@ -31,6 +31,6 @@ validate_service_file_ownership(sp) := {"kubeconfigFileExistsOwnership": ownersh
 
 deny[res] {
 	output := validate_service_file_ownership(input)
-	msg := "Ensure that the kubelet service file ownership is set to root:root"
+	msg := "Ensure proxy kubeconfig file ownership is set to root:root if exists"
 	res := result.new(msg, output)
 }
