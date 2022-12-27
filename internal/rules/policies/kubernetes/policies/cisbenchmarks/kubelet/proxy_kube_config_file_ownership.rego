@@ -21,7 +21,7 @@ import data.lib.kubernetes
 
 types := ["master", "worker"]
 
-validate_service_file_ownership(sp) := {"kubeconfigFileExistsOwnership": ownership} {
+validate_kube_config_file_ownership(sp) := {"kubeconfigFileExistsOwnership": ownership} {
 	sp.kind == "NodeInfo"
 	sp.type == types[_]
 	count(sp.info.kubeconfigFileExistsOwnership) > 0
@@ -30,7 +30,7 @@ validate_service_file_ownership(sp) := {"kubeconfigFileExistsOwnership": ownersh
 }
 
 deny[res] {
-	output := validate_service_file_ownership(input)
+	output := validate_kube_config_file_ownership(input)
 	msg := "Ensure proxy kubeconfig file ownership is set to root:root if exists"
 	res := result.new(msg, output)
 }

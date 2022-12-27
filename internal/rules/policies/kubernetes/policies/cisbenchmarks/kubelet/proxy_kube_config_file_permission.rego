@@ -21,7 +21,7 @@ import data.lib.kubernetes
 
 types := ["master", "worker"]
 
-validate_service_file_permission(sp) := {"kubeconfigFileExistsPermissions": permission} {
+validate_kube_config_file_permission(sp) := {"kubeconfigFileExistsPermissions": permission} {
 	sp.kind == "NodeInfo"
 	sp.type == types[_]
 	count(sp.info.kubeconfigFileExistsPermissions) > 0
@@ -30,7 +30,7 @@ validate_service_file_permission(sp) := {"kubeconfigFileExistsPermissions": perm
 }
 
 deny[res] {
-	output := validate_service_file_permission(input)
+	output := validate_kube_config_file_permission(input)
 	msg := "Ensure kubeconfig file permissions are set to 600 or more restrictive if exists"
 	res := result.new(msg, output)
 }
