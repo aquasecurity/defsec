@@ -9,7 +9,7 @@
 # custom:
 #   id: KCV0081
 #   avd_id: AVD-KCV-0081
-#   severity: HIGH
+#   severity: CRITICAL
 #   short_code: ensure-client-ca-argument-set-appropriate
 #   recommended_action: "If using a Kubelet config file, edit  the --client-ca-file argument ito appropriate value"
 #   input:
