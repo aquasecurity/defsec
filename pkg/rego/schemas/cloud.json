@@ -5561,6 +5561,10 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.dns.DNS"
         },
+        "nas": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.nas.NAS"
+        },
         "rdb": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.rdb.RDB"
@@ -5671,6 +5675,50 @@
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "type": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.nas.NAS": {
+      "type": "object",
+      "properties": {
+        "nasinstances": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.nas.NASInstance"
+          }
+        },
+        "nassecuritygroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.nas.NASSecurityGroup"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.nas.NASInstance": {
+      "type": "object",
+      "properties": {
+        "networkid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.nas.NASSecurityGroup": {
+      "type": "object",
+      "properties": {
+        "cidrs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+          }
+        },
+        "description": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
