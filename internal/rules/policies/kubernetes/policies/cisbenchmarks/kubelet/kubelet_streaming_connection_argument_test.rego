@@ -1,4 +1,4 @@
-package builtin.kubernetes.KCV0083
+package builtin.kubernetes.KCV0085
 
 test_validate_validate_kubelet_streaming_connection_idle_timeout_set_zero {
 	r := deny with input as {

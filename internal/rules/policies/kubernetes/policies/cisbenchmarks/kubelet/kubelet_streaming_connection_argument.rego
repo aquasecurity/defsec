@@ -7,15 +7,15 @@
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:
-#   id: KCV0083
-#   avd_id: AVD-KCV-0083
+#   id: KCV0085
+#   avd_id: AVD-KCV-0085
 #   severity: HIGH
 #   short_code: disable-timeouts-streaming-connections.
 #   recommended_action: "Edit the kubelet service file /etc/kubernetes/kubelet.conf and set --streaming-connection-idle-timeout=5m "
 #   input:
 #     selector:
 #     - type: kubernetes
-package builtin.kubernetes.KCV0083
+package builtin.kubernetes.KCV0085
 
 import data.lib.kubernetes
 
