@@ -13,7 +13,7 @@ func TestLoadSpecs(t *testing.T) {
 		specName     string
 		wantSpecPath string
 	}{
-		{name: "nsa spec", specName: "k8s-nsa", wantSpecPath: "./compliance/nsa-1.0.yaml"},
+		{name: "nsa spec", specName: "k8s-nsa", wantSpecPath: "./compliance/k8s-nsa-1.0.yaml"},
 		{name: "k8s cis bench", specName: "k8s-cis", wantSpecPath: "./compliance/k8s-cis-1.23.yaml"},
 		{name: "awscis1.2", specName: "aws-cis-1.2", wantSpecPath: "./compliance/aws-cis-1.2.yaml"},
 		{name: "awscis1.4", specName: "aws-cis-1.4", wantSpecPath: "./compliance/aws-cis-1.4.yaml"},
