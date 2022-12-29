@@ -1,8 +1,8 @@
 ---
 spec:
-  id: "0001"
-  title: nsa
-  description: National Security Agency - Kubernetes Hardening Guidance
+  id: k8s-nsa
+  title: National Security Agency - Kubernetes Hardening Guidance v1.0
+  description: National Security Agency - Kubernetes Hardening Guidance 
   relatedResources : 
     - https://www.nsa.gov/Press-Room/News-Highlights/Article/Article/2716980/nsa-cisa-release-kubernetes-hardening-guidance/
   version: "1.0"
