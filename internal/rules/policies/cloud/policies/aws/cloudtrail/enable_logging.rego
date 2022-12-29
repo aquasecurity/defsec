@@ -21,5 +21,5 @@ package builtin.aws.cloudtrail.aws0201
 deny[res] {
 	trail := input.aws.cloudtrail.trails[_]
 	not trail.islogging.value
-	res := result.new("Trail is not logging enabled", trail.islogging)
+	res := result.new("Logging is not enabled for cloudtrail", trail.islogging)
 }
