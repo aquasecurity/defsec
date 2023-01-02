@@ -26,13 +26,15 @@ type Trail struct {
 	CloudWatchLogsLogGroupArn defsecTypes.StringValue
 	IsLogging                 defsecTypes.BoolValue
 	BucketName                defsecTypes.StringValue
+	SnsTopicName              defsecTypes.StringValue
 	EventSelectors            []EventSelector
 }
 
 type EventSelector struct {
-	Metadata      defsecTypes.Metadata
-	DataResources []DataResource
-	ReadWriteType defsecTypes.StringValue // ReadOnly, WriteOnly, All. Default value is All for TF.
+	Metadata                defsecTypes.Metadata
+	DataResources           []DataResource
+	IncludeManagementEvents defsecTypes.BoolValue
+	ReadWriteType           defsecTypes.StringValue // ReadOnly, WriteOnly, All. Default value is All for TF.
 }
 
 type DataResource struct {

@@ -46,9 +46,10 @@ func adaptTrail(resource *terraform.Block) cloudtrail.Trail {
 			})
 		}
 		selector := cloudtrail.EventSelector{
-			Metadata:      selBlock.GetMetadata(),
-			DataResources: resources,
-			ReadWriteType: selBlock.GetAttribute("read_write_type").AsStringValueOrDefault("All", selBlock),
+			Metadata:                selBlock.GetMetadata(),
+			DataResources:           resources,
+			ReadWriteType:           selBlock.GetAttribute("read_write_type").AsStringValueOrDefault("All", selBlock),
+			IncludeManagementEvents: selBlock.GetAttribute("include_management_events").AsBoolValueOrDefault(true, selBlock),
 		}
 		selectors = append(selectors, selector)
 	}
@@ -62,6 +63,7 @@ func adaptTrail(resource *terraform.Block) cloudtrail.Trail {
 		CloudWatchLogsLogGroupArn: resource.GetAttribute("cloud_watch_logs_group_arn").AsStringValueOrDefault("", resource),
 		IsLogging:                 resource.GetAttribute("enable_logging").AsBoolValueOrDefault(true, resource),
 		BucketName:                resource.GetAttribute("s3_bucket_name").AsStringValueOrDefault("", resource),
+		SnsTopicName:              resource.GetAttribute("sns_topic_name").AsStringValueOrDefault("", resource),
 		EventSelectors:            selectors,
 	}
 }

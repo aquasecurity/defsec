@@ -92,9 +92,13 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		cloudWatchLogsArn = defsecTypes.String(*response.Trail.CloudWatchLogsLogGroupArn, metadata)
 	}
 
-	var bucketName string
+	var bucketName, snsTopicName string
 	if response.Trail.S3BucketName != nil {
 		bucketName = *response.Trail.S3BucketName
+	}
+
+	if response.Trail.SnsTopicName != nil {
+		snsTopicName = *response.Trail.SnsTopicName
 	}
 
 	name := defsecTypes.StringDefault("", metadata)
@@ -133,9 +137,10 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 				})
 			}
 			eventSelectors = append(eventSelectors, cloudtrail.EventSelector{
-				Metadata:      metadata,
-				DataResources: resources,
-				ReadWriteType: defsecTypes.String(string(eventSelector.ReadWriteType), metadata),
+				Metadata:                metadata,
+				DataResources:           resources,
+				ReadWriteType:           defsecTypes.String(string(eventSelector.ReadWriteType), metadata),
+				IncludeManagementEvents: defsecTypes.Bool(bool(*eventSelector.IncludeManagementEvents), metadata),
 			})
 		}
 	}
@@ -149,6 +154,7 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		KMSKeyID:                  defsecTypes.String(kmsKeyId, metadata),
 		IsLogging:                 isLogging,
 		BucketName:                defsecTypes.String(bucketName, metadata),
+		SnsTopicName:              defsecTypes.String(snsTopicName, metadata),
 		EventSelectors:            eventSelectors,
 	}, nil
 }

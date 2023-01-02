@@ -18,10 +18,11 @@ func getBuckets(cfFile parser.FileContext) []s3.Bucket {
 
 	for _, r := range bucketResources {
 		s3b := s3.Bucket{
-			Metadata:          r.Metadata(),
-			Name:              r.GetStringProperty("BucketName"),
-			PublicAccessBlock: getPublicAccessBlock(r),
-			Encryption:        getEncryption(r, cfFile),
+			Metadata:                r.Metadata(),
+			Name:                    r.GetStringProperty("BucketName"),
+			PublicAccessBlock:       getPublicAccessBlock(r),
+			ObjectLockConfiguration: getObjectLockConfiguration(r),
+			Encryption:              getEncryption(r, cfFile),
 			Versioning: s3.Versioning{
 				Metadata:  r.Metadata(),
 				Enabled:   hasVersioning(r),
@@ -47,6 +48,17 @@ func getPublicAccessBlock(r *parser.Resource) *s3.PublicAccessBlock {
 		BlockPublicPolicy:     r.GetBoolProperty("PublicAccessBlockConfiguration.BlockPublicPolicy"),
 		IgnorePublicACLs:      r.GetBoolProperty("PublicAccessBlockConfiguration.IgnorePublicAcls"),
 		RestrictPublicBuckets: r.GetBoolProperty("PublicAccessBlockConfiguration.RestrictPublicBuckets"),
+	}
+}
+
+func getObjectLockConfiguration(r *parser.Resource) *s3.ObjectLockConfiguration {
+	if block := r.GetProperty("ObjectLockConfiguration"); block.IsNil() {
+		return nil
+	}
+
+	return &s3.ObjectLockConfiguration{
+		Metadata:          r.Metadata(),
+		ObjectLockEnabled: r.GetStringProperty("ObjectLockConfiguration.ObjectLockEnabled"),
 	}
 }
 
