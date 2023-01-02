@@ -1,6 +1,6 @@
 spec:
-  id: "0001"
-  title: awscis1.2
+  id: aws-cis-1.2
+  title: AWS CIS Foundations v1.2
   description: AWS CIS Foundations
   version: "1.2"
   relatedResources:

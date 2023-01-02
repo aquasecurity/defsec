@@ -1,8 +1,8 @@
 ---
 spec:
-  id: "0002"
-  title: cis
-  description: CIS Kubernetes Benchmarks
+  id: k8s-cis
+  title: CIS Kubernetes Benchmarks v1.23
+  description: CIS Kubernetes Benchmarks 
   version: "1.23"
   relatedResources:
     - https://www.cisecurity.org/benchmark/kubernetes

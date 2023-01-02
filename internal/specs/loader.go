@@ -41,8 +41,8 @@ func init() {
 			panic(err)
 		}
 		if specVal, ok := fileSpec["spec"].(map[string]interface{}); ok {
-			if titleVal, ok := specVal["title"].(string); ok {
-				complianceSpecMap[titleVal] = string(specContent)
+			if idVal, ok := specVal["id"].(string); ok {
+				complianceSpecMap[idVal] = string(specContent)
 			}
 		}
 	}
