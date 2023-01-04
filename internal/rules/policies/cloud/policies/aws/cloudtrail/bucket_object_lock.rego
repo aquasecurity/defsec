@@ -23,7 +23,6 @@ deny[res] {
 	trail.bucketname.value != ""
     bucket := input.aws.s3.buckets[_]
     bucket.name.value == trail.bucketname.value
-    bucket.objectlockconfiguration 
-    bucket.objectlockenabled.value != "enabled"
+    bucket.objectlockconfiguration.objectlockenabled.value != "enabled"
 	res := result.new("Object lock is not enabled for bucket", bucket.name)
 }

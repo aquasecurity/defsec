@@ -111,6 +111,11 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		isLogging = defsecTypes.Bool(*status.IsLogging, metadata)
 	}
 
+	latestDeliveryError := defsecTypes.StringDefault("", metadata)
+	if status.LatestDeliveryError != nil {
+		latestDeliveryError = defsecTypes.String(*status.LatestDeliveryError, metadata)
+	}
+
 	var eventSelectors []cloudtrail.EventSelector
 	if response.Trail.HasCustomEventSelectors != nil && *response.Trail.HasCustomEventSelectors {
 		output, err := a.client.GetEventSelectors(a.Context(), &api.GetEventSelectorsInput{
@@ -153,6 +158,7 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		CloudWatchLogsLogGroupArn: cloudWatchLogsArn,
 		KMSKeyID:                  defsecTypes.String(kmsKeyId, metadata),
 		IsLogging:                 isLogging,
+		LatestDeliveryError:       latestDeliveryError,
 		BucketName:                defsecTypes.String(bucketName, metadata),
 		SnsTopicName:              defsecTypes.String(snsTopicName, metadata),
 		EventSelectors:            eventSelectors,

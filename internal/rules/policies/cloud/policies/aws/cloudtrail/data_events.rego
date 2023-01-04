@@ -20,6 +20,6 @@ package builtin.aws.cloudtrail.aws0324
 
 deny[res] {
 	trail := input.aws.cloudtrail.trails[_]
-	count(trail.eventselectors[0].dataresources) == 0
-	res := result.new("CloudTrail trail does not have Data Events configured", trail)
+	not trail.eventselectors[0].dataresources
+	res = result.new("CloudTrail trail does not have Data Events configured", trail)
 }

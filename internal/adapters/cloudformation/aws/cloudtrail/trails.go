@@ -3,6 +3,7 @@ package cloudtrail
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getCloudTrails(ctx parser.FileContext) (trails []cloudtrail.Trail) {
@@ -20,6 +21,7 @@ func getCloudTrails(ctx parser.FileContext) (trails []cloudtrail.Trail) {
 			IsLogging:                 r.GetBoolProperty("IsLogging"),
 			BucketName:                r.GetStringProperty("S3BucketName"),
 			SnsTopicName:              r.GetStringProperty("SnsTopicName"),
+			LatestDeliveryError:       types.StringDefault("", r.Metadata()),
 			EventSelectors:            getEventSelectors(r, ctx),
 		}
 

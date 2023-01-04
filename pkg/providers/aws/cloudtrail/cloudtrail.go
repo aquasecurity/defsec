@@ -27,6 +27,7 @@ type Trail struct {
 	IsLogging                 defsecTypes.BoolValue
 	BucketName                defsecTypes.StringValue
 	SnsTopicName              defsecTypes.StringValue
+	LatestDeliveryError       defsecTypes.StringValue
 	EventSelectors            []EventSelector
 }
 

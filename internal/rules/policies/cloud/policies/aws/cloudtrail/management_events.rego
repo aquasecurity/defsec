@@ -20,6 +20,6 @@ package builtin.aws.cloudtrail.aws0327
 
 deny[res] {
 	trail := input.aws.cloudtrail.trails[_]
-    trail.eventselectors.includemanagementevents.value == ""
-	res := result.new("CloudTrail trail is not configured to log management events", trail.eventselectors.includemanagementevents)
+    not trail.eventselectors[0].includemanagementevents.value
+	res := result.new("CloudTrail trail is not configured to log management events", trail)
 }

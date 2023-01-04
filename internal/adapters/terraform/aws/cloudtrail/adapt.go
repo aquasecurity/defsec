@@ -3,6 +3,7 @@ package cloudtrail
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) cloudtrail.CloudTrail {
@@ -64,6 +65,7 @@ func adaptTrail(resource *terraform.Block) cloudtrail.Trail {
 		IsLogging:                 resource.GetAttribute("enable_logging").AsBoolValueOrDefault(true, resource),
 		BucketName:                resource.GetAttribute("s3_bucket_name").AsStringValueOrDefault("", resource),
 		SnsTopicName:              resource.GetAttribute("sns_topic_name").AsStringValueOrDefault("", resource),
+		LatestDeliveryError:       types.StringDefault("", resource.GetMetadata()),
 		EventSelectors:            selectors,
 	}
 }
