@@ -74,6 +74,7 @@ func (a *adapter) adaptPasswordPolicy(state *state.State) error {
 	if policy.PasswordReusePrevention != nil {
 		reusePrevention = int(*policy.PasswordReusePrevention)
 	}
+
 	maxAge := 0
 	if policy.MaxPasswordAge != nil {
 		maxAge = int(*policy.MaxPasswordAge)
@@ -89,6 +90,7 @@ func (a *adapter) adaptPasswordPolicy(state *state.State) error {
 		RequireUppercase:     types.Bool(policy.RequireUppercaseCharacters, metadata),
 		RequireNumbers:       types.Bool(policy.RequireNumbers, metadata),
 		RequireSymbols:       types.Bool(policy.RequireSymbols, metadata),
+		ExpirePasswords:      types.Bool(policy.ExpirePasswords, metadata),
 		MaxAgeDays:           types.Int(maxAge, metadata),
 		MinimumLength:        types.Int(minimumLength, metadata),
 	}

@@ -1962,6 +1962,10 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.iam.PasswordPolicy": {
       "type": "object",
       "properties": {
+        "expirepasswords": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
         "maxagedays": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"

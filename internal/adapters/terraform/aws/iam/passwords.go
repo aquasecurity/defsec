@@ -59,6 +59,11 @@ func adaptPasswordPolicy(modules terraform.Modules) iam.PasswordPolicy {
 	} else {
 		policy.ReusePreventionCount = defsecTypes.IntDefault(0, policyBlock.GetMetadata())
 	}
+	if attr := policyBlock.GetAttribute("expire_passwords"); attr.IsNotNil() {
+		policy.ExpirePasswords = defsecTypes.BoolExplicit(attr.IsTrue(), attr.GetMetadata())
+	} else {
+		policy.ExpirePasswords = defsecTypes.BoolDefault(false, policyBlock.GetMetadata())
+	}
 	if attr := policyBlock.GetAttribute("max_password_age"); attr.IsNumber() {
 		value := attr.AsNumber()
 		policy.MaxAgeDays = defsecTypes.IntExplicit(int(value), attr.GetMetadata())
@@ -71,6 +76,5 @@ func adaptPasswordPolicy(modules terraform.Modules) iam.PasswordPolicy {
 	} else {
 		policy.MinimumLength = defsecTypes.IntDefault(0, policyBlock.GetMetadata())
 	}
-
 	return policy
 }
