@@ -1,0 +1,78 @@
+# METADATA
+# title :"CloudFront Distribution Origins TLS Version"
+# description: "Ensures CloudFront Distribution custom origin TLS version is not deprecated."
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/secure-connections-supported-viewer-protocols-ciphers.html
+# custom:
+#   avd_id: AVD-AWS-0180
+#   provider: aws
+#   service:CloudFront
+#   severity: LOW
+#   short_code: cloudfront-origin-tls-vers 
+#   recommended_action: "Modify cloudFront distribution and update the TLS version."
+#   input:
+#     selector:
+#      - type: cloud
+package builtin.aws.rds.aws0180
+
+#function(cache, settings, callback) {
+#        var results = [];
+#        var source = {};
+#        const deprecatedVersion = [
+#            'SSLv3',
+#            'TLSv1',
+#            'TLSv1.1',
+#        ];
+#        var region = helpers.defaultRegion(settings);
+#
+#        var listDistributions = helpers.addSource(cache, source,
+#            ['cloudfront', 'listDistributions', region]);
+#
+#        if (!listDistributions) return callback(null, results, source);
+#
+#        if (listDistributions.err || !listDistributions.data) {
+#            helpers.addResult(results, 3,
+#                'Unable to query for CloudFront distributions: ' + helpers.addError(listDistributions));
+#            return callback(null, results, source);
+#        }
+#
+#        if (!listDistributions.data.length) {
+#            helpers.addResult(results, 0, 'No CloudFront distributions found');
+#            return callback(null, results, source);
+#        }
+# 
+#        for (let distribution of listDistributions.data){
+#            if (!distribution.ARN) continue;
+#            if (!distribution.Origins || !distribution.Origins.Items || !distribution.Origins.Items.length){
+#                helpers.addResult(results, 0, 'CloudFront distribution has no origins', 'global', distribution.ARN);
+#            } else {
+#                let origins = distribution.Origins.Items;
+#                for (let origin of origins){
+#                    if (!origin.CustomOriginConfig ||
+#                    !origin.CustomOriginConfig.OriginSslProtocols ||
+#                    !origin.CustomOriginConfig.OriginSslProtocols.Items) {
+#                        helpers.addResult(results, 0, 'CloudFront distribution does not have custom origins or origins do not have SSL protocol items', 'global', distribution.ARN);
+#                        continue;
+#                    }
+#
+#                    let sslItems = origin.CustomOriginConfig.OriginSslProtocols.Items;
+#                    let isDeprecated = false;
+#                    for (let item of sslItems){
+#                        if (deprecatedVersion.includes(item)){
+#                            isDeprecated = true;
+#                            break;
+#                        } 
+#                    }
+#                    if (isDeprecated){
+#                        helpers.addResult(results, 2, 'CloudFront distribution custom origin TLS version is deprecated', 'global', distribution.ARN);
+#                    } else {
+#                        helpers.addResult(results, 0, 'CloudFront distribution custom origin TLS version is not deprecated', 'global', distribution.ARN);    
+#                    }   
+#                }
+#            }
+#        }
+#        callback(null, results, source);
+#    }

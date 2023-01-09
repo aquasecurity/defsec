@@ -1,0 +1,116 @@
+# METADATA
+# title :"S3 Secure Transport Enabled"
+# description: "Ensure AWS S3 buckets enforce SSL to secure data in transit"
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - https://aws.amazon.com/premiumsupport/knowledge-center/s3-bucket-policy-for-config-rule/
+# custom:
+#   avd_id: AVD-AWS-0180
+#   provider: aws
+#   service:S3
+#   severity: LOW
+#   short_code: bucket-secure-transport-enabled 
+#   recommended_action: "Update S3 bucket policy to enforse SSL to secure data in transit."
+#   input:
+#     selector:
+#      - type: cloud
+package builtin.aws.rds.aws0180
+
+#function(cache, settings, callback) {
+#        var results = [];
+#        var source = {};
+#
+#        var region = helpers.defaultRegion(settings);
+#
+#        var listBuckets = helpers.addSource(cache, source,
+#            ['s3', 'listBuckets', region]);
+#
+#        if (!listBuckets) return callback(null, results, source);
+#
+#        if (listBuckets.err || !listBuckets.data) {
+#            helpers.addResult(results, 3,
+#                `Unable to query for S3 buckets: ${helpers.addError(listBuckets)}`);
+#            return callback(null, results, source);
+#        }
+#
+#        if (!listBuckets.data.length) {
+#            helpers.addResult(results, 0, 'No S3 buckets found');
+#            return callback(null, results, source);
+#        }
+#
+#        listBuckets.data.forEach(bucket => {
+#            if (!bucket.Name) return;
+#
+#            var resource = 'arn:aws:s3:::' + bucket.Name;
+#            var bucketLocation = helpers.getS3BucketLocation(cache, region, bucket.Name);
+#
+#            var getBucketPolicy = helpers.addSource(cache, source,
+#                ['s3', 'getBucketPolicy', region, bucket.Name]);
+#
+#            // Check the bucket policy
+#            if (getBucketPolicy && getBucketPolicy.err &&
+#                getBucketPolicy.err.code && getBucketPolicy.err.code === 'NoSuchBucketPolicy') {
+#                helpers.addResult(results, 2, 'No bucket policy found', bucketLocation, resource);
+#            } else if (!getBucketPolicy || getBucketPolicy.err ||
+#                       !getBucketPolicy.data || !getBucketPolicy.data.Policy) {
+#                helpers.addResult(results, 3,
+#                    `Error querying for bucket policy for bucket "${bucket.Name}" ${helpers.addError(getBucketPolicy)}`,
+#                    bucketLocation, resource);
+#            } else {
+#                var statements = helpers.normalizePolicyDocument(getBucketPolicy.data.Policy);
+#
+#                if (!statements || !statements.length) {
+#                    helpers.addResult(results, 2,
+#                        'Bucket policy does not contain any statements',
+#                        bucketLocation, resource);
+#                    return;
+#                }
+#
+#                statements.forEach(statement => {
+#                    if (!statement.Sid || !statement.Sid.length) statement.Sid = Math.random().toString(36).substring(2,7);
+#                });
+#
+#                var denyPermissionsMap = helpers.getDenyPermissionsMap(statements);
+#                var sslEnforced = true;
+#
+#                for (var statement of statements) {
+#                    if (statement.Effect && statement.Effect === 'Allow' && statement.Principal && !statement.Principal.Service) {
+#                        if (!helpers.isEffectiveStatement(statement, denyPermissionsMap)) continue;
+#
+#                        if (!statement.Condition ||
+#                                !statement.Condition.Bool ||
+#                                !statement.Condition.Bool['aws:SecureTransport'] ||
+#                                statement.Condition.Bool['aws:SecureTransport'] === 'false') {
+#                            sslEnforced = false;
+#                            break;
+#                        }
+#                    } else if (statement.Effect && statement.Effect === 'Deny' && statement.Principal && !statement.Principal.Service && statement.Sid) {
+#                        var denyActionResourceMap = helpers.getDenyPermissionsMap(statements, statement.Sid);
+#                        if (!helpers.isEffectiveStatement(statement, denyActionResourceMap)) continue;
+#
+#                        if (!statement.Condition ||
+#                                !statement.Condition.Bool ||
+#                                !statement.Condition.Bool['aws:SecureTransport'] ||
+#                                statement.Condition.Bool['aws:SecureTransport'] === 'true') {
+#                            sslEnforced = false;
+#                            break;
+#                        }
+#                    }
+#                }
+#
+#                if (sslEnforced) {
+#                    helpers.addResult(results, 0,
+#                        `Bucket Policy for bucket "${bucket.Name}" enforces SSL to secure data in transit`,
+#                        bucketLocation, resource);
+#                } else {
+#                    helpers.addResult(results, 2,
+#                        `Bucket Policy for bucket "${bucket.Name}" does not enforce SSL to secure data in transit`,
+#                        bucketLocation, resource);
+#                }
+#            }
+#        });
+#
+#        callback(null, results, source);
+#    }

@@ -1,0 +1,88 @@
+# METADATA
+# title :"GuardDuty No Active Findings"
+# description: "Ensure that GurardDuty active/current findings does not exist in your AWS account."
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_findings.html
+# custom:
+#   avd_id: AVD-AWS-0180
+#   provider: aws
+#   service:GuardDuty
+#   severity: LOW
+#   short_code: no-active-findi 
+#   recommended_action: "Resolve the GuardDuty findings and archive them"
+#   input:
+#     selector:
+#      - type: cloud
+package builtin.aws.rds.aws0180
+
+#function(cache, settings, callback) {
+#        const results = [];
+#        const source = {};
+#
+#        const acctRegion = helpers.defaultRegion(settings);
+#        const awsOrGov = helpers.defaultPartition(settings);
+#        const accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+#
+#        const regions = helpers.regions(settings);
+#
+#        var config = {
+#            guardduty_findings_fail: parseInt(settings.guardduty_findings_fail || this.settings.guardduty_findings_fail.default)
+#        };
+#
+#        regions.guardduty.forEach((region) => {
+#            const listDetectors = helpers.addSource(cache, source, ['guardduty', 'listDetectors', region]);
+#
+#            if (!listDetectors) return;
+#
+#            if (listDetectors.err || !listDetectors.data) {
+#                helpers.addResult(results, 3,
+#                    'Unable to list GuardDuty detectors: ' + helpers.addError(listDetectors), region);
+#                return;
+#            }
+#
+#            if (!listDetectors.data.length) {
+#                helpers.addResult(results, 0, 'No GuardDuty detectors found', region);
+#                return;
+#            }
+#
+#            for (let detectorId of listDetectors.data) {
+#                const resource = 'arn:' + awsOrGov + ':guardduty:' + region + ':' + accountId + ':detector/' + detectorId;
+#                
+#                const getDetector = helpers.addSource(cache, source, ['guardduty', 'getDetector', region, detectorId]);
+#
+#                if (!getDetector || getDetector.err || !getDetector.data) {
+#                    helpers.addResult(results, 3, `Unable to get GuardDuty detector: ${helpers.addError(listDetectors)}`, region, resource);
+#                    continue;
+#                }
+#
+#                const getFindings = helpers.addSource(cache, source, ['guardduty', 'getFindings', region, detectorId]);
+#
+#                if (!getFindings) {
+#                    helpers.addResult(results, 0, 'No active findings available', region, resource);
+#                    continue;
+#                }
+#
+#                if (getFindings.err || !getFindings.data || !getFindings.data.Findings) {
+#                    helpers.addResult(results, 3, `Unable to get GuardDuty findings: ${helpers.addError(getFindings)}`, region, resource);
+#                    continue;
+#                }
+#
+#                if (!getFindings.data.Findings.length) {
+#                    helpers.addResult(results, 0, 'No active findings available', region, resource);
+#                    continue;
+#                }
+#
+#                let activeFindings = getFindings.data.Findings.filter(finding => finding.CreatedAt &&
+#                    helpers.hoursBetween(new Date, finding.CreatedAt) > config.guardduty_findings_fail);
+#                let status = (activeFindings && activeFindings.length) ? 2 : 0;
+#
+#                helpers.addResult(results, status,
+#                    `GuardDuty has ${status == 0 ? 0 : activeFindings.length} active finding(s)`, region, resource);
+#            }
+#        });
+#
+#        callback(null, results, source);
+#    }

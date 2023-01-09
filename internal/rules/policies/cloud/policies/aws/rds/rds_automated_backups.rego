@@ -1,0 +1,78 @@
+# METADATA
+# title :"RDS Automated Backups"
+# description: "Ensures automated backups are enabled for RDS instances"
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithAutomatedBackups.html
+# custom:
+#   avd_id: AVD-AWS-0180
+#   provider: aws
+#   service:RDS
+#   severity: LOW
+#   short_code: rds-automated-backups 
+#   recommended_action: "Enable automated backups for the RDS instance"
+#   input:
+#     selector:
+#      - type: cloud
+package builtin.aws.rds.aws0180
+
+#function(cache, settings, callback) {
+#        var config = {
+#            rds_backup_period: settings.rds_backup_period || this.settings.rds_backup_period.default
+#        };
+#
+#        var custom = helpers.isCustom(settings, this.settings);
+#
+#        var results = [];
+#        var source = {};
+#        var regions = helpers.regions(settings);
+#
+#        async.each(regions.rds, function(region, rcb){
+#            var describeDBInstances = helpers.addSource(cache, source,
+#                ['rds', 'describeDBInstances', region]);
+#
+#            if (!describeDBInstances) return rcb();
+#
+#            if (describeDBInstances.err || !describeDBInstances.data) {
+#                helpers.addResult(results, 3,
+#                    'Unable to query for RDS instances: ' + helpers.addError(describeDBInstances), region);
+#                return rcb();
+#            }
+#
+#            if (!describeDBInstances.data.length) {
+#                helpers.addResult(results, 0, 'No RDS instances found', region);
+#                return rcb();
+#            }
+#
+#            for (var i in describeDBInstances.data) {
+#                // For resource, attempt to use the endpoint address (more specific) but fallback to the instance identifier
+#                var db = describeDBInstances.data[i];
+#                var dbResource = db.DBInstanceArn;
+#
+#                // skip if it is read only replica Source Identifier for PostgreSQL
+#                if (db.Engine === 'postgresql' && db.ReadReplicaSourceDBInstanceIdentifier){
+#                    continue;
+#                }
+#
+#                if (db.BackupRetentionPeriod && db.BackupRetentionPeriod > config.rds_backup_period) {
+#                    helpers.addResult(results, 0,
+#                        'Automated backups are enabled with sufficient retention (' + db.BackupRetentionPeriod + ' days)',
+#                        region, dbResource, custom);
+#                } else if (db.BackupRetentionPeriod) {
+#                    helpers.addResult(results, 1,
+#                        'Automated backups are enabled but do not have sufficient retention (' + db.BackupRetentionPeriod + ' days)',
+#                        region, dbResource, custom);
+#                } else {
+#                    helpers.addResult(results, 2,
+#                        'Automated backups are not enabled',
+#                        region, dbResource, custom);
+#                }
+#            }
+#
+#            rcb();
+#        }, function(){
+#            callback(null, results, source);
+#        });
+#    }

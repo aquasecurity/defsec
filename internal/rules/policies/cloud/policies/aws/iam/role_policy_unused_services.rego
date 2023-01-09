@@ -1,0 +1,369 @@
+# METADATA
+# title :"IAM Role Policy Unused Services"
+# description: "Ensure that IAM role policies are scoped properly as to not provide access to unused AWS services."
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles.html
+# custom:
+#   avd_id: AVD-AWS-0180
+#   provider: aws
+#   service:IAM
+#   severity: LOW
+#   short_code: role-policy-unused-services 
+#   recommended_action: "Ensure that all IAM roles are scoped to specific services and resource types."
+#   input:
+#     selector:
+#      - type: cloud
+package builtin.aws.rds.aws0180
+
+#function(cache, settings, callback) {
+#        var config = {
+#            iam_role_policies_ignore_path: settings.iam_role_policies_ignore_path || this.settings.iam_role_policies_ignore_path.default,
+#            ignore_service_specific_wildcards: settings.ignore_service_specific_wildcards || this.settings.ignore_service_specific_wildcards.default,
+#            ignore_identity_federation_roles: settings.ignore_identity_federation_roles || this.settings.ignore_identity_federation_roles.default,
+#            ignore_aws_managed_iam_policies: settings.ignore_aws_managed_iam_policies || this.settings.ignore_aws_managed_iam_policies.default,
+#            ignore_customer_managed_iam_policies: settings.ignore_customer_managed_iam_policies || this.settings.ignore_customer_managed_iam_policies.default,
+#            iam_role_policies_ignore_tag: settings.iam_role_policies_ignore_tag || this.settings.iam_role_policies_ignore_tag.default
+#        };
+#
+#        config.ignore_service_specific_wildcards = (config.ignore_service_specific_wildcards === 'true');
+#        config.ignore_identity_federation_roles = (config.ignore_identity_federation_roles === 'true');
+#        config.ignore_aws_managed_iam_policies = (config.ignore_aws_managed_iam_policies === 'true');
+#        config.ignore_customer_managed_iam_policies = (config.ignore_customer_managed_iam_policies === 'true');
+#
+#        var custom = helpers.isCustom(settings, this.settings);
+#
+#        var results = [];
+#        var source = {};
+#
+#        var regions = helpers.regions(settings);
+#        var iamRegion = helpers.defaultRegion(settings);
+#
+#        var allResources = [];
+#        const allServices = {
+#            apigateway: ['stage',  'restapi', 'api'],
+#            cloudfront: ['distribution', 'streamingdistribution'],
+#            cloudwatch: ['alarm'],
+#            dynamodb: ['table'],
+#            ec2: ['volume', 'host', 'eip', 'instance', 'networkinterface', 'securitygroup', 'natgateway', 'egressonlyinternetgateway',
+#                'flowlog', 'transitgateway', 'vpcendpoint', 'vpcendpointservice', 'vpcpeeringconnection', 'registeredhainstance', 'launchtemplate',
+#                'customergateway', 'internetgateway', 'networkacl', 'routetable', 'subnet', 'vpc', 'vpcconnection', 'vpngateway'],
+#            ecr: ['repository', 'publicrepository'],
+#            ecs: ['cluster', 'taskdefinition', 'service'],
+#            efs: ['filesystem', 'accesspoint'],
+#            eks: ['cluster'],
+#            emr: ['securityconfiguration'],
+#            guardduty: ['detector'],
+#            elasticsearch: ['domain'],
+#            opensearch: ['domain'],
+#            qldb: ['ledger'],
+#            kinesis: ['stream', 'streamconsumer'],
+#            redshift: ['cluster', 'clusterparametergroup', 'clustersecuritygroup', 'clustersnapshot', 'clustersubnetgroup', 'eventsubscription'],
+#            rds: ['dbinstance', 'dbsecuritygroup', 'dbsnapshot', 'dbsubnetgroup', 'eventsubscription', 'dbcluster', 'dbclustersnapshot'],
+#            sagemaker: ['coderepository', 'model'],
+#            sns: ['topic'],
+#            sqs: ['queue'],
+#            s3: ['bucket', 'accountpublicaccessblock'],
+#            autoscaling: ['autoscalinggroup', 'launchconfguration', 'scalingpolicy', 'scheduledaction'],
+#            backup: ['backupplan', 'backupselection', 'backupvault', 'recoverypoint'],
+#            acm: ['certificate'],
+#            cloudformation: ['stack'],
+#            cloudtrail: ['trail'],
+#            codebuild: ['project'],
+#            codedeploy: ['application', 'deploymentconfig', 'deploymentgroup'],
+#            codepipeline: ['pipeline'],
+#            config: ['resourcecompliance', 'conformancepackcompliance'],
+#            elasticbeanstalk: ['applicstion', 'applicationversion', 'environment'],
+#            iam: ['user', 'group', 'role', 'policy'],
+#            kms: ['key'],
+#            lambda: ['function'],
+#            networkfirewall: ['firewall', 'firewallpolicy', 'rulegroup'],
+#            secretsmanager: ['secret'],
+#            servicecatalog: ['cloudFormationproduct', 'cloudformationprovisionedproduct', 'portfolio'],
+#            shield: ['protection', 'protection'],
+#            stepfunctions: ['statemachine'],
+#            ssm: ['managedinstanceinventory', 'patchcompliance', 'associationcompliance', 'filedata'],
+#            waf: ['ratebasedrule', 'rule', 'webacl', 'rulegroup', 'ratebasedrule', 'rule', 'webacl'],
+#            wafv2: ['webacl', 'rulegroup', 'managedruleset', 'ipset'],
+#            xray: ['encryptionconfig'],
+#            elasticloadbalancing: ['loadbalancer'],
+#            elasticloadbalancingv2: ['loadbalancer']
+#        };
+#
+#
+#
+#        async.each(regions.configservice, function(region, rcb) {
+#            var configRecorderStatus = helpers.addSource(cache, source,
+#                ['configservice', 'describeConfigurationRecorderStatus', region]);
+#
+#            if (!configRecorderStatus) {
+#                return rcb();
+#            }
+#
+#            if (configRecorderStatus.err || !configRecorderStatus.data) {
+#                helpers.addResult(results, 3,
+#                    'Unable to query config service: ' + helpers.addError(configRecorderStatus), region);
+#                return rcb();
+#            }
+#
+#            if (!configRecorderStatus.data.length) {
+#                helpers.addResult(results, 2,
+#                    'Config service is not enabled', region);
+#                return rcb();
+#            }
+#
+#            if (!configRecorderStatus.data[0].recording) {
+#                helpers.addResult(results, 2,
+#                    'Config service is not recording', region);
+#                return rcb();
+#            }
+#
+#            if (!configRecorderStatus.data[0].lastStatus ||
+#                (configRecorderStatus.data[0].lastStatus.toUpperCase() !== 'SUCCESS' &&
+#                configRecorderStatus.data[0].lastStatus.toUpperCase() !== 'PENDING')) {
+#                helpers.addResult(results, 2,
+#                    'Config Service is configured, and recording, but not delivering properly', region);
+#                return rcb();
+#            }
+#
+#            var discoveredResources = helpers.addSource(cache, source,
+#                ['configservice', 'getDiscoveredResourceCounts', region]);
+#
+#            if (discoveredResources.err || !discoveredResources.data) {
+#                helpers.addResult(results, 3,
+#                    'Unable to query for Discovered Resources: ' + helpers.addError(discoveredResources));
+#                return rcb();
+#            }
+#
+#            allResources.push(...discoveredResources.data);
+#            rcb();
+#        }, function() {
+#            if (!allResources.length) {
+#                helpers.addResult(results, 0, 'No Discovered Resources found.');
+#                return callback(null, results, source);
+#            }
+#
+#            allResources = allResources.reduce((result, resource) => {
+#                let arr  = resource.resourceType.split(':');
+#                if (arr.length && arr.length >= 5) {
+#                    let service = arr[2].toLowerCase();
+#                    let subService = arr[4].toLowerCase();
+#                    result[service] = result[service] || [];
+#
+#                    if (resource.count > 0 && (allServices[service] && allServices[service].includes(subService))) {
+#                        result[service].push(subService);
+#                    }
+#
+#                    return result;
+#                }
+#            }, {});
+#
+#            if (!allResources) allResources = {};
+#
+#            var listRoles = helpers.addSource(cache, source,
+#                ['iam', 'listRoles', iamRegion]);
+#
+#            if (!listRoles) return callback(null, results, source);
+#
+#            if (listRoles.err || !listRoles.data) {
+#                helpers.addResult(results, 3,
+#                    'Unable to query for IAM roles: ' + helpers.addError(listRoles));
+#                return callback(null, results, source);
+#            }
+#
+#            if (!listRoles.data.length) {
+#                helpers.addResult(results, 0, 'No IAM roles found');
+#                return callback(null, results, source);
+#            }
+#
+#            async.each(listRoles.data, function(role, cb){
+#                if (!role.RoleName) return cb();
+#
+#                // Skip roles with user-defined paths
+#                if (config.iam_role_policies_ignore_path &&
+#                    config.iam_role_policies_ignore_path.length &&
+#                    role.Path &&
+#                    role.Path.indexOf(config.iam_role_policies_ignore_path) > -1) {
+#                    return cb();
+#                }
+#
+#                // Get role details
+#                var getRole = helpers.addSource(cache, source,
+#                    ['iam', 'getRole', iamRegion, role.RoleName]);
+#
+#                if (!getRole || getRole.err || !getRole.data || !getRole.data.Role) {
+#                    helpers.addResult(results, 3,
+#                        'Unable to query for IAM role details: ' + role.RoleName + ': ' + helpers.addError(getRole), 'global', role.Arn);
+#                    return cb();
+#                }
+#                
+#                //Skip roles with user defined tags
+#                if (config.iam_role_policies_ignore_tag && config.iam_role_policies_ignore_tag.length) {
+#                    if (config.iam_role_policies_ignore_tag.split(':').length == 2){
+#                        var key = config.iam_role_policies_ignore_tag.split(':')[0].trim();
+#                        var value= new RegExp(config.iam_role_policies_ignore_tag.split(':')[1].trim());
+#                        if (getRole.data.Role.Tags && getRole.data.Role.Tags.length){
+#                            if (getRole.data.Role.Tags.find(tag =>
+#                                tag.Key == key && value.test(tag.Value))) return cb();
+#                        }
+#                    }
+#                }
+#
+#                if (config.ignore_identity_federation_roles &&
+#                    helpers.hasFederatedUserRole(helpers.normalizePolicyDocument(role.AssumeRolePolicyDocument))) {
+#                    helpers.addResult(results, 0,
+#                        'Role is federated user role',
+#                        'global', role.Arn, custom);
+#                    return cb();
+#                }
+#
+#                // Get managed policies attached to role
+#                var listAttachedRolePolicies = helpers.addSource(cache, source,
+#                    ['iam', 'listAttachedRolePolicies', iamRegion, role.RoleName]);
+#
+#                // Get inline policies attached to role
+#                var listRolePolicies = helpers.addSource(cache, source,
+#                    ['iam', 'listRolePolicies', iamRegion, role.RoleName]);
+#
+#                var getRolePolicy = helpers.addSource(cache, source,
+#                    ['iam', 'getRolePolicy', iamRegion, role.RoleName]);
+#    
+#                if (!listAttachedRolePolicies || listAttachedRolePolicies.err) {
+#                    helpers.addResult(results, 3,
+#                        'Unable to query for IAM attached policy for role: ' + role.RoleName + ': ' + helpers.addError(listAttachedRolePolicies), 'global', role.Arn);
+#                    return cb();
+#                }
+#
+#                if (!listRolePolicies || listRolePolicies.err) {
+#                    helpers.addResult(results, 3,
+#                        'Unable to query for IAM role policy for role: ' + role.RoleName + ': ' + helpers.addError(listRolePolicies), 'global', role.Arn);
+#                    return cb();
+#                }
+#
+#                var policyFailures = [];
+#                var roleFailures = [];
+#
+#                // See if role has admin managed policy
+#                if (listAttachedRolePolicies.data &&
+#                    listAttachedRolePolicies.data.AttachedPolicies) {
+#
+#                    for (var policy of listAttachedRolePolicies.data.AttachedPolicies) {
+#                        if (policy.PolicyArn === managedAdminPolicy) {
+#                            roleFailures.push('Role has managed AdministratorAccess policy');
+#                            break;
+#                        }
+#
+#                        if (config.ignore_aws_managed_iam_policies && /^arn:aws:iam::aws:.*/.test(policy.PolicyArn)) continue;
+#
+#                        if (config.ignore_customer_managed_iam_policies && /^arn:aws:iam::[0-9]{12}:.*/.test(policy.PolicyArn)) continue;
+#
+#                        var getPolicy = helpers.addSource(cache, source,
+#                            ['iam', 'getPolicy', iamRegion, policy.PolicyArn]);
+#
+#                        if (getPolicy &&
+#                            getPolicy.data &&
+#                            getPolicy.data.Policy &&
+#                            getPolicy.data.Policy.DefaultVersionId) {
+#                            var getPolicyVersion = helpers.addSource(cache, source,
+#                                ['iam', 'getPolicyVersion', iamRegion, policy.PolicyArn]);
+#
+#                            if (getPolicyVersion &&
+#                                getPolicyVersion.data &&
+#                                getPolicyVersion.data.PolicyVersion &&
+#                                getPolicyVersion.data.PolicyVersion.Document) {
+#                                let statements = helpers.normalizePolicyDocument(
+#                                    getPolicyVersion.data.PolicyVersion.Document);
+#
+#                                if (!statements) break;
+#
+#                                for (let statement of statements) {
+#                                    if (statement.Action && statement.Action.length) {
+#                                        for (let action of statement.Action) {
+#                                            let service = action.split(':')[0] ? action.split(':')[0].toLowerCase() : '';
+#                                            let resourceAction = action.split(':')[1] ? action.split(':')[1].toLowerCase() : '';
+#
+#                                            if (allServices[service]) {
+#                                                for (let supportedResource of allServices[service]) {
+#                                                    if (resourceAction.includes(supportedResource)) {
+#                                                        if (!allResources[service] || !allResources[service].includes(supportedResource)) {
+#                                                            if (policyFailures.indexOf(action) === -1) policyFailures.push(action);
+#                                                        }
+#                                                    }
+#                                                }
+#                                            }
+#                                        }
+#                                    }
+#                                }
+#
+#                                addRoleFailures(roleFailures, statements, 'managed', config.ignore_service_specific_wildcards);
+#                            }
+#                        }
+#                    }
+#                }
+#
+#                if (listRolePolicies.data &&
+#                    listRolePolicies.data.PolicyNames) {
+#
+#                    for (var p in listRolePolicies.data.PolicyNames) {
+#                        var policyName = listRolePolicies.data.PolicyNames[p];
+#
+#                        if (getRolePolicy &&
+#                            getRolePolicy[policyName] &&
+#                            getRolePolicy[policyName].data &&
+#                            getRolePolicy[policyName].data.PolicyDocument) {
+#                            var statements = helpers.normalizePolicyDocument(
+#                                getRolePolicy[policyName].data.PolicyDocument);
+#
+#                            if (!statements) break;
+#
+#                            for (let statement of statements) {
+#                                if ((statement.Action && statement.Action.length && statement.Action[0] === '*') ||
+#                                    (statement.Resource && statement.Resource.length &&  statement.Resource[0] === '*')) {
+#                                    continue;
+#                                }
+#                             
+#                                if (statement.Action && statement.Action.length &&
+#                                    statement.Resource && statement.Resource.length) {
+#                                    let service = statement.Resource[0].includes('arn') ? statement.Resource[0].split(':')[2].toLowerCase() :
+#                                        statement.Action[0].split(':')[1].toLowerCase();
+#                                    if (statement.Action.length > 1 || statement.Action[0] !== '*') {
+#                                        for (let action of statement.Action) {
+#                                            let resourceAction = action.split(':')[1].toLowerCase();
+#
+#                                            if (allServices[service]) {
+#                                                for (let supportedResource of allServices[service]) {
+#                                                    if (resourceAction.includes(supportedResource)) {
+#                                                        if (!allResources[service] || !allResources[service].includes(supportedResource)) {
+#                                                            if (policyFailures.indexOf(action) === -1) policyFailures.push(action);
+#                                                        }
+#                                                    }
+#                                                }
+#                                            }
+#                                        }
+#                                    }
+#                                }
+#                            }
+#
+#                            addRoleFailures(roleFailures, statements, 'inline', config.ignore_service_specific_wildcards);
+#                        }
+#                    }
+#                }
+#
+#                if (policyFailures.length || roleFailures.length) {
+#                    let failureMsg = policyFailures.length ? 'Role policies contain actions for resource types which are not in use: ' +
+#                        '[ ' + policyFailures.join(', ') + ' ]' + '\r\n' + roleFailures.join(', ') : roleFailures.join(', ');
+#                    helpers.addResult(results, 2, failureMsg, 'global', role.Arn, custom);
+#                } else {
+#                    helpers.addResult(results, 0,
+#                        'Role does not have overly-permissive policy',
+#                        'global', role.Arn, custom);
+#                }
+#
+#                cb();
+#            }, function() {
+#                callback(null, results, source);
+#            });
+#        });
+#    }

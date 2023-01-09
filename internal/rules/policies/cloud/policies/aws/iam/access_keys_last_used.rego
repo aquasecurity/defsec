@@ -1,0 +1,93 @@
+# METADATA
+# title :"Access Keys Last Used"
+# description: "Detects access keys that have not been used for a period of time and that should be decommissioned"
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - http://docs.aws.amazon.com/IAM/latest/UserGuide/ManagingCredentials.html
+# custom:
+#   avd_id: AVD-AWS-0180
+#   provider: aws
+#   service:IAM
+#   severity: LOW
+#   short_code: access-keys-last-used 
+#   recommended_action: "Log into the IAM portal and remove the offending access key."
+#   input:
+#     selector:
+#      - type: cloud
+package builtin.aws.rds.aws0180
+
+#function(cache, settings, callback) {
+#        var config = {
+#            access_keys_last_used_fail: settings.access_keys_last_used_fail || this.settings.access_keys_last_used_fail.default,
+#            access_keys_last_used_warn: settings.access_keys_last_used_warn || this.settings.access_keys_last_used_warn.default
+#        };
+#
+#        var custom = helpers.isCustom(settings, this.settings);
+#
+#        var results = [];
+#        var source = {};
+#
+#        var region = helpers.defaultRegion(settings);
+#
+#        var generateCredentialReport = helpers.addSource(cache, source,
+#            ['iam', 'generateCredentialReport', region]);
+#
+#        if (!generateCredentialReport) return callback(null, results, source);
+#
+#        if (generateCredentialReport.err || !generateCredentialReport.data) {
+#            helpers.addResult(results, 3,
+#                'Unable to query for users: ' + helpers.addError(generateCredentialReport));
+#            return callback(null, results, source);
+#        }
+#
+#        if (generateCredentialReport.data.length <= 2) {
+#            helpers.addResult(results, 0, 'No users using access keys found');
+#            return callback(null, results, source);
+#        }
+#
+#        var found = false;
+#
+#        function addAccessKeyResults(lastUsed, keyNum, arn) {
+#            if (!lastUsed) {
+#                helpers.addResult(results, 0,
+#                    'User access key '  + keyNum + ' has never been used', 'global', arn);
+#            } else {
+#                var returnMsg = 'User access key ' + keyNum + ': was last used ' + helpers.daysAgo(lastUsed) + ' days ago';
+#
+#                if (helpers.daysAgo(lastUsed) > config.access_keys_last_used_fail) {
+#                    helpers.addResult(results, 2, returnMsg, 'global', arn, custom);
+#                } else if (helpers.daysAgo(lastUsed) > config.access_keys_last_used_warn) {
+#                    helpers.addResult(results, 1, returnMsg, 'global', arn, custom);
+#                } else {
+#                    helpers.addResult(results, 0,
+#                        'User access key '  + keyNum + ' was last used ' +
+#                        helpers.daysAgo(lastUsed) + ' days ago', 'global', arn, custom);
+#                }
+#            }
+#
+#            found = true;
+#        }
+#
+#        async.each(generateCredentialReport.data, function(obj, cb){
+#            // The root account security is handled in a different plugin
+#            if (obj.user === '<root_account>') return cb();
+#
+#            if (obj.access_key_1_active) {
+#                addAccessKeyResults(obj.access_key_1_last_used_date, '1', obj.arn + ':access_key_1');
+#            }
+#
+#            if (obj.access_key_2_active) {
+#                addAccessKeyResults(obj.access_key_2_last_used_date, '2', obj.arn + ':access_key_2');
+#            }
+#
+#            cb();
+#        }, function(){
+#            if (!found) {
+#                helpers.addResult(results, 0, 'No users using access keys found');
+#            }
+#
+#            callback(null, results, source);
+#        });
+#    }

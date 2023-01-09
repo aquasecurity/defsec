@@ -1,0 +1,51 @@
+# METADATA
+# title :"SSM Documents Public Access"
+# description: "Ensure that SSM service has block public sharing setting enabled."
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - https://docs.aws.amazon.com/systems-manager/latest/userguide/ssm-share-block.html
+# custom:
+#   avd_id: AVD-AWS-0180
+#   provider: aws
+#   service:SSM
+#   severity: LOW
+#   short_code: ssm-document-public-acc 
+#   recommended_action: "Enable block public sharing setting under SSM  documents preferences."
+#   input:
+#     selector:
+#      - type: cloud
+package builtin.aws.rds.aws0180
+
+#function(cache, settings, callback) {
+#        const results = [];
+#        const source = {};
+#        const regions = helpers.regions(settings);
+#
+#        const acctRegion = helpers.defaultRegion(settings);
+#        var awsOrGov = helpers.defaultPartition(settings);
+#        const accountId = helpers.addSource(cache, source, ['sts', 'getCallerIdentity', acctRegion, 'data']);
+#
+#        for (const region of regions.ssm) {
+#            const getServiceSetting = helpers.addSource(cache, source,
+#                ['ssm', 'getServiceSetting', region]);
+#
+#            if (!getServiceSetting) continue;
+#
+#            const resource = 'arn:' + awsOrGov + ':ssm:' + region + ':' + accountId + ':servicesetting/ssm/documents/console/public-sharing-permission';
+#
+#            if (getServiceSetting.err || !getServiceSetting.data) {
+#                helpers.addResult(results, 3,
+#                    'Unable to query SSM service settings: ' + helpers.addError(getServiceSetting), region, resource);
+#                continue;
+#            }
+#
+#            const isPublic = (getServiceSetting.data.SettingValue && getServiceSetting.data.SettingValue.toUpperCase() == 'ENABLE') ?
+#                true : false;
+#            helpers.addResult(results, isPublic ? 2 :0,
+#                `SSM service has block public sharing ${isPublic ? 'enabled' : 'disabled'} for SSM documents`, region, resource);    
+#        }
+#
+#        callback(null, results, source);
+#    }

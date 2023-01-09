@@ -1,0 +1,106 @@
+# METADATA
+# title :"SQL Server TLS Version"
+# description: "Ensures RDS SQL Servers do not allow outdated TLS certificate versions"
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - https://aws.amazon.com/about-aws/whats-new/2020/07/amazon-rds-for-sql-server-supports-disabling-old-versions-of-tls-and-ciphers/
+# custom:
+#   avd_id: AVD-AWS-0180
+#   provider: aws
+#   service:RDS
+#   severity: LOW
+#   short_code: sql-server-t-l-s-vers 
+#   recommended_action: "Create a parameter group that contains the TLS version restriction and limit access to TLS 1.2 or higher"
+#   input:
+#     selector:
+#      - type: cloud
+package builtin.aws.rds.aws0180
+
+#function(cache, settings, callback) {
+#        var results = [];
+#        var source = {};
+#        var regions = helpers.regions(settings);
+#        async.each(regions.rds, function(region, rcb){
+#            var describeDBParameterGroups = helpers.addSource(cache, source,
+#                ['rds', 'describeDBParameterGroups', region]);
+#
+#            if (!describeDBParameterGroups) return rcb();
+#            
+#            if (describeDBParameterGroups.err || !describeDBParameterGroups.data) {
+#                helpers.addResult(results, 3,
+#                    'Unable to query for parameter groups: ' + helpers.addError(describeDBParameterGroups), region);
+#                return rcb();
+#            }
+#
+#            if (!describeDBParameterGroups.data.length) {
+#                helpers.addResult(results, 0, 'No parameter groups found', region);
+#                return rcb();
+#            }
+#
+#            var sqlFound = false;
+#
+#            async.each(describeDBParameterGroups.data, function(group, paramcb){
+#                if (!group.DBParameterGroupName) return paramcb();
+#                
+#                var resource = group.DBParameterGroupArn;
+#
+#                if (group.DBParameterGroupFamily &&
+#                    (!group.DBParameterGroupFamily.startsWith('sqlserver') ||
+#                    group.DBParameterGroupName.startsWith('default.'))) return paramcb();
+#                sqlFound = true;
+#                
+#                var parameters = helpers.addSource(cache, source,
+#                    ['rds', 'describeDBParameters', region, group.DBParameterGroupName]);
+#
+#                if (!parameters || parameters.err || !parameters.data || !parameters.data.Parameters){
+#                    helpers.addResult(results, 3,
+#                        'Unable to query for parameters: ' + helpers.addError(parameters),
+#                        region, resource);
+#                    return paramcb();
+#                }
+#
+#                var tls10;
+#                var tls11;
+#                var tls12;
+#
+#                for (var param in parameters.data.Parameters) {
+#                    if (parameters.data.Parameters[param] &&
+#                        parameters.data.Parameters[param].ParameterName &&
+#                        parameters.data.Parameters[param].ParameterName === 'rds.tls10') {
+#                        tls10 = parameters.data.Parameters[param].ParameterValue;
+#                    } else if (parameters.data.Parameters[param] &&
+#                        parameters.data.Parameters[param].ParameterName &&
+#                        parameters.data.Parameters[param].ParameterName === 'rds.tls11') {
+#                        tls11 = parameters.data.Parameters[param].ParameterValue;
+#                    } else if (parameters.data.Parameters[param] &&
+#                        parameters.data.Parameters[param].ParameterName &&
+#                        parameters.data.Parameters[param].ParameterName === 'rds.tls12') {
+#                        tls12 = parameters.data.Parameters[param].ParameterValue;
+#                    }
+#                    if (!tls10 || !tls11 || !tls12) continue;
+#                }
+#
+#                if (tls10 === 'disabled' && tls11 === 'disabled' && tls12 != 'disabled') {
+#                    helpers.addResult(results, 0,
+#                        'DB parameter group ' + (group.DBParameterGroupName) + ' uses TLS 1.2',
+#                        region, resource);
+#                } else {
+#                    helpers.addResult(results, 2,
+#                        'DB parameter group ' + (group.DBParameterGroupName) + ' does not require TLS 1.2',
+#                        region, resource);
+#                }
+#
+#                paramcb();
+#            });
+#
+#            if (!sqlFound) {
+#                helpers.addResult(results, 0, 'No DB parameter groups for SQL servers found', region);
+#            }
+#            
+#            rcb();
+#        }, function(){
+#            callback(null, results, source);
+#        });
+#    }

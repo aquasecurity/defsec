@@ -1,0 +1,58 @@
+# METADATA
+# title :"CloudTrail File Validation"
+# description: "Ensures CloudTrail file validation is enabled for all regions within an account"
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - http://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-enabling.html
+# custom:
+#   avd_id: AVD-AWS-0180
+#   provider: aws
+#   service:CloudTrail
+#   severity: LOW
+#   short_code: cloudtrail-file-validation 
+#   recommended_action: "Enable CloudTrail file validation for all regions"
+#   input:
+#     selector:
+#      - type: cloud
+package builtin.aws.rds.aws0180
+
+#function(cache, settings, callback) {
+#        var results = [];
+#        var source = {};
+#        var regions = helpers.regions(settings);
+#
+#        async.each(regions.cloudtrail, function(region, rcb){
+#            var describeTrails = helpers.addSource(cache, source,
+#                ['cloudtrail', 'describeTrails', region]);
+#
+#            if (!describeTrails) return rcb();
+#
+#            if (describeTrails.err || !describeTrails.data) {
+#                helpers.addResult(results, 3,
+#                    'Unable to query for CloudTrail file validation status: ' + helpers.addError(describeTrails), region);
+#                return rcb();
+#            }
+#
+#            if (!describeTrails.data.length) {
+#                helpers.addResult(results, 2, 'CloudTrail is not enabled', region);
+#            } else if (describeTrails.data[0]) {
+#                for (var t in describeTrails.data) {
+#                    if (describeTrails.data[t].S3BucketName == helpers.CLOUDSPLOIT_EVENTS_BUCKET) continue;
+#                    if (!describeTrails.data[t].LogFileValidationEnabled) {
+#                        helpers.addResult(results, 2, 'CloudTrail log file validation is not enabled',
+#                            region, describeTrails.data[t].TrailARN);
+#                    } else {
+#                        helpers.addResult(results, 0, 'CloudTrail log file validation is enabled',
+#                            region, describeTrails.data[t].TrailARN);
+#                    }
+#                }
+#            } else {
+#                helpers.addResult(results, 2, 'CloudTrail is enabled but is not properly configured', region);
+#            }
+#            rcb();
+#        }, function(){
+#            callback(null, results, source);
+#        });
+#    }
