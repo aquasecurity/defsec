@@ -6,6 +6,6 @@ test_detects_when_not_delivered {
 }
 
 test_when_delivered {
-	r := deny with input as {"aws": {"cloudtrail": {"trails": [{}]}}}
+	r := deny with input as {"aws": {"cloudtrail": {"trails": [{"latestdeliveryerror": {"value": ""}}]}}}
 	count(r) == 0
 }

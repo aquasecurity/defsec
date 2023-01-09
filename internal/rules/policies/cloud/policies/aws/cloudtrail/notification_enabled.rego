@@ -20,8 +20,8 @@ package builtin.aws.cloudtrail.aws0325
 
 deny[res] {
 	trail := input.aws.cloudtrail.trails[_]
-    trail.snstopicname
-	topic := input.aws.sns.topics[_]
-	trail.snstopicname.value != topic.arn.value
+    trail.snstopicname.value != ""
+	found := [topic | topic = input.aws.sns.topics[_]; trail.snstopicname.value == topic.arn.value]
+	count(found) == 0
 	res := result.new("CloudTrail trail SNS topic not found", trail)
 }

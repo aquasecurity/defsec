@@ -20,6 +20,6 @@ package builtin.aws.cloudtrail.aws0328
 
 deny[res] {
 	trail := input.aws.cloudtrail.trails[_]
-    trail.latestdeliveryerror
+    trail.latestdeliveryerror.value != ""
 	res := result.new("Logs for CloudTrail trail are not being delivered", trail)
 }

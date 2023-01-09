@@ -19,10 +19,18 @@
 package builtin.aws.cloudtrail.aws0326
 
 deny[res] {
-	trail := input.aws.cloudtrail.trails[_]
-	trail.bucketname.value != ""
+trail := input.aws.cloudtrail.trails[_]
+    trail.bucketname.value != ""
     bucket := input.aws.s3.buckets[_]
     bucket.name.value == trail.bucketname.value
-    bucket.objectlockconfiguration.objectlockenabled.value != "enabled"
-	res := result.new("Object lock is not enabled for bucket", bucket.name)
+    not bucket.objectlockconfiguration
+    res := result.new("Object lock is not enabled for bucket", bucket.name)
+}
+{
+    trail := input.aws.cloudtrail.trails[_]
+    trail.bucketname.value != ""
+    bucket := input.aws.s3.buckets[_]
+    bucket.name.value == trail.bucketname.value
+    bucket.objectlockconfiguration.objectlockenabled.value != "Enabled"
+    res := result.new("Object lock is enabled for bucket", bucket.name)
 }
