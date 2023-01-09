@@ -11,6 +11,7 @@ type PasswordPolicy struct {
 	RequireUppercase     defsecTypes.BoolValue
 	RequireNumbers       defsecTypes.BoolValue
 	RequireSymbols       defsecTypes.BoolValue
+	ExpirePasswords      defsecTypes.BoolValue
 	MaxAgeDays           defsecTypes.IntValue
 	MinimumLength        defsecTypes.IntValue
 }

@@ -16,6 +16,7 @@ func Adapt(cfFile parser.FileContext) iam.IAM {
 			RequireUppercase:     defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 			RequireNumbers:       defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 			RequireSymbols:       defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+			ExpirePasswords:      defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 			MaxAgeDays:           defsecTypes.IntDefault(0, defsecTypes.NewUnmanagedMetadata()),
 			MinimumLength:        defsecTypes.IntDefault(0, defsecTypes.NewUnmanagedMetadata()),
 		},
