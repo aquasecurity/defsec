@@ -3,6 +3,7 @@ package aws
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/accessanalyzer"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/appmesh"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/athena"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudfront"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
@@ -40,6 +41,7 @@ import (
 type AWS struct {
 	AccessAnalyzer accessanalyzer.AccessAnalyzer
 	APIGateway     apigateway.APIGateway
+	AppMesh        appmesh.AppMesh
 	Athena         athena.Athena
 	Cloudfront     cloudfront.Cloudfront
 	CloudTrail     cloudtrail.CloudTrail
