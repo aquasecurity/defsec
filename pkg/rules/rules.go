@@ -65,6 +65,7 @@ import (
 	_ "github.com/aquasecurity/defsec/rules/cloud/policies/nifcloud/computing"
 	_ "github.com/aquasecurity/defsec/rules/cloud/policies/nifcloud/dns"
 	_ "github.com/aquasecurity/defsec/rules/cloud/policies/nifcloud/nas"
+	_ "github.com/aquasecurity/defsec/rules/cloud/policies/nifcloud/network"
 	_ "github.com/aquasecurity/defsec/rules/cloud/policies/nifcloud/rdb"
 	_ "github.com/aquasecurity/defsec/rules/cloud/policies/nifcloud/sslcertificate"
 	_ "github.com/aquasecurity/defsec/rules/cloud/policies/openstack/compute"
