@@ -36,12 +36,6 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 	if err != nil {
 		return err
 	}
-
-	// state.AWS.AppMesh.VirtualGateways, err = a.getvirtualgateways()
-	// if err != nil {
-	// 	return err
-	// }
-
 	return nil
 }
 
@@ -70,7 +64,7 @@ func (a *adapter) getmeshes() (mesh []appmesh.Mesh, err error) {
 
 func (a *adapter) adaptMesh(meshref appmeshTypes.MeshRef) (*appmesh.Mesh, error) {
 	metadata := a.CreateMetadataFromARN(*meshref.Arn)
-	mesh, err := a.client.DescribeMesh(a.Context(), &appmeshApi.DescribeMeshInput{
+	response, err := a.client.DescribeMesh(a.Context(), &appmeshApi.DescribeMeshInput{
 		MeshName: meshref.MeshName,
 	})
 	if err != nil {
@@ -78,14 +72,53 @@ func (a *adapter) adaptMesh(meshref appmeshTypes.MeshRef) (*appmesh.Mesh, error)
 	}
 
 	var eftype string
-	if mesh.Mesh.Spec != nil {
-		if mesh.Mesh.Spec.EgressFilter != nil {
-			eftype = string(mesh.Mesh.Spec.EgressFilter.Type)
+	if response.Mesh.Spec != nil {
+		if response.Mesh.Spec.EgressFilter != nil {
+			eftype = string(response.Mesh.Spec.EgressFilter.Type)
 		}
+	}
+
+	var virtualgateways []appmesh.VirtualGateway
+	output, err := a.client.ListVirtualGateways(a.Context(), &appmeshApi.ListVirtualGatewaysInput{
+		MeshName: meshref.MeshName,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, VG := range output.VirtualGateways {
+		VGresponse, err := a.client.DescribeVirtualGateway(a.Context(), &appmeshApi.DescribeVirtualGatewayInput{
+			VirtualGatewayName: VG.VirtualGatewayName,
+			MeshName:           meshref.MeshName,
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		//var accessLogFilePath string
+		// if VGresponse.VirtualGateway.Spec != nil{
+		// 	if VGresponse.VirtualGateway.Spec.Logging != nil{
+		// 		if VGresponse.VirtualGateway.Spec.Logging.AccessLog != nil{
+		// 			accessLogFilePath = VGresponse.VirtualGateway.Spec.Logging.AccessLog
+		// 		}
+		// 	}
+		// }
+
+		virtualgateways = append(virtualgateways, appmesh.VirtualGateway{
+			Metadata: metadata,
+			Spec: appmesh.VGSpec{
+				Metadata: metadata,
+				Logging: appmesh.Logging{
+					Metadata: metadata,
+					//AccessLogFilePath: accessLogFilePath,
+				},
+			},
+		})
 	}
 
 	return &appmesh.Mesh{
 		Metadata: metadata,
+		Name:     defsecTypes.String(*meshref.MeshName, metadata),
 		Spec: appmesh.Spec{
 			Metadata: metadata,
 			EgressFilter: appmesh.EgressFilter{
@@ -93,68 +126,6 @@ func (a *adapter) adaptMesh(meshref appmeshTypes.MeshRef) (*appmesh.Mesh, error)
 				Type:     defsecTypes.String(eftype, metadata),
 			},
 		},
+		VirtualGateways: virtualgateways,
 	}, nil
 }
-
-// func (a *adapter) getvirtualgateways() (apigateway []appmesh.VirtualGateway, err error) {
-// 	a.Tracker().SetServiceLabel("Discovering AppMesh virtualgateways...")
-// 	var apiVG []appmeshTypes.VirtualGatewayRef
-// 	input = &appmeshApi.ListGatewayRoutesInput{
-//        MeshName: ,
-// 	}
-// 	for {
-// 		output, err := a.client.ListVirtualGateways(a.Context(), input)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		apiVG = append(apiVG, output.VirtualGateways...)
-// 		a.Tracker().SetTotalResources(len(apiVG))
-// 		if output.NextToken == nil {
-// 			break
-// 		}
-// 		input.NextToken = output.NextToken
-// 	}
-
-// 	a.Tracker().SetServiceLabel("Adapting AppMesh virtualgateway...")
-// 	return concurrency.Adapt(apiVG, a.RootAdapter, a.adaptVirtualGateway), nil
-
-// }
-
-// func (a *adapter) adaptVirtualGateway(VGref appmeshTypes.VirtualGatewayRef) (*appmesh.VirtualGateway, error) {
-// 	metadata := a.CreateMetadataFromARN(*VGref.Arn)
-// 	VG, err := a.client.DescribeVirtualGateway(a.Context(), &appmeshApi.DescribeVirtualGatewayInput{
-// 		MeshName: VGref.MeshName,
-// 	})
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	var path string
-// 	if VG.VirtualGateway.Spec != nil {
-// 		if VG.VirtualGateway.Spec.Logging != nil {
-// 			if VG.VirtualGateway.Spec.Logging.AccessLog != nil {
-// 				if VG.VirtualGateway.Spec.Logging.AccessLog.File.Path != nil {
-// 					path = VG.VirtualGateway.Spec.Logging.AccessLog.File.Path
-// 				}
-// 			}
-// 		}
-// 	}
-
-// 	return &appmesh.VirtualGateway{
-// 		Metadata: metadata,
-// 		Spec: appmesh.VGSpec{
-// 			Metadata: metadata,
-// 			Logging: appmesh.Logging{
-// 				Metadata: metadata,
-// 				AccessLog: appmesh.AccessLog{
-// 					Metadata: metadata,
-// 					File: appmesh.File{
-// 						Metadata: metadata,
-// 						Path:     defsecTypes.String("", metadata),
-// 					},
-// 				},
-// 			},
-// 		},
-// 	}, nil
-
-// }

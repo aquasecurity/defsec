@@ -5,13 +5,14 @@ import (
 )
 
 type AppMesh struct {
-	Meshes          []Mesh
-	VirtualGateways []VirtualGateway
+	Meshes []Mesh
 }
 
 type Mesh struct {
-	Metadata defsecTypes.Metadata
-	Spec     Spec
+	Metadata        defsecTypes.Metadata
+	Name            defsecTypes.StringValue
+	Spec            Spec
+	VirtualGateways []VirtualGateway
 }
 
 type VirtualGateway struct {
@@ -44,16 +45,6 @@ type TLS struct {
 	Mode     defsecTypes.StringValue
 }
 type Logging struct {
-	Metadata  defsecTypes.Metadata
-	AccessLog AccessLog
-}
-
-type AccessLog struct {
-	Metadata defsecTypes.Metadata
-	File     File
-}
-
-type File struct {
-	Metadata defsecTypes.Metadata
-	Path     defsecTypes.StringValue
+	Metadata          defsecTypes.Metadata
+	AccessLogFilePath defsecTypes.StringValue
 }
