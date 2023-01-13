@@ -23,7 +23,7 @@ func getReplicationInstances(modules terraform.Modules) []dms.ReplicationInstanc
 
 func adaptReplicationInstance(resource *terraform.Block) dms.ReplicationInstance {
 	multiAZAttr := resource.GetAttribute("multi_az")
-	multiAZVal := multiAZAttr.AsBoolValueOrDefault(true, resource)
+	multiAZVal := multiAZAttr.AsBoolValueOrDefault(false, resource)
 
 	autoMinorUpgrateAttr := resource.GetAttribute("auto_minor_version_upgrade")
 	autoMinorUpgrateVal := autoMinorUpgrateAttr.AsBoolValueOrDefault(false, resource)

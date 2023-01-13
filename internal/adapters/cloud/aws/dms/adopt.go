@@ -70,7 +70,7 @@ func (a *adapter) adaptReplicationIntsance(ReplicationInstance types.Replication
 	return &dms.ReplicationInstance{
 		Metadata:                metadata,
 		AutoMinorVersionUpgrade: defsecTypes.Bool(ReplicationInstance.AutoMinorVersionUpgrade, metadata),
-		MultiAZ:                 defsecTypes.Bool(ReplicationInstance.AutoMinorVersionUpgrade, metadata),
+		MultiAZ:                 defsecTypes.Bool(ReplicationInstance.MultiAZ, metadata),
 		PubliclyAccessible:      defsecTypes.Bool(ReplicationInstance.PubliclyAccessible, metadata),
 	}, nil
 }

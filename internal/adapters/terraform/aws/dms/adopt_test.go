@@ -23,14 +23,14 @@ func Test_getReplicationInstances(t *testing.T) {
 			terraform: `		
 			resource "aws_dms_replication_instance" "dms" {
 				auto_minor_version_upgrade   = true
-				multi_az                     = false
+				multi_az                     = true
 				publicly_accessible          = true
 			}
 `,
 			expected: dms.ReplicationInstance{
 				Metadata:                defsecTypes.NewTestMetadata(),
 				AutoMinorVersionUpgrade: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
-				MultiAZ:                 defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				MultiAZ:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				PubliclyAccessible:      defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 			},
 		},
@@ -43,7 +43,7 @@ func Test_getReplicationInstances(t *testing.T) {
 			expected: dms.ReplicationInstance{
 				Metadata:                defsecTypes.NewTestMetadata(),
 				AutoMinorVersionUpgrade: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
-				MultiAZ:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				MultiAZ:                 defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				PubliclyAccessible:      defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},

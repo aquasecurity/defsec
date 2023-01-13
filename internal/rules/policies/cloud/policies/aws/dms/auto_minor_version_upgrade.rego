@@ -20,6 +20,6 @@ package builtin.aws.dms.aws0317
 
 deny[res] {
 	replicationinstance := input.aws.dms.replicationinstances[_]
-	not replicationinstance.autominorversionupgrate.value
-	res := result.new("Replication instance does not have auto minor version upgrade enabled", replicationinstance.autominorversionupgrate)
+	not replicationinstance.autominorversionupgrade.value
+	res := result.new("Replication instance does not have auto minor version upgrade enabled", replicationinstance.autominorversionupgrade)
 }
