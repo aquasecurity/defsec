@@ -7,6 +7,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/azure"
 	"github.com/aquasecurity/defsec/pkg/providers/cloudstack"
 	"github.com/aquasecurity/defsec/pkg/providers/digitalocean"
+	"github.com/aquasecurity/defsec/pkg/providers/external"
 	"github.com/aquasecurity/defsec/pkg/providers/github"
 	"github.com/aquasecurity/defsec/pkg/providers/google"
 	"github.com/aquasecurity/defsec/pkg/providers/kubernetes"
@@ -20,6 +21,7 @@ type State struct {
 	Azure        azure.Azure
 	CloudStack   cloudstack.CloudStack
 	DigitalOcean digitalocean.DigitalOcean
+	External     external.External
 	GitHub       github.GitHub
 	Google       google.Google
 	Kubernetes   kubernetes.Kubernetes

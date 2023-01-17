@@ -5,6 +5,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/azure"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/cloudstack"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/digitalocean"
+	"github.com/aquasecurity/defsec/internal/adapters/terraform/external"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/github"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/google"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/kubernetes"
@@ -20,6 +21,7 @@ func Adapt(modules terraform.Modules) *state.State {
 		Azure:        azure.Adapt(modules),
 		CloudStack:   cloudstack.Adapt(modules),
 		DigitalOcean: digitalocean.Adapt(modules),
+		External:     external.Adapt(modules),
 		GitHub:       github.Adapt(modules),
 		Google:       google.Adapt(modules),
 		Kubernetes:   kubernetes.Adapt(modules),
