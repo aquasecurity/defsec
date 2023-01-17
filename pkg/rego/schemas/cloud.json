@@ -17,6 +17,10 @@
       "type": "object",
       "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.digitalocean.DigitalOcean"
     },
+    "external": {
+      "type": "object",
+      "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.external.External"
+    },
     "github": {
       "type": "object",
       "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.github.GitHub"
@@ -4202,6 +4206,38 @@
         "enabled": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.external.External": {
+      "type": "object",
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.external.Source"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.external.Source": {
+      "type": "object",
+      "properties": {
+        "program": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+          }
+        },
+        "query": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.MapValue"
+        },
+        "workingdir": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
