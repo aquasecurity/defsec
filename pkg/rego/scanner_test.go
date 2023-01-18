@@ -864,3 +864,26 @@ deny {
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 }
+
+func Test_RegoScanning_WithFilepathToSchema(t *testing.T) {
+
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `# METADATA
+# schemas:
+# - input: schema["dockerfile"]
+package defsec.test
+
+deny {
+    input.evil == "lol"
+}
+`,
+	})
+
+	//scanner := NewScanner(types.SourceDockerfile)
+	scanner := NewScanner(types.SourceJSON)
+	assert.ErrorContains(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+		"undefined ref: input.evil",
+	)
+}
