@@ -10,6 +10,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/kubernetes"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/openstack"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/oracle"
+	"github.com/aquasecurity/defsec/internal/adapters/terraform/provisioner"
 	"github.com/aquasecurity/defsec/pkg/state"
 	"github.com/aquasecurity/defsec/pkg/terraform"
 )
@@ -25,5 +26,6 @@ func Adapt(modules terraform.Modules) *state.State {
 		Kubernetes:   kubernetes.Adapt(modules),
 		OpenStack:    openstack.Adapt(modules),
 		Oracle:       oracle.Adapt(modules),
+		Provisioner:  provisioner.Adapt(modules),
 	}
 }
