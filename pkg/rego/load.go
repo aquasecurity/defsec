@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/open-policy-agent/opa/util"
+
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/bundle"
@@ -167,16 +168,15 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 func (s *Scanner) compilePolicies() error {
 	compiler := ast.NewCompiler()
 	schemaSet := ast.NewSchemaSet()
+	schemaSet.Put(ast.MustParseRef("schema.input"), map[string]interface{}{}) // for backwards compat only
 
 	for _, policy := range s.policies {
 		for _, annotation := range policy.Annotations {
 			for _, schemas := range annotation.Schemas {
 				schemaName, _ := schemas.Schema.Ptr()
-				b, _ := os.ReadFile(filepath.Join("schemas", schemaName+".json"))
-				schemaSet.Put(ast.MustParseRef(schemas.Schema.String()), util.MustUnmarshalJSON(b))
-
-				// TODO: Improve logic to use embedded policies for builtin
-				// TODO: Improve logic to read from file for custom schemas
+				if schema, ok := schemaMap[defsecTypes.Source(schemaName)]; ok {
+					schemaSet.Put(ast.MustParseRef(schemas.Schema.String()), util.MustUnmarshalJSON([]byte(schema)))
+				}
 			}
 		}
 	}

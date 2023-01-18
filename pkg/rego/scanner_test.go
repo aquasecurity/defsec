@@ -866,7 +866,6 @@ deny {
 }
 
 func Test_RegoScanning_WithFilepathToSchema(t *testing.T) {
-
 	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/test.rego": `# METADATA
 # schemas:
@@ -878,8 +877,6 @@ deny {
 }
 `,
 	})
-
-	//scanner := NewScanner(types.SourceDockerfile)
 	scanner := NewScanner(types.SourceJSON)
 	assert.ErrorContains(
 		t,
