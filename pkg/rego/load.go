@@ -8,9 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/open-policy-agent/opa/util"
-
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+	"github.com/open-policy-agent/opa/util"
 
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/bundle"
@@ -170,12 +169,16 @@ func (s *Scanner) compilePolicies() error {
 	schemaSet := ast.NewSchemaSet()
 	schemaSet.Put(ast.MustParseRef("schema.input"), map[string]interface{}{}) // for backwards compat only
 
-	for _, policy := range s.policies {
+	for name, policy := range s.policies {
 		for _, annotation := range policy.Annotations {
 			for _, schemas := range annotation.Schemas {
 				schemaName, _ := schemas.Schema.Ptr()
-				if schema, ok := schemaMap[defsecTypes.Source(schemaName)]; ok {
-					schemaSet.Put(ast.MustParseRef(schemas.Schema.String()), util.MustUnmarshalJSON([]byte(schema)))
+				if schemaName != "input" {
+					s.debug.Log("Detected schema type: %s, for policy: %s", schemaName, name)
+					s.inputSchema = nil // discard auto detected input schema in favour of policy defined schema
+					if schema, ok := schemaMap[defsecTypes.Source(schemaName)]; ok {
+						schemaSet.Put(ast.MustParseRef(schemas.Schema.String()), util.MustUnmarshalJSON([]byte(schema)))
+					}
 				}
 			}
 		}

@@ -7,6 +7,9 @@ import (
 	"path/filepath"
 	"strings"
 
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+	"github.com/open-policy-agent/opa/util"
+
 	"github.com/aquasecurity/defsec/internal/rules"
 	"github.com/aquasecurity/defsec/pkg/rego/schemas"
 
@@ -40,6 +43,18 @@ func RegisterRegoRules(modules map[string]*ast.Module) {
 	var schema interface{}
 	_ = json.Unmarshal([]byte(schemas.Anything), &schema)
 	schemaSet.Put(ast.MustParseRef("schema.input"), schema)
+
+	for _, policy := range modules {
+		for _, annotation := range policy.Annotations {
+			for _, schemas := range annotation.Schemas {
+				schemaName, _ := schemas.Schema.Ptr()
+				if schema, ok := schemaMap[defsecTypes.Source(schemaName)]; ok {
+					schemaSet.Put(ast.MustParseRef(schemas.Schema.String()), util.MustUnmarshalJSON([]byte(schema)))
+				}
+			}
+		}
+	}
+
 	compiler.WithSchemas(schemaSet)
 	compiler.WithCapabilities(nil)
 	compiler.Compile(modules)
