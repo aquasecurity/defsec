@@ -73,3 +73,8 @@ workdir[instruction] {
 	instruction := input.Stages[_].Commands[_]
 	instruction.Cmd == "workdir"
 }
+
+healthcheck[instruction] {
+	instruction := input.Stages[_].Commands[_]
+	instruction.Cmd == "healthcheck"
+}
