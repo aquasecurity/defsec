@@ -434,15 +434,6 @@
         }
       }
     },
-    "github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.AccessLog": {
-      "type": "object",
-      "properties": {
-        "file": {
-          "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.File"
-        }
-      }
-    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.AppMesh": {
       "type": "object",
       "properties": {
@@ -452,13 +443,6 @@
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.Mesh"
           }
-        },
-        "virtualgateways": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.VirtualGateway"
-          }
         }
       }
     },
@@ -466,15 +450,6 @@
       "type": "object",
       "properties": {
         "type": {
-          "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
-        }
-      }
-    },
-    "github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.File": {
-      "type": "object",
-      "properties": {
-        "path": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
@@ -492,18 +467,29 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.Logging": {
       "type": "object",
       "properties": {
-        "accesslog": {
+        "accesslogfilepath": {
           "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.AccessLog"
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
     "github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.Mesh": {
       "type": "object",
       "properties": {
+        "name": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "spec": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.Spec"
+        },
+        "virtualgateways": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.VirtualGateway"
+          }
         }
       }
     },

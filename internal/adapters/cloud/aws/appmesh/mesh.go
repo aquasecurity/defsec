@@ -8,6 +8,7 @@ import (
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	appmeshApi "github.com/aws/aws-sdk-go-v2/service/appmesh"
 	appmeshTypes "github.com/aws/aws-sdk-go-v2/service/appmesh/types"
+	"github.com/aws/aws-sdk-go/aws"
 )
 
 type adapter struct {
@@ -88,21 +89,34 @@ func (a *adapter) adaptMesh(meshref appmeshTypes.MeshRef) (*appmesh.Mesh, error)
 
 	for _, VG := range output.VirtualGateways {
 		VGresponse, err := a.client.DescribeVirtualGateway(a.Context(), &appmeshApi.DescribeVirtualGatewayInput{
-			VirtualGatewayName: VG.VirtualGatewayName,
-			MeshName:           meshref.MeshName,
+			VirtualGatewayName: aws.String(*VG.VirtualGatewayName),
+			MeshName:           aws.String(*meshref.MeshName),
 		})
 		if err != nil {
 			return nil, err
 		}
 
-		//var accessLogFilePath string
-		// if VGresponse.VirtualGateway.Spec != nil{
-		// 	if VGresponse.VirtualGateway.Spec.Logging != nil{
-		// 		if VGresponse.VirtualGateway.Spec.Logging.AccessLog != nil{
-		// 			accessLogFilePath = VGresponse.VirtualGateway.Spec.Logging.AccessLog
-		// 		}
-		// 	}
+		// var accessLogFilePath string
+		// if  VGresponse.VirtualGateway.Spec.Logging.AccessLog != nil{
+		// 	accesslog := VGresponse.VirtualGateway.Spec.Logging.AccessLog
+		// 	accesslog = *accesslog.
 		// }
+
+		var listeners []appmesh.Listener
+		for _, listener := range VGresponse.VirtualGateway.Spec.Listeners {
+			var tlsmode string
+			if listener.Tls != nil {
+				tlsmode = string(listener.Tls.Mode)
+			}
+
+			listeners = append(listeners, appmesh.Listener{
+				Metadata: metadata,
+				TLS: appmesh.TLS{
+					Metadata: metadata,
+					Mode:     defsecTypes.String(tlsmode, metadata),
+				},
+			})
+		}
 
 		virtualgateways = append(virtualgateways, appmesh.VirtualGateway{
 			Metadata: metadata,
@@ -112,6 +126,7 @@ func (a *adapter) adaptMesh(meshref appmeshTypes.MeshRef) (*appmesh.Mesh, error)
 					Metadata: metadata,
 					//AccessLogFilePath: accessLogFilePath,
 				},
+				Listeners: listeners,
 			},
 		})
 	}

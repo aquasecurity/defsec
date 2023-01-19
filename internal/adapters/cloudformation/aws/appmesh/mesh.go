@@ -21,8 +21,42 @@ func getmeshes(cfFile parser.FileContext) []appmesh.Mesh {
 					Type:     r.GetStringProperty("Spec.EgressFilter.Type"),
 				},
 			},
+			VirtualGateways: getvirtualgateway(cfFile),
 		}
 		meshes = append(meshes, mesh)
 	}
 	return meshes
+}
+
+func getvirtualgateway(cfFile parser.FileContext) []appmesh.VirtualGateway {
+	var VG []appmesh.VirtualGateway
+
+	VGResources := cfFile.GetResourcesByType("AWS::AppMesh::VirtualGateway")
+
+	for _, r := range VGResources {
+
+		VGateway := appmesh.VirtualGateway{
+			Metadata: r.Metadata(),
+			Spec: appmesh.VGSpec{
+				Metadata:  r.Metadata(),
+				Listeners: getlisteners(r),
+			},
+		}
+		VG = append(VG, VGateway)
+	}
+	return VG
+}
+
+func getlisteners(r *parser.Resource) (listeners []appmesh.Listener) {
+	listener := r.GetProperty("Spec.Listeners")
+	for _, list := range listener.AsList() {
+		listeners = append(listeners, appmesh.Listener{
+			Metadata: list.Metadata(),
+			TLS: appmesh.TLS{
+				Metadata: list.Metadata(),
+				Mode:     list.GetStringProperty("TLS.Mode"),
+			},
+		})
+	}
+	return listeners
 }

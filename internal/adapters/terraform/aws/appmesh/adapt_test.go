@@ -38,7 +38,7 @@ func Test_adaptMesh(t *testing.T) {
 					Metadata: defsecTypes.NewTestMetadata(),
 					EgressFilter: appmesh.EgressFilter{
 						Metadata: defsecTypes.NewTestMetadata(),
-						Type:     defsecTypes.String("DROP_ALL", defsecTypes.NewTestMetadata()),
+						Type:     defsecTypes.String("ALLOW_ALL", defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
@@ -64,7 +64,7 @@ func Test_adaptMesh(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
-			adapted := adaptMesh(modules.GetBlocks()[0])
+			adapted := adaptMesh(modules.GetBlocks()[0], modules[0])
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
 	}
@@ -92,9 +92,9 @@ func Test_Lines(t *testing.T) {
 	assert.Equal(t, 3, mesh.Spec.Metadata.Range().GetStartLine())
 	assert.Equal(t, 7, mesh.Spec.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 2, mesh.Spec.EgressFilter.Metadata.Range().GetStartLine())
-	assert.Equal(t, 8, mesh.Spec.EgressFilter.Metadata.Range().GetEndLine())
+	assert.Equal(t, 4, mesh.Spec.EgressFilter.Metadata.Range().GetStartLine())
+	assert.Equal(t, 6, mesh.Spec.EgressFilter.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 2, mesh.Spec.EgressFilter.Type.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 8, mesh.Spec.EgressFilter.Type.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 5, mesh.Spec.EgressFilter.Type.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 5, mesh.Spec.EgressFilter.Type.GetMetadata().Range().GetEndLine())
 }
