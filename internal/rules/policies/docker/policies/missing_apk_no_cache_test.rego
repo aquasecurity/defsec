@@ -71,29 +71,27 @@ test_last_no_cache_allowed {
 }
 
 test_basic_allowed {
-	r := deny with input as {"Stages": [
-		{"Name": "alpine:3.17", "Commands": [
-			{
-				"Cmd": "from",
-				"Value": ["alpine:3.17"],
-			},
-			{
-				"Cmd": "run",
-				"Value": ["apk add --no-cache python3"],
-			},
-			{
-				"Cmd": "run",
-				"Value": ["pip install --no-cache-dir -r /usr/src/app/requirements.txt"],
-			},
-			{
-				"Cmd": "cmd",
-				"Value": [
-					"python",
-					"/usr/src/app/app.py",
-				],
-			},
-		]},
-	]}
+	r := deny with input as {"Stages": [{"Name": "alpine:3.17", "Commands": [
+		{
+			"Cmd": "from",
+			"Value": ["alpine:3.17"],
+		},
+		{
+			"Cmd": "run",
+			"Value": ["apk add --no-cache python3"],
+		},
+		{
+			"Cmd": "run",
+			"Value": ["pip install --no-cache-dir -r /usr/src/app/requirements.txt"],
+		},
+		{
+			"Cmd": "cmd",
+			"Value": [
+				"python",
+				"/usr/src/app/app.py",
+			],
+		},
+	]}]}
 
 	count(r) == 0
 }
