@@ -14,7 +14,7 @@
 #   recommended_action: "Create a role which does not permit attaching to shell on pods"
 #   input:
 #     selector:
-#     - type: rbac
+#     - type: kubernetes
 package builtin.kubernetes.KSV054
 
 import data.lib.kubernetes

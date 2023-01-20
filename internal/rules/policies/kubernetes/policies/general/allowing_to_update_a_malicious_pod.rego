@@ -14,7 +14,7 @@
 #   recommended_action: "Create a role which does not permit update/create of a malicious pod"
 #   input:
 #     selector:
-#     - type: rbac
+#     - type: kubernetes
 package builtin.kubernetes.KSV048
 
 import data.lib.kubernetes

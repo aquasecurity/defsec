@@ -118,7 +118,7 @@ var schemaMap = map[types.Source]schemas.Schema{
 	types.SourceDefsec:     schemas.Cloud,
 	types.SourceCloud:      schemas.Cloud,
 	types.SourceKubernetes: schemas.Kubernetes,
-	types.SourceRbac:       schemas.RBAC,
+	types.SourceRbac:       schemas.Kubernetes,
 	types.SourceDockerfile: schemas.Dockerfile,
 	types.SourceTOML:       schemas.Anything,
 	types.SourceYAML:       schemas.Anything,

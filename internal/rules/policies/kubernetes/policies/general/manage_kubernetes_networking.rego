@@ -14,7 +14,7 @@
 #   recommended_action: "Networking resources are only allowed for verbs 'list', 'watch', 'get'"
 #   input:
 #     selector:
-#     - type: rbac
+#     - type: kubernetes
 package builtin.kubernetes.KSV056
 
 import data.lib.kubernetes

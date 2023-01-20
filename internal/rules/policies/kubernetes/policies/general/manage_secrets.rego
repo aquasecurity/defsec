@@ -14,7 +14,7 @@
 #   recommended_action: "Create a role which does not permit to manage secrets if not needed"
 #   input:
 #     selector:
-#     - type: rbac
+#     - type: kubernetes
 package builtin.kubernetes.KSV041
 
 import data.lib.kubernetes

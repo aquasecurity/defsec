@@ -14,7 +14,7 @@
 #   recommended_action: "Create a role which does not permit to create role clusterrolebindings and associate to privileged cluster role"
 #   input:
 #     selector:
-#     - type: rbac
+#     - type: kubernetes
 package builtin.kubernetes.KSV052
 
 import data.lib.kubernetes
