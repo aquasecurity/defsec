@@ -42,6 +42,8 @@ func adaptMesh(resource *terraform.Block, module *terraform.Module) appmesh.Mesh
 
 		VG = append(VG, appmesh.VirtualGateway{
 			Metadata: VGRes.GetMetadata(),
+			Name:     VGRes.GetAttribute("name").AsStringValueOrDefault("", VGRes),
+			MeshName: VGRes.GetAttribute("mesh_name").AsStringValueOrDefault("", VGRes),
 			Spec: appmesh.VGSpec{
 				Metadata:  VGRes.GetMetadata(),
 				Listeners: listener,

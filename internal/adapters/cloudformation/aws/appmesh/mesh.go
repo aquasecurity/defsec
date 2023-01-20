@@ -37,6 +37,8 @@ func getvirtualgateway(cfFile parser.FileContext) []appmesh.VirtualGateway {
 
 		VGateway := appmesh.VirtualGateway{
 			Metadata: r.Metadata(),
+			Name:     r.GetStringProperty("VirtualGatewayName"),
+			MeshName: r.GetStringProperty("MeshName"),
 			Spec: appmesh.VGSpec{
 				Metadata:  r.Metadata(),
 				Listeners: getlisteners(r),

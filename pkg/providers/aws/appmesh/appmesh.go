@@ -17,6 +17,8 @@ type Mesh struct {
 
 type VirtualGateway struct {
 	Metadata defsecTypes.Metadata
+	Name     defsecTypes.StringValue
+	MeshName defsecTypes.StringValue
 	Spec     VGSpec
 }
 

@@ -21,7 +21,7 @@ package builtin.aws.appmesh.aws0338
 deny[res] {
 	mesh := input.aws.appmesh.meshes[_]
     VG := mesh.virtualgateways[_]
-    found := [listener | listener = VG.spec.listener[_]; listener.tls.mode != "strict"]
+    found := [listener | listener = VG.spec.listeners[_]; listener.tls.mode.value != "STRICT"]
     count(found) != 0
-	res := result.new("App Mesh virtual gateway listeners does not restrict TLS enabled connections", mesh.spec)
+	res := result.new("App Mesh virtual gateway listeners does not restrict TLS enabled connections", VG)
 }

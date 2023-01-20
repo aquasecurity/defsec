@@ -96,12 +96,6 @@ func (a *adapter) adaptMesh(meshref appmeshTypes.MeshRef) (*appmesh.Mesh, error)
 			return nil, err
 		}
 
-		// var accessLogFilePath string
-		// if  VGresponse.VirtualGateway.Spec.Logging.AccessLog != nil{
-		// 	accesslog := VGresponse.VirtualGateway.Spec.Logging.AccessLog
-		// 	accesslog = *accesslog.
-		// }
-
 		var listeners []appmesh.Listener
 		for _, listener := range VGresponse.VirtualGateway.Spec.Listeners {
 			var tlsmode string
@@ -120,12 +114,10 @@ func (a *adapter) adaptMesh(meshref appmeshTypes.MeshRef) (*appmesh.Mesh, error)
 
 		virtualgateways = append(virtualgateways, appmesh.VirtualGateway{
 			Metadata: metadata,
+			Name:     defsecTypes.String(*VGresponse.VirtualGateway.VirtualGatewayName, metadata),
+			MeshName: defsecTypes.String(*VGresponse.VirtualGateway.MeshName, metadata),
 			Spec: appmesh.VGSpec{
-				Metadata: metadata,
-				Logging: appmesh.Logging{
-					Metadata: metadata,
-					//AccessLogFilePath: accessLogFilePath,
-				},
+				Metadata:  metadata,
 				Listeners: listeners,
 			},
 		})

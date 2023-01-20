@@ -530,6 +530,14 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.VirtualGateway": {
       "type": "object",
       "properties": {
+        "meshname": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "name": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "spec": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.appmesh.VGSpec"
