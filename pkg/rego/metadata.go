@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/open-policy-agent/opa/util"
+
 	"github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/severity"
@@ -362,4 +365,31 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 
 	return options
 
+}
+
+func BuildSchemaSetFromPolicies(policies map[string]*ast.Module, logger func(format string, args ...interface{})) (*ast.SchemaSet, bool) {
+	schemaSet := ast.NewSchemaSet()
+	schemaSet.Put(ast.MustParseRef("schema.input"), map[string]interface{}{}) // for backwards compat only
+	var customFound bool
+	for name, policy := range policies {
+		for _, annotation := range policy.Annotations {
+			for _, schemas := range annotation.Schemas {
+				schemaName, err := schemas.Schema.Ptr()
+				if err != nil {
+					continue
+				}
+				if schemaName != "input" {
+					if logger != nil {
+						logger("Detected schema type: %s, for policy: %s", schemaName, name)
+					}
+					customFound = true
+					if schema, ok := SchemaMap[defsecTypes.Source(schemaName)]; ok {
+						schemaSet.Put(ast.MustParseRef(schemas.Schema.String()), util.MustUnmarshalJSON([]byte(schema)))
+					}
+				}
+			}
+		}
+	}
+
+	return schemaSet, customFound
 }
