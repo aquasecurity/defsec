@@ -46,10 +46,12 @@ func RegisterRegoRules(modules map[string]*ast.Module) {
 
 	for _, policy := range modules {
 		for _, annotation := range policy.Annotations {
-			for _, schemas := range annotation.Schemas {
-				schemaName, _ := schemas.Schema.Ptr()
-				if schema, ok := schemaMap[defsecTypes.Source(schemaName)]; ok {
-					schemaSet.Put(ast.MustParseRef(schemas.Schema.String()), util.MustUnmarshalJSON([]byte(schema)))
+			for _, s := range annotation.Schemas {
+				schemaName, _ := s.Schema.Ptr()
+				if schemaName != "input" {
+					if schema, ok := schemaMap[defsecTypes.Source(schemaName)]; ok {
+						schemaSet.Put(ast.MustParseRef(s.Schema.String()), util.MustUnmarshalJSON([]byte(schema)))
+					}
 				}
 			}
 		}
