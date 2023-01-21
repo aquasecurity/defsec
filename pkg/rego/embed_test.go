@@ -45,7 +45,7 @@ deny[res]{
 }`,
 		},
 		{
-			name: "happy path new single schema",
+			name: "happy path new builtin single schema",
 			inputPolicy: `# METADATA
 # title: "dummy title"
 # description: "some description"
@@ -103,12 +103,12 @@ deny[res]{
 		t.Run(tc.name, func(t *testing.T) {
 			policies, err := RecurseEmbeddedModules(rules.EmbeddedLibraryFileSystem, ".")
 			require.NoError(t, err)
-			mod, err := ast.ParseModuleWithOpts("/rules/newrule.rego", tc.inputPolicy, ast.ParserOptions{
+			newRule, err := ast.ParseModuleWithOpts("/rules/newrule.rego", tc.inputPolicy, ast.ParserOptions{
 				ProcessAnnotation: true,
 			})
 			require.NoError(t, err)
 
-			policies["/rules/newrule.rego"] = mod
+			policies["/rules/newrule.rego"] = newRule
 			switch {
 			case tc.expectedError:
 				assert.Panics(t, func() {
