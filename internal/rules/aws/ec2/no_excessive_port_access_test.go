@@ -30,6 +30,8 @@ func TestCheckNoExcessivePortAccess(t *testing.T) {
 							{
 								Metadata: defsecTypes.NewTestMetadata(),
 								Protocol: defsecTypes.String("-1", defsecTypes.NewTestMetadata()),
+								Type:     defsecTypes.String("egress", defsecTypes.NewTestMetadata()),
+								Action:   defsecTypes.String("allow", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -47,6 +49,8 @@ func TestCheckNoExcessivePortAccess(t *testing.T) {
 							{
 								Metadata: defsecTypes.NewTestMetadata(),
 								Protocol: defsecTypes.String("all", defsecTypes.NewTestMetadata()),
+								Type:     defsecTypes.String("egress", defsecTypes.NewTestMetadata()),
+								Action:   defsecTypes.String("allow", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
@@ -64,6 +68,8 @@ func TestCheckNoExcessivePortAccess(t *testing.T) {
 							{
 								Metadata: defsecTypes.NewTestMetadata(),
 								Protocol: defsecTypes.String("tcp", defsecTypes.NewTestMetadata()),
+								Type:     defsecTypes.String("egress", defsecTypes.NewTestMetadata()),
+								Action:   defsecTypes.String("allow", defsecTypes.NewTestMetadata()),
 							},
 						},
 					},
