@@ -9,10 +9,10 @@ Resources:
     Type: AWS::EC2::NetworkAcl
     Properties:
       VpcId: "something"
+	  RuleAction: "allow"
   Rule:
     Type: AWS::EC2::NetworkAclEntry
     Properties:
-      Egress: true
       RuleAction: "allow"
       NetworkAclId:
         Ref: NetworkACL
@@ -29,14 +29,14 @@ Resources:
     Type: AWS::EC2::NetworkAcl
     Properties:
       VpcId: "something"
+      RuleAction: "allow"
   Rule:
     Type: AWS::EC2::NetworkAclEntry
     Properties:
-	  RuleAction: "allow"
-      Egress: true
       NetworkAclId:
         Ref: NetworkACL
       Protocol: -1
+      RuleAction: "allow"
 `,
 }
 
