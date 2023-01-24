@@ -5740,6 +5740,9 @@
         "resource": {
           "type": "string"
         },
+        "sourceprefix": {
+          "type": "string"
+        },
         "startline": {
           "type": "integer"
         },
@@ -5767,6 +5770,9 @@
           "type": "boolean"
         },
         "resource": {
+          "type": "string"
+        },
+        "sourceprefix": {
           "type": "string"
         },
         "startline": {
@@ -5798,6 +5804,9 @@
         "resource": {
           "type": "string"
         },
+        "sourceprefix": {
+          "type": "string"
+        },
         "startline": {
           "type": "integer"
         },
@@ -5825,6 +5834,9 @@
           "type": "boolean"
         },
         "resource": {
+          "type": "string"
+        },
+        "sourceprefix": {
           "type": "string"
         },
         "startline": {
@@ -5856,6 +5868,9 @@
         "resource": {
           "type": "string"
         },
+        "sourceprefix": {
+          "type": "string"
+        },
         "startline": {
           "type": "integer"
         },
@@ -5883,6 +5898,9 @@
           "type": "boolean"
         },
         "resource": {
+          "type": "string"
+        },
+        "sourceprefix": {
           "type": "string"
         },
         "startline": {
