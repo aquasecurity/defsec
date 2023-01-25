@@ -12,7 +12,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/kubernetes"
 	"github.com/aquasecurity/defsec/pkg/providers/openstack"
 	"github.com/aquasecurity/defsec/pkg/providers/oracle"
-	"github.com/aquasecurity/defsec/pkg/providers/provisioner"
+	"github.com/aquasecurity/defsec/pkg/providers/terraform"
 	"github.com/aquasecurity/defsec/pkg/rego/convert"
 )
 
@@ -26,7 +26,7 @@ type State struct {
 	Kubernetes   kubernetes.Kubernetes
 	OpenStack    openstack.OpenStack
 	Oracle       oracle.Oracle
-	Provisioner  provisioner.Provisioner
+	Terraform    terraform.Terraform
 }
 
 func (a *State) ToRego() interface{} {

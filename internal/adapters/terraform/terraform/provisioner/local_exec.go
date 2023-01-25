@@ -1,7 +1,7 @@
 package provisioner
 
 import (
-	"github.com/aquasecurity/defsec/pkg/providers/provisioner"
+	"github.com/aquasecurity/defsec/pkg/providers/terraform/provisioner"
 	"github.com/aquasecurity/defsec/pkg/terraform"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/zclconf/go-cty/cty"

@@ -37,9 +37,9 @@
       "type": "object",
       "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.oracle.Oracle"
     },
-    "provisioner": {
+    "terraform": {
       "type": "object",
-      "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.provisioner.Provisioner"
+      "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.terraform.Terraform"
     }
   },
   "definitions": {
@@ -5579,7 +5579,36 @@
         }
       }
     },
-    "github.com.aquasecurity.defsec.pkg.providers.provisioner.Connection": {
+    "github.com.aquasecurity.defsec.pkg.providers.terraform.Terraform": {
+      "type": "object",
+      "properties": {
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.terraform.module.Module"
+          }
+        },
+        "provisioner": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.terraform.provisioner.Provisioner"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.terraform.module.Module": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "version": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.terraform.provisioner.Connection": {
       "type": "object",
       "properties": {
         "agent": {
@@ -5700,12 +5729,12 @@
         }
       }
     },
-    "github.com.aquasecurity.defsec.pkg.providers.provisioner.File": {
+    "github.com.aquasecurity.defsec.pkg.providers.terraform.provisioner.File": {
       "type": "object",
       "properties": {
         "connection": {
           "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.provisioner.Connection"
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.terraform.provisioner.Connection"
         },
         "content": {
           "type": "object",
@@ -5721,7 +5750,7 @@
         }
       }
     },
-    "github.com.aquasecurity.defsec.pkg.providers.provisioner.LocalExec": {
+    "github.com.aquasecurity.defsec.pkg.providers.terraform.provisioner.LocalExec": {
       "type": "object",
       "properties": {
         "command": {
@@ -5745,38 +5774,38 @@
         }
       }
     },
-    "github.com.aquasecurity.defsec.pkg.providers.provisioner.Provisioner": {
+    "github.com.aquasecurity.defsec.pkg.providers.terraform.provisioner.Provisioner": {
       "type": "object",
       "properties": {
         "files": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.provisioner.File"
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.terraform.provisioner.File"
           }
         },
         "localexecs": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.provisioner.LocalExec"
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.terraform.provisioner.LocalExec"
           }
         },
         "remoteexecs": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.provisioner.RemoteExec"
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.terraform.provisioner.RemoteExec"
           }
         }
       }
     },
-    "github.com.aquasecurity.defsec.pkg.providers.provisioner.RemoteExec": {
+    "github.com.aquasecurity.defsec.pkg.providers.terraform.provisioner.RemoteExec": {
       "type": "object",
       "properties": {
         "connection": {
           "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.provisioner.Connection"
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.terraform.provisioner.Connection"
         },
         "inline": {
           "type": "array",
