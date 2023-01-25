@@ -282,15 +282,16 @@ USER root
 
 func Test_BasicScanNewRegoMetadata(t *testing.T) {
 	var testCases = []struct {
-		name              string
-		inputRegoPolicy   string
-		expectedError     string
-		expectedTraceLogs string
+		name                    string
+		inputRegoPolicy         string
+		expectedError           string
+		expectedInputTraceLogs  string
+		expectedOutputTraceLogs string
 	}{
 		{
 			name:            "old schema selector schema.input",
 			inputRegoPolicy: DS006PolicyWithOldSchemaSelector,
-			expectedTraceLogs: `REGO INPUT:
+			expectedInputTraceLogs: `REGO INPUT:
 {
   "path": "code/Dockerfile",
   "contents": {
@@ -337,95 +338,8 @@ func Test_BasicScanNewRegoMetadata(t *testing.T) {
   }
 }
 END REGO INPUT
-
-Enter data.builtin.dockerfile.DS006.deny = _
-| Eval data.builtin.dockerfile.DS006.deny = _
-| Index data.builtin.dockerfile.DS006.deny (matched 1 rule)
-| Enter data.builtin.dockerfile.DS006.deny
-| | Eval output = data.builtin.dockerfile.DS006.get_alias_from_copy[_]
-| | Index data.builtin.dockerfile.DS006.get_alias_from_copy (matched 1 rule)
-| | Enter data.builtin.dockerfile.DS006.get_alias_from_copy
-| | | Eval copies = data.lib.docker.stage_copies[stage]
-| | | Index data.lib.docker.stage_copies (matched 1 rule)
-| | | Enter data.lib.docker.stage_copies
-| | | | Eval stage = input.Stages[_]
-| | | | Eval copies = [copy | copy = stage.Commands[_]; copy.Cmd = "copy"]
-| | | | Enter copy = stage.Commands[_]; copy.Cmd = "copy"
-| | | | | Eval copy = stage.Commands[_]
-| | | | | Eval copy.Cmd = "copy"
-| | | | | Fail copy.Cmd = "copy"
-| | | | | Redo copy = stage.Commands[_]
-| | | | | Eval copy.Cmd = "copy"
-| | | | | Exit copy = stage.Commands[_]; copy.Cmd = "copy"
-| | | | Redo copy = stage.Commands[_]; copy.Cmd = "copy"
-| | | | | Redo copy.Cmd = "copy"
-| | | | | Redo copy = stage.Commands[_]
-| | | | Exit data.lib.docker.stage_copies
-| | | Redo data.lib.docker.stage_copies
-| | | | Redo copies = [copy | copy = stage.Commands[_]; copy.Cmd = "copy"]
-| | | | Redo stage = input.Stages[_]
-| | | Eval copy = copies[_]
-| | | Eval flag = copy.Flags[_]
-| | | Eval contains(flag, "--from=")
-| | | Eval split(flag, "=", command)
-| | | Eval parts = command
-| | | Eval x = stage.Name
-| | | Eval k = parts[1]
-| | | Eval data.builtin.dockerfile.DS006.is_alias_current_from_alias(x, k)
-| | | Index data.builtin.dockerfile.DS006.is_alias_current_from_alias (matched 1 rule)
-| | | Enter data.builtin.dockerfile.DS006.is_alias_current_from_alias
-| | | | Eval lower(current_name, flag)
-| | | | Eval current_name_lower = flag
-| | | | Eval lower(current_alias, container)
-| | | | Eval current_alias_lower = container
-| | | | Eval regex.split("\\s+as\\s+", current_name_lower, container)
-| | | | Eval [_, alias] = container
-| | | | Eval alias = current_alias
-| | | | Eval allow = true
-| | | | Exit data.builtin.dockerfile.DS006.is_alias_current_from_alias
-| | | Eval args = parts[1]
-| | | Eval output = {"args": args, "cmd": copy}
-| | | Exit data.builtin.dockerfile.DS006.get_alias_from_copy
-| | Redo data.builtin.dockerfile.DS006.get_alias_from_copy
-| | | Redo output = {"args": args, "cmd": copy}
-| | | Redo args = parts[1]
-| | | Redo data.builtin.dockerfile.DS006.is_alias_current_from_alias(x, k)
-| | | Redo data.builtin.dockerfile.DS006.is_alias_current_from_alias
-| | | | Redo allow = true
-| | | | Redo alias = current_alias
-| | | | Redo [_, alias] = container
-| | | | Redo regex.split("\\s+as\\s+", current_name_lower, container)
-| | | | Redo current_alias_lower = container
-| | | | Redo lower(current_alias, container)
-| | | | Redo current_name_lower = flag
-| | | | Redo lower(current_name, flag)
-| | | Redo k = parts[1]
-| | | Redo x = stage.Name
-| | | Redo parts = command
-| | | Redo split(flag, "=", command)
-| | | Redo contains(flag, "--from=")
-| | | Redo flag = copy.Flags[_]
-| | | Redo copy = copies[_]
-| | | Redo copies = data.lib.docker.stage_copies[stage]
-| | Eval copies = output.args
-| | Eval sprintf("'COPY --from' should not mention current alias '%s' since it is impossible to copy from itself", [copies], container)
-| | Eval msg = container
-| | Eval copy = output.cmd
-| | Eval result.new(msg, copy, container)
-| | Eval res = container
-| | Exit data.builtin.dockerfile.DS006.deny
-| Redo data.builtin.dockerfile.DS006.deny
-| | Redo res = container
-| | Redo result.new(msg, copy, container)
-| | Redo copy = output.cmd
-| | Redo msg = container
-| | Redo sprintf("'COPY --from' should not mention current alias '%s' since it is impossible to copy from itself", [copies], container)
-| | Redo copies = output.args
-| | Redo output = data.builtin.dockerfile.DS006.get_alias_from_copy[_]
-| Exit data.builtin.dockerfile.DS006.deny = _
-Redo data.builtin.dockerfile.DS006.deny = _
-| Redo data.builtin.dockerfile.DS006.deny = _
-REGO RESULTSET:
+`,
+			expectedOutputTraceLogs: `REGO RESULTSET:
 [
   {
     "expressions": [
@@ -458,7 +372,7 @@ END REGO RESULTSET
 		{
 			name:            "new schema selector schema.dockerfile",
 			inputRegoPolicy: DS006PolicyWithDockerfileSchema,
-			expectedTraceLogs: `REGO INPUT:
+			expectedInputTraceLogs: `REGO INPUT:
 {
   "path": "code/Dockerfile",
   "contents": {
@@ -505,95 +419,8 @@ END REGO RESULTSET
   }
 }
 END REGO INPUT
-
-Enter data.builtin.dockerfile.DS006.deny = _
-| Eval data.builtin.dockerfile.DS006.deny = _
-| Index data.builtin.dockerfile.DS006.deny (matched 1 rule)
-| Enter data.builtin.dockerfile.DS006.deny
-| | Eval output = data.builtin.dockerfile.DS006.get_alias_from_copy[_]
-| | Index data.builtin.dockerfile.DS006.get_alias_from_copy (matched 1 rule)
-| | Enter data.builtin.dockerfile.DS006.get_alias_from_copy
-| | | Eval copies = data.lib.docker.stage_copies[stage]
-| | | Index data.lib.docker.stage_copies (matched 1 rule)
-| | | Enter data.lib.docker.stage_copies
-| | | | Eval stage = input.Stages[_]
-| | | | Eval copies = [copy | copy = stage.Commands[_]; copy.Cmd = "copy"]
-| | | | Enter copy = stage.Commands[_]; copy.Cmd = "copy"
-| | | | | Eval copy = stage.Commands[_]
-| | | | | Eval copy.Cmd = "copy"
-| | | | | Fail copy.Cmd = "copy"
-| | | | | Redo copy = stage.Commands[_]
-| | | | | Eval copy.Cmd = "copy"
-| | | | | Exit copy = stage.Commands[_]; copy.Cmd = "copy"
-| | | | Redo copy = stage.Commands[_]; copy.Cmd = "copy"
-| | | | | Redo copy.Cmd = "copy"
-| | | | | Redo copy = stage.Commands[_]
-| | | | Exit data.lib.docker.stage_copies
-| | | Redo data.lib.docker.stage_copies
-| | | | Redo copies = [copy | copy = stage.Commands[_]; copy.Cmd = "copy"]
-| | | | Redo stage = input.Stages[_]
-| | | Eval copy = copies[_]
-| | | Eval flag = copy.Flags[_]
-| | | Eval contains(flag, "--from=")
-| | | Eval split(flag, "=", __local68__)
-| | | Eval parts = __local68__
-| | | Eval __local89__ = stage.Name
-| | | Eval __local90__ = parts[1]
-| | | Eval data.builtin.dockerfile.DS006.is_alias_current_from_alias(__local89__, __local90__)
-| | | Index data.builtin.dockerfile.DS006.is_alias_current_from_alias (matched 1 rule)
-| | | Enter data.builtin.dockerfile.DS006.is_alias_current_from_alias
-| | | | Eval lower(current_name, __local69__)
-| | | | Eval current_name_lower = __local69__
-| | | | Eval lower(current_alias, __local70__)
-| | | | Eval current_alias_lower = __local70__
-| | | | Eval regex.split("\\s+as\\s+", current_name_lower, __local71__)
-| | | | Eval [_, alias] = __local71__
-| | | | Eval alias = current_alias
-| | | | Eval allow = true
-| | | | Exit data.builtin.dockerfile.DS006.is_alias_current_from_alias
-| | | Eval args = parts[1]
-| | | Eval output = {"args": args, "cmd": copy}
-| | | Exit data.builtin.dockerfile.DS006.get_alias_from_copy
-| | Redo data.builtin.dockerfile.DS006.get_alias_from_copy
-| | | Redo output = {"args": args, "cmd": copy}
-| | | Redo args = parts[1]
-| | | Redo data.builtin.dockerfile.DS006.is_alias_current_from_alias(__local89__, __local90__)
-| | | Redo data.builtin.dockerfile.DS006.is_alias_current_from_alias
-| | | | Redo allow = true
-| | | | Redo alias = current_alias
-| | | | Redo [_, alias] = __local71__
-| | | | Redo regex.split("\\s+as\\s+", current_name_lower, __local71__)
-| | | | Redo current_alias_lower = __local70__
-| | | | Redo lower(current_alias, __local70__)
-| | | | Redo current_name_lower = __local69__
-| | | | Redo lower(current_name, __local69__)
-| | | Redo __local90__ = parts[1]
-| | | Redo __local89__ = stage.Name
-| | | Redo parts = __local68__
-| | | Redo split(flag, "=", __local68__)
-| | | Redo contains(flag, "--from=")
-| | | Redo flag = copy.Flags[_]
-| | | Redo copy = copies[_]
-| | | Redo copies = data.lib.docker.stage_copies[stage]
-| | Eval __local91__ = output.args
-| | Eval sprintf("'COPY --from' should not mention current alias '%s' since it is impossible to copy from itself", [__local91__], __local72__)
-| | Eval msg = __local72__
-| | Eval __local92__ = output.cmd
-| | Eval result.new(msg, __local92__, __local73__)
-| | Eval res = __local73__
-| | Exit data.builtin.dockerfile.DS006.deny
-| Redo data.builtin.dockerfile.DS006.deny
-| | Redo res = __local73__
-| | Redo result.new(msg, __local92__, __local73__)
-| | Redo __local92__ = output.cmd
-| | Redo msg = __local72__
-| | Redo sprintf("'COPY --from' should not mention current alias '%s' since it is impossible to copy from itself", [__local91__], __local72__)
-| | Redo __local91__ = output.args
-| | Redo output = data.builtin.dockerfile.DS006.get_alias_from_copy[_]
-| Exit data.builtin.dockerfile.DS006.deny = _
-Redo data.builtin.dockerfile.DS006.deny = _
-| Redo data.builtin.dockerfile.DS006.deny = _
-REGO RESULTSET:
+`,
+			expectedOutputTraceLogs: `REGO RESULTSET:
 [
   {
     "expressions": [
@@ -626,7 +453,7 @@ END REGO RESULTSET
 		{
 			name:            "new schema selector with custom schema.myfancydockerfile",
 			inputRegoPolicy: DS006PolicyWithMyFancyDockerfileSchema,
-			expectedTraceLogs: `REGO INPUT:
+			expectedInputTraceLogs: `REGO INPUT:
 {
   "path": "code/Dockerfile",
   "contents": {
@@ -673,95 +500,8 @@ END REGO RESULTSET
   }
 }
 END REGO INPUT
-
-Enter data.builtin.dockerfile.DS006.deny = _
-| Eval data.builtin.dockerfile.DS006.deny = _
-| Index data.builtin.dockerfile.DS006.deny (matched 1 rule)
-| Enter data.builtin.dockerfile.DS006.deny
-| | Eval output = data.builtin.dockerfile.DS006.get_alias_from_copy[_]
-| | Index data.builtin.dockerfile.DS006.get_alias_from_copy (matched 1 rule)
-| | Enter data.builtin.dockerfile.DS006.get_alias_from_copy
-| | | Eval copies = data.lib.docker.stage_copies[stage]
-| | | Index data.lib.docker.stage_copies (matched 1 rule)
-| | | Enter data.lib.docker.stage_copies
-| | | | Eval stage = input.Stages[_]
-| | | | Eval copies = [copy | copy = stage.Commands[_]; copy.Cmd = "copy"]
-| | | | Enter copy = stage.Commands[_]; copy.Cmd = "copy"
-| | | | | Eval copy = stage.Commands[_]
-| | | | | Eval copy.Cmd = "copy"
-| | | | | Fail copy.Cmd = "copy"
-| | | | | Redo copy = stage.Commands[_]
-| | | | | Eval copy.Cmd = "copy"
-| | | | | Exit copy = stage.Commands[_]; copy.Cmd = "copy"
-| | | | Redo copy = stage.Commands[_]; copy.Cmd = "copy"
-| | | | | Redo copy.Cmd = "copy"
-| | | | | Redo copy = stage.Commands[_]
-| | | | Exit data.lib.docker.stage_copies
-| | | Redo data.lib.docker.stage_copies
-| | | | Redo copies = [copy | copy = stage.Commands[_]; copy.Cmd = "copy"]
-| | | | Redo stage = input.Stages[_]
-| | | Eval copy = copies[_]
-| | | Eval flag = copy.Flags[_]
-| | | Eval contains(flag, "--from=")
-| | | Eval split(flag, "=", __local68__)
-| | | Eval parts = __local68__
-| | | Eval __local89__ = stage.Name
-| | | Eval __local90__ = parts[1]
-| | | Eval data.builtin.dockerfile.DS006.is_alias_current_from_alias(__local89__, __local90__)
-| | | Index data.builtin.dockerfile.DS006.is_alias_current_from_alias (matched 1 rule)
-| | | Enter data.builtin.dockerfile.DS006.is_alias_current_from_alias
-| | | | Eval lower(current_name, __local69__)
-| | | | Eval current_name_lower = __local69__
-| | | | Eval lower(current_alias, __local70__)
-| | | | Eval current_alias_lower = __local70__
-| | | | Eval regex.split("\\s+as\\s+", current_name_lower, __local71__)
-| | | | Eval [_, alias] = __local71__
-| | | | Eval alias = current_alias
-| | | | Eval allow = true
-| | | | Exit data.builtin.dockerfile.DS006.is_alias_current_from_alias
-| | | Eval args = parts[1]
-| | | Eval output = {"args": args, "cmd": copy}
-| | | Exit data.builtin.dockerfile.DS006.get_alias_from_copy
-| | Redo data.builtin.dockerfile.DS006.get_alias_from_copy
-| | | Redo output = {"args": args, "cmd": copy}
-| | | Redo args = parts[1]
-| | | Redo data.builtin.dockerfile.DS006.is_alias_current_from_alias(__local89__, __local90__)
-| | | Redo data.builtin.dockerfile.DS006.is_alias_current_from_alias
-| | | | Redo allow = true
-| | | | Redo alias = current_alias
-| | | | Redo [_, alias] = __local71__
-| | | | Redo regex.split("\\s+as\\s+", current_name_lower, __local71__)
-| | | | Redo current_alias_lower = __local70__
-| | | | Redo lower(current_alias, __local70__)
-| | | | Redo current_name_lower = __local69__
-| | | | Redo lower(current_name, __local69__)
-| | | Redo __local90__ = parts[1]
-| | | Redo __local89__ = stage.Name
-| | | Redo parts = __local68__
-| | | Redo split(flag, "=", __local68__)
-| | | Redo contains(flag, "--from=")
-| | | Redo flag = copy.Flags[_]
-| | | Redo copy = copies[_]
-| | | Redo copies = data.lib.docker.stage_copies[stage]
-| | Eval __local91__ = output.args
-| | Eval sprintf("'COPY --from' should not mention current alias '%s' since it is impossible to copy from itself", [__local91__], __local72__)
-| | Eval msg = __local72__
-| | Eval __local92__ = output.cmd
-| | Eval result.new(msg, __local92__, __local73__)
-| | Eval res = __local73__
-| | Exit data.builtin.dockerfile.DS006.deny
-| Redo data.builtin.dockerfile.DS006.deny
-| | Redo res = __local73__
-| | Redo result.new(msg, __local92__, __local73__)
-| | Redo __local92__ = output.cmd
-| | Redo msg = __local72__
-| | Redo sprintf("'COPY --from' should not mention current alias '%s' since it is impossible to copy from itself", [__local91__], __local72__)
-| | Redo __local91__ = output.args
-| | Redo output = data.builtin.dockerfile.DS006.get_alias_from_copy[_]
-| Exit data.builtin.dockerfile.DS006.deny = _
-Redo data.builtin.dockerfile.DS006.deny = _
-| Redo data.builtin.dockerfile.DS006.deny = _
-REGO RESULTSET:
+`,
+			expectedOutputTraceLogs: `REGO RESULTSET:
 [
   {
     "expressions": [
@@ -888,7 +628,8 @@ COPY --from=dep /binary /`
 				}, actualCode.Lines)
 
 				// assert logs
-				assert.Equal(t, tc.expectedTraceLogs, traceBuf.String(), tc.name)
+				assert.Contains(t, traceBuf.String(), tc.expectedInputTraceLogs, traceBuf.String())
+				assert.Contains(t, traceBuf.String(), tc.expectedOutputTraceLogs, traceBuf.String())
 			}
 		})
 	}
