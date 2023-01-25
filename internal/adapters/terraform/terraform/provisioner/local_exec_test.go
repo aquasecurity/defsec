@@ -3,7 +3,7 @@ package provisioner
 import (
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/providers/provisioner"
+	"github.com/aquasecurity/defsec/pkg/providers/terraform/provisioner"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/tftestutil"
