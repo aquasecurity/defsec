@@ -17,6 +17,7 @@ func TestLoadSpecs(t *testing.T) {
 		{name: "k8s cis bench", specName: "k8s-cis", wantSpecPath: "./compliance/k8s-cis-1.23.yaml"},
 		{name: "awscis1.2", specName: "aws-cis-1.2", wantSpecPath: "./compliance/aws-cis-1.2.yaml"},
 		{name: "awscis1.4", specName: "aws-cis-1.4", wantSpecPath: "./compliance/aws-cis-1.4.yaml"},
+		{name: "docker cis bench", specName: "docker-cis", wantSpecPath: "./compliance/docker-cis.yaml"},
 		{name: "awscis1.2 by filepath", specName: "@./compliance/aws-cis-1.2.yaml", wantSpecPath: "./compliance/aws-cis-1.2.yaml"},
 		{name: "bogus spec", specName: "foobarbaz"},
 	}
