@@ -26,7 +26,7 @@ func adaptMesh(resource *terraform.Block, module *terraform.Module) appmesh.Mesh
 
 	var VG []appmesh.VirtualGateway
 
-	VGReses := module.GetResourcesByType("aws_appmesh_virtual_gateway")
+	VGReses := module.GetReferencingResources(resource, "aws_appmesh_virtual_gateway", "mesh_name")
 	for _, VGRes := range VGReses {
 		var listener []appmesh.Listener
 		for _, listenerBlock := range VGRes.GetBlocks("listener") {
