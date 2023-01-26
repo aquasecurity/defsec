@@ -54,6 +54,10 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.athena.Athena"
         },
+        "backup": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.backup.Backup"
+        },
         "cloudfront": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.Cloudfront"
@@ -485,6 +489,106 @@
         "name": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.backup.Backup": {
+      "type": "object",
+      "properties": {
+        "plans": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.backup.Plan"
+          }
+        },
+        "regionsettings": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.backup.RegionSettings"
+        },
+        "vaults": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.backup.Vault"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.backup.LifeCycle": {
+      "type": "object",
+      "properties": {
+        "deleteafterdays": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
+        },
+        "movetocoldstorageafterdays": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.backup.Plan": {
+      "type": "object",
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.backup.Rule"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.backup.RegionSettings": {
+      "type": "object"
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.backup.Rule": {
+      "type": "object",
+      "properties": {
+        "lifecycle": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.backup.LifeCycle"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.backup.Vault": {
+      "type": "object",
+      "properties": {
+        "arn": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "keyarn": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "name": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "notifications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.backup.VaultNotifications"
+          }
+        },
+        "policy": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.backup.VaultNotifications": {
+      "type": "object",
+      "properties": {
+        "backupvaultevents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+          }
         }
       }
     },
