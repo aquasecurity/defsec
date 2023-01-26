@@ -76,6 +76,7 @@ require (
 )
 
 require (
+	github.com/aws/aws-sdk-go-v2/service/autoscaling v1.28.4
 	github.com/aws/aws-sdk-go-v2/service/kendra v1.38.5
 	github.com/aws/aws-sdk-go-v2/service/kinesisvideo v1.15.5
 	github.com/aws/aws-sdk-go-v2/service/proton v1.20.3
