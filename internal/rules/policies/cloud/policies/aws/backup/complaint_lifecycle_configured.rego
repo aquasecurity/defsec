@@ -19,8 +19,7 @@
 package builtin.aws.backup.aws0342
 
 is_lifecycle(rule){
-    not rule.lifecycle.deleteafterdays
-    not rule.lifecycle.movetocoldstorageafterdays 
+    any([rule.lifecycle.deleteafterdays.value == 0, rule.lifecycle.movetocoldstorageafterdays.value == 0])
 }
 
 deny[res] {

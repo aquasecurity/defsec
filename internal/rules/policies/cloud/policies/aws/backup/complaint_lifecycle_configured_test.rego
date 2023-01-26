@@ -1,7 +1,7 @@
 package builtin.aws.backup.aws0342
 
 test_detects_when_disabled {
-	r := deny with input as {"aws": {"backup": {"plans": [{"rules": [{"lifecycle": {}}]}]}}}
+	r := deny with input as {"aws": {"backup": {"plans": [{"rules": [{"lifecycle": {"deleteafterdays": {"value": 34},"movetocoldstorageafterdays": {"value": 0}}}]}]}}}
 	count(r) == 1
 }
 
