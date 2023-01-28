@@ -15,8 +15,8 @@ var CheckNoExcessivePortAccess = rules.Register(
 		Provider:    providers.AWSProvider,
 		Service:     "ec2",
 		ShortCode:   "no-excessive-port-access",
-		Summary:     "An ingress Network ACL rule allows ALL ports.",
-		Impact:      "All ports exposed for egressing data",
+		Summary:     "An Network ACL rule allows ALL ports.",
+		Impact:      "All ports exposed for ingressing/egressing data",
 		Resolution:  "Set specific allowed ports",
 		Explanation: `Ensure access to specific required ports is allowed, and nothing else.`,
 		Links: []string{
@@ -39,7 +39,7 @@ var CheckNoExcessivePortAccess = rules.Register(
 	func(s *state.State) (results scan.Results) {
 		for _, acl := range s.AWS.EC2.NetworkACLs {
 			for _, rule := range acl.Rules {
-				if rule.Protocol.EqualTo("-1") || rule.Protocol.EqualTo("all") {
+				if rule.Action.EqualTo("allow") && rule.Protocol.EqualTo("-1") || rule.Protocol.EqualTo("all") {
 					results.Add(
 						"Network ACL rule allows access using ALL ports.",
 						rule.Protocol,

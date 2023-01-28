@@ -114,11 +114,11 @@ type DynamicMetadata struct {
 	EndLine   int
 }
 
-var schemaMap = map[types.Source]schemas.Schema{
+var SchemaMap = map[types.Source]schemas.Schema{
 	types.SourceDefsec:     schemas.Cloud,
 	types.SourceCloud:      schemas.Cloud,
 	types.SourceKubernetes: schemas.Kubernetes,
-	types.SourceRbac:       schemas.RBAC,
+	types.SourceRbac:       schemas.Kubernetes,
 	types.SourceDockerfile: schemas.Dockerfile,
 	types.SourceTOML:       schemas.Anything,
 	types.SourceYAML:       schemas.Anything,
@@ -127,7 +127,7 @@ var schemaMap = map[types.Source]schemas.Schema{
 
 func NewScanner(source types.Source, options ...options.ScannerOption) *Scanner {
 
-	schema, ok := schemaMap[source]
+	schema, ok := SchemaMap[source]
 	if !ok {
 		schema = schemas.Anything
 	}
