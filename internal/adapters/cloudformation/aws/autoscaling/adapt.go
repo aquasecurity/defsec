@@ -109,7 +109,7 @@ func getSuspendedProcesses(r *parser.Resource) (SuspendedProcesses []autoscaling
 
 func getTags(r *parser.Resource) (Tags []autoscaling.Tags) {
 
-	Tag := r.GetProperty("Tags Names")
+	Tag := r.GetProperty("Tags")
 
 	if Tag.IsNil() || Tag.IsNotNil() {
 		return Tags
@@ -118,7 +118,7 @@ func getTags(r *parser.Resource) (Tags []autoscaling.Tags) {
 	for _, TG := range Tag.AsList() {
 		Tags = append(Tags, autoscaling.Tags{
 			Metadata:   TG.Metadata(),
-			ResourceId: TG.GetStringProperty("ResourceId"),
+			ResourceId: types.StringDefault("", TG.Metadata()),
 		})
 	}
 	return Tags

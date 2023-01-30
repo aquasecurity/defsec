@@ -80,15 +80,13 @@ func adaptAutoscaling(resource *terraform.Block, module *terraform.Module) autos
 		})
 	}
 
-	var resourceid []autoscaling.Tags
-	tagsRes := module.GetReferencingResources(resource, "aws_autoscaling_group", "tags")
+	var Tags []autoscaling.Tags
+	tagsRes := resource.GetBlocks("tags")
 	for _, tagRes := range tagsRes {
-		resourceIdAttr := tagRes.GetAttribute("tags")
-		resourceIdVal := resourceIdAttr.AsStringValueOrDefault("", tagRes)
 
-		resourceid = append(resourceid, autoscaling.Tags{
+		Tags = append(Tags, autoscaling.Tags{
 			Metadata:   tagRes.GetMetadata(),
-			ResourceId: resourceIdVal,
+			ResourceId: types.StringDefault("", tagRes.GetMetadata()),
 		})
 	}
 
@@ -102,7 +100,7 @@ func adaptAutoscaling(resource *terraform.Block, module *terraform.Module) autos
 		AutoScalingGroupARN:     ASGArnVal,
 		DefaultCooldown:         DefaultCooldownVal,
 		SuspendedProcesses:      suspendedprocess,
-		Tags:                    resourceid,
+		Tags:                    Tags,
 		LaunchConfigurationName: LaunchConfigurationNameVal,
 	}
 }
