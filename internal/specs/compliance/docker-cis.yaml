@@ -24,7 +24,7 @@ spec:
       checks:
       severity: 'HIGH'
     - id: '4.4'
-    - name: Ensure images are scanned and rebuilt to include security patches (Manual)
+      name: Ensure images are scanned and rebuilt to include security patches (Manual)
       description: 'Images should be scanned "frequently" for any vulnerabilities. Rebuild the images to include patches and then instantiate new containers from it.'
       checks:
       severity: 'CRITICAL'
