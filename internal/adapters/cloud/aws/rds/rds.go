@@ -50,6 +50,26 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 		return nil
 	}
 
+	state.AWS.RDS.Snapshots, err = a.getSnapshots()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.RDS.Parameters, err = a.getParameters()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.RDS.SnapshotAttributes, err = a.getSnapshotAttributes()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.RDS.ParameterGroups, err = a.getParameterGroups()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -74,6 +94,28 @@ func (a *adapter) getInstances() (instances []rds.Instance, err error) {
 
 	a.Tracker().SetServiceLabel("Adapting RDS instances...")
 	return concurrency.Adapt(apiDBInstances, a.RootAdapter, a.adaptDBInstance), nil
+}
+
+func (a *adapter) getParameter() (parameter []rds.Parameter, err error) {
+	a. Tracker().SetServiceLabel(" Parameter...")
+	var apiParameter []types.DBParameterGroup
+	var input rdsApi.DescribeDBParameterGroupsInput
+
+	for {
+		output, err := a.api.DescribeDBParameters(a.Context(), &input)
+		if err != nil {
+			return nil, err
+		}
+		apiParameter = append(apiParameter, output.Parameters...)
+		a.Tracker().SetTotalResources(len(apiParameter))
+		if output.Marker == nil {
+			break
+		}
+		input.Marker = output.Marker
+	}
+
+		a.Tracker().SetServiceLabel("Adapting RDS Parameters Groups")
+		return concurrency.Adapt(apiParameter, a.RootAdapter, a.adaptParameter), nil
 }
 
 func (a *adapter) getClusters() (clusters []rds.Cluster, err error) {
@@ -136,6 +178,11 @@ func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, e
 		engine = *dbInstance.Engine
 	}
 
+	// EnabledCloudwatchLogsExport := defsecTypes.StringValueList()
+	// if dbInstance.EnabledCloudwatchLogsExports != nil {
+	// 	EnabledCloudwatchLogsExport = defsecTypes.StringValueList(dbInstance.EnabledCloudwatchLogsExports, metadata)
+	// }
+
 	instance := &rds.Instance{
 		Metadata:                  dbInstanceMetadata,
 		BackupRetentionPeriodDays: defsecTypes.IntFromInt32(dbInstance.BackupRetentionPeriod, dbInstanceMetadata),
@@ -145,11 +192,23 @@ func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, e
 			dbInstance.PerformanceInsightsKMSKeyId,
 			dbInstanceMetadata,
 		),
-		Encryption:         getInstanceEncryption(dbInstance.StorageEncrypted, dbInstance.KmsKeyId, dbInstanceMetadata),
-		PublicAccess:       defsecTypes.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
-		Engine:             defsecTypes.String(engine, dbInstanceMetadata),
-		IAMAuthEnabled:     defsecTypes.Bool(dbInstance.IAMDatabaseAuthenticationEnabled, dbInstanceMetadata),
-		DeletionProtection: defsecTypes.Bool(dbInstance.DeletionProtection, dbInstanceMetadata),
+		Encryption:                       getInstanceEncryption(dbInstance.StorageEncrypted, dbInstance.KmsKeyId, dbInstanceMetadata),
+		PublicAccess:                     defsecTypes.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
+		Engine:                           defsecTypes.String(engine, dbInstanceMetadata),
+		IAMAuthEnabled:                   defsecTypes.Bool(dbInstance.IAMDatabaseAuthenticationEnabled, dbInstanceMetadata),
+		DeletionProtection:               defsecTypes.Bool(dbInstance.DeletionProtection, dbInstanceMetadata),
+		DBInstanceArn:                    defsecTypes.String(engine, dbInstanceMetadata),
+		StorageEncrypted:                 defsecTypes.Bool(dbInstance.StorageEncrypted, dbInstanceMetadata),
+		DBInstanceIdentifier:             defsecTypes.String(engine, dbInstanceMetadata),
+		DBParameterGroups:                getDBParameterGroups(dbInstance.DBParameterGroups, dbinstance.KmsKeyId, dbInstanceMetadata),
+		TagList:                          getTagList(dbInstance.TagList, dbinstance.KmsKeyId, dbInstanceMetadata),
+		EnabledCloudwatchLogsExports:     defsecTypes.String(engine, dbInstanceMetadata),
+		EngineVersion:                    defsecTypes.String(engine, dbInstanceMetadata),
+		AutoMinorVersionUpgrade:          defsecTypes.Bool(dbInstance.AutoMinorVersionUpgrade, dbInstanceMetadata),
+		MultiAZ:                          defsecTypes.Bool(dbInstance.MultiAZ, dbInstanceMetadata),
+		PubliclyAccessible:               defsecTypes.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
+		LatestRestorableTime:             defsecTypes.TimeValue(engine, dbInstanceMetadata),
+		ReadReplicaDBInstanceIdentifiers: defsecTypes.StringValueList(engine, dbInstanceMetadata),
 	}
 
 	return instance, nil
@@ -176,6 +235,7 @@ func (a *adapter) adaptCluster(dbCluster types.DBCluster) (*rds.Cluster, error) 
 		Encryption:   getInstanceEncryption(dbCluster.StorageEncrypted, dbCluster.KmsKeyId, dbClusterMetadata),
 		PublicAccess: defsecTypes.Bool(aws.ToBool(dbCluster.PubliclyAccessible), dbClusterMetadata),
 		Engine:       defsecTypes.String(engine, dbClusterMetadata),
+		LatestRestorableTime: defsecTypes.TimeValue{},
 	}
 
 	return cluster, nil
@@ -190,6 +250,12 @@ func (a *adapter) adaptClassic(dbSecurityGroup types.DBSecurityGroup) (*rds.DBSe
 	}
 
 	return dbsg, nil
+}
+
+func (a *adapter) adaptParameter(dbparameter types.Parameter) (*rds.Parameters, error) {
+	dbParameterMetedata := a.CreateMetadata("parametgrp" + *dbparameter.ParameterName)
+
+	p
 }
 
 func getInstanceEncryption(storageEncrypted bool, kmsKeyID *string, metadata defsecTypes.Metadata) rds.Encryption {
@@ -220,4 +286,20 @@ func getPerformanceInsights(enabled *bool, kmsKeyID *string, metadata defsecType
 	}
 
 	return performanceInsights
+}
+
+func getDBParameterGroups(dbParameterGroupName string, kmsKeyID *string, metadata defsecTypes.Metadata) rds.DBParameterGroupsList {
+	dbParameterGroupList := rds.DBParameterGroupsList{
+		Metadata:             metadata,
+		DBParameterGroupName: defsecTypes.StringDefault("", metadata),
+		KMSKeyID:             defsecTypes.StringDefault("", metadata),
+	}
+	if dbParameterGroupName != nil {
+		dbParameterGroupList.DBParameterGroupName = defsecTypes.String(*dbParameterGroupName, metadata)
+	}
+	if kmsKeyID != nil {
+		dbParameterGroupList.KMSKeyID = defsecTypes.String(*kmsKeyID, metadata)
+	}
+
+	return dbParameterGroupList
 }
