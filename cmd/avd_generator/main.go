@@ -17,7 +17,6 @@ import (
 )
 
 func main() {
-
 	var generateCount int
 
 	for _, metadata := range registered.GetRegistered(framework.ALL) {
@@ -28,6 +27,7 @@ func main() {
 	fmt.Printf("\nGenerated %d files in avd_docs\n", generateCount)
 }
 
+// nolint: cyclop
 func writeDocsFile(meta rules.RegisteredRule, path string) {
 
 	tmpl, err := template.New("defsec").Parse(docsMarkdownTemplate)
@@ -116,15 +116,6 @@ func fail(msg string, args ...interface{}) {
 }
 
 func GetExampleValueFromFile(filename string, exampleType string) (string, error) {
-	//var file fs.File
-	//var err error
-	//if file, err = srcFS.Open(filename); err != nil {
-	//	return "", err
-	//}
-	//
-	//ff, _ := file.Stat()
-	//ff.Name()
-	//f, err := parser.ParseFile(token.NewFileSet(), ff.Name(), nil, parser.AllErrors)
 	f, err := parser.ParseFile(token.NewFileSet(), filename, nil, parser.AllErrors)
 	if err != nil {
 		return "", err
