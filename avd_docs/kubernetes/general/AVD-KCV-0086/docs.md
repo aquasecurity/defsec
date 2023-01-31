@@ -1,5 +1,5 @@
 
-Ensure that the --hostname-override argument is not set
+Do not override node hostnames.
 
 ### Impact
 <!-- Add Impact here -->

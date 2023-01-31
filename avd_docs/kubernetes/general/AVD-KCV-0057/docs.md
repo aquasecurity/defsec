@@ -1,5 +1,5 @@
 
-Ensure that the container network interface file ownership is set to root:root
+Ensure that the container network interface file ownership is set to root:root.
 
 ### Impact
 <!-- Add Impact here -->

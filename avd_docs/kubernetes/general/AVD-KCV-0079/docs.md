@@ -1,5 +1,5 @@
 
-Ensure that the --anonymous-auth argument is set to false
+Disable anonymous requests to the Kubelet server.
 
 ### Impact
 <!-- Add Impact here -->

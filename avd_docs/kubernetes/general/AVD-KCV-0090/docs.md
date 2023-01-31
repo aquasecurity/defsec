@@ -1,5 +1,5 @@
 
-Ensure that the --rotate-certificates argument is not set to false
+Enable kubelet client certificate rotation.
 
 ### Impact
 <!-- Add Impact here -->

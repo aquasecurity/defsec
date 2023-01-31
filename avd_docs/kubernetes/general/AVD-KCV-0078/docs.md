@@ -1,5 +1,5 @@
 
-If the kubelet config.yaml configuration file is being used validate file ownership is set to root:root
+Ensure that if the kubelet refers to a configuration file with the --config argument, that file is owned by root:root.
 
 ### Impact
 <!-- Add Impact here -->

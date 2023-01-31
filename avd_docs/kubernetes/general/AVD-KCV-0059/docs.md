@@ -1,5 +1,5 @@
 
-Ensure that the etcd data directory ownership is set to etcd:etcd
+Ensure that the etcd data directory ownership is set to etcd:etcd.
 
 ### Impact
 <!-- Add Impact here -->

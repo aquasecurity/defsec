@@ -1,5 +1,5 @@
 
-Ensure that the Kubernetes PKI certificate file permission is set to 600
+Ensure that the Kubernetes PKI key file permission is set to 600.
 
 ### Impact
 <!-- Add Impact here -->

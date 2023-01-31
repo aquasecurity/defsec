@@ -2,7 +2,7 @@
 Ensure access to specific required ports is allowed, and nothing else.
 
 ### Impact
-All ports exposed for egressing data
+All ports exposed for ingressing/egressing data
 
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}

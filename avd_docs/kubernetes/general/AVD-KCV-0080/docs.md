@@ -1,5 +1,5 @@
 
-Ensure that the --authorization-mode argument is not set to AlwaysAllow
+Do not allow all requests. Enable explicit authorization.
 
 ### Impact
 <!-- Add Impact here -->

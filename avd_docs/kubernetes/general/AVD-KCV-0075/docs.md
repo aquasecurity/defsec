@@ -1,5 +1,5 @@
 
-Ensure that the certificate authorities file permissions are set to 600 or more restrictive
+Ensure that the certificate authorities file has permissions of 600 or more restrictive.
 
 ### Impact
 <!-- Add Impact here -->

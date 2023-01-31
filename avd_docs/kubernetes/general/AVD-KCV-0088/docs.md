@@ -1,5 +1,5 @@
 
-Ensure that the --tls-cert-file argument are set as appropriate
+Setup TLS connection on the Kubelets.
 
 ### Impact
 <!-- Add Impact here -->

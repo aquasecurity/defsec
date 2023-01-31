@@ -1,5 +1,5 @@
 
-Ensure that the Kubelet only makes use of Strong Cryptographic Ciphers
+Ensure that the Kubelet is configured to only use strong cryptographic ciphers.
 
 ### Impact
 <!-- Add Impact here -->

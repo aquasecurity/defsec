@@ -1,5 +1,5 @@
 
-Ensure that the etcd data directory permissions are set to 700 or more restrictive
+Ensure that the etcd data directory has permissions of 700 or more restrictive.
 
 ### Impact
 <!-- Add Impact here -->

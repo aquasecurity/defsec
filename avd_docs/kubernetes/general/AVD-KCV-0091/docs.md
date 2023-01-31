@@ -1,5 +1,5 @@
 
-Verify that the RotateKubeletServerCertificate argument is set to true
+Enable kubelet server certificate rotation.
 
 ### Impact
 <!-- Add Impact here -->
