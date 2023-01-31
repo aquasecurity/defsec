@@ -51,6 +51,10 @@ metadata_lint:
 docs:
 	go run ./cmd/avd_generator
 
+.PHONY: docs-test
+docs-test:
+	go test -v ./cmd/avd_generator/...
+
 .PHONY: id
 id:
 	@go run ./cmd/id

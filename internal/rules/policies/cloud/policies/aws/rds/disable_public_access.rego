@@ -16,6 +16,11 @@
 #   input:
 #     selector:
 #     - type: cloud
+#   terraform:
+#       good_examples: "internal/rules/aws/rds/no_public_db_access.tf.go"
+#   cloud_formation:
+#       good_examples: "internal/rules/aws/rds/no_public_db_access.cf.go"
+
 package builtin.aws.rds.aws0180
 
 deny[res] {
