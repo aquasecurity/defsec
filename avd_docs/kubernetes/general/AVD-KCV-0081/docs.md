@@ -1,5 +1,5 @@
 
-Ensure that the --client-ca-file argument is set as appropriate
+Enable Kubelet authentication using certificates.
 
 ### Impact
 <!-- Add Impact here -->

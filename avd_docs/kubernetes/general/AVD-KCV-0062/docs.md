@@ -1,5 +1,5 @@
 
-Ensure that the scheduler config file permissions are set to 600 or more restrictive
+Ensure that the scheduler config file has permissions of 600 or more restrictive.
 
 ### Impact
 <!-- Add Impact here -->

@@ -1,5 +1,5 @@
 
-Verify that the --read-only-port argument is set to 0
+Disable the read-only port.
 
 ### Impact
 <!-- Add Impact here -->

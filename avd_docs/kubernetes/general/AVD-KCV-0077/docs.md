@@ -1,5 +1,5 @@
 
-If the kubelet config.yaml configuration file is being used validate permissions set to 600 or more restrictive
+Ensure that if the kubelet refers to a configuration file with the --config argument, that file has permissions of 600 or more restrictive.
 
 ### Impact
 <!-- Add Impact here -->

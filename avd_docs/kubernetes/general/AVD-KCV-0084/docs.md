@@ -1,5 +1,5 @@
 
-Ensure that the --make-iptables-util-chains argument is set to true
+Allow Kubelet to manage iptables.
 
 ### Impact
 <!-- Add Impact here -->

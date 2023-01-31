@@ -1,5 +1,5 @@
 
-Ensure that the --protect-kernel-defaults argument is set to true
+Protect tuned kernel parameters from overriding kubelet default kernel parameter values.
 
 ### Impact
 <!-- Add Impact here -->

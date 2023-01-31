@@ -1,5 +1,5 @@
 
-Ensure that the --streaming-connection-idle-timeout argument is not set to 0
+Do not disable timeouts on streaming connections.
 
 ### Impact
 <!-- Add Impact here -->

@@ -1,5 +1,5 @@
 
-Ensure that the kubelet service file permissions are set to 600 or more restrictive
+Ensure that the kubelet service file has permissions of 600 or more restrictive.
 
 ### Impact
 <!-- Add Impact here -->

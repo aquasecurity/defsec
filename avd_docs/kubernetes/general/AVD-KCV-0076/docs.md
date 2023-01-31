@@ -1,5 +1,5 @@
 
-Ensure that the client certificate authorities file ownership is set to root:root
+Ensure that the certificate authorities file ownership is set to root:root.
 
 ### Impact
 <!-- Add Impact here -->

@@ -1,5 +1,5 @@
 
-Ensure that the --kubeconfig kubelet.conf file permissions are set to 600 or more restrictive
+Ensure that the kubelet.conf file has permissions of 600 or more restrictive.
 
 ### Impact
 <!-- Add Impact here -->

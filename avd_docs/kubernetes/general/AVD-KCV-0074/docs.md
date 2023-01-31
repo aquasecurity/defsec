@@ -1,5 +1,5 @@
 
-Ensure that the --kubeconfig kubelet.conf file ownership is set to root:root
+Ensure that the kubelet.conf file ownership is set to root:root.
 
 ### Impact
 <!-- Add Impact here -->

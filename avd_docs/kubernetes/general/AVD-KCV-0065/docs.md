@@ -1,5 +1,5 @@
 
-Ensure that the controller-manager config  file ownership is set to root:root
+Ensure that the controller-manager config  file ownership is set to root:root.
 
 ### Impact
 <!-- Add Impact here -->

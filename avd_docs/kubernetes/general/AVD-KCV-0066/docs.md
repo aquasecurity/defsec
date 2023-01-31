@@ -1,5 +1,5 @@
 
-Ensure that the Kubernetes PKI directory and file file ownership is set to root:root
+Ensure that the Kubernetes PKI directory and file file ownership is set to root:root.
 
 ### Impact
 <!-- Add Impact here -->

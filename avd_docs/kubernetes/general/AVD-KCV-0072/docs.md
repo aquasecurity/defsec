@@ -1,5 +1,5 @@
 
-if proxy kubeconfig file exists ensure ownership is set to root:root
+If kube-proxy is running, ensure that the file ownership of its kubeconfig file is set to root:root.
 
 ### Impact
 <!-- Add Impact here -->
