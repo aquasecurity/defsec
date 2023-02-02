@@ -5,13 +5,11 @@ import (
 )
 
 type RDS struct {
-	Instances          []Instance
-	Clusters           []Cluster
-	Classic            Classic
-	Snapshots          []Snapshots
-	Parameters         []Parameters
-	SnapshotAttributes []SnapshotAttributes
-	ParameterGroups    []ParameterGroups
+	Instances       []Instance
+	Clusters        []Cluster
+	Classic         Classic
+	Snapshots       []Snapshots
+	ParameterGroups []ParameterGroups
 }
 
 type Instance struct {
@@ -28,7 +26,7 @@ type Instance struct {
 	StorageEncrypted                 defsecTypes.BoolValue
 	DBInstanceIdentifier             defsecTypes.StringValue
 	DBParameterGroups                []DBParameterGroupsList
-	TagList                          []defsecTypes.MapValue
+	TagList                          []TagList
 	EnabledCloudwatchLogsExports     []defsecTypes.StringValue
 	EngineVersion                    defsecTypes.StringValue
 	AutoMinorVersionUpgrade          defsecTypes.BoolValue
@@ -51,15 +49,12 @@ type Cluster struct {
 }
 
 type Snapshots struct {
-	Metadata    defsecTypes.Metadata
-	DBSnapshots []DBSnapshots
-}
-
-type DBSnapshots struct {
 	Metadata             defsecTypes.Metadata
 	DBSnapshotIdentifier defsecTypes.StringValue
 	DBSnapshotArn        defsecTypes.StringValue
 	Encrypted            defsecTypes.BoolValue
+	KmsKeyId             defsecTypes.StringValue
+	SnapshotAttributes   []DBSnapshotAttributes
 }
 
 type Parameters struct {
@@ -69,32 +64,15 @@ type Parameters struct {
 }
 
 type ParameterGroups struct {
-	Metadata          defsecTypes.Metadata
-	DBParameterGroups []DBParameterGroups
-}
-
-type SnapshotAttributes struct {
-	Metadata                   defsecTypes.Metadata
-	DBSnapshotAttributesResult []DBSnapshotAttributesResult
-	KMSKeyID                   defsecTypes.StringValue
-}
-
-type DBSnapshotAttributesResult struct {
-	Metadata             defsecTypes.Metadata
-	DBSnapshotAttributes []DBSnapshotAttributes
-	KMSKeyID             defsecTypes.StringValue
+	Metadata               defsecTypes.Metadata
+	DBParameterGroupName   defsecTypes.StringValue
+	DBParameterGroupFamily defsecTypes.StringValue
+	Parameters             []Parameters
 }
 
 type DBSnapshotAttributes struct {
 	Metadata        defsecTypes.Metadata
 	AttributeValues []defsecTypes.StringValue
-	KMSKeyID        defsecTypes.StringValue
-}
-
-type DBParameterGroups struct {
-	Metadata               defsecTypes.Metadata
-	DBParameterGroupName   defsecTypes.StringValue
-	DBParameterGroupFamily defsecTypes.StringValue
 }
 
 const (
@@ -139,4 +117,8 @@ type DBParameterGroupsList struct {
 	Metadata             defsecTypes.Metadata
 	DBParameterGroupName defsecTypes.StringValue
 	KMSKeyID             defsecTypes.StringValue
+}
+
+type TagList struct {
+	Metadata defsecTypes.Metadata
 }

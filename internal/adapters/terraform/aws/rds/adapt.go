@@ -8,9 +8,11 @@ import (
 
 func Adapt(modules terraform.Modules) rds.RDS {
 	return rds.RDS{
-		Instances: getInstances(modules),
-		Clusters:  getClusters(modules),
-		Classic:   getClassic(modules),
+		Instances:       getInstances(modules),
+		Clusters:        getClusters(modules),
+		Classic:         getClassic(modules),
+		Snapshots:       getSnapshots(modules),
+		ParameterGroups: getParameterGroups(modules),
 	}
 }
 
@@ -20,6 +22,22 @@ func getInstances(modules terraform.Modules) (instances []rds.Instance) {
 	}
 
 	return instances
+}
+
+func getParameterGroups(modules terraform.Modules) (parametergroups []rds.ParameterGroups) {
+	for _, resource := range modules.GetResourcesByType("aws_db_parameter_group") {
+		parametergroups = append(parametergroups, adaptDBParameterGroups(resource, modules))
+	}
+
+	return parametergroups
+}
+
+func getSnapshots(modules terraform.Modules) (snapshots []rds.Snapshots) {
+	for _, resource := range modules.GetResourcesByType("aws_db_snapshot") {
+		snapshots = append(snapshots, adaptDBSnapshots(resource, modules))
+	}
+
+	return snapshots
 }
 
 func getClusters(modules terraform.Modules) (clusters []rds.Cluster) {
@@ -51,8 +69,9 @@ func getClusters(modules terraform.Modules) (clusters []rds.Cluster) {
 				EncryptStorage: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 				KMSKeyID:       defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			},
-			PublicAccess: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
-			Engine:       defsecTypes.StringUnresolvable(defsecTypes.NewUnmanagedMetadata()),
+			PublicAccess:         defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+			Engine:               defsecTypes.StringUnresolvable(defsecTypes.NewUnmanagedMetadata()),
+			LatestRestorableTime: defsecTypes.TimeUnresolvable(defsecTypes.NewUnmanagedMetadata()),
 		}
 		for _, orphan := range orphanResources {
 			orphanage.Instances = append(orphanage.Instances, adaptClusterInstance(orphan, modules))
@@ -96,6 +115,28 @@ func adaptClassicDBSecurityGroup(resource *terraform.Block) rds.DBSecurityGroup 
 }
 
 func adaptInstance(resource *terraform.Block, modules terraform.Modules) rds.Instance {
+
+	var ReadReplicaDBInstanceIdentifiers []defsecTypes.StringValue
+	RRDIAttr := resource.GetAttribute("replicate_source_db")
+	for _, RRDI := range RRDIAttr.AsStringValues() {
+		ReadReplicaDBInstanceIdentifiers = append(ReadReplicaDBInstanceIdentifiers, RRDI)
+	}
+
+	var TagList []rds.TagList
+	tagres := resource.GetBlocks("tags")
+	for _, tagres := range tagres {
+
+		TagList = append(TagList, rds.TagList{
+			Metadata: tagres.GetMetadata(),
+		})
+	}
+
+	var EnabledCloudwatchLogsExports []defsecTypes.StringValue
+	ECWEAttr := resource.GetAttribute("enabled_cloudwatch_logs_exports")
+	for _, ECWE := range ECWEAttr.AsStringValues() {
+		EnabledCloudwatchLogsExports = append(EnabledCloudwatchLogsExports, ECWE)
+	}
+
 	replicaSource := resource.GetAttribute("replicate_source_db")
 	replicaSourceValue := ""
 	if replicaSource.IsNotNil() {
@@ -104,15 +145,59 @@ func adaptInstance(resource *terraform.Block, modules terraform.Modules) rds.Ins
 		}
 	}
 	return rds.Instance{
-		Metadata:                  resource.GetMetadata(),
-		BackupRetentionPeriodDays: resource.GetAttribute("backup_retention_period").AsIntValueOrDefault(0, resource),
-		ReplicationSourceARN:      defsecTypes.StringExplicit(replicaSourceValue, resource.GetMetadata()),
-		PerformanceInsights:       adaptPerformanceInsights(resource),
-		Encryption:                adaptEncryption(resource),
-		PublicAccess:              resource.GetAttribute("publicly_accessible").AsBoolValueOrDefault(false, resource),
-		Engine:                    resource.GetAttribute("engine").AsStringValueOrDefault(rds.EngineAurora, resource),
-		IAMAuthEnabled:            resource.GetAttribute("iam_database_authentication_enabled").AsBoolValueOrDefault(false, resource),
-		DeletionProtection:        resource.GetAttribute("deletion_protection").AsBoolValueOrDefault(false, resource),
+		Metadata:                         resource.GetMetadata(),
+		BackupRetentionPeriodDays:        resource.GetAttribute("backup_retention_period").AsIntValueOrDefault(0, resource),
+		ReplicationSourceARN:             defsecTypes.StringExplicit(replicaSourceValue, resource.GetMetadata()),
+		PerformanceInsights:              adaptPerformanceInsights(resource),
+		Encryption:                       adaptEncryption(resource),
+		PublicAccess:                     resource.GetAttribute("publicly_accessible").AsBoolValueOrDefault(false, resource),
+		Engine:                           resource.GetAttribute("engine").AsStringValueOrDefault(rds.EngineAurora, resource),
+		IAMAuthEnabled:                   resource.GetAttribute("iam_database_authentication_enabled").AsBoolValueOrDefault(false, resource),
+		DeletionProtection:               resource.GetAttribute("deletion_protection").AsBoolValueOrDefault(false, resource),
+		DBInstanceArn:                    resource.GetAttribute("arn").AsStringValueOrDefault("", resource),
+		StorageEncrypted:                 resource.GetAttribute("storage_encrypted").AsBoolValueOrDefault(false, resource),
+		DBInstanceIdentifier:             resource.GetAttribute("identifier").AsStringValueOrDefault("", resource),
+		EngineVersion:                    resource.GetAttribute("engine_version").AsStringValueOrDefault("", resource),
+		AutoMinorVersionUpgrade:          resource.GetAttribute("auto_minor_version_upgrade").AsBoolValueOrDefault(true, resource),
+		MultiAZ:                          resource.GetAttribute("multi_az").AsBoolValueOrDefault(false, resource),
+		PubliclyAccessible:               resource.GetAttribute("publicly_accessible").AsBoolValueOrDefault(false, resource),
+		LatestRestorableTime:             defsecTypes.TimeUnresolvable(resource.GetMetadata()),
+		ReadReplicaDBInstanceIdentifiers: ReadReplicaDBInstanceIdentifiers,
+		TagList:                          TagList,
+		EnabledCloudwatchLogsExports:     EnabledCloudwatchLogsExports,
+	}
+}
+
+func adaptDBParameterGroups(resource *terraform.Block, modules terraform.Modules) rds.ParameterGroups {
+
+	var Parameters []rds.Parameters
+	paramres := resource.GetBlocks("parameter")
+	for _, paramres := range paramres {
+
+		Parameters = append(Parameters, rds.Parameters{
+			Metadata:       paramres.GetMetadata(),
+			ParameterName:  defsecTypes.StringDefault("", paramres.GetMetadata()),
+			ParameterValue: defsecTypes.StringDefault("", paramres.GetMetadata()),
+		})
+	}
+
+	return rds.ParameterGroups{
+		Metadata:               resource.GetMetadata(),
+		DBParameterGroupName:   resource.GetAttribute("name").AsStringValueOrDefault("", resource),
+		DBParameterGroupFamily: resource.GetAttribute("family").AsStringValueOrDefault("", resource),
+		Parameters:             Parameters,
+	}
+}
+
+func adaptDBSnapshots(resource *terraform.Block, modules terraform.Modules) rds.Snapshots {
+
+	return rds.Snapshots{
+		Metadata:             resource.GetMetadata(),
+		DBSnapshotIdentifier: resource.GetAttribute("db_snapshot_identifier").AsStringValueOrDefault("", resource),
+		DBSnapshotArn:        resource.GetAttribute("db_snapshot_arn").AsStringValueOrDefault("", resource),
+		Encrypted:            resource.GetAttribute("encrypted").AsBoolValueOrDefault(true, resource),
+		KmsKeyId:             resource.GetAttribute("kms_key_id").AsStringValueOrDefault("", resource),
+		SnapshotAttributes:   nil,
 	}
 }
 
@@ -137,6 +222,7 @@ func adaptCluster(resource *terraform.Block, modules terraform.Modules) (rds.Clu
 		Encryption:                adaptEncryption(resource),
 		PublicAccess:              defsecTypes.Bool(public, resource.GetMetadata()),
 		Engine:                    resource.GetAttribute("engine").AsStringValueOrDefault(rds.EngineAurora, resource),
+		LatestRestorableTime:      defsecTypes.TimeUnresolvable(resource.GetMetadata()),
 	}, ids
 }
 
