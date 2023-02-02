@@ -55,22 +55,34 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 		return err
 	}
 
-	state.AWS.RDS.Parameters, err = a.getParameters()
-	if err != nil {
-		return err
-	}
-
-	state.AWS.RDS.SnapshotAttributes, err = a.getSnapshotAttributes()
-	if err != nil {
-		return err
-	}
-
 	state.AWS.RDS.ParameterGroups, err = a.getParameterGroups()
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (a *adapter) getSnapshots() (snapshots []rds.Snapshots, err error) {
+	a.Tracker().SetServiceLabel("Discovering Snapshots...")
+	var apiDBSnapshots []types.DBSnapshot
+	var input rdsApi.DescribeDBSnapshotsInput
+
+	for {
+		output, err := a.api.DescribeDBSnapshots(a.Context(), &input)
+		if err != nil {
+			return nil, err
+		}
+
+		apiDBSnapshots = append(apiDBSnapshots, output.DBSnapshots...)
+		a.Tracker().SetTotalResources(len(apiDBSnapshots))
+		if output.Marker == nil {
+			break
+		}
+		input.Marker = output.Marker
+	}
+	a.Tracker().SetServiceLabel("Adapting rds DBsnapshots...")
+	return concurrency.Adapt(apiDBSnapshots, a.RootAdapter, a.adaptDBSnapshots), nil
 }
 
 func (a *adapter) getInstances() (instances []rds.Instance, err error) {
@@ -96,17 +108,17 @@ func (a *adapter) getInstances() (instances []rds.Instance, err error) {
 	return concurrency.Adapt(apiDBInstances, a.RootAdapter, a.adaptDBInstance), nil
 }
 
-func (a *adapter) getParameter() (parameter []rds.Parameter, err error) {
-	a. Tracker().SetServiceLabel(" Parameter...")
+func (a *adapter) getParameterGroups() (parameter []rds.ParameterGroups, err error) {
+	a.Tracker().SetServiceLabel(" Parameter...")
 	var apiParameter []types.DBParameterGroup
 	var input rdsApi.DescribeDBParameterGroupsInput
 
 	for {
-		output, err := a.api.DescribeDBParameters(a.Context(), &input)
+		output, err := a.api.DescribeDBParameterGroups(a.Context(), &input)
 		if err != nil {
 			return nil, err
 		}
-		apiParameter = append(apiParameter, output.Parameters...)
+		apiParameter = append(apiParameter, output.DBParameterGroups...)
 		a.Tracker().SetTotalResources(len(apiParameter))
 		if output.Marker == nil {
 			break
@@ -114,8 +126,8 @@ func (a *adapter) getParameter() (parameter []rds.Parameter, err error) {
 		input.Marker = output.Marker
 	}
 
-		a.Tracker().SetServiceLabel("Adapting RDS Parameters Groups")
-		return concurrency.Adapt(apiParameter, a.RootAdapter, a.adaptParameter), nil
+	a.Tracker().SetServiceLabel("Adapting RDS Parameters Groups")
+	return concurrency.Adapt(apiParameter, a.RootAdapter, a.adaptParameterGroup), nil
 }
 
 func (a *adapter) getClusters() (clusters []rds.Cluster, err error) {
@@ -173,15 +185,29 @@ func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, e
 
 	dbInstanceMetadata := a.CreateMetadata("db:" + *dbInstance.DBInstanceIdentifier)
 
+	var TagList []rds.TagList
+	if dbInstance.TagList != nil {
+		for range dbInstance.TagList {
+			TagList = append(TagList, rds.TagList{
+				Metadata: dbInstanceMetadata,
+			})
+		}
+	}
+
+	var EnabledCloudwatchLogsExports []defsecTypes.StringValue
+	for _, ECWE := range dbInstance.EnabledCloudwatchLogsExports {
+		EnabledCloudwatchLogsExports = append(EnabledCloudwatchLogsExports, defsecTypes.String(ECWE, dbInstanceMetadata))
+	}
+
+	var ReadReplicaDBInstanceIdentifiers []defsecTypes.StringValue
+	for _, RRDBI := range dbInstance.EnabledCloudwatchLogsExports {
+		ReadReplicaDBInstanceIdentifiers = append(ReadReplicaDBInstanceIdentifiers, defsecTypes.String(RRDBI, dbInstanceMetadata))
+	}
+
 	engine := rds.EngineAurora
 	if dbInstance.Engine != nil {
 		engine = *dbInstance.Engine
 	}
-
-	// EnabledCloudwatchLogsExport := defsecTypes.StringValueList()
-	// if dbInstance.EnabledCloudwatchLogsExports != nil {
-	// 	EnabledCloudwatchLogsExport = defsecTypes.StringValueList(dbInstance.EnabledCloudwatchLogsExports, metadata)
-	// }
 
 	instance := &rds.Instance{
 		Metadata:                  dbInstanceMetadata,
@@ -197,18 +223,17 @@ func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, e
 		Engine:                           defsecTypes.String(engine, dbInstanceMetadata),
 		IAMAuthEnabled:                   defsecTypes.Bool(dbInstance.IAMDatabaseAuthenticationEnabled, dbInstanceMetadata),
 		DeletionProtection:               defsecTypes.Bool(dbInstance.DeletionProtection, dbInstanceMetadata),
-		DBInstanceArn:                    defsecTypes.String(engine, dbInstanceMetadata),
+		DBInstanceArn:                    defsecTypes.String(*dbInstance.DBInstanceArn, dbInstanceMetadata),
 		StorageEncrypted:                 defsecTypes.Bool(dbInstance.StorageEncrypted, dbInstanceMetadata),
-		DBInstanceIdentifier:             defsecTypes.String(engine, dbInstanceMetadata),
-		DBParameterGroups:                getDBParameterGroups(dbInstance.DBParameterGroups, dbinstance.KmsKeyId, dbInstanceMetadata),
-		TagList:                          getTagList(dbInstance.TagList, dbinstance.KmsKeyId, dbInstanceMetadata),
-		EnabledCloudwatchLogsExports:     defsecTypes.String(engine, dbInstanceMetadata),
+		DBInstanceIdentifier:             defsecTypes.String(*dbInstance.DBInstanceIdentifier, dbInstanceMetadata),
+		TagList:                          TagList,
+		EnabledCloudwatchLogsExports:     EnabledCloudwatchLogsExports,
 		EngineVersion:                    defsecTypes.String(engine, dbInstanceMetadata),
 		AutoMinorVersionUpgrade:          defsecTypes.Bool(dbInstance.AutoMinorVersionUpgrade, dbInstanceMetadata),
 		MultiAZ:                          defsecTypes.Bool(dbInstance.MultiAZ, dbInstanceMetadata),
 		PubliclyAccessible:               defsecTypes.Bool(dbInstance.PubliclyAccessible, dbInstanceMetadata),
-		LatestRestorableTime:             defsecTypes.TimeValue(engine, dbInstanceMetadata),
-		ReadReplicaDBInstanceIdentifiers: defsecTypes.StringValueList(engine, dbInstanceMetadata),
+		LatestRestorableTime:             defsecTypes.TimeUnresolvable(dbInstanceMetadata),
+		ReadReplicaDBInstanceIdentifiers: ReadReplicaDBInstanceIdentifiers,
 	}
 
 	return instance, nil
@@ -232,13 +257,75 @@ func (a *adapter) adaptCluster(dbCluster types.DBCluster) (*rds.Cluster, error) 
 			dbCluster.PerformanceInsightsKMSKeyId,
 			dbClusterMetadata,
 		),
-		Encryption:   getInstanceEncryption(dbCluster.StorageEncrypted, dbCluster.KmsKeyId, dbClusterMetadata),
-		PublicAccess: defsecTypes.Bool(aws.ToBool(dbCluster.PubliclyAccessible), dbClusterMetadata),
-		Engine:       defsecTypes.String(engine, dbClusterMetadata),
-		LatestRestorableTime: defsecTypes.TimeValue{},
+		Encryption:           getInstanceEncryption(dbCluster.StorageEncrypted, dbCluster.KmsKeyId, dbClusterMetadata),
+		PublicAccess:         defsecTypes.Bool(aws.ToBool(dbCluster.PubliclyAccessible), dbClusterMetadata),
+		Engine:               defsecTypes.String(engine, dbClusterMetadata),
+		LatestRestorableTime: defsecTypes.TimeUnresolvable(dbClusterMetadata),
 	}
 
 	return cluster, nil
+}
+
+func (a *adapter) adaptParameterGroup(DBParameterGroup types.DBParameterGroup) (*rds.ParameterGroups, error) {
+
+	metadata := a.CreateMetadata("dbperametergroup:" + *DBParameterGroup.DBParameterGroupArn)
+	var parameter []rds.Parameters
+	output, err := a.api.DescribeDBParameters(a.Context(), &rdsApi.DescribeDBParametersInput{})
+	if err != nil {
+		return nil, err
+	}
+	for _, r := range output.Parameters {
+		parameter = append(parameter, rds.Parameters{
+			Metadata:       metadata,
+			ParameterName:  defsecTypes.String(*r.ParameterName, metadata),
+			ParameterValue: defsecTypes.String(*r.ParameterValue, metadata),
+		})
+	}
+
+	return &rds.ParameterGroups{
+		Metadata:               metadata,
+		Parameters:             parameter,
+		DBParameterGroupName:   defsecTypes.String(*DBParameterGroup.DBParameterGroupName, metadata),
+		DBParameterGroupFamily: defsecTypes.String(*DBParameterGroup.DBParameterGroupFamily, metadata),
+	}, nil
+
+}
+
+func (a *adapter) adaptDBSnapshots(DBSnapshots types.DBSnapshot) (*rds.Snapshots, error) {
+	metadata := a.CreateMetadata("dbsnapshots" + *DBSnapshots.DBSnapshotArn)
+
+	var SnapshotAttributes []rds.DBSnapshotAttributes
+	output, err := a.api.DescribeDBSnapshotAttributes(a.Context(), &rdsApi.DescribeDBSnapshotAttributesInput{})
+	if err != nil {
+		return nil, err
+	}
+	if output.DBSnapshotAttributesResult != nil {
+		for _, r := range output.DBSnapshotAttributesResult.DBSnapshotAttributes {
+
+			var AV []defsecTypes.StringValue
+			if r.AttributeValues != nil {
+				for _, Values := range r.AttributeValues {
+					AV = append(AV, defsecTypes.String(Values, metadata))
+				}
+			}
+			SnapshotAttributes = append(SnapshotAttributes, rds.DBSnapshotAttributes{
+				Metadata:        metadata,
+				AttributeValues: AV,
+			})
+		}
+
+	}
+
+	snapshots := &rds.Snapshots{
+		Metadata:             metadata,
+		DBSnapshotIdentifier: defsecTypes.String(*DBSnapshots.DBSnapshotIdentifier, metadata),
+		DBSnapshotArn:        defsecTypes.String(*DBSnapshots.DBSnapshotArn, metadata),
+		Encrypted:            defsecTypes.Bool(DBSnapshots.Encrypted, metadata),
+		KmsKeyId:             defsecTypes.String(*DBSnapshots.KmsKeyId, metadata),
+		SnapshotAttributes:   SnapshotAttributes,
+	}
+
+	return snapshots, nil
 }
 
 func (a *adapter) adaptClassic(dbSecurityGroup types.DBSecurityGroup) (*rds.DBSecurityGroup, error) {
@@ -250,12 +337,6 @@ func (a *adapter) adaptClassic(dbSecurityGroup types.DBSecurityGroup) (*rds.DBSe
 	}
 
 	return dbsg, nil
-}
-
-func (a *adapter) adaptParameter(dbparameter types.Parameter) (*rds.Parameters, error) {
-	dbParameterMetedata := a.CreateMetadata("parametgrp" + *dbparameter.ParameterName)
-
-	p
 }
 
 func getInstanceEncryption(storageEncrypted bool, kmsKeyID *string, metadata defsecTypes.Metadata) rds.Encryption {
@@ -286,20 +367,4 @@ func getPerformanceInsights(enabled *bool, kmsKeyID *string, metadata defsecType
 	}
 
 	return performanceInsights
-}
-
-func getDBParameterGroups(dbParameterGroupName string, kmsKeyID *string, metadata defsecTypes.Metadata) rds.DBParameterGroupsList {
-	dbParameterGroupList := rds.DBParameterGroupsList{
-		Metadata:             metadata,
-		DBParameterGroupName: defsecTypes.StringDefault("", metadata),
-		KMSKeyID:             defsecTypes.StringDefault("", metadata),
-	}
-	if dbParameterGroupName != nil {
-		dbParameterGroupList.DBParameterGroupName = defsecTypes.String(*dbParameterGroupName, metadata)
-	}
-	if kmsKeyID != nil {
-		dbParameterGroupList.KMSKeyID = defsecTypes.String(*kmsKeyID, metadata)
-	}
-
-	return dbParameterGroupList
 }
