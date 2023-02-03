@@ -36,7 +36,7 @@ func Test_ManifestValidity(t *testing.T) {
 		_ = os.Remove("../bundle.tar.gz")
 	}()
 
-	f, err := os.Open("../internal/rules/policies/.manifest")
+	f, err := os.Open("../rules/policies/.manifest")
 	require.NoError(t, err)
 
 	var m manifest

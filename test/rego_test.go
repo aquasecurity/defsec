@@ -23,7 +23,7 @@ func Test_AllRegoCloudRulesMatchSchema(t *testing.T) {
 
 	// load all the tests first
 	baseModules := make(map[string]*ast.Module)
-	require.NoError(t, filepath.Walk("../internal/rules/policies/cloud", func(path string, info os.FileInfo, err error) error {
+	require.NoError(t, filepath.Walk("../rules/policies/cloud", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -69,7 +69,7 @@ func Test_AllRegoRules(t *testing.T) {
 	// load all the tests first
 	baseModules := make(map[string]*ast.Module)
 	testModules := make(map[string]*ast.Module)
-	require.NoError(t, filepath.Walk("../internal/rules/policies", func(path string, info os.FileInfo, err error) error {
+	require.NoError(t, filepath.Walk("../rules/policies", func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
