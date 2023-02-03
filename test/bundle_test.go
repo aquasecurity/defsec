@@ -36,7 +36,7 @@ func Test_ManifestValidity(t *testing.T) {
 		_ = os.Remove("../bundle.tar.gz")
 	}()
 
-	f, err := os.Open("../rules/policies/.manifest")
+	f, err := os.Open("../rules/.manifest")
 	require.NoError(t, err)
 
 	var m manifest
@@ -93,7 +93,7 @@ func Test_ManifestValidity(t *testing.T) {
 	policies, err := mfs.ReadDir("./policies")
 	require.NoError(t, err)
 
-	entries, err := os.ReadDir("../policies")
+	entries, err := os.ReadDir("../rules")
 	require.NoError(t, err)
 
 	var expectedDirs []string
