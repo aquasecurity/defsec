@@ -4,8 +4,8 @@ import (
 	"embed"
 )
 
-//go:embed rules/*/policies
+//go:embed */policies
 var EmbeddedPolicyFileSystem embed.FS
 
-//go:embed rules/*/lib
+//go:embed */lib
 var EmbeddedLibraryFileSystem embed.FS
