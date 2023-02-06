@@ -70,35 +70,44 @@ deny[res] {
 	res := result.new(msg, {"__defsec_metadata": {"startline": 1, "endline": 5}})
 }
 
+
 compareVersion(obj){
   # deprecated version
   depVer:=obj.deprecation_version
-  apiDepVer:=semanticeVersion(depVer)
+  apiDepVer:=semanticVersion(depVer)
   resultDep:=semver.compare(k8s.version,apiDepVer)
   
   # removed version
   remVer:=obj.removed_version
-  apiRemVer:=semanticeVersion(remVer)
+  apiRemVer:=semanticVersion(remVer)
   resultRem:=semver.compare(k8s.version,apiRemVer)
   valid(resultDep,resultRem)
 }
-
+# k8sversion == deprecated && k8sversion < removed
 valid(resultDep,resultRem){
   resultDep == 0
   resultRem == -1
 }
 
+# k8sversion > deprecated && k8sversion < removed
 valid(resultDep,resultRem){
   resultDep == 1
   resultRem == -1
 }
 
+# k8sversion > deprecated && k8sversion > removed
 valid(resultDep,resultRem){
   resultDep == 1
   resultRem == 1
 }
 
+# k8sversion > deprecated && k8sversion == removed
 valid(resultDep,resultRem){
   resultDep == 1
   resultRem == 0
+}
+
+semanticVersion(version) = apiSemVer {
+  cVer := replace(version, "v", "")
+  apiSemVer:= concat("", [cVer, ".0"])
 }
