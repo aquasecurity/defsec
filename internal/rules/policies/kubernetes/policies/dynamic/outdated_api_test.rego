@@ -1,17 +1,11 @@
 package defsec.kubernetes.KSV107
 
 recommendedVersions_mock_data = {"batch/v1": {"Job": {
-	"deprecated_version": "v1.21",
+	"deprecation_version": "v1.21",
 	"replacement_version": "batch.v1.CronJobList",
 	"removed_version": "v1.25",
 	"ref": "https://github.com/kubernetes/kubernetes/tree/master/staging/src/k8s.io/api/batch/v1beta1/zz_generated.prerelease-lifecycle.go",
 }}}
-
-k8s_mock_data = {
-  "k8s": {
-    "version": "1.23.0"
-  }
-}
 
 test_eval_k8s_api_with_data_match {
 	r := deny with input as {
@@ -36,7 +30,7 @@ test_eval_k8s_api_with_data_match {
 		},
 	}
 		with recommendedVersions as recommendedVersions_mock_data
-        with k8s as k8s_mock_data
+
 	count(r) > 0
 }
 
@@ -63,6 +57,6 @@ test_eval_k8s_api_with_data_do_not_match {
 		},
 	}
 		with recommendedVersions as recommendedVersions_mock_data
-        with k8s as k8s_mock_data
+
 	count(r) == 0
 }
