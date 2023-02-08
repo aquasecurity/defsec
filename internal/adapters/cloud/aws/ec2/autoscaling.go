@@ -58,6 +58,22 @@ func (a *adapter) adaptLaunchTemplate(template types.LaunchTemplate) (*ec2.Launc
 		return nil, fmt.Errorf("launch template not found")
 	}
 
+	var LTV []ec2.LaunchTemplateVersion
+	for _, V := range output.LaunchTemplateVersions {
+		var imageId string
+		if V.LaunchTemplateData != nil {
+			imageId = *V.LaunchTemplateData.ImageId
+		}
+		LTV = append(LTV, ec2.LaunchTemplateVersion{
+			Metadata:      metadata,
+			VersionNumber: defsecTypes.Int(int(*V.VersionNumber), metadata),
+			LaunchTemplateData: ec2.LaunchTemplateData{
+				Metadata: metadata,
+				ImageId:  defsecTypes.String(imageId, metadata),
+			},
+		})
+	}
+
 	templateData := output.LaunchTemplateVersions[0].LaunchTemplateData
 
 	instance := ec2.NewInstance(metadata)
@@ -80,7 +96,83 @@ func (a *adapter) adaptLaunchTemplate(template types.LaunchTemplate) (*ec2.Launc
 	}
 
 	return &ec2.LaunchTemplate{
+		Metadata:               metadata,
+		Id:                     defsecTypes.String(*template.LaunchTemplateId, metadata),
+		DefaultVersion:         defsecTypes.Int(int(*template.DefaultVersionNumber), metadata),
+		Instance:               *instance,
+		LaunchTemplateVersions: LTV,
+	}, nil
+}
+
+func (a *adapter) getNetworkInterfaces() ([]ec2.NetworkInterface, error) {
+
+	a.Tracker().SetServiceLabel("Discovering Network Interfaces...")
+
+	input := ec2api.DescribeNetworkInterfacesInput{}
+
+	var apiNI []types.NetworkInterface
+	for {
+		output, err := a.client.DescribeNetworkInterfaces(a.Context(), &input)
+		if err != nil {
+			return nil, err
+		}
+		apiNI = append(apiNI, output.NetworkInterfaces...)
+		a.Tracker().SetTotalResources(len(apiNI))
+		if output.NextToken == nil {
+			break
+		}
+		input.NextToken = output.NextToken
+	}
+
+	a.Tracker().SetServiceLabel("Adapting network interfaces...")
+	return concurrency.Adapt(apiNI, a.RootAdapter, a.adaptNetworkInterface), nil
+}
+
+func (a *adapter) adaptNetworkInterface(NI types.NetworkInterface) (*ec2.NetworkInterface, error) {
+
+	metadata := a.CreateMetadata("network-interface/" + *NI.NetworkInterfaceId)
+
+	return &ec2.NetworkInterface{
 		Metadata: metadata,
-		Instance: *instance,
+		Id:       defsecTypes.String(*NI.NetworkInterfaceId, metadata),
+		Status:   defsecTypes.String(string(NI.Status), metadata),
+	}, nil
+}
+
+func (a *adapter) getccountAttributes() ([]ec2.AccountAttribute, error) {
+
+	a.Tracker().SetServiceLabel("Discovering Account Attributes..")
+
+	input := ec2api.DescribeAccountAttributesInput{}
+
+	var apiAccAtt []types.AccountAttribute
+	for {
+		output, err := a.client.DescribeAccountAttributes(a.Context(), &input)
+		if err != nil {
+			return nil, err
+		}
+		apiAccAtt = append(apiAccAtt, output.AccountAttributes...)
+		a.Tracker().SetTotalResources(len(apiAccAtt))
+		if output.AccountAttributes == nil {
+			break
+		}
+	}
+
+	a.Tracker().SetServiceLabel("Adapting network interfaces...")
+	return concurrency.Adapt(apiAccAtt, a.RootAdapter, a.adaptAccountAttribute), nil
+}
+
+func (a *adapter) adaptAccountAttribute(api types.AccountAttribute) (*ec2.AccountAttribute, error) {
+
+	metadata := a.CreateMetadata("account- attribute/" + *api.AttributeName)
+
+	var AVs []defsecTypes.StringValue
+	for _, AV := range api.AttributeValues {
+		AVs = append(AVs, defsecTypes.String(*AV.AttributeValue, metadata))
+	}
+	return &ec2.AccountAttribute{
+		Metadata:        metadata,
+		AttributeName:   defsecTypes.String(*api.AttributeName, metadata),
+		AttributeValues: AVs,
 	}, nil
 }

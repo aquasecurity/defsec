@@ -15,11 +15,29 @@ func getNetworkACLs(ctx parser.FileContext) (acls []ec2.NetworkACL) {
 		acl := ec2.NetworkACL{
 			Metadata:      aclResource.Metadata(),
 			Rules:         getRules(aclResource.ID(), ctx),
+			Entries:       getentries(ctx),
 			IsDefaultRule: defsecTypes.BoolDefault(false, aclResource.Metadata()),
 		}
 		acls = append(acls, acl)
 	}
 	return acls
+}
+
+func getentries(ctx parser.FileContext) []ec2.Entries {
+	var entries []ec2.Entries
+	for _, entry := range ctx.GetResourcesByType("AWS::EC2::NetworkAclEntry") {
+		entries = append(entries, ec2.Entries{
+			Metadata:   entry.Metadata(),
+			Egress:     entry.GetBoolProperty("Egress"),
+			RuleAction: entry.GetStringProperty("RuleAction"),
+			PortRange: ec2.PortRange{
+				Metadata: entry.Metadata(),
+				To:       entry.GetIntProperty("PortRange.To"),
+				From:     entry.GetIntProperty("PortRange.From"),
+			},
+		})
+	}
+	return entries
 }
 
 func getRules(id string, ctx parser.FileContext) (rules []ec2.NetworkACLRule) {

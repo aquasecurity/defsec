@@ -36,18 +36,22 @@ func adaptVPC(modules terraform.Modules, block *terraform.Block, def bool) ec2.V
 			break
 		}
 	}
+
 	return ec2.VPC{
 		Metadata:        block.GetMetadata(),
 		ID:              defsecTypes.StringUnresolvable(block.GetMetadata()),
 		IsDefault:       defsecTypes.Bool(def, block.GetMetadata()),
 		SecurityGroups:  nil,
 		FlowLogsEnabled: defsecTypes.BoolDefault(hasFlowLogs, block.GetMetadata()),
+		Tags:            gettags(block),
 	}
 }
 
 func (a *sgAdapter) adaptSecurityGroups(modules terraform.Modules) []ec2.SecurityGroup {
 	var securityGroups []ec2.SecurityGroup
+	var groupname defsecTypes.StringValue
 	for _, resource := range modules.GetResourcesByType("aws_security_group") {
+		groupname = resource.GetAttribute("name").AsStringValueOrDefault("", resource)
 		securityGroups = append(securityGroups, a.adaptSecurityGroup(resource, modules))
 	}
 	orphanResources := modules.GetResourceByIDs(a.sgRuleIDs.Orphans()...)
@@ -55,6 +59,7 @@ func (a *sgAdapter) adaptSecurityGroups(modules terraform.Modules) []ec2.Securit
 		orphanage := ec2.SecurityGroup{
 			Metadata:     defsecTypes.NewUnmanagedMetadata(),
 			Description:  defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			GroupName:    groupname,
 			IngressRules: nil,
 			EgressRules:  nil,
 			IsDefault:    defsecTypes.BoolUnresolvable(defsecTypes.NewUnmanagedMetadata()),
@@ -67,7 +72,6 @@ func (a *sgAdapter) adaptSecurityGroups(modules terraform.Modules) []ec2.Securit
 				orphanage.EgressRules = append(orphanage.EgressRules, adaptSGRule(sgRule, modules))
 			}
 		}
-		securityGroups = append(securityGroups, orphanage)
 	}
 
 	return securityGroups
@@ -127,10 +131,13 @@ func (a *sgAdapter) adaptSecurityGroup(resource *terraform.Block, module terrafo
 	return ec2.SecurityGroup{
 		Metadata:     resource.GetMetadata(),
 		Description:  descriptionVal,
+		GroupName:    defsecTypes.String("", resource.GetMetadata()),
+		GroupId:      resource.GetAttribute("id").AsStringValueOrDefault("", resource),
 		IngressRules: ingressRules,
 		EgressRules:  egressRules,
 		IsDefault:    defsecTypes.Bool(false, defsecTypes.NewUnmanagedMetadata()),
 		VPCID:        resource.GetAttribute("vpc_id").AsStringValueOrDefault("", resource),
+		Tags:         gettags(resource),
 	}
 }
 
@@ -154,7 +161,7 @@ func adaptSGRule(resource *terraform.Block, modules terraform.Modules) ec2.Secur
 	}
 
 	if cidrBlocks.IsNotNil() {
-		cidrs = cidrBlocks.AsStringValues()
+		cidrs = append(cidrs, cidrBlocks.AsStringValues()...)
 	}
 
 	if ipv6cidrBlocks.IsNotNil() {
@@ -164,7 +171,10 @@ func adaptSGRule(resource *terraform.Block, modules terraform.Modules) ec2.Secur
 	return ec2.SecurityGroupRule{
 		Metadata:    resource.GetMetadata(),
 		Description: ruleDescVal,
+		FromPort:    resource.GetAttribute("from_port").AsIntValueOrDefault(0, resource),
+		ToPort:      resource.GetAttribute("to_port").AsIntValueOrDefault(0, resource),
 		CIDRs:       cidrs,
+		IpProtocol:  resource.GetAttribute("protocol").AsStringValueOrDefault("", resource),
 	}
 }
 
@@ -178,6 +188,7 @@ func (a *naclAdapter) adaptNetworkACL(resource *terraform.Block, module *terrafo
 	return ec2.NetworkACL{
 		Metadata:      resource.GetMetadata(),
 		Rules:         networkRules,
+		Entries:       nil,
 		IsDefaultRule: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 	}
 }
@@ -215,5 +226,89 @@ func adaptNetworkACLRule(resource *terraform.Block) ec2.NetworkACLRule {
 		Action:   actionVal,
 		Protocol: protocolVal,
 		CIDRs:    cidrs,
+	}
+}
+
+func adaptVPCEndPoints(modules terraform.Modules) []ec2.VpcEndPoint {
+	var vpcs []ec2.VpcEndPoint
+	for _, module := range modules {
+		for _, resource := range module.GetResourcesByType("aws_vpc_endpoint") {
+			vpcs = append(vpcs, adaptVPCEndPoint(resource))
+		}
+	}
+	return vpcs
+}
+
+func adaptVPCEndPoint(resource *terraform.Block) ec2.VpcEndPoint {
+	var subnetIds []defsecTypes.StringValue
+	subnetIdsAttr := resource.GetAttribute("subnet_ids")
+	for _, subnetId := range subnetIdsAttr.AsStringValues() {
+		subnetIds = append(subnetIds, subnetId)
+	}
+	return ec2.VpcEndPoint{
+		Metadata:       resource.GetMetadata(),
+		ID:             resource.GetAttribute("id").AsStringValueOrDefault("", resource),
+		Type:           resource.GetAttribute("vpc_endpoint_type").AsStringValueOrDefault("", resource),
+		PolicyDocument: resource.GetAttribute("policy").AsStringValueOrDefault("", resource),
+		SubnetIds:      subnetIds,
+	}
+
+}
+
+func adaptVPCPeerConnections(modules terraform.Modules) []ec2.VpcPeeringConnection {
+	var vpcs []ec2.VpcPeeringConnection
+	for _, module := range modules {
+		for _, resource := range module.GetResourcesByType("aws_vpc_peering_connection") {
+			vpcs = append(vpcs, adaptVPCPeerConnection(resource))
+		}
+	}
+	return vpcs
+}
+
+func adaptVPCPeerConnection(vpcinfo *terraform.Block) ec2.VpcPeeringConnection {
+
+	return ec2.VpcPeeringConnection{
+		Metadata:               vpcinfo.GetMetadata(),
+		VpcPeeringConnectionId: vpcinfo.GetAttribute("id").AsStringValueOrDefault("", vpcinfo),
+		AccepterVpcInfo: ec2.VpcInfo{
+			Metadata:  vpcinfo.GetMetadata(),
+			CidrBlock: defsecTypes.String("", vpcinfo.GetMetadata()),
+			OwnerId:   vpcinfo.GetAttribute("peer_owner_id").AsStringValueOrDefault("", vpcinfo),
+			VPCId:     vpcinfo.GetAttribute("peer_vpc_id").AsStringValueOrDefault("", vpcinfo),
+		},
+		RequesterVpcInfo: ec2.VpcInfo{
+			Metadata:  vpcinfo.GetMetadata(),
+			CidrBlock: defsecTypes.String("", vpcinfo.GetMetadata()),
+			OwnerId:   vpcinfo.GetAttribute("peer_owner_id").AsStringValueOrDefault("", vpcinfo),
+			VPCId:     vpcinfo.GetAttribute("vpc_id").AsStringValueOrDefault("", vpcinfo),
+		},
+	}
+
+}
+
+func adaptVPCEPServices(modules terraform.Modules) []ec2.VpcEndPointService {
+	var vpcs []ec2.VpcEndPointService
+	for _, module := range modules {
+		for _, resource := range module.GetResourcesByType("aws_vpc_endpoint_service") {
+			vpcs = append(vpcs, adaptVPCEPService(resource, module))
+		}
+	}
+	return vpcs
+}
+
+func adaptVPCEPService(EPS *terraform.Block, module *terraform.Module) ec2.VpcEndPointService {
+
+	var APs []ec2.AllowedPricipal
+	for _, AP := range module.GetReferencingResources(EPS, "aws_vpc_endpoint_service_allowed_principal", "vpc_endpoint_service_id") {
+		APs = append(APs, ec2.AllowedPricipal{
+			Metadata: AP.GetMetadata(),
+		})
+	}
+
+	return ec2.VpcEndPointService{
+		Metadata:                          EPS.GetMetadata(),
+		Owner:                             defsecTypes.String("", EPS.GetMetadata()),
+		ServiceId:                         EPS.GetAttribute("id").AsStringValueOrDefault("", EPS),
+		VpcEPSPermissionAllowedPrincipals: APs,
 	}
 }

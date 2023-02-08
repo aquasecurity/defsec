@@ -19,8 +19,19 @@ func adaptLaunchTemplates(modules terraform.Modules) (templates []ec2.LaunchTemp
 		metadataOptions := getMetadataOptions(b)
 		userData := b.GetAttribute("user_data").AsStringValueOrDefault("", b)
 
-		templates = append(templates, ec2.LaunchTemplate{
+		var TV []ec2.LaunchTemplateVersion
+		TV = append(TV, ec2.LaunchTemplateVersion{
 			Metadata: b.GetMetadata(),
+			LaunchTemplateData: ec2.LaunchTemplateData{
+				Metadata: b.GetMetadata(),
+				ImageId:  b.GetAttribute("image_id").AsStringValueOrDefault("", b),
+			},
+		})
+
+		templates = append(templates, ec2.LaunchTemplate{
+			Metadata:       b.GetMetadata(),
+			Id:             b.GetAttribute("id").AsStringValueOrDefault("", b),
+			DefaultVersion: b.GetAttribute("default_version").AsIntValueOrDefault(0, b),
 			Instance: ec2.Instance{
 				Metadata:        b.GetMetadata(),
 				MetadataOptions: metadataOptions,
@@ -29,6 +40,7 @@ func adaptLaunchTemplates(modules terraform.Modules) (templates []ec2.LaunchTemp
 				RootBlockDevice: nil,
 				EBSBlockDevices: nil,
 			},
+			LaunchTemplateVersions: TV,
 		})
 	}
 
@@ -117,4 +129,20 @@ func getMetadataOptions(b *terraform.Block) ec2.MetadataOptions {
 	}
 
 	return options
+}
+
+func adaptNetworkInterfaces(modules terraform.Modules) (NIs []ec2.NetworkInterface) {
+
+	blocks := modules.GetResourcesByType("aws_network_interface")
+
+	for _, b := range blocks {
+
+		NIs = append(NIs, ec2.NetworkInterface{
+			Metadata: b.GetMetadata(),
+			Id:       b.GetAttribute("id").AsStringValueOrDefault("", b),
+			Status:   defsecTypes.String("", b.GetMetadata()),
+		})
+	}
+
+	return NIs
 }

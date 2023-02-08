@@ -58,12 +58,93 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 		return err
 	}
 
+	state.AWS.EC2.VpcPeeringConnections, err = a.getVPCPeerConnection()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.VpcEndPointService, err = a.getVPCEPServices()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.VpcEndPoints, err = a.getVPCEndPoints()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.Addresses, err = a.getAddresses()
+	if err != nil {
+		return err
+	}
+
 	state.AWS.EC2.LaunchTemplates, err = a.getLaunchTemplates()
 	if err != nil {
 		return err
 	}
 
 	state.AWS.EC2.Volumes, err = a.getVolumes()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.InternetGateways, err = a.getinternetGateways()
+	if err != nil {
+		return err
+	}
+	state.AWS.EC2.EgressOnlyInternetGateways, err = a.getEgressOnlyIGs()
+	if err != nil {
+		return err
+	}
+	state.AWS.EC2.NatGateways, err = a.getNatGateways()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.VpnGateways, err = a.getVpnGateways()
+	if err != nil {
+		return err
+	}
+	state.AWS.EC2.VpnConnections, err = a.getVpnConnections()
+	if err != nil {
+		return err
+	}
+	state.AWS.EC2.Subnets, err = a.getSubnets()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.AccountAttributes, err = a.getccountAttributes()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.NetworkInterfaces, err = a.getNetworkInterfaces()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.FlowLogs, err = a.getFlowLogs()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.Images, err = a.getImages()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.RouteTables, err = a.getRouteTable()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.Snapshots, err = a.getSnapshots()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.EC2.ResourceTags, err = a.gettags()
 	if err != nil {
 		return err
 	}
@@ -124,12 +205,70 @@ func (a *adapter) adaptInstance(instance ec2Types.Instance) (*ec2.Instance, erro
 		i.MetadataOptions.HttpEndpoint = defsecTypes.StringDefault(string(instance.MetadataOptions.HttpEndpoint), instanceMetadata)
 	}
 
+	if instance.CpuOptions != nil {
+		i.CPUOptions.CoreCount = defsecTypes.Int(int(*instance.CpuOptions.CoreCount), instanceMetadata)
+		i.CPUOptions.ThreadPerCore = defsecTypes.Int(int(*instance.CpuOptions.ThreadsPerCore), instanceMetadata)
+	}
+
+	if instance.VpcId != nil {
+		i.VPCId = defsecTypes.String(*instance.VpcId, instanceMetadata)
+	}
+
+	if instance.InstanceId != nil {
+		i.InstanceId = defsecTypes.String(*instance.InstanceId, instanceMetadata)
+	}
+
+	if instance.ImageId != nil {
+		i.ImageId = defsecTypes.String(*instance.ImageId, instanceMetadata)
+	}
+
+	if instance.PublicIpAddress != nil {
+		i.PublicIpAddress = defsecTypes.String(*instance.PublicIpAddress, instanceMetadata)
+	}
+
+	if instance.SubnetId != nil {
+		i.SubnetId = defsecTypes.String(*instance.SubnetId, instanceMetadata)
+	}
+
+	i.InstanceLifecycle = defsecTypes.String(string(instance.InstanceLifecycle), instanceMetadata)
+
+	if instance.State != nil {
+		i.StateName = defsecTypes.String(string(instance.State.Name), instanceMetadata)
+	}
+
+	if instance.Monitoring.State == "enabled" {
+		i.MonitoringState = defsecTypes.Bool(true, instanceMetadata)
+	}
+
+	i.InstanceType = defsecTypes.String(string(instance.InstanceType), instanceMetadata)
+
+	if instance.KeyName != nil {
+		i.KeyName = defsecTypes.String(*instance.KeyName, instanceMetadata)
+	}
+
+	if instance.SpotInstanceRequestId != nil {
+		i.SpotInstanceRequestId = defsecTypes.String(*instance.SpotInstanceRequestId, instanceMetadata)
+	}
+
+	if instance.IamInstanceProfile != nil {
+		i.IamInstanceProfile = defsecTypes.String(*instance.IamInstanceProfile.Arn, instanceMetadata)
+	}
+
+	if instance.Tags != nil {
+		for range instance.Tags {
+			i.Tags = append(i.Tags, ec2.Tags{
+				Metadata: instanceMetadata,
+			})
+		}
+	}
+
 	if instance.BlockDeviceMappings != nil {
 		for _, blockMapping := range instance.BlockDeviceMappings {
 			volumeMetadata := a.CreateMetadata(fmt.Sprintf("volume/%s", *blockMapping.Ebs.VolumeId))
 			ebsDevice := &ec2.BlockDevice{
 				Metadata:  volumeMetadata,
 				Encrypted: defsecTypes.BoolDefault(false, volumeMetadata),
+				VolumeId:  defsecTypes.String(*blockMapping.Ebs.VolumeId, volumeMetadata),
 			}
 			if strings.EqualFold(*blockMapping.DeviceName, *instance.RootDeviceName) {
 				// is root block device
@@ -139,6 +278,20 @@ func (a *adapter) adaptInstance(instance ec2Types.Instance) (*ec2.Instance, erro
 			}
 			volumeBlockMap[*blockMapping.Ebs.VolumeId] = ebsDevice
 			volumeIds = append(volumeIds, *blockMapping.Ebs.VolumeId)
+		}
+	}
+
+	if instance.NetworkInterfaces != nil {
+		for range instance.NetworkInterfaces {
+			i.NetworkInterfaces = append(i.NetworkInterfaces, ec2.NetworkInterfaces{
+				Metadata: instanceMetadata,
+			})
+		}
+	}
+
+	if instance.SecurityGroups != nil {
+		for _, SG := range instance.SecurityGroups {
+			i.SecurityGroupIds = append(i.SecurityGroupIds, defsecTypes.String(*SG.GroupId, instanceMetadata))
 		}
 	}
 

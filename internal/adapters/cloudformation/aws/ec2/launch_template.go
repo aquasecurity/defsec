@@ -11,8 +11,24 @@ func getLaunchTemplates(file parser.FileContext) (templates []ec2.LaunchTemplate
 
 	for _, r := range launchConfigResources {
 
-		launchTemplate := ec2.LaunchTemplate{
+		var LTV []ec2.LaunchTemplateVersion
+		var imageid types.StringValue
+		if data := r.GetProperty("LaunchTemplateData"); data.IsNotNil() {
+			imageid = data.GetStringProperty("ImageId")
+		}
+		LTV = append(LTV, ec2.LaunchTemplateVersion{
 			Metadata: r.Metadata(),
+			LaunchTemplateData: ec2.LaunchTemplateData{
+				Metadata: r.Metadata(),
+				ImageId:  imageid,
+			},
+		})
+
+		launchTemplate := ec2.LaunchTemplate{
+			Metadata:               r.Metadata(),
+			Id:                     types.String("", r.Metadata()),
+			DefaultVersion:         r.GetIntProperty("DefaultVersionNumber"),
+			LaunchTemplateVersions: LTV,
 			Instance: ec2.Instance{
 				Metadata: r.Metadata(),
 				MetadataOptions: ec2.MetadataOptions{
@@ -35,7 +51,6 @@ func getLaunchTemplates(file parser.FileContext) (templates []ec2.LaunchTemplate
 					HttpEndpoint: opts.GetStringProperty("HttpEndpoint", "enabled"),
 				}
 			}
-
 			launchTemplate.Instance.UserData = data.GetStringProperty("UserData", "")
 
 			blockDevices := getBlockDevices(r)
