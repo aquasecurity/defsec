@@ -2071,9 +2071,30 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.lambda.Environment": {
+      "type": "object",
+      "properties": {
+        "variables": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.MapValue"
+        }
+      }
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.lambda.Function": {
       "type": "object",
       "properties": {
+        "envrionment": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.lambda.Environment"
+        },
+        "functionarn": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "functionname": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "permissions": {
           "type": "array",
           "items": {
@@ -2081,9 +2102,17 @@
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.lambda.Permission"
           }
         },
+        "runtime": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "tracing": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.lambda.Tracing"
+        },
+        "vpcconfig": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.lambda.VpcConfig"
         }
       }
     },
@@ -2116,6 +2145,15 @@
       "type": "object",
       "properties": {
         "mode": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.lambda.VpcConfig": {
+      "type": "object",
+      "properties": {
+        "vpcid": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }

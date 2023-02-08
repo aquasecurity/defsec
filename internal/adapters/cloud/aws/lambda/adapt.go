@@ -124,12 +124,48 @@ func (a *adapter) adaptFunction(function types.FunctionConfiguration) (*lambda.F
 		}
 	}
 
+	var functionarn string
+	if function.FunctionArn != nil {
+		functionarn = *function.FunctionArn
+	}
+
+	var funcname string
+	if function.FunctionName != nil {
+		funcname = *function.FunctionName
+	}
+
+	var vpcid string
+	if function.VpcConfig.VpcId != nil {
+		vpcid = *function.VpcConfig.VpcId
+	}
+
+	var variables map[string]string
+	if function.Environment.Variables != nil {
+		variables = function.Environment.Variables
+	}
+
+	var runtime string
+	if function.Runtime.Values() != nil {
+		runtime = string(function.Runtime)
+	}
+
 	return &lambda.Function{
 		Metadata: metadata,
 		Tracing: lambda.Tracing{
 			Metadata: metadata,
 			Mode:     defsecTypes.String(tracingMode, metadata),
 		},
-		Permissions: permissions,
+		Permissions:  permissions,
+		FunctionName: defsecTypes.String(funcname, metadata),
+		FunctionArn:  defsecTypes.String(functionarn, metadata),
+		VpcConfig: lambda.VpcConfig{
+			Metadata: metadata,
+			VpcId:    defsecTypes.String(vpcid, metadata),
+		},
+		Runtime: defsecTypes.String(runtime, metadata),
+		Envrionment: lambda.Environment{
+			Metadata:  metadata,
+			Variables: defsecTypes.Map(variables, metadata),
+		},
 	}, nil
 }
