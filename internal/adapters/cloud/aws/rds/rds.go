@@ -270,7 +270,9 @@ func (a *adapter) adaptParameterGroup(DBParameterGroup types.DBParameterGroup) (
 
 	metadata := a.CreateMetadata("dbperametergroup:" + *DBParameterGroup.DBParameterGroupArn)
 	var parameter []rds.Parameters
-	output, err := a.api.DescribeDBParameters(a.Context(), &rdsApi.DescribeDBParametersInput{})
+	output, err := a.api.DescribeDBParameters(a.Context(), &rdsApi.DescribeDBParametersInput{
+		DBParameterGroupName: DBParameterGroup.DBParameterGroupName,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -295,7 +297,9 @@ func (a *adapter) adaptDBSnapshots(DBSnapshots types.DBSnapshot) (*rds.Snapshots
 	metadata := a.CreateMetadata("dbsnapshots" + *DBSnapshots.DBSnapshotArn)
 
 	var SnapshotAttributes []rds.DBSnapshotAttributes
-	output, err := a.api.DescribeDBSnapshotAttributes(a.Context(), &rdsApi.DescribeDBSnapshotAttributesInput{})
+	output, err := a.api.DescribeDBSnapshotAttributes(a.Context(), &rdsApi.DescribeDBSnapshotAttributesInput{
+		DBSnapshotIdentifier: DBSnapshots.DBSnapshotIdentifier,
+	})
 	if err != nil {
 		return nil, err
 	}
