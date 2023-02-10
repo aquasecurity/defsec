@@ -603,9 +603,16 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cloudtrail.Tags": {
+      "type": "object"
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.cloudtrail.Trail": {
       "type": "object",
       "properties": {
+        "arn": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "bucketname": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
@@ -624,6 +631,10 @@
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudtrail.EventSelector"
           }
+        },
+        "includeglobalserviceevents": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "islogging": {
           "type": "object",
@@ -648,6 +659,13 @@
         "snstopicname": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudtrail.Tags"
+          }
         }
       }
     },

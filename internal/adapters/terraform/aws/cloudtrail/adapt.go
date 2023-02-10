@@ -56,16 +56,29 @@ func adaptTrail(resource *terraform.Block) cloudtrail.Trail {
 	}
 
 	return cloudtrail.Trail{
-		Metadata:                  resource.GetMetadata(),
-		Name:                      nameVal,
-		EnableLogFileValidation:   enableLogFileValidationVal,
-		IsMultiRegion:             isMultiRegionVal,
-		KMSKeyID:                  KMSKeyIDVal,
-		CloudWatchLogsLogGroupArn: resource.GetAttribute("cloud_watch_logs_group_arn").AsStringValueOrDefault("", resource),
-		IsLogging:                 resource.GetAttribute("enable_logging").AsBoolValueOrDefault(true, resource),
-		BucketName:                resource.GetAttribute("s3_bucket_name").AsStringValueOrDefault("", resource),
-		SnsTopicName:              resource.GetAttribute("sns_topic_name").AsStringValueOrDefault("", resource),
-		LatestDeliveryError:       types.StringDefault("", resource.GetMetadata()),
-		EventSelectors:            selectors,
+		Metadata:                   resource.GetMetadata(),
+		Name:                       nameVal,
+		Arn:                        resource.GetAttribute("arn").AsStringValueOrDefault("", resource),
+		EnableLogFileValidation:    enableLogFileValidationVal,
+		IsMultiRegion:              isMultiRegionVal,
+		KMSKeyID:                   KMSKeyIDVal,
+		CloudWatchLogsLogGroupArn:  resource.GetAttribute("cloud_watch_logs_group_arn").AsStringValueOrDefault("", resource),
+		IsLogging:                  resource.GetAttribute("enable_logging").AsBoolValueOrDefault(true, resource),
+		BucketName:                 resource.GetAttribute("s3_bucket_name").AsStringValueOrDefault("", resource),
+		SnsTopicName:               resource.GetAttribute("sns_topic_name").AsStringValueOrDefault("", resource),
+		LatestDeliveryError:        types.StringDefault("", resource.GetMetadata()),
+		EventSelectors:             selectors,
+		Tags:                       gettags(resource),
+		IncludeGlobalServiceEvents: resource.GetAttribute("include_global_service_events").AsBoolValueOrDefault(true, resource),
 	}
+}
+
+func gettags(r *terraform.Block) []cloudtrail.Tags {
+	var Tags []cloudtrail.Tags
+	for _, t := range r.GetBlocks("tags") {
+		Tags = append(Tags, cloudtrail.Tags{
+			Metadata: t.GetMetadata(),
+		})
+	}
+	return Tags
 }
