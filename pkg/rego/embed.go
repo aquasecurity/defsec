@@ -3,13 +3,10 @@ package rego
 import (
 	"context"
 	"embed"
-	"encoding/json"
 	"path/filepath"
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/rules"
-	"github.com/aquasecurity/defsec/pkg/rego/schemas"
-
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/bundle"
 )
@@ -36,10 +33,7 @@ func RegisterRegoRules(modules map[string]*ast.Module) {
 	ctx := context.TODO()
 
 	compiler := ast.NewCompiler()
-	schemaSet := ast.NewSchemaSet()
-	var schema interface{}
-	_ = json.Unmarshal([]byte(schemas.Anything), &schema)
-	schemaSet.Put(ast.MustParseRef("schema.input"), schema)
+	schemaSet, _, _ := BuildSchemaSetFromPolicies(modules, nil, nil)
 	compiler.WithSchemas(schemaSet)
 	compiler.WithCapabilities(nil)
 	compiler.Compile(modules)

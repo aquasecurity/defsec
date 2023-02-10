@@ -242,8 +242,8 @@ data:
 			},
 		},
 		{
-			name: "rbac, reader",
-			path: "rbac.yml",
+			name: "kubernetes, clusterRole",
+			path: "k8s.yml",
 			r: strings.NewReader(`apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -265,7 +265,7 @@ rules:
   - list
   - watch`),
 			expected: []FileType{
-				FileTypeRbac,
+				FileTypeKubernetes,
 				FileTypeYAML,
 			},
 		},
