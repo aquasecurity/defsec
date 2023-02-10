@@ -38,10 +38,22 @@ func adaptAPIsV1(modules terraform.Modules) []v1.API {
 	apiStageIDs := modules.GetChildResourceIDMapByType("aws_api_gateway_stage")
 
 	for _, apiBlock := range modules.GetResourcesByType("aws_api_gateway_rest_api") {
+
+		var types []defsecTypes.StringValue
+		for _, t := range apiBlock.GetBlocks("endpoint_configuration") {
+			typeAttr := t.GetAttribute("types").AsStringValueOrDefault("", t)
+			types = append(types, typeAttr)
+		}
 		api := v1.API{
-			Metadata:                  apiBlock.GetMetadata(),
-			Name:                      apiBlock.GetAttribute("name").AsStringValueOrDefault("", apiBlock),
-			Stages:                    nil,
+			Metadata:               apiBlock.GetMetadata(),
+			Name:                   apiBlock.GetAttribute("name").AsStringValueOrDefault("", apiBlock),
+			Id:                     apiBlock.GetAttribute("id").AsStringValueOrDefault("", apiBlock),
+			MinimumCompressionSize: apiBlock.GetAttribute("minimum_compression_size").AsIntValueOrDefault(-1, apiBlock),
+			Stages:                 nil,
+			EndpointConfiguration: v1.EndpointConfiguration{
+				Metadata: apiBlock.GetMetadata(),
+				Types:    types,
+			},
 			Resources:                 adaptAPIResourcesV1(modules, apiBlock),
 			DisableExecuteApiEndpoint: apiBlock.GetAttribute("disable_execute_api_endpoint").AsBoolValueOrDefault(false, apiBlock),
 		}
@@ -74,8 +86,9 @@ func adaptAPIsV1(modules terraform.Modules) []v1.API {
 
 func adaptStageV1(stageBlock *terraform.Block, modules terraform.Modules) v1.Stage {
 	stage := v1.Stage{
-		Metadata: stageBlock.GetMetadata(),
-		Name:     stageBlock.GetAttribute("name").AsStringValueOrDefault("", stageBlock),
+		Metadata:            stageBlock.GetMetadata(),
+		Name:                stageBlock.GetAttribute("name").AsStringValueOrDefault("", stageBlock),
+		ClientCertificateId: stageBlock.GetAttribute("client_certificate_id").AsStringValueOrDefault("", stageBlock),
 		AccessLogging: v1.AccessLogging{
 			Metadata:              stageBlock.GetMetadata(),
 			CloudwatchLogGroupARN: defsecTypes.StringDefault("", stageBlock.GetMetadata()),
@@ -84,6 +97,14 @@ func adaptStageV1(stageBlock *terraform.Block, modules terraform.Modules) v1.Sta
 		CacheClusterEnabled: stageBlock.GetAttribute("cache_cluster_enabled").AsBoolValueOrDefault(false, stageBlock),
 		WebAclArn:           defsecTypes.StringDefault("", stageBlock.GetMetadata()),
 	}
+
+	for _, C := range modules.GetReferencingResources(stageBlock, "aws_api_gateway_client_certificate", "id") {
+		clientCertificate := v1.ClientCertificate{
+			Metadata:       C.GetMetadata(),
+			ExpirationDate: defsecTypes.TimeUnresolvable(C.GetMetadata()),
+		}
+		stage.ClientCertificate = clientCertificate
+	}
 	for _, methodSettings := range modules.GetReferencingResources(stageBlock, "aws_api_gateway_method_settings", "stage_name") {
 
 		restMethodSettings := v1.RESTMethodSettings{
@@ -91,6 +112,7 @@ func adaptStageV1(stageBlock *terraform.Block, modules terraform.Modules) v1.Sta
 			Method:             defsecTypes.String("", methodSettings.GetMetadata()),
 			CacheDataEncrypted: defsecTypes.BoolDefault(false, methodSettings.GetMetadata()),
 			CacheEnabled:       defsecTypes.BoolDefault(false, methodSettings.GetMetadata()),
+			MetricsEnabled:     defsecTypes.BoolDefault(false, methodSettings.GetMetadata()),
 		}
 
 		if settings := methodSettings.GetBlock("settings"); settings.IsNotNil() {
@@ -100,6 +122,10 @@ func adaptStageV1(stageBlock *terraform.Block, modules terraform.Modules) v1.Sta
 			if encrypted := settings.GetAttribute("caching_enabled"); encrypted.IsNotNil() {
 				restMethodSettings.CacheEnabled = settings.GetAttribute("caching_enabled").AsBoolValueOrDefault(false, settings)
 			}
+			if encrypted := settings.GetAttribute("metrics_enabled"); encrypted.IsNotNil() {
+				restMethodSettings.MetricsEnabled = settings.GetAttribute("metrics_enabled").AsBoolValueOrDefault(false, settings)
+			}
+
 		}
 
 		stage.RESTMethodSettings = append(stage.RESTMethodSettings, restMethodSettings)

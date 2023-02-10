@@ -73,13 +73,36 @@ func (a *adapter) adaptRestAPIV1(restAPI agTypes.RestApi) (*v1.API, error) {
 	}
 
 	name := defsecTypes.StringDefault("", metadata)
+	id := defsecTypes.StringDefault("", metadata)
+	MCS := defsecTypes.IntDefault(0, metadata)
 	if restAPI.Name != nil {
 		name = defsecTypes.String(*restAPI.Name, metadata)
 	}
 
+	if restAPI.Id != nil {
+		id = defsecTypes.String(*restAPI.Id, metadata)
+	}
+
+	if restAPI.MinimumCompressionSize != nil {
+		MCS = defsecTypes.Int(int(*restAPI.MinimumCompressionSize), metadata)
+	}
+
+	var types []defsecTypes.StringValue
+	if restAPI.EndpointConfiguration != nil {
+		for _, t := range restAPI.EndpointConfiguration.Types {
+			types = append(types, defsecTypes.String(string(t), metadata))
+		}
+	}
+
 	return &v1.API{
-		Metadata:                  metadata,
-		Name:                      name,
+		Metadata:               metadata,
+		Name:                   name,
+		Id:                     id,
+		MinimumCompressionSize: MCS,
+		EndpointConfiguration: v1.EndpointConfiguration{
+			Metadata: metadata,
+			Types:    types,
+		},
 		Stages:                    stages,
 		Resources:                 resources,
 		DisableExecuteApiEndpoint: defsecTypes.Bool(restAPI.DisableExecuteApiEndpoint, metadata),
@@ -88,6 +111,17 @@ func (a *adapter) adaptRestAPIV1(restAPI agTypes.RestApi) (*v1.API, error) {
 
 func (a *adapter) adaptStageV1(restAPI agTypes.RestApi, stage agTypes.Stage) v1.Stage {
 	metadata := a.CreateMetadata(fmt.Sprintf("/restapis/%s/stages/%s", *restAPI.Id, *stage.StageName))
+
+	output, err := a.clientV1.GetClientCertificate(a.Context(), &api.GetClientCertificateInput{
+		ClientCertificateId: stage.ClientCertificateId,
+	})
+	if err != nil {
+		output = nil
+	}
+	var ED defsecTypes.TimeValue
+	if output != nil {
+		ED = defsecTypes.Time(*output.ExpirationDate, metadata)
+	}
 
 	var logARN string
 	if stage.AccessLogSettings != nil && stage.AccessLogSettings.DestinationArn != nil {
@@ -101,6 +135,7 @@ func (a *adapter) adaptStageV1(restAPI agTypes.RestApi, stage agTypes.Stage) v1.
 			Method:             defsecTypes.String(method, metadata),
 			CacheDataEncrypted: defsecTypes.Bool(setting.CacheDataEncrypted, metadata),
 			CacheEnabled:       defsecTypes.Bool(setting.CachingEnabled, metadata),
+			MetricsEnabled:     defsecTypes.Bool(setting.MetricsEnabled, metadata),
 		})
 	}
 
@@ -109,11 +144,13 @@ func (a *adapter) adaptStageV1(restAPI agTypes.RestApi, stage agTypes.Stage) v1.
 		name = defsecTypes.String(*stage.StageName, metadata)
 	}
 
-	var WebAclArn string
+	var WebAclArn, CSId string
 	if stage.WebAclArn != nil {
 		WebAclArn = *stage.WebAclArn
 	}
-
+	if stage.ClientCertificateId != nil {
+		CSId = *stage.ClientCertificateId
+	}
 	return v1.Stage{
 		Metadata: metadata,
 		Name:     name,
@@ -121,10 +158,15 @@ func (a *adapter) adaptStageV1(restAPI agTypes.RestApi, stage agTypes.Stage) v1.
 			Metadata:              metadata,
 			CloudwatchLogGroupARN: defsecTypes.String(logARN, metadata),
 		},
+		ClientCertificate: v1.ClientCertificate{
+			Metadata:       metadata,
+			ExpirationDate: ED,
+		},
 		RESTMethodSettings:  methodSettings,
 		XRayTracingEnabled:  defsecTypes.Bool(stage.TracingEnabled, metadata),
 		CacheClusterEnabled: defsecTypes.Bool(stage.CacheClusterEnabled, metadata),
 		WebAclArn:           defsecTypes.String(WebAclArn, metadata),
+		ClientCertificateId: defsecTypes.String(CSId, metadata),
 	}
 }
 
