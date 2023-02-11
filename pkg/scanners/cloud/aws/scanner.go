@@ -166,6 +166,7 @@ func (s *Scanner) Scan(ctx context.Context, cloudState *state.State) (results sc
 		return nil, fmt.Errorf("cloud state is nil")
 	}
 
+	// evaluate go rules
 	for _, rule := range s.getRegisteredRules() {
 		select {
 		case <-ctx.Done():
@@ -182,10 +183,12 @@ func (s *Scanner) Scan(ctx context.Context, cloudState *state.State) (results sc
 		}
 	}
 
+	// evaluate rego rules
 	regoScanner, err := s.initRegoScanner()
 	if err != nil {
 		return nil, err
 	}
+	// TODO(simar): Actual aws scan starts here...
 	regoResults, err := regoScanner.ScanInput(ctx, rego.Input{
 		Contents: cloudState.ToRego(),
 	})

@@ -163,6 +163,7 @@ func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (scan.Re
 	}
 
 	s.debug.Log("Scanning %d files...", len(inputs))
+	// TODO(simar): Actual k8s scan starts here...
 	results, err := regoScanner.ScanInput(ctx, inputs...)
 	if err != nil {
 		return nil, err

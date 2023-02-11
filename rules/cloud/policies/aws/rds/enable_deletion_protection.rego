@@ -16,6 +16,7 @@
 #   input:
 #     selector:
 #     - type: cloud
+#       subtype: rds
 package builtin.aws.rds.aws0177
 
 deny[res] {

@@ -230,6 +230,16 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 		default:
 		}
 
+		if st, ok := SchemaMap[s.sourceType]; ok {
+			if st != schemas.Anything {
+				// skip if policy isn't relevant to what is being scanned
+				// TODO(simar): remove schemas.Kubernetes check once all k8s policies have subtype selector
+				if !isPolicyApplicable(module, inputs...) && (st != schemas.Kubernetes) {
+					continue
+				}
+			}
+		}
+
 		namespace := getModuleNamespace(module)
 		topLevel := strings.Split(namespace, ".")[0]
 		if _, ok := s.ruleNamespaces[topLevel]; !ok {
@@ -268,6 +278,44 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 	return results, nil
 }
 
+func isPolicyApplicable(module *ast.Module, inputs ...Input) bool {
+	for _, input := range inputs {
+		if ii, ok := input.Contents.(map[string]interface{}); ok {
+			for provider := range ii {
+				// TODO(simar): Add other providers
+				if !strings.Contains(strings.Join([]string{"kind", "aws"}, ","), provider) {
+					continue
+				}
+				for _, a := range module.Annotations {
+					if in, ok := a.Custom["input"].(map[string]interface{}); ok {
+						if selectors, ok := in["selector"].([]interface{}); ok {
+							for _, ss := range selectors {
+								if s, ok := ss.(map[string]interface{}); ok {
+									if subtype, ok := s["subtype"]; ok {
+										switch services := ii[provider].(type) {
+										case map[string]interface{}: // cloud
+											for service := range services {
+												if service == subtype {
+													return true
+												}
+											}
+										case string: // k8s
+											if services == subtype {
+												return true
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return false
+}
+
 func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, inputs []Input, combined bool) (scan.Results, error) {
 
 	// handle combined evaluations if possible
@@ -296,7 +344,7 @@ func (s *Scanner) applyRule(ctx context.Context, namespace string, rule string, 
 		}
 		s.trace("RESULTSET", set)
 		ruleResults := s.convertResults(set, input, namespace, rule, traces)
-		if len(ruleResults) == 0 {
+		if len(ruleResults) == 0 { // It passed because we didn't find anything wrong (NOT because it didn't exist)
 			var result regoResult
 			result.FS = input.FS
 			result.Filepath = input.Path
