@@ -7,6 +7,7 @@ import (
 type DynamoDB struct {
 	DAXClusters []DAXCluster
 	Tables      []Table
+	Backups     []Backup
 }
 
 type DAXCluster struct {
@@ -15,10 +16,15 @@ type DAXCluster struct {
 	PointInTimeRecovery  defsecTypes.BoolValue
 }
 
+type Backup struct {
+	Metadata defsecTypes.Metadata
+}
+
 type Table struct {
-	Metadata             defsecTypes.Metadata
-	ServerSideEncryption ServerSideEncryption
-	PointInTimeRecovery  defsecTypes.BoolValue
+	Metadata               defsecTypes.Metadata
+	ServerSideEncryption   ServerSideEncryption
+	PointInTimeRecovery    defsecTypes.BoolValue
+	ContinuousBackupStatus defsecTypes.StringValue
 }
 
 type ServerSideEncryption struct {
