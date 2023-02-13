@@ -820,6 +820,10 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.documentdb.Cluster": {
       "type": "object",
       "properties": {
+        "backupretentionperiod": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
+        },
         "enabledlogexports": {
           "type": "array",
           "items": {

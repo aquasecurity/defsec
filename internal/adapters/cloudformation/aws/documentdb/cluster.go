@@ -12,12 +12,13 @@ func getClusters(ctx parser.FileContext) (clusters []documentdb.Cluster) {
 
 	for _, r := range clusterResources {
 		cluster := documentdb.Cluster{
-			Metadata:          r.Metadata(),
-			Identifier:        r.GetStringProperty("DBClusterIdentifier"),
-			EnabledLogExports: getLogExports(r),
-			Instances:         nil,
-			StorageEncrypted:  r.GetBoolProperty("StorageEncrypted"),
-			KMSKeyID:          r.GetStringProperty("KmsKeyId"),
+			Metadata:              r.Metadata(),
+			Identifier:            r.GetStringProperty("DBClusterIdentifier"),
+			EnabledLogExports:     getLogExports(r),
+			Instances:             nil,
+			BackupRetentionPeriod: r.GetIntProperty("BackupRetentionPeriod"),
+			StorageEncrypted:      r.GetBoolProperty("StorageEncrypted"),
+			KMSKeyID:              r.GetStringProperty("KmsKeyId"),
 		}
 
 		updateInstancesOnCluster(&cluster, ctx)
