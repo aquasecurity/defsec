@@ -517,12 +517,36 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.CustomOriginConfig": {
+      "type": "object",
+      "properties": {
+        "originprotocolpolicy": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "originsslprotocolsitems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+          }
+        }
+      }
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.Distribution": {
       "type": "object",
       "properties": {
         "defaultcachebehaviour": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.CacheBehaviour"
+        },
+        "distributionconfig": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.DistributionConfig"
+        },
+        "etag": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "logging": {
           "type": "object",
@@ -535,6 +559,21 @@
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.CacheBehaviour"
           }
         },
+        "origingroups": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.OriginGroups"
+        },
+        "originitems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.OriginItem"
+          }
+        },
+        "restrictions": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.Restrictions"
+        },
         "viewercertificate": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.ViewerCertificate"
@@ -542,6 +581,15 @@
         "wafid": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.DistributionConfig": {
+      "type": "object",
+      "properties": {
+        "logging": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -554,9 +602,60 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.OriginGroups": {
+      "type": "object",
+      "properties": {
+        "quantity": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.OriginItem": {
+      "type": "object",
+      "properties": {
+        "customoriginconfig": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.CustomOriginConfig"
+        },
+        "s3originconfig": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.S3OriginConfig"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.Restrictions": {
+      "type": "object",
+      "properties": {
+        "geoitems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+          }
+        },
+        "georestrictiontype": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.S3OriginConfig": {
+      "type": "object",
+      "properties": {
+        "originaccessidentity": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.ViewerCertificate": {
       "type": "object",
       "properties": {
+        "cloudfrontdefaultcertificate": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
         "minimumprotocolversion": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"

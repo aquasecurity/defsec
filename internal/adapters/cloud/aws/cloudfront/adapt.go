@@ -75,6 +75,21 @@ func (a *adapter) adaptDistribution(distribution types.DistributionSummary) (*cl
 		return nil, err
 	}
 
+	output, err := a.client.GetDistribution(a.Context(), &api.GetDistributionInput{
+		Id: distribution.Id,
+	})
+	if err != nil {
+		output = nil
+	}
+	var etag string
+	var loggingenabled bool
+	if output != nil {
+		etag = *output.ETag
+		if output.Distribution.DistributionConfig != nil {
+			loggingenabled = *output.Distribution.DistributionConfig.Logging.Enabled
+		}
+	}
+
 	var wafID string
 	if distribution.WebACLId != nil {
 		wafID = *distribution.WebACLId
@@ -85,12 +100,17 @@ func (a *adapter) adaptDistribution(distribution types.DistributionSummary) (*cl
 		loggingBucket = *config.DistributionConfig.Logging.Bucket
 	}
 
-	var defaultCacheBehaviour, fieldLevelEncryptionId string
+	var viewerProtocolPolicy, fieldLevelEncryptionId string
 	var compress bool
-	if config.DistributionConfig.DefaultCacheBehavior != nil {
-		defaultCacheBehaviour = string(config.DistributionConfig.DefaultCacheBehavior.ViewerProtocolPolicy)
-		fieldLevelEncryptionId = *config.DistributionConfig.DefaultCacheBehavior.FieldLevelEncryptionId
-		compress = *config.DistributionConfig.DefaultCacheBehavior.Compress
+	if distribution.DefaultCacheBehavior != nil {
+		viewerProtocolPolicy = string(distribution.DefaultCacheBehavior.ViewerProtocolPolicy)
+		fieldLevelEncryptionId = *distribution.DefaultCacheBehavior.FieldLevelEncryptionId
+		compress = *distribution.DefaultCacheBehavior.Compress
+	}
+
+	var quantity int
+	if distribution.OriginGroups != nil {
+		quantity = int(*distribution.OriginGroups.Quantity)
 	}
 
 	var cacheBehaviours []cloudfront.CacheBehaviour
@@ -102,8 +122,40 @@ func (a *adapter) adaptDistribution(distribution types.DistributionSummary) (*cl
 	}
 
 	var minimumProtocolVersion string
-	if config.DistributionConfig.ViewerCertificate != nil {
-		minimumProtocolVersion = string(config.DistributionConfig.ViewerCertificate.MinimumProtocolVersion)
+	if distribution.ViewerCertificate != nil {
+		minimumProtocolVersion = string(distribution.ViewerCertificate.MinimumProtocolVersion)
+	}
+
+	cloudFrontDefaultCertificate := distribution.ViewerCertificate.CloudFrontDefaultCertificate
+
+	var geoRestrictionType string
+	var geoItems []defsecTypes.StringValue
+	if distribution.Restrictions.GeoRestriction != nil {
+		geoRestrictionType = string(distribution.Restrictions.GeoRestriction.RestrictionType)
+		for _, item := range distribution.Restrictions.GeoRestriction.Items {
+			geoItems = append(geoItems, defsecTypes.String(item, metadata))
+		}
+	}
+
+	var originItem []cloudfront.OriginItem
+	for _, item := range distribution.Origins.Items {
+
+		var originsslItem []defsecTypes.StringValue
+		for _, sslitem := range item.CustomOriginConfig.OriginSslProtocols.Items {
+			originsslItem = append(originsslItem, defsecTypes.String(string(sslitem), metadata))
+		}
+		originItem = append(originItem, cloudfront.OriginItem{
+			Metadata: metadata,
+			S3OriginConfig: cloudfront.S3OriginConfig{
+				Metadata:             metadata,
+				OriginAccessIdentity: defsecTypes.String(*item.S3OriginConfig.OriginAccessIdentity, metadata),
+			},
+			CustomOriginConfig: cloudfront.CustomOriginConfig{
+				Metadata:                metadata,
+				OriginProtocolPolicy:    defsecTypes.String(string(item.CustomOriginConfig.OriginProtocolPolicy), metadata),
+				OriginSslProtocolsItems: originsslItem,
+			},
+		})
 	}
 
 	return &cloudfront.Distribution{
@@ -115,14 +167,30 @@ func (a *adapter) adaptDistribution(distribution types.DistributionSummary) (*cl
 		},
 		DefaultCacheBehaviour: cloudfront.CacheBehaviour{
 			Metadata:               metadata,
-			ViewerProtocolPolicy:   defsecTypes.String(defaultCacheBehaviour, metadata),
+			ViewerProtocolPolicy:   defsecTypes.String(viewerProtocolPolicy, metadata),
 			FieldLevelEncryptionId: defsecTypes.String(fieldLevelEncryptionId, metadata),
 			Compress:               defsecTypes.Bool(compress, metadata),
 		},
 		OrdererCacheBehaviours: cacheBehaviours,
 		ViewerCertificate: cloudfront.ViewerCertificate{
-			Metadata:               metadata,
-			MinimumProtocolVersion: defsecTypes.String(minimumProtocolVersion, metadata),
+			Metadata:                     metadata,
+			MinimumProtocolVersion:       defsecTypes.String(minimumProtocolVersion, metadata),
+			CloudFrontDefaultCertificate: defsecTypes.Bool(*cloudFrontDefaultCertificate, metadata),
+		},
+		OriginGroups: cloudfront.OriginGroups{
+			Metadata: metadata,
+			Quantity: defsecTypes.Int(quantity, metadata),
+		},
+		Restrictions: cloudfront.Restrictions{
+			Metadata:           metadata,
+			GeoRestrictionType: defsecTypes.String(geoRestrictionType, metadata),
+			GeoItems:           geoItems,
+		},
+		OriginItems: originItem,
+		Etag:        defsecTypes.String(etag, metadata),
+		DistributionConfig: cloudfront.DistributionConfig{
+			Metadata: metadata,
+			Logging:  defsecTypes.Bool(loggingenabled, metadata),
 		},
 	}, nil
 }
