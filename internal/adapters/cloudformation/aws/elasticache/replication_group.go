@@ -14,6 +14,8 @@ func getReplicationGroups(ctx parser.FileContext) (replicationGroups []elasticac
 			Metadata:                 r.Metadata(),
 			TransitEncryptionEnabled: r.GetBoolProperty("TransitEncryptionEnabled"),
 			AtRestEncryptionEnabled:  r.GetBoolProperty("AtRestEncryptionEnabled"),
+			KmsKeyId:                 r.GetStringProperty("KmsKeyId"),
+			MultiAZ:                  r.GetBoolProperty("MultiAZEnabled"),
 		}
 
 		replicationGroups = append(replicationGroups, replicationGroup)
