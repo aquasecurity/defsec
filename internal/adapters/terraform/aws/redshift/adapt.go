@@ -8,8 +8,10 @@ import (
 
 func Adapt(modules terraform.Modules) redshift.Redshift {
 	return redshift.Redshift{
-		Clusters:       adaptClusters(modules),
-		SecurityGroups: adaptSecurityGroups(modules),
+		Clusters:          adaptClusters(modules),
+		SecurityGroups:    adaptSecurityGroups(modules),
+		ClusterParameters: adaptParameters(modules),
+		ReservedNodes:     nil,
 	}
 }
 
@@ -33,19 +35,53 @@ func adaptSecurityGroups(modules terraform.Modules) []redshift.SecurityGroup {
 	return securityGroups
 }
 
+func adaptParameters(modules terraform.Modules) []redshift.ClusterParameter {
+	var Parameters []redshift.ClusterParameter
+	for _, module := range modules {
+		for _, resource := range module.GetResourcesByType("aws_redshift_parameter_group") {
+			for _, r := range resource.GetBlocks("parameter") {
+				Parameters = append(Parameters, adaptParameter(r))
+			}
+		}
+	}
+	return Parameters
+}
+
 func adaptCluster(resource *terraform.Block, module *terraform.Module) redshift.Cluster {
 	cluster := redshift.Cluster{
-		Metadata: resource.GetMetadata(),
+		Metadata:                         resource.GetMetadata(),
+		ClusterIdentifier:                resource.GetAttribute("cluster_identifier").AsStringValueOrDefault("", resource),
+		NodeType:                         resource.GetAttribute("node_type").AsStringValueOrDefault("", resource),
+		MasterUsername:                   resource.GetAttribute("master_username").AsStringValueOrDefault("", resource),
+		NumberOfNodes:                    resource.GetAttribute("number_of_nodes").AsIntValueOrDefault(1, resource),
+		PubliclyAccessible:               resource.GetAttribute("publicly_accessible").AsBoolValueOrDefault(true, resource),
+		LoggingEnabled:                   defsecTypes.Bool(false, resource.GetMetadata()),
+		AutomatedSnapshotRetentionPeriod: defsecTypes.Int(7, resource.GetMetadata()),
+		AllowVersionUpgrade:              resource.GetAttribute("allow_version_upgrade").AsBoolValueOrDefault(true, resource),
+		VpcId:                            defsecTypes.String("", resource.GetMetadata()),
 		Encryption: redshift.Encryption{
 			Metadata: resource.GetMetadata(),
 			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 			KMSKeyID: defsecTypes.StringDefault("", resource.GetMetadata()),
+		},
+		EndPoint: redshift.EndPoint{
+			Metadata: resource.GetMetadata(),
+			Port:     resource.GetAttribute("port").AsIntValueOrDefault(5439, resource),
 		},
 		SubnetGroupName: defsecTypes.StringDefault("", resource.GetMetadata()),
 	}
 
 	encryptedAttr := resource.GetAttribute("encrypted")
 	cluster.Encryption.Enabled = encryptedAttr.AsBoolValueOrDefault(false, resource)
+
+	if logBlock := resource.GetBlock("logging"); logBlock.IsNotNil() {
+		cluster.LoggingEnabled = logBlock.GetAttribute("enable").AsBoolValueOrDefault(false, logBlock)
+	}
+
+	if snapBlock := resource.GetBlock("snapshot_copy"); snapBlock.IsNotNil() {
+		snapAttr := snapBlock.GetAttribute("retention_period")
+		cluster.AutomatedSnapshotRetentionPeriod = snapAttr.AsIntValueOrDefault(7, snapBlock)
+	}
 
 	KMSKeyIDAttr := resource.GetAttribute("kms_key_id")
 	cluster.Encryption.KMSKeyID = KMSKeyIDAttr.AsStringValueOrDefault("", resource)
@@ -68,5 +104,14 @@ func adaptSecurityGroup(resource *terraform.Block) redshift.SecurityGroup {
 	return redshift.SecurityGroup{
 		Metadata:    resource.GetMetadata(),
 		Description: descriptionVal,
+	}
+}
+
+func adaptParameter(resource *terraform.Block) redshift.ClusterParameter {
+
+	return redshift.ClusterParameter{
+		Metadata:       resource.GetMetadata(),
+		ParameterName:  resource.GetAttribute("name").AsStringValueOrDefault("", resource),
+		ParameterValue: resource.GetAttribute("value").AsStringValueOrDefault("", resource),
 	}
 }
