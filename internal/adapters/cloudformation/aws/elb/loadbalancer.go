@@ -17,11 +17,34 @@ func getLoadBalancers(ctx parser.FileContext) (loadbalancers []elb.LoadBalancer)
 			DropInvalidHeaderFields: checkForDropInvalidHeaders(r),
 			Internal:                isInternal(r),
 			Listeners:               getListeners(r, ctx),
+			Attibute:                getattributes(r),
 		}
 		loadbalancers = append(loadbalancers, lb)
 	}
 
 	return loadbalancers
+}
+
+func getTargetGroups(ctx parser.FileContext) (targetgroups []elb.TargetGroup) {
+	targetres := ctx.GetResourcesByType("")
+
+	for _, r := range targetres {
+		var attributes []elb.AttibuteV2
+		for _, attr := range r.GetProperty("TargetGroupAttributes").AsList() {
+			attributes = append(attributes, elb.AttibuteV2{
+				Metadata: attr.Metadata(),
+				Key:      r.GetStringProperty("Key"),
+				Value:    r.GetStringProperty("Value"),
+			})
+		}
+		targetgroup := elb.TargetGroup{
+			Metadata:     r.Metadata(),
+			Attribute:    attributes,
+			TargetHealth: nil,
+		}
+		targetgroups = append(targetgroups, targetgroup)
+	}
+	return targetgroups
 }
 
 func getListeners(lbr *parser.Resource, ctx parser.FileContext) (listeners []elb.Listener) {
@@ -30,11 +53,20 @@ func getListeners(lbr *parser.Resource, ctx parser.FileContext) (listeners []elb
 
 	for _, r := range listenerResources {
 		if r.GetStringProperty("LoadBalancerArn").Value() == lbr.ID() {
+
+			var certificates []elb.Certificate
+			for _, cer := range r.GetProperty("Certificates").AsList() {
+				certificates = append(certificates, elb.Certificate{
+					Metadata: cer.Metadata(),
+					Arn:      cer.GetStringProperty("CertificateArn"),
+				})
+			}
 			listener := elb.Listener{
 				Metadata:       r.Metadata(),
 				Protocol:       r.GetStringProperty("Protocol", "HTTP"),
 				TLSPolicy:      r.GetStringProperty("SslPolicy", "ELBSecurityPolicy-2016-08"),
 				DefaultActions: getDefaultListenerActions(r),
+				Certificates:   certificates,
 			}
 
 			listeners = append(listeners, listener)
@@ -86,4 +118,20 @@ func checkForDropInvalidHeaders(r *parser.Resource) types.BoolValue {
 	}
 
 	return r.BoolDefault(false)
+}
+
+func getattributes(r *parser.Resource) []elb.AttibuteV2 {
+	var attributes []elb.AttibuteV2
+	attributesProp := r.GetProperty("LoadBalancerAttributes")
+	if attributesProp.IsNotList() {
+		return attributes
+	}
+	for _, attr := range attributesProp.AsList() {
+		attributes = append(attributes, elb.AttibuteV2{
+			Metadata: attr.Metadata(),
+			Key:      attr.GetStringProperty("Key"),
+			Value:    attr.GetStringProperty("Value"),
+		})
+	}
+	return attributes
 }

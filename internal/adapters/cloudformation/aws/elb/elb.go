@@ -8,6 +8,9 @@ import (
 // Adapt ...
 func Adapt(cfFile parser.FileContext) elb.ELB {
 	return elb.ELB{
-		LoadBalancers: getLoadBalancers(cfFile),
+		LoadBalancers:        getLoadBalancers(cfFile),
+		TargetGroups:         getTargetGroups(cfFile),
+		LoadBalancersV1:      getLoadBalancersV1(cfFile),
+		LoadBalancerPolicies: getLoadBalancersPolicy(cfFile),
 	}
 }

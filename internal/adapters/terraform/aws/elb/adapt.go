@@ -13,7 +13,10 @@ func Adapt(modules terraform.Modules) elb.ELB {
 	}
 
 	return elb.ELB{
-		LoadBalancers: adapter.adaptLoadBalancers(modules),
+		LoadBalancers:        adapter.adaptLoadBalancers(modules),
+		TargetGroups:         nil,
+		LoadBalancersV1:      adapter.adaptLoadBalancersV1(modules),
+		LoadBalancerPolicies: adapter.adaptLoadBalancersPolicies(modules),
 	}
 }
 
@@ -43,7 +46,7 @@ func (a *adapter) adaptLoadBalancers(modules terraform.Modules) []elb.LoadBalanc
 			Listeners:               nil,
 		}
 		for _, listenerResource := range orphanResources {
-			orphanage.Listeners = append(orphanage.Listeners, adaptListener(listenerResource, "application"))
+			orphanage.Listeners = append(orphanage.Listeners, adaptListener(listenerResource, "application", modules))
 		}
 		loadBalancers = append(loadBalancers, orphanage)
 	}
@@ -68,7 +71,7 @@ func (a *adapter) adaptLoadBalancer(resource *terraform.Block, module terraform.
 
 	for _, listenerBlock := range listenerBlocks {
 		a.listenerIDs.Resolve(listenerBlock.ID())
-		listeners = append(listeners, adaptListener(listenerBlock, typeVal.Value()))
+		listeners = append(listeners, adaptListener(listenerBlock, typeVal.Value(), module))
 	}
 	return elb.LoadBalancer{
 		Metadata:                resource.GetMetadata(),
@@ -76,6 +79,7 @@ func (a *adapter) adaptLoadBalancer(resource *terraform.Block, module terraform.
 		DropInvalidHeaderFields: dropInvalidHeadersVal,
 		Internal:                internalVal,
 		Listeners:               listeners,
+		Attibute:                nil,
 	}
 }
 
@@ -92,12 +96,13 @@ func (a *adapter) adaptClassicLoadBalancer(resource *terraform.Block, module ter
 	}
 }
 
-func adaptListener(listenerBlock *terraform.Block, typeVal string) elb.Listener {
+func adaptListener(listenerBlock *terraform.Block, typeVal string, module terraform.Modules) elb.Listener {
 	listener := elb.Listener{
 		Metadata:       listenerBlock.GetMetadata(),
 		Protocol:       defsecTypes.StringDefault("", listenerBlock.GetMetadata()),
 		TLSPolicy:      defsecTypes.StringDefault("", listenerBlock.GetMetadata()),
 		DefaultActions: nil,
+		Certificates:   nil,
 	}
 
 	protocolAttr := listenerBlock.GetAttribute("protocol")
@@ -107,6 +112,15 @@ func adaptListener(listenerBlock *terraform.Block, typeVal string) elb.Listener 
 
 	sslPolicyAttr := listenerBlock.GetAttribute("ssl_policy")
 	listener.TLSPolicy = sslPolicyAttr.AsStringValueOrDefault("", listenerBlock)
+
+	res := module.GetReferencingResources(listenerBlock, "aws_lb_listener_certificate", "listener_arn")
+	for _, cer := range res {
+		certifacte := elb.Certificate{
+			Metadata: cer.GetMetadata(),
+			Arn:      cer.GetAttribute("certificate_arn").AsStringValueOrDefault("", cer),
+		}
+		listener.Certificates = append(listener.Certificates, certifacte)
+	}
 
 	for _, defaultActionBlock := range listenerBlock.GetBlocks("default_action") {
 		action := elb.Action{
