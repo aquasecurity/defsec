@@ -11,4 +11,9 @@ type Analyzer struct {
 	ARN      types.StringValue
 	Name     types.StringValue
 	Active   types.BoolValue
+	Findings []Findings
+}
+
+type Findings struct {
+	Metadata types.Metadata
 }

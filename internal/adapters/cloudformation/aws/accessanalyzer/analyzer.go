@@ -13,6 +13,7 @@ func getAccessAnalyzer(ctx parser.FileContext) (analyzers []accessanalyzer.Analy
 		aa := accessanalyzer.Analyzer{
 			Metadata: r.Metadata(),
 			Name:     r.GetStringProperty("AnalyzerName"),
+			ARN:      r.StringDefault(""),
 		}
 
 		analyzers = append(analyzers, aa)
