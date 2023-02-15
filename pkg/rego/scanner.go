@@ -217,10 +217,17 @@ type Input struct {
 }
 
 func isPolicyWithSubtype(sourceType types.Source) bool {
-	for _, p := range []schemas.Schema{schemas.Cloud} { // TODO(simar): Add schemas.Kubernetes once all k8s policy have subtype
-		if SchemaMap[sourceType] == p {
+	for _, s := range []types.Source{types.SourceCloud, types.SourceDefsec} { // TODO(simar): Add types.Kubernetes once all k8s policy have subtype
+		if sourceType == s {
 			return true
 		}
+		/*
+			for _, p := range []schemas.Schema{schemas.Cloud} {
+				if SchemaMap[sourceType] == p {
+					return true
+				}
+			}
+		*/
 	}
 	return false
 }

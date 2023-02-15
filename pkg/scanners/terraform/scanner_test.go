@@ -296,13 +296,19 @@ resource "aws_s3_bucket" "my-bucket" {
 }
 `,
 				"/rules/test.rego": fmt.Sprintf(`
-				package %s
+# METADATA
+# custom:
+#   input:
+#     selector:
+#     - type: cloud
+#       subtype: s3 
+package %s
 
-				deny[cause] {
-				bucket := input.aws.s3.buckets[_]
-				bucket.name.value == "evil"
-				cause := bucket.name
-				}
+deny[cause] {
+bucket := input.aws.s3.buckets[_]
+bucket.name.value == "evil"
+cause := bucket.name
+}
 
 				`, test.policyNamespace),
 			})
