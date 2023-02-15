@@ -50,7 +50,8 @@ type InputOptions struct {
 }
 
 type Selector struct {
-	Type string
+	Type    string
+	Subtype string
 }
 
 func (m StaticMetadata) ToRule() scan.Rule {
@@ -358,6 +359,9 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 						if selector.Type == string(types.SourceDefsec) {
 							selector.Type = string(types.SourceCloud)
 						}
+					}
+					if subType, ok := selectorMap["subtype"]; ok {
+						selector.Subtype = fmt.Sprintf("%s", subType)
 					}
 				}
 				options.Selectors = append(options.Selectors, selector)

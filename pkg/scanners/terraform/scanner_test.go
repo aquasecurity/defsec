@@ -181,7 +181,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec"}],
+	"selector": [{"type": "defsec", "subtype":"s3"}],
 }
 
 deny[cause] {
@@ -440,7 +440,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec"}],
+	"selector": [{"type": "defsec", "subtype": "s3"}],
 }
 
 deny[res] {
@@ -507,6 +507,7 @@ resource "aws_sqs_queue_policy" "bad_example" {
 #   input:
 #     selector:
 #     - type: cloud
+#       subtype: sqs
 package defsec.abcdefg
 
 
