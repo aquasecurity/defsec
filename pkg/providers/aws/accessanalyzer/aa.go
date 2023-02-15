@@ -7,8 +7,8 @@ type AccessAnalyzer struct {
 }
 
 type Analyzer struct {
-	types.Metadata
-	ARN    types.StringValue
-	Name   types.StringValue
-	Active types.BoolValue
+	Metadata types.Metadata
+	ARN      types.StringValue
+	Name     types.StringValue
+	Active   types.BoolValue
 }
