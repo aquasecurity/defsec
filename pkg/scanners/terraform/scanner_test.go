@@ -392,7 +392,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec"}],
+	"selector": [{"type": "defsec", "subtype": "s3"}],
 }
 
 deny[cause] {
@@ -611,7 +611,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec"}],
+	"selector": [{"type": "defsec", "subtype": "ecs"}],
 }
 
 deny[res] {
@@ -843,6 +843,10 @@ resource "aws_apigatewayv2_stage" "bad_example" {
 # - input: schema.input
 # custom:
 #   avd_id: AVD-AWS-0001
+#   input:
+#     selector:
+#     - type: cloud
+#       subtype: apigateway 
 package builtin.cloud.AWS0001
 
 deny[res] {
