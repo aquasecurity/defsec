@@ -296,6 +296,7 @@ func (m *MetadataRetriever) fromAnnotation(metadata *StaticMetadata, annotation 
 	return nil
 }
 
+// nolint: cyclop
 func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.Module) InputOptions {
 
 	options := InputOptions{
