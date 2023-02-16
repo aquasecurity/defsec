@@ -48,9 +48,11 @@ type Scanner struct {
 	policyReaders       []io.Reader
 	policyFS            fs.FS
 	useEmbedded         bool
+	regoOnly            bool
 }
 
-func (s *Scanner) SetRegoOnly(bool) {
+func (s *Scanner) SetRegoOnly(value bool) {
+	s.regoOnly = value
 }
 
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
@@ -167,19 +169,21 @@ func (s *Scanner) Scan(ctx context.Context, cloudState *state.State) (results sc
 	}
 
 	// evaluate go rules
-	for _, rule := range s.getRegisteredRules() {
-		select {
-		case <-ctx.Done():
-			return nil, ctx.Err()
-		default:
-		}
-		if rule.Rule().RegoPackage != "" {
-			continue
-		}
-		ruleResults := rule.Evaluate(cloudState)
-		if len(ruleResults) > 0 {
-			s.debug.Log("Found %d results for %s", len(ruleResults), rule.Rule().AVDID)
-			results = append(results, ruleResults...)
+	if !s.regoOnly {
+		for _, rule := range s.getRegisteredRules() {
+			select {
+			case <-ctx.Done():
+				return nil, ctx.Err()
+			default:
+			}
+			if rule.Rule().RegoPackage != "" {
+				continue
+			}
+			ruleResults := rule.Evaluate(cloudState)
+			if len(ruleResults) > 0 {
+				s.debug.Log("Found %d results for %s", len(ruleResults), rule.Rule().AVDID)
+				results = append(results, ruleResults...)
+			}
 		}
 	}
 

@@ -368,7 +368,7 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 						for _, subT := range subType {
 							if st, ok := subT.(map[string]interface{}); ok {
 								s := SubType{}
-								mapstructure.Decode(st, &s)
+								_ = mapstructure.Decode(st, &s)
 								selector.Subtypes = append(selector.Subtypes, s)
 							}
 						}
