@@ -216,15 +216,6 @@ type Input struct {
 	Contents interface{} `json:"contents"`
 }
 
-func isPolicyWithSubtype(sourceType types.Source) bool {
-	for _, s := range []types.Source{types.SourceCloud, types.SourceDefsec} { // TODO(simar): Add types.Kubernetes once all k8s policy have subtype
-		if sourceType == s {
-			return true
-		}
-	}
-	return false
-}
-
 func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results, error) {
 
 	s.debug.Log("Scanning %d inputs...", len(inputs))
@@ -284,17 +275,30 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 	return results, nil
 }
 
-func checkSubtype(ii map[string]interface{}, provider string, subtype string) bool {
-	switch services := ii[provider].(type) {
-	case map[string]interface{}: // cloud
-		for service := range services {
-			if service == subtype {
+func isPolicyWithSubtype(sourceType types.Source) bool {
+	for _, s := range []types.Source{types.SourceCloud, types.SourceDefsec} { // TODO(simar): Add types.Kubernetes once all k8s policy have subtype
+		if sourceType == s {
+			return true
+		}
+	}
+	return false
+}
+
+func checkSubtype(ii map[string]interface{}, provider string, subTypes []SubType) bool {
+	for _, st := range subTypes {
+		switch services := ii[provider].(type) {
+		case map[string]interface{}: // cloud
+			for service := range services {
+				if service == st.Service {
+					return true
+				}
+			}
+		case string: // k8s
+			if services == st.Group ||
+				services == st.Version ||
+				services == st.Kind {
 				return true
 			}
-		}
-	case string: // k8s
-		if services == subtype {
-			return true
 		}
 	}
 	return false
@@ -311,7 +315,7 @@ func isPolicyApplicable(staticMetadata *StaticMetadata, inputs ...Input) bool {
 
 				// check metadata for subtype
 				for _, s := range staticMetadata.InputOptions.Selectors {
-					if checkSubtype(ii, provider, s.Subtype) {
+					if checkSubtype(ii, provider, s.Subtypes) {
 						return true
 					}
 				}

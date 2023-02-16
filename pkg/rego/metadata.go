@@ -7,21 +7,16 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/open-policy-agent/opa/util"
-
+	"github.com/aquasecurity/defsec/pkg/framework"
+	"github.com/aquasecurity/defsec/pkg/providers"
+	"github.com/aquasecurity/defsec/pkg/scan"
+	"github.com/aquasecurity/defsec/pkg/severity"
 	"github.com/aquasecurity/defsec/pkg/types"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
-
-	"github.com/aquasecurity/defsec/pkg/framework"
-	"github.com/aquasecurity/defsec/pkg/severity"
-
-	"github.com/aquasecurity/defsec/pkg/scan"
-
-	"github.com/aquasecurity/defsec/pkg/providers"
-
-	"github.com/open-policy-agent/opa/rego"
-
+	"github.com/mitchellh/mapstructure"
 	"github.com/open-policy-agent/opa/ast"
+	"github.com/open-policy-agent/opa/rego"
+	"github.com/open-policy-agent/opa/util"
 )
 
 type StaticMetadata struct {
@@ -50,8 +45,16 @@ type InputOptions struct {
 }
 
 type Selector struct {
-	Type    string
-	Subtype string
+	Type     string
+	Subtypes []SubType
+}
+
+type SubType struct {
+	Group     string
+	Version   string
+	Kind      string
+	Namespace string
+	Service   string // only for cloud
 }
 
 func (m StaticMetadata) ToRule() scan.Rule {
@@ -361,8 +364,14 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 							selector.Type = string(types.SourceCloud)
 						}
 					}
-					if subType, ok := selectorMap["subtype"]; ok {
-						selector.Subtype = fmt.Sprintf("%s", subType)
+					if subType, ok := selectorMap["subtypes"].([]interface{}); ok {
+						for _, subT := range subType {
+							if st, ok := subT.(map[string]interface{}); ok {
+								s := SubType{}
+								mapstructure.Decode(st, &s)
+								selector.Subtypes = append(selector.Subtypes, s)
+							}
+						}
 					}
 				}
 				options.Selectors = append(options.Selectors, selector)

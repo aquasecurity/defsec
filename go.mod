@@ -78,6 +78,7 @@ require (
 require (
 	github.com/aquasecurity/trivy v0.34.0
 	github.com/aws/smithy-go v1.13.5
+	github.com/mitchellh/mapstructure v1.5.0
 	k8s.io/utils v0.0.0-20221107191617-1a15be271d1d
 )
 

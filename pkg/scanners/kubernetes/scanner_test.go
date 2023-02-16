@@ -629,15 +629,16 @@ func Test_checkPolicyIsApplicable(t *testing.T) {
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
 # custom:
 #   id: KSV001
-#   avd_id: AVD-KSV-0001
+#   avd_id: AVD-KSV-0999
 #   severity: MEDIUM
 #   short_code: no-self-privesc
 #   recommended_action: "Set 'set containers[].securityContext.allowPrivilegeEscalation' to 'false'."
 #   input:
 #     selector:
 #     - type: kubernetes
-#       subtype: Pod
-package builtin.kubernetes.KSV001
+#       subtypes:
+#         - kind: Pod
+package builtin.kubernetes.KSV999
 
 import data.lib.kubernetes
 import data.lib.utils
@@ -677,15 +678,16 @@ deny[res] {
 # - https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
 # custom:
 #   id: KSV110
-#   avd_id: AVD-KSV-0110
+#   avd_id: AVD-KSV-0888
 #   severity: LOW
 #   short_code: default-namespace-should-not-be-used
 #   recommended_action: "Ensure that namespaces are created to allow for appropriate segregation of Kubernetes resources and that all new resources are created in a specific namespace."
 #   input:
 #     selector:
 #     - type: kubernetes
-#       subtype: Namespace
-package builtin.kubernetes.KSV110
+#       subtypes:
+#         - kind: Namespace
+package builtin.kubernetes.KSV888
 
 import data.lib.kubernetes
 
@@ -720,6 +722,8 @@ spec:
 
 	scanner := NewScanner(
 		options.ScannerWithEmbeddedPolicies(true),
+		options.ScannerWithPolicyDirs("policies/"),
+		options.ScannerWithPolicyFilesystem(srcFS),
 	)
 	results, err := scanner.ScanFS(context.TODO(), srcFS, "test/KSV001")
 	require.NoError(t, err)

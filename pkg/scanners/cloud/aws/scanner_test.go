@@ -63,7 +63,7 @@ func Test_checkPolicyIsApplicable(t *testing.T) {
 # related_resources:
 # - http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.html
 # custom:
-#   avd_id: AVD-AWS-0180
+#   avd_id: AVD-AWS-0999
 #   provider: aws
 #   service: rds
 #   severity: HIGH
@@ -72,8 +72,9 @@ func Test_checkPolicyIsApplicable(t *testing.T) {
 #   input:
 #     selector:
 #     - type: cloud
-#       subtype: rds
-package builtin.aws.rds.aws0180
+#       subtypes:
+#         - service: rds
+package builtin.aws.rds.aws0999
 
 deny[res] {
 	instance := input.aws.rds.instances[_]
@@ -90,7 +91,7 @@ deny[res] {
 # related_resources:
 # - http://docs.aws.amazon.com/AmazonS3/latest/dev/Versioning.html#MultiFactorAuthenticationDelete
 # custom:
-#   avd_id: AVD-AWS-0323
+#   avd_id: AVD-AWS-0888
 #   provider: aws
 #   service: cloudtrail
 #   severity: HIGH
@@ -100,7 +101,7 @@ deny[res] {
 #     selector:
 #     - type: cloud
 #       subtype: cloudtrail
-package builtin.aws.cloudtrail.aws0323
+package builtin.aws.cloudtrail.aws0888
 
 deny[res] {
 	trail := input.aws.cloudtrail.trails[_]
@@ -115,6 +116,7 @@ deny[res] {
 	scanner := New(
 		options.ScannerWithEmbeddedPolicies(false),
 		options.ScannerWithPolicyFilesystem(srcFS),
+		options.ScannerWithRegoOnly(true),
 		options.ScannerWithPolicyDirs("policies/"))
 
 	st := state.State{AWS: aws.AWS{
@@ -130,11 +132,6 @@ deny[res] {
 
 	results, err := scanner.Scan(context.TODO(), &st)
 	require.NoError(t, err)
-
-	for i, r := range results {
-		if r.Rule().RegoPackage != "" {
-			failure := results.GetFailed()[i].Rule()
-			assert.Equal(t, "RDS Publicly Accessible", failure.Summary)
-		}
-	}
+	require.Equal(t, 1, len(results))
+	require.Equal(t, "RDS Publicly Accessible", results.GetFailed()[0].Rule().Summary)
 }
