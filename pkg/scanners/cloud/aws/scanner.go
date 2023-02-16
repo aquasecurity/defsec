@@ -188,7 +188,6 @@ func (s *Scanner) Scan(ctx context.Context, cloudState *state.State) (results sc
 	if err != nil {
 		return nil, err
 	}
-	// TODO(simar): Actual aws scan starts here...
 	regoResults, err := regoScanner.ScanInput(ctx, rego.Input{
 		Contents: cloudState.ToRego(),
 	})
