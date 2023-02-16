@@ -221,13 +221,6 @@ func isPolicyWithSubtype(sourceType types.Source) bool {
 		if sourceType == s {
 			return true
 		}
-		/*
-			for _, p := range []schemas.Schema{schemas.Cloud} {
-				if SchemaMap[sourceType] == p {
-					return true
-				}
-			}
-		*/
 	}
 	return false
 }
