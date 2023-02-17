@@ -194,12 +194,18 @@ func (a *adapter) adaptAlarm(alarm cwTypes.MetricAlarm) (*cloudwatch.Alarm, erro
 		metric = defsecTypes.String(*alarm.MetricName, metadata)
 	}
 
+	var actions []defsecTypes.StringValue
+	for _, action := range alarm.AlarmActions {
+		actions = append(actions, defsecTypes.String(action, metadata))
+	}
+
 	return &cloudwatch.Alarm{
-		Metadata:   metadata,
-		AlarmName:  name,
-		MetricName: metric,
-		Dimensions: dimensions,
-		Metrics:    metrics,
+		Metadata:    metadata,
+		AlarmName:   name,
+		MetricName:  metric,
+		Dimensions:  dimensions,
+		Metrics:     metrics,
+		AlarmAction: actions,
 	}, nil
 }
 
@@ -230,14 +236,29 @@ func (a *adapter) getMetricFilters(name *string, metadata defsecTypes.Metadata) 
 			name = defsecTypes.String(*mf.FilterName, metadata)
 		}
 
+		logname := defsecTypes.StringDefault("", metadata)
+		if mf.LogGroupName != nil {
+			logname = defsecTypes.String(*mf.LogGroupName, metadata)
+		}
+
+		var matrictrans []cloudwatch.MetricTransformation
+		for _, mt := range mf.MetricTransformations {
+			matrictrans = append(matrictrans, cloudwatch.MetricTransformation{
+				Metadata:   metadata,
+				MetricName: defsecTypes.String(*mt.MetricName, metadata),
+			})
+		}
+
 		pattern := defsecTypes.StringDefault("", metadata)
 		if mf.FilterPattern != nil {
 			pattern = defsecTypes.String(*mf.FilterPattern, metadata)
 		}
 		metricFilters = append(metricFilters, cloudwatch.MetricFilter{
-			Metadata:      metadata,
-			FilterName:    name,
-			FilterPattern: pattern,
+			Metadata:              metadata,
+			LogGroupName:          logname,
+			FilterName:            name,
+			FilterPattern:         pattern,
+			MetricTransformations: matrictrans,
 		})
 
 	}

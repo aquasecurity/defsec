@@ -9,5 +9,10 @@ import (
 func Adapt(cfFile parser.FileContext) config.Config {
 	return config.Config{
 		ConfigurationAggregrator: getConfigurationAggregator(cfFile),
+		Rules:                    getConfigRule(cfFile),
+		RecorderStatus:           nil,
+		ResourceCounts:           nil,
+		Recorders:                getRecorders(cfFile),
+		DeliveryChannels:         getDeliveryChannel(cfFile),
 	}
 }
