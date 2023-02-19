@@ -94,6 +94,7 @@ func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 
 func (s *Scanner) SetTraceWriter(io.Writer)        {}
 func (s *Scanner) SetPerResultTracingEnabled(bool) {}
+func (s *Scanner) SetData(map[string]any)          {}
 func (s *Scanner) SetDataDirs(...string)           {}
 func (s *Scanner) SetPolicyNamespaces(...string)   {}
 

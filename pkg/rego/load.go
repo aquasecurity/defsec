@@ -156,7 +156,7 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 	for namespace := range uniq {
 		namespaces = append(namespaces, namespace)
 	}
-	store, err := initStore(s.dataDirs, namespaces)
+	store, err := initStore(s.dataDirs, namespaces, s.data)
 	if err != nil {
 		return fmt.Errorf("unable to load data: %w", err)
 	}

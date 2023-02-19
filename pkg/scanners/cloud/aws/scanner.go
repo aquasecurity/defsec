@@ -91,6 +91,7 @@ func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
 
 func (s *Scanner) SetTraceWriter(writer io.Writer)   {}
 func (s *Scanner) SetPerResultTracingEnabled(b bool) {}
+func (s *Scanner) SetData(_ map[string]any)          {}
 func (s *Scanner) SetDataDirs(s2 ...string)          {}
 func (s *Scanner) SetPolicyNamespaces(s2 ...string)  {}
 func (s *Scanner) SetSkipRequiredCheck(b bool)       {}

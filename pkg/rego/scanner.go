@@ -30,6 +30,7 @@ type Scanner struct {
 	ruleNamespaces map[string]struct{}
 	policies       map[string]*ast.Module
 	store          storage.Store
+	data           map[string]any
 	dataDirs       []string
 	runtimeValues  *ast.Term
 	compiler       *ast.Compiler
@@ -90,6 +91,10 @@ func (s *Scanner) SetPerResultTracingEnabled(b bool) {
 
 func (s *Scanner) SetPolicyDirs(_ ...string) {
 	// NOTE: Policy dirs option not applicable for rego, policies are loaded on-demand by other scanners.
+}
+
+func (s *Scanner) SetData(data map[string]any) {
+	s.data = data
 }
 
 func (s *Scanner) SetDataDirs(dirs ...string) {

@@ -80,6 +80,7 @@ func (s *Scanner) SetPolicyDirs(dirs ...string) {
 	s.policyDirs = dirs
 }
 
+func (s *Scanner) SetData(map[string]any) {}
 func (s *Scanner) SetDataDirs(_ ...string) {
 	// handled by rego later - nothing to do for now...
 }

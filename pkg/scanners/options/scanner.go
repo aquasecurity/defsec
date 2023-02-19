@@ -12,6 +12,7 @@ type ConfigurableScanner interface {
 	SetTraceWriter(io.Writer)
 	SetPerResultTracingEnabled(bool)
 	SetPolicyDirs(...string)
+	SetData(map[string]any)
 	SetDataDirs(...string)
 	SetPolicyNamespaces(...string)
 	SetSkipRequiredCheck(bool)
@@ -72,6 +73,12 @@ func ScannerWithPerResultTracing(enabled bool) ScannerOption {
 func ScannerWithPolicyDirs(paths ...string) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetPolicyDirs(paths...)
+	}
+}
+
+func ScannerWithData(data map[string]any) ScannerOption {
+	return func(s ConfigurableScanner) {
+		s.SetData(data)
 	}
 }
 

@@ -84,6 +84,7 @@ func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
 
 func (s *Scanner) SetTraceWriter(_ io.Writer)        {}
 func (s *Scanner) SetPerResultTracingEnabled(_ bool) {}
+func (s *Scanner) SetData(map[string]any)            {}
 func (s *Scanner) SetDataDirs(_ ...string)           {}
 func (s *Scanner) SetPolicyNamespaces(_ ...string)   {}
 
