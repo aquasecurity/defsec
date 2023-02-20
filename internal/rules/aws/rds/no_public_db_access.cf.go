@@ -3,7 +3,7 @@ package rds
 var cloudFormationNoPublicDbAccessGoodExamples = []string{
 	`---
 AWSTemplateFormatVersion: 2010-09-09
-Description: Bad example
+Description: Good example
 Resources:
   Queue:
     Type: AWS::RDS::DBInstance
