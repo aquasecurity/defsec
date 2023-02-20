@@ -35,7 +35,7 @@ func initStore(dataFS fs.FS, dataPaths, namespaces []string) (storage.Store, err
 		return nil, fmt.Errorf("filter data paths: %w", err)
 	}
 
-	documents, err := loader.NewFileLoader().All(allDocumentPaths)
+	documents, err := loader.NewFileLoader().WithFS(dataFS).All(allDocumentPaths)
 	if err != nil {
 		return nil, fmt.Errorf("load documents: %w", err)
 	}
