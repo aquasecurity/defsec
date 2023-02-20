@@ -156,7 +156,13 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 	for namespace := range uniq {
 		namespaces = append(namespaces, namespace)
 	}
-	store, err := initStore(s.dataFS, s.dataDirs, namespaces)
+
+	dataFS := srcFS
+	if s.dataFS != nil {
+		s.debug.Log("Overriding filesystem for data!")
+		dataFS = s.dataFS
+	}
+	store, err := initStore(dataFS, s.dataDirs, namespaces)
 	if err != nil {
 		return fmt.Errorf("unable to load data: %w", err)
 	}
