@@ -83,6 +83,9 @@ func (s *Scanner) SetPolicyReaders(readers []io.Reader) {
 func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on
 }
+func (s *Scanner) SetDataFilesystem(_ fs.FS) {
+	// handled by rego when option is passed on
+}
 
 func (s *Scanner) SetUseEmbeddedPolicies(loadEmbedded bool) {
 	s.loadEmbedded = loadEmbedded
@@ -94,7 +97,6 @@ func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 
 func (s *Scanner) SetTraceWriter(io.Writer)        {}
 func (s *Scanner) SetPerResultTracingEnabled(bool) {}
-func (s *Scanner) SetData(map[string]any)          {}
 func (s *Scanner) SetDataDirs(...string)           {}
 func (s *Scanner) SetPolicyNamespaces(...string)   {}
 

@@ -12,12 +12,12 @@ type ConfigurableScanner interface {
 	SetTraceWriter(io.Writer)
 	SetPerResultTracingEnabled(bool)
 	SetPolicyDirs(...string)
-	SetData(map[string]any)
 	SetDataDirs(...string)
 	SetPolicyNamespaces(...string)
 	SetSkipRequiredCheck(bool)
 	SetPolicyReaders([]io.Reader)
 	SetPolicyFilesystem(fs.FS)
+	SetDataFilesystem(fs.FS)
 	SetUseEmbeddedPolicies(bool)
 	SetFrameworks(frameworks []framework.Framework)
 	SetSpec(spec string)
@@ -76,12 +76,6 @@ func ScannerWithPolicyDirs(paths ...string) ScannerOption {
 	}
 }
 
-func ScannerWithData(data map[string]any) ScannerOption {
-	return func(s ConfigurableScanner) {
-		s.SetData(data)
-	}
-}
-
 func ScannerWithDataDirs(paths ...string) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetDataDirs(paths...)
@@ -104,6 +98,12 @@ func ScannerWithSkipRequiredCheck(skip bool) ScannerOption {
 func ScannerWithPolicyFilesystem(f fs.FS) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetPolicyFilesystem(f)
+	}
+}
+
+func ScannerWithDataFilesystem(f fs.FS) ScannerOption {
+	return func(s ConfigurableScanner) {
+		s.SetDataFilesystem(f)
 	}
 }
 

@@ -2,6 +2,7 @@ package rego
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -11,10 +12,10 @@ import (
 )
 
 // initialise a store populated with OPA data files found in dataPaths
-func initStore(dataPaths, namespaces []string, data map[string]interface{}) (storage.Store, error) {
+func initStore(dataFS fs.FS, dataPaths, namespaces []string) (storage.Store, error) {
 	// FilteredPaths will recursively find all file paths that contain a valid document
 	// extension from the given list of data paths.
-	allDocumentPaths, err := loader.FilteredPaths(dataPaths, func(abspath string, info os.FileInfo, depth int) bool {
+	allDocumentPaths, err := loader.FilteredPathsFS(dataFS, dataPaths, func(abspath string, info os.FileInfo, depth int) bool {
 		if info.IsDir() {
 			return false
 		}
@@ -41,11 +42,6 @@ func initStore(dataPaths, namespaces []string, data map[string]interface{}) (sto
 
 	// pass all namespaces so that rego rule can refer to namespaces as data.namespaces
 	documents.Documents["namespaces"] = namespaces
-
-	// Merge passed data into loaded data
-	for k, v := range data {
-		documents.Documents[k] = v
-	}
 
 	store, err := documents.Store()
 	if err != nil {

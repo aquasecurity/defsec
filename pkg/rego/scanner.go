@@ -30,7 +30,6 @@ type Scanner struct {
 	ruleNamespaces map[string]struct{}
 	policies       map[string]*ast.Module
 	store          storage.Store
-	data           map[string]any
 	dataDirs       []string
 	runtimeValues  *ast.Term
 	compiler       *ast.Compiler
@@ -39,6 +38,7 @@ type Scanner struct {
 	tracePerResult bool
 	retriever      *MetadataRetriever
 	policyFS       fs.FS
+	dataFS         fs.FS
 	frameworks     []framework.Framework
 	spec           string
 	inputSchema    interface{} // unmarshalled into this from a json schema document
@@ -73,6 +73,10 @@ func (s *Scanner) SetPolicyFilesystem(fs fs.FS) {
 	s.policyFS = fs
 }
 
+func (s *Scanner) SetDataFilesystem(fs fs.FS) {
+	s.dataFS = fs
+}
+
 func (s *Scanner) SetPolicyReaders(_ []io.Reader) {
 	// NOTE: Policy readers option not applicable for rego, policies are loaded on-demand by other scanners.
 }
@@ -91,10 +95,6 @@ func (s *Scanner) SetPerResultTracingEnabled(b bool) {
 
 func (s *Scanner) SetPolicyDirs(_ ...string) {
 	// NOTE: Policy dirs option not applicable for rego, policies are loaded on-demand by other scanners.
-}
-
-func (s *Scanner) SetData(data map[string]any) {
-	s.data = data
 }
 
 func (s *Scanner) SetDataDirs(dirs ...string) {

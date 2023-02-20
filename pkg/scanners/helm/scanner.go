@@ -102,7 +102,6 @@ func (s *Scanner) SetPolicyDirs(dirs ...string) {
 	s.policyDirs = dirs
 }
 
-func (s *Scanner) SetData(map[string]any) {}
 func (s *Scanner) SetDataDirs(dirs ...string) {
 	s.dataDirs = dirs
 }
@@ -113,6 +112,9 @@ func (s *Scanner) SetPolicyNamespaces(namespaces ...string) {
 
 func (s *Scanner) SetPolicyFilesystem(policyFS fs.FS) {
 	s.policyFS = policyFS
+}
+
+func (s *Scanner) SetDataFilesystem(policyFS fs.FS) {
 }
 
 func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, path string) (scan.Results, error) {
