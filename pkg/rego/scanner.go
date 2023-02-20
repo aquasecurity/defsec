@@ -294,6 +294,7 @@ func checkSubtype(ii map[string]interface{}, provider string, subTypes []SubType
 				}
 			}
 		case string: // k8s
+			// TODO(simar): This logic probably needs to be revisited
 			if services == st.Group ||
 				services == st.Version ||
 				services == st.Kind {

@@ -15,7 +15,6 @@
 #   input:
 #     selector:
 #     - type: kubernetes
-#       subtype: Pod
 package builtin.kubernetes.KSV001
 
 import data.lib.kubernetes
