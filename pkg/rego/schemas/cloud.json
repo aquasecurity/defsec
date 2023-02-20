@@ -54,6 +54,10 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.athena.Athena"
         },
+        "cloudformation": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudformation.Cloudformation"
+        },
         "cloudfront": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.Cloudfront"
@@ -66,9 +70,21 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudwatch.CloudWatch"
         },
+        "codeartifact": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.codeartifact.Codeartifact"
+        },
         "codebuild": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.codebuild.CodeBuild"
+        },
+        "codepipeline": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.codepipeline.Codepipeline"
+        },
+        "cognito": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cognito.Cognito"
         },
         "config": {
           "type": "object",
@@ -488,6 +504,86 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cloudformation.Cloudformation": {
+      "type": "object",
+      "properties": {
+        "stacks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudformation.Stack"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cloudformation.Parameter": {
+      "type": "object",
+      "properties": {
+        "parameterkey": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cloudformation.Stack": {
+      "type": "object",
+      "properties": {
+        "enableterminationprotection": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
+        "notificationarns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+          }
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudformation.Parameter"
+          }
+        },
+        "rolearn": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "stackdriftstatus": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "stackevents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cloudformation.StackEvent"
+          }
+        },
+        "stackid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "stackname": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "stackstatus": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cloudformation.StackEvent": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.TimeValue"
+        }
+      }
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.cloudfront.CacheBehaviour": {
       "type": "object",
       "properties": {
@@ -752,6 +848,31 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.codeartifact.Codeartifact": {
+      "type": "object",
+      "properties": {
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.codeartifact.Domain"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.codeartifact.Domain": {
+      "type": "object",
+      "properties": {
+        "arn": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "encryptionkey": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.codebuild.ArtifactSettings": {
       "type": "object",
       "properties": {
@@ -786,6 +907,52 @@
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.codebuild.ArtifactSettings"
           }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.codepipeline.Codepipeline": {
+      "type": "object",
+      "properties": {
+        "pipelines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.codepipeline.Pipeline"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.codepipeline.Pipeline": {
+      "type": "object",
+      "properties": {
+        "encryptionkey": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cognito.Cognito": {
+      "type": "object",
+      "properties": {
+        "userpool": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.cognito.UserPool"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.cognito.UserPool": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "mfaconfiguration": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
