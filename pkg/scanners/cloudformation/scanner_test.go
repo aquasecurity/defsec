@@ -45,7 +45,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec", "subtype": "s3"}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "s3"}]}],
 }
 
 deny[res] {
