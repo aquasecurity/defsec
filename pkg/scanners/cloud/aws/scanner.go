@@ -85,6 +85,10 @@ func (s *Scanner) SetPolicyFilesystem(fs fs.FS) {
 	s.policyFS = fs
 }
 
+func (s *Scanner) SetDataFilesystem(fs fs.FS) {
+	s.policyFS = fs
+}
+
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
 	s.useEmbedded = b
 }

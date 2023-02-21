@@ -17,6 +17,7 @@ type ConfigurableScanner interface {
 	SetSkipRequiredCheck(bool)
 	SetPolicyReaders([]io.Reader)
 	SetPolicyFilesystem(fs.FS)
+	SetDataFilesystem(fs.FS)
 	SetUseEmbeddedPolicies(bool)
 	SetFrameworks(frameworks []framework.Framework)
 	SetSpec(spec string)
@@ -97,6 +98,12 @@ func ScannerWithSkipRequiredCheck(skip bool) ScannerOption {
 func ScannerWithPolicyFilesystem(f fs.FS) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetPolicyFilesystem(f)
+	}
+}
+
+func ScannerWithDataFilesystem(f fs.FS) ScannerOption {
+	return func(s ConfigurableScanner) {
+		s.SetDataFilesystem(f)
 	}
 }
 
