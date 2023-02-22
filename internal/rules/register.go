@@ -3,10 +3,10 @@ package rules
 import (
 	"sync"
 
-	"github.com/aquasecurity/defsec/internal/specs"
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/state"
+	"github.com/aquasecurity/defsec/rules/specs"
 	cs "github.com/aquasecurity/trivy/pkg/compliance/spec"
 	"gopkg.in/yaml.v3"
 )
