@@ -1,7 +1,7 @@
 package defsec.kubernetes.KSV107
 
 recommendedVersions_mock_data = {"batch/v1": {"Job": {
-	"deprecated_version": "v1.21",
+	"deprecation_version": "v1.21",
 	"replacement_version": "batch.v1.CronJobList",
 	"removed_version": "v1.25",
 	"ref": "https://github.com/kubernetes/kubernetes/tree/master/staging/src/k8s.io/api/batch/v1beta1/zz_generated.prerelease-lifecycle.go",
