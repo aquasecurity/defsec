@@ -92,9 +92,9 @@ func (a *adapter) adaptCluster(apiCluster types.Cluster) (*redshift.Cluster, err
 		output = nil
 	}
 
-	var logenabled bool
+	var loggingenabled bool
 	if output != nil {
-		logenabled = output.LoggingEnabled
+		loggingenabled = output.LoggingEnabled
 	}
 
 	var kmsKeyId string
@@ -122,7 +122,7 @@ func (a *adapter) adaptCluster(apiCluster types.Cluster) (*redshift.Cluster, err
 		VpcId:                            defsecTypes.String(*apiCluster.VpcId, metadata),
 		MasterUsername:                   defsecTypes.String(*apiCluster.MasterUsername, metadata),
 		AutomatedSnapshotRetentionPeriod: defsecTypes.Int(int(apiCluster.ManualSnapshotRetentionPeriod), metadata),
-		LoggingEnabled:                   defsecTypes.Bool(logenabled, metadata),
+		LoggingEnabled:                   defsecTypes.Bool(loggingenabled, metadata),
 		EndPoint: redshift.EndPoint{
 			Metadata: metadata,
 			Port:     defsecTypes.Int(port, metadata),
@@ -178,15 +178,15 @@ func (a *adapter) getReservedNodes() ([]redshift.ReservedNode, error) {
 
 	a.Tracker().SetServiceLabel("Discovering reserved nodes...")
 
-	var apinodes []types.ReservedNode
+	var apiReservednodes []types.ReservedNode
 	var input api.DescribeReservedNodesInput
 	for {
 		output, err := a.api.DescribeReservedNodes(a.Context(), &input)
 		if err != nil {
 			return nil, err
 		}
-		apinodes = append(apinodes, output.ReservedNodes...)
-		a.Tracker().SetTotalResources(len(apinodes))
+		apiReservednodes = append(apiReservednodes, output.ReservedNodes...)
+		a.Tracker().SetTotalResources(len(apiReservednodes))
 		if output.Marker == nil {
 			break
 		}
@@ -194,14 +194,14 @@ func (a *adapter) getReservedNodes() ([]redshift.ReservedNode, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting reserved node ...")
-	return concurrency.Adapt(apinodes, a.RootAdapter, a.adaptnode), nil
+	return concurrency.Adapt(apiReservednodes, a.RootAdapter, a.adaptnode), nil
 }
 
-func (a *adapter) adaptnode(apinode types.ReservedNode) (*redshift.ReservedNode, error) {
-	metadata := a.CreateMetadata(*apinode.ReservedNodeId)
+func (a *adapter) adaptnode(node types.ReservedNode) (*redshift.ReservedNode, error) {
+	metadata := a.CreateMetadata(*node.ReservedNodeId)
 	return &redshift.ReservedNode{
 		Metadata: metadata,
-		NodeType: defsecTypes.String(*apinode.NodeType, metadata),
+		NodeType: defsecTypes.String(*node.NodeType, metadata),
 	}, nil
 }
 
