@@ -9,11 +9,15 @@ type EKS struct {
 }
 
 type Cluster struct {
-	Metadata            defsecTypes.Metadata
-	Logging             Logging
-	Encryption          Encryption
-	PublicAccessEnabled defsecTypes.BoolValue
-	PublicAccessCIDRs   []defsecTypes.StringValue
+	Metadata             defsecTypes.Metadata
+	Version              defsecTypes.StringValue
+	PlatFormVersion      defsecTypes.StringValue
+	Logging              Logging
+	Encryption           Encryption
+	PublicAccessEnabled  defsecTypes.BoolValue
+	PrivateAccessEnabled defsecTypes.BoolValue
+	PublicAccessCIDRs    []defsecTypes.StringValue
+	SecurityGroupIDs     []defsecTypes.StringValue
 }
 
 type Logging struct {

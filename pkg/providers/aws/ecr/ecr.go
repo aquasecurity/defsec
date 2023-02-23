@@ -11,6 +11,9 @@ type ECR struct {
 
 type Repository struct {
 	Metadata           defsecTypes.Metadata
+	Name               defsecTypes.StringValue
+	Id                 defsecTypes.StringValue
+	Arn                defsecTypes.StringValue
 	ImageScanning      ImageScanning
 	ImageTagsImmutable defsecTypes.BoolValue
 	Policies           []iam.Policy

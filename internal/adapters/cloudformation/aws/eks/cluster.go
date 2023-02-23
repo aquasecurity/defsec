@@ -12,7 +12,9 @@ func getClusters(ctx parser.FileContext) (clusters []eks.Cluster) {
 
 	for _, r := range clusterResources {
 		cluster := eks.Cluster{
-			Metadata: r.Metadata(),
+			Metadata:        r.Metadata(),
+			Version:         r.GetStringProperty("Version"),
+			PlatFormVersion: defsecTypes.String("", r.Metadata()),
 			// Logging not supported for cloudformation https://github.com/aws/containers-roadmap/issues/242
 			Logging: eks.Logging{
 				Metadata:          r.Metadata(),
@@ -22,10 +24,11 @@ func getClusters(ctx parser.FileContext) (clusters []eks.Cluster) {
 				ControllerManager: defsecTypes.BoolUnresolvable(r.Metadata()),
 				Scheduler:         defsecTypes.BoolUnresolvable(r.Metadata()),
 			},
-			Encryption: getEncryptionConfig(r),
-			// endpoint protection not supported - https://github.com/aws/containers-roadmap/issues/242
-			PublicAccessEnabled: defsecTypes.BoolUnresolvable(r.Metadata()),
-			PublicAccessCIDRs:   nil,
+			Encryption:           getEncryptionConfig(r),
+			PublicAccessEnabled:  r.GetBoolProperty("ResourcesVpcConfig.EndpointPublicAccess"),
+			PrivateAccessEnabled: r.GetBoolProperty("ResourcesVpcConfig.EndpointPrivateAccess"),
+			PublicAccessCIDRs:    nil,
+			SecurityGroupIDs:     getSecurityGroupIds(r),
 		}
 
 		clusters = append(clusters, cluster)
@@ -53,4 +56,23 @@ func getEncryptionConfig(r *parser.Resource) eks.Encryption {
 	}
 
 	return encryption
+}
+
+func getSecurityGroupIds(r *parser.Resource) []defsecTypes.StringValue {
+
+	var securityGroupIDs []defsecTypes.StringValue
+
+	prop := r.GetProperty("ResourcesVpcConfig")
+	if prop.IsNotNil() {
+		securityGroupIDsprop := prop.GetProperty("SecurityGroupIds")
+
+		if securityGroupIDsprop.IsNil() || securityGroupIDsprop.IsNotList() {
+			return securityGroupIDs
+		}
+
+		for _, id := range securityGroupIDsprop.AsList() {
+			securityGroupIDs = append(securityGroupIDs, id.AsStringValue())
+		}
+	}
+	return securityGroupIDs
 }

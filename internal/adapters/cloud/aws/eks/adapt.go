@@ -76,12 +76,17 @@ func (a *adapter) adaptCluster(name string) (*eks.Cluster, error) {
 
 	metadata := a.CreateMetadataFromARN(*output.Cluster.Arn)
 
-	var publicAccess bool
+	var publicAccess, privateAccess bool
 	var publicCidrs []defsecTypes.StringValue
+	var securitygroupIds []defsecTypes.StringValue
 	if output.Cluster.ResourcesVpcConfig != nil {
 		publicAccess = output.Cluster.ResourcesVpcConfig.EndpointPublicAccess
+		privateAccess = output.Cluster.ResourcesVpcConfig.EndpointPrivateAccess
 		for _, cidr := range output.Cluster.ResourcesVpcConfig.PublicAccessCidrs {
 			publicCidrs = append(publicCidrs, defsecTypes.String(cidr, metadata))
+		}
+		for _, ids := range output.Cluster.ResourcesVpcConfig.SecurityGroupIds {
+			securitygroupIds = append(securitygroupIds, defsecTypes.String(ids, metadata))
 		}
 	}
 
@@ -98,6 +103,15 @@ func (a *adapter) adaptCluster(name string) (*eks.Cluster, error) {
 				}
 			}
 		}
+	}
+
+	var version, platformversion string
+	if output.Cluster.Version != nil {
+		version = *output.Cluster.Version
+	}
+
+	if output.Cluster.PlatformVersion != nil {
+		platformversion = *output.Cluster.PlatformVersion
 	}
 
 	var logAPI, logAudit, logAuth, logCM, logSched bool
@@ -124,7 +138,9 @@ func (a *adapter) adaptCluster(name string) (*eks.Cluster, error) {
 	}
 
 	return &eks.Cluster{
-		Metadata: metadata,
+		Metadata:        metadata,
+		Version:         defsecTypes.String(version, metadata),
+		PlatFormVersion: defsecTypes.String(platformversion, metadata),
 		Logging: eks.Logging{
 			Metadata:          metadata,
 			API:               defsecTypes.Bool(logAPI, metadata),
@@ -138,7 +154,9 @@ func (a *adapter) adaptCluster(name string) (*eks.Cluster, error) {
 			Secrets:  defsecTypes.Bool(secretsEncrypted, metadata),
 			KMSKeyID: defsecTypes.String(encryptionKeyARN, metadata),
 		},
-		PublicAccessEnabled: defsecTypes.Bool(publicAccess, metadata),
-		PublicAccessCIDRs:   publicCidrs,
+		PublicAccessEnabled:  defsecTypes.Bool(publicAccess, metadata),
+		PrivateAccessEnabled: defsecTypes.Bool(privateAccess, metadata),
+		PublicAccessCIDRs:    publicCidrs,
+		SecurityGroupIDs:     securitygroupIds,
 	}, nil
 }

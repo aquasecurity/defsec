@@ -80,6 +80,39 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterSummary) (*emr.Cluster, e
 		return nil, err
 	}
 
+	var masterinstance emr.Instance
+	var coreinstance emr.Instance
+	group, err := a.api.ListInstanceGroups(a.Context(), &api.ListInstanceGroupsInput{
+		ClusterId: apiCluster.Id,
+	})
+	if err != nil {
+		for _, g := range group.InstanceGroups {
+
+			masterinstancetype := defsecTypes.StringDefault("", metadata)
+			masterinstancecount := defsecTypes.IntDefault(1, metadata)
+			if g.InstanceGroupType == types.InstanceGroupTypeMaster {
+				masterinstancetype = defsecTypes.String(*g.InstanceType, metadata)
+				masterinstancecount = defsecTypes.Int(int(*g.RunningInstanceCount), metadata)
+			}
+			masterinstance = emr.Instance{
+				Metadata:      metadata,
+				InstanceType:  masterinstancetype,
+				InstanceCount: masterinstancecount,
+			}
+			coreinstancetype := defsecTypes.StringDefault("", metadata)
+			coreinstancecount := defsecTypes.IntDefault(1, metadata)
+			if g.InstanceGroupType == types.InstanceGroupTypeCore {
+				coreinstancetype = defsecTypes.String(*g.InstanceType, metadata)
+				coreinstancecount = defsecTypes.Int(int(*g.RunningInstanceCount), metadata)
+			}
+			coreinstance = emr.Instance{
+				Metadata:      metadata,
+				InstanceType:  coreinstancetype,
+				InstanceCount: coreinstancecount,
+			}
+		}
+	}
+
 	name := defsecTypes.StringDefault("", metadata)
 	if apiCluster.Name != nil {
 		name = defsecTypes.String(*apiCluster.Name, metadata)
@@ -95,13 +128,25 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterSummary) (*emr.Cluster, e
 		serviceRole = defsecTypes.String(*output.Cluster.ServiceRole, metadata)
 	}
 
+	var ec2SubnetId string
+	if output.Cluster.Ec2InstanceAttributes != nil {
+		ec2SubnetId = *output.Cluster.Ec2InstanceAttributes.Ec2SubnetId
+	}
+
 	return &emr.Cluster{
-		Metadata: metadata,
+		Metadata:    metadata,
+		EC2SubnetId: defsecTypes.String(ec2SubnetId, metadata),
+		LogUri:      defsecTypes.String(*output.Cluster.LogUri, metadata),
 		Settings: emr.ClusterSettings{
 			Metadata:     metadata,
 			Name:         name,
 			ReleaseLabel: releaseLabel,
 			ServiceRole:  serviceRole,
+		},
+		InstanceGroup: emr.InstanceGroup{
+			Metadata:            metadata,
+			CoreInstanceGroup:   coreinstance,
+			MasterInstanceGroup: masterinstance,
 		},
 	}, nil
 }
