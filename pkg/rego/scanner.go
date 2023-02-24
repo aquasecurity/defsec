@@ -289,7 +289,7 @@ func checkSubtype(ii map[string]interface{}, provider string, subTypes []SubType
 		switch services := ii[provider].(type) {
 		case map[string]interface{}: // cloud
 			for service := range services {
-				if service == st.Service {
+				if (service == st.Service) && (st.Provider == provider) {
 					return true
 				}
 			}

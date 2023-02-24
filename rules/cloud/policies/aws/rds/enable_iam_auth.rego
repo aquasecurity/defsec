@@ -18,6 +18,7 @@
 #     - type: cloud
 #       subtypes:
 #         - service: rds
+#           provider: aws
 package builtin.aws.rds.aws0176
 
 deny[res] {

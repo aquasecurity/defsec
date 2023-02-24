@@ -302,7 +302,8 @@ resource "aws_s3_bucket" "my-bucket" {
 #     selector:
 #     - type: cloud
 #       subtypes:
-#       - service: s3 
+#       - service: s3
+#         provider: aws
 package %s
 
 deny[cause] {
@@ -516,6 +517,7 @@ resource "aws_sqs_queue_policy" "bad_example" {
 #     - type: cloud
 #       subtypes: 
 #         - service: sqs
+#           provider: aws
 package defsec.abcdefg
 
 
@@ -850,6 +852,7 @@ resource "aws_apigatewayv2_stage" "bad_example" {
 #     - type: cloud
 #       subtypes:
 #         - service: apigateway
+#           provider: aws
 package builtin.cloud.AWS0001
 
 deny[res] {

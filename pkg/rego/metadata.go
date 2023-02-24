@@ -55,6 +55,7 @@ type SubType struct {
 	Kind      string
 	Namespace string
 	Service   string // only for cloud
+	Provider  string // only for cloud
 }
 
 func (m StaticMetadata) ToRule() scan.Rule {

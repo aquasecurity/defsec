@@ -73,7 +73,8 @@ func Test_checkPolicyIsApplicable(t *testing.T) {
 #     selector:
 #     - type: cloud
 #       subtypes:
-#         - service: rds
+#         - provider: aws
+#           service: rds
 package builtin.aws.rds.aws0999
 
 deny[res] {
@@ -100,7 +101,9 @@ deny[res] {
 #   input:
 #     selector:
 #     - type: cloud
-#       subtype: cloudtrail
+#       subtypes: 
+#         - provider: aws 
+#           service: cloudtrail
 package builtin.aws.cloudtrail.aws0888
 
 deny[res] {

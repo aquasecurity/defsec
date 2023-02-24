@@ -18,6 +18,7 @@
 #     - type: cloud
 #       subtypes:
 #         - service: rds
+#           provider: aws
 #   terraform:
 #       good_examples: "rules/cloud/policies/aws/rds/no_public_db_access.tf.go"
 #   cloud_formation:
