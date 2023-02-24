@@ -181,7 +181,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec", "subtypes": [{"service": "s3"}]}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "s3", "provider": "aws"}]}],
 }
 
 deny[cause] {
@@ -394,7 +394,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec", "subtypes": [{"service": "s3"}]}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "s3", "provider": "aws"}]}],
 }
 
 deny[cause] {
@@ -448,7 +448,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec", "subtypes": [{"service": "s3"}]}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "s3", "provider": "aws"}]}],
 }
 
 deny[res] {

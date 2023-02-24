@@ -6,6 +6,7 @@ import (
 
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/providers/aws"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/rds"
 	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -53,8 +54,9 @@ func TestScanner_GetRegisteredRules(t *testing.T) {
 }
 
 func Test_checkPolicyIsApplicable(t *testing.T) {
-	srcFS := testutil.CreateFS(t, map[string]string{
-		"policies/rds_policy.rego": `# METADATA
+	t.Run("single cloud", func(t *testing.T) {
+		srcFS := testutil.CreateFS(t, map[string]string{
+			"policies/rds_policy.rego": `# METADATA
 # title: "RDS Publicly Accessible"
 # description: "Ensures RDS instances are not launched into the public cloud."
 # scope: package
@@ -83,7 +85,7 @@ deny[res] {
 	res := result.new("Instance has Public Access enabled", instance.publicaccess)
 }
 `,
-		"policies/cloudtrail_policy.rego": `# METADATA
+			"policies/cloudtrail_policy.rego": `# METADATA
 # title: "CloudTrail Bucket Delete Policy"
 # description: "Ensures CloudTrail logging bucket has a policy to prevent deletion of logs without an MFA token"
 # scope: package
@@ -115,26 +117,79 @@ deny[res] {
 	res := result.new("Bucket has MFA delete disabled", bucket.name)
 }
 `,
-	})
-	scanner := New(
-		options.ScannerWithEmbeddedPolicies(false),
-		options.ScannerWithPolicyFilesystem(srcFS),
-		options.ScannerWithRegoOnly(true),
-		options.ScannerWithPolicyDirs("policies/"))
+		})
+		scanner := New(
+			options.ScannerWithEmbeddedPolicies(false),
+			options.ScannerWithPolicyFilesystem(srcFS),
+			options.ScannerWithRegoOnly(true),
+			options.ScannerWithPolicyDirs("policies/"))
 
-	st := state.State{AWS: aws.AWS{
-		RDS: rds.RDS{
-			Instances: []rds.Instance{
-				{Metadata: defsecTypes.Metadata{},
-					PublicAccess: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+		st := state.State{AWS: aws.AWS{
+			RDS: rds.RDS{
+				Instances: []rds.Instance{
+					{Metadata: defsecTypes.Metadata{},
+						PublicAccess: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					},
 				},
 			},
-		},
-		// note: there is no CloudTrail resource in our AWS state (so we expect no results for it)
-	}}
+			// note: there is no CloudTrail resource in our AWS state (so we expect no results for it)
+		}}
 
-	results, err := scanner.Scan(context.TODO(), &st)
-	require.NoError(t, err)
-	require.Equal(t, 1, len(results))
-	require.Equal(t, "RDS Publicly Accessible", results.GetFailed()[0].Rule().Summary)
+		results, err := scanner.Scan(context.TODO(), &st)
+		require.NoError(t, err)
+		require.Equal(t, 1, len(results))
+		require.Equal(t, "RDS Publicly Accessible", results.GetFailed()[0].Rule().Summary)
+	})
+
+	t.Run("multi cloud with similarly named services", func(t *testing.T) {
+		srcFS := testutil.CreateFS(t, map[string]string{
+			"policies/azure_iam_policy.rego": `# METADATA
+# title: "Azure IAM Policy"
+# custom:
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#         - provider: azure 
+#           service: iam 
+package builtin.azure.iam.iam1234
+
+deny[res] {
+	res := true
+}
+`,
+			"policies/aws_iam_policy.rego": `# METADATA
+# title: "AWS IAM Policy"
+# custom:
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#         - provider: aws 
+#           service: iam 
+package builtin.aws.iam.iam5678
+
+deny[res] {
+	res := true
+}
+`,
+		})
+		scanner := New(
+			options.ScannerWithEmbeddedPolicies(false),
+			options.ScannerWithPolicyFilesystem(srcFS),
+			options.ScannerWithRegoOnly(true),
+			options.ScannerWithPolicyDirs("policies/"))
+
+		st := state.State{AWS: aws.AWS{
+			IAM: iam.IAM{
+				PasswordPolicy: iam.PasswordPolicy{MinimumLength: defsecTypes.Int(1, defsecTypes.NewTestMetadata())},
+			},
+			// note: there is no Azure IAM in our cloud state (so we expect no results for it)
+		}}
+
+		results, err := scanner.Scan(context.TODO(), &st)
+		require.NoError(t, err)
+		require.Equal(t, 1, len(results))
+		require.Equal(t, "AWS IAM Policy", results.GetFailed()[0].Rule().Summary)
+	})
 }
