@@ -360,7 +360,7 @@ deny[res] {
 				},
 				Azure: azure.Azure{
 					Authorization: authorization.Authorization{
-						[]authorization.RoleDefinition{{
+						RoleDefinitions: []authorization.RoleDefinition{{
 							Metadata: defsecTypes.NewTestMetadata(),
 							Permissions: []authorization.Permission{
 								{

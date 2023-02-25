@@ -615,7 +615,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec", "subtypes": [{"service": "ecs"}]}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "ecs", "provider": "aws"}]}],
 }
 
 deny[res] {
