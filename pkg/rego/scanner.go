@@ -285,6 +285,10 @@ func isPolicyWithSubtype(sourceType types.Source) bool {
 }
 
 func checkSubtype(ii map[string]interface{}, provider string, subTypes []SubType) bool {
+	if len(subTypes) == 0 { // policy always applies if no subtypes
+		return true
+	}
+
 	for _, st := range subTypes {
 		switch services := ii[provider].(type) {
 		case map[string]interface{}: // cloud
@@ -310,7 +314,7 @@ func isPolicyApplicable(staticMetadata *StaticMetadata, inputs ...Input) bool {
 		if ii, ok := input.Contents.(map[string]interface{}); ok {
 			for provider := range ii {
 				// TODO(simar): Add other providers
-				if !strings.Contains(strings.Join([]string{"kind", "aws"}, ","), provider) {
+				if !strings.Contains(strings.Join([]string{"kind", "aws", "azure"}, ","), provider) {
 					continue
 				}
 
