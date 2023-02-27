@@ -59,6 +59,10 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 		return err
 	}
 
+	if err := a.adaptCredentialReport(state); err != nil {
+		return err
+	}
+
 	return nil
 }
 
