@@ -51,9 +51,12 @@ func mapRoles(modules terraform.Modules) (map[string]iam.Role, map[string]struct
 	roleMap := make(map[string]iam.Role)
 	for _, roleBlock := range modules.GetResourcesByType("aws_iam_role") {
 		role := iam.Role{
-			Metadata: roleBlock.GetMetadata(),
-			Name:     roleBlock.GetAttribute("name").AsStringValueOrDefault("", roleBlock),
-			Policies: nil,
+			Metadata:                 roleBlock.GetMetadata(),
+			Name:                     roleBlock.GetAttribute("name").AsStringValueOrDefault("", roleBlock),
+			Tags:                     gettags(roleBlock),
+			LastUsedDate:             defsecTypes.TimeUnresolvable(roleBlock.GetMetadata()),
+			AssumeRolePolicyDocument: roleBlock.GetAttribute("assume_role_policy").AsStringValueOrDefault("", roleBlock),
+			Policies:                 nil,
 		}
 		if inlineBlock := roleBlock.GetBlock("inline_policy"); inlineBlock.IsNotNil() {
 			policy := iam.Policy{
