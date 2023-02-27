@@ -1947,6 +1947,13 @@
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iam.User"
           }
+        },
+        "virtualmfadevices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iam.VirtualMfaDevice"
+          }
         }
       }
     },
@@ -1962,6 +1969,10 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.iam.PasswordPolicy": {
       "type": "object",
       "properties": {
+        "allowuserstochangepassword": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
         "expirepasswords": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
@@ -2003,6 +2014,10 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
+        "defaultversionid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "document": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iam.Document"
@@ -2016,6 +2031,14 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.iam.Role": {
       "type": "object",
       "properties": {
+        "assumerolepolicydocument": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "lastuseddate": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.TimeValue"
+        },
         "name": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
@@ -2026,6 +2049,30 @@
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iam.Policy"
           }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iam.Tag"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.iam.SSHPublicKey": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "status": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "uploaddate": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.TimeValue"
         }
       }
     },
@@ -2035,8 +2082,15 @@
         "expiration": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.TimeValue"
+        },
+        "name": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.iam.Tag": {
+      "type": "object"
     },
     "github.com.aquasecurity.defsec.pkg.providers.aws.iam.User": {
       "type": "object",
@@ -2076,6 +2130,29 @@
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iam.Policy"
           }
+        },
+        "sshpublickeys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iam.SSHPublicKey"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iam.Tag"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.iam.VirtualMfaDevice": {
+      "type": "object",
+      "properties": {
+        "serialnumber": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },

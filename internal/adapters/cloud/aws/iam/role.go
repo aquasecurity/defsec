@@ -76,9 +76,32 @@ func (a *adapter) adaptRole(apiRole iamtypes.Role) (*iam.Role, error) {
 
 	metadata := a.CreateMetadataFromARN(*apiRole.Arn)
 
+	var tags []iam.Tag
+	output, err := a.api.GetRole(a.Context(), &iamapi.GetRoleInput{
+		RoleName: apiRole.RoleName,
+	})
+	if err != nil {
+		output = nil
+	}
+	if output != nil {
+		for range output.Role.Tags {
+			tags = append(tags, iam.Tag{
+				Metadata: metadata,
+			})
+		}
+	}
+
+	var lastuseddate types.TimeValue
+	if output.Role.RoleLastUsed != nil {
+		lastuseddate = types.Time(*output.Role.RoleLastUsed.LastUsedDate, metadata)
+	}
+
 	return &iam.Role{
-		Metadata: metadata,
-		Name:     types.String(*apiRole.RoleName, metadata),
-		Policies: policies,
+		Metadata:                 metadata,
+		Name:                     types.String(*apiRole.RoleName, metadata),
+		Tags:                     tags,
+		LastUsedDate:             lastuseddate,
+		AssumeRolePolicyDocument: types.String(*apiRole.AssumeRolePolicyDocument, metadata),
+		Policies:                 policies,
 	}, nil
 }

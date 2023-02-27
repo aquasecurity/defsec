@@ -39,9 +39,12 @@ func getRoles(ctx parser.FileContext) (roles []iam.Role) {
 		roleName := roleResource.GetStringProperty("RoleName")
 
 		roles = append(roles, iam.Role{
-			Metadata: roleResource.Metadata(),
-			Name:     roleName,
-			Policies: getPoliciesDocs(policyProp),
+			Metadata:                 roleResource.Metadata(),
+			Name:                     roleName,
+			Policies:                 getPoliciesDocs(policyProp),
+			Tags:                     getTags(roleResource),
+			LastUsedDate:             defsecTypes.TimeUnresolvable(roleResource.Metadata()),
+			AssumeRolePolicyDocument: roleResource.GetStringProperty("AssumeRolePolicyDocument"),
 		})
 	}
 	return roles
@@ -58,6 +61,7 @@ func getUsers(ctx parser.FileContext) (users []iam.User) {
 			LastAccess: defsecTypes.TimeUnresolvable(userResource.Metadata()),
 			Policies:   getPoliciesDocs(policyProp),
 			AccessKeys: getAccessKeys(ctx, userName.Value()),
+			Tags:       getTags(userResource),
 		})
 	}
 	return users
@@ -122,4 +126,35 @@ func getPoliciesDocs(policiesProp *parser.Property) []iam.Policy {
 		})
 	}
 	return policies
+}
+
+func getServerCertificates(ctx parser.FileContext) []iam.ServerCertificate {
+	var certs []iam.ServerCertificate
+
+	certResources := ctx.GetResourcesByType("")
+	for _, r := range certResources {
+		certs = append(certs, iam.ServerCertificate{
+			Metadata:   r.Metadata(),
+			Name:       r.GetStringProperty("ServerCertificateName"),
+			Expiration: defsecTypes.TimeUnresolvable(r.Metadata()),
+		})
+	}
+	return certs
+}
+
+func getTags(resource *parser.Resource) []iam.Tag {
+
+	var tags []iam.Tag
+
+	tagList := resource.GetProperty("Tags")
+	if tagList.IsNil() || tagList.IsNotList() {
+		return tags
+	}
+
+	for _, t := range tagList.AsList() {
+		tags = append(tags, iam.Tag{
+			Metadata: t.Metadata(),
+		})
+	}
+	return tags
 }
