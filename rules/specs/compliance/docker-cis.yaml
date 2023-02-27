@@ -27,7 +27,7 @@ spec:
       name: Ensure images are scanned and rebuilt to include security patches
       description: 'Images should be scanned "frequently" for any vulnerabilities. Rebuild the images to include patches and then instantiate new containers from it.'
       checks:
-        - id: VULN-CRITICAL # special ID for filtering vulnerabilties
+        - id: VULN-CRITICAL # special ID for filtering vulnerabilities
       severity: 'CRITICAL'
     - id: '4.5'
       name: Ensure Content trust for Docker is Enabled (Manual)
@@ -61,6 +61,7 @@ spec:
       name: Ensure secrets are not stored in Dockerfiles (Manual)
       description: 'Do not store any secrets in Dockerfiles.'
       checks:
+        - id: SECRET-CRITICAL # special ID for filtering secrets
       severity: 'CRITICAL'
     - id: '4.11'
       name: Ensure verified packages are only Installed (Manual)
