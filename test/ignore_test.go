@@ -448,7 +448,7 @@ resource "bad" "my-rule" {
 }
 
 func Test_TrivyIgnoreIgnoreWithExpiryAndWorkspaceAndWorkspaceSupplied(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
+	reg := rules.Register(exampleRule, nil)
 	defer rules.Deregister(reg)
 
 	results := scanHCLWithWorkspace(t, `
@@ -460,7 +460,7 @@ resource "bad" "my-rule" {
 }
 
 func Test_TrivyIgnoreIgnoreWithExpiryAndWorkspaceButWrongWorkspaceSupplied(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
+	reg := rules.Register(exampleRule, nil)
 	defer rules.Deregister(reg)
 
 	results := scanHCLWithWorkspace(t, `
@@ -473,7 +473,7 @@ resource "bad" "my-rule" {
 }
 
 func Test_TrivyIgnoreWithAliasCodeStillIgnored(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
+	reg := rules.Register(exampleRule, nil)
 	defer rules.Deregister(reg)
 
 	results := scanHCLWithWorkspace(t, `
