@@ -36,118 +36,64 @@ var exampleTrivyRule = scan.Rule{
 }
 
 func Test_TrivyIgnoreAll(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
 
-	results := scanHCL(t, `
+	var testCases = []struct {
+		name         string
+		inputOptions string
+		assertLength int
+	}{
+		{name: "TrivyIgnoreAll", inputOptions: `
 resource "bad" "my-rule" {
     secure = false // trivy:ignore:*
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-
-}
-
-func Test_TrivyIgnoreLineAboveTheBlock(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "TrivyIgnoreLineAboveTheBlock", inputOptions: `
 // trivy:ignore:*
 resource "bad" "my-rule" {
    secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreLineAboveTheBlockMatchingParamBool(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "TrivyIgnoreLineAboveTheBlockMatchingParamBool", inputOptions: `
 // trivy:ignore:*[secure=false]
 resource "bad" "my-rule" {
    secure = false
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreLineAboveTheBlockNotMatchingParamBool(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "TrivyIgnoreLineAboveTheBlockNotMatchingParamBool", inputOptions: `
 // trivy:ignore:*[secure=true]
 resource "bad" "my-rule" {
    secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_TrivyIgnoreLineAboveTheBlockMatchingParamString(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 1},
+		{name: "TrivyIgnoreLineAboveTheBlockMatchingParamString", inputOptions: `
 // trivy:ignore:*[name=myrule]
 resource "bad" "my-rule" {
     name = "myrule"
     secure = false
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreLineAboveTheBlockNotMatchingParamString(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "TrivyIgnoreLineAboveTheBlockNotMatchingParamString", inputOptions: `
 // trivy:ignore:*[name=myrule2]
 resource "bad" "my-rule" {
     name = "myrule"
     secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_TrivyIgnoreLineAboveTheBlockMatchingParamInt(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 1},
+		{name: "TrivyIgnoreLineAboveTheBlockMatchingParamInt", inputOptions: `
 // trivy:ignore:*[port=123]
 resource "bad" "my-rule" {
    secure = false
    port = 123
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreLineAboveTheBlockNotMatchingParamInt(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "TrivyIgnoreLineAboveTheBlockNotMatchingParamInt", inputOptions: `
 // trivy:ignore:*[port=456]
 resource "bad" "my-rule" {
    secure = false 
    port = 123
 }
-`)
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_TrivyIgnoreLineStackedAboveTheBlock(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 1},
+		{name: "TrivyIgnoreLineStackedAboveTheBlock", inputOptions: `
 // trivy:ignore:*
 // trivy:ignore:a
 // trivy:ignore:b
@@ -156,15 +102,8 @@ func Test_TrivyIgnoreLineStackedAboveTheBlock(t *testing.T) {
 resource "bad" "my-rule" {
    secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreLineStackedAboveTheBlockWithoutMatch(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "TrivyIgnoreLineStackedAboveTheBlockWithoutMatch", inputOptions: `
 #trivy:ignore:*
 
 #trivy:ignore:x
@@ -175,15 +114,8 @@ func Test_TrivyIgnoreLineStackedAboveTheBlockWithoutMatch(t *testing.T) {
 resource "bad" "my-rule" {
    secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_TrivyIgnoreLineStackedAboveTheBlockWithHashesWithoutSpaces(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 1},
+		{name: "TrivyIgnoreLineStackedAboveTheBlockWithHashesWithoutSpaces", inputOptions: `
 #trivy:ignore:*
 #trivy:ignore:a
 #trivy:ignore:b
@@ -192,15 +124,8 @@ func Test_TrivyIgnoreLineStackedAboveTheBlockWithHashesWithoutSpaces(t *testing.
 resource "bad" "my-rule" {
    secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreLineStackedAboveTheBlockWithoutSpaces(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "TrivyIgnoreLineStackedAboveTheBlockWithoutSpaces", inputOptions: `
 //trivy:ignore:*
 //trivy:ignore:a
 //trivy:ignore:b
@@ -209,138 +134,40 @@ func Test_TrivyIgnoreLineStackedAboveTheBlockWithoutSpaces(t *testing.T) {
 resource "bad" "my-rule" {
    secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreLineAboveTheLine(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "TrivyIgnoreLineAboveTheLine", inputOptions: `
 resource "bad" "my-rule" {
 	# trivy:ignore:aws-service-abc123
     secure = false
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreWithExpDateIfDateBreachedThenDontIgnore(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "TrivyIgnoreWithExpDateIfDateBreachedThenDontIgnore", inputOptions: `
 resource "bad" "my-rule" {
     secure = false # trivy:ignore:aws-service-abc123:exp:2000-01-02
 }
-`)
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_TrivyIgnoreWithExpDateIfDateNotBreachedThenIgnoreIgnore(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 1},
+		{name: "TrivyIgnoreWithExpDateIfDateNotBreachedThenIgnoreIgnore", inputOptions: `
 resource "bad" "my-rule" {
     secure = false # trivy:ignore:aws-service-abc123:exp:2221-01-02
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreWithExpDateIfDateInvalidThenDropTheIgnore(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "TrivyIgnoreWithExpDateIfDateInvalidThenDropTheIgnore", inputOptions: `
 resource "bad" "my-rule" {
    secure = false # trivy:ignore:aws-service-abc123:exp:2221-13-02
 }
-`)
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_TrivyIgnoreAboveResourceBlockWithExpDateIfDateNotBreachedThenIgnoreIgnore(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 1},
+		{name: "TrivyIgnoreAboveResourceBlockWithExpDateIfDateNotBreachedThenIgnoreIgnore", inputOptions: `
 #trivy:ignore:aws-service-abc123:exp:2221-01-02
 resource "bad" "my-rule" {
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreAboveResourceBlockWithExpDateAndMultipleIgnoresIfDateNotBreachedThenIgnoreIgnore(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "TrivyIgnoreAboveResourceBlockWithExpDateAndMultipleIgnoresIfDateNotBreachedThenIgnoreIgnore", inputOptions: `
 # trivy:ignore:aws-service-abc123:exp:2221-01-02
 resource "bad" "my-rule" {
 	
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreIgnoreWithExpiryAndWorkspaceAndWorkspaceSupplied(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCLWithWorkspace(t, `
-# trivy:ignore:aws-service-abc123:exp:2221-01-02:ws:testworkspace
-resource "bad" "my-rule" {
-}
-`, "testworkspace")
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreInline(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, fmt.Sprintf(`
-	resource "bad" "sample" {
-		  secure = false # trivy:ignore:%s
-	}
-	  `, exampleTrivyRule.LongID()))
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreIgnoreWithExpiryAndWorkspaceButWrongWorkspaceSupplied(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCLWithWorkspace(t, `
-# trivy:ignore:aws-service-abc123:exp:2221-01-02:ws:otherworkspace
-resource "bad" "my-rule" {
-	
-}
-`, "testworkspace")
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_TrivyIgnoreWithAliasCodeStillIgnored(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCLWithWorkspace(t, `
-# trivy:ignore:aws-other-abc123
-resource "bad" "my-rule" {
-	
-}
-`, "testworkspace")
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_TrivyIgnoreForImpliedIAMResource(t *testing.T) {
-	reg := rules.Register(exampleTrivyRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "TrivyIgnoreForImpliedIAMResource", inputOptions: `
 terraform {
 required_version = "~> 1.1.6"
 
@@ -383,6 +210,65 @@ actions = [
 resources = ["*"] # trivy:ignore:aws-iam-enforce-mfa
 }
 }
-`)
+`, assertLength: 0}}
+
+	reg := rules.Register(exampleTrivyRule, nil)
+	defer rules.Deregister(reg)
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			results := scanHCL(t, tc.inputOptions)
+			assert.Len(t, results.GetFailed(), tc.assertLength)
+		})
+	}
+}
+
+func Test_TrivyIgnoreIgnoreWithExpiryAndWorkspaceAndWorkspaceSupplied(t *testing.T) {
+	reg := rules.Register(exampleTrivyRule, nil)
+	defer rules.Deregister(reg)
+
+	results := scanHCLWithWorkspace(t, `
+# trivy:ignore:aws-service-abc123:exp:2221-01-02:ws:testworkspace
+resource "bad" "my-rule" {
+}
+`, "testworkspace")
+	assert.Len(t, results.GetFailed(), 0)
+}
+
+func Test_TrivyIgnoreIgnoreWithExpiryAndWorkspaceButWrongWorkspaceSupplied(t *testing.T) {
+	reg := rules.Register(exampleTrivyRule, nil)
+	defer rules.Deregister(reg)
+
+	results := scanHCLWithWorkspace(t, `
+# trivy:ignore:aws-service-abc123:exp:2221-01-02:ws:otherworkspace
+resource "bad" "my-rule" {
+	
+}
+`, "testworkspace")
+	assert.Len(t, results.GetFailed(), 1)
+}
+
+func Test_TrivyIgnoreWithAliasCodeStillIgnored(t *testing.T) {
+	reg := rules.Register(exampleTrivyRule, nil)
+	defer rules.Deregister(reg)
+
+	results := scanHCLWithWorkspace(t, `
+# trivy:ignore:aws-other-abc123
+resource "bad" "my-rule" {
+	
+}
+`, "testworkspace")
+	assert.Len(t, results.GetFailed(), 0)
+}
+
+func Test_TrivyIgnoreInline(t *testing.T) {
+	reg := rules.Register(exampleRule, nil)
+	defer rules.Deregister(reg)
+
+	results := scanHCL(t, fmt.Sprintf(`
+	resource "bad" "sample" {
+		  secure = false # trivy:ignore:%s
+	}
+	  `, exampleRule.LongID()))
 	assert.Len(t, results.GetFailed(), 0)
 }

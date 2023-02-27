@@ -41,118 +41,64 @@ var exampleRule = scan.Rule{
 }
 
 func Test_IgnoreAll(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
 
-	results := scanHCL(t, `
+	var testCases = []struct {
+		name         string
+		inputOptions string
+		assertLength int
+	}{
+		{name: "IgnoreAll", inputOptions: `
 resource "bad" "my-rule" {
     secure = false // tfsec:ignore:*
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-
-}
-
-func Test_IgnoreLineAboveTheBlock(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "IgnoreLineAboveTheBlock", inputOptions: `
 // tfsec:ignore:*
 resource "bad" "my-rule" {
    secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_IgnoreLineAboveTheBlockMatchingParamBool(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "IgnoreLineAboveTheBlockMatchingParamBool", inputOptions: `
 // tfsec:ignore:*[secure=false]
 resource "bad" "my-rule" {
    secure = false
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_IgnoreLineAboveTheBlockNotMatchingParamBool(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "IgnoreLineAboveTheBlockNotMatchingParamBool", inputOptions: `
 // tfsec:ignore:*[secure=true]
 resource "bad" "my-rule" {
    secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_IgnoreLineAboveTheBlockMatchingParamString(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 1},
+		{name: "IgnoreLineAboveTheBlockMatchingParamString", inputOptions: `
 // tfsec:ignore:*[name=myrule]
 resource "bad" "my-rule" {
     name = "myrule"
     secure = false
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_IgnoreLineAboveTheBlockNotMatchingParamString(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "IgnoreLineAboveTheBlockNotMatchingParamString", inputOptions: `
 // tfsec:ignore:*[name=myrule2]
 resource "bad" "my-rule" {
     name = "myrule"
     secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_IgnoreLineAboveTheBlockMatchingParamInt(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 1},
+		{name: "IgnoreLineAboveTheBlockMatchingParamInt", inputOptions: `
 // tfsec:ignore:*[port=123]
 resource "bad" "my-rule" {
    secure = false
    port = 123
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_IgnoreLineAboveTheBlockNotMatchingParamInt(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "IgnoreLineAboveTheBlockNotMatchingParamInt", inputOptions: `
 // tfsec:ignore:*[port=456]
 resource "bad" "my-rule" {
    secure = false 
    port = 123
 }
-`)
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_IgnoreLineStackedAboveTheBlock(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 1},
+		{name: "IgnoreLineStackedAboveTheBlock", inputOptions: `
 // tfsec:ignore:*
 // tfsec:ignore:a
 // tfsec:ignore:b
@@ -161,15 +107,8 @@ func Test_IgnoreLineStackedAboveTheBlock(t *testing.T) {
 resource "bad" "my-rule" {
    secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_IgnoreLineStackedAboveTheBlockWithoutMatch(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "IgnoreLineStackedAboveTheBlockWithoutMatch", inputOptions: `
 #tfsec:ignore:*
 
 #tfsec:ignore:x
@@ -180,15 +119,8 @@ func Test_IgnoreLineStackedAboveTheBlockWithoutMatch(t *testing.T) {
 resource "bad" "my-rule" {
    secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_IgnoreLineStackedAboveTheBlockWithHashesWithoutSpaces(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 1},
+		{name: "IgnoreLineStackedAboveTheBlockWithHashesWithoutSpaces", inputOptions: `
 #tfsec:ignore:*
 #tfsec:ignore:a
 #tfsec:ignore:b
@@ -197,15 +129,8 @@ func Test_IgnoreLineStackedAboveTheBlockWithHashesWithoutSpaces(t *testing.T) {
 resource "bad" "my-rule" {
    secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_IgnoreLineStackedAboveTheBlockWithoutSpaces(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "IgnoreLineStackedAboveTheBlockWithoutSpaces", inputOptions: `
 //tfsec:ignore:*
 //tfsec:ignore:a
 //tfsec:ignore:b
@@ -214,81 +139,93 @@ func Test_IgnoreLineStackedAboveTheBlockWithoutSpaces(t *testing.T) {
 resource "bad" "my-rule" {
    secure = false 
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_IgnoreLineAboveTheLine(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "IgnoreLineAboveTheLine", inputOptions: `
 resource "bad" "my-rule" {
 	# tfsec:ignore:aws-service-abc123
     secure = false
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_IgnoreWithExpDateIfDateBreachedThenDontIgnore(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "IgnoreWithExpDateIfDateBreachedThenDontIgnore", inputOptions: `
 resource "bad" "my-rule" {
     secure = false # tfsec:ignore:aws-service-abc123:exp:2000-01-02
 }
-`)
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_IgnoreWithExpDateIfDateNotBreachedThenIgnoreIgnore(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 1},
+		{name: "IgnoreWithExpDateIfDateNotBreachedThenIgnoreIgnore", inputOptions: `
 resource "bad" "my-rule" {
     secure = false # tfsec:ignore:aws-service-abc123:exp:2221-01-02
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_IgnoreWithExpDateIfDateInvalidThenDropTheIgnore(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "IgnoreWithExpDateIfDateInvalidThenDropTheIgnore", inputOptions: `
 resource "bad" "my-rule" {
    secure = false # tfsec:ignore:aws-service-abc123:exp:2221-13-02
 }
-`)
-	assert.Len(t, results.GetFailed(), 1)
-}
-
-func Test_IgnoreAboveResourceBlockWithExpDateIfDateNotBreachedThenIgnoreIgnore(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 1},
+		{name: "IgnoreAboveResourceBlockWithExpDateIfDateNotBreachedThenIgnoreIgnore", inputOptions: `
 #tfsec:ignore:aws-service-abc123:exp:2221-01-02
 resource "bad" "my-rule" {
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_IgnoreAboveResourceBlockWithExpDateAndMultipleIgnoresIfDateNotBreachedThenIgnoreIgnore(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
+`, assertLength: 0},
+		{name: "IgnoreAboveResourceBlockWithExpDateAndMultipleIgnoresIfDateNotBreachedThenIgnoreIgnore", inputOptions: `
 # tfsec:ignore:aws-service-abc123:exp:2221-01-02
 resource "bad" "my-rule" {
 	
 }
-`)
-	assert.Len(t, results.GetFailed(), 0)
+`, assertLength: 0},
+		{name: "IgnoreForImpliedIAMResource", inputOptions: `
+terraform {
+required_version = "~> 1.1.6"
+
+required_providers {
+aws = {
+source  = "hashicorp/aws"
+version = "~> 3.48"
+}
+}
+}
+
+# Retrieve an IAM group defined outside of this Terraform config.
+
+# tfsec:ignore:aws-iam-enforce-mfa
+data "aws_iam_group" "externally_defined_group" {
+group_name = "group-name" # tfsec:ignore:aws-iam-enforce-mfa
+}
+
+# Create an IAM policy and attach it to the group.
+
+# tfsec:ignore:aws-iam-enforce-mfa
+resource "aws_iam_policy" "test_policy" {
+name   = "test-policy" # tfsec:ignore:aws-iam-enforce-mfa
+policy = data.aws_iam_policy_document.test_policy.json # tfsec:ignore:aws-iam-enforce-mfa
+}
+
+# tfsec:ignore:aws-iam-enforce-mfa
+resource "aws_iam_group_policy_attachment" "test_policy_attachment" {
+group      = data.aws_iam_group.externally_defined_group.group_name # tfsec:ignore:aws-iam-enforce-mfa
+policy_arn = aws_iam_policy.test_policy.arn # tfsec:ignore:aws-iam-enforce-mfa
+}
+
+# tfsec:ignore:aws-iam-enforce-mfa
+data "aws_iam_policy_document" "test_policy" {
+statement {
+sid = "PublishToCloudWatch" # tfsec:ignore:aws-iam-enforce-mfa
+actions = [
+"cloudwatch:PutMetricData", # tfsec:ignore:aws-iam-enforce-mfa
+]
+resources = ["*"] # tfsec:ignore:aws-iam-enforce-mfa
+}
+}
+`, assertLength: 0}}
+
+	reg := rules.Register(exampleRule, nil)
+	defer rules.Deregister(reg)
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			results := scanHCL(t, tc.inputOptions)
+			assert.Len(t, results.GetFailed(), tc.assertLength)
+		})
+	}
 }
 
 func Test_IgnoreIgnoreWithExpiryAndWorkspaceAndWorkspaceSupplied(t *testing.T) {
@@ -338,56 +275,5 @@ resource "bad" "my-rule" {
 	
 }
 `, "testworkspace")
-	assert.Len(t, results.GetFailed(), 0)
-}
-
-func Test_IgnoreForImpliedIAMResource(t *testing.T) {
-	reg := rules.Register(exampleRule, nil)
-	defer rules.Deregister(reg)
-
-	results := scanHCL(t, `
-terraform {
-required_version = "~> 1.1.6"
-
-required_providers {
-aws = {
-source  = "hashicorp/aws"
-version = "~> 3.48"
-}
-}
-}
-
-# Retrieve an IAM group defined outside of this Terraform config.
-
-# tfsec:ignore:aws-iam-enforce-mfa
-data "aws_iam_group" "externally_defined_group" {
-group_name = "group-name" # tfsec:ignore:aws-iam-enforce-mfa
-}
-
-# Create an IAM policy and attach it to the group.
-
-# tfsec:ignore:aws-iam-enforce-mfa
-resource "aws_iam_policy" "test_policy" {
-name   = "test-policy" # tfsec:ignore:aws-iam-enforce-mfa
-policy = data.aws_iam_policy_document.test_policy.json # tfsec:ignore:aws-iam-enforce-mfa
-}
-
-# tfsec:ignore:aws-iam-enforce-mfa
-resource "aws_iam_group_policy_attachment" "test_policy_attachment" {
-group      = data.aws_iam_group.externally_defined_group.group_name # tfsec:ignore:aws-iam-enforce-mfa
-policy_arn = aws_iam_policy.test_policy.arn # tfsec:ignore:aws-iam-enforce-mfa
-}
-
-# tfsec:ignore:aws-iam-enforce-mfa
-data "aws_iam_policy_document" "test_policy" {
-statement {
-sid = "PublishToCloudWatch" # tfsec:ignore:aws-iam-enforce-mfa
-actions = [
-"cloudwatch:PutMetricData", # tfsec:ignore:aws-iam-enforce-mfa
-]
-resources = ["*"] # tfsec:ignore:aws-iam-enforce-mfa
-}
-}
-`)
 	assert.Len(t, results.GetFailed(), 0)
 }
