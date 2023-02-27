@@ -181,7 +181,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec"}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "s3", "provider": "aws"}]}],
 }
 
 deny[cause] {
@@ -296,13 +296,21 @@ resource "aws_s3_bucket" "my-bucket" {
 }
 `,
 				"/rules/test.rego": fmt.Sprintf(`
-				package %s
+# METADATA
+# custom:
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#       - service: s3
+#         provider: aws
+package %s
 
-				deny[cause] {
-				bucket := input.aws.s3.buckets[_]
-				bucket.name.value == "evil"
-				cause := bucket.name
-				}
+deny[cause] {
+bucket := input.aws.s3.buckets[_]
+bucket.name.value == "evil"
+cause := bucket.name
+}
 
 				`, test.policyNamespace),
 			})
@@ -386,7 +394,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec"}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "s3", "provider": "aws"}]}],
 }
 
 deny[cause] {
@@ -440,7 +448,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec"}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "s3", "provider": "aws"}]}],
 }
 
 deny[res] {
@@ -507,6 +515,9 @@ resource "aws_sqs_queue_policy" "bad_example" {
 #   input:
 #     selector:
 #     - type: cloud
+#       subtypes: 
+#         - service: sqs
+#           provider: aws
 package defsec.abcdefg
 
 
@@ -604,7 +615,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec"}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "ecs", "provider": "aws"}]}],
 }
 
 deny[res] {
@@ -836,6 +847,12 @@ resource "aws_apigatewayv2_stage" "bad_example" {
 # - input: schema.input
 # custom:
 #   avd_id: AVD-AWS-0001
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#         - service: apigateway
+#           provider: aws
 package builtin.cloud.AWS0001
 
 deny[res] {
