@@ -56,7 +56,7 @@ func Test_adaptTopic(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			modules := tftestutil.CreateModulesFromSource(t, test.terraform, ".tf")
-			adapted := adaptTopic(modules.GetBlocks()[0])
+			adapted := adaptTopic(modules.GetBlocks()[0], modules)
 			testutil.AssertDefsecEqual(t, test.expected, adapted)
 		})
 	}

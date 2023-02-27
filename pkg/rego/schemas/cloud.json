@@ -2910,12 +2910,28 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.sns.SNS": {
       "type": "object",
       "properties": {
+        "subscriptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.sns.Subscription"
+          }
+        },
         "topics": {
           "type": "array",
           "items": {
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.sns.Topic"
           }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.sns.Subscription": {
+      "type": "object",
+      "properties": {
+        "endpoint": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -2929,6 +2945,13 @@
         "encryption": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.sns.Encryption"
+        },
+        "policy": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iam.Policy"
+          }
         }
       }
     },
@@ -2948,6 +2971,10 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.sqs.Queue": {
       "type": "object",
       "properties": {
+        "approximatenumberofmessages": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "encryption": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.sqs.Encryption"
@@ -2960,6 +2987,10 @@
           }
         },
         "queueurl": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "redrivepolicy": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }

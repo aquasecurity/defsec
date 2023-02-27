@@ -3,11 +3,13 @@ package sns
 import (
 	aws2 "github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/concurrency"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sns"
 	"github.com/aquasecurity/defsec/pkg/state"
 	"github.com/aquasecurity/defsec/pkg/types"
 	snsapi "github.com/aws/aws-sdk-go-v2/service/sns"
 	snsTypes "github.com/aws/aws-sdk-go-v2/service/sns/types"
+	"github.com/liamg/iamgo"
 )
 
 type adapter struct {
@@ -34,6 +36,11 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 	var err error
 
 	state.AWS.SNS.Topics, err = a.getTopics()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.SNS.Subscriptions, err = a.getSubscriptions()
 	if err != nil {
 		return err
 	}
@@ -82,6 +89,54 @@ func (a *adapter) adaptTopic(topic snsTypes.Topic) (*sns.Topic, error) {
 		t.Encryption.KMSKeyID = types.String(kmsKeyID, topicMetadata)
 	}
 
+	if policy, ok := topicAttributes.Attributes["Policy"]; ok {
+		iampolicy, err := iamgo.ParseString(policy)
+		if err == nil {
+			t.Policy = append(t.Policy, iam.Policy{
+				Metadata: topicMetadata,
+				Name:     types.StringDefault("", topicMetadata),
+				Document: iam.Document{
+					Metadata: topicMetadata,
+					Parsed:   *iampolicy,
+				},
+				Builtin: types.Bool(false, topicMetadata),
+			})
+		}
+	}
+
 	return t, nil
 
+}
+
+func (a *adapter) getSubscriptions() (subscriptions []sns.Subscription, err error) {
+
+	a.Tracker().SetServiceLabel("Discovering SNS subscriptions...")
+	var apiSubscriptions []snsTypes.Subscription
+	var input snsapi.ListSubscriptionsInput
+
+	for {
+		output, err := a.client.ListSubscriptions(a.Context(), &input)
+		if err != nil {
+			return nil, err
+		}
+		apiSubscriptions = append(apiSubscriptions, output.Subscriptions...)
+		a.Tracker().SetTotalResources(len(apiSubscriptions))
+		if output.NextToken == nil {
+			break
+		}
+		input.NextToken = output.NextToken
+	}
+
+	a.Tracker().SetServiceLabel("Adapting SNS subscriptions...")
+	return concurrency.Adapt(apiSubscriptions, a.RootAdapter, a.adaptSubscription), nil
+
+}
+
+func (a *adapter) adaptSubscription(apisubcription snsTypes.Subscription) (*sns.Subscription, error) {
+	metadata := a.CreateMetadataFromARN(*apisubcription.SubscriptionArn)
+
+	return &sns.Subscription{
+		Metadata: metadata,
+		Endpoint: types.String(*apisubcription.Endpoint, metadata),
+	}, nil
 }

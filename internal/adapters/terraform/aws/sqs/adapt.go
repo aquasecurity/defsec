@@ -76,8 +76,10 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 		}
 
 		a.queues[uuid.NewString()] = sqs.Queue{
-			Metadata: defsecTypes.NewUnmanagedMetadata(),
-			QueueURL: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			Metadata:                    defsecTypes.NewUnmanagedMetadata(),
+			QueueURL:                    defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			ApproximateNumberOfMessages: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			RedrivePolicy:               defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			Encryption: sqs.Encryption{
 				Metadata:          defsecTypes.NewUnmanagedMetadata(),
 				ManagedEncryption: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
@@ -155,8 +157,10 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 	}
 
 	a.queues[resource.ID()] = sqs.Queue{
-		Metadata: resource.GetMetadata(),
-		QueueURL: defsecTypes.StringDefault("", resource.GetMetadata()),
+		Metadata:                    resource.GetMetadata(),
+		QueueURL:                    defsecTypes.StringDefault("", resource.GetMetadata()),
+		ApproximateNumberOfMessages: defsecTypes.StringDefault("", resource.GetMetadata()),
+		RedrivePolicy:               resource.GetAttribute("redrive_policy").AsStringValueOrDefault("", resource),
 		Encryption: sqs.Encryption{
 			Metadata:          resource.GetMetadata(),
 			ManagedEncryption: managedEncryption.AsBoolValueOrDefault(false, resource),
