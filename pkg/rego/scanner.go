@@ -38,6 +38,7 @@ type Scanner struct {
 	tracePerResult bool
 	retriever      *MetadataRetriever
 	policyFS       fs.FS
+	dataFS         fs.FS
 	frameworks     []framework.Framework
 	spec           string
 	inputSchema    interface{} // unmarshalled into this from a json schema document
@@ -70,6 +71,10 @@ func (s *Scanner) trace(heading string, input interface{}) {
 
 func (s *Scanner) SetPolicyFilesystem(fs fs.FS) {
 	s.policyFS = fs
+}
+
+func (s *Scanner) SetDataFilesystem(fs fs.FS) {
+	s.dataFS = fs
 }
 
 func (s *Scanner) SetPolicyReaders(_ []io.Reader) {
