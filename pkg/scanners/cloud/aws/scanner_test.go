@@ -192,6 +192,42 @@ deny[res] {
 			}{totalResults: 2, summaries: []string{"RDS Publicly Accessible", "CloudTrail Bucket Delete Policy"}},
 		},
 		{
+			name: "conflicting selectors",
+			srcFS: testutil.CreateFS(t, map[string]string{
+				"policies/rds_policy.rego": `# METADATA
+# title: "RDS Publicly Accessible"
+# custom:
+#   provider: aws
+#   service: rds
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#         - provider: aws
+#           service: ec2
+package builtin.aws.rds.aws0999
+
+deny[res] {
+	res := true
+}
+`,
+			}),
+
+			state: state.State{AWS: aws.AWS{
+				RDS: rds.RDS{
+					Instances: []rds.Instance{
+						{Metadata: defsecTypes.Metadata{},
+							PublicAccess: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						},
+					},
+				},
+			}},
+			expectedResults: struct {
+				totalResults int
+				summaries    []string
+			}{totalResults: 0},
+		},
+		{
 			name: "selector is defined with empty subtype",
 			srcFS: testutil.CreateFS(t, map[string]string{
 				"policies/rds_policy.rego": `# METADATA
