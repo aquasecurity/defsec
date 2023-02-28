@@ -105,7 +105,7 @@ deny[res] {
 			expectedResults: struct {
 				totalResults int
 				summaries    []string
-			}{totalResults: 0},
+			}{totalResults: 2, summaries: []string{"RDS Publicly Accessible", "CloudTrail Bucket Delete Policy"}},
 		},
 		{
 			name: "selector is empty",
@@ -146,7 +146,7 @@ deny[res] {
 			expectedResults: struct {
 				totalResults int
 				summaries    []string
-			}{totalResults: 0},
+			}{totalResults: 2, summaries: []string{"RDS Publicly Accessible", "CloudTrail Bucket Delete Policy"}},
 		},
 		{
 			name: "selector without subtype",

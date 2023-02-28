@@ -285,7 +285,7 @@ func isPolicyWithSubtype(sourceType types.Source) bool {
 }
 
 func checkSubtype(ii map[string]interface{}, provider string, subTypes []SubType) bool {
-	if len(subTypes) == 0 { // policy always applies if no subtypes
+	if len(subTypes) == 0 {
 		return true
 	}
 
@@ -316,6 +316,10 @@ func isPolicyApplicable(staticMetadata *StaticMetadata, inputs ...Input) bool {
 				// TODO(simar): Add other providers
 				if !strings.Contains(strings.Join([]string{"kind", "aws", "azure"}, ","), provider) {
 					continue
+				}
+
+				if len(staticMetadata.InputOptions.Selectors) == 0 { // policy always applies if no selectors
+					return true
 				}
 
 				// check metadata for subtype
