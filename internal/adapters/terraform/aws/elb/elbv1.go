@@ -45,7 +45,7 @@ func (a *adapter) adaptLoadBalancerV1(resource *terraform.Block) elb.LoadBalance
 		DNSName:   resource.GetAttribute("dns_name").AsStringValueOrDefault("", resource),
 		Instances: ins,
 		Listener:  listener,
-		Attributes: elb.Attibute{
+		Attributes: elb.Attribute{
 			Metadata:                      resource.GetMetadata(),
 			AccessLogEnabled:              acclog,
 			CrossZoneLoadBalancingEnabled: resource.GetAttribute("cross_zone_load_balancing").AsBoolValueOrDefault(true, resource),

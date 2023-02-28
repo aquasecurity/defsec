@@ -31,7 +31,7 @@ func getLoadBalancersV1(ctx parser.FileContext) (loadbalancers []elb.LoadBalance
 			Name:     r.GetStringProperty("LoadBalancerName"),
 			DNSName:  r.GetStringProperty("DNSName"),
 			Listener: listener,
-			Attributes: elb.Attibute{
+			Attributes: elb.Attribute{
 				Metadata:                      r.Metadata(),
 				ConnectionDrainingEnabled:     r.GetBoolProperty("ConnectionDrainingPolicy.Enabled"),
 				CrossZoneLoadBalancingEnabled: r.GetBoolProperty("CrossZone"),

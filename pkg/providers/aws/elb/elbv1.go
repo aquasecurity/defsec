@@ -10,7 +10,7 @@ type LoadBalancerV1 struct {
 	DNSName    defsecTypes.StringValue
 	Listener   []ListenerV1
 	Instances  []Instance
-	Attributes Attibute
+	Attributes Attribute
 }
 
 type LoadBalancerPolicy struct {
@@ -34,7 +34,7 @@ type Instance struct {
 	Id       defsecTypes.StringValue
 }
 
-type Attibute struct {
+type Attribute struct {
 	Metadata                      defsecTypes.Metadata
 	AccessLogEnabled              defsecTypes.BoolValue
 	CrossZoneLoadBalancingEnabled defsecTypes.BoolValue

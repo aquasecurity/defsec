@@ -51,7 +51,7 @@ func (a *adapter) adaptLoadBalancerV1(loadbalancer types.LoadBalancerDescription
 		})
 	}
 
-	var attributes elb.Attibute
+	var attributes elb.Attribute
 	{
 		output, err := a.apiV1.DescribeLoadBalancerAttributes(a.Context(), &apiV1.DescribeLoadBalancerAttributesInput{
 			LoadBalancerName: loadbalancer.LoadBalancerName,
@@ -69,7 +69,7 @@ func (a *adapter) adaptLoadBalancerV1(loadbalancer types.LoadBalancerDescription
 		if output.LoadBalancerAttributes.CrossZoneLoadBalancing != nil {
 			crosszone = output.LoadBalancerAttributes.CrossZoneLoadBalancing.Enabled
 		}
-		attributes = elb.Attibute{
+		attributes = elb.Attribute{
 			Metadata:                      metadata,
 			AccessLogEnabled:              defsecTypes.Bool(acclog, metadata),
 			CrossZoneLoadBalancingEnabled: defsecTypes.Bool(crosszone, metadata),
