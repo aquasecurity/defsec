@@ -203,11 +203,21 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
+        "findings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.accessanalyzer.Findings"
+          }
+        },
         "name": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.accessanalyzer.Findings": {
+      "type": "object"
     },
     "github.com.aquasecurity.defsec.pkg.providers.aws.apigateway.APIGateway": {
       "type": "object",
