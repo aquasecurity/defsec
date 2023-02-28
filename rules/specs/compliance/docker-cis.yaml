@@ -58,7 +58,7 @@ spec:
         - id: AVD-DS-0005
       severity: 'LOW'
     - id: '4.10'
-      name: Ensure secrets are not stored in Dockerfiles (Manual)
+      name: Ensure secrets are not stored in Dockerfiles
       description: 'Do not store any secrets in Dockerfiles.'
       checks:
         - id: SECRET-CRITICAL # special ID for filtering secrets
