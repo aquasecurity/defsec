@@ -66,6 +66,24 @@ resource "something" "else" {}
 
 }
 
+func Test_TrivyOptionWithAlternativeIDProvider(t *testing.T) {
+	reg := rules.Register(alwaysFailRule, nil)
+	defer rules.Deregister(reg)
+
+	options := []options.ScannerOption{
+		ScannerWithAlternativeIDProvider(func(s string) []string {
+			return []string{"something", "altid", "blah"}
+		}),
+	}
+	results := scanWithOptions(t, `
+//trivy:ignore:altid
+resource "something" "else" {}
+`, options...)
+	require.Len(t, results.GetFailed(), 0)
+	require.Len(t, results.GetIgnored(), 1)
+
+}
+
 func Test_OptionWithSeverityOverrides(t *testing.T) {
 	reg := rules.Register(alwaysFailRule, nil)
 	defer rules.Deregister(reg)
