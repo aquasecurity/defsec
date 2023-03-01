@@ -5,8 +5,14 @@ import (
 )
 
 type Athena struct {
-	Databases  []Database
-	Workgroups []Workgroup
+	Databases         []Database
+	Workgroups        []Workgroup
+	WorkGroupLocation WorkGroupLocation
+}
+
+type WorkGroupLocation struct {
+	Metadata       defsecTypes.Metadata
+	OutputLocation defsecTypes.StringValue
 }
 
 type Database struct {

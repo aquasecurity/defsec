@@ -3,7 +3,10 @@ package aws
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/accessanalyzer"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/appflow"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/apprunner"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/athena"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/auditmanager"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudfront"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
@@ -20,6 +23,11 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elb"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/emr"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/finspace"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/firehose"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/forecast"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/frauddetector"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/fsx"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/kinesis"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/kms"
@@ -39,8 +47,11 @@ import (
 
 type AWS struct {
 	AccessAnalyzer accessanalyzer.AccessAnalyzer
+	Appflow        appflow.Appflow
+	Apprunner      apprunner.Apprunner
 	APIGateway     apigateway.APIGateway
 	Athena         athena.Athena
+	Auditmanager   auditmanager.AuditManager
 	Cloudfront     cloudfront.Cloudfront
 	CloudTrail     cloudtrail.CloudTrail
 	CloudWatch     cloudwatch.CloudWatch
@@ -57,6 +68,11 @@ type AWS struct {
 	Elasticsearch  elasticsearch.Elasticsearch
 	ELB            elb.ELB
 	EMR            emr.EMR
+	Finspace       finspace.ListEnvironements
+	Firehose       firehose.Firehose
+	Forecast       forecast.Forecast
+	Frauddetector  frauddetector.Frauddetector
+	Fsx            fsx.Fsx
 	IAM            iam.IAM
 	Kinesis        kinesis.Kinesis
 	KMS            kms.KMS

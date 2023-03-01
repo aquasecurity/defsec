@@ -8,8 +8,9 @@ import (
 
 func Adapt(modules terraform.Modules) athena.Athena {
 	return athena.Athena{
-		Databases:  adaptDatabases(modules),
-		Workgroups: adaptWorkgroups(modules),
+		Databases:         adaptDatabases(modules),
+		Workgroups:        adaptWorkgroups(modules),
+		WorkGroupLocation: getOutputLocation(modules),
 	}
 }
 
@@ -21,6 +22,14 @@ func adaptDatabases(modules terraform.Modules) []athena.Database {
 		}
 	}
 	return databases
+}
+
+func getOutputLocation(modules terraform.Modules) (outputlocation athena.WorkGroupLocation) {
+	for _, resource := range modules.GetResourcesByType("aws_athena_workgroup") {
+		outputlocation = adaptOutputLocaiton(resource, modules)
+	}
+
+	return outputlocation
 }
 
 func adaptWorkgroups(modules terraform.Modules) []athena.Workgroup {
@@ -77,4 +86,12 @@ func adaptWorkgroup(resource *terraform.Block) athena.Workgroup {
 	}
 
 	return workgroup
+}
+
+func adaptOutputLocaiton(resource *terraform.Block, modules terraform.Modules) athena.WorkGroupLocation {
+
+	return athena.WorkGroupLocation{
+		Metadata:       resource.GetMetadata(),
+		OutputLocation: resource.GetAttribute("output_location").AsStringValueOrDefault("", resource),
+	}
 }

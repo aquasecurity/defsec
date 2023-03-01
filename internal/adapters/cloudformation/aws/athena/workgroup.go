@@ -28,3 +28,25 @@ func getWorkGroups(cfFile parser.FileContext) []athena.Workgroup {
 
 	return workgroups
 }
+
+func getWorkGroupLocation(ctx parser.FileContext) athena.WorkGroupLocation {
+
+	var outputlocation athena.WorkGroupLocation
+	GetLocationOutput := ctx.GetResourcesByType("AWS::Athena::WorkGroup")
+
+	for _, r := range GetLocationOutput {
+
+		var OutputLocation athena.WorkGroupLocation
+		for range r.GetProperty("EncryptionConfiguration").AsString() {
+			OutputLocation = athena.WorkGroupLocation{
+				Metadata:       r.Metadata(),
+				OutputLocation: r.GetStringProperty("KmsKey"),
+			}
+		}
+
+		ol := OutputLocation
+		outputlocation = ol
+	}
+
+	return outputlocation
+}

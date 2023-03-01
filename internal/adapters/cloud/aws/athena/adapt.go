@@ -46,6 +46,11 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 		return err
 	}
 
+	state.AWS.Athena.WorkGroupLocation, err = a.getWorkGroupLocations()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -70,6 +75,32 @@ func (a *adapter) getWorkgroups() ([]athena.Workgroup, error) {
 
 	a.Tracker().SetServiceLabel("Adapting workgroups...")
 	return concurrency.Adapt(apiWorkgroups, a.RootAdapter, a.adaptWorkgroup), nil
+}
+
+func (a *adapter) getWorkGroupLocations() (athena.WorkGroupLocation, error) {
+	var apiWorkGroupLocation types.WorkGroupConfiguration
+	var input api.GetWorkGroupInput
+	var workgrouplocation athena.WorkGroupLocation
+
+	a.Tracker().SetServiceLabel("Discovering getworkgroups location...")
+	metadata := a.CreateMetadata(*apiWorkGroupLocation.ResultConfiguration.ExpectedBucketOwner)
+
+	output, err := a.client.GetWorkGroup(a.Context(), &input)
+	if err != nil {
+		return workgrouplocation, err
+	}
+	apiWorkGroupLocation = *output.WorkGroup.Configuration
+
+	var Location string
+	if apiWorkGroupLocation.ResultConfiguration.OutputLocation != nil {
+		Location = *apiWorkGroupLocation.ResultConfiguration.OutputLocation
+	}
+
+	workgrouplocation = athena.WorkGroupLocation{
+		Metadata:       metadata,
+		OutputLocation: defsecTypes.String(Location, metadata),
+	}
+	return workgrouplocation, nil
 }
 
 func (a *adapter) adaptWorkgroup(workgroup types.WorkGroupSummary) (*athena.Workgroup, error) {
