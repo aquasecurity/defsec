@@ -20,7 +20,13 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticsearch"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elb"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/emr"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/glue"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/gluedatabrew"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/guardduty"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/healthlake"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/imagebuilder"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/iotsitewise"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/kinesis"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/kms"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/lambda"
@@ -57,7 +63,13 @@ type AWS struct {
 	Elasticsearch  elasticsearch.Elasticsearch
 	ELB            elb.ELB
 	EMR            emr.EMR
+	Glue           glue.Glue
+	GlueDataBrew   gluedatabrew.GlueDataBrew
+	GuardDuty      guardduty.Guardduty
+	HealthLake     healthlake.HealthLake
 	IAM            iam.IAM
+	ImageBuilder   imagebuilder.Imagebuilder
+	IoTSiteWise    iotsitewise.IoTSiteWise
 	Kinesis        kinesis.Kinesis
 	KMS            kms.KMS
 	Lambda         lambda.Lambda
