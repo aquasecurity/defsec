@@ -224,7 +224,7 @@ func (a *adapter) getParameters() ([]redshift.ClusterParameter, error) {
 		input.Marker = output.Marker
 	}
 
-	a.Tracker().SetServiceLabel("Adapting clusters...")
+	a.Tracker().SetServiceLabel("Adapting cluster parameters...")
 	return concurrency.Adapt(apiClusters, a.RootAdapter, a.adaptParameter), nil
 }
 
@@ -237,13 +237,13 @@ func (a *adapter) adaptParameter(parameter types.ClusterParameterGroup) (*redshi
 		return nil, err
 	}
 	metadata := a.CreateMetadata(*parameter.ParameterGroupName)
-	var parameters redshift.ClusterParameter
+	var clusterParameters redshift.ClusterParameter
 	for _, P := range output.Parameters {
-		parameters = redshift.ClusterParameter{
+		clusterParameters = redshift.ClusterParameter{
 			Metadata:       metadata,
 			ParameterName:  defsecTypes.String(*P.ParameterName, metadata),
 			ParameterValue: defsecTypes.String(*P.ParameterValue, metadata),
 		}
 	}
-	return &parameters, nil
+	return &clusterParameters, nil
 }
