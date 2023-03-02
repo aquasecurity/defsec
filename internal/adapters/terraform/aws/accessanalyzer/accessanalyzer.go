@@ -3,6 +3,7 @@ package accessanalyzer
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/accessanalyzer"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) accessanalyzer.AccessAnalyzer {
@@ -34,5 +35,6 @@ func adaptAnalyzers(resource *terraform.Block) accessanalyzer.Analyzer {
 		Metadata: resource.GetMetadata(),
 		Name:     analyzerNameAttr,
 		ARN:      arnAnalyzerAttr,
+		Active:   types.BoolDefault(false, resource.GetMetadata()),
 	}
 }
