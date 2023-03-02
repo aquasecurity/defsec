@@ -39,7 +39,10 @@ func (a *adapter) adaptFunctions(modules terraform.Modules) []lambda.Function {
 				Metadata: defsecTypes.NewUnmanagedMetadata(),
 				Mode:     defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			},
-			Permissions: nil,
+			FunctionName: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			FunctionArn:  defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			Runtime:      defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			Permissions:  nil,
 		}
 		for _, permission := range orphanResources {
 			orphanage.Permissions = append(orphanage.Permissions, a.adaptPermission(permission))
