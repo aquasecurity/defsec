@@ -47,7 +47,8 @@ func getTables(file parser.FileContext) (tables []dynamodb.Table) {
 				Enabled:  defsecTypes.BoolDefault(false, r.Metadata()),
 				KMSKeyID: defsecTypes.StringDefault("", r.Metadata()),
 			},
-			PointInTimeRecovery: r.GetBoolProperty("PointInTimeRecoverySpecification.PointInTimeRecoveryEnabled"),
+			PointInTimeRecovery:    r.GetBoolProperty("PointInTimeRecoverySpecification.PointInTimeRecoveryEnabled"),
+			ContinuousBackupStatus: defsecTypes.StringDefault("", r.Metadata()),
 		}
 
 		if sseProp := r.GetProperty("SSESpecification"); sseProp.IsNotNil() {

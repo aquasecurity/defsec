@@ -199,5 +199,6 @@ func (a *adapter) adaptcluster(cluster daxtype.Cluster) (*dynamodb.DAXCluster, e
 	return &dynamodb.DAXCluster{
 		Metadata:             metadata,
 		ServerSideEncryption: encryption,
+		PointInTimeRecovery:  defsecTypes.BoolUnresolvable(metadata),
 	}, nil
 }

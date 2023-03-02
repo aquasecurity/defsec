@@ -68,7 +68,8 @@ func adaptTable(resource *terraform.Block, module *terraform.Module) dynamodb.Ta
 			Enabled:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 			KMSKeyID: defsecTypes.StringDefault("", resource.GetMetadata()),
 		},
-		PointInTimeRecovery: defsecTypes.BoolDefault(false, resource.GetMetadata()),
+		PointInTimeRecovery:    defsecTypes.BoolDefault(false, resource.GetMetadata()),
+		ContinuousBackupStatus: defsecTypes.String("", resource.GetMetadata()),
 	}
 
 	if ssEncryptionBlock := resource.GetBlock("server_side_encryption"); ssEncryptionBlock.IsNotNil() {
