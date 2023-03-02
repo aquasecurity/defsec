@@ -14,7 +14,7 @@ func Adapt(modules terraform.Modules) lex.Lex {
 func adaptBotAliases(modules terraform.Modules) []lex.BotAlias {
 	var botAliases []lex.BotAlias
 	for _, module := range modules {
-		for _, resource := range module.GetResourcesByType("aws_lex_bot") {
+		for _, resource := range module.GetResourcesByType("aws_lex_bot_alias") {
 			botAliases = append(botAliases, adaptBotAlias(resource, module))
 		}
 	}
@@ -23,22 +23,18 @@ func adaptBotAliases(modules terraform.Modules) []lex.BotAlias {
 
 func adaptBotAlias(resource *terraform.Block, module *terraform.Module) lex.BotAlias {
 
-	var botAlias lex.BotAlias
-	for _, ba := range module.GetReferencingResources(resource, " aws_lex_bot_alias", "bot_name") {
-
-		var logsettings []lex.AudioLogSetting
-		if logBlock := ba.GetBlock("conversation_logs"); logBlock.IsNotNil() {
-			for _, ls := range logBlock.GetBlocks("log_settings") {
-				logsettings = append(logsettings, lex.AudioLogSetting{
-					Metadata:  ls.GetMetadata(),
-					KmsKeyArn: ls.GetAttribute("kms_key_arn").AsStringValueOrDefault("", ls),
-				})
-			}
-		}
-		botAlias = lex.BotAlias{
-			Metadata:         ba.GetMetadata(),
-			AudioLogSettings: logsettings,
+	var logsettings []lex.AudioLogSetting
+	if logBlock := resource.GetBlock("conversation_logs"); logBlock.IsNotNil() {
+		for _, ls := range logBlock.GetBlocks("log_settings") {
+			logsettings = append(logsettings, lex.AudioLogSetting{
+				Metadata:  ls.GetMetadata(),
+				KmsKeyArn: ls.GetAttribute("kms_key_arn").AsStringValueOrDefault("", ls),
+			})
 		}
 	}
-	return botAlias
+	return lex.BotAlias{
+		Metadata:         resource.GetMetadata(),
+		AudioLogSettings: logsettings,
+	}
+
 }

@@ -72,7 +72,7 @@ func (a *adapter) getBotAliases() ([]lex.BotAlias, error) {
 }
 
 func (a *adapter) adaptBotAlias(alias types.BotAliasSummary) (*lex.BotAlias, error) {
-	var botAlias lex.BotAlias
+
 	metadata := a.CreateMetadata(*alias.BotAliasId)
 
 	output, err := a.api.DescribeBotAlias(a.Context(), &api.DescribeBotAliasInput{
@@ -94,9 +94,8 @@ func (a *adapter) adaptBotAlias(alias types.BotAliasSummary) (*lex.BotAlias, err
 			})
 		}
 	}
-	botAlias = lex.BotAlias{
+	return &lex.BotAlias{
 		Metadata:         metadata,
 		AudioLogSettings: logsettings,
-	}
-	return &botAlias, nil
+	}, nil
 }
