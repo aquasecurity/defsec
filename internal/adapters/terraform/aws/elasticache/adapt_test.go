@@ -37,9 +37,16 @@ func Test_adaptCluster(t *testing.T) {
 `,
 			expected: elasticache.Cluster{
 				Metadata:               defsecTypes.NewTestMetadata(),
+				Id:                     defsecTypes.String("cluster-example", defsecTypes.NewTestMetadata()),
 				Engine:                 defsecTypes.String("redis", defsecTypes.NewTestMetadata()),
 				NodeType:               defsecTypes.String("cache.m4.large", defsecTypes.NewTestMetadata()),
 				SnapshotRetentionLimit: defsecTypes.Int(5, defsecTypes.NewTestMetadata()),
+				EngineVersion:          defsecTypes.String("3.2.10", defsecTypes.NewTestMetadata()),
+				NumCacheNodes:          defsecTypes.Int(1, defsecTypes.NewTestMetadata()),
+				ConfigurationEndpoint: elasticache.ConfigurationEndpoint{
+					Metadata: defsecTypes.NewTestMetadata(),
+					Port:     defsecTypes.Int(6379, defsecTypes.NewTestMetadata()),
+				},
 			},
 		},
 		{
@@ -49,9 +56,16 @@ func Test_adaptCluster(t *testing.T) {
 			}`,
 			expected: elasticache.Cluster{
 				Metadata:               defsecTypes.NewTestMetadata(),
+				Id:                     defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				Engine:                 defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				NodeType:               defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				SnapshotRetentionLimit: defsecTypes.Int(0, defsecTypes.NewTestMetadata()),
+				EngineVersion:          defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				NumCacheNodes:          defsecTypes.Int(1, defsecTypes.NewTestMetadata()),
+				ConfigurationEndpoint: elasticache.ConfigurationEndpoint{
+					Metadata: defsecTypes.NewTestMetadata(),
+					Port:     defsecTypes.Int(11211, defsecTypes.NewTestMetadata()),
+				},
 			},
 		},
 	}
