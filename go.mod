@@ -113,6 +113,14 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.19 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.23 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.17 // indirect
+	github.com/aws/aws-sdk-go-v2/service/lexmodelsv2 v1.28.3 // indirect
+	github.com/aws/aws-sdk-go-v2/service/location v1.22.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/lookoutequipment v1.17.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/lookoutmetrics v1.19.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/lookoutvision v1.15.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/managedblockchain v1.15.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/memorydb v1.12.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/mwaa v1.14.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.12.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.14.4 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
