@@ -56,7 +56,7 @@ func adaptCluster(resource *terraform.Block, module *terraform.Module) redshift.
 		NumberOfNodes:                    resource.GetAttribute("number_of_nodes").AsIntValueOrDefault(1, resource),
 		PubliclyAccessible:               resource.GetAttribute("publicly_accessible").AsBoolValueOrDefault(true, resource),
 		LoggingEnabled:                   defsecTypes.Bool(false, resource.GetMetadata()),
-		AutomatedSnapshotRetentionPeriod: defsecTypes.Int(7, resource.GetMetadata()),
+		AutomatedSnapshotRetentionPeriod: defsecTypes.Int(0, resource.GetMetadata()),
 		AllowVersionUpgrade:              resource.GetAttribute("allow_version_upgrade").AsBoolValueOrDefault(true, resource),
 		VpcId:                            defsecTypes.String("", resource.GetMetadata()),
 		Encryption: redshift.Encryption{

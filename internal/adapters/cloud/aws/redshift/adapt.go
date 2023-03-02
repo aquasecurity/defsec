@@ -1,6 +1,8 @@
 package redshift
 
 import (
+	"strings"
+
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/redshift"
@@ -207,43 +209,45 @@ func (a *adapter) adaptnode(node types.ReservedNode) (*redshift.ReservedNode, er
 
 func (a *adapter) getParameters() ([]redshift.ClusterParameter, error) {
 
-	a.Tracker().SetServiceLabel("Discovering cluster parameters group...")
+	a.Tracker().SetServiceLabel("Discovering cluster parameters ...")
 
-	var apiClusters []types.ClusterParameterGroup
+	var apiClusters []types.Parameter
 	var input api.DescribeClusterParameterGroupsInput
-	for {
-		output, err := a.api.DescribeClusterParameterGroups(a.Context(), &input)
-		if err != nil {
-			return nil, err
+	output, err := a.api.DescribeClusterParameterGroups(a.Context(), &input)
+	if err != nil {
+		return nil, err
+	}
+	for _, group := range output.ParameterGroups {
+		groupname := *group.ParameterGroupName
+		if !strings.HasPrefix(groupname, "default.redshift") {
+			output, err := a.api.DescribeClusterParameters(a.Context(), &api.DescribeClusterParametersInput{
+				ParameterGroupName: group.ParameterGroupName,
+			})
+			if err != nil {
+				return nil, err
+			}
+			apiClusters = append(apiClusters, output.Parameters...)
+			a.Tracker().SetTotalResources(len(apiClusters))
+			if output.Marker == nil {
+				break
+			}
+			input.Marker = output.Marker
 		}
-		apiClusters = append(apiClusters, output.ParameterGroups...)
-		a.Tracker().SetTotalResources(len(apiClusters))
-		if output.Marker == nil {
-			break
-		}
-		input.Marker = output.Marker
+
 	}
 
 	a.Tracker().SetServiceLabel("Adapting cluster parameters...")
 	return concurrency.Adapt(apiClusters, a.RootAdapter, a.adaptParameter), nil
 }
 
-func (a *adapter) adaptParameter(parameter types.ClusterParameterGroup) (*redshift.ClusterParameter, error) {
+func (a *adapter) adaptParameter(parameter types.Parameter) (*redshift.ClusterParameter, error) {
 
-	output, err := a.api.DescribeClusterParameters(a.Context(), &api.DescribeClusterParametersInput{
-		ParameterGroupName: parameter.ParameterGroupName,
-	})
-	if err != nil {
-		return nil, err
-	}
-	metadata := a.CreateMetadata(*parameter.ParameterGroupName)
-	var clusterParameters redshift.ClusterParameter
-	for _, P := range output.Parameters {
-		clusterParameters = redshift.ClusterParameter{
-			Metadata:       metadata,
-			ParameterName:  defsecTypes.String(*P.ParameterName, metadata),
-			ParameterValue: defsecTypes.String(*P.ParameterValue, metadata),
-		}
-	}
-	return &clusterParameters, nil
+	metadata := a.CreateMetadata(*parameter.ParameterName)
+
+	return &redshift.ClusterParameter{
+		Metadata:       metadata,
+		ParameterName:  defsecTypes.String(*parameter.ParameterName, metadata),
+		ParameterValue: defsecTypes.String(*parameter.ParameterValue, metadata),
+	}, nil
+
 }
