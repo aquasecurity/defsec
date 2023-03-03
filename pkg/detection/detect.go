@@ -83,13 +83,14 @@ func init() {
 				return false
 			}
 
-			data, err := io.ReadAll(r)
-			if err != nil {
+			var buf bytes.Buffer
+			if _, err := io.Copy(&buf, r); err != nil {
 				return false
 			}
+			data := buf.Bytes()
 
 			contents := make(map[string]interface{})
-			err = json.Unmarshal(data, &contents)
+			err := json.Unmarshal(data, &contents)
 			if err == nil {
 				if _, ok := contents["terraform_version"]; ok {
 					_, stillOk := contents["format_version"]
@@ -116,10 +117,11 @@ func init() {
 			return false
 		}
 
-		data, err := io.ReadAll(r)
-		if err != nil {
+		var buf bytes.Buffer
+		if _, err := io.Copy(&buf, r); err != nil {
 			return false
 		}
+		data := buf.Bytes()
 
 		sniff := struct {
 			Resources map[string]map[string]interface{} `json:"Resources" yaml:"Resources"`
@@ -136,10 +138,12 @@ func init() {
 			return false
 		}
 
-		data, err := io.ReadAll(r)
-		if err != nil {
+		var buf bytes.Buffer
+		if _, err := io.Copy(&buf, r); err != nil {
 			return false
 		}
+		data := buf.Bytes()
+
 		sniff := struct {
 			ContentType string                 `json:"contentType"`
 			Parameters  map[string]interface{} `json:"parameters"`
@@ -195,16 +199,17 @@ func init() {
 			return false
 		}
 
-		contents, err := io.ReadAll(r)
-		if err != nil {
+		var buf bytes.Buffer
+		if _, err := io.Copy(&buf, r); err != nil {
 			return false
 		}
+		data := buf.Bytes()
 
 		expectedProperties := []string{"apiVersion", "kind", "metadata"}
 
 		if IsType(name, r, FileTypeJSON) {
 			var result map[string]interface{}
-			if err := json.Unmarshal(contents, &result); err != nil {
+			if err := json.Unmarshal(data, &result); err != nil {
 				return false
 			}
 
@@ -218,11 +223,11 @@ func init() {
 
 		marker := "\n---\n"
 		altMarker := "\r\n---\r\n"
-		if bytes.Contains(contents, []byte(altMarker)) {
+		if bytes.Contains(data, []byte(altMarker)) {
 			marker = altMarker
 		}
 
-		for _, partial := range strings.Split(string(contents), marker) {
+		for _, partial := range strings.Split(string(data), marker) {
 			var result map[string]interface{}
 			if err := yaml.Unmarshal([]byte(partial), &result); err != nil {
 				continue
@@ -271,9 +276,12 @@ func ensureSeeker(r io.Reader) io.ReadSeeker {
 	if seeker, ok := r.(io.ReadSeeker); ok {
 		return seeker
 	}
-	if data, err := io.ReadAll(r); err == nil {
-		return bytes.NewReader(data)
+
+	var buf bytes.Buffer
+	if _, err := io.Copy(&buf, r); err == nil {
+		return bytes.NewReader(buf.Bytes())
 	}
+
 	return nil
 }
 

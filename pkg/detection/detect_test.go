@@ -1,8 +1,10 @@
 package detection
 
 import (
+	"bytes"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 	"testing"
 
@@ -299,5 +301,27 @@ rules:
 				assert.False(t, IsType(test.path, test.r, "invalid"))
 			})
 		})
+	}
+}
+
+func BenchmarkIsType_SmallFile(b *testing.B) {
+	data, err := os.ReadFile(fmt.Sprintf("./testdata/%s", "small.file"))
+	assert.Nil(b, err)
+
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = IsType(fmt.Sprintf("./testdata/%s", "small.file"), bytes.NewReader(data), FileTypeAzureARM)
+	}
+}
+
+func BenchmarkIsType_BigFile(b *testing.B) {
+	data, err := os.ReadFile(fmt.Sprintf("./testdata/%s", "big.file"))
+	assert.Nil(b, err)
+
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = IsType(fmt.Sprintf("./testdata/%s", "big.file"), bytes.NewReader(data), FileTypeAzureARM)
 	}
 }
