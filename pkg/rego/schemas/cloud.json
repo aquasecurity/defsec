@@ -2525,15 +2525,48 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.organizations.AccountHandshake": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "state": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.organizations.Organization": {
+      "type": "object",
+      "properties": {
+        "featureset": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.organizations.Organizations": {
       "type": "object",
       "properties": {
+        "accounthandshakes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.organizations.AccountHandshake"
+          }
+        },
         "accounts": {
           "type": "array",
           "items": {
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.organizations.Account"
           }
+        },
+        "organization": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.organizations.Organization"
         }
       }
     },

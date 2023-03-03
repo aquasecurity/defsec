@@ -7,6 +7,7 @@ import (
 
 func Adapt(cfFile parser.FileContext) organizations.Organizations {
 	return organizations.Organizations{
-		Accounts: getAccounts(cfFile),
+		Accounts:          getAccounts(cfFile),
+		AccountHandshakes: nil,
 	}
 }

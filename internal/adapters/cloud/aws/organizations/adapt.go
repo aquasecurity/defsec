@@ -37,6 +37,15 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 	if err != nil {
 		return err
 	}
+	state.AWS.Organizations.Organization, err = a.getOrganization()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.Organizations.AccountHandshakes, err = a.getHandShakes()
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -61,14 +70,68 @@ func (a *adapter) getAccounts() ([]organizations.Account, error) {
 	}
 
 	a.Tracker().SetServiceLabel("Adapting accounts...")
-	return concurrency.Adapt(apiAccounts, a.RootAdapter, a.adaptEnvironment), nil
+	return concurrency.Adapt(apiAccounts, a.RootAdapter, a.adaptAccount), nil
 }
 
-func (a *adapter) adaptEnvironment(account types.Account) (*organizations.Account, error) {
+func (a *adapter) adaptAccount(account types.Account) (*organizations.Account, error) {
 	metadata := a.CreateMetadataFromARN(*account.Arn)
 
 	return &organizations.Account{
 		Metadata: metadata,
 		Id:       defsecTypes.String(*account.Id, metadata),
+	}, nil
+}
+
+func (a *adapter) getOrganization() (organizations.Organization, error) {
+
+	a.Tracker().SetServiceLabel("Discovering organizations..")
+
+	var input api.DescribeOrganizationInput
+	var organization organizations.Organization
+
+	output, err := a.api.DescribeOrganization(a.Context(), &input)
+	if err != nil {
+		return organization, err
+	}
+	metadata := a.CreateMetadataFromARN(*output.Organization.Arn)
+	organization = organizations.Organization{
+		Metadata:   metadata,
+		FeatureSet: defsecTypes.String(string(output.Organization.FeatureSet), metadata),
+	}
+
+	return organization, nil
+
+}
+
+func (a *adapter) getHandShakes() ([]organizations.AccountHandshake, error) {
+
+	a.Tracker().SetServiceLabel("Discovering account handshakes..")
+
+	var input api.ListHandshakesForAccountInput
+	var apiHandshakes []types.Handshake
+	for {
+		output, err := a.api.ListHandshakesForAccount(a.Context(), &input)
+		if err != nil {
+			return nil, err
+		}
+		apiHandshakes = append(apiHandshakes, output.Handshakes...)
+		a.Tracker().SetTotalResources(len(apiHandshakes))
+		if output.NextToken == nil {
+			break
+		}
+		input.NextToken = output.NextToken
+	}
+
+	a.Tracker().SetServiceLabel("Adapting account handshake...")
+	return concurrency.Adapt(apiHandshakes, a.RootAdapter, a.adaptHandshake), nil
+}
+
+func (a *adapter) adaptHandshake(handshake types.Handshake) (*organizations.AccountHandshake, error) {
+	metadata := a.CreateMetadataFromARN(*handshake.Arn)
+
+	return &organizations.AccountHandshake{
+		Metadata: metadata,
+		State:    defsecTypes.String(string(handshake.State), metadata),
+		Action:   defsecTypes.String(string(handshake.Action), metadata),
 	}, nil
 }
