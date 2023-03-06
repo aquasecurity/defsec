@@ -40,7 +40,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/mq v1.13.15
 	github.com/aws/aws-sdk-go-v2/service/neptune v1.17.12
 	github.com/aws/aws-sdk-go-v2/service/rds v1.26.1
-	github.com/aws/aws-sdk-go-v2/service/redshift v1.26.10
+	github.com/aws/aws-sdk-go-v2/service/redshift v1.27.5
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.27.11
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.16.2
 	github.com/aws/aws-sdk-go-v2/service/sns v1.18.1
