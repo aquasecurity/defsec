@@ -9,7 +9,7 @@ require (
 	github.com/apparentlymart/go-cidr v1.1.0
 	github.com/aquasecurity/go-mock-aws v0.0.0-20220726154943-99847deb62b0
 	github.com/aws/aws-sdk-go v1.44.131
-	github.com/aws/aws-sdk-go-v2 v1.17.1
+	github.com/aws/aws-sdk-go-v2 v1.17.5
 	github.com/aws/aws-sdk-go-v2/config v1.17.8
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.21
 	github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.16.0
@@ -77,7 +77,7 @@ require (
 
 require (
 	github.com/aquasecurity/trivy v0.34.0
-	github.com/aws/smithy-go v1.13.4
+	github.com/aws/smithy-go v1.13.5
 	k8s.io/utils v0.0.0-20220728103510-ee6ede2d64ed
 )
 
@@ -103,17 +103,29 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.8 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.17 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.25 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.19 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.29 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.23 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.24 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.14 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.9 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.18 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.17 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.23 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.17 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.17 // indirect
+	github.com/aws/aws-sdk-go-v2/service/kendra v1.38.5 // indirect
+	github.com/aws/aws-sdk-go-v2/service/kinesisvideo v1.15.5 // indirect
+	github.com/aws/aws-sdk-go-v2/service/proton v1.20.3 // indirect
+	github.com/aws/aws-sdk-go-v2/service/qldb v1.15.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ses v1.15.3 // indirect
+	github.com/aws/aws-sdk-go-v2/service/shield v1.18.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.11.23 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.13.6 // indirect
+	github.com/aws/aws-sdk-go-v2/service/timestreamwrite v1.16.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/transfer v1.28.5 // indirect
+	github.com/aws/aws-sdk-go-v2/service/translate v1.17.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/waf v1.12.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.26.0 // indirect
+	github.com/aws/aws-sdk-go-v2/service/xray v1.16.5 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
 	github.com/caarlos0/env/v6 v6.10.1 // indirect
