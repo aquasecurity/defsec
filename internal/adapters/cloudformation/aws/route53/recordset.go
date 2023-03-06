@@ -22,7 +22,8 @@ func getRecordsets(ctx parser.FileContext) []route53.RecordSet {
 			Type:            r.GetStringProperty("Type"),
 			ResourceRecords: resourceRecords,
 			AliasTarget: route53.AliasTarget{
-				DnsName: r.GetStringProperty("AliasTarget.DNSName"),
+				Metadata: r.Metadata(),
+				DnsName:  r.GetStringProperty("AliasTarget.DNSName"),
 			},
 		})
 	}
