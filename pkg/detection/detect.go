@@ -83,14 +83,8 @@ func init() {
 				return false
 			}
 
-			var buf bytes.Buffer
-			if _, err := io.Copy(&buf, r); err != nil {
-				return false
-			}
-			data := buf.Bytes()
-
 			contents := make(map[string]interface{})
-			err := json.Unmarshal(data, &contents)
+			err := json.NewDecoder(r).Decode(&contents)
 			if err == nil {
 				if _, ok := contents["terraform_version"]; ok {
 					_, stillOk := contents["format_version"]
@@ -102,33 +96,29 @@ func init() {
 	}
 
 	matchers[FileTypeCloudFormation] = func(name string, r io.ReadSeeker) bool {
-		var unmarshalFunc func([]byte, interface{}) error
+		sniff := struct {
+			Resources map[string]map[string]interface{} `json:"Resources" yaml:"Resources"`
+		}{}
 
 		switch {
 		case IsType(name, r, FileTypeYAML):
-			unmarshalFunc = yaml.Unmarshal
+			if resetReader(r) == nil {
+				return false
+			}
+			if err := yaml.NewDecoder(r).Decode(&sniff); err != nil {
+				return false
+			}
 		case IsType(name, r, FileTypeJSON):
-			unmarshalFunc = json.Unmarshal
+			if resetReader(r) == nil {
+				return false
+			}
+			if err := json.NewDecoder(r).Decode(&sniff); err != nil {
+				return false
+			}
 		default:
 			return false
 		}
 
-		if resetReader(r) == nil {
-			return false
-		}
-
-		var buf bytes.Buffer
-		if _, err := io.Copy(&buf, r); err != nil {
-			return false
-		}
-		data := buf.Bytes()
-
-		sniff := struct {
-			Resources map[string]map[string]interface{} `json:"Resources" yaml:"Resources"`
-		}{}
-		if err := unmarshalFunc(data, &sniff); err != nil {
-			return false
-		}
 		return sniff.Resources != nil
 	}
 
@@ -138,19 +128,13 @@ func init() {
 			return false
 		}
 
-		var buf bytes.Buffer
-		if _, err := io.Copy(&buf, r); err != nil {
-			return false
-		}
-		data := buf.Bytes()
-
 		sniff := struct {
 			ContentType string                 `json:"contentType"`
 			Parameters  map[string]interface{} `json:"parameters"`
 			Resources   []interface{}          `json:"resources"`
 		}{}
 		metadata := types.NewUnmanagedMetadata()
-		if err := armjson.Unmarshal(data, &sniff, &metadata); err != nil {
+		if err := armjson.UnmarshalFromReader(r, &sniff, &metadata); err != nil {
 			return false
 		}
 
@@ -199,17 +183,15 @@ func init() {
 			return false
 		}
 
-		var buf bytes.Buffer
-		if _, err := io.Copy(&buf, r); err != nil {
-			return false
-		}
-		data := buf.Bytes()
-
 		expectedProperties := []string{"apiVersion", "kind", "metadata"}
 
 		if IsType(name, r, FileTypeJSON) {
+			if resetReader(r) == nil {
+				return false
+			}
+
 			var result map[string]interface{}
-			if err := json.Unmarshal(data, &result); err != nil {
+			if err := json.NewDecoder(r).Decode(&result); err != nil {
 				return false
 			}
 
@@ -220,6 +202,13 @@ func init() {
 			}
 			return true
 		}
+
+		// at this point, we need to inspect bytes
+		var buf bytes.Buffer
+		if _, err := io.Copy(&buf, r); err != nil {
+			return false
+		}
+		data := buf.Bytes()
 
 		marker := "\n---\n"
 		altMarker := "\r\n---\r\n"
