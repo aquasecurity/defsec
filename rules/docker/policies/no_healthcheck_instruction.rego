@@ -1,6 +1,6 @@
 # METADATA
 # title: "No HEALTHCHECK defined"
-# description: "You shoud add HEALTHCHECK instruction in your docker container images to perform the health check on running containers."
+# description: "You should add HEALTHCHECK instruction in your docker container images to perform the health check on running containers."
 # scope: package
 # schemas:
 # - input: schema["input"]
