@@ -121,13 +121,8 @@ func (a *adapter) adaptSecurityGroup(apiSecurityGroup types.SecurityGroup) (*ec2
 		}
 
 		var fromport, toport int
-		if ingress.FromPort != nil {
-			fromport = int(*ingress.FromPort)
-		}
-
-		if ingress.ToPort != nil {
-			toport = int(*ingress.ToPort)
-		}
+		fromport = int(*ingress.FromPort)
+		toport = int(*ingress.ToPort)
 
 		var groupids []defsecTypes.StringValue
 		if ingress.UserIdGroupPairs != nil {
@@ -165,13 +160,9 @@ func (a *adapter) adaptSecurityGroup(apiSecurityGroup types.SecurityGroup) (*ec2
 			}
 		}
 		var fromport, toport int
-		if egress.FromPort != nil {
-			fromport = int(*egress.FromPort)
-		}
+		fromport = int(*egress.FromPort)
+		toport = int(*egress.ToPort)
 
-		if egress.ToPort != nil {
-			toport = int(*egress.ToPort)
-		}
 		sg.EgressRules = append(sg.EgressRules, ec2.SecurityGroupRule{
 			Metadata:    sgMetadata,
 			IpProtocol:  defsecTypes.String(*egress.IpProtocol, sgMetadata),
@@ -364,7 +355,7 @@ func (a *adapter) adaptVPCPeerConnection(vpc types.VpcPeeringConnection) (*ec2.V
 	}, nil
 }
 
-func (a *adapter) getVPCEPServices() (VpcEpss []ec2.VpcEndPointService, err error) {
+func (a *adapter) getVPCEPServices() (vpcEpss []ec2.VpcEndPointService, err error) {
 
 	a.Tracker().SetServiceLabel("Discovering Vpc EndPointServices...")
 
@@ -395,7 +386,7 @@ func (a *adapter) adaptVPCService(es types.ServiceDetail) (*ec2.VpcEndPointServi
 		ServiceId: es.ServiceId,
 	})
 	if err != nil {
-		EPSPs = nil
+		return nil, err
 	}
 
 	for _, ESP := range EPSP.AllowedPrincipals {

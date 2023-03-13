@@ -210,25 +210,14 @@ func (a *adapter) adaptInstance(instance ec2Types.Instance) (*ec2.Instance, erro
 		i.CPUOptions.ThreadPerCore = defsecTypes.Int(int(*instance.CpuOptions.ThreadsPerCore), instanceMetadata)
 	}
 
-	if instance.VpcId != nil {
-		i.VPCId = defsecTypes.String(*instance.VpcId, instanceMetadata)
-	}
+	i.VPCId = defsecTypes.String(*instance.VpcId, instanceMetadata)
 
-	if instance.InstanceId != nil {
-		i.InstanceId = defsecTypes.String(*instance.InstanceId, instanceMetadata)
-	}
+	i.InstanceId = defsecTypes.String(*instance.InstanceId, instanceMetadata)
 
-	if instance.ImageId != nil {
-		i.ImageId = defsecTypes.String(*instance.ImageId, instanceMetadata)
-	}
+	i.ImageId = defsecTypes.String(*instance.ImageId, instanceMetadata)
 
-	if instance.PublicIpAddress != nil {
-		i.PublicIpAddress = defsecTypes.String(*instance.PublicIpAddress, instanceMetadata)
-	}
-
-	if instance.SubnetId != nil {
-		i.SubnetId = defsecTypes.String(*instance.SubnetId, instanceMetadata)
-	}
+	i.PublicIpAddress = defsecTypes.String(*instance.PublicIpAddress, instanceMetadata)
+	i.SubnetId = defsecTypes.String(*instance.SubnetId, instanceMetadata)
 
 	i.InstanceLifecycle = defsecTypes.String(string(instance.InstanceLifecycle), instanceMetadata)
 
@@ -241,25 +230,15 @@ func (a *adapter) adaptInstance(instance ec2Types.Instance) (*ec2.Instance, erro
 	}
 
 	i.InstanceType = defsecTypes.String(string(instance.InstanceType), instanceMetadata)
+	i.KeyName = defsecTypes.String(*instance.KeyName, instanceMetadata)
 
-	if instance.KeyName != nil {
-		i.KeyName = defsecTypes.String(*instance.KeyName, instanceMetadata)
-	}
+	i.SpotInstanceRequestId = defsecTypes.String(*instance.SpotInstanceRequestId, instanceMetadata)
+	i.IamInstanceProfile = defsecTypes.String(*instance.IamInstanceProfile.Arn, instanceMetadata)
 
-	if instance.SpotInstanceRequestId != nil {
-		i.SpotInstanceRequestId = defsecTypes.String(*instance.SpotInstanceRequestId, instanceMetadata)
-	}
-
-	if instance.IamInstanceProfile != nil {
-		i.IamInstanceProfile = defsecTypes.String(*instance.IamInstanceProfile.Arn, instanceMetadata)
-	}
-
-	if instance.Tags != nil {
-		for range instance.Tags {
-			i.Tags = append(i.Tags, ec2.Tags{
-				Metadata: instanceMetadata,
-			})
-		}
+	for range instance.Tags {
+		i.Tags = append(i.Tags, ec2.Tags{
+			Metadata: instanceMetadata,
+		})
 	}
 
 	if instance.BlockDeviceMappings != nil {
