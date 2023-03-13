@@ -35,6 +35,9 @@ func Test_Adapt(t *testing.T) {
 					http_tokens = "required"
 					http_endpoint = "disabled"
 				}	
+
+				cpu_core_count = 1
+				cpu_threads_per_core = 2
 			  
 				ebs_block_device {
 				  encrypted = true
@@ -48,7 +51,8 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 			expected: ec2.EC2{
 				Instances: []ec2.Instance{
 					{
-						Metadata: defsecTypes.NewTestMetadata(),
+						Metadata:     defsecTypes.NewTestMetadata(),
+						InstanceType: defsecTypes.String("t1.micro", defsecTypes.NewTestMetadata()),
 						MetadataOptions: ec2.MetadataOptions{
 							Metadata:     defsecTypes.NewTestMetadata(),
 							HttpTokens:   defsecTypes.String("required", defsecTypes.NewTestMetadata()),
@@ -61,6 +65,12 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 						RootBlockDevice: &ec2.BlockDevice{
 							Metadata:  defsecTypes.NewTestMetadata(),
 							Encrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						},
+
+						CPUOptions: ec2.CPUOptions{
+							Metadata:      defsecTypes.NewTestMetadata(),
+							CoreCount:     defsecTypes.Int(1, defsecTypes.NewTestMetadata()),
+							ThreadPerCore: defsecTypes.Int(2, defsecTypes.NewTestMetadata()),
 						},
 						EBSBlockDevices: []*ec2.BlockDevice{
 							{
@@ -81,13 +91,19 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 			expected: ec2.EC2{
 				Instances: []ec2.Instance{
 					{
-						Metadata: defsecTypes.NewTestMetadata(),
+						Metadata:     defsecTypes.NewTestMetadata(),
+						InstanceType: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						MetadataOptions: ec2.MetadataOptions{
 							Metadata:     defsecTypes.NewTestMetadata(),
 							HttpTokens:   defsecTypes.String("", defsecTypes.NewTestMetadata()),
 							HttpEndpoint: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 						},
 						UserData: defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						CPUOptions: ec2.CPUOptions{
+							Metadata:      defsecTypes.NewTestMetadata(),
+							CoreCount:     defsecTypes.Int(1, defsecTypes.NewTestMetadata()),
+							ThreadPerCore: defsecTypes.Int(2, defsecTypes.NewTestMetadata()),
+						},
 						RootBlockDevice: &ec2.BlockDevice{
 							Metadata:  defsecTypes.NewTestMetadata(),
 							Encrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
@@ -121,6 +137,9 @@ func TestLines(t *testing.T) {
 			http_tokens = "required"
 			http_endpoint = "disabled"
 		}	
+
+		cpu_core_count = 1
+		cpu_threads_per_core = 2
 	  
 		ebs_block_device {
 		  encrypted = true
@@ -138,7 +157,7 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 	instance := adapted.Instances[0]
 
 	assert.Equal(t, 2, instance.Metadata.Range().GetStartLine())
-	assert.Equal(t, 22, instance.Metadata.Range().GetEndLine())
+	assert.Equal(t, 25, instance.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 6, instance.RootBlockDevice.Metadata.Range().GetStartLine())
 	assert.Equal(t, 8, instance.RootBlockDevice.Metadata.Range().GetEndLine())
@@ -155,12 +174,12 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 	assert.Equal(t, 12, instance.MetadataOptions.HttpEndpoint.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 12, instance.MetadataOptions.HttpEndpoint.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 15, instance.EBSBlockDevices[0].Metadata.Range().GetStartLine())
-	assert.Equal(t, 17, instance.EBSBlockDevices[0].Metadata.Range().GetEndLine())
+	assert.Equal(t, 18, instance.EBSBlockDevices[0].Metadata.Range().GetStartLine())
+	assert.Equal(t, 20, instance.EBSBlockDevices[0].Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 16, instance.EBSBlockDevices[0].Encrypted.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 16, instance.EBSBlockDevices[0].Encrypted.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 19, instance.EBSBlockDevices[0].Encrypted.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 19, instance.EBSBlockDevices[0].Encrypted.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 19, instance.UserData.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 21, instance.UserData.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 22, instance.UserData.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 24, instance.UserData.GetMetadata().Range().GetEndLine())
 }

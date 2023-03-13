@@ -15,10 +15,10 @@ type LaunchConfiguration struct {
 }
 
 type LaunchTemplate struct {
-	Metadata       defsecTypes.Metadata
-	Id             defsecTypes.StringValue
-	DefaultVersion defsecTypes.IntValue
-	Instance
+	Metadata               defsecTypes.Metadata
+	Id                     defsecTypes.StringValue
+	DefaultVersion         defsecTypes.IntValue
+	Instance               Instance
 	LaunchTemplateVersions []LaunchTemplateVersion
 }
 

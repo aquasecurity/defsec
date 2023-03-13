@@ -87,6 +87,7 @@ func (a *adapter) adaptLaunchTemplate(template types.LaunchTemplate) (*ec2.Launc
 			ebsDevice := &ec2.BlockDevice{
 				Metadata:  metadata,
 				Encrypted: defsecTypes.BoolDefault(false, metadata),
+				VolumeId:  defsecTypes.StringDefault("", metadata),
 			}
 			if blockMapping.Ebs != nil && blockMapping.Ebs.Encrypted != nil {
 				ebsDevice.Encrypted = defsecTypes.BoolDefault(*blockMapping.Ebs.Encrypted, metadata)
@@ -128,14 +129,14 @@ func (a *adapter) getNetworkInterfaces() ([]ec2.NetworkInterface, error) {
 	return concurrency.Adapt(apiNI, a.RootAdapter, a.adaptNetworkInterface), nil
 }
 
-func (a *adapter) adaptNetworkInterface(NI types.NetworkInterface) (*ec2.NetworkInterface, error) {
+func (a *adapter) adaptNetworkInterface(ni types.NetworkInterface) (*ec2.NetworkInterface, error) {
 
-	metadata := a.CreateMetadata("network-interface/" + *NI.NetworkInterfaceId)
+	metadata := a.CreateMetadata("network-interface/" + *ni.NetworkInterfaceId)
 
 	return &ec2.NetworkInterface{
 		Metadata: metadata,
-		Id:       defsecTypes.String(*NI.NetworkInterfaceId, metadata),
-		Status:   defsecTypes.String(string(NI.Status), metadata),
+		Id:       defsecTypes.String(*ni.NetworkInterfaceId, metadata),
+		Status:   defsecTypes.String(string(ni.Status), metadata),
 	}, nil
 }
 

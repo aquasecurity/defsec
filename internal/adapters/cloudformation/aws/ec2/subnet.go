@@ -12,11 +12,12 @@ func getSubnets(ctx parser.FileContext) (subnets []ec2.Subnet) {
 	for _, r := range subnetResources {
 
 		subnet := ec2.Subnet{
-			Metadata:            r.Metadata(),
-			MapPublicIpOnLaunch: r.GetBoolProperty("MapPublicIpOnLaunch"),
-			VPcId:               r.GetStringProperty("VpcId"),
-			CidrBlock:           r.GetStringProperty("CidrBlock"),
-			SubnetId:            r.GetStringProperty("SubnetId"),
+			Metadata:                r.Metadata(),
+			MapPublicIpOnLaunch:     r.GetBoolProperty("MapPublicIpOnLaunch"),
+			VPcId:                   r.GetStringProperty("VpcId"),
+			CidrBlock:               r.GetStringProperty("CidrBlock"),
+			SubnetId:                r.GetStringProperty("SubnetId"),
+			AvailableIpAddressCount: types.IntDefault(0, r.Metadata()),
 		}
 
 		subnets = append(subnets, subnet)
@@ -39,6 +40,7 @@ func getImages(ctx parser.FileContext) (images []ec2.Image) {
 		image := ec2.Image{
 			Metadata:        r.Metadata(),
 			ImageId:         r.GetStringProperty("InstanceConfiguration.Image"),
+			Public:          types.BoolDefault(false, r.Metadata()),
 			DeprecationTime: types.String("", r.Metadata()),
 			EbsBlockDecive:  ebsBD,
 		}

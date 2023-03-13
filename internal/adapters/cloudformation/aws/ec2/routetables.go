@@ -58,8 +58,10 @@ func getaddresses(ctx parser.FileContext) (addresses []ec2.Address) {
 	for _, r := range addresource {
 
 		add := ec2.Address{
-			Metadata: r.Metadata(),
-			Domain:   r.GetStringProperty("Domain"),
+			Metadata:      r.Metadata(),
+			Domain:        r.GetStringProperty("Domain"),
+			AllocationId:  types.StringDefault("", r.Metadata()),
+			AssociationId: types.StringDefault("", r.Metadata()),
 		}
 		addresses = append(addresses, add)
 	}
@@ -67,6 +69,8 @@ func getaddresses(ctx parser.FileContext) (addresses []ec2.Address) {
 	for _, r := range addassresource {
 
 		addass := ec2.Address{
+			Metadata:      r.Metadata(),
+			Domain:        types.StringDefault("", r.Metadata()),
 			AllocationId:  r.GetStringProperty("AllocationId"),
 			AssociationId: types.String("", r.Metadata()),
 		}

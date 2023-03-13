@@ -87,6 +87,7 @@ func getInstances(modules terraform.Modules) []ec2.Instance {
 			RootBlockDevice: &ec2.BlockDevice{
 				Metadata:  b.GetMetadata(),
 				Encrypted: types.BoolDefault(false, b.GetMetadata()),
+				VolumeId:  types.StringDefault("", b.GetMetadata()),
 			},
 			EBSBlockDevices:   nil,
 			NetworkInterfaces: nil,

@@ -144,11 +144,11 @@ func (a *adapter) adaptvpnconnection(vpnConn types.VpnConnection) (*ec2.VpnConne
 	}, nil
 }
 
-func (a *adapter) adaptEgressOnlyIG(IG types.EgressOnlyInternetGateway) (*ec2.EgressOnlyInternetGateway, error) {
-	metadata := a.CreateMetadata(fmt.Sprintf("Egressonlyinternetgateway/%s", *IG.EgressOnlyInternetGatewayId))
+func (a *adapter) adaptEgressOnlyIG(ig types.EgressOnlyInternetGateway) (*ec2.EgressOnlyInternetGateway, error) {
+	metadata := a.CreateMetadata(fmt.Sprintf("Egressonlyinternetgateway/%s", *ig.EgressOnlyInternetGatewayId))
 	return &ec2.EgressOnlyInternetGateway{
 		Metadata: metadata,
-		Id:       defsecTypes.String(*IG.EgressOnlyInternetGatewayId, metadata),
+		Id:       defsecTypes.String(*ig.EgressOnlyInternetGatewayId, metadata),
 	}, nil
 }
 

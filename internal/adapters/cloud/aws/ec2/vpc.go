@@ -273,7 +273,7 @@ func (a *adapter) adaptVPC(v types.Vpc) (*ec2.VPC, error) {
 
 }
 
-func (a *adapter) getVPCEndPoints() (VpcEPs []ec2.VpcEndPoint, err error) {
+func (a *adapter) getVPCEndPoints() (vpcEps []ec2.VpcEndPoint, err error) {
 
 	a.Tracker().SetServiceLabel("Discovering Vpc EndPoints...")
 
@@ -319,7 +319,7 @@ func (a *adapter) adaptVpcEndPoints(vpc types.VpcEndpoint) (*ec2.VpcEndPoint, er
 	}, nil
 }
 
-func (a *adapter) getVPCPeerConnection() (VpcPCs []ec2.VpcPeeringConnection, err error) {
+func (a *adapter) getVPCPeerConnection() (vpcPcs []ec2.VpcPeeringConnection, err error) {
 
 	a.Tracker().SetServiceLabel("Discovering Vpc PeeringConnection...")
 
@@ -364,11 +364,11 @@ func (a *adapter) adaptVPCPeerConnection(vpc types.VpcPeeringConnection) (*ec2.V
 	}, nil
 }
 
-func (a *adapter) getVPCEPServices() (VpcEPSs []ec2.VpcEndPointService, err error) {
+func (a *adapter) getVPCEPServices() (VpcEpss []ec2.VpcEndPointService, err error) {
 
 	a.Tracker().SetServiceLabel("Discovering Vpc EndPointServices...")
 
-	var apiVpcEPSs []types.ServiceDetail
+	var apiVpcEpss []types.ServiceDetail
 	var input ec2api.DescribeVpcEndpointServicesInput
 
 	for {
@@ -376,8 +376,8 @@ func (a *adapter) getVPCEPServices() (VpcEPSs []ec2.VpcEndPointService, err erro
 		if err != nil {
 			return nil, err
 		}
-		apiVpcEPSs = append(apiVpcEPSs, output.ServiceDetails...)
-		a.Tracker().SetTotalResources(len(apiVpcEPSs))
+		apiVpcEpss = append(apiVpcEpss, output.ServiceDetails...)
+		a.Tracker().SetTotalResources(len(apiVpcEpss))
 		if output.NextToken == nil {
 			break
 		}
@@ -385,14 +385,14 @@ func (a *adapter) getVPCEPServices() (VpcEPSs []ec2.VpcEndPointService, err erro
 	}
 
 	a.Tracker().SetServiceLabel("Adapting Vpc PeeringConnection...")
-	return concurrency.Adapt(apiVpcEPSs, a.RootAdapter, a.adaptVPCService), nil
+	return concurrency.Adapt(apiVpcEpss, a.RootAdapter, a.adaptVPCService), nil
 }
 
-func (a *adapter) adaptVPCService(ES types.ServiceDetail) (*ec2.VpcEndPointService, error) {
+func (a *adapter) adaptVPCService(es types.ServiceDetail) (*ec2.VpcEndPointService, error) {
 
 	var EPSPs []ec2.AllowedPricipal
 	EPSP, err := a.client.DescribeVpcEndpointServicePermissions(a.Context(), &ec2api.DescribeVpcEndpointServicePermissionsInput{
-		ServiceId: ES.ServiceId,
+		ServiceId: es.ServiceId,
 	})
 	if err != nil {
 		EPSPs = nil
@@ -404,11 +404,11 @@ func (a *adapter) adaptVPCService(ES types.ServiceDetail) (*ec2.VpcEndPointServi
 			Metadata: metadata,
 		})
 	}
-	metadata := a.CreateMetadata("vpc/" + *ES.ServiceId)
+	metadata := a.CreateMetadata("vpc/" + *es.ServiceId)
 	return &ec2.VpcEndPointService{
 		Metadata:                          metadata,
-		ServiceId:                         defsecTypes.String(*ES.ServiceId, metadata),
-		Owner:                             defsecTypes.String(*ES.Owner, metadata),
+		ServiceId:                         defsecTypes.String(*es.ServiceId, metadata),
+		Owner:                             defsecTypes.String(*es.Owner, metadata),
 		VpcEPSPermissionAllowedPrincipals: EPSPs,
 	}, nil
 

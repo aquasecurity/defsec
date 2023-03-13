@@ -22,6 +22,7 @@ func getLaunchTemplates(file parser.FileContext) (templates []ec2.LaunchTemplate
 				Metadata: r.Metadata(),
 				ImageId:  imageid,
 			},
+			VersionNumber: types.IntDefault(0, r.Metadata()),
 		})
 
 		launchTemplate := ec2.LaunchTemplate{
@@ -30,7 +31,19 @@ func getLaunchTemplates(file parser.FileContext) (templates []ec2.LaunchTemplate
 			DefaultVersion:         r.GetIntProperty("DefaultVersionNumber"),
 			LaunchTemplateVersions: LTV,
 			Instance: ec2.Instance{
-				Metadata: r.Metadata(),
+				Metadata:              r.Metadata(),
+				VPCId:                 types.StringDefault("", r.Metadata()),
+				ImageId:               types.StringDefault("", r.Metadata()),
+				SubnetId:              types.StringDefault("", r.Metadata()),
+				InstanceId:            types.StringDefault("", r.Metadata()),
+				InstanceType:          types.StringDefault("", r.Metadata()),
+				InstanceLifecycle:     types.StringDefault("", r.Metadata()),
+				StateName:             types.StringDefault("", r.Metadata()),
+				IamInstanceProfile:    types.String("", r.Metadata()),
+				PublicIpAddress:       types.String("", r.Metadata()),
+				MonitoringState:       types.BoolDefault(false, r.Metadata()),
+				KeyName:               types.StringDefault("", r.Metadata()),
+				SpotInstanceRequestId: types.StringDefault("", r.Metadata()),
 				MetadataOptions: ec2.MetadataOptions{
 					Metadata:     r.Metadata(),
 					HttpTokens:   types.StringDefault("optional", r.Metadata()),
@@ -45,22 +58,27 @@ func getLaunchTemplates(file parser.FileContext) (templates []ec2.LaunchTemplate
 
 		if data := r.GetProperty("LaunchTemplateData"); data.IsNotNil() {
 			if opts := data.GetProperty("MetadataOptions"); opts.IsNotNil() {
-				launchTemplate.MetadataOptions = ec2.MetadataOptions{
+				launchTemplate.Instance.MetadataOptions = ec2.MetadataOptions{
 					Metadata:     opts.Metadata(),
 					HttpTokens:   opts.GetStringProperty("HttpTokens", "optional"),
 					HttpEndpoint: opts.GetStringProperty("HttpEndpoint", "enabled"),
 				}
 			}
 			launchTemplate.Instance.UserData = data.GetStringProperty("UserData", "")
+			launchTemplate.Instance.ImageId = data.GetStringProperty("ImageId", "")
+			launchTemplate.Instance.InstanceType = data.GetStringProperty("InstanceType", "")
+			launchTemplate.Instance.IamInstanceProfile = data.GetStringProperty("IamInstanceProfile.Arn", "")
+			launchTemplate.Instance.KeyName = data.GetStringProperty("KeyName", "")
+			launchTemplate.Instance.MonitoringState = data.GetBoolProperty("Monitoring.Enabled")
 
 			blockDevices := getBlockDevices(r)
 			for i, device := range blockDevices {
 				copyDevice := device
 				if i == 0 {
-					launchTemplate.RootBlockDevice = copyDevice
+					launchTemplate.Instance.RootBlockDevice = copyDevice
 					continue
 				}
-				launchTemplate.EBSBlockDevices = append(launchTemplate.EBSBlockDevices, device)
+				launchTemplate.Instance.EBSBlockDevices = append(launchTemplate.Instance.EBSBlockDevices, device)
 			}
 		}
 

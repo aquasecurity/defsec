@@ -24,11 +24,12 @@ func adaptSubnet(resource *terraform.Block, module *terraform.Module) ec2.Subnet
 	subnetIdVal := subnetIdAttr.AsStringValueOrDefault("", resource)
 
 	return ec2.Subnet{
-		Metadata:            resource.GetMetadata(),
-		MapPublicIpOnLaunch: mapPublicIpOnLaunchVal,
-		SubnetId:            subnetIdVal,
-		VPcId:               resource.GetAttribute("vpc_id").AsStringValueOrDefault("", resource),
-		CidrBlock:           resource.GetAttribute("cidr_block").AsStringValueOrDefault("", resource),
+		Metadata:                resource.GetMetadata(),
+		MapPublicIpOnLaunch:     mapPublicIpOnLaunchVal,
+		SubnetId:                subnetIdVal,
+		AvailableIpAddressCount: types.IntDefault(0, resource.GetMetadata()),
+		VPcId:                   resource.GetAttribute("vpc_id").AsStringValueOrDefault("", resource),
+		CidrBlock:               resource.GetAttribute("cidr_block").AsStringValueOrDefault("", resource),
 	}
 }
 
@@ -58,6 +59,7 @@ func adaptImage(resource *terraform.Block) ec2.Image {
 		ImageId:         resource.GetAttribute("image").AsStringValueOrDefault("", resource),
 		DeprecationTime: types.String("", resource.GetMetadata()),
 		EbsBlockDecive:  ebsblockdevice,
+		Public:          types.Bool(false, resource.GetMetadata()),
 	}
 }
 

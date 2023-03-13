@@ -58,6 +58,7 @@ func (a *sgAdapter) adaptSecurityGroups(modules terraform.Modules) []ec2.Securit
 	if len(orphanResources) > 0 {
 		orphanage := ec2.SecurityGroup{
 			Metadata:     defsecTypes.NewUnmanagedMetadata(),
+			GroupId:      defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			Description:  defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			GroupName:    groupname,
 			IngressRules: nil,
@@ -296,19 +297,19 @@ func adaptVPCEPServices(modules terraform.Modules) []ec2.VpcEndPointService {
 	return vpcs
 }
 
-func adaptVPCEPService(EPS *terraform.Block, module *terraform.Module) ec2.VpcEndPointService {
+func adaptVPCEPService(eps *terraform.Block, module *terraform.Module) ec2.VpcEndPointService {
 
 	var APs []ec2.AllowedPricipal
-	for _, AP := range module.GetReferencingResources(EPS, "aws_vpc_endpoint_service_allowed_principal", "vpc_endpoint_service_id") {
+	for _, AP := range module.GetReferencingResources(eps, "aws_vpc_endpoint_service_allowed_principal", "vpc_endpoint_service_id") {
 		APs = append(APs, ec2.AllowedPricipal{
 			Metadata: AP.GetMetadata(),
 		})
 	}
 
 	return ec2.VpcEndPointService{
-		Metadata:                          EPS.GetMetadata(),
-		Owner:                             defsecTypes.String("", EPS.GetMetadata()),
-		ServiceId:                         EPS.GetAttribute("id").AsStringValueOrDefault("", EPS),
+		Metadata:                          eps.GetMetadata(),
+		Owner:                             defsecTypes.String("", eps.GetMetadata()),
+		ServiceId:                         eps.GetAttribute("id").AsStringValueOrDefault("", eps),
 		VpcEPSPermissionAllowedPrincipals: APs,
 	}
 }

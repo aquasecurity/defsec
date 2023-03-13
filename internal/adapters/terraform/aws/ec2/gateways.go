@@ -40,7 +40,7 @@ func adaptinternetgateway(resource *terraform.Block, module *terraform.Module) e
 func adaptEgressonlyIGs(modules terraform.Modules) []ec2.EgressOnlyInternetGateway {
 	var EOIGs []ec2.EgressOnlyInternetGateway
 	for _, module := range modules {
-		for _, resource := range module.GetResourcesByType("ws_egress_only_internet_gateway") {
+		for _, resource := range module.GetResourcesByType("aws_egress_only_internet_gateway") {
 			EOIGs = append(EOIGs, adaptEgressonlyIG(resource))
 		}
 	}

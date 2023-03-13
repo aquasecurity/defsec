@@ -26,8 +26,10 @@ func getVolumes(ctx parser.FileContext) (volumes []ec2.Volume) {
 				Enabled:  r.GetBoolProperty("Encrypted"),
 				KMSKeyID: r.GetStringProperty("KmsKeyId"),
 			},
-			Attachments: getattachemnts(ctx),
-			Tags:        tags,
+			Attachments:            getattachemnts(ctx),
+			EbsEncryptionByDefault: defsecTypes.BoolDefault(false, r.Metadata()),
+			EbsDefaultKmsKeyId:     defsecTypes.String("", r.Metadata()),
+			Tags:                   tags,
 		}
 
 		volumes = append(volumes, volume)
