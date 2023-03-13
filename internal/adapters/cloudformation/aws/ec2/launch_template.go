@@ -58,13 +58,13 @@ func getLaunchTemplates(file parser.FileContext) (templates []ec2.LaunchTemplate
 
 		if data := r.GetProperty("LaunchTemplateData"); data.IsNotNil() {
 			if opts := data.GetProperty("MetadataOptions"); opts.IsNotNil() {
-				launchTemplate.Instance.MetadataOptions = ec2.MetadataOptions{
+				launchTemplate.MetadataOptions = ec2.MetadataOptions{
 					Metadata:     opts.Metadata(),
 					HttpTokens:   opts.GetStringProperty("HttpTokens", "optional"),
 					HttpEndpoint: opts.GetStringProperty("HttpEndpoint", "enabled"),
 				}
 			}
-			launchTemplate.Instance.UserData = data.GetStringProperty("UserData", "")
+			launchTemplate.UserData = data.GetStringProperty("UserData", "")
 			launchTemplate.Instance.ImageId = data.GetStringProperty("ImageId", "")
 			launchTemplate.Instance.InstanceType = data.GetStringProperty("InstanceType", "")
 			launchTemplate.Instance.IamInstanceProfile = data.GetStringProperty("IamInstanceProfile.Arn", "")

@@ -80,6 +80,7 @@ func adaptLaunchConfiguration(resource *terraform.Block) ec2.LaunchConfiguration
 		RootBlockDevice: &ec2.BlockDevice{
 			Metadata:  resource.GetMetadata(),
 			Encrypted: defsecTypes.BoolDefault(false, resource.GetMetadata()),
+			VolumeId:  defsecTypes.String("", resource.GetMetadata()),
 		},
 		EBSBlockDevices: nil,
 		MetadataOptions: getMetadataOptions(resource),
