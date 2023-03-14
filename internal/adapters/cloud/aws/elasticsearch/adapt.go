@@ -109,16 +109,6 @@ func (a *adapter) adaptDomain(apiDomain types.DomainInfo) (*elasticsearch.Domain
 		}
 	}
 
-	name := defsecTypes.StringDefault("", metadata)
-	if apiDomain.DomainName != nil {
-		name = defsecTypes.String(*apiDomain.DomainName, metadata)
-	}
-
-	accesspolicy := defsecTypes.StringDefault("", metadata)
-	if status.AccessPolicies != nil {
-		accesspolicy = defsecTypes.String(*status.AccessPolicies, metadata)
-	}
-
 	var currentVersion, newVersion, updatestatus string
 	var updateAvailable bool
 
@@ -131,8 +121,8 @@ func (a *adapter) adaptDomain(apiDomain types.DomainInfo) (*elasticsearch.Domain
 
 	return &elasticsearch.Domain{
 		Metadata:               metadata,
-		DomainName:             name,
-		AccessPolicies:         accesspolicy,
+		DomainName:             defsecTypes.String(*apiDomain.DomainName, metadata),
+		AccessPolicies:         defsecTypes.String(*status.AccessPolicies, metadata),
 		DedicatedMasterEnabled: defsecTypes.Bool(dedicatedMasterEnabled, metadata),
 		VpcId:                  defsecTypes.String(vpcId, metadata),
 		LogPublishing: elasticsearch.LogPublishing{
