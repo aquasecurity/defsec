@@ -36,8 +36,24 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 	a.RootAdapter = root
 	a.client = ec2api.NewFromConfig(root.SessionConfig())
-	var err error
 
+	if err := a.getAWSResources(state); err != nil {
+		return err
+	}
+
+	for i, vpc := range state.AWS.EC2.VPCs {
+		for _, group := range state.AWS.EC2.SecurityGroups {
+			if group.VPCID.EqualTo(vpc.ID.Value()) {
+				state.AWS.EC2.VPCs[i].SecurityGroups = append(state.AWS.EC2.VPCs[i].SecurityGroups, group)
+			}
+		}
+	}
+
+	return nil
+}
+
+func (a *adapter) getAWSResources(state *state.State) error {
+	var err error
 	state.AWS.EC2.Instances, err = a.getInstances()
 	if err != nil {
 		return err
@@ -149,15 +165,8 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 		return err
 	}
 
-	for i, vpc := range state.AWS.EC2.VPCs {
-		for _, group := range state.AWS.EC2.SecurityGroups {
-			if group.VPCID.EqualTo(vpc.ID.Value()) {
-				state.AWS.EC2.VPCs[i].SecurityGroups = append(state.AWS.EC2.VPCs[i].SecurityGroups, group)
-			}
-		}
-	}
-
 	return nil
+
 }
 
 func (a *adapter) getInstances() (instances []ec2.Instance, err error) {
