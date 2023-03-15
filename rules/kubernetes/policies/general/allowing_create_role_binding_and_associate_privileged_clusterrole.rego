@@ -3,7 +3,7 @@
 # description: "Check whether role permits creating role bindings and associating to privileged role/clusterrole"
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/rbac-good-practices/
 # custom:

@@ -3,7 +3,7 @@
 # description: "Avoid using 'RUN' with 'sudo' commands, as it can lead to unpredictable behavior."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://docs.docker.com/engine/reference/builder/#run
 # custom:

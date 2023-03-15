@@ -57,7 +57,7 @@ func Test_AllRegoCloudRulesMatchSchema(t *testing.T) {
 	schemaSet := ast.NewSchemaSet()
 	var schema interface{}
 	require.NoError(t, json.Unmarshal([]byte(schemas.Cloud), &schema))
-	schemaSet.Put(ast.MustParseRef("schema.input"), schema)
+	schemaSet.Put(ast.MustParseRef("schema.cloud"), schema)
 	compiler.WithSchemas(schemaSet)
 	compiler.WithCapabilities(ast.CapabilitiesForThisVersion())
 	compiler.Compile(baseModules)
@@ -104,7 +104,9 @@ func Test_AllRegoRules(t *testing.T) {
 
 	compiler := ast.NewCompiler()
 	schemaSet := ast.NewSchemaSet()
-	schemaSet.Put(ast.MustParseRef("schema.input"), map[string]interface{}{})
+	schemaSet.Put(ast.MustParseRef("schema.dockerfile"), map[string]interface{}{})
+	schemaSet.Put(ast.MustParseRef("schema.cloud"), map[string]interface{}{})
+	schemaSet.Put(ast.MustParseRef("schema.kubernetes"), map[string]interface{}{})
 	compiler.WithSchemas(schemaSet)
 	compiler.WithCapabilities(ast.CapabilitiesForThisVersion())
 	compiler.Compile(baseModules)

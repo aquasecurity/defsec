@@ -3,7 +3,7 @@
 # description: "If kube-proxy is running, and if it is using a file-based kubeconfig file, ensure that the proxy kubeconfig file has permissions of 600 or more restrictive."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

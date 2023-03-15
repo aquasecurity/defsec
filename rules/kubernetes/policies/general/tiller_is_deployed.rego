@@ -3,7 +3,7 @@
 # description: "Check if Helm Tiller component is deployed."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # custom:
 #   id: KSV102
 #   avd_id: AVD-KSV-0102

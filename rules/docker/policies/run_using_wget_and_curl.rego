@@ -3,7 +3,7 @@
 # description: "Avoid using both 'wget' and 'curl' since these tools have the same effect."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run
 # custom:

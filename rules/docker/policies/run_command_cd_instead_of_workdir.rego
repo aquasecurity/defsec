@@ -3,7 +3,7 @@
 # description: "Use WORKDIR instead of proliferating instructions like 'RUN cd … && do-something', which are hard to read, troubleshoot, and maintain."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#workdir
 # custom:

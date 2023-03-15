@@ -3,7 +3,7 @@
 # description: "The ability to control which pods get service traffic directed to them allows for interception attacks. Controlling network policy allows for bypassing lateral movement restrictions."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/rbac-good-practices/
 # custom:

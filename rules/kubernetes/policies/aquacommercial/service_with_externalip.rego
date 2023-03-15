@@ -3,7 +3,7 @@
 # description: "Services with external IP addresses allows direct access from the internet and might expose risk for CVE-2020-8554"
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # custom:
 #   id: AVD-KSV-0108
 #   avd_id: AVD-KSV-0108

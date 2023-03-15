@@ -3,7 +3,7 @@
 # description: "Rotate log files on reaching 100 MB or as appropriate."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

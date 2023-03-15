@@ -3,7 +3,7 @@
 # description: "The RBAC role cluster-admin provides wide-ranging powers over the environment and should be used only where and when needed."
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/rbac-good-practices/
 # custom:

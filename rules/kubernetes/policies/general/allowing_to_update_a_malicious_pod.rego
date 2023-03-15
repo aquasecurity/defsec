@@ -3,7 +3,7 @@
 # description: "Check whether role permits update/create of a malicious pod"
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/rbac-good-practices/
 # custom:

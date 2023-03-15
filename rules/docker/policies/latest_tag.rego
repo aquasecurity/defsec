@@ -3,7 +3,7 @@
 # description: "When using a 'FROM' statement you should use a specific tag to avoid uncontrolled behavior when the image is updated."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # custom:
 #   id: DS001
 #   avd_id: AVD-DS-0001

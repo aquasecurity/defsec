@@ -5,7 +5,7 @@
 # related_resources:
 # - https://docs.docker.com/engine/reference/builder/#add
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # custom:
 #   id: DS005
 #   avd_id: AVD-DS-0005

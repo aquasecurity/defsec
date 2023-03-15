@@ -3,7 +3,7 @@
 # description: "Managing /etc/hosts aliases can prevent the container engine from modifying the file after a pod’s containers have already been started."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # custom:
 #   id: KSV007
 #   avd_id: AVD-KSV-0007

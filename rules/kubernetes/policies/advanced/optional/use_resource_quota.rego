@@ -3,7 +3,7 @@
 # description: "ensure resource quota policy has configure in order to limit aggregate resource usage within namespace"
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/quota-memory-cpu-namespace/
 # custom:

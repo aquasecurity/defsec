@@ -3,7 +3,7 @@
 # description: "Sharing the host’s PID namespace allows visibility on host processes, potentially leaking information such as environment variables and configuration."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline
 # custom:

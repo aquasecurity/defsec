@@ -3,7 +3,7 @@
 # description: "Restrict kubelet nodes to reading only objects associated with them."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

@@ -3,7 +3,7 @@
 # description: "Sharing the host’s network namespace permits processes in the pod to communicate with processes bound to the host’s loopback adapter."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline
 # custom:

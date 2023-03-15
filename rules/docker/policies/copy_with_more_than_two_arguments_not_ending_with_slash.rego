@@ -3,7 +3,7 @@
 # description: "When a COPY command has more than two arguments, the last one should end with a slash."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://docs.docker.com/engine/reference/builder/#copy
 # custom:

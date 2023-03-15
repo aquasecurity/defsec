@@ -3,7 +3,7 @@
 # description: "Disable anonymous requests to the Kubelet server."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

@@ -3,7 +3,7 @@
 # description: "A program inside the container can elevate its own privileges and run as root, which might give the program control over the container and node."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
 # custom:

@@ -3,7 +3,7 @@
 # description: "Security best practices require containers to run with minimal required capabilities."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubesec.io/basics/containers-securitycontext-capabilities-drop-index-all/
 # custom:

@@ -3,7 +3,7 @@
 # description: "Container images must not start with an empty prefix or a defined public registry domain."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # custom:
 #   id: KSV034
 #   avd_id: AVD-KSV-0034

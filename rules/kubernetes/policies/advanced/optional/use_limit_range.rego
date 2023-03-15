@@ -3,7 +3,7 @@
 # description: "ensure limit range policy has configure in order to limit resource usage for namespaces or nodes"
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/
 # custom:

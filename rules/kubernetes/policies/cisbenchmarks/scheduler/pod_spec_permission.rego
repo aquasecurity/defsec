@@ -3,7 +3,7 @@
 # description: "Ensure that the scheduler pod specification file has permissions of 600 or more restrictive."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

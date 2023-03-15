@@ -3,7 +3,7 @@
 # description: "Cached package data should be cleaned after installation to reduce image size."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
 # custom:

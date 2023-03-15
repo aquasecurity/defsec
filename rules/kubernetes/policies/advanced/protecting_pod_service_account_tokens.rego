@@ -3,7 +3,7 @@
 # description: "ensure that Pod specifications disable the secret token being mounted by setting automountServiceAccountToken: false"
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/#serviceaccount-admission-controller
 # custom:

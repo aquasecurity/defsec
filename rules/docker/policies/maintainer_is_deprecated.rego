@@ -3,7 +3,7 @@
 # description: "MAINTAINER has been deprecated since Docker 1.13.0."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://docs.docker.com/engine/deprecated/#maintainer-in-dockerfile
 # custom:

@@ -3,7 +3,7 @@
 # description: "Ensure deletion protection is enabled for RDS database instances."
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - https://aws.amazon.com/about-aws/whats-new/2018/09/amazon-rds-now-provides-database-deletion-protection/
 # custom:

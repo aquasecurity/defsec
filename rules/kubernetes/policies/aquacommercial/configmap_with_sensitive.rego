@@ -3,7 +3,7 @@
 # description: "Storing sensitive content such as usernames and email addresses in configMaps is unsafe"
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # custom:
 #   id: AVD-KSV-0110
 #   avd_id: AVD-KSV-01010

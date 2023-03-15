@@ -3,7 +3,7 @@
 # description: "SYS_ADMIN gives the processes running inside the container privileges that are equivalent to root."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubesec.io/basics/containers-securitycontext-capabilities-add-index-sys-admin/
 # custom:

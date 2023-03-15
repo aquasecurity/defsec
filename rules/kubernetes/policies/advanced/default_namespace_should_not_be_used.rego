@@ -3,7 +3,7 @@
 # description: "ensure that default namespace should not be used"
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
 # custom:

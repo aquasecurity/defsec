@@ -3,7 +3,7 @@
 # description: "You should add HEALTHCHECK instruction in your docker container images to perform the health check on running containers."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://blog.aquasec.com/docker-security-best-practices
 # custom:

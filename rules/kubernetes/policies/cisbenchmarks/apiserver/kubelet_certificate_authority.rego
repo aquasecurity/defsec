@@ -3,7 +3,7 @@
 # description: "Verify kubelet's certificate before establishing connection."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

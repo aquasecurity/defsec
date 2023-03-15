@@ -3,7 +3,7 @@
 # description: "The layer and image size should be reduced by deleting unneeded caches after running zypper."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run
 # custom:

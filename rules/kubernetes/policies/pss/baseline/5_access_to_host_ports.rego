@@ -3,7 +3,7 @@
 # description: "HostPorts should be disallowed, or at minimum restricted to a known list."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline
 # custom:

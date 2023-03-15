@@ -3,7 +3,7 @@
 # description: "Explicitly set a service account public key file for service accounts on the apiserver."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

@@ -3,7 +3,7 @@
 # description: "'runAsNonRoot' forces the running image to run as a non-root user to ensure least privileges."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
 # custom:

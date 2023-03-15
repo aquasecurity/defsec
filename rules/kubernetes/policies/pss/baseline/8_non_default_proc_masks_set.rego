@@ -3,7 +3,7 @@
 # description: "The default /proc masks are set up to reduce attack surface, and should be required."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline
 # custom:

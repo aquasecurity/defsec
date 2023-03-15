@@ -3,7 +3,7 @@
 # description: "Enforcing memory limits prevents DoS via resource exhaustion."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubesec.io/basics/containers-resources-limits-memory/
 # custom:

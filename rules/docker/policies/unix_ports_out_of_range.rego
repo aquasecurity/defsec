@@ -3,7 +3,7 @@
 # description: "UNIX ports outside the range 0-65535 are exposed."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://docs.docker.com/engine/reference/builder/#expose
 # custom:

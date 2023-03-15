@@ -3,7 +3,7 @@
 # description: "Storing secrets in configMaps is unsafe"
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # custom:
 #   id: AVD-KSV-0109
 #   avd_id: AVD-KSV-0109

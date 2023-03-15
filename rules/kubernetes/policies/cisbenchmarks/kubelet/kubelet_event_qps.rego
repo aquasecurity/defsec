@@ -3,7 +3,7 @@
 # description: "Security relevant information should be captured. The --event-qps flag on the Kubelet can be used to limit the rate at which events are gathered"
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:
