@@ -3,13 +3,11 @@ package rego
 import (
 	"context"
 	"embed"
-	"encoding/json"
 	"path/filepath"
 	"strings"
 
 	"github.com/aquasecurity/defsec/internal/rules"
-	"github.com/aquasecurity/defsec/pkg/rego/schemas"
-
+	rules2 "github.com/aquasecurity/defsec/rules"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/bundle"
 )
@@ -36,10 +34,7 @@ func RegisterRegoRules(modules map[string]*ast.Module) {
 	ctx := context.TODO()
 
 	compiler := ast.NewCompiler()
-	schemaSet := ast.NewSchemaSet()
-	var schema interface{}
-	_ = json.Unmarshal([]byte(schemas.Anything), &schema)
-	schemaSet.Put(ast.MustParseRef("schema.input"), schema)
+	schemaSet, _, _ := BuildSchemaSetFromPolicies(modules, nil, nil)
 	compiler.WithSchemas(schemaSet)
 	compiler.WithCapabilities(nil)
 	compiler.Compile(modules)
@@ -65,11 +60,11 @@ func RegisterRegoRules(modules map[string]*ast.Module) {
 }
 
 func loadEmbeddedPolicies() (map[string]*ast.Module, error) {
-	return RecurseEmbeddedModules(rules.EmbeddedPolicyFileSystem, ".")
+	return RecurseEmbeddedModules(rules2.EmbeddedPolicyFileSystem, ".")
 }
 
 func loadEmbeddedLibraries() (map[string]*ast.Module, error) {
-	return RecurseEmbeddedModules(rules.EmbeddedLibraryFileSystem, ".")
+	return RecurseEmbeddedModules(rules2.EmbeddedLibraryFileSystem, ".")
 }
 
 func RecurseEmbeddedModules(fs embed.FS, dir string) (map[string]*ast.Module, error) {

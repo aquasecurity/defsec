@@ -14,12 +14,13 @@ const (
 )
 
 type Cluster struct {
-	Metadata          defsecTypes.Metadata
-	Identifier        defsecTypes.StringValue
-	EnabledLogExports []defsecTypes.StringValue
-	Instances         []Instance
-	StorageEncrypted  defsecTypes.BoolValue
-	KMSKeyID          defsecTypes.StringValue
+	Metadata              defsecTypes.Metadata
+	Identifier            defsecTypes.StringValue
+	EnabledLogExports     []defsecTypes.StringValue
+	BackupRetentionPeriod defsecTypes.IntValue
+	Instances             []Instance
+	StorageEncrypted      defsecTypes.BoolValue
+	KMSKeyID              defsecTypes.StringValue
 }
 
 type Instance struct {
