@@ -26,6 +26,7 @@ func (a *adapter) Provider() string {
 func (a *adapter) Name() string {
 	return "kendra"
 }
+//Adapting for api call
 
 func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 
