@@ -6,8 +6,8 @@ import (
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/state"
+	"github.com/aquasecurity/defsec/pkg/types"
 	"github.com/aquasecurity/defsec/rules/specs"
-	cs "github.com/aquasecurity/trivy/pkg/compliance/spec"
 	"gopkg.in/yaml.v3"
 )
 
@@ -121,7 +121,7 @@ func (r *registry) getSpecRules(spec string) []RegisteredRule {
 	defer r.RUnlock()
 	var specRules []RegisteredRule
 
-	var complianceSpec cs.ComplianceSpec
+	var complianceSpec types.ComplianceSpec
 	specContent := specs.GetSpec(spec)
 	if err := yaml.Unmarshal([]byte(specContent), &complianceSpec); err != nil {
 		return nil
