@@ -3,7 +3,7 @@
 # description: "Different FROMs can't have the same alias defined."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://docs.docker.com/develop/develop-images/multistage-build/
 # custom:

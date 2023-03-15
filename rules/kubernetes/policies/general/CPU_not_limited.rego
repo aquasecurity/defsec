@@ -3,7 +3,7 @@
 # description: "Enforcing CPU limits prevents DoS via resource exhaustion."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://cloud.google.com/blog/products/containers-kubernetes/kubernetes-best-practices-resource-requests-and-limits
 # custom:

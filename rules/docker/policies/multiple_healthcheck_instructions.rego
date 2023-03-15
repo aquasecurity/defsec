@@ -3,7 +3,7 @@
 # description: "Providing more than one HEALTHCHECK instruction per stage is confusing and error-prone."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://docs.docker.com/engine/reference/builder/#healthcheck
 # custom:

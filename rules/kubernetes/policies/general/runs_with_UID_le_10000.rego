@@ -3,7 +3,7 @@
 # description: "Force the container to run with user ID > 10000 to avoid conflicts with the host’s user table."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubesec.io/basics/containers-securitycontext-runasuser/
 # custom:

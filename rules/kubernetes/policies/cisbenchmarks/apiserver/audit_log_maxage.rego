@@ -3,7 +3,7 @@
 # description: "Retain the logs for at least 30 days or as appropriate."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

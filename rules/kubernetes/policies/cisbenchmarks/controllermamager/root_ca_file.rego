@@ -3,7 +3,7 @@
 # description: "Allow pods to verify the API server's serving certificate before establishing connections."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

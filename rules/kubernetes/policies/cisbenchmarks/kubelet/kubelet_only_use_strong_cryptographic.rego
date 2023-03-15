@@ -3,7 +3,7 @@
 # description: "Ensure that the Kubelet is configured to only use strong cryptographic ciphers."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

@@ -3,7 +3,7 @@
 # description: "For clarity and reliability, you should always use absolute paths for your WORKDIR."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#workdir
 # custom:

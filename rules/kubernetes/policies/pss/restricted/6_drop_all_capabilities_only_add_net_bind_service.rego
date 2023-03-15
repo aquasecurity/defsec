@@ -3,7 +3,7 @@
 # description: "Containers must drop ALL capabilities, and are only permitted to add back the NET_BIND_SERVICE capability."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
 # custom:

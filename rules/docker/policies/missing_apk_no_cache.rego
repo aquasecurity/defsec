@@ -3,7 +3,7 @@
 # description: "You should use 'apk add' with '--no-cache' to clean package cached data and reduce image size."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://github.com/gliderlabs/docker-alpine/blob/master/docs/usage.md#disabling-cache
 # custom:

@@ -3,7 +3,7 @@
 # description: "etcd should be configured to make use of TLS encryption for client connections."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

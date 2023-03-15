@@ -3,7 +3,7 @@
 # description: "Ensure that the Kubernetes PKI key file permission is set to 600."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

@@ -3,7 +3,7 @@
 # description: "Exposing port 22 might allow users to SSH into the container."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # custom:
 #   id: DS004
 #   avd_id: AVD-DS-0004

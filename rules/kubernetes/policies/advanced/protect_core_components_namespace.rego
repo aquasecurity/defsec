@@ -3,7 +3,7 @@
 # description: "ensure that User pods are not placed in kube-system namespace"
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/reference/setup-tools/kubeadm/implementation-details/
 # custom:

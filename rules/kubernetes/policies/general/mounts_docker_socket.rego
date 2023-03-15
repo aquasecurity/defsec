@@ -3,7 +3,7 @@
 # description: "Mounting docker.sock from the host can give the container full root access to the host."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubesec.io/basics/spec-volumes-hostpath-path-var-run-docker-sock/
 # custom:

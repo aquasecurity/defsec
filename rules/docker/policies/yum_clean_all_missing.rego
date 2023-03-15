@@ -3,7 +3,7 @@
 # description: "You should use 'yum clean all' after using a 'yum install' command to clean package cached data and reduce image size."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # related_resources:
 # - https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run
 # custom:

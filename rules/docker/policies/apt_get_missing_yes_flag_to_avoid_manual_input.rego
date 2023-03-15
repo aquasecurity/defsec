@@ -5,7 +5,7 @@
 # related_resources:
 # - https://docs.docker.com/engine/reference/builder/#run
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # custom:
 #   schema_version: 1
 #   id: DS021

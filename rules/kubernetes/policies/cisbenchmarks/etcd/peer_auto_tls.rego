@@ -3,7 +3,7 @@
 # description: "Do not use self-signed certificates for TLS."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

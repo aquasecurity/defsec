@@ -3,7 +3,7 @@
 # description: "The container should drop all default capabilities and add only those that are needed for its execution."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubesec.io/basics/containers-securitycontext-capabilities-drop-index-all/
 # custom:

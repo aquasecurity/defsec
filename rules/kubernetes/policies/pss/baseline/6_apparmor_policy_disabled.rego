@@ -3,7 +3,7 @@
 # description: "A program inside the container can bypass AppArmor protection policies."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline
 # custom:

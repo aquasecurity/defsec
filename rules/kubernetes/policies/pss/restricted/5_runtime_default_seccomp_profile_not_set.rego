@@ -3,7 +3,7 @@
 # description: "The RuntimeDefault/Localhost seccomp profile must be required, or allow specific additional profiles."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
 # custom:

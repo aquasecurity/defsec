@@ -3,7 +3,7 @@
 # description: "'apt-get dist-upgrade' upgrades a major version so it doesn't make more sense in Dockerfile."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["dockerfile"]
 # custom:
 #   id: DS024
 #   avd_id: AVD-DS-0024

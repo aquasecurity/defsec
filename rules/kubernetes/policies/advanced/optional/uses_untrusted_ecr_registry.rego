@@ -3,7 +3,7 @@
 # description: "Container images from non-ECR registries should be forbidden."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # custom:
 #   id: KSV035
 #   avd_id: AVD-KSV-0035

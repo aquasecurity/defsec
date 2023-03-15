@@ -3,7 +3,7 @@
 # description: "Used to cover attacker’s tracks, but most clusters ship logs quickly off-cluster."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/rbac-good-practices/
 # custom:

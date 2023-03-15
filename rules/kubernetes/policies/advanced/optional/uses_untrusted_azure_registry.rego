@@ -3,7 +3,7 @@
 # description: "Containers should only use images from trusted registries."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # custom:
 #   id: KSV032
 #   avd_id: AVD-KSV-0032

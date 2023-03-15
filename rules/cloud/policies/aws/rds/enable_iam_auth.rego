@@ -3,7 +3,7 @@
 # description: "Ensure IAM Database Authentication is enabled for RDS database instances to manage database access"
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - https://docs.aws.amazon.com/neptune/latest/userguide/iam-auth.html
 # custom:

@@ -3,7 +3,7 @@
 # description: "If kube-proxy is running, ensure that the file ownership of its kubeconfig file is set to root:root."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:

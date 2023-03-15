@@ -3,7 +3,7 @@
 # description: "ensure that network policies selectors are applied to pods or namespaces to restricted ingress and egress traffic within the pod network"
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/tasks/administer-cluster/declare-network-policy/
 # custom:

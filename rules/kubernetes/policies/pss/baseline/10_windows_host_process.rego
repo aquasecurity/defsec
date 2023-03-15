@@ -3,7 +3,7 @@
 # description: "Windows pods offer the ability to run HostProcess containers which enable privileged access to the Windows node."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline
 # custom:

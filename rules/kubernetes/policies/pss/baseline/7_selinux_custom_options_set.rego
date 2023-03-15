@@ -3,7 +3,7 @@
 # description: "Setting a custom SELinux user or role option should be forbidden."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline
 # custom:

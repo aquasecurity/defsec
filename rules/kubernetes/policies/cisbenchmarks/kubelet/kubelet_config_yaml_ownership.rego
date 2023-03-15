@@ -3,7 +3,7 @@
 # description: "Ensure that if the kubelet refers to a configuration file with the --config argument, that file is owned by root:root."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://www.cisecurity.org/benchmark/kubernetes
 # custom:
