@@ -11,7 +11,7 @@ Resources:
       Name: Good SAM API example
       StageName: Prod
       Tracing: Activey
-      AccessLogSetting:
+      AccessLogSettings:
         DestinationArn: gateway-logging
         Format: json
 
