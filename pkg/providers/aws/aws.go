@@ -29,8 +29,12 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/neptune"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/rds"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/redshift"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/route53"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/s3"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/s3glacier"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/sagemaker"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sam"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/secretsmanager"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sns"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ssm"
@@ -66,8 +70,12 @@ type AWS struct {
 	Neptune        neptune.Neptune
 	RDS            rds.RDS
 	Redshift       redshift.Redshift
+	Route53        route53.Route53
 	SAM            sam.SAM
+	SecretsManager secretsmanager.SecretsManager
 	S3             s3.S3
+	S3Glacier      s3glacier.S3glacier
+	SageMaker      sagemaker.SageMaker
 	SNS            sns.SNS
 	SQS            sqs.SQS
 	SSM            ssm.SSM
