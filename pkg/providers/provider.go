@@ -23,6 +23,7 @@ const (
 	OracleProvider       Provider = "oracle"
 	OpenStackProvider    Provider = "openstack"
 	CloudStackProvider   Provider = "cloudstack"
+	TerraformProvider    Provider = "terraform"
 )
 
 func RuleProviderToString(provider Provider) string {
