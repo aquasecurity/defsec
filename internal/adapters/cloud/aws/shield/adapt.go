@@ -57,6 +57,7 @@ func (a *adapter) getDescribeSubscription() (shield.Subscription, error) {
 
 	var describesubscription shield.Subscription
 	var input api.DescribeSubscriptionInput
+	var describesubscriptionapi aatypes.Subscription
 
 	output, err := a.api.DescribeSubscription(a.Context(), &input)
 	if err != nil {
@@ -64,9 +65,15 @@ func (a *adapter) getDescribeSubscription() (shield.Subscription, error) {
 	}
 	metadata := a.CreateMetadataFromARN(*output.Subscription.SubscriptionArn)
 
+	var autorenew string
+	if describesubscriptionapi.AutoRenew != "ENABLED" {
+		autorenew = "DISABLED"
+	}
+
 	describesubscription = shield.Subscription{
-		Metadata: metadata,
-		EndTime:  defsecTypes.Time(*output.Subscription.EndTime, metadata),
+		Metadata:  metadata,
+		EndTime:   defsecTypes.Time(*output.Subscription.EndTime, metadata),
+		AutoRenew: defsecTypes.String(autorenew, metadata),
 	}
 
 	return describesubscription, nil

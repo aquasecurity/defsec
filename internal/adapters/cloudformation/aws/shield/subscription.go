@@ -7,12 +7,5 @@ import (
 
 // Adapt ...
 func Adapt(cfFile parser.FileContext) shield.Shield {
-	var subscription shield.Subscription
-	var Protections []shield.Protections
-	var ContactSettings []shield.ContactSettings
-	return shield.Shield{
-		DescribeSubscription:             subscription,
-		ListProtections:                  Protections,
-		DescribeEmergencyContactSettings: ContactSettings,
-	}
+	return shield.Shield{}
 }

@@ -7,8 +7,5 @@ import (
 
 // Adapt ...
 func Adapt(cfFile parser.FileContext) xray.Xray {
-	var keyId xray.Configuration // no encryption configuration docs in cloudformation.
-	return xray.Xray{
-		EncryptionConfig: keyId,
-	}
+	return xray.Xray{}
 }

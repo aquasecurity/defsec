@@ -27,13 +27,11 @@ func adaptDescribeSubscriptions(modules terraform.Modules) shield.Subscription {
 }
 
 func adaptContactSettings(modules terraform.Modules) []shield.ContactSettings {
-	var contactSettings []shield.ContactSettings
-	return contactSettings
+	return []shield.ContactSettings{}
 }
 
 func adaptListProtections(modules terraform.Modules) []shield.Protections {
-	var protections []shield.Protections
-	return protections
+	return []shield.Protections{}
 }
 
 func adaptDescribeSubscription(resource *terraform.Block) shield.Subscription {
