@@ -28,13 +28,14 @@ func adaptAccounts(modules terraform.Modules) []organizations.Account {
 }
 
 func adaptOrganization(modules terraform.Modules) organizations.Organization {
-	organization := organizations.Organization{}
+	organization := organizations.Organization{
+		Metadata:   types.NewUnmanagedMetadata(),
+		FeatureSet: types.String("", types.NewUnmanagedMetadata()),
+	}
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("aws_organizations_organization") {
-			organization = organizations.Organization{
-				Metadata:   resource.GetMetadata(),
-				FeatureSet: types.StringDefault("", resource.GetMetadata()),
-			}
+			organization.Metadata = resource.GetMetadata()
+			organization.FeatureSet = types.StringDefault("", resource.GetMetadata())
 		}
 	}
 	return organization

@@ -88,16 +88,19 @@ func (a *adapter) getOrganization() (organizations.Organization, error) {
 
 	var input api.DescribeOrganizationInput
 
-	organization := organizations.Organization{}
+	organization := organizations.Organization{
+		Metadata:   defsecTypes.NewUnmanagedMetadata(),
+		FeatureSet: defsecTypes.String("", defsecTypes.NewUnmanagedMetadata()),
+	}
 
 	output, err := a.api.DescribeOrganization(a.Context(), &input)
 	if err != nil {
 		return organization, err
 	}
-	metadata := a.CreateMetadataFromARN(*output.Organization.Arn)
-	organization = organizations.Organization{
-		Metadata:   metadata,
-		FeatureSet: defsecTypes.String(string(output.Organization.FeatureSet), metadata),
+	if err != nil {
+		metadata := a.CreateMetadataFromARN(*output.Organization.Arn)
+		organization.Metadata = metadata
+		organization.FeatureSet = defsecTypes.String(string(output.Organization.FeatureSet), metadata)
 	}
 
 	return organization, nil
