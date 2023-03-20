@@ -28,7 +28,7 @@ func adaptAccounts(modules terraform.Modules) []organizations.Account {
 }
 
 func adaptOrganization(modules terraform.Modules) organizations.Organization {
-	var organization organizations.Organization
+	organization := organizations.Organization{}
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("aws_organizations_organization") {
 			organization = organizations.Organization{

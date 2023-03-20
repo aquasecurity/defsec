@@ -3,6 +3,7 @@ package elastictranscoder
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elastictranscoder"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) elastictranscoder.ElasticTranscoder {
@@ -26,6 +27,7 @@ func adaptPipeline(resource *terraform.Block) elastictranscoder.Pipeline {
 	return elastictranscoder.Pipeline{
 		Metadata:     resource.GetMetadata(),
 		AwsKmsKeyArn: resource.GetAttribute("aws_kms_key_arn").AsStringValueOrDefault("", resource),
+		Status:       types.StringDefault("", resource.GetMetadata()),
 		Outputs:      nil,
 	}
 }

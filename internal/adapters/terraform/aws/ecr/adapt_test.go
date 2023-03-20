@@ -78,6 +78,7 @@ func Test_adaptRepository(t *testing.T) {
 `,
 			expected: ecr.Repository{
 				Metadata:           defsecTypes.NewTestMetadata(),
+				Name:               defsecTypes.String("bar", defsecTypes.NewTestMetadata()),
 				ImageTagsImmutable: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				ImageScanning: ecr.ImageScanning{
 					Metadata:   defsecTypes.NewTestMetadata(),
@@ -137,6 +138,7 @@ func Test_adaptRepository(t *testing.T) {
 `,
 			expected: ecr.Repository{
 				Metadata:           defsecTypes.NewTestMetadata(),
+				Name:               defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				ImageTagsImmutable: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 				ImageScanning: ecr.ImageScanning{
 					Metadata:   defsecTypes.NewTestMetadata(),

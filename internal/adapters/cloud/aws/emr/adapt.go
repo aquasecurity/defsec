@@ -80,36 +80,34 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterSummary) (*emr.Cluster, e
 		return nil, err
 	}
 
-	var masterinstance emr.Instance
-	var coreinstance emr.Instance
 	group, err := a.api.ListInstanceGroups(a.Context(), &api.ListInstanceGroupsInput{
 		ClusterId: apiCluster.Id,
 	})
+
+	masterinstance := emr.Instance{
+		Metadata:      metadata,
+		InstanceType:  defsecTypes.StringDefault("", metadata),
+		InstanceCount: defsecTypes.IntDefault(1, metadata),
+	}
+	coreinstance := emr.Instance{
+		Metadata:      metadata,
+		InstanceType:  defsecTypes.StringDefault("", metadata),
+		InstanceCount: defsecTypes.IntDefault(1, metadata),
+	}
+
 	if err != nil {
 		for _, g := range group.InstanceGroups {
 
-			masterinstancetype := defsecTypes.StringDefault("", metadata)
-			masterinstancecount := defsecTypes.IntDefault(1, metadata)
 			if g.InstanceGroupType == types.InstanceGroupTypeMaster {
-				masterinstancetype = defsecTypes.String(*g.InstanceType, metadata)
-				masterinstancecount = defsecTypes.Int(int(*g.RunningInstanceCount), metadata)
+				masterinstance.InstanceType = defsecTypes.String(*g.InstanceType, metadata)
+				masterinstance.InstanceCount = defsecTypes.Int(int(*g.RunningInstanceCount), metadata)
 			}
-			masterinstance = emr.Instance{
-				Metadata:      metadata,
-				InstanceType:  masterinstancetype,
-				InstanceCount: masterinstancecount,
-			}
-			coreinstancetype := defsecTypes.StringDefault("", metadata)
-			coreinstancecount := defsecTypes.IntDefault(1, metadata)
+
 			if g.InstanceGroupType == types.InstanceGroupTypeCore {
-				coreinstancetype = defsecTypes.String(*g.InstanceType, metadata)
-				coreinstancecount = defsecTypes.Int(int(*g.RunningInstanceCount), metadata)
+				coreinstance.InstanceType = defsecTypes.String(*g.InstanceType, metadata)
+				coreinstance.InstanceCount = defsecTypes.Int(int(*g.RunningInstanceCount), metadata)
 			}
-			coreinstance = emr.Instance{
-				Metadata:      metadata,
-				InstanceType:  coreinstancetype,
-				InstanceCount: coreinstancecount,
-			}
+
 		}
 	}
 

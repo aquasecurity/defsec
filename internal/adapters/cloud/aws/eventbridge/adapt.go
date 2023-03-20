@@ -70,12 +70,12 @@ func (a *adapter) getBuses() ([]eventbridge.Bus, error) {
 	return concurrency.Adapt(apiBuses, a.RootAdapter, a.adaptBus), nil
 }
 
-func (a *adapter) adaptBus(Bus types.EventBus) (*eventbridge.Bus, error) {
-	metadata := a.CreateMetadataFromARN(*Bus.Arn)
+func (a *adapter) adaptBus(bus types.EventBus) (*eventbridge.Bus, error) {
+	metadata := a.CreateMetadataFromARN(*bus.Arn)
 
 	return &eventbridge.Bus{
 		Metadata: metadata,
-		Policy:   defsecTypes.String(*Bus.Policy, metadata),
+		Policy:   defsecTypes.String(*bus.Policy, metadata),
 	}, nil
 }
 

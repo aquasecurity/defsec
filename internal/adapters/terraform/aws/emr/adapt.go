@@ -59,23 +59,27 @@ func adaptSecurityConfiguration(resource *terraform.Block) emr.SecurityConfigura
 }
 
 func getInstanceGroup(resource *terraform.Block) emr.InstanceGroup {
-	var masterinstance emr.Instance
-	var coreinstance emr.Instance
+	masterinstance := emr.Instance{
+		Metadata:      resource.GetMetadata(),
+		InstanceType:  types.StringDefault("", resource.GetMetadata()),
+		InstanceCount: types.IntDefault(1, resource.GetMetadata()),
+	}
+	coreinstance := emr.Instance{
+		Metadata:      resource.GetMetadata(),
+		InstanceType:  types.StringDefault("", resource.GetMetadata()),
+		InstanceCount: types.IntDefault(1, resource.GetMetadata()),
+	}
 
 	if mastergroupBlock := resource.GetBlock("master_instance_group"); mastergroupBlock.IsNotNil() {
-		masterinstance = emr.Instance{
-			Metadata:      mastergroupBlock.GetMetadata(),
-			InstanceType:  mastergroupBlock.GetAttribute("instance_type").AsStringValueOrDefault("", mastergroupBlock),
-			InstanceCount: mastergroupBlock.GetAttribute("instance_count").AsIntValueOrDefault(1, mastergroupBlock),
-		}
+		masterinstance.Metadata = mastergroupBlock.GetMetadata()
+		masterinstance.InstanceType = mastergroupBlock.GetAttribute("instance_typeInstanceCount:").AsStringValueOrDefault("", mastergroupBlock)
+		masterinstance.InstanceCount = mastergroupBlock.GetAttribute("instance_count").AsIntValueOrDefault(1, mastergroupBlock)
 	}
 
 	if coregroupBlock := resource.GetBlock("core_instance_group"); coregroupBlock.IsNotNil() {
-		coreinstance = emr.Instance{
-			Metadata:      coregroupBlock.GetMetadata(),
-			InstanceType:  coregroupBlock.GetAttribute("instance_type").AsStringValueOrDefault("", coregroupBlock),
-			InstanceCount: coregroupBlock.GetAttribute("instance_count").AsIntValueOrDefault(1, coregroupBlock),
-		}
+		coreinstance.Metadata = coregroupBlock.GetMetadata()
+		coreinstance.InstanceType = coregroupBlock.GetAttribute("instance_type").AsStringValueOrDefault("", coregroupBlock)
+		coreinstance.InstanceCount = coregroupBlock.GetAttribute("instance_count").AsIntValueOrDefault(1, coregroupBlock)
 	}
 	return emr.InstanceGroup{
 		Metadata:            resource.GetMetadata(),

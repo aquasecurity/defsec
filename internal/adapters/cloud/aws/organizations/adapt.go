@@ -87,7 +87,8 @@ func (a *adapter) getOrganization() (organizations.Organization, error) {
 	a.Tracker().SetServiceLabel("Discovering organizations..")
 
 	var input api.DescribeOrganizationInput
-	var organization organizations.Organization
+
+	organization := organizations.Organization{}
 
 	output, err := a.api.DescribeOrganization(a.Context(), &input)
 	if err != nil {
