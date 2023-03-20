@@ -70,8 +70,14 @@ func (a *adapter) adaptFilesystem(apiFilesystem types.FileSystemDescription) (*e
 	if apiFilesystem.Encrypted != nil {
 		encrypted = defsecTypes.Bool(*apiFilesystem.Encrypted, metadata)
 	}
+
+	kmskeyid := defsecTypes.StringDefault("", metadata)
+	if apiFilesystem.KmsKeyId != nil {
+		kmskeyid = defsecTypes.String(*apiFilesystem.KmsKeyId, metadata)
+	}
 	return &efs.FileSystem{
 		Metadata:  metadata,
 		Encrypted: encrypted,
+		KmsKeyId:  kmskeyid,
 	}, nil
 }

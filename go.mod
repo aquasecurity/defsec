@@ -76,6 +76,10 @@ require (
 )
 
 require (
+	github.com/aws/aws-sdk-go-v2/service/elasticbeanstalk v1.15.4
+	github.com/aws/aws-sdk-go-v2/service/elastictranscoder v1.14.3
+	github.com/aws/aws-sdk-go-v2/service/eventbridge v1.18.5
+	github.com/aws/aws-sdk-go-v2/service/organizations v1.18.4
 	github.com/aws/smithy-go v1.13.5
 	github.com/mitchellh/mapstructure v1.5.0
 	k8s.io/utils v0.0.0-20230115233650-391b47cb4029
@@ -106,7 +110,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.30 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.24 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.30 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.14 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.21 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.10 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.18 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.19 // indirect

@@ -11,4 +11,5 @@ type EFS struct {
 type FileSystem struct {
 	Metadata  defsecTypes.Metadata
 	Encrypted defsecTypes.BoolValue
+	KmsKeyId  defsecTypes.StringValue
 }

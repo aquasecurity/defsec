@@ -25,7 +25,9 @@ func adaptClusters(modules terraform.Modules) []eks.Cluster {
 func adaptCluster(resource *terraform.Block) eks.Cluster {
 
 	cluster := eks.Cluster{
-		Metadata: resource.GetMetadata(),
+		Metadata:        resource.GetMetadata(),
+		Version:         resource.GetAttribute("version").AsStringValueOrDefault("", resource),
+		PlatFormVersion: resource.GetAttribute("platform_version").AsStringValueOrDefault("", resource),
 		Logging: eks.Logging{
 			Metadata:          resource.GetMetadata(),
 			API:               defsecTypes.BoolDefault(false, resource.GetMetadata()),
@@ -39,8 +41,10 @@ func adaptCluster(resource *terraform.Block) eks.Cluster {
 			Secrets:  defsecTypes.BoolDefault(false, resource.GetMetadata()),
 			KMSKeyID: defsecTypes.StringDefault("", resource.GetMetadata()),
 		},
-		PublicAccessEnabled: defsecTypes.BoolDefault(true, resource.GetMetadata()),
-		PublicAccessCIDRs:   nil,
+		PublicAccessEnabled:  defsecTypes.BoolDefault(true, resource.GetMetadata()),
+		PrivateAccessEnabled: defsecTypes.BoolDefault(false, resource.GetMetadata()),
+		PublicAccessCIDRs:    nil,
+		SecurityGroupIDs:     nil,
 	}
 
 	if logTypesAttr := resource.GetAttribute("enabled_cluster_log_types"); logTypesAttr.IsNotNil() {
@@ -77,6 +81,9 @@ func adaptCluster(resource *terraform.Block) eks.Cluster {
 		publicAccessAttr := vpcBlock.GetAttribute("endpoint_public_access")
 		cluster.PublicAccessEnabled = publicAccessAttr.AsBoolValueOrDefault(true, vpcBlock)
 
+		privateAccessAttr := vpcBlock.GetAttribute("endpoint_private_access")
+		cluster.PrivateAccessEnabled = privateAccessAttr.AsBoolValueOrDefault(false, vpcBlock)
+
 		publicAccessCidrsAttr := vpcBlock.GetAttribute("public_access_cidrs")
 		cidrList := publicAccessCidrsAttr.AsStringValues()
 		for _, cidr := range cidrList {
@@ -84,6 +91,11 @@ func adaptCluster(resource *terraform.Block) eks.Cluster {
 		}
 		if len(cidrList) == 0 {
 			cluster.PublicAccessCIDRs = append(cluster.PublicAccessCIDRs, defsecTypes.StringDefault("0.0.0.0/0", vpcBlock.GetMetadata()))
+		}
+
+		securityGroupIdsAttr := vpcBlock.GetAttribute("security_group_ids")
+		for _, ids := range securityGroupIdsAttr.AsStringValues() {
+			cluster.SecurityGroupIDs = append(cluster.SecurityGroupIDs, ids)
 		}
 	}
 

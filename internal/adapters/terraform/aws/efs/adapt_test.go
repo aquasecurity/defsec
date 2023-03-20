@@ -32,6 +32,7 @@ func Test_adaptFileSystem(t *testing.T) {
 			expected: efs.FileSystem{
 				Metadata:  defsecTypes.NewTestMetadata(),
 				Encrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				KmsKeyId:  defsecTypes.String("my_kms_key", defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -43,6 +44,7 @@ func Test_adaptFileSystem(t *testing.T) {
 			expected: efs.FileSystem{
 				Metadata:  defsecTypes.NewTestMetadata(),
 				Encrypted: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				KmsKeyId:  defsecTypes.String("", defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

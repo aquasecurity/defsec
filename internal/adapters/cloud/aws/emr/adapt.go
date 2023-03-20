@@ -80,6 +80,37 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterSummary) (*emr.Cluster, e
 		return nil, err
 	}
 
+	group, err := a.api.ListInstanceGroups(a.Context(), &api.ListInstanceGroupsInput{
+		ClusterId: apiCluster.Id,
+	})
+
+	masterinstance := emr.Instance{
+		Metadata:      metadata,
+		InstanceType:  defsecTypes.StringDefault("", metadata),
+		InstanceCount: defsecTypes.IntDefault(1, metadata),
+	}
+	coreinstance := emr.Instance{
+		Metadata:      metadata,
+		InstanceType:  defsecTypes.StringDefault("", metadata),
+		InstanceCount: defsecTypes.IntDefault(1, metadata),
+	}
+
+	if err != nil {
+		for _, g := range group.InstanceGroups {
+
+			if g.InstanceGroupType == types.InstanceGroupTypeMaster {
+				masterinstance.InstanceType = defsecTypes.String(*g.InstanceType, metadata)
+				masterinstance.InstanceCount = defsecTypes.Int(int(*g.RunningInstanceCount), metadata)
+			}
+
+			if g.InstanceGroupType == types.InstanceGroupTypeCore {
+				coreinstance.InstanceType = defsecTypes.String(*g.InstanceType, metadata)
+				coreinstance.InstanceCount = defsecTypes.Int(int(*g.RunningInstanceCount), metadata)
+			}
+
+		}
+	}
+
 	name := defsecTypes.StringDefault("", metadata)
 	if apiCluster.Name != nil {
 		name = defsecTypes.String(*apiCluster.Name, metadata)
@@ -95,13 +126,25 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterSummary) (*emr.Cluster, e
 		serviceRole = defsecTypes.String(*output.Cluster.ServiceRole, metadata)
 	}
 
+	var ec2SubnetId string
+	if output.Cluster.Ec2InstanceAttributes != nil {
+		ec2SubnetId = *output.Cluster.Ec2InstanceAttributes.Ec2SubnetId
+	}
+
 	return &emr.Cluster{
-		Metadata: metadata,
+		Metadata:    metadata,
+		EC2SubnetId: defsecTypes.String(ec2SubnetId, metadata),
+		LogUri:      defsecTypes.String(*output.Cluster.LogUri, metadata),
 		Settings: emr.ClusterSettings{
 			Metadata:     metadata,
 			Name:         name,
 			ReleaseLabel: releaseLabel,
 			ServiceRole:  serviceRole,
+		},
+		InstanceGroup: emr.InstanceGroup{
+			Metadata:            metadata,
+			CoreInstanceGroup:   coreinstance,
+			MasterInstanceGroup: masterinstance,
 		},
 	}, nil
 }

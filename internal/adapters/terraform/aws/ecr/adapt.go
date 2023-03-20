@@ -28,6 +28,9 @@ func adaptRepositories(modules terraform.Modules) []ecr.Repository {
 func adaptRepository(resource *terraform.Block, module *terraform.Module, modules terraform.Modules) ecr.Repository {
 	repo := ecr.Repository{
 		Metadata: resource.GetMetadata(),
+		Name:     resource.GetAttribute("name").AsStringValueOrDefault("", resource),
+		Id:       resource.GetAttribute("registry_id ").AsStringValueOrDefault("", resource),
+		Arn:      resource.GetAttribute("arn").AsStringValueOrDefault("", resource),
 		ImageScanning: ecr.ImageScanning{
 			Metadata:   resource.GetMetadata(),
 			ScanOnPush: defsecTypes.BoolDefault(false, resource.GetMetadata()),

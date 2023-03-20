@@ -3,6 +3,7 @@ package emr
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/emr"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) emr.EMR {
@@ -23,9 +24,18 @@ func adaptClusters(modules terraform.Modules) []emr.Cluster {
 
 func adaptCluster(resource *terraform.Block) emr.Cluster {
 
-	return emr.Cluster{
-		Metadata: resource.GetMetadata(),
+	var ec2SubnetId types.StringValue
+	if ec2block := resource.GetBlock("ec2_attributes"); ec2block.IsNotNil() {
+		ec2SubnetId = ec2block.GetAttribute("subnet_id").AsStringValueOrDefault("", resource)
 	}
+
+	return emr.Cluster{
+		Metadata:      resource.GetMetadata(),
+		EC2SubnetId:   ec2SubnetId,
+		LogUri:        resource.GetAttribute("log_uri").AsStringValueOrDefault("", resource),
+		InstanceGroup: getInstanceGroup(resource),
+	}
+
 }
 
 func adaptSecurityConfigurations(modules terraform.Modules) []emr.SecurityConfiguration {
@@ -46,4 +56,34 @@ func adaptSecurityConfiguration(resource *terraform.Block) emr.SecurityConfigura
 		Configuration: resource.GetAttribute("configuration").AsStringValueOrDefault("", resource),
 	}
 
+}
+
+func getInstanceGroup(resource *terraform.Block) emr.InstanceGroup {
+	masterinstance := emr.Instance{
+		Metadata:      resource.GetMetadata(),
+		InstanceType:  types.StringDefault("", resource.GetMetadata()),
+		InstanceCount: types.IntDefault(1, resource.GetMetadata()),
+	}
+	coreinstance := emr.Instance{
+		Metadata:      resource.GetMetadata(),
+		InstanceType:  types.StringDefault("", resource.GetMetadata()),
+		InstanceCount: types.IntDefault(1, resource.GetMetadata()),
+	}
+
+	if mastergroupBlock := resource.GetBlock("master_instance_group"); mastergroupBlock.IsNotNil() {
+		masterinstance.Metadata = mastergroupBlock.GetMetadata()
+		masterinstance.InstanceType = mastergroupBlock.GetAttribute("instance_typeInstanceCount:").AsStringValueOrDefault("", mastergroupBlock)
+		masterinstance.InstanceCount = mastergroupBlock.GetAttribute("instance_count").AsIntValueOrDefault(1, mastergroupBlock)
+	}
+
+	if coregroupBlock := resource.GetBlock("core_instance_group"); coregroupBlock.IsNotNil() {
+		coreinstance.Metadata = coregroupBlock.GetMetadata()
+		coreinstance.InstanceType = coregroupBlock.GetAttribute("instance_type").AsStringValueOrDefault("", coregroupBlock)
+		coreinstance.InstanceCount = coregroupBlock.GetAttribute("instance_count").AsIntValueOrDefault(1, coregroupBlock)
+	}
+	return emr.InstanceGroup{
+		Metadata:            resource.GetMetadata(),
+		MasterInstanceGroup: masterinstance,
+		CoreInstanceGroup:   coreinstance,
+	}
 }

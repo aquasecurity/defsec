@@ -14,6 +14,7 @@ func getFileSystems(ctx parser.FileContext) (filesystems []efs.FileSystem) {
 		filesystem := efs.FileSystem{
 			Metadata:  r.Metadata(),
 			Encrypted: r.GetBoolProperty("Encrypted"),
+			KmsKeyId:  r.GetStringProperty("KmsKeyId"),
 		}
 
 		filesystems = append(filesystems, filesystem)

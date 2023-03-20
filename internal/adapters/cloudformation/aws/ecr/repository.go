@@ -21,6 +21,9 @@ func getRepositories(ctx parser.FileContext) (repositories []ecr.Repository) {
 
 		repository := ecr.Repository{
 			Metadata: r.Metadata(),
+			Name:     r.GetStringProperty("RepositoryName"),
+			Id:       r.GetStringProperty("RegistryId"),
+			Arn:      r.GetStringProperty("Arn"),
 			ImageScanning: ecr.ImageScanning{
 				Metadata:   r.Metadata(),
 				ScanOnPush: defsecTypes.BoolDefault(false, r.Metadata()),

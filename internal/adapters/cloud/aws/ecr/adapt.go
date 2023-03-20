@@ -109,6 +109,9 @@ func (a *adapter) adaptRepository(apiRepository types.Repository) (*ecr.Reposito
 
 	return &ecr.Repository{
 		Metadata: metadata,
+		Name:     defsecTypes.String(*apiRepository.RepositoryName, metadata),
+		Id:       defsecTypes.String(*apiRepository.RegistryId, metadata),
+		Arn:      defsecTypes.String(*apiRepository.RepositoryArn, metadata),
 		ImageScanning: ecr.ImageScanning{
 			Metadata:   metadata,
 			ScanOnPush: defsecTypes.Bool(scanOnPush, metadata),
