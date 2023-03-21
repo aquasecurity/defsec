@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/internal/rules"
+	rules2 "github.com/aquasecurity/defsec/rules"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -101,7 +102,7 @@ deny[res]{
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			policies, err := RecurseEmbeddedModules(rules.EmbeddedLibraryFileSystem, ".")
+			policies, err := RecurseEmbeddedModules(rules2.EmbeddedLibraryFileSystem, ".")
 			require.NoError(t, err)
 			newRule, err := ast.ParseModuleWithOpts("/rules/newrule.rego", tc.inputPolicy, ast.ParserOptions{
 				ProcessAnnotation: true,
