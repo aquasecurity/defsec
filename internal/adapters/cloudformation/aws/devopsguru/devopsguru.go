@@ -5,15 +5,8 @@ import (
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 )
 
-func getChannel(ctx parser.FileContext) []devopsguru.NotificationChannel {
-
-	resources := ctx.GetResourcesByType("AWS::DevOpsGuru::NotificationChannel")
-
-	var NCs []devopsguru.NotificationChannel
-	for _, r := range resources {
-		NCs = append(NCs, devopsguru.NotificationChannel{
-			Metadata: r.Metadata(),
-		})
+func Adapt(cfFile parser.FileContext) devopsguru.Devopsguru {
+	return devopsguru.Devopsguru{
+		NotificationChannels: getChannel(cfFile),
 	}
-	return NCs
 }

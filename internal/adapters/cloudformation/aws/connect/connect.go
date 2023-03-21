@@ -5,7 +5,6 @@ import (
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 )
 
-// Adapt ...
 func Adapt(cfFile parser.FileContext) connect.Connect {
 	return connect.Connect{
 		Instances: getInstances(cfFile),
