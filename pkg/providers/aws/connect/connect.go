@@ -27,4 +27,4 @@ var (
 	ResourceType = [5]types.InstanceStorageResourceType{"ATTACHMENTS", "CALL_RECORDINGS", "CHAT_TRANSCRIPTS", "SCHEDULED_REPORTS", "MEDIA_STREAMS"}
 )
 
-//Attachments is not supported no
+// Attachments is not supported no
