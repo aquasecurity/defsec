@@ -54,11 +54,15 @@ func parseIgnores(data []byte, path string, moduleSource string) []terraform.Ign
 }
 
 var commentPattern = regexp.MustCompile(`^\s*([/]+|/\*|#)+\s*tfsec:`)
+var trivyCommentPattern = regexp.MustCompile(`^\s*([/]+|/\*|#)+\s*trivy:`)
 
 func parseIgnoresFromLine(input string) []terraform.Ignore {
 
 	var ignores []terraform.Ignore
+
 	input = commentPattern.ReplaceAllString(input, "tfsec:")
+	input = trivyCommentPattern.ReplaceAllString(input, "trivy:")
+
 	bits := strings.Split(strings.TrimSpace(input), " ")
 	for i, bit := range bits {
 		bit := strings.TrimSpace(bit)
@@ -66,7 +70,7 @@ func parseIgnoresFromLine(input string) []terraform.Ignore {
 		bit = strings.TrimPrefix(bit, "//")
 		bit = strings.TrimPrefix(bit, "/*")
 
-		if strings.HasPrefix(bit, "tfsec:") {
+		if strings.HasPrefix(bit, "tfsec:") || strings.HasPrefix(bit, "trivy:") {
 			ignore, err := parseIgnoreFromComment(bit)
 			if err != nil {
 				continue
@@ -81,7 +85,7 @@ func parseIgnoresFromLine(input string) []terraform.Ignore {
 
 func parseIgnoreFromComment(input string) (*terraform.Ignore, error) {
 	var ignore terraform.Ignore
-	if !strings.HasPrefix(input, "tfsec:") {
+	if !strings.HasPrefix(input, "tfsec:") && !strings.HasPrefix(input, "trivy:") {
 		return nil, fmt.Errorf("invalid ignore")
 	}
 

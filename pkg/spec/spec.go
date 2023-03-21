@@ -1,6 +1,8 @@
 package spec
 
-import "github.com/aquasecurity/defsec/internal/specs"
+import (
+	"github.com/aquasecurity/defsec/rules/specs"
+)
 
 // Loader access compliance specs
 type Loader interface {

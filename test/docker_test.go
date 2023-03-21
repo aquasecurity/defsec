@@ -27,7 +27,7 @@ func Test_Docker_RegoPoliciesFromDisk(t *testing.T) {
 	entries, err := os.ReadDir("./testdata/dockerfile")
 	require.NoError(t, err)
 
-	policiesPath, err := filepath.Abs("../internal/rules/policies")
+	policiesPath, err := filepath.Abs("../rules")
 	require.NoError(t, err)
 	scanner := dockerfile.NewScanner(
 		options.ScannerWithPolicyDirs(filepath.Base(policiesPath)),

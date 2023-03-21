@@ -38,9 +38,7 @@ func outputSARIF(b ConfigurableFormatter, results scan.Results) error {
 			rule.WithHelpURI(links[0])
 		}
 
-		metadata := res.Metadata().Root()
-
-		rng := metadata.Range()
+		rng := res.Metadata().Range()
 		message := sarif.NewTextMessage(res.Description())
 		region := sarif.NewSimpleRegion(rng.GetStartLine(), rng.GetEndLine())
 		var level string
@@ -55,7 +53,7 @@ func outputSARIF(b ConfigurableFormatter, results scan.Results) error {
 			level = "error"
 		}
 
-		path := b.Path(res, metadata)
+		path := b.Path(res, res.Metadata())
 
 		location := sarif.NewPhysicalLocation().
 			WithArtifactLocation(sarif.NewSimpleArtifactLocation(path)).

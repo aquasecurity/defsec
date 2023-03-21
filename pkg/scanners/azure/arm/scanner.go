@@ -83,6 +83,9 @@ func (s *Scanner) SetPolicyReaders(readers []io.Reader) {
 func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on
 }
+func (s *Scanner) SetDataFilesystem(_ fs.FS) {
+	// handled by rego when option is passed on
+}
 
 func (s *Scanner) SetUseEmbeddedPolicies(loadEmbedded bool) {
 	s.loadEmbedded = loadEmbedded

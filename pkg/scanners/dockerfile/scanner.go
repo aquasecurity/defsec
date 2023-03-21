@@ -92,6 +92,10 @@ func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on
 }
 
+func (s *Scanner) SetDataFilesystem(_ fs.FS) {
+	// handled by rego when option is passed on
+}
+
 func NewScanner(opts ...options.ScannerOption) *Scanner {
 	s := &Scanner{
 		options: opts,

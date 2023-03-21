@@ -82,6 +82,10 @@ func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on
 }
 
+func (s *Scanner) SetDataFilesystem(_ fs.FS) {
+	// handled by rego when option is passed on
+}
+
 func (s *Scanner) SetTraceWriter(_ io.Writer)        {}
 func (s *Scanner) SetPerResultTracingEnabled(_ bool) {}
 func (s *Scanner) SetDataDirs(_ ...string)           {}
