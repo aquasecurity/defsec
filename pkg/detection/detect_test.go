@@ -1,8 +1,10 @@
 package detection
 
 import (
+	"bytes"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 	"testing"
 
@@ -185,6 +187,52 @@ spec:
 			},
 		},
 		{
+			name: "kubernetes, reader, JSON",
+			path: "k8s.json",
+			r: strings.NewReader(`{
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "nginx-deployment",
+    "labels": {
+      "app": "nginx"
+    }
+  },
+  "spec": {
+    "replicas": 3,
+    "selector": {
+      "matchLabels": {
+        "app": "nginx"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "nginx"
+        }
+      },
+      "spec": {
+        "containers": [
+          {
+            "name": "nginx",
+            "image": "nginx:1.14.2",
+            "ports": [
+              {
+                "containerPort": 80
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}`),
+			expected: []FileType{
+				FileTypeKubernetes,
+				FileTypeJSON,
+			},
+		},
+		{
 			name: "YAML, no reader",
 			path: "file.yaml",
 			r:    nil,
@@ -299,5 +347,27 @@ rules:
 				assert.False(t, IsType(test.path, test.r, "invalid"))
 			})
 		})
+	}
+}
+
+func BenchmarkIsType_SmallFile(b *testing.B) {
+	data, err := os.ReadFile(fmt.Sprintf("./testdata/%s", "small.file"))
+	assert.Nil(b, err)
+
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = IsType(fmt.Sprintf("./testdata/%s", "small.file"), bytes.NewReader(data), FileTypeAzureARM)
+	}
+}
+
+func BenchmarkIsType_BigFile(b *testing.B) {
+	data, err := os.ReadFile(fmt.Sprintf("./testdata/%s", "big.file"))
+	assert.Nil(b, err)
+
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = IsType(fmt.Sprintf("./testdata/%s", "big.file"), bytes.NewReader(data), FileTypeAzureARM)
 	}
 }
