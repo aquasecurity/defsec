@@ -71,12 +71,23 @@ func (a *adapter) adaptDomain(apiDomain types.DomainInfo) (*elasticsearch.Domain
 	var auditEnabled bool
 	var transitEncryption bool
 	var atRestEncryption bool
-	var enforceHTTPS bool
-	var tlsPolicy string
+	var enforceHTTPS, dedicatedMasterEnabled bool
+	var tlsPolicy, cloudWatchLogGroupArn, kmskeyId, vpcId string
+
+	if status.ElasticsearchClusterConfig != nil {
+		dedicatedMasterEnabled = *status.ElasticsearchClusterConfig.DedicatedMasterEnabled
+	}
+
+	if status.VPCOptions != nil && status.VPCOptions.VPCId != nil {
+		vpcId = *status.VPCOptions.VPCId
+	}
 
 	if status.LogPublishingOptions != nil {
 		if audit, ok := status.LogPublishingOptions["AUDIT_LOGS"]; ok && audit.Enabled != nil {
 			auditEnabled = *audit.Enabled
+			if audit.CloudWatchLogsLogGroupArn != nil {
+				cloudWatchLogGroupArn = *audit.CloudWatchLogsLogGroupArn
+			}
 		}
 	}
 
@@ -86,6 +97,9 @@ func (a *adapter) adaptDomain(apiDomain types.DomainInfo) (*elasticsearch.Domain
 
 	if status.EncryptionAtRestOptions != nil && status.EncryptionAtRestOptions.Enabled != nil {
 		atRestEncryption = *status.EncryptionAtRestOptions.Enabled
+		if status.EncryptionAtRestOptions.KmsKeyId != nil {
+			kmskeyId = *status.EncryptionAtRestOptions.KmsKeyId
+		}
 	}
 
 	if status.DomainEndpointOptions != nil {
@@ -95,17 +109,26 @@ func (a *adapter) adaptDomain(apiDomain types.DomainInfo) (*elasticsearch.Domain
 		}
 	}
 
-	name := defsecTypes.StringDefault("", metadata)
-	if apiDomain.DomainName != nil {
-		name = defsecTypes.String(*apiDomain.DomainName, metadata)
+	var currentVersion, newVersion, updatestatus string
+	var updateAvailable bool
+
+	if status.ServiceSoftwareOptions != nil {
+		currentVersion = *status.ServiceSoftwareOptions.CurrentVersion
+		newVersion = *status.ServiceSoftwareOptions.NewVersion
+		updateAvailable = *status.ServiceSoftwareOptions.UpdateAvailable
+		updatestatus = string(status.ServiceSoftwareOptions.UpdateStatus)
 	}
 
 	return &elasticsearch.Domain{
-		Metadata:   metadata,
-		DomainName: name,
+		Metadata:               metadata,
+		DomainName:             defsecTypes.String(*apiDomain.DomainName, metadata),
+		AccessPolicies:         defsecTypes.String(*status.AccessPolicies, metadata),
+		DedicatedMasterEnabled: defsecTypes.Bool(dedicatedMasterEnabled, metadata),
+		VpcId:                  defsecTypes.String(vpcId, metadata),
 		LogPublishing: elasticsearch.LogPublishing{
-			Metadata:     metadata,
-			AuditEnabled: defsecTypes.Bool(auditEnabled, metadata),
+			Metadata:              metadata,
+			AuditEnabled:          defsecTypes.Bool(auditEnabled, metadata),
+			CloudWatchLogGroupArn: defsecTypes.String(cloudWatchLogGroupArn, metadata),
 		},
 		TransitEncryption: elasticsearch.TransitEncryption{
 			Metadata: metadata,
@@ -114,11 +137,19 @@ func (a *adapter) adaptDomain(apiDomain types.DomainInfo) (*elasticsearch.Domain
 		AtRestEncryption: elasticsearch.AtRestEncryption{
 			Metadata: metadata,
 			Enabled:  defsecTypes.Bool(atRestEncryption, metadata),
+			KmsKeyId: defsecTypes.String(kmskeyId, metadata),
 		},
 		Endpoint: elasticsearch.Endpoint{
 			Metadata:     metadata,
 			EnforceHTTPS: defsecTypes.Bool(enforceHTTPS, metadata),
 			TLSPolicy:    defsecTypes.String(tlsPolicy, metadata),
+		},
+		ServiceSoftwareOptions: elasticsearch.ServiceSoftwareOptions{
+			Metadata:        metadata,
+			CurrentVersion:  defsecTypes.String(currentVersion, metadata),
+			NewVersion:      defsecTypes.String(newVersion, metadata),
+			UpdateAvailable: defsecTypes.Bool(updateAvailable, metadata),
+			UpdateStatus:    defsecTypes.String(updatestatus, metadata),
 		},
 	}, nil
 }

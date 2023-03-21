@@ -52,11 +52,12 @@ func adaptCluster(resource *terraform.Block, module *terraform.Module) documentd
 	KMSKeyIDVal := KMSKeyIDAttr.AsStringValueOrDefault("", resource)
 
 	return documentdb.Cluster{
-		Metadata:          resource.GetMetadata(),
-		Identifier:        identifierVal,
-		EnabledLogExports: enabledLogExports,
-		Instances:         instances,
-		StorageEncrypted:  storageEncryptedVal,
-		KMSKeyID:          KMSKeyIDVal,
+		Metadata:              resource.GetMetadata(),
+		Identifier:            identifierVal,
+		EnabledLogExports:     enabledLogExports,
+		BackupRetentionPeriod: resource.GetAttribute("backup_retention_period").AsIntValueOrDefault(0, resource),
+		Instances:             instances,
+		StorageEncrypted:      storageEncryptedVal,
+		KMSKeyID:              KMSKeyIDVal,
 	}
 }
