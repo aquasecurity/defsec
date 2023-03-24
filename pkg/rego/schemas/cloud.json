@@ -1718,7 +1718,20 @@
         }
       }
     },
-    "github.com.aquasecurity.defsec.pkg.providers.aws.elb.Attibute": {
+    "github.com.aquasecurity.defsec.pkg.providers.aws.elb.AttibuteV2": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "value": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.elb.Attribute": {
       "type": "object",
       "properties": {
         "accesslogenabled": {
@@ -1732,19 +1745,6 @@
         "crosszoneloadbalancingenabled": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
-        }
-      }
-    },
-    "github.com.aquasecurity.defsec.pkg.providers.aws.elb.AttibuteV2": {
-      "type": "object",
-      "properties": {
-        "key": {
-          "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
-        },
-        "value": {
-          "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -1883,7 +1883,7 @@
       "properties": {
         "attributes": {
           "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.elb.Attibute"
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.elb.Attribute"
         },
         "dnsname": {
           "type": "object",

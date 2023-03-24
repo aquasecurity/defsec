@@ -51,31 +51,32 @@ func (a *adapter) adaptLoadBalancerV1(loadbalancer types.LoadBalancerDescription
 		})
 	}
 
-	var attributes elb.Attribute
-	{
-		output, err := a.apiV1.DescribeLoadBalancerAttributes(a.Context(), &apiV1.DescribeLoadBalancerAttributesInput{
-			LoadBalancerName: loadbalancer.LoadBalancerName,
-		})
-		if err != nil {
-			return nil, err
-		}
-		var acclog, conndraining, crosszone bool
-		if output.LoadBalancerAttributes.AccessLog != nil {
-			acclog = output.LoadBalancerAttributes.AccessLog.Enabled
-		}
-		if output.LoadBalancerAttributes.ConnectionDraining != nil {
-			conndraining = output.LoadBalancerAttributes.ConnectionDraining.Enabled
-		}
-		if output.LoadBalancerAttributes.CrossZoneLoadBalancing != nil {
-			crosszone = output.LoadBalancerAttributes.CrossZoneLoadBalancing.Enabled
-		}
-		attributes = elb.Attribute{
-			Metadata:                      metadata,
-			AccessLogEnabled:              defsecTypes.Bool(acclog, metadata),
-			CrossZoneLoadBalancingEnabled: defsecTypes.Bool(crosszone, metadata),
-			ConnectionDrainingEnabled:     defsecTypes.Bool(conndraining, metadata),
-		}
+	attributes := elb.Attribute{
+		Metadata:                      metadata,
+		AccessLogEnabled:              defsecTypes.BoolDefault(true, metadata),
+		CrossZoneLoadBalancingEnabled: defsecTypes.BoolDefault(true, metadata),
+		ConnectionDrainingEnabled:     defsecTypes.BoolDefault(false, metadata),
 	}
+	output, err := a.apiV1.DescribeLoadBalancerAttributes(a.Context(), &apiV1.DescribeLoadBalancerAttributesInput{
+		LoadBalancerName: loadbalancer.LoadBalancerName,
+	})
+	if err != nil {
+		return nil, err
+	}
+	var acclog, conndraining, crosszone bool
+	if output.LoadBalancerAttributes.AccessLog != nil {
+		acclog = output.LoadBalancerAttributes.AccessLog.Enabled
+	}
+	if output.LoadBalancerAttributes.ConnectionDraining != nil {
+		conndraining = output.LoadBalancerAttributes.ConnectionDraining.Enabled
+	}
+	if output.LoadBalancerAttributes.CrossZoneLoadBalancing != nil {
+		crosszone = output.LoadBalancerAttributes.CrossZoneLoadBalancing.Enabled
+	}
+
+	attributes.AccessLogEnabled = defsecTypes.Bool(acclog, metadata)
+	attributes.CrossZoneLoadBalancingEnabled = defsecTypes.Bool(crosszone, metadata)
+	attributes.ConnectionDrainingEnabled = defsecTypes.Bool(conndraining, metadata)
 
 	return &elb.LoadBalancerV1{
 		Metadata:   metadata,
