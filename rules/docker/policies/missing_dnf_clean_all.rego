@@ -15,7 +15,7 @@
 #   input:
 #     selector:
 #     - type: dockerfile
-package builtin.dockerfile.DS025
+package builtin.dockerfile.DS019
 
 import data.lib.docker
 
