@@ -20,7 +20,7 @@ test_denied {
 	]}]}
 
 	count(r) == 1
-	r[_].msg == "'microdnf clean all' is missed: set -uex &&     microdnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo &&     sed -i 's/\\$releasever/26/g' /etc/yum.repos.d/docker-ce.repo &&     microdnf install -vy docker-ce"
+	r[_].msg == "'microdnf clean all' is missed: set -uex &&      microdnf install -vy docker-ce"
 }
 
 test_allowed {
