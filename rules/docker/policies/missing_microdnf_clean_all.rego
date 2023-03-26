@@ -7,15 +7,15 @@
 # related_resources:
 # - https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
 # custom:
-#   id: DS025
-#   avd_id: AVD-DS-0025
+#   id: DS027
+#   avd_id: AVD-DS-0027
 #   severity: HIGH
 #   short_code: purge-microdnf-package-cache
 #   recommended_action: "Add 'microdnf clean all' to Dockerfile"
 #   input:
 #     selector:
 #     - type: dockerfile
-package builtin.dockerfile.DS025
+package builtin.dockerfile.DS027
 
 import data.lib.docker
 
