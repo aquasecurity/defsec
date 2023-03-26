@@ -20,7 +20,7 @@ test_denied {
 	]}]}
 
 	count(r) == 1
-	r[_].msg == "'microdnf clean all' is missed: set -uex &&      microdnf install -vy docker-ce"
+	r[_].msg == "'microdnf clean all' is missed: set -uex &&     microdnf install -vy docker-ce"
 }
 
 test_allowed {
