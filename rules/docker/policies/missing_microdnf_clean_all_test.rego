@@ -8,7 +8,7 @@ test_denied {
 		},
 		{
 			"Cmd": "run",
-			"Value": ["set -uex &&     dnf install -vy docker-ce"],
+			"Value": ["set -uex &&     microdnf install -vy docker-ce"],
 		},
 		{
 			"Cmd": "healthcheck",
