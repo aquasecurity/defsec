@@ -1,4 +1,4 @@
-package builtin.dockerfile.DS025
+package builtin.dockerfile.DS027
 
 test_denied {
 	r := deny with input as {"Stages": [{"Name": "ubi8:8.7", "Commands": [
