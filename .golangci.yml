@@ -33,7 +33,7 @@ issues:
     - path: "."
       linters:
         - typecheck
-    - path: internal/rules/
+    - path: rules/
       linters:
         - gosec
     - path: pkg/scanners/terraform/parser/funcs/
