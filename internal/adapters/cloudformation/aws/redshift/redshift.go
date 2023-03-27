@@ -8,7 +8,9 @@ import (
 // Adapt ...
 func Adapt(cfFile parser.FileContext) redshift.Redshift {
 	return redshift.Redshift{
-		Clusters:       getClusters(cfFile),
-		SecurityGroups: getSecurityGroups(cfFile),
+		Clusters:          getClusters(cfFile),
+		SecurityGroups:    getSecurityGroups(cfFile),
+		ClusterParameters: getParameters(cfFile),
+		ReservedNodes:     nil,
 	}
 }

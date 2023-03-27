@@ -614,3 +614,124 @@ spec:
 	assert.Equal(t, 14, firstResult.Metadata().Range().GetEndLine())
 	assert.Equal(t, "k8s.yaml", firstResult.Metadata().Range().GetFilename())
 }
+
+// TODO(simar): Uncomment once all k8s policies have subtype selector added
+/*
+func Test_checkPolicyIsApplicable(t *testing.T) {
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/pod_policy.rego": `# METADATA
+# title: "Process can elevate its own privileges"
+# description: "A program inside the container can elevate its own privileges and run as root, which might give the program control over the container and node."
+# scope: package
+# schemas:
+# - input: schema["input"]
+# related_resources:
+# - https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
+# custom:
+#   id: KSV001
+#   avd_id: AVD-KSV-0999
+#   severity: MEDIUM
+#   short_code: no-self-privesc
+#   recommended_action: "Set 'set containers[].securityContext.allowPrivilegeEscalation' to 'false'."
+#   input:
+#     selector:
+#     - type: kubernetes
+#       subtypes:
+#         - kind: Pod
+package builtin.kubernetes.KSV999
+
+import data.lib.kubernetes
+import data.lib.utils
+
+default checkAllowPrivilegeEscalation = false
+
+# getNoPrivilegeEscalationContainers returns the names of all containers which have
+# securityContext.allowPrivilegeEscalation set to false.
+getNoPrivilegeEscalationContainers[container] {
+	allContainers := kubernetes.containers[_]
+	allContainers.securityContext.allowPrivilegeEscalation == false
+	container := allContainers.name
+}
+
+# getPrivilegeEscalationContainers returns the names of all containers which have
+# securityContext.allowPrivilegeEscalation set to true or not set.
+getPrivilegeEscalationContainers[container] {
+	containerName := kubernetes.containers[_].name
+	not getNoPrivilegeEscalationContainers[containerName]
+	container := kubernetes.containers[_]
+}
+
+deny[res] {
+	output := getPrivilegeEscalationContainers[_]
+	msg := kubernetes.format(sprintf("Container '%s' of %s '%s' should set 'securityContext.allowPrivilegeEscalation' to false", [output.name, kubernetes.kind, kubernetes.name]))
+	res := result.new(msg, output)
+}
+
+`,
+		"policies/namespace_policy.rego": `# METADATA
+# title: "The default namespace should not be used"
+# description: "ensure that default namespace should not be used"
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+# custom:
+#   id: KSV110
+#   avd_id: AVD-KSV-0888
+#   severity: LOW
+#   short_code: default-namespace-should-not-be-used
+#   recommended_action: "Ensure that namespaces are created to allow for appropriate segregation of Kubernetes resources and that all new resources are created in a specific namespace."
+#   input:
+#     selector:
+#     - type: kubernetes
+#       subtypes:
+#         - kind: Namespace
+package builtin.kubernetes.KSV888
+
+import data.lib.kubernetes
+
+default defaultNamespaceInUse = false
+
+defaultNamespaceInUse {
+	kubernetes.namespace == "default"
+}
+
+deny[res] {
+	defaultNamespaceInUse
+	msg := sprintf("%s '%s' should not be set with 'default' namespace", [kubernetes.kind, kubernetes.name])
+	res := result.new(msg, input.metadata.namespace)
+}
+
+`,
+		"test/KSV001/pod.yaml": `apiVersion: v1
+kind: Pod
+metadata:
+  name: hello-cpu-limit
+spec:
+  containers:
+    - command: ["sh", "-c", "echo 'Hello' && sleep 1h"]
+      image: busybox
+      name: hello
+      securityContext:
+        capabilities:
+          drop:
+            - all
+`,
+	})
+
+	scanner := NewScanner(
+		options.ScannerWithEmbeddedPolicies(true),
+		options.ScannerWithPolicyDirs("policies/"),
+		options.ScannerWithPolicyFilesystem(srcFS),
+	)
+	results, err := scanner.ScanFS(context.TODO(), srcFS, "test/KSV001")
+	require.NoError(t, err)
+
+	require.NoError(t, err)
+	require.Len(t, results.GetFailed(), 1)
+
+	failure := results.GetFailed()[0].Rule()
+	assert.Equal(t, "Process can elevate its own privileges", failure.Summary)
+}
+*/

@@ -16,6 +16,10 @@ func isRegoFile(name string) bool {
 	return strings.HasSuffix(name, bundle.RegoExt) && !strings.HasSuffix(name, "_test"+bundle.RegoExt)
 }
 
+func isJSONFile(name string) bool {
+	return strings.HasSuffix(name, ".json")
+}
+
 func sanitisePath(path string) string {
 	vol := filepath.VolumeName(path)
 	path = strings.TrimPrefix(path, vol)
@@ -152,19 +156,31 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 	for namespace := range uniq {
 		namespaces = append(namespaces, namespace)
 	}
-	store, err := initStore(s.dataDirs, namespaces)
+
+	dataFS := srcFS
+	if s.dataFS != nil {
+		s.debug.Log("Overriding filesystem for data!")
+		dataFS = s.dataFS
+	}
+	store, err := initStore(dataFS, s.dataDirs, namespaces)
 	if err != nil {
 		return fmt.Errorf("unable to load data: %w", err)
 	}
 	s.store = store
 
-	return s.compilePolicies()
+	return s.compilePolicies(srcFS, paths)
 }
 
-func (s *Scanner) compilePolicies() error {
+func (s *Scanner) compilePolicies(srcFS fs.FS, paths []string) error {
 	compiler := ast.NewCompiler()
-	schemaSet := ast.NewSchemaSet()
-	schemaSet.Put(ast.MustParseRef("schema.input"), map[string]interface{}{})
+	schemaSet, custom, err := BuildSchemaSetFromPolicies(s.policies, paths, srcFS)
+	if err != nil {
+		return err
+	}
+	if custom {
+		s.inputSchema = nil // discard auto detected input schema in favour of policy defined schema
+	}
+
 	compiler.WithSchemas(schemaSet)
 	compiler.WithCapabilities(ast.CapabilitiesForThisVersion())
 	compiler.Compile(s.policies)

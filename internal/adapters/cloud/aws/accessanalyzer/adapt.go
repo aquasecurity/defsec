@@ -84,10 +84,28 @@ func (a *adapter) adaptAnalyzer(apiAnalyzer aatypes.AnalyzerSummary) (*accessana
 	if apiAnalyzer.Name != nil {
 		name = *apiAnalyzer.Name
 	}
+
+	var findings []accessanalyzer.Findings
+	output, err := a.api.ListFindings(a.Context(), &api.ListFindingsInput{
+		AnalyzerArn: apiAnalyzer.Arn,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if output.Findings != nil {
+		for _, r := range output.Findings {
+			findings = append(findings, accessanalyzer.Findings{
+				Metadata: metadata,
+			})
+			_ = r
+		}
+	}
+
 	return &accessanalyzer.Analyzer{
 		Metadata: metadata,
 		ARN:      types.String(*apiAnalyzer.Arn, metadata),
 		Name:     types.String(name, metadata),
 		Active:   types.Bool(apiAnalyzer.Status == aatypes.AnalyzerStatusActive, metadata),
+		Findings: findings,
 	}, nil
 }

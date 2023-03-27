@@ -5,8 +5,10 @@ import (
 )
 
 type Redshift struct {
-	Clusters       []Cluster
-	SecurityGroups []SecurityGroup
+	Clusters          []Cluster
+	ReservedNodes     []ReservedNode
+	ClusterParameters []ClusterParameter
+	SecurityGroups    []SecurityGroup
 }
 
 type SecurityGroup struct {
@@ -14,10 +16,36 @@ type SecurityGroup struct {
 	Description defsecTypes.StringValue
 }
 
+type ReservedNode struct {
+	Metadata defsecTypes.Metadata
+	NodeType defsecTypes.StringValue
+}
+
+type ClusterParameter struct {
+	Metadata       defsecTypes.Metadata
+	ParameterName  defsecTypes.StringValue
+	ParameterValue defsecTypes.StringValue
+}
+
 type Cluster struct {
-	Metadata        defsecTypes.Metadata
-	Encryption      Encryption
-	SubnetGroupName defsecTypes.StringValue
+	Metadata                         defsecTypes.Metadata
+	ClusterIdentifier                defsecTypes.StringValue
+	NodeType                         defsecTypes.StringValue
+	VpcId                            defsecTypes.StringValue
+	NumberOfNodes                    defsecTypes.IntValue
+	PubliclyAccessible               defsecTypes.BoolValue
+	AllowVersionUpgrade              defsecTypes.BoolValue
+	MasterUsername                   defsecTypes.StringValue
+	AutomatedSnapshotRetentionPeriod defsecTypes.IntValue
+	LoggingEnabled                   defsecTypes.BoolValue
+	EndPoint                         EndPoint
+	Encryption                       Encryption
+	SubnetGroupName                  defsecTypes.StringValue
+}
+
+type EndPoint struct {
+	Metadata defsecTypes.Metadata
+	Port     defsecTypes.IntValue
 }
 
 type Encryption struct {
