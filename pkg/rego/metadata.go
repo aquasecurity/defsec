@@ -7,21 +7,16 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/open-policy-agent/opa/util"
-
+	"github.com/aquasecurity/defsec/pkg/framework"
+	"github.com/aquasecurity/defsec/pkg/providers"
+	"github.com/aquasecurity/defsec/pkg/scan"
+	"github.com/aquasecurity/defsec/pkg/severity"
 	"github.com/aquasecurity/defsec/pkg/types"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
-
-	"github.com/aquasecurity/defsec/pkg/framework"
-	"github.com/aquasecurity/defsec/pkg/severity"
-
-	"github.com/aquasecurity/defsec/pkg/scan"
-
-	"github.com/aquasecurity/defsec/pkg/providers"
-
-	"github.com/open-policy-agent/opa/rego"
-
+	"github.com/mitchellh/mapstructure"
 	"github.com/open-policy-agent/opa/ast"
+	"github.com/open-policy-agent/opa/rego"
+	"github.com/open-policy-agent/opa/util"
 )
 
 type StaticMetadata struct {
@@ -50,7 +45,17 @@ type InputOptions struct {
 }
 
 type Selector struct {
-	Type string
+	Type     string
+	Subtypes []SubType
+}
+
+type SubType struct {
+	Group     string
+	Version   string
+	Kind      string
+	Namespace string
+	Service   string // only for cloud
+	Provider  string // only for cloud
 }
 
 func (m StaticMetadata) ToRule() scan.Rule {
@@ -295,6 +300,7 @@ func (m *MetadataRetriever) fromAnnotation(metadata *StaticMetadata, annotation 
 	return nil
 }
 
+// nolint: cyclop
 func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.Module) InputOptions {
 
 	options := InputOptions{
@@ -357,6 +363,15 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 						// handle backward compatibility for "defsec" source type which is now "cloud"
 						if selector.Type == string(types.SourceDefsec) {
 							selector.Type = string(types.SourceCloud)
+						}
+					}
+					if subType, ok := selectorMap["subtypes"].([]interface{}); ok {
+						for _, subT := range subType {
+							if st, ok := subT.(map[string]interface{}); ok {
+								s := SubType{}
+								_ = mapstructure.Decode(st, &s)
+								selector.Subtypes = append(selector.Subtypes, s)
+							}
 						}
 					}
 				}

@@ -17,7 +17,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/scan"
 
 	"github.com/aquasecurity/defsec/internal/rules"
-	"github.com/aquasecurity/defsec/internal/rules/aws/iam"
+	"github.com/aquasecurity/defsec/rules/cloud/policies/aws/iam"
 
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/executor"
 

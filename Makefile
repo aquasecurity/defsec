@@ -1,4 +1,4 @@
-DYNAMIC_REGO_FOLDER=./internal/rules/policies/kubernetes/policies/dynamic
+DYNAMIC_REGO_FOLDER=./rules/policies/kubernetes/policies/dynamic
 
 .PHONY: test
 test:
@@ -17,7 +17,7 @@ schema:
 
 .PHONY: fmt-rego
 fmt-rego:
-	opa fmt -w internal/rules/policies
+	opa fmt -w rules/policies
 
 .PHONY: test-rego
 test-rego:
@@ -50,6 +50,10 @@ metadata_lint:
 .PHONY: docs
 docs:
 	go run ./cmd/avd_generator
+
+.PHONY: docs-test
+docs-test:
+	go test -v ./cmd/avd_generator/...
 
 .PHONY: id
 id:

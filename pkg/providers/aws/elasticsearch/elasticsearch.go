@@ -9,12 +9,24 @@ type Elasticsearch struct {
 }
 
 type Domain struct {
-	Metadata          defsecTypes.Metadata
-	DomainName        defsecTypes.StringValue
-	LogPublishing     LogPublishing
-	TransitEncryption TransitEncryption
-	AtRestEncryption  AtRestEncryption
-	Endpoint          Endpoint
+	Metadata               defsecTypes.Metadata
+	DomainName             defsecTypes.StringValue
+	AccessPolicies         defsecTypes.StringValue
+	DedicatedMasterEnabled defsecTypes.BoolValue
+	VpcId                  defsecTypes.StringValue
+	LogPublishing          LogPublishing
+	TransitEncryption      TransitEncryption
+	AtRestEncryption       AtRestEncryption
+	ServiceSoftwareOptions ServiceSoftwareOptions
+	Endpoint               Endpoint
+}
+
+type ServiceSoftwareOptions struct {
+	Metadata        defsecTypes.Metadata
+	CurrentVersion  defsecTypes.StringValue
+	NewVersion      defsecTypes.StringValue
+	UpdateAvailable defsecTypes.BoolValue
+	UpdateStatus    defsecTypes.StringValue
 }
 
 type Endpoint struct {
@@ -24,8 +36,9 @@ type Endpoint struct {
 }
 
 type LogPublishing struct {
-	Metadata     defsecTypes.Metadata
-	AuditEnabled defsecTypes.BoolValue
+	Metadata              defsecTypes.Metadata
+	AuditEnabled          defsecTypes.BoolValue
+	CloudWatchLogGroupArn defsecTypes.StringValue
 }
 
 type TransitEncryption struct {
@@ -36,4 +49,5 @@ type TransitEncryption struct {
 type AtRestEncryption struct {
 	Metadata defsecTypes.Metadata
 	Enabled  defsecTypes.BoolValue
+	KmsKeyId defsecTypes.StringValue
 }
