@@ -3,6 +3,7 @@ package appmesh
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/appmesh"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getmeshes(cfFile parser.FileContext) []appmesh.Mesh {
@@ -14,6 +15,7 @@ func getmeshes(cfFile parser.FileContext) []appmesh.Mesh {
 
 		mesh := appmesh.Mesh{
 			Metadata: r.Metadata(),
+			Name:     types.StringDefault("", r.Metadata()),
 			Spec: appmesh.Spec{
 				Metadata: r.Metadata(),
 				EgressFilter: appmesh.EgressFilter{

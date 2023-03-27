@@ -53,6 +53,7 @@ func adaptMesh(resource *terraform.Block, module *terraform.Module) appmesh.Mesh
 
 	mesh := appmesh.Mesh{
 		Metadata: resource.GetMetadata(),
+		Name:     types.StringDefault("", resource.GetMetadata()),
 		Spec: appmesh.Spec{
 			Metadata: resource.GetMetadata(),
 			EgressFilter: appmesh.EgressFilter{
