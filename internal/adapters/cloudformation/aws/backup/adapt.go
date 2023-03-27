@@ -75,7 +75,7 @@ func getbackupPlans(ctx parser.FileContext) (plans []backup.Plan) {
 	return plans
 }
 
-func getplanrules(r *parser.Property) (Rules []backup.Rule) {
+func getplanrules(r *parser.Property) (rules []backup.Rule) {
 	ruleList := r.GetProperty("BackupPlanRule")
 	if ruleList.IsNil() || !ruleList.IsList() {
 		return
@@ -90,7 +90,7 @@ func getplanrules(r *parser.Property) (Rules []backup.Rule) {
 				MoveToColdStorageAfterDays: a.GetIntProperty("Lifecycle.MoveToColdStorageAfterDays"),
 			},
 		}
-		Rules = append(Rules, rule)
+		rules = append(rules, rule)
 	}
-	return Rules
+	return rules
 }

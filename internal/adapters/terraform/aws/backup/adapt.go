@@ -37,13 +37,12 @@ func adaptPlans(modules terraform.Modules) []backup.Plan {
 }
 
 func adaptSettings(modules terraform.Modules) backup.RegionSettings {
-	var RS backup.RegionSettings
+	RS := backup.RegionSettings{
+		Metadata: defsecTypes.NewUnmanagedMetadata(),
+	}
 	for _, module := range modules {
 		for _, resource := range module.GetResourcesByType("aws_backup_region_settings") {
-
-			RS = backup.RegionSettings{
-				Metadata: resource.GetMetadata(),
-			}
+			RS.Metadata = resource.GetMetadata()
 		}
 	}
 	return RS
