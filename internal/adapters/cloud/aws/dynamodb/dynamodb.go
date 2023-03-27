@@ -124,7 +124,7 @@ func (a *adapter) adaptTable(tableName string) (*dynamodb.Table, error) {
 	}, nil
 }
 
-func (a *adapter) getBackups() (Backup []dynamodb.Backup, err error) {
+func (a *adapter) getBackups() (backup []dynamodb.Backup, err error) {
 
 	a.Tracker().SetServiceLabel("Discovering DynamoDB backups...")
 
