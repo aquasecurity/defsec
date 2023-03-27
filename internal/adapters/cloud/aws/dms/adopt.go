@@ -64,13 +64,13 @@ func (a *adapter) getReplicationInstances() ([]dms.ReplicationInstance, error) {
 	return concurrency.Adapt(apiReplicationInstances, a.RootAdapter, a.adaptReplicationIntsance), nil
 }
 
-func (a *adapter) adaptReplicationIntsance(ReplicationInstance types.ReplicationInstance) (*dms.ReplicationInstance, error) {
-	metadata := a.CreateMetadataFromARN(*ReplicationInstance.ReplicationInstanceArn)
+func (a *adapter) adaptReplicationIntsance(replicationInstance types.ReplicationInstance) (*dms.ReplicationInstance, error) {
+	metadata := a.CreateMetadataFromARN(*replicationInstance.ReplicationInstanceArn)
 
 	return &dms.ReplicationInstance{
 		Metadata:                metadata,
-		AutoMinorVersionUpgrade: defsecTypes.Bool(ReplicationInstance.AutoMinorVersionUpgrade, metadata),
-		MultiAZ:                 defsecTypes.Bool(ReplicationInstance.MultiAZ, metadata),
-		PubliclyAccessible:      defsecTypes.Bool(ReplicationInstance.PubliclyAccessible, metadata),
+		AutoMinorVersionUpgrade: defsecTypes.Bool(replicationInstance.AutoMinorVersionUpgrade, metadata),
+		MultiAZ:                 defsecTypes.Bool(replicationInstance.MultiAZ, metadata),
+		PubliclyAccessible:      defsecTypes.Bool(replicationInstance.PubliclyAccessible, metadata),
 	}, nil
 }
