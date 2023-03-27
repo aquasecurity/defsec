@@ -2,6 +2,7 @@ package rego
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -11,15 +12,19 @@ import (
 )
 
 // initialise a store populated with OPA data files found in dataPaths
-func initStore(dataPaths, namespaces []string) (storage.Store, error) {
+func initStore(dataFS fs.FS, dataPaths, namespaces []string) (storage.Store, error) {
 	// FilteredPaths will recursively find all file paths that contain a valid document
 	// extension from the given list of data paths.
-	allDocumentPaths, err := loader.FilteredPaths(dataPaths, func(abspath string, info os.FileInfo, depth int) bool {
+	allDocumentPaths, err := loader.FilteredPathsFS(dataFS, dataPaths, func(abspath string, info os.FileInfo, depth int) bool {
 		if info.IsDir() {
 			return false
 		}
 		ext := strings.ToLower(filepath.Ext(info.Name()))
-		for _, filter := range []string{".yaml", ".yml", ".json"} {
+		for _, filter := range []string{
+			".yaml",
+			".yml",
+			".json",
+		} {
 			if filter == ext {
 				return false
 			}
@@ -30,7 +35,7 @@ func initStore(dataPaths, namespaces []string) (storage.Store, error) {
 		return nil, fmt.Errorf("filter data paths: %w", err)
 	}
 
-	documents, err := loader.NewFileLoader().All(allDocumentPaths)
+	documents, err := loader.NewFileLoader().WithFS(dataFS).All(allDocumentPaths)
 	if err != nil {
 		return nil, fmt.Errorf("load documents: %w", err)
 	}

@@ -29,6 +29,10 @@ func Test_Adapt(t *testing.T) {
 			
 			resource "aws_redshift_cluster" "example" {
 			  cluster_identifier = "tf-redshift-cluster"
+			  publicly_accessible = false
+			  number_of_nodes = 1
+			  allow_version_upgrade = false
+			  port = 5440
 			  encrypted          = true
 			  kms_key_id         = aws_kms_key.redshift.key_id
 			  cluster_subnet_group_name = "redshift_subnet"
@@ -42,7 +46,15 @@ func Test_Adapt(t *testing.T) {
 			expected: redshift.Redshift{
 				Clusters: []redshift.Cluster{
 					{
-						Metadata: defsecTypes.NewTestMetadata(),
+						Metadata:            defsecTypes.NewTestMetadata(),
+						ClusterIdentifier:   defsecTypes.String("tf-redshift-cluster", defsecTypes.NewTestMetadata()),
+						PubliclyAccessible:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						NumberOfNodes:       defsecTypes.Int(1, defsecTypes.NewTestMetadata()),
+						AllowVersionUpgrade: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						EndPoint: redshift.EndPoint{
+							Metadata: defsecTypes.NewTestMetadata(),
+							Port:     defsecTypes.Int(5440, defsecTypes.NewTestMetadata()),
+						},
 						Encryption: redshift.Encryption{
 							Metadata: defsecTypes.NewTestMetadata(),
 							Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
@@ -82,13 +94,25 @@ func Test_adaptCluster(t *testing.T) {
 			terraform: `			
 			resource "aws_redshift_cluster" "example" {
 			  cluster_identifier = "tf-redshift-cluster"
+			  publicly_accessible = false
+			  number_of_nodes = 1
+			  allow_version_upgrade = false
+			  port = 5440
 			  encrypted          = true
 			  kms_key_id         = "key-id"
 			  cluster_subnet_group_name = "redshift_subnet"
 			}
 `,
 			expected: redshift.Cluster{
-				Metadata: defsecTypes.NewTestMetadata(),
+				Metadata:            defsecTypes.NewTestMetadata(),
+				ClusterIdentifier:   defsecTypes.String("tf-redshift-cluster", defsecTypes.NewTestMetadata()),
+				PubliclyAccessible:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				NumberOfNodes:       defsecTypes.Int(1, defsecTypes.NewTestMetadata()),
+				AllowVersionUpgrade: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				EndPoint: redshift.EndPoint{
+					Metadata: defsecTypes.NewTestMetadata(),
+					Port:     defsecTypes.Int(5440, defsecTypes.NewTestMetadata()),
+				},
 				Encryption: redshift.Encryption{
 					Metadata: defsecTypes.NewTestMetadata(),
 					Enabled:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
@@ -104,7 +128,15 @@ func Test_adaptCluster(t *testing.T) {
 			}
 `,
 			expected: redshift.Cluster{
-				Metadata: defsecTypes.NewTestMetadata(),
+				Metadata:            defsecTypes.NewTestMetadata(),
+				ClusterIdentifier:   defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				PubliclyAccessible:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				NumberOfNodes:       defsecTypes.Int(1, defsecTypes.NewTestMetadata()),
+				AllowVersionUpgrade: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				EndPoint: redshift.EndPoint{
+					Metadata: defsecTypes.NewTestMetadata(),
+					Port:     defsecTypes.Int(5439, defsecTypes.NewTestMetadata()),
+				},
 				Encryption: redshift.Encryption{
 					Metadata: defsecTypes.NewTestMetadata(),
 					Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),

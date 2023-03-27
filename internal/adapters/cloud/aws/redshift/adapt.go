@@ -1,6 +1,8 @@
 package redshift
 
 import (
+	"strings"
+
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/redshift"
@@ -34,6 +36,16 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 	var err error
 
 	state.AWS.Redshift.Clusters, err = a.getClusters()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.Redshift.ReservedNodes, err = a.getReservedNodes()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.Redshift.ClusterParameters, err = a.getParameters()
 	if err != nil {
 		return err
 	}
@@ -75,6 +87,18 @@ func (a *adapter) adaptCluster(apiCluster types.Cluster) (*redshift.Cluster, err
 
 	metadata := a.CreateMetadataFromARN(*apiCluster.ClusterNamespaceArn)
 
+	output, err := a.api.DescribeLoggingStatus(a.Context(), &api.DescribeLoggingStatusInput{
+		ClusterIdentifier: apiCluster.ClusterIdentifier,
+	})
+	if err != nil {
+		output = nil
+	}
+
+	var loggingenabled bool
+	if output != nil {
+		loggingenabled = output.LoggingEnabled
+	}
+
 	var kmsKeyId string
 	if apiCluster.KmsKeyId != nil {
 		kmsKeyId = *apiCluster.KmsKeyId
@@ -85,8 +109,26 @@ func (a *adapter) adaptCluster(apiCluster types.Cluster) (*redshift.Cluster, err
 		subnetGroupName = *apiCluster.ClusterSubnetGroupName
 	}
 
+	var port int
+	if apiCluster.Endpoint != nil {
+		port = int(apiCluster.Endpoint.Port)
+	}
+
 	return &redshift.Cluster{
-		Metadata: metadata,
+		Metadata:                         metadata,
+		ClusterIdentifier:                defsecTypes.String(*apiCluster.ClusterIdentifier, metadata),
+		AllowVersionUpgrade:              defsecTypes.Bool(apiCluster.AllowVersionUpgrade, metadata),
+		NumberOfNodes:                    defsecTypes.Int(int(apiCluster.NumberOfNodes), metadata),
+		NodeType:                         defsecTypes.String(*apiCluster.NodeType, metadata),
+		PubliclyAccessible:               defsecTypes.Bool(apiCluster.PubliclyAccessible, metadata),
+		VpcId:                            defsecTypes.String(*apiCluster.VpcId, metadata),
+		MasterUsername:                   defsecTypes.String(*apiCluster.MasterUsername, metadata),
+		AutomatedSnapshotRetentionPeriod: defsecTypes.Int(int(apiCluster.ManualSnapshotRetentionPeriod), metadata),
+		LoggingEnabled:                   defsecTypes.Bool(loggingenabled, metadata),
+		EndPoint: redshift.EndPoint{
+			Metadata: metadata,
+			Port:     defsecTypes.Int(port, metadata),
+		},
 		Encryption: redshift.Encryption{
 			Metadata: metadata,
 			Enabled:  defsecTypes.Bool(apiCluster.Encrypted, metadata),
@@ -132,4 +174,80 @@ func (a *adapter) adaptSecurityGroup(apiSG types.ClusterSecurityGroup) (*redshif
 		Metadata:    metadata,
 		Description: description,
 	}, nil
+}
+
+func (a *adapter) getReservedNodes() ([]redshift.ReservedNode, error) {
+
+	a.Tracker().SetServiceLabel("Discovering reserved nodes...")
+
+	var apiReservednodes []types.ReservedNode
+	var input api.DescribeReservedNodesInput
+	for {
+		output, err := a.api.DescribeReservedNodes(a.Context(), &input)
+		if err != nil {
+			return nil, err
+		}
+		apiReservednodes = append(apiReservednodes, output.ReservedNodes...)
+		a.Tracker().SetTotalResources(len(apiReservednodes))
+		if output.Marker == nil {
+			break
+		}
+		input.Marker = output.Marker
+	}
+
+	a.Tracker().SetServiceLabel("Adapting reserved node ...")
+	return concurrency.Adapt(apiReservednodes, a.RootAdapter, a.adaptnode), nil
+}
+
+func (a *adapter) adaptnode(node types.ReservedNode) (*redshift.ReservedNode, error) {
+	metadata := a.CreateMetadata(*node.ReservedNodeId)
+	return &redshift.ReservedNode{
+		Metadata: metadata,
+		NodeType: defsecTypes.String(*node.NodeType, metadata),
+	}, nil
+}
+
+func (a *adapter) getParameters() ([]redshift.ClusterParameter, error) {
+
+	a.Tracker().SetServiceLabel("Discovering cluster parameters ...")
+
+	var apiClusters []types.Parameter
+	var input api.DescribeClusterParameterGroupsInput
+	output, err := a.api.DescribeClusterParameterGroups(a.Context(), &input)
+	if err != nil {
+		return nil, err
+	}
+	for _, group := range output.ParameterGroups {
+		groupname := *group.ParameterGroupName
+		if !strings.HasPrefix(groupname, "default.redshift") {
+			output, err := a.api.DescribeClusterParameters(a.Context(), &api.DescribeClusterParametersInput{
+				ParameterGroupName: group.ParameterGroupName,
+			})
+			if err != nil {
+				return nil, err
+			}
+			apiClusters = append(apiClusters, output.Parameters...)
+			a.Tracker().SetTotalResources(len(apiClusters))
+			if output.Marker == nil {
+				break
+			}
+			input.Marker = output.Marker
+		}
+
+	}
+
+	a.Tracker().SetServiceLabel("Adapting cluster parameters...")
+	return concurrency.Adapt(apiClusters, a.RootAdapter, a.adaptParameter), nil
+}
+
+func (a *adapter) adaptParameter(parameter types.Parameter) (*redshift.ClusterParameter, error) {
+
+	metadata := a.CreateMetadata(*parameter.ParameterName)
+
+	return &redshift.ClusterParameter{
+		Metadata:       metadata,
+		ParameterName:  defsecTypes.String(*parameter.ParameterName, metadata),
+		ParameterValue: defsecTypes.String(*parameter.ParameterValue, metadata),
+	}, nil
+
 }
