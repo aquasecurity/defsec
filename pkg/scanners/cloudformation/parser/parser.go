@@ -142,6 +142,7 @@ func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (context 
 	context.lines = lines
 	context.SourceFormat = sourceFmt
 	context.filepath = path
+	context.Ignores = parseIgnores(lines)
 
 	p.debug.Log("Context loaded from source %s", path)
 

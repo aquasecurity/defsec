@@ -1,10 +1,11 @@
 ---
+# trivy:ignore:*
 AWSTemplateFormatVersion: "2010-09-09"
 Description: An example Stack for a bucket
 Parameters:
   BucketName: 
     Type: String
-    Default: naughty-bucket
+    Default: ignored-bucket
   EncryptBucket:
     Type: Boolean
     Default: false
@@ -16,9 +17,6 @@ Resources:
         Ref: BucketName
       PublicAccessBlockConfiguration:
         BlockPublicAcls: false
-        BlockPublicPolicy: false # trivy:ignore:AVD-AWS-0087
+        BlockPublicPolicy: false 
         IgnorePublicAcls: true
         RestrictPublicBuckets: false
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-        - BucketKeyEnabled: !Ref EncryptBucket

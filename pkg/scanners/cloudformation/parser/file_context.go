@@ -16,6 +16,7 @@ type FileContexts []*FileContext
 type FileContext struct {
 	filepath     string
 	lines        []string
+	Ignores      []Ignore
 	SourceFormat SourceFormat
 	Parameters   map[string]*Parameter  `json:"Parameters" yaml:"Parameters"`
 	Resources    map[string]*Resource   `json:"Resources" yaml:"Resources"`

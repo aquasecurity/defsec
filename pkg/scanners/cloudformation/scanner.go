@@ -202,6 +202,9 @@ func (s *Scanner) scanFileContext(ctx context.Context, regoScanner *rego.Scanner
 
 					description := getDescription(scanResult, ref)
 					scanResult.OverrideDescription(description)
+					if parser.IsIgnored(scanResult, cfCtx.Ignores) {
+						scanResult.OverrideStatus(scan.StatusIgnored)
+					}
 					results = append(results, scanResult)
 				}
 			}
