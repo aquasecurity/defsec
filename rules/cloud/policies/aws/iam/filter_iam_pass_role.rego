@@ -22,9 +22,9 @@
 package builtin.aws.iam.aws0342
 
 deny[res] {
-    role := input.aws.iam.roles[_]
-    policy := role.policies[_]
-    action := policy.document[_]
-    contains(action, "iam:PassRole")
-    res = result.new("Warning: 'iam:PassRole' action is present in role", role.name)
+	role := input.aws.iam.roles[_]
+	policy := role.policies[_]
+	action := policy.document[_]
+	contains(action, "iam:PassRole")
+	res = result.new("Warning: 'iam:PassRole' action is present in role", role.name)
 }
