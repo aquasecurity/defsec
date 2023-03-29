@@ -29,6 +29,10 @@
       "type": "object",
       "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.kubernetes.Kubernetes"
     },
+    "nifcloud": {
+      "type": "object",
+      "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.Nifcloud"
+    },
     "openstack": {
       "type": "object",
       "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.openstack.OpenStack"
@@ -5543,6 +5547,389 @@
         "protocol": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.Nifcloud": {
+      "type": "object",
+      "properties": {
+        "computing": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.computing.Computing"
+        },
+        "dns": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.dns.DNS"
+        },
+        "nas": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.nas.NAS"
+        },
+        "network": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.Network"
+        },
+        "rdb": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.rdb.RDB"
+        },
+        "sslcertificate": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.sslcertificate.SSLCertificate"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.computing.Computing": {
+      "type": "object",
+      "properties": {
+        "instances": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.computing.Instance"
+          }
+        },
+        "securitygroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.computing.SecurityGroup"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.computing.Instance": {
+      "type": "object",
+      "properties": {
+        "networkinterfaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.computing.NetworkInterface"
+          }
+        },
+        "securitygroup": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.computing.NetworkInterface": {
+      "type": "object",
+      "properties": {
+        "networkid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.computing.SecurityGroup": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "egressrules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.computing.SecurityGroupRule"
+          }
+        },
+        "ingressrules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.computing.SecurityGroupRule"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.computing.SecurityGroupRule": {
+      "type": "object",
+      "properties": {
+        "cidr": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "description": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.dns.DNS": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.dns.Record"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.dns.Record": {
+      "type": "object",
+      "properties": {
+        "record": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "type": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.nas.NAS": {
+      "type": "object",
+      "properties": {
+        "nasinstances": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.nas.NASInstance"
+          }
+        },
+        "nassecuritygroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.nas.NASSecurityGroup"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.nas.NASInstance": {
+      "type": "object",
+      "properties": {
+        "networkid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.nas.NASSecurityGroup": {
+      "type": "object",
+      "properties": {
+        "cidrs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+          }
+        },
+        "description": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.ElasticLoadBalancer": {
+      "type": "object",
+      "properties": {
+        "listeners": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.ElasticLoadBalancerListener"
+          }
+        },
+        "networkinterfaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.NetworkInterface"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.ElasticLoadBalancerListener": {
+      "type": "object",
+      "properties": {
+        "protocol": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.LoadBalancer": {
+      "type": "object",
+      "properties": {
+        "listeners": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.LoadBalancerListener"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.LoadBalancerListener": {
+      "type": "object",
+      "properties": {
+        "protocol": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "tlspolicy": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.Network": {
+      "type": "object",
+      "properties": {
+        "elasticloadbalancers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.ElasticLoadBalancer"
+          }
+        },
+        "loadbalancers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.LoadBalancer"
+          }
+        },
+        "routers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.Router"
+          }
+        },
+        "vpngateways": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.VpnGateway"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.NetworkInterface": {
+      "type": "object",
+      "properties": {
+        "isvipnetwork": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
+        "networkid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.Router": {
+      "type": "object",
+      "properties": {
+        "networkinterfaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.NetworkInterface"
+          }
+        },
+        "securitygroup": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.network.VpnGateway": {
+      "type": "object",
+      "properties": {
+        "securitygroup": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.rdb.DBInstance": {
+      "type": "object",
+      "properties": {
+        "backupretentionperioddays": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
+        },
+        "engine": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "engineversion": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "networkid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "publicaccess": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.rdb.DBSecurityGroup": {
+      "type": "object",
+      "properties": {
+        "cidrs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+          }
+        },
+        "description": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.rdb.RDB": {
+      "type": "object",
+      "properties": {
+        "dbinstances": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.rdb.DBInstance"
+          }
+        },
+        "dbsecuritygroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.rdb.DBSecurityGroup"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.sslcertificate.SSLCertificate": {
+      "type": "object",
+      "properties": {
+        "servercertificates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.nifcloud.sslcertificate.ServerCertificate"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.nifcloud.sslcertificate.ServerCertificate": {
+      "type": "object",
+      "properties": {
+        "expiration": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.TimeValue"
         }
       }
     },
