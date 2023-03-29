@@ -5,7 +5,7 @@
 # schemas:
 # - input: schema["cloud"]
 # related_resources:
-# - https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html  // 
+# - https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html 
 # custom:
 #   avd_id: AVD-AWS-0342
 #   provider: aws
@@ -19,11 +19,6 @@
 #       subtypes:
 #         - service: iam
 #           provider: aws
-#   terraform:
-#       good_examples: "rules/cloud/policies/aws/iam/filter_iam_pass_role.tf.go"
-#   cloud_formation:
-#       good_examples: "rules/cloud/policies/aws/iam/filter_iam_pass_role_check.cf.go"
-
 package builtin.aws.iam.aws0342
 
 deny[res] {
