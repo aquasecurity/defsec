@@ -3,7 +3,7 @@
 # description: "Ensures S3 bucket logging is enabled for S3 buckets."
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - http://docs.aws.amazon.com/AmazonS3/latest/dev/Logging.html
 # custom:
@@ -16,6 +16,9 @@
 #   input:
 #     selector:
 #     - type: cloud
+#       subtypes:
+#         - service: s3
+#           provider: aws
 package builtin.aws.s3.aws0321
 
 deny[res] {

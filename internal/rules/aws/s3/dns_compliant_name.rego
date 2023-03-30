@@ -3,7 +3,7 @@
 # description: "Ensures that S3 buckets have DNS complaint bucket names."
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - https://docs.aws.amazon.com/AmazonS3/latest./dev/transfer-acceleration.html
 # custom:
@@ -16,6 +16,9 @@
 #   input:
 #     selector:
 #     - type: cloud
+#       subtypes:
+#         - service: s3
+#           provider: aws
 package builtin.aws.s3.aws0320
 
 deny[res] {
