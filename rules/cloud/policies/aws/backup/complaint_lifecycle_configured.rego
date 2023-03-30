@@ -3,7 +3,7 @@
 # description: "Ensure that a compliant lifecycle configuration is enabled for your Amazon Backup plans in order to meet compliance requirements when it comes to security and cost optimization."
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - https://docs.aws.amazon.com/aws-backup/latest/devguide/API_Lifecycle.html
 # custom:
@@ -16,6 +16,9 @@
 #   input:
 #     selector:
 #     - type: cloud
+#       subtypes:
+#         - service: backup
+#           provider: aws
 package builtin.aws.backup.aws0342
 
 is_lifecycle(rule){
