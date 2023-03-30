@@ -3,7 +3,7 @@
 # description: "Ensure that AWS App Mesh virtual gateway listeners only accepts TLS enabled connections."
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - https://docs.aws.amazon.com/app-mesh/latest/APIReference/API_ListenerTls.html
 # custom:
@@ -16,6 +16,9 @@
 #   input:
 #     selector:
 #     - type: cloud
+#       subtypes:
+#         - service: appmesh
+#           provider: aws
 package builtin.aws.appmesh.aws0338
 
 deny[res] {
