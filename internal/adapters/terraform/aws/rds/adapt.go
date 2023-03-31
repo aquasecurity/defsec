@@ -158,7 +158,7 @@ func adaptInstance(resource *terraform.Block, modules terraform.Modules) rds.Ins
 		StorageEncrypted:                 resource.GetAttribute("storage_encrypted").AsBoolValueOrDefault(false, resource),
 		DBInstanceIdentifier:             resource.GetAttribute("identifier").AsStringValueOrDefault("", resource),
 		EngineVersion:                    resource.GetAttribute("engine_version").AsStringValueOrDefault("", resource),
-		AutoMinorVersionUpgrade:          resource.GetAttribute("auto_minor_version_upgrade").AsBoolValueOrDefault(true, resource),
+		AutoMinorVersionUpgrade:          resource.GetAttribute("auto_minor_version_upgrade").AsBoolValueOrDefault(false, resource),
 		MultiAZ:                          resource.GetAttribute("multi_az").AsBoolValueOrDefault(false, resource),
 		PubliclyAccessible:               resource.GetAttribute("publicly_accessible").AsBoolValueOrDefault(false, resource),
 		LatestRestorableTime:             defsecTypes.TimeUnresolvable(resource.GetMetadata()),
