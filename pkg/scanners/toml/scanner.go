@@ -65,27 +65,21 @@ func (s *Scanner) SetDebugWriter(writer io.Writer) {
 	s.debug = debug.New(writer, "toml", "scanner")
 }
 
-func (s *Scanner) SetTraceWriter(_ io.Writer) {
-
-}
-
-func (s *Scanner) SetPerResultTracingEnabled(_ bool) {
-
-}
+func (s *Scanner) SetTraceWriter(_ io.Writer)        {}
+func (s *Scanner) SetPerResultTracingEnabled(_ bool) {}
 
 func (s *Scanner) SetPolicyDirs(dirs ...string) {
 	s.policyDirs = dirs
 }
 
-func (s *Scanner) SetDataDirs(_ ...string) {
-
-}
-
-func (s *Scanner) SetPolicyNamespaces(_ ...string) {
-
-}
+func (s *Scanner) SetDataDirs(_ ...string)         {}
+func (s *Scanner) SetPolicyNamespaces(_ ...string) {}
 
 func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
+	// handled by rego when option is passed on
+}
+
+func (s *Scanner) SetDataFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on
 }
 

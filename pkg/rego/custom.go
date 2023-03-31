@@ -28,24 +28,37 @@ func init() {
 	)
 }
 
-func createResult(_ rego.BuiltinContext, msg, cause *ast.Term) (*ast.Term, error) {
+func createResult(ctx rego.BuiltinContext, msg, cause *ast.Term) (*ast.Term, error) {
 
 	metadata := map[string]*ast.Term{
-		"msg":       msg,
-		"startline": ast.IntNumberTerm(0),
-		"endline":   ast.IntNumberTerm(0),
-		"filepath":  ast.StringTerm(""),
-		"explicit":  ast.BooleanTerm(false),
-		"managed":   ast.BooleanTerm(true),
-		"fskey":     ast.StringTerm(""),
-		"resource":  ast.StringTerm(""),
+		"startline":    ast.IntNumberTerm(0),
+		"endline":      ast.IntNumberTerm(0),
+		"sourceprefix": ast.StringTerm(""),
+		"filepath":     ast.StringTerm(""),
+		"explicit":     ast.BooleanTerm(false),
+		"managed":      ast.BooleanTerm(true),
+		"fskey":        ast.StringTerm(""),
+		"resource":     ast.StringTerm(""),
+		"parent":       ast.NullTerm(),
+	}
+	if msg != nil {
+		metadata["msg"] = msg
 	}
 
 	// universal
-	if defsec := cause.Get(ast.StringTerm("__defsec_metadata")); defsec != nil {
-		metadata = updateMetadata(metadata, defsec)
-	} else { // docker...
-		metadata = updateMetadata(metadata, cause)
+	input := cause.Get(ast.StringTerm("__defsec_metadata"))
+	if input == nil {
+		// docker
+		input = cause
+	}
+	metadata = updateMetadata(metadata, input)
+
+	if term := input.Get(ast.StringTerm("parent")); term != nil {
+		var err error
+		metadata["parent"], err = createResult(ctx, nil, term)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	var values [][2]*ast.Term
@@ -73,6 +86,9 @@ func updateMetadata(metadata map[string]*ast.Term, input *ast.Term) map[string]*
 	}
 	if term := input.Get(ast.StringTerm("filepath")); term != nil {
 		metadata["filepath"] = term
+	}
+	if term := input.Get(ast.StringTerm("sourceprefix")); term != nil {
+		metadata["sourceprefix"] = term
 	}
 	if term := input.Get(ast.StringTerm("Path")); term != nil {
 		metadata["filepath"] = term
