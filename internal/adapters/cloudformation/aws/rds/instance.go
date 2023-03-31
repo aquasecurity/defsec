@@ -84,6 +84,7 @@ func getDBParameterGroups(r *parser.Resource) (dbpmgroup []rds.DBParameterGroups
 		dbpmgroup = append(dbpmgroup, rds.DBParameterGroupsList{
 			Metadata:             DBPMG.Metadata(),
 			DBParameterGroupName: DBPMG.AsStringValue(),
+			KMSKeyID:             DBPMG.AsStringValue(),
 		})
 	}
 	return dbpmgroup
