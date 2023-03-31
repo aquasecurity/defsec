@@ -10,6 +10,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/github"
 	"github.com/aquasecurity/defsec/pkg/providers/google"
 	"github.com/aquasecurity/defsec/pkg/providers/kubernetes"
+	"github.com/aquasecurity/defsec/pkg/providers/nifcloud"
 	"github.com/aquasecurity/defsec/pkg/providers/openstack"
 	"github.com/aquasecurity/defsec/pkg/providers/oracle"
 	"github.com/aquasecurity/defsec/pkg/rego/convert"
@@ -26,6 +27,7 @@ type State struct {
 	Kubernetes   kubernetes.Kubernetes
 	OpenStack    openstack.OpenStack
 	Oracle       oracle.Oracle
+	Nifcloud     nifcloud.Nifcloud
 }
 
 func (a *State) ToRego() interface{} {

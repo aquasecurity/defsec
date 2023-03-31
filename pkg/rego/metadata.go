@@ -3,20 +3,20 @@ package rego
 import (
 	"context"
 	"fmt"
+	"io/fs"
+	"path/filepath"
 	"strings"
 
-	"github.com/aquasecurity/defsec/pkg/types"
-
 	"github.com/aquasecurity/defsec/pkg/framework"
-	"github.com/aquasecurity/defsec/pkg/severity"
-
-	"github.com/aquasecurity/defsec/pkg/scan"
-
 	"github.com/aquasecurity/defsec/pkg/providers"
-
-	"github.com/open-policy-agent/opa/rego"
-
+	"github.com/aquasecurity/defsec/pkg/scan"
+	"github.com/aquasecurity/defsec/pkg/severity"
+	"github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+	"github.com/mitchellh/mapstructure"
 	"github.com/open-policy-agent/opa/ast"
+	"github.com/open-policy-agent/opa/rego"
+	"github.com/open-policy-agent/opa/util"
 )
 
 type StaticMetadata struct {
@@ -45,7 +45,17 @@ type InputOptions struct {
 }
 
 type Selector struct {
-	Type string
+	Type     string
+	Subtypes []SubType
+}
+
+type SubType struct {
+	Group     string
+	Version   string
+	Kind      string
+	Namespace string
+	Service   string // only for cloud
+	Provider  string // only for cloud
 }
 
 func (m StaticMetadata) ToRule() scan.Rule {
@@ -290,6 +300,7 @@ func (m *MetadataRetriever) fromAnnotation(metadata *StaticMetadata, annotation 
 	return nil
 }
 
+// nolint: cyclop
 func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.Module) InputOptions {
 
 	options := InputOptions{
@@ -354,6 +365,15 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 							selector.Type = string(types.SourceCloud)
 						}
 					}
+					if subType, ok := selectorMap["subtypes"].([]interface{}); ok {
+						for _, subT := range subType {
+							if st, ok := subT.(map[string]interface{}); ok {
+								s := SubType{}
+								_ = mapstructure.Decode(st, &s)
+								selector.Subtypes = append(selector.Subtypes, s)
+							}
+						}
+					}
 				}
 				options.Selectors = append(options.Selectors, selector)
 			}
@@ -362,4 +382,66 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 
 	return options
 
+}
+
+func BuildSchemaSetFromPolicies(policies map[string]*ast.Module, paths []string, srcFS fs.FS) (*ast.SchemaSet, bool, error) {
+	schemaSet := ast.NewSchemaSet()
+	schemaSet.Put(ast.MustParseRef("schema.input"), map[string]interface{}{}) // for backwards compat only
+	var customFound bool
+	for _, policy := range policies {
+		for _, annotation := range policy.Annotations {
+			for _, ss := range annotation.Schemas {
+				schemaName, err := ss.Schema.Ptr()
+				if err != nil {
+					continue
+				}
+				if schemaName != "input" {
+					if schema, ok := SchemaMap[defsecTypes.Source(schemaName)]; ok {
+						customFound = true
+						schemaSet.Put(ast.MustParseRef(ss.Schema.String()), util.MustUnmarshalJSON([]byte(schema)))
+					} else {
+						b, err := findSchemaInFS(paths, srcFS, schemaName)
+						if err != nil {
+							return schemaSet, true, err
+						}
+						if b != nil {
+							customFound = true
+							schemaSet.Put(ast.MustParseRef(ss.Schema.String()), util.MustUnmarshalJSON(b))
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return schemaSet, customFound, nil
+}
+
+// findSchemaInFS tries to find the schema anywhere in the specified FS
+func findSchemaInFS(paths []string, srcFS fs.FS, schemaName string) ([]byte, error) {
+	var schema []byte
+	for _, path := range paths {
+		if err := fs.WalkDir(srcFS, sanitisePath(path), func(path string, info fs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if info.IsDir() {
+				return nil
+			}
+			if !isJSONFile(info.Name()) {
+				return nil
+			}
+			if info.Name() == schemaName+".json" {
+				schema, err = fs.ReadFile(srcFS, filepath.ToSlash(path))
+				if err != nil {
+					return err
+				}
+				return nil
+			}
+			return nil
+		}); err != nil {
+			return nil, err
+		}
+	}
+	return schema, nil
 }

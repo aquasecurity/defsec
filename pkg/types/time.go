@@ -96,14 +96,7 @@ func (t TimeValue) After(i time.Time) bool {
 }
 
 func (t TimeValue) ToRego() interface{} {
-	return map[string]interface{}{
-		"filepath":  t.metadata.Range().GetFilename(),
-		"startline": t.metadata.Range().GetStartLine(),
-		"endline":   t.metadata.Range().GetEndLine(),
-		"managed":   t.metadata.isManaged,
-		"explicit":  t.metadata.isExplicit,
-		"value":     t.Value().Format(time.RFC3339),
-		"fskey":     CreateFSKey(t.metadata.Range().GetFS()),
-		"resource":  t.metadata.Reference(),
-	}
+	m := t.metadata.ToRego().(map[string]interface{})
+	m["value"] = t.Value().Format(time.RFC3339)
+	return m
 }

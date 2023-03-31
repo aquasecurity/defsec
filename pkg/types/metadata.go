@@ -77,15 +77,20 @@ func (m *Metadata) UnmarshalJSON(data []byte) error {
 }
 
 func (m *Metadata) ToRego() interface{} {
-	return map[string]interface{}{
-		"filepath":  m.Range().GetFilename(),
-		"startline": m.Range().GetStartLine(),
-		"endline":   m.Range().GetEndLine(),
-		"managed":   m.isManaged,
-		"explicit":  m.isExplicit,
-		"fskey":     CreateFSKey(m.Range().GetFS()),
-		"resource":  m.Reference(),
+	input := map[string]interface{}{
+		"filepath":     m.Range().GetLocalFilename(),
+		"startline":    m.Range().GetStartLine(),
+		"endline":      m.Range().GetEndLine(),
+		"sourceprefix": m.Range().GetSourcePrefix(),
+		"managed":      m.isManaged,
+		"explicit":     m.isExplicit,
+		"fskey":        CreateFSKey(m.Range().GetFS()),
+		"resource":     m.Reference(),
 	}
+	if m.parent != nil {
+		input["parent"] = m.parent.ToRego()
+	}
+	return input
 }
 
 func NewMetadata(r Range, ref string) Metadata {
