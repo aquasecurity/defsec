@@ -12,7 +12,7 @@ var terraformDiskEncryptionNoPlaintextKeyGoodExamples = []string{
 
 var terraformDiskEncryptionNoPlaintextKeyBadExamples = []string{
 	`
- resource "google_compute_disk" "good_example" {
+ resource "google_compute_disk" "bad_example" {
  	disk_encryption_key {
  		raw_key="b2ggbm8gdGhpcyBpcyBiYWQ="
  	}
