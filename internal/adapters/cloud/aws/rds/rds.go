@@ -266,12 +266,12 @@ func (a *adapter) adaptCluster(dbCluster types.DBCluster) (*rds.Cluster, error) 
 	return cluster, nil
 }
 
-func (a *adapter) adaptParameterGroup(DBParameterGroup types.DBParameterGroup) (*rds.ParameterGroups, error) {
+func (a *adapter) adaptParameterGroup(dbParameterGroup types.DBParameterGroup) (*rds.ParameterGroups, error) {
 
-	metadata := a.CreateMetadata("dbperametergroup:" + *DBParameterGroup.DBParameterGroupArn)
+	metadata := a.CreateMetadata("dbperametergroup:" + *dbParameterGroup.DBParameterGroupArn)
 	var parameter []rds.Parameters
 	output, err := a.api.DescribeDBParameters(a.Context(), &rdsApi.DescribeDBParametersInput{
-		DBParameterGroupName: DBParameterGroup.DBParameterGroupName,
+		DBParameterGroupName: dbParameterGroup.DBParameterGroupName,
 	})
 	if err != nil {
 		return nil, err
@@ -287,18 +287,18 @@ func (a *adapter) adaptParameterGroup(DBParameterGroup types.DBParameterGroup) (
 	return &rds.ParameterGroups{
 		Metadata:               metadata,
 		Parameters:             parameter,
-		DBParameterGroupName:   defsecTypes.String(*DBParameterGroup.DBParameterGroupName, metadata),
-		DBParameterGroupFamily: defsecTypes.String(*DBParameterGroup.DBParameterGroupFamily, metadata),
+		DBParameterGroupName:   defsecTypes.String(*dbParameterGroup.DBParameterGroupName, metadata),
+		DBParameterGroupFamily: defsecTypes.String(*dbParameterGroup.DBParameterGroupFamily, metadata),
 	}, nil
 
 }
 
-func (a *adapter) adaptDBSnapshots(DBSnapshots types.DBSnapshot) (*rds.Snapshots, error) {
-	metadata := a.CreateMetadata("dbsnapshots" + *DBSnapshots.DBSnapshotArn)
+func (a *adapter) adaptDBSnapshots(dbSnapshots types.DBSnapshot) (*rds.Snapshots, error) {
+	metadata := a.CreateMetadata("dbsnapshots" + *dbSnapshots.DBSnapshotArn)
 
 	var SnapshotAttributes []rds.DBSnapshotAttributes
 	output, err := a.api.DescribeDBSnapshotAttributes(a.Context(), &rdsApi.DescribeDBSnapshotAttributesInput{
-		DBSnapshotIdentifier: DBSnapshots.DBSnapshotIdentifier,
+		DBSnapshotIdentifier: dbSnapshots.DBSnapshotIdentifier,
 	})
 	if err != nil {
 		return nil, err
@@ -322,10 +322,10 @@ func (a *adapter) adaptDBSnapshots(DBSnapshots types.DBSnapshot) (*rds.Snapshots
 
 	snapshots := &rds.Snapshots{
 		Metadata:             metadata,
-		DBSnapshotIdentifier: defsecTypes.String(*DBSnapshots.DBSnapshotIdentifier, metadata),
-		DBSnapshotArn:        defsecTypes.String(*DBSnapshots.DBSnapshotArn, metadata),
-		Encrypted:            defsecTypes.Bool(DBSnapshots.Encrypted, metadata),
-		KmsKeyId:             defsecTypes.String(*DBSnapshots.KmsKeyId, metadata),
+		DBSnapshotIdentifier: defsecTypes.String(*dbSnapshots.DBSnapshotIdentifier, metadata),
+		DBSnapshotArn:        defsecTypes.String(*dbSnapshots.DBSnapshotArn, metadata),
+		Encrypted:            defsecTypes.Bool(dbSnapshots.Encrypted, metadata),
+		KmsKeyId:             defsecTypes.String(*dbSnapshots.KmsKeyId, metadata),
 		SnapshotAttributes:   SnapshotAttributes,
 	}
 

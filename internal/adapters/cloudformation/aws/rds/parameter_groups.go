@@ -23,20 +23,20 @@ func getParameterGroups(ctx parser.FileContext) (parametergroups []rds.Parameter
 	return parametergroups
 }
 
-func getParameters(r *parser.Resource) (Parameters []rds.Parameters) {
+func getParameters(r *parser.Resource) (parameters []rds.Parameters) {
 
 	DBParam := r.GetProperty("Parameters")
 
 	if DBParam.IsNil() || DBParam.IsNotNil() {
-		return Parameters
+		return parameters
 	}
 
 	for _, DBP := range DBParam.AsList() {
-		Parameters = append(Parameters, rds.Parameters{
+		parameters = append(parameters, rds.Parameters{
 			Metadata:       DBP.Metadata(),
 			ParameterName:  types.StringDefault("", DBP.Metadata()),
 			ParameterValue: types.StringDefault("", DBP.Metadata()),
 		})
 	}
-	return Parameters
+	return parameters
 }
