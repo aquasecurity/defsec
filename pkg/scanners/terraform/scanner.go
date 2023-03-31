@@ -112,13 +112,14 @@ func (s *Scanner) SetPolicyDirs(dirs ...string) {
 	s.policyDirs = dirs
 }
 
-func (s *Scanner) SetDataDirs(_ ...string) {
-}
-
-func (s *Scanner) SetPolicyNamespaces(_ ...string) {
-}
+func (s *Scanner) SetDataDirs(_ ...string)         {}
+func (s *Scanner) SetPolicyNamespaces(_ ...string) {}
 
 func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
+	// handled by rego when option is passed on
+}
+
+func (s *Scanner) SetDataFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on
 }
 

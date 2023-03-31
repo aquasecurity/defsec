@@ -102,11 +102,12 @@ func (a *adapter) adaptCluster(cluster types.DBCluster) (*documentdb.Cluster, er
 	}
 
 	return &documentdb.Cluster{
-		Metadata:          metadata,
-		Identifier:        defsecTypes.String(identifier, metadata),
-		EnabledLogExports: logExports,
-		Instances:         instances,
-		StorageEncrypted:  defsecTypes.Bool(cluster.StorageEncrypted, metadata),
-		KMSKeyID:          defsecTypes.String(kmsKeyId, metadata),
+		Metadata:              metadata,
+		Identifier:            defsecTypes.String(identifier, metadata),
+		EnabledLogExports:     logExports,
+		Instances:             instances,
+		StorageEncrypted:      defsecTypes.Bool(cluster.StorageEncrypted, metadata),
+		KMSKeyID:              defsecTypes.String(kmsKeyId, metadata),
+		BackupRetentionPeriod: defsecTypes.Int(int(*cluster.BackupRetentionPeriod), metadata),
 	}, nil
 }

@@ -5,20 +5,14 @@ import (
 	"context"
 	"testing"
 
-	"github.com/aquasecurity/defsec/pkg/rego/schemas"
-
-	"github.com/aquasecurity/defsec/internal/rules"
-	"github.com/aquasecurity/defsec/pkg/rego"
-
 	"github.com/aquasecurity/defsec/pkg/framework"
-	"github.com/aquasecurity/defsec/pkg/scanners/options"
-
+	"github.com/aquasecurity/defsec/pkg/rego"
+	"github.com/aquasecurity/defsec/pkg/rego/schemas"
 	"github.com/aquasecurity/defsec/pkg/scan"
-
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+	"github.com/aquasecurity/defsec/rules"
 	"github.com/aquasecurity/defsec/test/testutil"
-
 	"github.com/stretchr/testify/assert"
-
 	"github.com/stretchr/testify/require"
 )
 
@@ -352,7 +346,9 @@ END REGO INPUT
             "fskey": "",
             "managed": true,
             "msg": "'COPY --from' should not mention current alias 'dep' since it is impossible to copy from itself",
+            "parent": null,
             "resource": "",
+            "sourceprefix": "",
             "startline": 2
           }
         ],
@@ -433,7 +429,9 @@ END REGO INPUT
             "fskey": "",
             "managed": true,
             "msg": "'COPY --from' should not mention current alias 'dep' since it is impossible to copy from itself",
+            "parent": null,
             "resource": "",
+            "sourceprefix": "",
             "startline": 2
           }
         ],
@@ -514,7 +512,9 @@ END REGO INPUT
             "fskey": "",
             "managed": true,
             "msg": "'COPY --from' should not mention current alias 'dep' since it is impossible to copy from itself",
+            "parent": null,
             "resource": "",
+            "sourceprefix": "",
             "startline": 2
           }
         ],

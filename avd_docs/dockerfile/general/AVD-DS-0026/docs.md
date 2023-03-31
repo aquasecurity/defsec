@@ -1,5 +1,5 @@
 
-You shoud add HEALTHCHECK instruction in your docker container images to perform the health check on running containers.
+You should add HEALTHCHECK instruction in your docker container images to perform the health check on running containers.
 
 ### Impact
 <!-- Add Impact here -->

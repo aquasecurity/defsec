@@ -66,6 +66,24 @@ resource "something" "else" {}
 
 }
 
+func Test_TrivyOptionWithAlternativeIDProvider(t *testing.T) {
+	reg := rules.Register(alwaysFailRule, nil)
+	defer rules.Deregister(reg)
+
+	options := []options.ScannerOption{
+		ScannerWithAlternativeIDProvider(func(s string) []string {
+			return []string{"something", "altid", "blah"}
+		}),
+	}
+	results := scanWithOptions(t, `
+//trivy:ignore:altid
+resource "something" "else" {}
+`, options...)
+	require.Len(t, results.GetFailed(), 0)
+	require.Len(t, results.GetIgnored(), 1)
+
+}
+
 func Test_OptionWithSeverityOverrides(t *testing.T) {
 	reg := rules.Register(alwaysFailRule, nil)
 	defer rules.Deregister(reg)
@@ -181,7 +199,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec"}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "s3", "provider": "aws"}]}],
 }
 
 deny[cause] {
@@ -216,11 +234,27 @@ deny[cause] {
 	}
 	assert.Equal(t, []scan.Line{
 		{
+			Number:     2,
+			Content:    "resource \"aws_s3_bucket\" \"my-bucket\" {",
+			IsCause:    false,
+			FirstCause: false,
+			LastCause:  false,
+			Annotation: "",
+		},
+		{
 			Number:     3,
 			Content:    "\tbucket = \"evil\"",
 			IsCause:    true,
 			FirstCause: true,
 			LastCause:  true,
+			Annotation: "",
+		},
+		{
+			Number:     4,
+			Content:    "}",
+			IsCause:    false,
+			FirstCause: false,
+			LastCause:  false,
 			Annotation: "",
 		},
 	}, actualCode.Lines)
@@ -296,13 +330,21 @@ resource "aws_s3_bucket" "my-bucket" {
 }
 `,
 				"/rules/test.rego": fmt.Sprintf(`
-				package %s
+# METADATA
+# custom:
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#       - service: s3
+#         provider: aws
+package %s
 
-				deny[cause] {
-				bucket := input.aws.s3.buckets[_]
-				bucket.name.value == "evil"
-				cause := bucket.name
-				}
+deny[cause] {
+bucket := input.aws.s3.buckets[_]
+bucket.name.value == "evil"
+cause := bucket.name
+}
 
 				`, test.policyNamespace),
 			})
@@ -386,7 +428,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec"}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "s3", "provider": "aws"}]}],
 }
 
 deny[cause] {
@@ -440,7 +482,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec"}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "s3", "provider": "aws"}]}],
 }
 
 deny[res] {
@@ -507,6 +549,9 @@ resource "aws_sqs_queue_policy" "bad_example" {
 #   input:
 #     selector:
 #     - type: cloud
+#       subtypes: 
+#         - service: sqs
+#           provider: aws
 package defsec.abcdefg
 
 
@@ -604,7 +649,7 @@ __rego_metadata__ := {
 
 __rego_input__ := {
 	"combine": false,
-	"selector": [{"type": "defsec"}],
+	"selector": [{"type": "defsec", "subtypes": [{"service": "ecs", "provider": "aws"}]}],
 }
 
 deny[res] {
@@ -836,6 +881,12 @@ resource "aws_apigatewayv2_stage" "bad_example" {
 # - input: schema.input
 # custom:
 #   avd_id: AVD-AWS-0001
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#         - service: apigateway
+#           provider: aws
 package builtin.cloud.AWS0001
 
 deny[res] {
