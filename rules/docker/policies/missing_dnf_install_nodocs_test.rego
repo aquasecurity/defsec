@@ -1,4 +1,4 @@
-package builtin.dockerfile.DS019
+package builtin.dockerfile.DS028
 
 test_denied {
 	r := deny with input as {"Stages": [{"Name": "fedora:27", "Commands": [
@@ -20,7 +20,7 @@ test_denied {
 	]}]}
 
 	count(r) == 1
-	r[_].msg == "'dnf clean all' is missed: set -uex &&     dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo &&     sed -i 's/\\$releasever/26/g' /etc/yum.repos.d/docker-ce.repo &&     dnf install -vy docker-ce"
+	r[_].msg == "'--nodocs missing': set -uex &&     dnf install -vy docker-ce &&     dnf clean all"
 }
 
 test_allowed {
@@ -31,7 +31,7 @@ test_allowed {
 		},
 		{
 			"Cmd": "run",
-			"Value": ["set -uex &&     dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo &&     sed -i 's/\\$releasever/26/g' /etc/yum.repos.d/docker-ce.repo &&     dnf install -vy docker-ce &&     dnf clean all"],
+			"Value": ["set -uex &&     dnf install -vy docker-ce &&     dnf clean all"],
 		},
 		{
 			"Cmd": "healthcheck",
@@ -77,7 +77,7 @@ test_multiple_install_denied {
 	r[_].msg == "'dnf clean all' is missed: dnf install bash && dnf clean all && dnf install zsh"
 }
 
-test_multiple_install_allowed {
+test_reinstall_missing_denied {
 	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
 		{
 			"Cmd": "from",
@@ -85,9 +85,42 @@ test_multiple_install_allowed {
 		},
 		{
 			"Cmd": "run",
-			"Value": ["dnf install bash && dnf clean all && dnf install zsh && dnf clean all"],
+			"Value": ["dnf reinstall bash zsh && dnf clean all"],
 		},
 	]}]}
 
-	count(r) == 0
+	count(r) == 1
 }
+
+test_microdnf_reinstall_missing_denied {
+	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
+		{
+			"Cmd": "from",
+			"Value": ["alpine:3.5"],
+		},
+		{
+			"Cmd": "run",
+			"Value": ["microdnf reinstall bash zsh && microdnf clean all"],
+		},
+	]}]}
+
+	count(r) == 1
+}
+
+test_microdnf_install_allowed {
+	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
+		{
+			"Cmd": "from",
+			"Value": ["alpine:3.5"],
+		},
+		{
+			"Cmd": "run",
+			"Value": ["microdnf install --nodocs bash zsh && microdnf clean all"],
+		},
+	]}]}
+
+	count(r) == 1
+}
+
+
+# write some tests for microdnf, dnf reinstall and other combinations
