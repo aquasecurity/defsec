@@ -36,7 +36,6 @@ get_apk[output] {
 deny[res] {
 	output := get_apk[_]
 	msg := sprintf("'--no-cache' is missed: %s", [output.arg])
-	print(msg)
 	res := result.new(msg, output.cmd)
 }
 

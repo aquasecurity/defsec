@@ -8,7 +8,7 @@
 #   id: DS028
 #   avd_id: AVD-DS-0028
 #   severity: HIGH
-#   short_code: docs_not_needed_in_docker
+#   short_code: dnf_dont_install_docs_in_docker
 #   recommended_action: "Use '--nodocs' to 'dnf install' to Dockerfile"
 #   input:
 #     selector:
@@ -21,7 +21,8 @@ get_dnf[output] {
 	run := docker.run[_]
 	arg := run.Value[0]
 
-	regex.match("(micro)?dnf (-[a-zA-Z]+\\s*)install(-[a-zA-Z]+\\s*)*", arg)
+	# try to find all combinations of microdnf install, microdnf install and dnf install
+	regex.match("dnf (-[a-zA-Z]+\\s*)*install(-[a-zA-Z]+\\s*)*", arg)
 
 	not contains_nodocs(arg)
 
@@ -31,14 +32,12 @@ get_dnf[output] {
 	}
 }
 
-
-contains_nodocs(cmd) {
-	# contains at any 
-	split(cmd, " ")[_] == "--nodocs"
-}
-
 deny[res] {
 	output := get_dnf[_]
-	msg := sprintf("'--no-cache' is missed: %s: ", [output.arg])
+	msg := sprintf("'--nodocs' is missing for dnf package installation: %s: ", [output.arg])
 	res := result.new(msg, output.cmd)
+}
+
+contains_nodocs(cmd) {
+	split(cmd, " ")[_] == "--nodocs"
 }

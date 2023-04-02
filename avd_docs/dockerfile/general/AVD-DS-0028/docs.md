@@ -1,5 +1,5 @@
 
-Cached package data should be cleaned after installation to reduce image size.
+Documentation should not be installed to reduce image size.
 
 ### Impact
 <!-- Add Impact here -->
@@ -8,6 +8,4 @@ Cached package data should be cleaned after installation to reduce image size.
 {{ remediationActions }}
 
 ### Links
-- https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
-
-
+- https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#dont-install-unnecessary-packages
