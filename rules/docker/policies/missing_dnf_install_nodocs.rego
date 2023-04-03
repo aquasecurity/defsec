@@ -22,7 +22,7 @@ get_dnf[output] {
 	arg := run.Value[0]
 
 	# try to find all combinations of microdnf install, microdnf install and dnf install
-	regex.match("dnf (-[a-zA-Z]+\\s*)*install(-[a-zA-Z]+\\s*)*", arg)
+	regex.match("dnf (-[a-zA-Z]+ *)*install(-[a-zA-Z]+ *)*", arg)
 
 	not contains_nodocs(arg)
 

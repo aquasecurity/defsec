@@ -8,7 +8,7 @@ test_dnf_denied {
 		},
 		{
 			"Cmd": "run",
-			"Value": ["set -uex &&     dnf install -vy docker-ce &&     dnf clean all"],
+			"Value": ["dnf install -vy docker-ce &&     dnf clean all"],
 		},
 		{
 			"Cmd": "healthcheck",
@@ -20,7 +20,7 @@ test_dnf_denied {
 	]}]}
 
 	count(r) == 1
-	r[_].msg == "'--nodocs' is missing for dnf package installation: set -uex &&     dnf install -vy docker-ce &&     dnf clean all"
+	r[_].msg == "'--nodocs' is missing for dnf package installation: dnf install -vy docker-ce &&     dnf clean all"
 }
 
 test_dnf_allowed {
@@ -46,6 +46,7 @@ test_dnf_allowed {
 }
 
 # # write the same with microdnf tests
+# tests both flags before and after install command
 
 # test_missing_with_install_flags {
 # 	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
