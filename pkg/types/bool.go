@@ -86,14 +86,7 @@ func (b BoolValue) IsFalse() bool {
 }
 
 func (s BoolValue) ToRego() interface{} {
-	return map[string]interface{}{
-		"filepath":  s.metadata.Range().GetFilename(),
-		"startline": s.metadata.Range().GetStartLine(),
-		"endline":   s.metadata.Range().GetEndLine(),
-		"managed":   s.metadata.isManaged,
-		"explicit":  s.metadata.isExplicit,
-		"value":     s.Value(),
-		"fskey":     CreateFSKey(s.metadata.Range().GetFS()),
-		"resource":  s.metadata.Reference(),
-	}
+	m := s.metadata.ToRego().(map[string]interface{})
+	m["value"] = s.Value()
+	return m
 }

@@ -53,6 +53,23 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 			},
 			expected: false,
 		},
+		{
+			name: "Load balancer listener using TLS v1.3",
+			input: elb.ELB{
+				LoadBalancers: []elb.LoadBalancer{
+					{
+						Metadata: defsecTypes.NewTestMetadata(),
+						Listeners: []elb.Listener{
+							{
+								Metadata:  defsecTypes.NewTestMetadata(),
+								TLSPolicy: defsecTypes.String("ELBSecurityPolicy-TLS13-1-2-2021-06", defsecTypes.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

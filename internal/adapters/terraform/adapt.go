@@ -8,6 +8,7 @@ import (
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/github"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/google"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/kubernetes"
+	"github.com/aquasecurity/defsec/internal/adapters/terraform/nifcloud"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/openstack"
 	"github.com/aquasecurity/defsec/internal/adapters/terraform/oracle"
 	"github.com/aquasecurity/defsec/pkg/state"
@@ -23,6 +24,7 @@ func Adapt(modules terraform.Modules) *state.State {
 		GitHub:       github.Adapt(modules),
 		Google:       google.Adapt(modules),
 		Kubernetes:   kubernetes.Adapt(modules),
+		Nifcloud:     nifcloud.Adapt(modules),
 		OpenStack:    openstack.Adapt(modules),
 		Oracle:       oracle.Adapt(modules),
 	}

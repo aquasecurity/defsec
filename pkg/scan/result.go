@@ -281,11 +281,15 @@ func (r *Results) SetSourceAndFilesystem(source string, f fs.FS, logicalSource b
 			newrng = defsecTypes.NewRangeWithLogicalSource(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(),
 				source, f)
 		}
+		parent := m.Parent()
 		switch {
 		case m.IsExplicit():
 			m = defsecTypes.NewExplicitMetadata(newrng, m.Reference())
 		default:
 			m = defsecTypes.NewMetadata(newrng, m.Reference())
+		}
+		if parent != nil {
+			m.SetParentPtr(parent)
 		}
 		(*r)[i].OverrideMetadata(m)
 	}

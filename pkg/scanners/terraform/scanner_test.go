@@ -234,11 +234,27 @@ deny[cause] {
 	}
 	assert.Equal(t, []scan.Line{
 		{
+			Number:     2,
+			Content:    "resource \"aws_s3_bucket\" \"my-bucket\" {",
+			IsCause:    false,
+			FirstCause: false,
+			LastCause:  false,
+			Annotation: "",
+		},
+		{
 			Number:     3,
 			Content:    "\tbucket = \"evil\"",
 			IsCause:    true,
 			FirstCause: true,
 			LastCause:  true,
+			Annotation: "",
+		},
+		{
+			Number:     4,
+			Content:    "}",
+			IsCause:    false,
+			FirstCause: false,
+			LastCause:  false,
 			Annotation: "",
 		},
 	}, actualCode.Lines)

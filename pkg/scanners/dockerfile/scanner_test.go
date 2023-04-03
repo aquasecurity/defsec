@@ -346,7 +346,9 @@ END REGO INPUT
             "fskey": "",
             "managed": true,
             "msg": "'COPY --from' should not mention current alias 'dep' since it is impossible to copy from itself",
+            "parent": null,
             "resource": "",
+            "sourceprefix": "",
             "startline": 2
           }
         ],
@@ -427,7 +429,9 @@ END REGO INPUT
             "fskey": "",
             "managed": true,
             "msg": "'COPY --from' should not mention current alias 'dep' since it is impossible to copy from itself",
+            "parent": null,
             "resource": "",
+            "sourceprefix": "",
             "startline": 2
           }
         ],
@@ -508,7 +512,9 @@ END REGO INPUT
             "fskey": "",
             "managed": true,
             "msg": "'COPY --from' should not mention current alias 'dep' since it is impossible to copy from itself",
+            "parent": null,
             "resource": "",
+            "sourceprefix": "",
             "startline": 2
           }
         ],
