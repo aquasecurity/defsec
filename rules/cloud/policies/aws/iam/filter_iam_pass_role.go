@@ -40,7 +40,6 @@ var FilterIamPassRole = rules.Register(
 		Severity: severity.Medium,
 	},
 	func(s *state.State) (results scan.Results) {
-		// for _, role := range s.AWS.IAM.Roles {
 		var passrole string
 		var policyname types.StringValue
 		for _, policy := range s.AWS.IAM.Policies {
@@ -51,12 +50,10 @@ var FilterIamPassRole = rules.Register(
 					if string_property == "iam:PassRole" {
 						passrole = string_property
 						policyname = policy.Name
-						// fmt.Printf("this is %T", Policyname)
 					}
 				}
 			}
 		}
-		// }
 		if passrole == "iam:PassRole" {
 			results.Add("Warning: Iam Pass Role is present in the policy", policyname)
 		} else {
