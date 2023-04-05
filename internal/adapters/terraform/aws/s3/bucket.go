@@ -14,20 +14,22 @@ type adapter struct {
 func (a *adapter) adaptBuckets() []s3.Bucket {
 	for _, block := range a.modules.GetResourcesByType("aws_s3_bucket") {
 		bucket := &s3.Bucket{
-			Metadata:          block.GetMetadata(),
-			Name:              block.GetAttribute("bucket").AsStringValueOrDefault("", block),
-			PublicAccessBlock: nil,
-			BucketPolicies:    nil,
-			Encryption:        getEncryption(block, a),
-			Versioning:        getVersioning(block, a),
-			Logging:           getLogging(block, a),
-			ACL:               getBucketAcl(block, a),
+			Metadata:                block.GetMetadata(),
+			Name:                    block.GetAttribute("bucket").AsStringValueOrDefault("", block),
+			PublicAccessBlock:       nil,
+			BucketPolicies:          nil,
+			ObjectLockConfiguration: nil,
+			Encryption:              getEncryption(block, a),
+			Versioning:              getVersioning(block, a),
+			Logging:                 getLogging(block, a),
+			ACL:                     getBucketAcl(block, a),
 		}
 		a.bucketMap[block.ID()] = bucket
 	}
 
 	a.adaptBucketPolicies()
 	a.adaptPublicAccessBlocks()
+	a.adaptobjectLockConfig()
 
 	var buckets []s3.Bucket
 	for _, bucket := range a.bucketMap {

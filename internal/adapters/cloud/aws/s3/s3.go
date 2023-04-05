@@ -88,14 +88,15 @@ func (a *adapter) adaptBucket(bucket s3types.Bucket) (*s3.Bucket, error) {
 	}
 
 	b := s3.Bucket{
-		Metadata:          bucketMetadata,
-		Name:              name,
-		PublicAccessBlock: a.getPublicAccessBlock(bucket.Name, bucketMetadata),
-		BucketPolicies:    a.getBucketPolicies(bucket.Name, bucketMetadata),
-		Encryption:        a.getBucketEncryption(bucket.Name, bucketMetadata),
-		Versioning:        a.getBucketVersioning(bucket.Name, bucketMetadata),
-		Logging:           a.getBucketLogging(bucket.Name, bucketMetadata),
-		ACL:               a.getBucketACL(bucket.Name, bucketMetadata),
+		Metadata:                bucketMetadata,
+		Name:                    name,
+		PublicAccessBlock:       a.getPublicAccessBlock(bucket.Name, bucketMetadata),
+		BucketPolicies:          a.getBucketPolicies(bucket.Name, bucketMetadata),
+		Encryption:              a.getBucketEncryption(bucket.Name, bucketMetadata),
+		Versioning:              a.getBucketVersioning(bucket.Name, bucketMetadata),
+		Logging:                 a.getBucketLogging(bucket.Name, bucketMetadata),
+		ObjectLockConfiguration: a.getObjectLockConfiguration(bucket.Name, bucketMetadata),
+		ACL:                     a.getBucketACL(bucket.Name, bucketMetadata),
 	}
 
 	return &b, nil
@@ -131,6 +132,33 @@ func (a *adapter) getPublicAccessBlock(bucketName *string, metadata defsecTypes.
 	pab.RestrictPublicBuckets = defsecTypes.Bool(config.RestrictPublicBuckets, metadata)
 
 	return &pab
+}
+
+func (a *adapter) getObjectLockConfiguration(bucketName *string, metadata defsecTypes.Metadata) *s3.ObjectLockConfiguration {
+	objectLockConfiguration, err := a.api.GetObjectLockConfiguration(a.Context(), &s3api.GetObjectLockConfigurationInput{
+		Bucket: bucketName,
+	})
+	if err != nil {
+		// nolint
+		if awsError, ok := err.(awserr.Error); ok {
+			if awsError.Code() == "NoSuchObjectLockConfiguration" {
+				return nil
+			}
+		}
+		a.Debug("Error getting object lock configuration: %s", err)
+		return nil
+	}
+
+	if objectLockConfiguration == nil {
+		return nil
+	}
+	config := objectLockConfiguration.ObjectLockConfiguration
+	objectLock := s3.ObjectLockConfiguration{
+		Metadata:          metadata,
+		ObjectLockEnabled: defsecTypes.String(string(config.ObjectLockEnabled), metadata),
+	}
+
+	return &objectLock
 }
 
 func (a *adapter) getBucketPolicies(bucketName *string, metadata defsecTypes.Metadata) []iam.Policy {

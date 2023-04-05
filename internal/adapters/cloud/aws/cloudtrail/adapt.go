@@ -87,14 +87,33 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		return nil, err
 	}
 
+	tag, err := a.client.ListTags(a.Context(), &api.ListTagsInput{
+		ResourceIdList: []string{*info.TrailARN},
+	})
+	if err != nil {
+		tag = nil
+	}
+	var tags []cloudtrail.Tags
+	if tag != nil {
+		for range tag.ResourceTagList[0].TagsList {
+			tags = append(tags, cloudtrail.Tags{
+				Metadata: metadata,
+			})
+		}
+	}
+
 	cloudWatchLogsArn := defsecTypes.StringDefault("", metadata)
 	if response.Trail.CloudWatchLogsLogGroupArn != nil {
 		cloudWatchLogsArn = defsecTypes.String(*response.Trail.CloudWatchLogsLogGroupArn, metadata)
 	}
 
-	var bucketName string
+	var bucketName, snsTopicName string
 	if response.Trail.S3BucketName != nil {
 		bucketName = *response.Trail.S3BucketName
+	}
+
+	if response.Trail.SnsTopicName != nil {
+		snsTopicName = *response.Trail.SnsTopicName
 	}
 
 	name := defsecTypes.StringDefault("", metadata)
@@ -102,9 +121,19 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 		name = defsecTypes.String(*info.Name, metadata)
 	}
 
+	arn := defsecTypes.StringDefault("", metadata)
+	if info.TrailARN != nil {
+		arn = defsecTypes.String(*info.TrailARN, metadata)
+	}
+
 	isLogging := defsecTypes.BoolDefault(false, metadata)
 	if status.IsLogging != nil {
 		isLogging = defsecTypes.Bool(*status.IsLogging, metadata)
+	}
+
+	latestDeliveryError := defsecTypes.StringDefault("", metadata)
+	if status.LatestDeliveryError != nil {
+		latestDeliveryError = defsecTypes.String(*status.LatestDeliveryError, metadata)
 	}
 
 	var eventSelectors []cloudtrail.EventSelector
@@ -133,22 +162,28 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 				})
 			}
 			eventSelectors = append(eventSelectors, cloudtrail.EventSelector{
-				Metadata:      metadata,
-				DataResources: resources,
-				ReadWriteType: defsecTypes.String(string(eventSelector.ReadWriteType), metadata),
+				Metadata:                metadata,
+				DataResources:           resources,
+				ReadWriteType:           defsecTypes.String(string(eventSelector.ReadWriteType), metadata),
+				IncludeManagementEvents: defsecTypes.Bool(bool(*eventSelector.IncludeManagementEvents), metadata),
 			})
 		}
 	}
 
 	return &cloudtrail.Trail{
-		Metadata:                  metadata,
-		Name:                      name,
-		EnableLogFileValidation:   defsecTypes.Bool(response.Trail.LogFileValidationEnabled != nil && *response.Trail.LogFileValidationEnabled, metadata),
-		IsMultiRegion:             defsecTypes.Bool(response.Trail.IsMultiRegionTrail != nil && *response.Trail.IsMultiRegionTrail, metadata),
-		CloudWatchLogsLogGroupArn: cloudWatchLogsArn,
-		KMSKeyID:                  defsecTypes.String(kmsKeyId, metadata),
-		IsLogging:                 isLogging,
-		BucketName:                defsecTypes.String(bucketName, metadata),
-		EventSelectors:            eventSelectors,
+		Metadata:                   metadata,
+		Name:                       name,
+		Arn:                        arn,
+		EnableLogFileValidation:    defsecTypes.Bool(response.Trail.LogFileValidationEnabled != nil && *response.Trail.LogFileValidationEnabled, metadata),
+		IsMultiRegion:              defsecTypes.Bool(response.Trail.IsMultiRegionTrail != nil && *response.Trail.IsMultiRegionTrail, metadata),
+		CloudWatchLogsLogGroupArn:  cloudWatchLogsArn,
+		KMSKeyID:                   defsecTypes.String(kmsKeyId, metadata),
+		IsLogging:                  isLogging,
+		LatestDeliveryError:        latestDeliveryError,
+		BucketName:                 defsecTypes.String(bucketName, metadata),
+		SnsTopicName:               defsecTypes.String(snsTopicName, metadata),
+		EventSelectors:             eventSelectors,
+		Tags:                       tags,
+		IncludeGlobalServiceEvents: defsecTypes.Bool(*response.Trail.IncludeGlobalServiceEvents, metadata),
 	}, nil
 }
