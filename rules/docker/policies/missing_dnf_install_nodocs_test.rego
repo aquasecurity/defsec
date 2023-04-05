@@ -8,7 +8,7 @@ test_dnf_denied {
 		},
 		{
 			"Cmd": "run",
-			"Value": ["dnf install -vy docker-ce &&     dnf clean all"],
+			"Value": ["dnf install -y docker &&     dnf clean all"],
 		},
 		{
 			"Cmd": "healthcheck",
