@@ -18,8 +18,7 @@ test_client_ca_file_is_set {
 		}]},
 	}
 
-	count(r) == 1
-	r[_].msg == "Ensure that the --client-ca-file argument is set as appropriate"
+	count(r) == 0
 }
 
 test_client_ca_file_is_not_set {
@@ -41,4 +40,5 @@ test_client_ca_file_is_not_set {
 	}
 
 	count(r) == 0
+	r[_].msg == "Ensure that the --client-ca-file argument is set as appropriate"
 }
