@@ -179,17 +179,17 @@ command_has_flag(command, flag) {
 }
 
 is_controllermananager(container) {
-	regex.match("kube-controller-manager", container.command[0])
+	regex.match("^kube-controller-manager$", container.command[0])
 }
 
 is_etcd(container) {
-	regex.match("etcd", container.command[0])
+	regex.match("^etcd$", container.command[0])
 }
 
 is_scheduler(container) {
-	regex.match("kube-scheduler", container.command[0])
+	regex.match("^kube-scheduler$", container.command[0])
 }
 
 is_apiserver(container) {
-	regex.match("kube-apiserver", container.command[0])
+	regex.match("^kube-apiserver$", container.command[0])
 }
