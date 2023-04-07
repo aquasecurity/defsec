@@ -68,7 +68,7 @@ no_install_flag := `(--no-install-recommends)`
 
 optional_not_related_flags := `\s*(-(-)?[a-zA-Z]+\s*)*`
 
-combined_flags := sprintf(`%s(%s|%s)%s`, [optional_not_related_flags, no_install_flag, optional_not_related_flags])
+combined_flags := sprintf(`%s(%s|%s)%s`, [optional_not_related_flags, no_install_flag, optional_not_related_flags, no_install_flag])
 
 # flags before command
 includes_no_install_recommends(command) {
