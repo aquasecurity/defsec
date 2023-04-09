@@ -18,17 +18,36 @@ package builtin.dockerfile.DS028
 import data.lib.docker
 
 get_dnf[output] {
-	run := docker.run[_]
+	run = docker.run[_]
+
+	count(run.Value) == 1
 	arg := run.Value[0]
 
-	# try to find all combinations of microdnf install, microdnf install and dnf install
-	regex.match("dnf (-(-)?[a-zA-Z]+ *)*install(-(-)?[a-zA-Z]+ *)*", arg)
+	is_dnf(arg)
 
-	not contains_nodocs(arg)
+	not includes_assume_yes(arg)
 
 	output := {
-		"cmd": run,
 		"arg": arg,
+		"cmd": run,
+	}
+}
+
+# checking json array
+get_dnf[output] {
+	run = docker.run[_]
+
+	count(run.Value) > 1
+
+	arg := concat(" ", run.Value)
+
+	is_dnf(arg)
+
+	not includes_nodocs(arg)
+
+	output := {
+		"arg": arg,
+		"cmd": run,
 	}
 }
 
@@ -38,6 +57,37 @@ deny[res] {
 	res := result.new(msg, output.cmd)
 }
 
-contains_nodocs(cmd) {
-	split(cmd, " ")[_] == "--nodocs"
+nodocs_flags := `--nodocs`
+
+optional_not_related_flags := `\s*(-(-)?[a-zA-Z]+\s*)*`
+
+combined_flags := sprintf(`%s%s%s`, [optional_not_related_flags, nodocs_flags, optional_not_related_flags])
+
+dnf_install_regex := `(install)|(in)|(reinstall)|(rei)|(install-n)|(install-na)|(install-nevra)`
+
+# dnf
+is_dnf(command) {
+	regex.match(sprintf("dnf%s%s%s", combined_flags, dnf_install_regex, combined_flags), arg)
+}
+
+# microdnf
+is_dnf(command) {
+	regex.match(sprintf("microdnf%s(install|reinstall)%s", combined_flags, combined_flags), command)
+}
+
+# flags before command
+includes_nodocs(command) {
+	install_regexp := sprintf(`%s`, [combined_flags])
+	regex.match(install_regexp, command)
+}
+
+includes_nodocs(command) {
+	install_regexp := sprintf(`%s`, [combined_flags])
+	regex.match(install_regexp, command)
+}
+
+# flags behind command
+includes_nodocs(command) {
+	install_regexp := sprintf(`%s%s`, [optional_not_related_flags, combined_flags])
+	regex.match(install_regexp, command)
 }
