@@ -14,8 +14,8 @@ import (
 	"github.com/zclconf/go-cty/cty"
 )
 
-func getAbsPath(path string) (string, error) {
-	p, err := filepath.Abs(path)
+func getAbsPath(inputPath string) (string, error) {
+	p, err := filepath.Abs(inputPath)
 	if err != nil {
 		return "", fmt.Errorf("unable to determine path: %w", err)
 	}
@@ -71,6 +71,7 @@ func loadTFVarsFile(srcFS fs.FS, filename string) (map[string]cty.Value, error) 
 	if err != nil {
 		return nil, err
 	}
+	absPath = filepath.ToSlash(absPath) // in memory fs is only slash based
 
 	src, err := fs.ReadFile(srcFS, absPath)
 	if err != nil {
