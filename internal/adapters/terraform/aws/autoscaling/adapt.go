@@ -55,7 +55,7 @@ func adaptAutoscaling(resource *terraform.Block, module *terraform.Module) autos
 	}
 
 	HCTAttr := resource.GetAttribute("health_check_type")
-	HCTVal := HCTAttr.AsStringValueOrDefault("EC2", resource)
+	HCTVal := HCTAttr.AsStringValueOrDefault("", resource)
 
 	var LBNames []types.StringValue
 	LBNAttr := resource.GetAttribute("load_balancers")

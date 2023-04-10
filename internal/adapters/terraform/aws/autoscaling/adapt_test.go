@@ -66,7 +66,8 @@ func TestLines(t *testing.T) {
 	resource "aws_autoscaling_group" "example" {
 		name     = "my-group"
 		availability_zones = "us-east-1a"
-		
+		health_check_type  = "ELB"
+		load_balancers = "test"
 		 
 	}`
 
@@ -78,7 +79,7 @@ func TestLines(t *testing.T) {
 	autoscalingGroupsList := adapted.AutoscalingGroupsList[0]
 
 	assert.Equal(t, 2, autoscalingGroupsList.Metadata.Range().GetStartLine())
-	assert.Equal(t, 7, autoscalingGroupsList.Metadata.Range().GetEndLine())
+	assert.Equal(t, 8, autoscalingGroupsList.Metadata.Range().GetEndLine())
 
 	assert.Equal(t, 3, autoscalingGroupsList.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, autoscalingGroupsList.Name.GetMetadata().Range().GetEndLine())
@@ -86,10 +87,10 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 4, autoscalingGroupsList.AvaiabilityZone[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 4, autoscalingGroupsList.AvaiabilityZone[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 4, autoscalingGroupsList.HealthCheckType.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 4, autoscalingGroupsList.HealthCheckType.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 5, autoscalingGroupsList.HealthCheckType.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 5, autoscalingGroupsList.HealthCheckType.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 4, autoscalingGroupsList.LoadBalancerNames[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 4, autoscalingGroupsList.LoadBalancerNames[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 6, autoscalingGroupsList.LoadBalancerNames[0].GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 6, autoscalingGroupsList.LoadBalancerNames[0].GetMetadata().Range().GetEndLine())
 
 }
