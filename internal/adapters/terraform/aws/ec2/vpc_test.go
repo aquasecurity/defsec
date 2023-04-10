@@ -199,6 +199,30 @@ func Test_AdaptVPC(t *testing.T) {
 				},
 			},
 		},
+		{
+			name: "flow log with referenced VPC ID",
+			terraform: `
+			locals {
+				vpc_id = try(aws_vpc.this.id, "")
+			}
+			resource "aws_vpc" "this" {
+				cidr_block = "10.0.0.0/16"
+			}
+			resource "aws_flow_log" "this" {
+				vpc_id = local.vpc_id
+			}
+`,
+			expected: ec2.EC2{
+				VPCs: []ec2.VPC{
+					{
+						Metadata:        defsecTypes.NewTestMetadata(),
+						IsDefault:       defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						ID:              defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						FlowLogsEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					},
+				},
+			},
+		},
 	}
 
 	for _, test := range tests {
