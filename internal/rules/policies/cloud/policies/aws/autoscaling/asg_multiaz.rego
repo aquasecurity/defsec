@@ -20,6 +20,6 @@ package builtin.aws.autoscaling.aws0339
 
 deny[res] {
 	group := input.aws.autoscaling.autoscalinggroupslist[_]
-	count(group.avaiabilityzone) <= 1 
+	count(group.avaiabilityzone) <= 1
 	res := result.new(sprintf("Auto scaling group is only using (%v) availibility zones", [count(group.avaiabilityzone)]), group)
 }

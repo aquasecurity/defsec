@@ -20,7 +20,7 @@ package builtin.aws.autoscaling.aws0341
 
 deny[res] {
 	group := input.aws.autoscaling.autoscalinggroupslist[_]
-    not group.healthchecktype.value == "ELB" 
-    group.loadbalancernames
-    res:= result.new("Auto Scaling group does not have ELB health check active", group)
+	not group.healthchecktype.value == "ELB"
+	group.loadbalancernames
+	res := result.new("Auto Scaling group does not have ELB health check active", group)
 }
