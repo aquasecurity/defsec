@@ -63,63 +63,63 @@ func getNotificationConfigurations(ctx parser.FileContext) (notificationconfigva
 	return notificationconfigvals
 }
 
-func getAvailabilityZone(r *parser.Resource) (AvaiabilityZone []types.StringValue) {
+func getAvailabilityZone(r *parser.Resource) (avaiabilityZone []types.StringValue) {
 
 	AvaiabilityZoneList := r.GetProperty("AvailabilityZones")
 
 	if AvaiabilityZoneList.IsNil() || AvaiabilityZoneList.IsNotList() {
-		return AvaiabilityZone
+		return avaiabilityZone
 	}
 
 	for _, AZ := range AvaiabilityZoneList.AsList() {
-		AvaiabilityZone = append(AvaiabilityZone, AZ.AsStringValue())
+		avaiabilityZone = append(avaiabilityZone, AZ.AsStringValue())
 	}
-	return AvaiabilityZone
+	return avaiabilityZone
 }
 
-func getLBNames(r *parser.Resource) (LoadBalancerNames []types.StringValue) {
+func getLBNames(r *parser.Resource) (loadBalancerNames []types.StringValue) {
 
 	LBNames := r.GetProperty("LoadBalancerNames")
 
 	if LBNames.IsNil() || LBNames.IsNotList() {
-		return LoadBalancerNames
+		return loadBalancerNames
 	}
 
 	for _, LBN := range LBNames.AsList() {
-		LoadBalancerNames = append(LoadBalancerNames, LBN.AsStringValue())
+		loadBalancerNames = append(loadBalancerNames, LBN.AsStringValue())
 	}
-	return LoadBalancerNames
+	return loadBalancerNames
 }
 
-func getSuspendedProcesses(r *parser.Resource) (SuspendedProcesses []autoscaling.SuspendedProcesses) {
+func getSuspendedProcesses(r *parser.Resource) (suspendedProcesses []autoscaling.SuspendedProcesses) {
 
 	SusProcesses := r.GetProperty("SuspendedProcesses")
 
 	if SusProcesses.IsNil() || SusProcesses.IsNotNil() {
-		return SuspendedProcesses
+		return suspendedProcesses
 	}
 
 	for _, SP := range SusProcesses.AsList() {
-		SuspendedProcesses = append(SuspendedProcesses, autoscaling.SuspendedProcesses{
+		suspendedProcesses = append(suspendedProcesses, autoscaling.SuspendedProcesses{
 			Metadata: SP.Metadata(),
 		})
 	}
-	return SuspendedProcesses
+	return suspendedProcesses
 }
 
-func getTags(r *parser.Resource) (Tags []autoscaling.Tags) {
+func getTags(r *parser.Resource) (tags []autoscaling.Tags) {
 
 	Tag := r.GetProperty("Tags")
 
 	if Tag.IsNil() || Tag.IsNotNil() {
-		return Tags
+		return tags
 	}
 
 	for _, TG := range Tag.AsList() {
-		Tags = append(Tags, autoscaling.Tags{
+		tags = append(tags, autoscaling.Tags{
 			Metadata:   TG.Metadata(),
 			ResourceId: types.StringDefault("", TG.Metadata()),
 		})
 	}
-	return Tags
+	return tags
 }
