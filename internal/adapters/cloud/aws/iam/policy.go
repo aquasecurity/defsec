@@ -72,9 +72,14 @@ func (a *adapter) adaptPolicy(apiPolicy iamtypes.Policy) (*iam.Policy, error) {
 		name = defsecTypes.String(*apiPolicy.PolicyName, metadata)
 	}
 
+	defaultVersionId := defsecTypes.String("", metadata)
+	if apiPolicy.DefaultVersionId != nil {
+		defaultVersionId = defsecTypes.String(*apiPolicy.DefaultVersionId, metadata)
+	}
+
 	return &iam.Policy{
 		Metadata:         metadata,
-		DefaultVersionId: defsecTypes.String(*apiPolicy.DefaultVersionId, metadata),
+		DefaultVersionId: defaultVersionId,
 		Name:             name,
 		Document: iam.Document{
 			Metadata: metadata,
