@@ -16,10 +16,13 @@
 #   input:
 #     selector:
 #     - type: cloud
+#       subtypes:
+#         - service: iam
+#           provider: aws
 package builtin.aws.iam.aws0334
 
 deny[res] {
 	policy := input.aws.iam.passwordpolicy
-    not policy.requirenumbers.value
+	not policy.requirenumbers.value
 	res := result.new("Password policy does not require numbers", policy.requirenumbers)
 }

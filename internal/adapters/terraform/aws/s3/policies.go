@@ -20,10 +20,11 @@ func (a *adapter) adaptBucketPolicies() {
 		}
 
 		policy := iam.Policy{
-			Metadata: policyAttr.GetMetadata(),
-			Name:     defsecTypes.StringDefault("", b.GetMetadata()),
-			Document: *doc,
-			Builtin:  defsecTypes.Bool(false, b.GetMetadata()),
+			Metadata:         policyAttr.GetMetadata(),
+			Name:             defsecTypes.StringDefault("", b.GetMetadata()),
+			Document:         *doc,
+			Builtin:          defsecTypes.Bool(false, b.GetMetadata()),
+			DefaultVersionId: defsecTypes.StringDefault("", b.GetMetadata()),
 		}
 
 		var bucketName string

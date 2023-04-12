@@ -16,10 +16,13 @@
 #   input:
 #     selector:
 #     - type: cloud
+#       subtypes:
+#         - service: iam
+#           provider: aws
 package builtin.aws.iam.aws0336
 
 deny[res] {
 	policy := input.aws.iam.passwordpolicy
-    not policy.requiresymbols.value
+	not policy.requiresymbols.value
 	res := result.new("Password policy does not require symbols", policy.requiresymbols)
 }

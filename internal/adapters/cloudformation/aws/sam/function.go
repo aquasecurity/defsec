@@ -46,7 +46,8 @@ func setFunctionPolicies(r *parser.Resource, function *sam.Function) {
 							Metadata: property.Metadata(),
 							Parsed:   *parsed,
 						},
-						Builtin: defsecTypes.Bool(false, property.Metadata()),
+						Builtin:          defsecTypes.Bool(false, property.Metadata()),
+						DefaultVersionId: defsecTypes.StringDefault("", property.Metadata()),
 					}
 					function.Policies = append(function.Policies, policy)
 				} else if property.IsString() {

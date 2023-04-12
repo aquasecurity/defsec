@@ -73,7 +73,8 @@ func adaptRepository(resource *terraform.Block, module *terraform.Module, module
 						Parsed:   *parsed,
 						Metadata: policyAttr.GetMetadata(),
 					},
-					Builtin: defsecTypes.Bool(false, policyRes.GetMetadata()),
+					Builtin:          defsecTypes.Bool(false, policyRes.GetMetadata()),
+					DefaultVersionId: defsecTypes.StringDefault("", policyRes.GetMetadata()),
 				}
 
 				repo.Policies = append(repo.Policies, policy)
@@ -87,7 +88,8 @@ func adaptRepository(resource *terraform.Block, module *terraform.Module, module
 							Metadata: doc.Source.GetMetadata(),
 							IsOffset: true,
 						},
-						Builtin: defsecTypes.Bool(false, policyRes.GetMetadata()),
+						Builtin:          defsecTypes.Bool(false, policyRes.GetMetadata()),
+						DefaultVersionId: defsecTypes.StringDefault("", policyRes.GetMetadata()),
 					}
 					repo.Policies = append(repo.Policies, policy)
 				}

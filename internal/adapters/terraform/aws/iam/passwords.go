@@ -22,6 +22,7 @@ func adaptPasswordPolicy(modules terraform.Modules) iam.PasswordPolicy {
 		MaxAgeDays:                 defsecTypes.IntDefault(math.MaxInt, defsecTypes.NewUnmanagedMetadata()),
 		MinimumLength:              defsecTypes.IntDefault(0, defsecTypes.NewUnmanagedMetadata()),
 		AllowUsersToChangePassword: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+		ExpirePasswords:            defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 	}
 
 	passwordPolicies := modules.GetResourcesByType("aws_iam_account_password_policy")

@@ -16,6 +16,9 @@
 #   input:
 #     selector:
 #     - type: cloud
+#       subtypes:
+#         - service: iam
+#           provider: aws
 package builtin.aws.iam.aws0332
 
 deny[res] {

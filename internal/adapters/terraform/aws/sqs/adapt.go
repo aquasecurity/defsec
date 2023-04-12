@@ -38,7 +38,8 @@ func (a *adapter) adaptQueues() []sqs.Queue {
 			Document: iamp.Document{
 				Metadata: policyBlock.GetMetadata(),
 			},
-			Builtin: defsecTypes.Bool(false, policyBlock.GetMetadata()),
+			Builtin:          defsecTypes.Bool(false, policyBlock.GetMetadata()),
+			DefaultVersionId: defsecTypes.StringDefault("", policyBlock.GetMetadata()),
 		}
 		if attr := policyBlock.GetAttribute("policy"); attr.IsString() {
 			dataBlock, err := a.modules.GetBlockById(attr.Value().AsString())
@@ -111,7 +112,8 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 				Document: iamp.Document{
 					Metadata: attr.GetMetadata(),
 				},
-				Builtin: defsecTypes.Bool(false, attr.GetMetadata()),
+				Builtin:          defsecTypes.Bool(false, attr.GetMetadata()),
+				DefaultVersionId: defsecTypes.StringDefault("", attr.GetMetadata()),
 			}
 			parsed, err := iamgo.ParseString(attr.Value().AsString())
 			if err == nil {
@@ -131,7 +133,8 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 						IsOffset: true,
 						HasRefs:  false,
 					},
-					Builtin: defsecTypes.Bool(false, attr.GetMetadata()),
+					Builtin:          defsecTypes.Bool(false, attr.GetMetadata()),
+					DefaultVersionId: defsecTypes.StringDefault("", attr.GetMetadata()),
 				}
 				policies = append(policies, policy)
 			}
@@ -147,7 +150,8 @@ func (a *adapter) adaptQueue(resource *terraform.Block) {
 						Metadata: doc.Source.GetMetadata(),
 						Parsed:   doc.Document,
 					},
-					Builtin: defsecTypes.Bool(false, refBlock.GetMetadata()),
+					Builtin:          defsecTypes.Bool(false, refBlock.GetMetadata()),
+					DefaultVersionId: defsecTypes.StringDefault("", refBlock.GetMetadata()),
 				}
 				policies = append(policies, policy)
 			}

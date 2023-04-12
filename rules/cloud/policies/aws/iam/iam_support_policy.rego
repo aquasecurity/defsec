@@ -19,7 +19,7 @@
 package builtin.aws.iam.aws0330
 
 deny[res] {
-    found := [policy| policy = input.aws.iam.policies[_]; policy.name.value == "AWSSupportAccess"]
-    count(found) == 0
+	found := [policy | policy = input.aws.iam.policies[_]; policy.name.value == "AWSSupportAccess"]
+	count(found) == 0
 	res := result.new("No role, user or group attached to the AWSSupportAccess policy", "")
 }

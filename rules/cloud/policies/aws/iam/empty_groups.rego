@@ -3,7 +3,7 @@
 # description: "Ensures all groups have at least one member"
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_WorkingWithGroupsAndUsers.html
 # custom:
@@ -16,6 +16,10 @@
 #   input:
 #     selector:
 #     - type: cloud
+#       subtypes:
+#         - service: iam
+#           provider: aws
+
 package builtin.aws.iam.aws0329
 
 deny[res] {

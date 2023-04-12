@@ -16,10 +16,13 @@
 #   input:
 #     selector:
 #     - type: cloud
+#       subtypes:
+#         - service: iam
+#           provider: aws
 package builtin.aws.iam.aws0333
 
 deny[res] {
 	policy := input.aws.iam.passwordpolicy
-    not policy.requirelowercase.value
+	not policy.requirelowercase.value
 	res := result.new("Password policy does not require lowercase characters", policy.requirelowercase)
 }
