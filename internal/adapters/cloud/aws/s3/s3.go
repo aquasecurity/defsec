@@ -168,7 +168,7 @@ func (a *adapter) getBucketPolicies(bucketName *string, metadata defsecTypes.Met
 				Metadata: metadata,
 				Parsed:   *policyDocument,
 			},
-			Builtin: defsecTypes.Bool(false, metadata),
+			Builtin:          defsecTypes.Bool(false, metadata),
 			DefaultVersionId: defsecTypes.StringDefault("", metadata),
 		})
 	}
