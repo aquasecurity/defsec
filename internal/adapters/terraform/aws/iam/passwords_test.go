@@ -26,7 +26,7 @@ func Test_adaptPasswordPolicy(t *testing.T) {
 				require_numbers                = true
 				require_uppercase_characters   = true
 				require_symbols                = true
-				allow_users_to_change_password = true
+				allow_users_to_change_password = false
 				max_password_age               = 90
 				password_reuse_prevention      = 3
 			  }
