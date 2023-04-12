@@ -30,9 +30,13 @@ func Test_adaptCluster(t *testing.T) {
 				  network_policy = "calico"
 				}
 
-				api_server_authorized_ip_ranges = [
+				api_server_access_profile {
+
+					authorized_ip_ranges = [
 					"1.2.3.4/32"
-				]
+					]
+		
+				}
 
 				addon_profile {
 					oms_agent {
@@ -171,10 +175,14 @@ func TestLines(t *testing.T) {
 		network_profile {
 		  network_policy = "calico"
 		}
+        
+		api_server_access_profile {
 
-		api_server_authorized_ip_ranges = [
+		    authorized_ip_ranges = [
 			"1.2.3.4/32"
-		]
+		    ]
+
+		}
 
 		addon_profile {
 			oms_agent {
@@ -202,23 +210,23 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 6, cluster.NetworkProfile.NetworkPolicy.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 6, cluster.NetworkProfile.NetworkPolicy.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 9, cluster.APIServerAuthorizedIPRanges[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 11, cluster.APIServerAuthorizedIPRanges[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 11, cluster.APIServerAuthorizedIPRanges[0].GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 13, cluster.APIServerAuthorizedIPRanges[0].GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 13, cluster.AddonProfile.Metadata.Range().GetStartLine())
-	assert.Equal(t, 17, cluster.AddonProfile.Metadata.Range().GetEndLine())
+	assert.Equal(t, 17, cluster.AddonProfile.Metadata.Range().GetStartLine())
+	assert.Equal(t, 21, cluster.AddonProfile.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 14, cluster.AddonProfile.OMSAgent.Metadata.Range().GetStartLine())
-	assert.Equal(t, 16, cluster.AddonProfile.OMSAgent.Metadata.Range().GetEndLine())
+	assert.Equal(t, 18, cluster.AddonProfile.OMSAgent.Metadata.Range().GetStartLine())
+	assert.Equal(t, 20, cluster.AddonProfile.OMSAgent.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 15, cluster.AddonProfile.OMSAgent.Enabled.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 15, cluster.AddonProfile.OMSAgent.Enabled.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 19, cluster.AddonProfile.OMSAgent.Enabled.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 19, cluster.AddonProfile.OMSAgent.Enabled.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 19, cluster.RoleBasedAccessControl.Metadata.Range().GetStartLine())
-	assert.Equal(t, 21, cluster.RoleBasedAccessControl.Metadata.Range().GetEndLine())
+	assert.Equal(t, 23, cluster.RoleBasedAccessControl.Metadata.Range().GetStartLine())
+	assert.Equal(t, 25, cluster.RoleBasedAccessControl.Metadata.Range().GetEndLine())
 
-	assert.Equal(t, 20, cluster.RoleBasedAccessControl.Enabled.GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 20, cluster.RoleBasedAccessControl.Enabled.GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 24, cluster.RoleBasedAccessControl.Enabled.GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 24, cluster.RoleBasedAccessControl.Enabled.GetMetadata().Range().GetEndLine())
 }
 
 func TestWithLocals(t *testing.T) {
@@ -235,9 +243,13 @@ locals {
 
 resource "azurerm_kubernetes_cluster" "aks" {
   # not working
-  api_server_authorized_ip_ranges = local.ip_whitelist
+  api_server_access_profile {
+   authorized_ip_ranges = local.ip_whitelist
+  }
   # working
-  # api_server_authorized_ip_ranges = concat(var.ip_whitelist, split(",", data.azurerm_public_ip.example.ip_address))
+  api_server_access_profile {
+   authorized_ip_ranges = concat(var.ip_whitelist, split(",", data.azurerm_public_ip.example.ip_address))
+  }
 }`
 
 	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
