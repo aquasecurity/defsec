@@ -123,7 +123,8 @@ func getPoliciesDocs(policiesProp *parser.Property) []iam.Policy {
 				Metadata: policyProp.Metadata(),
 				Parsed:   *doc,
 			},
-			Builtin: defsecTypes.Bool(false, policyProp.Metadata()),
+			Builtin:          defsecTypes.Bool(false, policyProp.Metadata()),
+			DefaultVersionId: policy.StringDefault(""),
 		})
 	}
 	return policies
