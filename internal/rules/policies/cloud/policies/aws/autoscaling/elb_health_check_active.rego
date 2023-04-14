@@ -11,7 +11,7 @@
 #   provider: aws
 #   service: autoscaling
 #   severity: LOW
-#   short_code: elb_health_check_active
+#   short_code: elb-health-check-active
 #   recommended_action: "Enable ELB health check for the Auto Scaling groups."
 #   input:
 #     selector:
