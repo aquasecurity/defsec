@@ -47,9 +47,11 @@ type Scanner struct {
 	debug                   debug.Logger
 	enableEmbeddedLibraries bool
 	sync.Mutex
-	loadEmbedded bool
-	frameworks   []framework.Framework
-	spec         string
+	loadEmbedded          bool
+	frameworks            []framework.Framework
+	spec                  string
+	loadEmbeddedLibraries bool
+	loadEmbeddedPolicies  bool
 }
 
 func (s *Scanner) SetSpec(spec string) {
@@ -65,7 +67,11 @@ func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
-	s.loadEmbedded = b
+	s.loadEmbeddedPolicies = b
+}
+
+func (s *Scanner) SetUseEmbeddedLibraries(b bool) {
+	s.loadEmbeddedLibraries = b
 }
 
 func (s *Scanner) SetEmbeddedLibrariesEnabled(enabled bool) {
@@ -155,12 +161,13 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	}
 	regoScanner := rego.NewScanner(types.SourceCloud, s.options...)
 	regoScanner.SetParentDebugLogger(s.debug)
-	if s.enableEmbeddedLibraries {
+	if s.enableEmbeddedLibraries { // TODO(simar7): Why is this here?
 		if err := regoScanner.LoadEmbeddedLibraries(); err != nil {
 			return nil, fmt.Errorf("failed to load embedded libraries: %w", err)
 		}
 	}
-	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
+
+	if err := regoScanner.LoadPolicies(s.loadEmbeddedLibraries, s.loadEmbeddedPolicies, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner
