@@ -11,7 +11,7 @@
 #   provider: aws
 #   service: autoscaling
 #   severity: LOW
-#   short_code: asg_multiaz
+#   short_code: asg-multi-az
 #   recommended_action: "Modify the autoscaling instance to enable scaling across multiple availability zones."
 #   input:
 #     selector:
