@@ -3,7 +3,7 @@
 # description: "Ensures all autoscaling groups contain at least 1 instance.."
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - https://docs.aws.amazon.com/autoscaling/ec2/userguide/AutoScalingGroup.html
 # custom:
