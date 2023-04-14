@@ -2,7 +2,6 @@ package terraform
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"io/fs"
 	"path/filepath"
@@ -160,11 +159,6 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	}
 	regoScanner := rego.NewScanner(types.SourceCloud, s.options...)
 	regoScanner.SetParentDebugLogger(s.debug)
-	if s.enableEmbeddedLibraries { // TODO(simar7): Why is this here?
-		if err := regoScanner.LoadEmbeddedLibraries(); err != nil {
-			return nil, fmt.Errorf("failed to load embedded libraries: %w", err)
-		}
-	}
 
 	if err := regoScanner.LoadPolicies(s.loadEmbeddedLibraries, s.loadEmbeddedPolicies, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
