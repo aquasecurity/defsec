@@ -615,6 +615,7 @@ spec:
 	assert.Equal(t, "k8s.yaml", firstResult.Metadata().Range().GetFilename())
 }
 
+/*
 // TODO(simar): Uncomment once all k8s policies have subtype selector added
 func Test_checkPolicyIsApplicable(t *testing.T) {
 	srcFS := testutil.CreateFS(t, map[string]string{
@@ -734,3 +735,4 @@ spec:
 	failure := results.GetFailed()[0].Rule()
 	assert.Equal(t, "Process can elevate its own privileges", failure.Summary)
 }
+*/

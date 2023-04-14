@@ -281,7 +281,7 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 }
 
 func isPolicyWithSubtype(sourceType types.Source) bool {
-	for _, s := range []types.Source{types.SourceCloud, types.SourceDefsec, types.SourceKubernetes} { // TODO(simar): Add types.Kubernetes once all k8s policy have subtype
+	for _, s := range []types.Source{types.SourceCloud, types.SourceDefsec} { // TODO(simar): Add types.Kubernetes once all k8s policy have subtype
 		if sourceType == s {
 			return true
 		}
