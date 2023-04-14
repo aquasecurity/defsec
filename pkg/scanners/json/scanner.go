@@ -34,7 +34,6 @@ type Scanner struct {
 	skipRequired  bool
 	options       []options.ScannerOption
 	sync.Mutex
-	loadEmbedded          bool
 	frameworks            []framework.Framework
 	spec                  string
 	loadEmbeddedPolicies  bool

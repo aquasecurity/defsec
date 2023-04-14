@@ -47,7 +47,6 @@ type Scanner struct {
 	debug                   debug.Logger
 	enableEmbeddedLibraries bool
 	sync.Mutex
-	loadEmbedded          bool
 	frameworks            []framework.Framework
 	spec                  string
 	loadEmbeddedLibraries bool

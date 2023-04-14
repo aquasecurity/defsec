@@ -93,17 +93,7 @@ func (s *Scanner) LoadEmbeddedLibraries() error {
 	return nil
 }
 
-func (s *Scanner) LoadPolicies(enableEmbeddedLibraries, enableEmbeddedPolicies bool, srcFS fs.FS, paths []string, readers []io.Reader) error {
-
-	if s.policies == nil {
-		s.policies = make(map[string]*ast.Module)
-	}
-
-	if s.policyFS != nil {
-		s.debug.Log("Overriding filesystem for policies!")
-		srcFS = s.policyFS
-	}
-
+func (s *Scanner) loadEmbedded(enableEmbeddedLibraries, enableEmbeddedPolicies bool) error {
 	if enableEmbeddedLibraries {
 		loadedLibs, errLoad := loadEmbeddedLibraries()
 		if errLoad != nil {
@@ -124,6 +114,24 @@ func (s *Scanner) LoadPolicies(enableEmbeddedLibraries, enableEmbeddedPolicies b
 			s.policies[name] = policy
 		}
 		s.debug.Log("Loaded %d embedded policies.", len(loaded))
+	}
+
+	return nil
+}
+
+func (s *Scanner) LoadPolicies(enableEmbeddedLibraries, enableEmbeddedPolicies bool, srcFS fs.FS, paths []string, readers []io.Reader) error {
+
+	if s.policies == nil {
+		s.policies = make(map[string]*ast.Module)
+	}
+
+	if s.policyFS != nil {
+		s.debug.Log("Overriding filesystem for policies!")
+		srcFS = s.policyFS
+	}
+
+	if err := s.loadEmbedded(enableEmbeddedLibraries, enableEmbeddedPolicies); err != nil {
+		return err
 	}
 
 	var err error
