@@ -3,7 +3,7 @@
 # description: "Ensures that ASGs are created to be cross-AZ for high availability."
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - http://docs.aws.amazon.com/autoscaling/latest/userguide/AutoScalingGroup.html
 # custom:
