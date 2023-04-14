@@ -25,6 +25,5 @@ deny[res] {
 	policy := input.aws.iam.policies[_]
 	action := policy.document.value
 	contains(action, "iam:PassRole")
-	msg := sprintf("Warning: 'iam:PassRole' action is present in policy %v", [action])
-	res = result.new(msg, policy.name)
+	res = result.new("Warning: 'iam:PassRole' action is present in policy", policy.document)
 }
