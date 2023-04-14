@@ -11,7 +11,7 @@
 #   provider: aws
 #   service: autoscaling
 #   severity: LOW
-#   short_code: empty_asg
+#   short_code: empty-asg
 #   recommended_action: "Delete the unused AutoScaling group."
 #   input:
 #     selector:
