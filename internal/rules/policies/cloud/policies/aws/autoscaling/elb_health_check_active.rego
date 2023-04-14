@@ -3,7 +3,7 @@
 # description: "Ensures all Auto Scaling groups have ELB health check active.."
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-add-elb-healthcheck.html
 # custom:
