@@ -22,7 +22,7 @@ import data.lib.kubernetes
 check_flag[container] {
 	container := kubernetes.containers[_]
 	kubernetes.is_apiserver(container)
-	kubernetes.command_has_flag(container.command, "--etcd-cafile")
+	not kubernetes.command_has_flag(container.command, "--etcd-cafile")
 }
 
 deny[res] {
