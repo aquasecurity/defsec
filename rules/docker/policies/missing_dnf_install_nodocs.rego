@@ -9,7 +9,7 @@
 #   avd_id: AVD-DS-0028
 #   severity: HIGH
 #   short_code: dnf_dont_install_docs_in_docker
-#   recommended_action: "Use '--nodocs' to 'dnf install' to Dockerfile"
+#   recommended_action: "Use '--nodocs' to 'dnf install' and 'microdnf install' to Dockerfile"
 #   input:
 #     selector:
 #     - type: dockerfile
@@ -33,7 +33,6 @@ get_dnf[output] {
 	}
 }
 
-# checking json array
 get_dnf[output] {
 	run = docker.run[_]
 
@@ -81,6 +80,7 @@ includes_nodocs(command) {
 	regex.match(install_regexp, command)
 }
 
+# flags after command
 includes_nodocs(command) {
 	install_regexp := sprintf(`%s`, [combined_flags])
 	regex.match(install_regexp, command)
@@ -91,3 +91,6 @@ includes_nodocs(command) {
 	install_regexp := sprintf(`%s%s`, [optional_not_related_flags, combined_flags])
 	regex.match(install_regexp, command)
 }
+
+# all combination of this
+# maybe just try with dnf, and then do microdnf later?
