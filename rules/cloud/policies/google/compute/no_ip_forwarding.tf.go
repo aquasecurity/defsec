@@ -2,7 +2,7 @@ package compute
 
 var terraformNoIpForwardingGoodExamples = []string{
 	`
- resource "google_compute_instance" "bad_example" {
+ resource "google_compute_instance" "good_example" {
    name         = "test"
    machine_type = "e2-medium"
    zone         = "us-central1-a"

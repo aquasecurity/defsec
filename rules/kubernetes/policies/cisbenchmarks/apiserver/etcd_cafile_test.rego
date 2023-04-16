@@ -18,8 +18,7 @@ test_etcd_cafile_is_set {
 		}]},
 	}
 
-	count(r) == 1
-	r[_].msg == "Ensure that the --etcd-cafile argument is set as appropriate"
+	count(r) == 0
 }
 
 test_etcd_cafile_is_not_set {
@@ -40,5 +39,6 @@ test_etcd_cafile_is_not_set {
 		}]},
 	}
 
-	count(r) == 0
+	count(r) == 1
+	r[_].msg == "Ensure that the --etcd-cafile argument is set as appropriate"
 }
