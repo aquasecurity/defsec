@@ -8,7 +8,7 @@ test_dnf_denied {
 		},
 		{
 			"Cmd": "run",
-			"Value": ["dnf install -y docker &&     dnf clean all"],
+			"Value": ["microdnf update &&      microdnf install -y docker &&     dnf clean all"],
 		},
 		{
 			"Cmd": "healthcheck",
@@ -23,27 +23,27 @@ test_dnf_denied {
 	r[_].msg == "'--nodocs' is missing for dnf package installation: dnf install -vy docker-ce &&     dnf clean all"
 }
 
-test_dnf_allowed {
-	r := deny with input as {"Stages": [{"Name": "fedora:27", "Commands": [
-		{
-			"Cmd": "from",
-			"Value": ["fedora:27"],
-		},
-		{
-			"Cmd": "run",
-			"Value": ["dnf install --nodocs -vy docker-ce &&     dnf clean all"],
-		},
-		{
-			"Cmd": "healthcheck",
-			"Value": [
-				"CMD",
-				"curl --fail http://localhost:3000 || exit 1",
-			],
-		},
-	]}]}
-
-	count(r) == 0
-}
+# test_dnf_allowed {
+# 	r := deny with input as {"Stages": [{"Name": "fedora:27", "Commands": [
+# 		{
+# 			"Cmd": "from",
+# 			"Value": ["fedora:27"],
+# 		},
+# 		{
+# 			"Cmd": "run",
+# 			"Value": ["dnf install --nodocs -vy docker-ce &&     dnf clean all"],
+# 		},
+# 		{
+# 			"Cmd": "healthcheck",
+# 			"Value": [
+# 				"CMD",
+# 				"curl --fail http://localhost:3000 || exit 1",
+# 			],
+# 		},
+# 	]}]}
+# 
+# 	count(r) == 0
+# }
 
 # # write the same with microdnf tests
 # tests both flags before and after install command

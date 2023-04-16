@@ -23,24 +23,7 @@ get_dnf[output] {
 	count(run.Value) == 1
 	arg := run.Value[0]
 
-	is_dnf(arg)
-
-	not includes_assume_yes(arg)
-
-	output := {
-		"arg": arg,
-		"cmd": run,
-	}
-}
-
-get_dnf[output] {
-	run = docker.run[_]
-
-	count(run.Value) > 1
-
-	arg := concat(" ", run.Value)
-
-	is_dnf(arg)
+	is_dnf_install(arg)
 
 	not includes_nodocs(arg)
 
@@ -63,26 +46,28 @@ optional_not_related_flags := `\s*(-(-)?[a-zA-Z]+\s*)*`
 combined_flags := sprintf(`%s%s%s`, [optional_not_related_flags, nodocs_flags, optional_not_related_flags])
 
 dnf_install_regex := `(install)|(in)|(reinstall)|(rei)|(install-n)|(install-na)|(install-nevra)`
+microdnf_install_regex := `(install)|(reinstall)`
 
+# maybe these two functions are not needed
 # dnf
-is_dnf(command) {
-	regex.match(sprintf("dnf%s%s%s", combined_flags, dnf_install_regex, combined_flags), arg)
+is_dnf_install(command) {
+	regex.match(sprintf(`dnf%s%s%s`, [combined_flags, dnf_install_regex, combined_flags]), command)
 }
 
 # microdnf
-is_dnf(command) {
-	regex.match(sprintf("microdnf%s(install|reinstall)%s", combined_flags, combined_flags), command)
+is_dnf_install(command) {
+	regex.match(sprintf(`microdnf%s%s%s`, [combined_flags, microdnf_install_regex, combined_flags]), command)
 }
 
 # flags before command
 includes_nodocs(command) {
-	install_regexp := sprintf(`%s`, [combined_flags])
+	install_regexp := sprintf(`microdnf%sinstall`, [combined_flags])
 	regex.match(install_regexp, command)
 }
 
 # flags after command
 includes_nodocs(command) {
-	install_regexp := sprintf(`%s`, [combined_flags])
+	install_regexp := sprintf(`microdnf install%s`, [combined_flags])
 	regex.match(install_regexp, command)
 }
 
