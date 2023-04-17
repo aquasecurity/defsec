@@ -521,10 +521,6 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.apprunner.Apprunner": {
       "type": "object",
       "properties": {
-        "describeservices": {
-          "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.apprunner.DescribeService"
-        },
         "listservices": {
           "type": "array",
           "items": {
@@ -534,18 +530,13 @@
         }
       }
     },
-    "github.com.aquasecurity.defsec.pkg.providers.aws.apprunner.DescribeService": {
+    "github.com.aquasecurity.defsec.pkg.providers.aws.apprunner.ListService": {
       "type": "object",
       "properties": {
         "kmskey": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
-        }
-      }
-    },
-    "github.com.aquasecurity.defsec.pkg.providers.aws.apprunner.ListService": {
-      "type": "object",
-      "properties": {
+        },
         "servicearn": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
@@ -561,10 +552,6 @@
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.athena.Database"
           }
-        },
-        "workgrouplocation": {
-          "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.athena.WorkGroupLocation"
         },
         "workgroups": {
           "type": "array",
@@ -597,15 +584,6 @@
         }
       }
     },
-    "github.com.aquasecurity.defsec.pkg.providers.aws.athena.WorkGroupLocation": {
-      "type": "object",
-      "properties": {
-        "outputlocation": {
-          "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
-        }
-      }
-    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.athena.Workgroup": {
       "type": "object",
       "properties": {
@@ -618,6 +596,10 @@
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         },
         "name": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "outputlocation": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
