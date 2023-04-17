@@ -24,9 +24,9 @@ func Test_Adapt(t *testing.T) {
 			terraform: `
 			resource "aws_lambda_function" "example" {
 				filename      = "lambda_function_payload.zip"
-				function_name = ""
+				function_name = "lambda_function_name"
 				role          = aws_iam_role.iam_for_lambda.arn
-				runtime = ""
+				runtime = "nodejs12.x"
 
 				tracing_config {
 				  mode = "Passthrough"
@@ -112,9 +112,9 @@ func TestLines(t *testing.T) {
 	src := `
 	resource "aws_lambda_function" "example" {
 		filename      = "lambda_function_payload.zip"
-		function_name = ""
+		function_name = "lambda_function_name"
 		role          = aws_iam_role.iam_for_lambda.arn
-		runtime = ""
+		runtime = "nodejs12.x"
 
 		tracing_config {
 		  mode = "Passthrough"
