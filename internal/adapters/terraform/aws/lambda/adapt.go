@@ -55,7 +55,6 @@ func (a *adapter) adaptFunctions(modules terraform.Modules) []lambda.Function {
 
 func (a *adapter) adaptFunction(function *terraform.Block, modules terraform.Modules, orphans terraform.ResourceIDResolutions) lambda.Function {
 	var permissions []lambda.Permission
-	variables := make(map[string]string)
 
 	for _, module := range modules {
 		for _, p := range module.GetResourcesByType("aws_lambda_permission") {
@@ -79,7 +78,7 @@ func (a *adapter) adaptFunction(function *terraform.Block, modules terraform.Mod
 		Runtime: function.GetAttribute("runtime").AsStringValueOrDefault("", function),
 		Envrionment: lambda.Environment{
 			Metadata:  function.GetMetadata(),
-			Variables: defsecTypes.Map(variables, function.GetMetadata()),
+			Variables: defsecTypes.MapDefault(nil, function.GetMetadata()),
 		},
 	}
 }
