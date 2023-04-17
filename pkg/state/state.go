@@ -14,7 +14,6 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/openstack"
 	"github.com/aquasecurity/defsec/pkg/providers/oracle"
 	"github.com/aquasecurity/defsec/pkg/rego/convert"
-	
 )
 
 type State struct {

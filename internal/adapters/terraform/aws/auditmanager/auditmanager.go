@@ -3,6 +3,7 @@ package auditmanager
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/auditmanager"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) auditmanager.AuditManager {
@@ -11,18 +12,16 @@ func Adapt(modules terraform.Modules) auditmanager.AuditManager {
 	}
 }
 
-func getSettingKmsKey(modules terraform.Modules) (kmskey auditmanager.Setting) {
+func getSettingKmsKey(modules terraform.Modules) auditmanager.Setting {
+	auditmanagerSettings := auditmanager.Setting{
+		Metadata: defsecTypes.NewUnmanagedMetadata(),
+		KmsKey:   defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+	}
+
 	for _, resource := range modules.GetResourcesByType("aws_auditmanager_account_registration") {
-		kmskey = adaptSettingKmskey(resource, modules)
+		auditmanagerSettings.Metadata = resource.GetMetadata()
+		auditmanagerSettings.KmsKey = resource.GetAttribute("kms_key").AsStringValueOrDefault("", resource)
 	}
 
-	return kmskey
-}
-
-func adaptSettingKmskey(resource *terraform.Block, modules terraform.Modules) auditmanager.Setting {
-
-	return auditmanager.Setting{
-		Metadata: resource.GetMetadata(),
-		KmsKey:   resource.GetAttribute("kms_key").AsStringValueOrDefault("", resource),
-	}
+	return auditmanagerSettings
 }

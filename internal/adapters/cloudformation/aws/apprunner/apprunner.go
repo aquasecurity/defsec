@@ -8,7 +8,6 @@ import (
 // Adapt ...
 func Adapt(cfFile parser.FileContext) apprunner.Apprunner {
 	return apprunner.Apprunner{
-		DescribeServices:  getDescribeService(cfFile),
 		ListServices: getListService(cfFile),
 	}
 }

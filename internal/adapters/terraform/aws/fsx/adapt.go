@@ -29,5 +29,6 @@ func adaptFileSystemType(resource *terraform.Block, module *terraform.Module) fs
 	return fsx.Filesystem{
 		Metadata:       resource.GetMetadata(),
 		FileSystemType: TypeVal,
+		KmsKeyId:       resource.GetAttribute("kms_key_id").AsStringValueOrDefault("", resource),
 	}
 }

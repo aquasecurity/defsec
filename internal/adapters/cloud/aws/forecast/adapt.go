@@ -100,25 +100,24 @@ func (a *adapter) getListDatasets() ([]forecast.ListDataset, error) {
 func (a *adapter) getDescribeDatasets() (forecast.DescribeDataset, error) {
 	var apiDescribeDataset aatypes.EncryptionConfig
 	var input api.DescribeDatasetInput
-	var describedataset forecast.DescribeDataset
 
 	metadata := a.CreateMetadataFromARN(*apiDescribeDataset.KMSKeyArn)
-
-	output, err := a.api.DescribeDataset(a.Context(), &input)
-	if err != nil {
-		return describedataset, err
-	}
-	apiDescribeDataset = *output.EncryptionConfig
 
 	var KEYARN string
 	if apiDescribeDataset.KMSKeyArn != nil {
 		KEYARN = *apiDescribeDataset.KMSKeyArn
 	}
 
-	describedataset = forecast.DescribeDataset{
+	describedataset := forecast.DescribeDataset{
 		Metadata:  metadata,
 		KMSKeyArn: types.String(KEYARN, metadata),
 	}
+
+	output, err := a.api.DescribeDataset(a.Context(), &input)
+	if err != nil {
+		return describedataset, err
+	}
+	apiDescribeDataset = *output.EncryptionConfig
 
 	a.Tracker().SetServiceLabel("Adapting forecast...")
 	return describedataset, nil

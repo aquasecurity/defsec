@@ -43,17 +43,9 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 func (a *adapter) getDeliveryStream() (firehose.DeliveryStreamDescription, error) {
 	var apiDeliveryStream aatypes.DeliveryStreamDescription
 	var input api.DescribeDeliveryStreamInput
-	var description firehose.DeliveryStreamDescription
 
 	a.Tracker().SetServiceLabel("Discovering delivery streams descr...")
 	metadata := a.CreateMetadataFromARN(*apiDeliveryStream.DeliveryStreamARN)
-
-	output, err := a.api.DescribeDeliveryStream(a.Context(), &input)
-	if err != nil {
-		return description, err
-	}
-
-	apiDeliveryStream = *output.DeliveryStreamDescription
 
 	var KEYARN string
 	for _, KA := range apiDeliveryStream.Destinations {
@@ -62,13 +54,19 @@ func (a *adapter) getDeliveryStream() (firehose.DeliveryStreamDescription, error
 			awskmskeyarn = *KA.ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig.AWSKMSKeyARN
 		}
 		KEYARN = awskmskeyarn
-
 	}
 
-	description = firehose.DeliveryStreamDescription{
+	description := firehose.DeliveryStreamDescription{
 		Metadata:     metadata,
 		AWSKMSKeyARN: defsecTypes.String(KEYARN, metadata),
 	}
+
+	output, err := a.api.DescribeDeliveryStream(a.Context(), &input)
+	if err != nil {
+		return description, err
+	}
+
+	apiDeliveryStream = *output.DeliveryStreamDescription
 
 	return description, nil
 }

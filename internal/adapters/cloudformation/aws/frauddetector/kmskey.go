@@ -6,20 +6,27 @@ import (
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getKmsKey(ctx parser.FileContext) (kmskeyarn frauddetector.KmsKey) {
+func getKmsKey(ctx parser.FileContext) frauddetector.KmsKey {
 
-	getDeliveryStreamDescription := ctx.GetResourcesByType("AWS::FraudDetector::Detector")
-
-	for _, r := range getDeliveryStreamDescription {
-
-		var Kmskey types.StringValue
-
-		ds := frauddetector.KmsKey{
-			Metadata:            r.Metadata(),
-			KmsEncryptionKeyArn: Kmskey,
-		}
-		kmskeyarn = ds
+	deliveryDescriptions := frauddetector.KmsKey{
+		Metadata:            types.NewUnmanagedMetadata(),
+		KmsEncryptionKeyArn: types.StringDefault("", ctx.Metadata()),
 	}
 
-	return kmskeyarn
+	deliveryDescriptionsResource := ctx.GetResourcesByType("AWS::FraudDetector::Detector")
+
+	if len(deliveryDescriptionsResource) == 0 {
+		return deliveryDescriptions
+	}
+
+	return frauddetector.KmsKey{
+		Metadata:            deliveryDescriptionsResource[0].Metadata(),
+		KmsEncryptionKeyArn: isKmsEncryptionKeyArn(deliveryDescriptionsResource[0]),
+	}
+}
+
+func isKmsEncryptionKeyArn(r *parser.Resource) types.StringValue {
+	kmsEncryptionKeyArnProp := types.StringUnresolvable(r.Metadata())
+
+	return kmsEncryptionKeyArnProp
 }

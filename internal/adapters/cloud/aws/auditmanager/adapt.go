@@ -44,7 +44,13 @@ func (a *adapter) getAuditManager() (auditmanager.Setting, error) {
 
 	var input api.GetSettingsInput
 	var auditmanagerapi types.Settings
-	var Setting auditmanager.Setting
+
+	metadata := a.CreateMetadata(*auditmanagerapi.KmsKey)
+
+	Setting := auditmanager.Setting{
+		Metadata: metadata,
+		KmsKey:   defsecTypes.String(*auditmanagerapi.KmsKey, metadata),
+	}
 
 	output, err := a.api.GetSettings(a.Context(), &input)
 	if err != nil {
@@ -52,12 +58,6 @@ func (a *adapter) getAuditManager() (auditmanager.Setting, error) {
 	}
 
 	auditmanagerapi = *output.Settings
-
-	metadata := a.CreateMetadata(*auditmanagerapi.KmsKey)
-	Setting = auditmanager.Setting{
-		Metadata: metadata,
-		KmsKey:   defsecTypes.String(*auditmanagerapi.KmsKey, metadata),
-	}
 
 	return Setting, nil
 

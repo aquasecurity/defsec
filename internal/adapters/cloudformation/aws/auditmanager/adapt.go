@@ -6,22 +6,27 @@ import (
 	"github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getAuditSetting(ctx parser.FileContext) (kmskey auditmanager.Setting) {
+func getAuditSetting(ctx parser.FileContext) auditmanager.Setting {
 
-	getKmsKey := ctx.GetResourcesByType("AWS::AuditManager::Assessment")
-
-	for _, r := range getKmsKey {
-
-		var AWSKMSKeyARN types.StringValue
-		keyarn := r.GetProperty("Arn").AsString()
-		AWSKMSKeyARN = types.String(keyarn, types.Metadata{})
-
-		ds := auditmanager.Setting{
-			Metadata: r.Metadata(),
-			KmsKey:   AWSKMSKeyARN,
-		}
-		kmskey = ds
+	auditSettings := auditmanager.Setting{
+		Metadata: types.NewUnmanagedMetadata(),
+		KmsKey:   types.StringDefault("", ctx.Metadata()),
 	}
 
-	return kmskey
+	kmsKeyResources := ctx.GetResourcesByType("AWS::AuditManager::Assessment")
+
+	if len(kmsKeyResources) == 0 {
+		return auditSettings
+	}
+
+	return auditmanager.Setting{
+		Metadata: kmsKeyResources[0].Metadata(),
+		KmsKey:   iskmsKeyVal(kmsKeyResources[0]),
+	}
+}
+
+func iskmsKeyVal(r *parser.Resource) types.StringValue {
+	kmsKeyVal := types.StringUnresolvable(r.Metadata())
+
+	return kmsKeyVal
 }

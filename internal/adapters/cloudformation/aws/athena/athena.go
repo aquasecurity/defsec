@@ -10,6 +10,5 @@ func Adapt(cfFile parser.FileContext) athena.Athena {
 	return athena.Athena{
 		Databases:  nil,
 		Workgroups: getWorkGroups(cfFile),
-		WorkGroupLocation: getWorkGroupLocation(cfFile),
 	}
 }

@@ -5,16 +5,11 @@ import (
 )
 
 type Apprunner struct {
-	ListServices     []ListService
-	DescribeServices DescribeService
+	ListServices []ListService
 }
 
 type ListService struct {
 	Metadata   defsecTypes.Metadata
 	ServiceArn defsecTypes.StringValue
-}
-
-type DescribeService struct {
-	Metadata defsecTypes.Metadata
-	KmsKey   defsecTypes.StringValue
+	KmsKey     defsecTypes.StringValue
 }

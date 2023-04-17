@@ -14,6 +14,7 @@ func getFileSystem(ctx parser.FileContext) (filesystemtype []fsx.Filesystem) {
 		ds := fsx.Filesystem{
 			Metadata:       r.Metadata(),
 			FileSystemType: r.GetStringProperty("FileSystemTypes"),
+			KmsKeyId:       r.GetStringProperty("KmsKeyId"),
 		}
 		filesystemtype = append(filesystemtype, ds)
 	}

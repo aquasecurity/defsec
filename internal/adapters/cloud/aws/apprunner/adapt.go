@@ -37,11 +37,6 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 		return err
 	}
 
-	state.AWS.Apprunner.DescribeServices, err = a.getDescribeServices()
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -70,33 +65,6 @@ func (a *adapter) getListServices() ([]apprunner.ListService, error) {
 
 }
 
-func (a *adapter) getDescribeServices() (apprunner.DescribeService, error) {
-	a.Tracker().SetServiceLabel(" apprunner Describe service...")
-
-	var input api.DescribeServiceInput
-	var apiDescribeService aatypes.Service
-	var outapprunner apprunner.DescribeService
-
-	metadata := a.CreateMetadataFromARN(*apiDescribeService.ServiceArn)
-
-	output, err := a.api.DescribeService(a.Context(), &input)
-	if err != nil {
-		return outapprunner, err
-	}
-	apiDescribeService = *output.Service
-
-	var kmskey string
-	if apiDescribeService.EncryptionConfiguration.KmsKey != nil {
-		kmskey = *apiDescribeService.EncryptionConfiguration.KmsKey
-	}
-
-	return apprunner.DescribeService{
-		Metadata: metadata,
-		KmsKey:   types.String(kmskey, metadata),
-	}, nil
-
-}
-
 func (a *adapter) adaptListService(apiListService aatypes.ServiceSummary) (*apprunner.ListService, error) {
 
 	metadata := a.CreateMetadataFromARN(*apiListService.ServiceArn)
@@ -105,9 +73,23 @@ func (a *adapter) adaptListService(apiListService aatypes.ServiceSummary) (*appr
 		arn = *apiListService.ServiceArn
 	}
 
+	output, err := a.api.DescribeService(a.Context(), &api.DescribeServiceInput{
+		ServiceArn: apiListService.ServiceArn,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var keyid string
+	if output.Service.EncryptionConfiguration.KmsKey != nil {
+		keyid = *output.Service.EncryptionConfiguration.KmsKey
+	}
+
 	return &apprunner.ListService{
 		Metadata:   metadata,
 		ServiceArn: types.String(arn, metadata),
+		KmsKey:     types.String(keyid, metadata),
 	}, nil
 
 }

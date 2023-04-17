@@ -43,10 +43,19 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 func (a *adapter) getKmsKey() (frauddetector.KmsKey, error) {
 	var apiKMSKeyArn aatypes.KMSKey
 	var input api.GetKMSEncryptionKeyInput
-	var description frauddetector.KmsKey
 
 	a.Tracker().SetServiceLabel("Discovering frauddetector kmskey arn...")
 	metadata := a.CreateMetadataFromARN(*apiKMSKeyArn.KmsEncryptionKeyArn)
+
+	var Kmskeyarn string
+	if apiKMSKeyArn.KmsEncryptionKeyArn != nil {
+		Kmskeyarn = *apiKMSKeyArn.KmsEncryptionKeyArn
+	}
+
+	description := frauddetector.KmsKey{
+		Metadata:            metadata,
+		KmsEncryptionKeyArn: defsecTypes.String(Kmskeyarn, metadata),
+	}
 
 	output, err := a.api.GetKMSEncryptionKey(a.Context(), &input)
 	if err != nil {
@@ -54,16 +63,6 @@ func (a *adapter) getKmsKey() (frauddetector.KmsKey, error) {
 	}
 
 	apiKMSKeyArn = *output.KmsKey
-
-	var Kmskeyarn string
-	if apiKMSKeyArn.KmsEncryptionKeyArn != nil {
-		Kmskeyarn = *apiKMSKeyArn.KmsEncryptionKeyArn
-	}
-
-	description = frauddetector.KmsKey{
-		Metadata:            metadata,
-		KmsEncryptionKeyArn: defsecTypes.String(Kmskeyarn, metadata),
-	}
 
 	return description, nil
 }

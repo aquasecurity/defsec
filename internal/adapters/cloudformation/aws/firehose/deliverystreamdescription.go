@@ -3,25 +3,35 @@ package firehose
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/firehose"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
-	"github.com/aquasecurity/defsec/pkg/types"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
-func getDeliveryStreamDescription(ctx parser.FileContext) (kmskeyarn firehose.DeliveryStreamDescription) {
+func getDeliveryStreamDescription(ctx parser.FileContext) firehose.DeliveryStreamDescription {
 
-	getDeliveryStreamDescription := ctx.GetResourcesByType("AWS::KinesisFirehose::DeliveryStream")
-
-	for _, r := range getDeliveryStreamDescription {
-
-		var AWSKMSKeyARN types.StringValue
-		keyarn := r.GetProperty("KMSEncryptionConfig").AsString()
-		AWSKMSKeyARN = types.String(keyarn, types.Metadata{})
-
-		ds := firehose.DeliveryStreamDescription{
-			Metadata:     r.Metadata(),
-			AWSKMSKeyARN: AWSKMSKeyARN,
-		}
-		kmskeyarn = ds
+	deliveryDescriptions := firehose.DeliveryStreamDescription{
+		Metadata:     defsecTypes.NewUnmanagedMetadata(),
+		AWSKMSKeyARN: defsecTypes.StringDefault("", ctx.Metadata()),
+		// .GetStringProperty("KMSEncryptionConfig"),
 	}
 
-	return kmskeyarn
+	deliveryStreamDescriptionResource := ctx.GetResourcesByType("AWS::KinesisFirehose::DeliveryStream")
+
+	if len(deliveryStreamDescriptionResource) == 0 {
+		return deliveryDescriptions
+	}
+
+	return firehose.DeliveryStreamDescription{
+		Metadata:     deliveryStreamDescriptionResource[0].Metadata(),
+		AWSKMSKeyARN: isAwsKmsKeyArn(deliveryStreamDescriptionResource[0]),
+	}
+}
+
+func isAwsKmsKeyArn(r *parser.Resource) defsecTypes.StringValue {
+	kmsKeyArnProp := r.GetProperty("KMSEncryptionConfig")
+
+	if kmsKeyArnProp.IsNotNil() {
+		return kmsKeyArnProp.AsStringValue()
+	}
+
+	return defsecTypes.StringDefault("", r.Metadata())
 }

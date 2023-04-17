@@ -13,20 +13,15 @@ func Adapt(modules terraform.Modules) frauddetector.Frauddetector {
 }
 
 func adaptKmskey(modules terraform.Modules) frauddetector.KmsKey {
-	var DeliveryStreamDescription frauddetector.KmsKey
-	for _, module := range modules {
-		for _, resource := range module.GetResourcesByType("awscc_frauddetector_outcome") {
-			DeliveryStreamDescription = adaptKmsKey(resource, module)
-		}
+	deliveryStreamDescription := frauddetector.KmsKey{
+		Metadata:            types.NewUnmanagedMetadata(),
+		KmsEncryptionKeyArn: types.StringDefault("", types.NewUnmanagedMetadata()),
 	}
-	return DeliveryStreamDescription
-}
 
-func adaptKmsKey(resource *terraform.Block, module *terraform.Module) frauddetector.KmsKey {
-	var KeyVal string
-
-	return frauddetector.KmsKey{
-		Metadata:            resource.GetMetadata(),
-		KmsEncryptionKeyArn: types.String(KeyVal, types.Metadata{}),
+	for _, resource := range modules.GetResourcesByType("awscc_frauddetector_outcome") {
+		deliveryStreamDescription.Metadata = resource.GetMetadata()
+		deliveryStreamDescription.KmsEncryptionKeyArn = types.StringUnresolvable(resource.GetMetadata())
 	}
+
+	return deliveryStreamDescription
 }

@@ -34,7 +34,7 @@ func adaptForecastExportJob(resource *terraform.Block, module *terraform.Module)
 	return forecast.ListForecastExportJob{
 		Metadata:             resource.GetMetadata(),
 		KMSKeyArn:            TypeVal,
-		ForecastExportJobArn: defsecTypes.String(Jobarn, defsecTypes.Metadata{}),
+		ForecastExportJobArn: defsecTypes.String(Jobarn, resource.GetMetadata()),
 	}
 }
 
@@ -60,22 +60,15 @@ func adaptListDataset(resource *terraform.Block, module *terraform.Module) forec
 }
 
 func adaptDescribeDatasets(modules terraform.Modules) forecast.DescribeDataset {
-	var DescribeDataset forecast.DescribeDataset
-	for _, module := range modules {
-		for _, resource := range module.GetResourcesByType("awscc_forecast_dataset") {
-			DescribeDataset = adaptDescribeDataset(resource, module)
-		}
+	describeDataset := forecast.DescribeDataset{
+		Metadata:  defsecTypes.NewUnmanagedMetadata(),
+		KMSKeyArn: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 	}
-	return DescribeDataset
-}
 
-func adaptDescribeDataset(resource *terraform.Block, module *terraform.Module) forecast.DescribeDataset {
-
-	KmsAttr := resource.GetAttribute("kms_key_arn")
-	KmsVal := KmsAttr.AsStringValueOrDefault("", resource)
-
-	return forecast.DescribeDataset{
-		Metadata:  resource.GetMetadata(),
-		KMSKeyArn: KmsVal,
+	for _, resource := range modules.GetResourcesByType("awscc_forecast_dataset") {
+		describeDataset.Metadata = resource.GetMetadata()
+		describeDataset.KMSKeyArn = resource.GetAttribute("kms_key_arn").AsStringValueOrDefault("", resource)
 	}
+
+	return describeDataset
 }
