@@ -139,9 +139,11 @@ func (a *adapter) adaptFunction(function types.FunctionConfiguration) (*lambda.F
 		vpcid = *function.VpcConfig.VpcId
 	}
 
-	var variables map[string]string
+	var variables map[string]string // adapt it via append function
 	if function.Environment.Variables != nil {
-		variables = function.Environment.Variables
+		for range function.Environment.Variables {
+			variables = function.Environment.Variables
+		}
 	}
 
 	var runtime string
