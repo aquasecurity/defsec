@@ -6,7 +6,6 @@ import (
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	api "github.com/aws/aws-sdk-go-v2/service/xray"
-	"github.com/aws/aws-sdk-go-v2/service/xray/types"
 )
 
 type adapter struct {
@@ -44,9 +43,12 @@ func (a *adapter) getEncryptionConfig() (xray.Configuration, error) {
 
 	a.Tracker().SetServiceLabel("Discovering Encryption Configuration ...")
 
-	var encryptionconfiguration xray.Configuration
+	encryptionconfiguration := xray.Configuration{
+		Metadata: defsecTypes.NewUnmanagedMetadata(),
+		KeyId:    defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+	}
+
 	var input api.GetEncryptionConfigInput
-	var apiconfig types.EncryptionConfig
 
 	output, err := a.api.GetEncryptionConfig(a.Context(), &input)
 	if err != nil {
@@ -54,14 +56,12 @@ func (a *adapter) getEncryptionConfig() (xray.Configuration, error) {
 	}
 	metadata := a.CreateMetadata(*output.EncryptionConfig.KeyId)
 	var key_id string
-	if apiconfig.KeyId != nil {
-		key_id = *apiconfig.KeyId
+	if output.EncryptionConfig.KeyId != nil {
+		key_id = *output.EncryptionConfig.KeyId
 	}
 
-	encryptionconfiguration = xray.Configuration{
+	return xray.Configuration{
 		Metadata: metadata,
 		KeyId:    defsecTypes.String(key_id, metadata),
-	}
-
-	return encryptionconfiguration, nil
+	}, nil
 }

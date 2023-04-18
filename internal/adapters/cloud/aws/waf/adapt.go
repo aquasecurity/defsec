@@ -74,7 +74,7 @@ func (a *adapter) adaptListWebACLs(apiListWebACLs aatypes.WebACLSummary) (*waf.L
 	}
 
 	return &waf.ListACLs{
-		Metadata: metadata,
+		Metadata:  metadata,
 		WebACLsID: defsecTypes.String(webaclid, metadata),
 	}, nil
 }

@@ -1,6 +1,8 @@
 package shield
 
 import (
+	"time"
+
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/shield"
@@ -53,30 +55,33 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 
 func (a *adapter) getDescribeSubscription() (shield.Subscription, error) {
 
+	var input api.DescribeSubscriptionInput
+
 	a.Tracker().SetServiceLabel("Discovering subscription...")
 
-	var describesubscription shield.Subscription
-	var input api.DescribeSubscriptionInput
-	var describesubscriptionapi aatypes.Subscription
+	describesubscription := shield.Subscription{
+		Metadata:  defsecTypes.NewUnmanagedMetadata(),
+		EndTime:   defsecTypes.TimeDefault(time.Now(), defsecTypes.NewUnmanagedMetadata()),
+		AutoRenew: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+	}
 
 	output, err := a.api.DescribeSubscription(a.Context(), &input)
 	if err != nil {
 		return describesubscription, err
 	}
+
 	metadata := a.CreateMetadataFromARN(*output.Subscription.SubscriptionArn)
 
 	var autorenew string
-	if describesubscriptionapi.AutoRenew != "ENABLED" {
+	if output.Subscription.AutoRenew != "ENABLED" {
 		autorenew = "DISABLED"
 	}
 
-	describesubscription = shield.Subscription{
+	return shield.Subscription{
 		Metadata:  metadata,
 		EndTime:   defsecTypes.Time(*output.Subscription.EndTime, metadata),
 		AutoRenew: defsecTypes.String(autorenew, metadata),
-	}
-
-	return describesubscription, nil
+	}, nil
 }
 
 func (a *adapter) getContactSettings() ([]shield.ContactSettings, error) {
