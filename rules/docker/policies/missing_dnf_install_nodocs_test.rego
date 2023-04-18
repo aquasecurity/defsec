@@ -93,48 +93,47 @@ test_dnf_denied {
 # 	count(r) == 1
 # }
 
-# test_microdnf_reinstall_missing_denied {
-# 	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
-# 		{
-# 			"Cmd": "from",
-# 			"Value": ["alpine:3.5"],
-# 		},
-# 		{
-# 			"Cmd": "run",
-# 			"Value": ["microdnf reinstall bash zsh && microdnf clean all"],
-# 		},
-# 		{
-# 			"Cmd": "healthcheck",
-# 			"Value": [
-# 				"CMD",
-# 				"curl --fail http://localhost:3000 || exit 1",
-# 			],
-# 		},
-# 	]}]}
+test_microdnf_reinstall_missing_denied {
+	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
+		{
+			"Cmd": "from",
+			"Value": ["alpine:3.5"],
+		},
+		{
+			"Cmd": "run",
+			"Value": ["microdnf reinstall bash zsh && microdnf clean all"],
+		},
+		{
+			"Cmd": "healthcheck",
+			"Value": [
+				"CMD",
+				"curl --fail http://localhost:3000 || exit 1",
+			],
+		},
+	]}]}
 
-# 	count(r) == 1
-# }
+	count(r) == 1
+	r[_].msg == "'--nodocs' is missing for dnf package installation: microdnf reinstall bash zsh && microdnf clean all"
+}
 
-# test_microdnf_install_allowed {
-# 	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
-# 		{
-# 			"Cmd": "from",
-# 			"Value": ["alpine:3.5"],
-# 		},
-# 		{
-# 			"Cmd": "run",
-# 			"Value": ["microdnf install --nodocs bash zsh && microdnf clean all"],
-# 		},
-# 		{
-# 			"Cmd": "healthcheck",
-# 			"Value": [
-# 				"CMD",
-# 				"curl --fail http://localhost:3000 || exit 1",
-# 			],
-# 		},
-# 	]}]}
+test_microdnf_install_allowed {
+	r := deny with input as {"Stages": [{"Name": "alpine:3.5", "Commands": [
+		{
+			"Cmd": "from",
+			"Value": ["alpine:3.5"],
+		},
+		{
+			"Cmd": "run",
+			"Value": ["microdnf install --nodocs bash zsh &&     microdnf clean all"],
+		},
+		{
+			"Cmd": "healthcheck",
+			"Value": [
+				"CMD",
+				"curl --fail http://localhost:3000 || exit 1",
+			],
+		},
+	]}]}
 
-# 	count(r) == 1
-# }
-
-# write some tests for microdnf, dnf reinstall and other combinations
+	count(r) == 0
+}
