@@ -29,11 +29,15 @@ func Test_adaptBroker(t *testing.T) {
 				}
 
 				publicly_accessible = false
+				auto_minor_version_upgrade = false
+				deployment_mode = "CLUSTER_MULTI_AZ"
 			  }
 `,
 			expected: mq.Broker{
-				Metadata:     defsecTypes.NewTestMetadata(),
-				PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				Metadata:                defsecTypes.NewTestMetadata(),
+				PublicAccess:            defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				AutoMinorVersionUpgrade: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				DeploymentMode:          defsecTypes.String("CLUSTER_MULTI_AZ", defsecTypes.NewTestMetadata()),
 				Logging: mq.Logging{
 					Metadata: defsecTypes.NewTestMetadata(),
 					General:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
@@ -50,11 +54,15 @@ func Test_adaptBroker(t *testing.T) {
 				}
 
 				publicly_accessible = true
+				auto_minor_version_upgrade = true
+				deployment_mode = "SINGLE_INSTANCE"
 			  }
 `,
 			expected: mq.Broker{
-				Metadata:     defsecTypes.NewTestMetadata(),
-				PublicAccess: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				Metadata:                defsecTypes.NewTestMetadata(),
+				PublicAccess:            defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				AutoMinorVersionUpgrade: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				DeploymentMode:          defsecTypes.String("SINGLE_INSTANCE", defsecTypes.NewTestMetadata()),
 				Logging: mq.Logging{
 					Metadata: defsecTypes.NewTestMetadata(),
 					General:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
@@ -69,8 +77,10 @@ func Test_adaptBroker(t *testing.T) {
 			  }
 `,
 			expected: mq.Broker{
-				Metadata:     defsecTypes.NewTestMetadata(),
-				PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				Metadata:                defsecTypes.NewTestMetadata(),
+				PublicAccess:            defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				AutoMinorVersionUpgrade: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				DeploymentMode:          defsecTypes.String("SINGLE_INSTANCE", defsecTypes.NewTestMetadata()),
 				Logging: mq.Logging{
 					Metadata: defsecTypes.NewTestMetadata(),
 					General:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
