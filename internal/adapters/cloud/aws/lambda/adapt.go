@@ -135,12 +135,12 @@ func (a *adapter) adaptFunction(function types.FunctionConfiguration) (*lambda.F
 	}
 
 	var vpcid string
-	if function.VpcConfig.VpcId != nil {
+	if function.VpcConfig != nil && function.VpcConfig.VpcId != nil {
 		vpcid = *function.VpcConfig.VpcId
 	}
 
-	var variables map[string]string // adapt it via append function
-	if function.Environment.Variables != nil {
+	var variables map[string]string
+	if function.Environment != nil && function.Environment.Variables != nil {
 		variables = function.Environment.Variables
 	}
 
