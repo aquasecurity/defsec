@@ -9,9 +9,14 @@ type MQ struct {
 }
 
 type Broker struct {
-	Metadata     defsecTypes.Metadata
-	PublicAccess defsecTypes.BoolValue
-	Logging      Logging
+	Metadata                defsecTypes.Metadata
+	PublicAccess            defsecTypes.BoolValue
+	DeploymentMode          defsecTypes.StringValue
+	EngineType              defsecTypes.StringValue
+	HostInstanceType        defsecTypes.StringValue
+	KmsKeyId                defsecTypes.StringValue
+	AutoMinorVersionUpgrade defsecTypes.BoolValue
+	Logging                 Logging
 }
 
 type Logging struct {
