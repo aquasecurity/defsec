@@ -27,8 +27,13 @@ func getBuckets(cfFile parser.FileContext) []s3.Bucket {
 				Enabled:   hasVersioning(r),
 				MFADelete: defsecTypes.BoolUnresolvable(r.Metadata()),
 			},
-			Logging: getLogging(r),
-			ACL:     convertAclValue(r.GetStringProperty("AccessControl", "private")),
+			Logging:                       getLogging(r),
+			ACL:                           convertAclValue(r.GetStringProperty("AccessControl", "private")),
+			LifecycleConfiguration:        getLifecycle(r),
+			AccelerateConfigurationStatus: r.GetStringProperty("AccelerateConfiguration.AccelerationStatus"),
+			Website:                       getWebsite(r),
+			BucketLocation:                defsecTypes.String("", r.Metadata()),
+			Objects:                       nil,
 		}
 
 		buckets = append(buckets, s3b)
@@ -111,4 +116,33 @@ func getEncryption(r *parser.Resource, _ parser.FileContext) s3.Encryption {
 	}
 
 	return encryption
+}
+
+func getLifecycle(resource *parser.Resource) []s3.Rules {
+	LifecycleProp := resource.GetProperty("LifecycleConfiguration")
+	RuleProp := LifecycleProp.GetProperty("Rules")
+
+	var rule []s3.Rules
+
+	if RuleProp.IsNil() || RuleProp.IsNotList() {
+		return rule
+	}
+
+	for _, r := range RuleProp.AsList() {
+		rule = append(rule, s3.Rules{
+			Metadata: r.Metadata(),
+			Status:   r.GetStringProperty("Status"),
+		})
+	}
+	return rule
+}
+
+func getWebsite(r *parser.Resource) *s3.Website {
+	if block := r.GetProperty("WebsiteConfiguration"); block.IsNil() {
+		return nil
+	} else {
+		return &s3.Website{
+			Metadata: block.Metadata(),
+		}
+	}
 }
