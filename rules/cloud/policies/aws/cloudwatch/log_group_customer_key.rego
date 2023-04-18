@@ -3,7 +3,7 @@
 # description: "Ensures CloudWatch log groups should be encrypted using CMK."
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/encrypt-log-data-kms.html
 # custom:
@@ -21,5 +21,5 @@ package builtin.aws.cloudwatch.aws0181
 deny[res] {
 	group := input.aws.cloudwatch.loggroups[_]
 	group.kmskeyid.value == ""
-	res := result.new("Log group is not encrypted.", group.kmskeyid)
+	res := result.new("Log group is not encrypted. ", group.kmskeyid)
 }
