@@ -14,14 +14,19 @@ type adapter struct {
 func (a *adapter) adaptBuckets() []s3.Bucket {
 	for _, block := range a.modules.GetResourcesByType("aws_s3_bucket") {
 		bucket := &s3.Bucket{
-			Metadata:          block.GetMetadata(),
-			Name:              block.GetAttribute("bucket").AsStringValueOrDefault("", block),
-			PublicAccessBlock: nil,
-			BucketPolicies:    nil,
-			Encryption:        getEncryption(block, a),
-			Versioning:        getVersioning(block, a),
-			Logging:           getLogging(block, a),
-			ACL:               getBucketAcl(block, a),
+			Metadata:                      block.GetMetadata(),
+			Name:                          block.GetAttribute("bucket").AsStringValueOrDefault("", block),
+			PublicAccessBlock:             nil,
+			BucketPolicies:                nil,
+			Encryption:                    getEncryption(block, a),
+			Versioning:                    getVersioning(block, a),
+			Logging:                       getLogging(block, a),
+			ACL:                           getBucketAcl(block, a),
+			AccelerateConfigurationStatus: getaccelerateStatus(block, a),
+			BucketLocation:                block.GetAttribute("region").AsStringValueOrDefault("", block),
+			LifecycleConfiguration:        getLifecycle(block, a),
+			Website:                       getWebsite(block, a),
+			Objects:                       getObject(block, a),
 		}
 		a.bucketMap[block.ID()] = bucket
 	}
@@ -232,4 +237,46 @@ func hasLogging(b *terraform.Block) defsecTypes.BoolValue {
 		return defsecTypes.Bool(true, targetBucket.GetMetadata())
 	}
 	return defsecTypes.BoolDefault(false, b.GetMetadata())
+}
+
+func getLifecycle(b *terraform.Block, a *adapter) []s3.Rules {
+
+	var rules []s3.Rules
+	for _, r := range a.modules.GetReferencingResources(b, "aws_s3_bucket_lifecycle_configuration", "bucket") {
+		ruleblock := r.GetBlocks("rule")
+		for _, rule := range ruleblock {
+			rules = append(rules, s3.Rules{
+				Metadata: rule.GetMetadata(),
+				Status:   rule.GetAttribute("status").AsStringValueOrDefault("Enabled", rule),
+			})
+		}
+	}
+	return rules
+}
+
+func getWebsite(b *terraform.Block, a *adapter) (website *s3.Website) {
+	for _, r := range a.modules.GetReferencingResources(b, "aws_s3_bucket_website_configuration", "bucket") {
+		website = &s3.Website{
+			Metadata: r.GetMetadata(),
+		}
+	}
+	return website
+}
+
+func getObject(b *terraform.Block, a *adapter) []s3.Contents {
+	var object []s3.Contents
+	for _, r := range a.modules.GetReferencingResources(b, "aws_s3_object", "bucket") {
+		object = append(object, s3.Contents{
+			Metadata: r.GetMetadata(),
+		})
+	}
+	return object
+}
+
+func getaccelerateStatus(b *terraform.Block, a *adapter) defsecTypes.StringValue {
+	var status defsecTypes.StringValue
+	for _, r := range a.modules.GetReferencingResources(b, " aws_s3_bucket_accelerate_configuration", "bucket") {
+		status = r.GetAttribute("status").AsStringValueOrDefault("Enabled", r)
+	}
+	return status
 }

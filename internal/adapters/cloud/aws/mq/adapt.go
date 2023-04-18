@@ -74,10 +74,19 @@ func (a *adapter) adaptBroker(apiBroker types.BrokerSummary) (*mq.Broker, error)
 	if err != nil {
 		return nil, err
 	}
+	var kmskeyid string
+	if output.EncryptionOptions != nil {
+		kmskeyid = *output.EncryptionOptions.KmsKeyId
+	}
 
 	return &mq.Broker{
-		Metadata:     metadata,
-		PublicAccess: defsecTypes.Bool(output.PubliclyAccessible, metadata),
+		Metadata:                metadata,
+		PublicAccess:            defsecTypes.Bool(output.PubliclyAccessible, metadata),
+		DeploymentMode:          defsecTypes.String(string(apiBroker.DeploymentMode), metadata),
+		EngineType:              defsecTypes.String(string(apiBroker.EngineType), metadata),
+		HostInstanceType:        defsecTypes.String(*apiBroker.HostInstanceType, metadata),
+		AutoMinorVersionUpgrade: defsecTypes.Bool(output.AutoMinorVersionUpgrade, metadata),
+		KmsKeyId:                defsecTypes.String(kmskeyid, metadata),
 		Logging: mq.Logging{
 			Metadata: metadata,
 			General:  defsecTypes.Bool(output.Logs != nil && output.Logs.General, metadata),

@@ -1,12 +1,14 @@
 package compute
 
-var terraformNoIpForwardingGoodExamples = []string{
+var terraformEnableShieldedVmSbGoodExamples = []string{
 	`
  resource "google_compute_instance" "good_example" {
    name         = "test"
    machine_type = "e2-medium"
    zone         = "us-central1-a"
  
+   tags = ["foo", "bar"]
+ 
    boot_disk {
      initialize_params {
        image = "debian-cloud/debian-9"
@@ -17,19 +19,23 @@ var terraformNoIpForwardingGoodExamples = []string{
    scratch_disk {
      interface = "SCSI"
    }
-   
-   can_ip_forward = false
+ 
+   shielded_instance_config {
+     enable_secure_boot = true
+   }
  }
  `,
 }
 
-var terraformNoIpForwardingBadExamples = []string{
+var terraformEnableShieldedVmSbBadExamples = []string{
 	`
  resource "google_compute_instance" "bad_example" {
    name         = "test"
    machine_type = "e2-medium"
    zone         = "us-central1-a"
  
+   tags = ["foo", "bar"]
+ 
    boot_disk {
      initialize_params {
        image = "debian-cloud/debian-9"
@@ -41,13 +47,15 @@ var terraformNoIpForwardingBadExamples = []string{
      interface = "SCSI"
    }
  
-   can_ip_forward = true
+   shielded_instance_config {
+     enable_secure_boot = false
+   }
  }
  `,
 }
 
-var terraformNoIpForwardingLinks = []string{
-	`https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance#can_ip_forward`,
+var terraformEnableShieldedVmSbLinks = []string{
+	`https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance#enable_secure_boot`,
 }
 
-var terraformNoIpForwardingRemediationMarkdown = ``
+var terraformEnableShieldedVmSbRemediationMarkdown = ``
