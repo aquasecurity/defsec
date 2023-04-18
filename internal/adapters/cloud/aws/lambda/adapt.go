@@ -141,9 +141,7 @@ func (a *adapter) adaptFunction(function types.FunctionConfiguration) (*lambda.F
 
 	var variables map[string]string // adapt it via append function
 	if function.Environment.Variables != nil {
-		for range function.Environment.Variables {
-			variables = function.Environment.Variables
-		}
+		variables = function.Environment.Variables
 	}
 
 	var runtime string
