@@ -14,11 +14,20 @@ func getClusters(ctx parser.FileContext) (clusters []msk.Cluster) {
 			EncryptionInTransit: msk.EncryptionInTransit{
 				Metadata:     r.Metadata(),
 				ClientBroker: defsecTypes.StringDefault("TLS", r.Metadata()),
+				InCluster:    defsecTypes.BoolDefault(true, r.Metadata()),
 			},
 			EncryptionAtRest: msk.EncryptionAtRest{
 				Metadata:  r.Metadata(),
 				KMSKeyARN: defsecTypes.StringDefault("", r.Metadata()),
 				Enabled:   defsecTypes.BoolDefault(false, r.Metadata()),
+			},
+			BrokerNodeGroupInfo: msk.BrokerNodeGroupInfo{
+				Metadata:         r.Metadata(),
+				PublicAccessType: defsecTypes.String("DISABLED", r.Metadata()),
+			},
+			ClientAuthentication: msk.ClientAuthentication{
+				Metadata:        r.Metadata(),
+				Unauthenticated: defsecTypes.BoolDefault(false, r.Metadata()),
 			},
 			Logging: msk.Logging{
 				Metadata: r.Metadata(),
@@ -44,6 +53,21 @@ func getClusters(ctx parser.FileContext) (clusters []msk.Cluster) {
 			cluster.EncryptionInTransit = msk.EncryptionInTransit{
 				Metadata:     encProp.Metadata(),
 				ClientBroker: encProp.GetStringProperty("ClientBroker", "TLS"),
+				InCluster:    encProp.GetBoolProperty("InCluster"),
+			}
+		}
+
+		if brokernodeProp := r.GetProperty("BrokerNodeGroupInfo"); brokernodeProp.IsNotNil() {
+			cluster.BrokerNodeGroupInfo = msk.BrokerNodeGroupInfo{
+				Metadata:         brokernodeProp.Metadata(),
+				PublicAccessType: brokernodeProp.GetStringProperty("ConnectivityInfo.PublicAccess.Type"),
+			}
+		}
+
+		if clientProp := r.GetProperty("ClientAuthentication"); clientProp.IsNotNil() {
+			cluster.ClientAuthentication = msk.ClientAuthentication{
+				Metadata:        clientProp.Metadata(),
+				Unauthenticated: clientProp.GetBoolProperty("Unauthenticated.Enabled"),
 			}
 		}
 

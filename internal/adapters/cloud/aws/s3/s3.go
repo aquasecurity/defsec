@@ -88,14 +88,19 @@ func (a *adapter) adaptBucket(bucket s3types.Bucket) (*s3.Bucket, error) {
 	}
 
 	b := s3.Bucket{
-		Metadata:          bucketMetadata,
-		Name:              name,
-		PublicAccessBlock: a.getPublicAccessBlock(bucket.Name, bucketMetadata),
-		BucketPolicies:    a.getBucketPolicies(bucket.Name, bucketMetadata),
-		Encryption:        a.getBucketEncryption(bucket.Name, bucketMetadata),
-		Versioning:        a.getBucketVersioning(bucket.Name, bucketMetadata),
-		Logging:           a.getBucketLogging(bucket.Name, bucketMetadata),
-		ACL:               a.getBucketACL(bucket.Name, bucketMetadata),
+		Metadata:                      bucketMetadata,
+		Name:                          name,
+		PublicAccessBlock:             a.getPublicAccessBlock(bucket.Name, bucketMetadata),
+		BucketPolicies:                a.getBucketPolicies(bucket.Name, bucketMetadata),
+		Encryption:                    a.getBucketEncryption(bucket.Name, bucketMetadata),
+		Versioning:                    a.getBucketVersioning(bucket.Name, bucketMetadata),
+		Logging:                       a.getBucketLogging(bucket.Name, bucketMetadata),
+		ACL:                           a.getBucketACL(bucket.Name, bucketMetadata),
+		Objects:                       a.getObjects(bucket.Name, bucketMetadata),
+		AccelerateConfigurationStatus: a.getBucketAccelarate(bucket.Name, bucketMetadata),
+		LifecycleConfiguration:        a.getBucketLifecycle(bucket.Name, bucketMetadata),
+		BucketLocation:                a.getBucketLocation(bucket.Name, bucketMetadata),
+		Website:                       a.getWebsite(bucket.Name, bucketMetadata),
 	}
 
 	return &b, nil
@@ -283,4 +288,76 @@ func (a *adapter) getBucketACL(bucketName *string, metadata defsecTypes.Metadata
 	}
 
 	return defsecTypes.String(aclValue, metadata)
+}
+
+func (a *adapter) getBucketLifecycle(bucketName *string, metadata defsecTypes.Metadata) []s3.Rules {
+	output, err := a.api.GetBucketLifecycleConfiguration(a.Context(), &s3api.GetBucketLifecycleConfigurationInput{
+		Bucket: bucketName,
+	})
+	if err != nil {
+		return nil
+	}
+	var rules []s3.Rules
+	for _, r := range output.Rules {
+		rules = append(rules, s3.Rules{
+			Metadata: metadata,
+			Status:   defsecTypes.String(string(r.Status), metadata),
+		})
+	}
+	return rules
+}
+
+func (a *adapter) getBucketAccelarate(bucketName *string, metadata defsecTypes.Metadata) defsecTypes.StringValue {
+	output, err := a.api.GetBucketAccelerateConfiguration(a.Context(), &s3api.GetBucketAccelerateConfigurationInput{
+		Bucket: bucketName,
+	})
+	if err != nil {
+		return defsecTypes.StringDefault("", metadata)
+	}
+	return defsecTypes.String(string(output.Status), metadata)
+}
+
+func (a *adapter) getBucketLocation(bucketName *string, metadata defsecTypes.Metadata) defsecTypes.StringValue {
+	output, err := a.api.GetBucketLocation(a.Context(), &s3api.GetBucketLocationInput{
+		Bucket: bucketName,
+	})
+	if err != nil {
+		return defsecTypes.StringDefault("", metadata)
+	}
+	return defsecTypes.String(string(output.LocationConstraint), metadata)
+}
+
+func (a *adapter) getObjects(bucketName *string, metadata defsecTypes.Metadata) []s3.Contents {
+	output, err := a.api.ListObjects(a.Context(), &s3api.ListObjectsInput{
+		Bucket: bucketName,
+	})
+	if err != nil {
+		return nil
+	}
+	var obj []s3.Contents
+	for range output.Contents {
+		obj = append(obj, s3.Contents{
+			Metadata: metadata,
+		})
+	}
+	return obj
+}
+
+func (a *adapter) getWebsite(bucketName *string, metadata defsecTypes.Metadata) *s3.Website {
+
+	website, err := a.api.GetBucketWebsite(a.Context(), &s3api.GetBucketWebsiteInput{
+		Bucket: bucketName,
+	})
+	if err != nil {
+		a.Debug("Error getting website: %s", err)
+		return nil
+	}
+
+	if website == nil {
+		return nil
+	} else {
+		return &s3.Website{
+			Metadata: metadata,
+		}
+	}
 }

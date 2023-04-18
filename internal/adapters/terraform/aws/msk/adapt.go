@@ -28,6 +28,15 @@ func adaptCluster(resource *terraform.Block) msk.Cluster {
 		EncryptionInTransit: msk.EncryptionInTransit{
 			Metadata:     resource.GetMetadata(),
 			ClientBroker: defsecTypes.StringDefault("TLS_PLAINTEXT", resource.GetMetadata()),
+			InCluster:    defsecTypes.BoolDefault(true, resource.GetMetadata()),
+		},
+		BrokerNodeGroupInfo: msk.BrokerNodeGroupInfo{
+			Metadata:         resource.GetMetadata(),
+			PublicAccessType: defsecTypes.StringDefault("DISABLED", resource.GetMetadata()),
+		},
+		ClientAuthentication: msk.ClientAuthentication{
+			Metadata:        resource.GetMetadata(),
+			Unauthenticated: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		},
 		EncryptionAtRest: msk.EncryptionAtRest{
 			Metadata:  resource.GetMetadata(),
@@ -60,12 +69,27 @@ func adaptCluster(resource *terraform.Block) msk.Cluster {
 			if clientBrokerAttr := encryptionInTransitBlock.GetAttribute("client_broker"); clientBrokerAttr.IsNotNil() {
 				cluster.EncryptionInTransit.ClientBroker = clientBrokerAttr.AsStringValueOrDefault("TLS", encryptionInTransitBlock)
 			}
+			cluster.EncryptionInTransit.InCluster = encryptionInTransitBlock.GetAttribute("in_cluster").AsBoolValueOrDefault(true, encryptionInTransitBlock)
 		}
 
 		if encryptionAtRestAttr := encryptBlock.GetAttribute("encryption_at_rest_kms_key_arn"); encryptionAtRestAttr.IsNotNil() {
 			cluster.EncryptionAtRest.Metadata = encryptionAtRestAttr.GetMetadata()
 			cluster.EncryptionAtRest.KMSKeyARN = encryptionAtRestAttr.AsStringValueOrDefault("", encryptBlock)
 			cluster.EncryptionAtRest.Enabled = defsecTypes.Bool(true, encryptionAtRestAttr.GetMetadata())
+		}
+	}
+
+	if clientBlock := resource.GetBlock("client_authentication"); clientBlock.IsNotNil() {
+		cluster.ClientAuthentication.Metadata = clientBlock.GetMetadata()
+		cluster.ClientAuthentication.Unauthenticated = clientBlock.GetAttribute("unauthenticated").AsBoolValueOrDefault(false, clientBlock)
+	}
+
+	if brokernodeBlock := resource.GetBlock("broker_node_group_info"); brokernodeBlock.IsNotNil() {
+		cluster.BrokerNodeGroupInfo.Metadata = brokernodeBlock.GetMetadata()
+		if connectBlock := brokernodeBlock.GetBlock("connectivity_info"); connectBlock.IsNotNil() {
+			if publicaccessBlock := connectBlock.GetBlock("public-access"); publicaccessBlock.IsNotNil() {
+				cluster.BrokerNodeGroupInfo.PublicAccessType = publicaccessBlock.GetAttribute("type").AsStringValueOrDefault("DISABLED", publicaccessBlock)
+			}
 		}
 	}
 
