@@ -402,7 +402,10 @@ spec:
     name: hello2
 `
 
-	results, err := NewScanner(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true), options.ScannerWithEmbeddedLibraries(true)).ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(file))
+	results, err := NewScanner(
+		options.ScannerWithEmbeddedPolicies(true),
+		options.ScannerWithEmbeddedLibraries(true),
+		options.ScannerWithEmbeddedLibraries(true)).ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(file))
 	require.NoError(t, err)
 
 	assert.Greater(t, len(results.GetFailed()), 1)
