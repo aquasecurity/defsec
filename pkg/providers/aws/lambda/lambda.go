@@ -9,9 +9,24 @@ type Lambda struct {
 }
 
 type Function struct {
-	Metadata    defsecTypes.Metadata
-	Tracing     Tracing
-	Permissions []Permission
+	Metadata     defsecTypes.Metadata
+	Tracing      Tracing
+	Permissions  []Permission
+	FunctionName defsecTypes.StringValue
+	FunctionArn  defsecTypes.StringValue
+	VpcConfig    VpcConfig
+	Runtime      defsecTypes.StringValue
+	Envrionment  Environment
+}
+
+type Environment struct {
+	Metadata  defsecTypes.Metadata
+	Variables defsecTypes.MapValue
+}
+
+type VpcConfig struct {
+	Metadata defsecTypes.Metadata
+	VpcId    defsecTypes.StringValue
 }
 
 const (
