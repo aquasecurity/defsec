@@ -81,7 +81,7 @@ func (a *adapter) getSnapshots() (snapshots []rds.Snapshots, err error) {
 		}
 		input.Marker = output.Marker
 	}
-	a.Tracker().SetServiceLabel("Adapting rds DBsnapshots...")
+	a.Tracker().SetServiceLabel("Adapting RDS DB snapshots...")
 	return concurrency.Adapt(apiDBSnapshots, a.RootAdapter, a.adaptDBSnapshots), nil
 }
 
@@ -276,11 +276,22 @@ func (a *adapter) adaptParameterGroup(dbParameterGroup types.DBParameterGroup) (
 	if err != nil {
 		return nil, err
 	}
+
 	for _, r := range output.Parameters {
+
+		parameterName := defsecTypes.StringDefault("", metadata)
+		if r.ParameterName != nil {
+			parameterName = defsecTypes.String(*r.ParameterName, metadata)
+		}
+
+		parmeterValue := defsecTypes.StringDefault("", metadata)
+		if r.ParameterValue != nil {
+			parmeterValue = defsecTypes.String(*r.ParameterValue, metadata)
+		}
 		parameter = append(parameter, rds.Parameters{
 			Metadata:       metadata,
-			ParameterName:  defsecTypes.String(*r.ParameterName, metadata),
-			ParameterValue: defsecTypes.String(*r.ParameterValue, metadata),
+			ParameterName:  parameterName,
+			ParameterValue: parmeterValue,
 		})
 	}
 

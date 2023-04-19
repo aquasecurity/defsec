@@ -155,7 +155,7 @@ func adaptInstance(resource *terraform.Block, modules terraform.Modules) rds.Ins
 		IAMAuthEnabled:                   resource.GetAttribute("iam_database_authentication_enabled").AsBoolValueOrDefault(false, resource),
 		DeletionProtection:               resource.GetAttribute("deletion_protection").AsBoolValueOrDefault(false, resource),
 		DBInstanceArn:                    resource.GetAttribute("arn").AsStringValueOrDefault("", resource),
-		StorageEncrypted:                 resource.GetAttribute("storage_encrypted").AsBoolValueOrDefault(false, resource),
+		StorageEncrypted:                 resource.GetAttribute("storage_encrypted").AsBoolValueOrDefault(true, resource),
 		DBInstanceIdentifier:             resource.GetAttribute("identifier").AsStringValueOrDefault("", resource),
 		EngineVersion:                    resource.GetAttribute("engine_version").AsStringValueOrDefault("", resource),
 		AutoMinorVersionUpgrade:          resource.GetAttribute("auto_minor_version_upgrade").AsBoolValueOrDefault(false, resource),

@@ -27,7 +27,7 @@ func Test_Adapt(t *testing.T) {
 				engine                  = "aurora-mysql"
 				backup_retention_period = 7
 				kms_key_id  = "kms_key_1"
-				storage_encrypted = false
+				storage_encrypted = true
 				replication_source_identifier = "arn-of-a-source-db-cluster"
 			  }
 	
@@ -37,7 +37,7 @@ func Test_Adapt(t *testing.T) {
 				performance_insights_enabled = true
 				performance_insights_kms_key_id = "performance_key_0"
 				kms_key_id  = "kms_key_0"
-				storage_encrypted = false
+				storage_encrypted = true
 			}
 
 			resource "aws_db_security_group" "example" {
@@ -50,7 +50,7 @@ func Test_Adapt(t *testing.T) {
 				skip_final_snapshot  = true
 				performance_insights_enabled = true
 				performance_insights_kms_key_id = "performance_key_1"
-				storage_encrypted = false
+				storage_encrypted = true
 				kms_key_id = "kms_key_2"
 			}
 `,
@@ -67,11 +67,12 @@ func Test_Adapt(t *testing.T) {
 						},
 						Encryption: rds.Encryption{
 							Metadata:       defsecTypes.NewTestMetadata(),
-							EncryptStorage: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							EncryptStorage: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							KMSKeyID:       defsecTypes.String("kms_key_2", defsecTypes.NewTestMetadata()),
 						},
-						PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
-						Engine:       defsecTypes.String(rds.EngineAurora, defsecTypes.NewTestMetadata()),
+						PublicAccess:     defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						Engine:           defsecTypes.String(rds.EngineAurora, defsecTypes.NewTestMetadata()),
+						StorageEncrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 				Clusters: []rds.Cluster{
@@ -86,7 +87,7 @@ func Test_Adapt(t *testing.T) {
 						},
 						Encryption: rds.Encryption{
 							Metadata:       defsecTypes.NewTestMetadata(),
-							EncryptStorage: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							EncryptStorage: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 							KMSKeyID:       defsecTypes.String("kms_key_1", defsecTypes.NewTestMetadata()),
 						},
 						Instances: []rds.ClusterInstance{
@@ -102,11 +103,12 @@ func Test_Adapt(t *testing.T) {
 									},
 									Encryption: rds.Encryption{
 										Metadata:       defsecTypes.NewTestMetadata(),
-										EncryptStorage: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+										EncryptStorage: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 										KMSKeyID:       defsecTypes.String("kms_key_0", defsecTypes.NewTestMetadata()),
 									},
-									PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
-									Engine:       defsecTypes.String(rds.EngineAurora, defsecTypes.NewTestMetadata()),
+									PublicAccess:     defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+									Engine:           defsecTypes.String(rds.EngineAurora, defsecTypes.NewTestMetadata()),
+									StorageEncrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 								},
 								ClusterIdentifier: defsecTypes.String("aws_rds_cluster.example", defsecTypes.NewTestMetadata()),
 							},
@@ -161,9 +163,10 @@ func Test_adaptInstance(t *testing.T) {
 					EncryptStorage: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 					KMSKeyID:       defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				},
-				PublicAccess:   defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
-				Engine:         defsecTypes.String(rds.EngineAurora, defsecTypes.NewTestMetadata()),
-				IAMAuthEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				PublicAccess:     defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				Engine:           defsecTypes.String(rds.EngineAurora, defsecTypes.NewTestMetadata()),
+				StorageEncrypted: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				IAMAuthEnabled:   defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}
