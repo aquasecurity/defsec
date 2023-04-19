@@ -33,7 +33,7 @@ func getClustersAndInstances(ctx parser.FileContext) (clusters []rds.Cluster, or
 			DBInstanceArn:                    r.GetStringProperty("DBInstanceArn"),
 			StorageEncrypted:                 r.GetBoolProperty("StorageEncrypted", false),
 			DBInstanceIdentifier:             r.GetStringProperty("DBInstanceIdentifier"),
-			DBParameterGroups:                getDBParameterGroups(r),
+			DBParameterGroups:                getDBParameterGroups(ctx, r),
 			TagList:                          getTagList(r),
 			EnabledCloudwatchLogsExports:     getEnabledCloudwatchLogsExports(r),
 			EngineVersion:                    r.GetStringProperty("EngineVersion"),
@@ -72,22 +72,18 @@ func getClustersAndInstances(ctx parser.FileContext) (clusters []rds.Cluster, or
 	return clusters, orphans
 }
 
-func getDBParameterGroups(r *parser.Resource) (dbpmgroup []rds.DBParameterGroupsList) {
+func getDBParameterGroups(ctx parser.FileContext, r *parser.Resource) (dbParameterGroup []rds.DBParameterGroupsList) {
 
-	DBParameterGroup := r.GetProperty("DBParameterGroups")
-
-	if DBParameterGroup.IsNil() || DBParameterGroup.IsNotNil() {
-		return dbpmgroup
+	for _, r := range ctx.GetResourcesByType("DBParameterGroups") {
+		dbpmgl := rds.DBParameterGroupsList{
+			Metadata:             r.Metadata(),
+			DBParameterGroupName: r.GetStringProperty("DBParameterGroupName"),
+			KMSKeyID:             types.StringUnresolvable(r.Metadata()),
+		}
+		dbParameterGroup = append(dbParameterGroup, dbpmgl)
 	}
 
-	for _, DBPMG := range DBParameterGroup.AsList() {
-		dbpmgroup = append(dbpmgroup, rds.DBParameterGroupsList{
-			Metadata:             DBPMG.Metadata(),
-			DBParameterGroupName: DBPMG.AsStringValue(),
-			KMSKeyID:             DBPMG.AsStringValue(),
-		})
-	}
-	return dbpmgroup
+	return dbParameterGroup
 }
 
 func getEnabledCloudwatchLogsExports(r *parser.Resource) (enabledcloudwatchlogexportslist []types.StringValue) {
