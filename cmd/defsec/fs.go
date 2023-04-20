@@ -36,6 +36,7 @@ func scanFS(dir string, stdout, stderr io.Writer) error {
 
 	opts := []options.ScannerOption{
 		options.ScannerWithEmbeddedPolicies(true),
+		options.ScannerWithEmbeddedLibraries(true),
 	}
 
 	if flagDebug {

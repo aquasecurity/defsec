@@ -2134,9 +2134,30 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.lambda.Environment": {
+      "type": "object",
+      "properties": {
+        "variables": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.MapValue"
+        }
+      }
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.lambda.Function": {
       "type": "object",
       "properties": {
+        "envrionment": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.lambda.Environment"
+        },
+        "functionarn": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "functionname": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "permissions": {
           "type": "array",
           "items": {
@@ -2144,9 +2165,17 @@
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.lambda.Permission"
           }
         },
+        "runtime": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "tracing": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.lambda.Tracing"
+        },
+        "vpcconfig": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.lambda.VpcConfig"
         }
       }
     },
@@ -2184,9 +2213,38 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.lambda.VpcConfig": {
+      "type": "object",
+      "properties": {
+        "vpcid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.mq.Broker": {
       "type": "object",
       "properties": {
+        "autominorversionupgrade": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
+        "deploymentmode": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "enginetype": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "hostinstancetype": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "kmskeyid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "logging": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.mq.Logging"
@@ -2239,6 +2297,24 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.msk.BrokerNodeGroupInfo": {
+      "type": "object",
+      "properties": {
+        "publicaccesstype": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.msk.ClientAuthentication": {
+      "type": "object",
+      "properties": {
+        "unauthenticated": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        }
+      }
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.msk.CloudwatchLogging": {
       "type": "object",
       "properties": {
@@ -2251,6 +2327,14 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.msk.Cluster": {
       "type": "object",
       "properties": {
+        "brokernodegroupinfo": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.msk.BrokerNodeGroupInfo"
+        },
+        "clientauthentication": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.msk.ClientAuthentication"
+        },
         "encryptionatrest": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.msk.EncryptionAtRest"
@@ -2284,6 +2368,10 @@
         "clientbroker": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "incluster": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },
@@ -2656,7 +2744,15 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.s3.Bucket": {
       "type": "object",
       "properties": {
+        "accelerateconfigurationstatus": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "acl": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "bucketlocation": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
@@ -2671,6 +2767,13 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.s3.Encryption"
         },
+        "lifecycleconfiguration": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.s3.Rules"
+          }
+        },
         "logging": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.s3.Logging"
@@ -2679,6 +2782,13 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
+        "objects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.s3.Contents"
+          }
+        },
         "publicaccessblock": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.s3.PublicAccessBlock"
@@ -2686,8 +2796,15 @@
         "versioning": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.s3.Versioning"
+        },
+        "website": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.s3.Website"
         }
       }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.s3.Contents": {
+      "type": "object"
     },
     "github.com.aquasecurity.defsec.pkg.providers.aws.s3.Encryption": {
       "type": "object",
@@ -2740,6 +2857,15 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.s3.Rules": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.s3.S3": {
       "type": "object",
       "properties": {
@@ -2764,6 +2890,9 @@
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.s3.Website": {
+      "type": "object"
     },
     "github.com.aquasecurity.defsec.pkg.providers.aws.sam.API": {
       "type": "object",

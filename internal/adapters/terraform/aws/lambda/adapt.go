@@ -39,7 +39,10 @@ func (a *adapter) adaptFunctions(modules terraform.Modules) []lambda.Function {
 				Metadata: defsecTypes.NewUnmanagedMetadata(),
 				Mode:     defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			},
-			Permissions: nil,
+			FunctionName: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			FunctionArn:  defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			Runtime:      defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			Permissions:  nil,
 		}
 		for _, permission := range orphanResources {
 			orphanage.Permissions = append(orphanage.Permissions, a.adaptPermission(permission))
@@ -52,6 +55,7 @@ func (a *adapter) adaptFunctions(modules terraform.Modules) []lambda.Function {
 
 func (a *adapter) adaptFunction(function *terraform.Block, modules terraform.Modules, orphans terraform.ResourceIDResolutions) lambda.Function {
 	var permissions []lambda.Permission
+
 	for _, module := range modules {
 		for _, p := range module.GetResourcesByType("aws_lambda_permission") {
 			if referencedBlock, err := module.GetReferencedBlock(p.GetAttribute("function_name"), p); err == nil && referencedBlock == function {
@@ -62,9 +66,20 @@ func (a *adapter) adaptFunction(function *terraform.Block, modules terraform.Mod
 	}
 
 	return lambda.Function{
-		Metadata:    function.GetMetadata(),
-		Tracing:     a.adaptTracing(function),
-		Permissions: permissions,
+		Metadata:     function.GetMetadata(),
+		Tracing:      a.adaptTracing(function),
+		Permissions:  permissions,
+		FunctionName: function.GetAttribute("function_name").AsStringValueOrDefault("", function),
+		FunctionArn:  function.GetAttribute("arn").AsStringValueOrDefault("", function),
+		VpcConfig: lambda.VpcConfig{
+			Metadata: function.GetMetadata(),
+			VpcId:    defsecTypes.String("", function.GetMetadata()),
+		},
+		Runtime: function.GetAttribute("runtime").AsStringValueOrDefault("", function),
+		Envrionment: lambda.Environment{
+			Metadata:  function.GetMetadata(),
+			Variables: defsecTypes.MapDefault(nil, function.GetMetadata()),
+		},
 	}
 }
 
