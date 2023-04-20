@@ -1,5 +1,5 @@
 
-Ensures that ASGs are created to be cross-AZ for high availability.
+Ensures that ASGs are created to be cross-AZ for high availability
 
 ### Impact
 <!-- Add Impact here -->

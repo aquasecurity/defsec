@@ -1,5 +1,5 @@
 
-Ensures all autoscaling groups contain at least 1 instance..
+Ensures all autoscaling groups contain at least 1 instance.
 
 ### Impact
 <!-- Add Impact here -->

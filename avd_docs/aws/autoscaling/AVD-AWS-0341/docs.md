@@ -1,5 +1,5 @@
 
-Ensures all Auto Scaling groups have ELB health check active..
+Ensures all Auto Scaling groups have ELB health check active
 
 ### Impact
 <!-- Add Impact here -->

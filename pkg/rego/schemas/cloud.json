@@ -583,7 +583,7 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
-        "avaiabilityzone": {
+        "availabilityzone": {
           "type": "array",
           "items": {
             "type": "object",
