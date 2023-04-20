@@ -14,8 +14,8 @@ func getAutoscalingGroups(ctx parser.FileContext) (groups []autoscaling.Autoscal
 		ag := autoscaling.AutoscalingGroupsList{
 			Metadata:                r.Metadata(),
 			Name:                    r.GetStringProperty("AutoScalingGroupName"),
-			AvaiabilityZone:         getAvailabilityZone(r),
-			Instances:               nil,
+			AvailabilityZone:         getAvailabilityZone(r),
+			Instances:               getInstancesList(r, ctx),
 			HealthCheckType:         r.GetStringProperty("HealthCheckType"),
 			LoadBalancerNames:       getLBNames(r),
 			AutoScalingGroupARN:     r.GetStringProperty("AutoScalingGroupARN"),
@@ -63,18 +63,18 @@ func getNotificationConfigurations(ctx parser.FileContext) (notificationconfigva
 	return notificationconfigvals
 }
 
-func getAvailabilityZone(r *parser.Resource) (avaiabilityZone []types.StringValue) {
+func getAvailabilityZone(r *parser.Resource) (availabilityZone []types.StringValue) {
 
-	AvaiabilityZoneList := r.GetProperty("AvailabilityZones")
+	AvailabilityZoneList := r.GetProperty("AvailabilityZones")
 
-	if AvaiabilityZoneList.IsNil() || AvaiabilityZoneList.IsNotList() {
-		return avaiabilityZone
+	if AvailabilityZoneList.IsNil() || AvailabilityZoneList.IsNotList() {
+		return availabilityZone
 	}
 
-	for _, AZ := range AvaiabilityZoneList.AsList() {
-		avaiabilityZone = append(avaiabilityZone, AZ.AsStringValue())
+	for _, az := range AvailabilityZoneList.AsList() {
+		availabilityZone = append(availabilityZone, az.AsStringValue())
 	}
-	return avaiabilityZone
+	return availabilityZone
 }
 
 func getLBNames(r *parser.Resource) (loadBalancerNames []types.StringValue) {
@@ -111,15 +111,30 @@ func getTags(r *parser.Resource) (tags []autoscaling.Tags) {
 
 	Tag := r.GetProperty("Tags")
 
-	if Tag.IsNil() || Tag.IsNotNil() {
+	if Tag.IsNil() || Tag.IsNotList() {
 		return tags
 	}
 
-	for _, TG := range Tag.AsList() {
-		tags = append(tags, autoscaling.Tags{
-			Metadata:   TG.Metadata(),
-			ResourceId: types.StringDefault("", TG.Metadata()),
+	for _, tg := range Tag.AsList() {
+		tags = append(tags, autoscaling.Tags{	
+			Metadata:   tg.Metadata(),
+			ResourceId: types.StringDefault("", tg.Metadata()),
 		})
 	}
 	return tags
+}
+
+func getInstancesList(r *parser.Resource, ctx parser.FileContext) (instances []autoscaling.InstanceList) {
+	instanceResources := ctx.GetResourcesByType("AWS::AutoScaling::AutoScalingGroup")
+	for _, r := range instanceResources {
+
+		in := autoscaling.InstanceList{
+			Metadata:   r.Metadata(),
+			InstanceId: r.GetStringProperty("InstanceId"),
+		}
+
+		instances = append(instances, in)
+	}
+
+	return instances
 }

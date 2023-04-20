@@ -25,16 +25,14 @@ func Test_adaptCluster(t *testing.T) {
 			terraform: `		
 			resource "aws_autoscaling_group" "example" {
 			 name     = "my-group"
-			 availability_zones = "us-east-1a"
-			 
-			  
+			 availability_zones = "us-east-1a"	  
 			}
 
 `,
 			expected: autoscaling.AutoscalingGroupsList{
 				Metadata: defsecTypes.NewTestMetadata(),
 				Name:     defsecTypes.String("my-group", defsecTypes.NewTestMetadata()),
-				AvaiabilityZone: []defsecTypes.StringValue{
+				AvailabilityZone: []defsecTypes.StringValue{
 					defsecTypes.String("us-east-1a", defsecTypes.NewTestMetadata()),
 				},
 			},
@@ -84,8 +82,8 @@ func TestLines(t *testing.T) {
 	assert.Equal(t, 3, autoscalingGroupsList.Name.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 3, autoscalingGroupsList.Name.GetMetadata().Range().GetEndLine())
 
-	assert.Equal(t, 4, autoscalingGroupsList.AvaiabilityZone[0].GetMetadata().Range().GetStartLine())
-	assert.Equal(t, 4, autoscalingGroupsList.AvaiabilityZone[0].GetMetadata().Range().GetEndLine())
+	assert.Equal(t, 4, autoscalingGroupsList.AvailabilityZone[0].GetMetadata().Range().GetStartLine())
+	assert.Equal(t, 4, autoscalingGroupsList.AvailabilityZone[0].GetMetadata().Range().GetEndLine())
 
 	assert.Equal(t, 5, autoscalingGroupsList.HealthCheckType.GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 5, autoscalingGroupsList.HealthCheckType.GetMetadata().Range().GetEndLine())

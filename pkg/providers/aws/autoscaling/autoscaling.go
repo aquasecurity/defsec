@@ -13,7 +13,7 @@ type Autoscaling struct {
 type AutoscalingGroupsList struct {
 	Metadata                defsecTypes.Metadata
 	Name                    defsecTypes.StringValue
-	AvaiabilityZone         []defsecTypes.StringValue
+	AvailabilityZone        []defsecTypes.StringValue
 	Instances               []InstanceList
 	HealthCheckType         defsecTypes.StringValue
 	LoadBalancerNames       []defsecTypes.StringValue

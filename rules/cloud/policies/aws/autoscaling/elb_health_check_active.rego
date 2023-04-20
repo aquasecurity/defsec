@@ -1,6 +1,6 @@
 # METADATA
 # title: "ELB Health Check Active"
-# description: "Ensures all Auto Scaling groups have ELB health check active.."
+# description: "Ensures all Auto Scaling groups have ELB health check active"
 # scope: package
 # schemas:
 # - input: schema["cloud"]
@@ -12,7 +12,7 @@
 #   service: autoscaling
 #   severity: LOW
 #   short_code: elb-health-check-active
-#   recommended_action: "Enable ELB health check for the Auto Scaling groups."
+#   recommended_action: "Enable ELB health check for the Auto Scaling groups"
 #   input:
 #     selector:
 #     - type: cloud

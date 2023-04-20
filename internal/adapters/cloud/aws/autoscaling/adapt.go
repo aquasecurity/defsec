@@ -98,15 +98,15 @@ func (a *adapter) adaptautoscaling(autoscalingapi aatypes.AutoScalingGroup) (*au
 	}
 
 	var AVZone []types.StringValue
-	for _, AV := range autoscalingapi.AvailabilityZones {
-		AVZone = append(AVZone, types.String(AV, metadata))
+	for _, av := range autoscalingapi.AvailabilityZones {
+		AVZone = append(AVZone, types.String(av, metadata))
 	}
 
 	var InsList []autoscaling.InstanceList
-	for _, IL := range autoscalingapi.Instances {
+	for _, il := range autoscalingapi.Instances {
 		var instanceId string
-		if IL.InstanceId != nil {
-			instanceId = *IL.InstanceId
+		if il.InstanceId != nil {
+			instanceId = *il.InstanceId
 		}
 
 		InsList = append(InsList, autoscaling.InstanceList{
@@ -144,10 +144,10 @@ func (a *adapter) adaptautoscaling(autoscalingapi aatypes.AutoScalingGroup) (*au
 	}
 
 	var Tag []autoscaling.Tags
-	for _, TR := range autoscalingapi.Tags {
+	for _, tr := range autoscalingapi.Tags {
 		var resourceid string
-		if TR.ResourceId != nil {
-			resourceid = *TR.ResourceId
+		if tr.ResourceId != nil {
+			resourceid = *tr.ResourceId
 		}
 
 		Tag = append(Tag, autoscaling.Tags{
@@ -165,7 +165,7 @@ func (a *adapter) adaptautoscaling(autoscalingapi aatypes.AutoScalingGroup) (*au
 	return &autoscaling.AutoscalingGroupsList{
 		Metadata:                metadata,
 		Name:                    types.String(name, metadata),
-		AvaiabilityZone:         AVZone,
+		AvailabilityZone:        AVZone,
 		Instances:               InsList,
 		HealthCheckType:         types.String(HCheckType, metadata),
 		LoadBalancerNames:       LBNames,
@@ -179,7 +179,7 @@ func (a *adapter) adaptautoscaling(autoscalingapi aatypes.AutoScalingGroup) (*au
 }
 
 func (a *adapter) getLaunchConfigurations() ([]autoscaling.LaunchConfigurations, error) {
-	a.Tracker().SetServiceLabel(" Launch Configurations...")
+	a.Tracker().SetServiceLabel("Launch Configurations...")
 
 	var input api.DescribeLaunchConfigurationsInput
 	var lauchconfigapi []aatypes.LaunchConfiguration
@@ -244,7 +244,7 @@ func (a *adapter) adaptlaunchconfiguration(lauchconfigapi aatypes.LaunchConfigur
 }
 
 func (a *adapter) getNotificationConfigurations() ([]autoscaling.NotificationConfigurations, error) {
-	a.Tracker().SetServiceLabel(" Notificaiton Configurations...")
+	a.Tracker().SetServiceLabel("Notificaiton Configurations...")
 
 	var input api.DescribeNotificationConfigurationsInput
 	var notificationconfigapi []aatypes.NotificationConfiguration

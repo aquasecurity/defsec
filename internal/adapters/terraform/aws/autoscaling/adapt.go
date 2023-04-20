@@ -93,7 +93,7 @@ func adaptAutoscaling(resource *terraform.Block, module *terraform.Module) autos
 	return autoscaling.AutoscalingGroupsList{
 		Metadata:                resource.GetMetadata(),
 		Name:                    nameVal,
-		AvaiabilityZone:         AZones,
+		AvailabilityZone:        AZones,
 		Instances:               nil,
 		HealthCheckType:         HCTVal,
 		LoadBalancerNames:       LBNames,
@@ -123,7 +123,7 @@ func adaptLaunchConfiguration(resource *terraform.Block, module *terraform.Modul
 	userDataAttr := resource.GetAttribute("user_data")
 	userDataVal := userDataAttr.AsStringValueOrDefault("", resource)
 
-	iamInstanceProfileAttr := resource.GetAttribute(("iam_instance_profile"))
+	iamInstanceProfileAttr := resource.GetAttribute("iam_instance_profile")
 	iamInstanceProfileVal := iamInstanceProfileAttr.AsStringValueOrDefault("", resource)
 
 	launchConfigNameAttr := resource.GetAttribute("name")

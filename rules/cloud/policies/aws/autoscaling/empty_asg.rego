@@ -1,6 +1,6 @@
 # METADATA
 # title: "Empty AutoScaling Group"
-# description: "Ensures all autoscaling groups contain at least 1 instance.."
+# description: "Ensures all autoscaling groups contain at least 1 instance."
 # scope: package
 # schemas:
 # - input: schema["cloud"]
