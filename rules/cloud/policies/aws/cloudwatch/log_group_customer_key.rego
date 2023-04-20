@@ -21,5 +21,5 @@ package builtin.aws.cloudwatch.aws0181
 deny[res] {
 	group := input.aws.cloudwatch.loggroups[_]
 	group.kmskeyid.value == ""
-	res := result.new("Log group is not encrypted. ", group.kmskeyid)
+	res := result.new("Log group is not encrypted", group.kmskeyid)
 }
