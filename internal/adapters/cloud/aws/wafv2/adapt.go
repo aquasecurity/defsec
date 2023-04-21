@@ -60,7 +60,7 @@ func (a *adapter) getListWebACLs2() ([]wafv2.WebACLs2, error) {
 		input.NextMarker = output.NextMarker
 	}
 
-	a.Tracker().SetServiceLabel("Adapting list WebACLs2...")
+	a.Tracker().SetServiceLabel("Adapting list WebACLs v2...")
 	return concurrency.Adapt(apiListWebACLs2, a.RootAdapter, a.adaptListWebACLs2), nil
 }
 

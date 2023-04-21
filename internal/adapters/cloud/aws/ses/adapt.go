@@ -73,7 +73,6 @@ func (a *adapter) adaptListIdentities(apiListIdentities string) (*ses.Identities
 
 	var verificationStatus string
 	var dkimEnabled bool
-	// val, found := output.DkimAttributes[""]
 	return &ses.Identities{
 		Metadata: metadata,
 		DkimAttributes: ses.DkimAttributes{
