@@ -43,7 +43,7 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 
 func (a *adapter) getStreamInfo() ([]kinesisvideo.StreamInfo, error) {
 
-	a.Tracker().SetServiceLabel("Discovering Stram Info...")
+	a.Tracker().SetServiceLabel("Discovering Stream Info...")
 
 	var apiStreamInfo []aatypes.StreamInfo
 	var input api.ListStreamsInput
