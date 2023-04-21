@@ -23,9 +23,9 @@ package builtin.aws.iam.aws0342
 
 
 allows_permission(statements, permission, effect) {
-	statement := statements[_]
+    statement := statements[_]
     statement.Effect == effect
-   	action = statement.Action[_]
+    action = statement.Action[_]
     action == permission
 }
 
