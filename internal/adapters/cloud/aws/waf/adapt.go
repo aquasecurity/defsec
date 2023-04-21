@@ -43,7 +43,7 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 
 func (a *adapter) getListWebACLs() ([]waf.ListACLs, error) {
 
-	a.Tracker().SetServiceLabel("Discovering WebACLs2 list...")
+	a.Tracker().SetServiceLabel("Discovering WebACLs v1 list...")
 
 	var apiListWebACLs []aatypes.WebACLSummary
 	var input api.ListWebACLsInput
