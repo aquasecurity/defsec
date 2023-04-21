@@ -4,6 +4,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/accessanalyzer"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/athena"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/autoscaling"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudfront"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
@@ -50,6 +51,7 @@ import (
 
 type AWS struct {
 	AccessAnalyzer  accessanalyzer.AccessAnalyzer
+	Autoscaling     autoscaling.Autoscaling
 	APIGateway      apigateway.APIGateway
 	Athena          athena.Athena
 	Cloudfront      cloudfront.Cloudfront
