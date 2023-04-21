@@ -14,7 +14,7 @@ func getAutoscalingGroups(ctx parser.FileContext) (groups []autoscaling.Autoscal
 		ag := autoscaling.AutoscalingGroupsList{
 			Metadata:                r.Metadata(),
 			Name:                    r.GetStringProperty("AutoScalingGroupName"),
-			AvailabilityZone:         getAvailabilityZone(r),
+			AvailabilityZone:        getAvailabilityZone(r),
 			Instances:               getInstancesList(r, ctx),
 			HealthCheckType:         r.GetStringProperty("HealthCheckType"),
 			LoadBalancerNames:       getLBNames(r),
@@ -116,7 +116,7 @@ func getTags(r *parser.Resource) (tags []autoscaling.Tags) {
 	}
 
 	for _, tg := range Tag.AsList() {
-		tags = append(tags, autoscaling.Tags{	
+		tags = append(tags, autoscaling.Tags{
 			Metadata:   tg.Metadata(),
 			ResourceId: types.StringDefault("", tg.Metadata()),
 		})

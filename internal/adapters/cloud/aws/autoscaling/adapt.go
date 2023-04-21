@@ -3,14 +3,15 @@ package autoscaling
 import (
 	"fmt"
 
+	"github.com/aws/aws-sdk-go-v2/aws/arn"
+	api "github.com/aws/aws-sdk-go-v2/service/autoscaling"
+	aatypes "github.com/aws/aws-sdk-go-v2/service/autoscaling/types"
+
 	"github.com/aquasecurity/defsec/internal/adapters/cloud/aws"
 	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/autoscaling"
 	"github.com/aquasecurity/defsec/pkg/state"
 	"github.com/aquasecurity/defsec/pkg/types"
-	"github.com/aws/aws-sdk-go-v2/aws/arn"
-	api "github.com/aws/aws-sdk-go-v2/service/autoscaling"
-	aatypes "github.com/aws/aws-sdk-go-v2/service/autoscaling/types"
 )
 
 type adapter struct {
