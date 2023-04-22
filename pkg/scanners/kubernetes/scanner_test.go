@@ -342,7 +342,7 @@ deny[res] {
 
 func Test_FileScan(t *testing.T) {
 
-	results, err := NewScanner(options.ScannerWithEmbeddedPolicies(true)).ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(`
+	results, err := NewScanner(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true), options.ScannerWithEmbeddedLibraries(true)).ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(`
 apiVersion: v1
 kind: Pod
 metadata: 
@@ -360,7 +360,7 @@ spec:
 
 func Test_FileScan_WithSeparator(t *testing.T) {
 
-	results, err := NewScanner(options.ScannerWithEmbeddedPolicies(true)).ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(`
+	results, err := NewScanner(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true)).ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(`
 ---
 ---
 apiVersion: v1
@@ -402,7 +402,10 @@ spec:
     name: hello2
 `
 
-	results, err := NewScanner(options.ScannerWithEmbeddedPolicies(true)).ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(file))
+	results, err := NewScanner(
+		options.ScannerWithEmbeddedPolicies(true),
+		options.ScannerWithEmbeddedLibraries(true),
+		options.ScannerWithEmbeddedLibraries(true)).ScanReader(context.TODO(), "k8s.yaml", strings.NewReader(file))
 	require.NoError(t, err)
 
 	assert.Greater(t, len(results.GetFailed()), 1)
@@ -541,7 +544,7 @@ func Test_FileScanExampleWithResultFunction(t *testing.T) {
 	results, err := NewScanner(
 		options.ScannerWithDebug(os.Stdout),
 		options.ScannerWithTrace(os.Stdout),
-		options.ScannerWithEmbeddedPolicies(true),
+		options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true),
 		options.ScannerWithPolicyReader(strings.NewReader(`package defsec
 
 import data.lib.kubernetes
@@ -615,8 +618,8 @@ spec:
 	assert.Equal(t, "k8s.yaml", firstResult.Metadata().Range().GetFilename())
 }
 
-// TODO(simar): Uncomment once all k8s policies have subtype selector added
 /*
+// TODO(simar): Uncomment once all k8s policies have subtype selector added
 func Test_checkPolicyIsApplicable(t *testing.T) {
 	srcFS := testutil.CreateFS(t, map[string]string{
 		"policies/pod_policy.rego": `# METADATA
@@ -624,7 +627,7 @@ func Test_checkPolicyIsApplicable(t *testing.T) {
 # description: "A program inside the container can elevate its own privileges and run as root, which might give the program control over the container and node."
 # scope: package
 # schemas:
-# - input: schema["input"]
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted
 # custom:
@@ -673,7 +676,7 @@ deny[res] {
 # description: "ensure that default namespace should not be used"
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["kubernetes"]
 # related_resources:
 # - https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
 # custom:
@@ -721,7 +724,8 @@ spec:
 	})
 
 	scanner := NewScanner(
-		options.ScannerWithEmbeddedPolicies(true),
+		//options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true),
+		options.ScannerWithEmbeddedLibraries(true),
 		options.ScannerWithPolicyDirs("policies/"),
 		options.ScannerWithPolicyFilesystem(srcFS),
 	)
