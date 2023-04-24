@@ -326,8 +326,8 @@ github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.18.20 h1:dJngzOIJ
 github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.18.20/go.mod h1:tAKN3/tWkL0P+WA44wSkNyk6wWcbHUfTV2F3j3o6Yhs=
 github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.10 h1:R8edMXNKBaic58L371826hNQanJSjirStcIAkXNe/bQ=
 github.com/aws/aws-sdk-go-v2/service/elasticsearchservice v1.16.10/go.mod h1:VPuMdyWzqCRgv5qTww9yeauwGsOxVbtP2OyqXVyZB8g=
-github.com/aws/aws-sdk-go-v2/service/emr v1.23.4 h1:A73pff/ErHNc9K7tGI+Ey7D8imRhKE6LcTql+CWMK0M=
-github.com/aws/aws-sdk-go-v2/service/emr v1.23.4/go.mod h1:hBq5Dk4z9fjyqQmtwNhAC6exHWwxyPFfpisjHJa6FuU=
+github.com/aws/aws-sdk-go-v2/service/emr v1.24.2 h1:9wI9GjF+rtL97vthvuS9aAbZaag5PZItntroRJwdawk=
+github.com/aws/aws-sdk-go-v2/service/emr v1.24.2/go.mod h1:ARRG9pW6VTCTlCYMHOQhymyT0u31uIS+zgKiv0v+aRI=
 github.com/aws/aws-sdk-go-v2/service/iam v1.19.10 h1:mNCARLwZyWdk7070h4Sb9plb947g8jthPkC+WUmoN30=
 github.com/aws/aws-sdk-go-v2/service/iam v1.19.10/go.mod h1:KeyeWNh9U2iztqp7JsK2PvnAupYWNZFp8A6ItqAQay4=
 github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.9/go.mod h1:a9j48l6yL5XINLHLcOKInjdvknN+vWqPBxqeIDw7ktw=
