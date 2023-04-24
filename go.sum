@@ -290,8 +290,8 @@ github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.16.0 h1:rPv8ZiaTIwLp4JOCQ
 github.com/aws/aws-sdk-go-v2/service/accessanalyzer v1.16.0/go.mod h1:l5+hat25VFsG9jpsXrtEYqw6Ih3pLaC5I4+8hrng7F4=
 github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.24 h1:eWwaF3m67oAJGBhfzVC9dLXPYhLHB238N1LhgFa8INk=
 github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.24/go.mod h1:3olVANhEv+CFhEvC/TTkqh+1kg+r0px3CbH5eRKx7J4=
-github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.18 h1:b+6dNRDFDdvW8wZcgHAW0LrLVoJQw5ACUMHU0WjV/1g=
-github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.12.18/go.mod h1:Ei6UH6WRGNA0URIdDX3efUFVc23XGfT+QbYLkgBIqQU=
+github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.13.9 h1:fXQDzZHv9YWb+eTMI4kfS+8qp5YJ3TOHSBHGIDDDg8U=
+github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.13.9/go.mod h1:4X2SQkl5vpL0SSXRQpufP8KDsP3mcC0tCrS/lCH8iAg=
 github.com/aws/aws-sdk-go-v2/service/athena v1.18.10 h1:s8cE1HX3Pi53iMg+A+d7gGvmjA+Z4nH6u0BbbuFwXXE=
 github.com/aws/aws-sdk-go-v2/service/athena v1.18.10/go.mod h1:LiVr7tVQ2lrlv82VQhyuulN8uysLHsEeptFjA5PY1Pc=
 github.com/aws/aws-sdk-go-v2/service/autoscaling v1.28.4 h1:FTzD49N7q3gQyqUyJrG7PX0ENFIyHYWfwka0rkJWeyI=
