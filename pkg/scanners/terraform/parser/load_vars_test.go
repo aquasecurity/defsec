@@ -3,22 +3,40 @@ package parser
 import (
 	"testing"
 
+	"github.com/aquasecurity/defsec/test/testutil"
+
 	"github.com/zclconf/go-cty/cty"
 
-	"github.com/aquasecurity/defsec/pkg/extrafs"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func Test_TFVarsFile(t *testing.T) {
 	t.Run("tfvars file", func(t *testing.T) {
-		vars, err := loadTFVars(extrafs.OSDir("/"), []string{"testdata/tfvars/terraform.tfvars"})
+		fs := testutil.CreateFS(t, map[string]string{
+			"test.tfvars": `instance_type = "t2.large"`,
+		})
+
+		vars, err := loadTFVars(fs, []string{"test.tfvars"})
 		require.NoError(t, err)
 		assert.Equal(t, "t2.large", vars["instance_type"].AsString())
 	})
 
 	t.Run("tfvars json file", func(t *testing.T) {
-		vars, err := loadTFVars(extrafs.OSDir("/"), []string{"testdata/tfvars/terraform.tfvars.json"})
+		fs := testutil.CreateFS(t, map[string]string{
+			"test.tfvars.json": `{
+  "variable": {
+    "foo": {
+      "default": "bar"
+    },
+    "baz": "qux"
+  },
+  "foo2": true,
+  "foo3": 3
+}`,
+		})
+
+		vars, err := loadTFVars(fs, []string{"test.tfvars.json"})
 		require.NoError(t, err)
 		assert.Equal(t, "bar", vars["variable"].GetAttr("foo").GetAttr("default").AsString())
 		assert.Equal(t, "qux", vars["variable"].GetAttr("baz").AsString())
