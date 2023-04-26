@@ -71,15 +71,15 @@ func (a *adapter) adaptFileSystem(apiFileSystem aatypes.FileSystem) (*fsx.Filesy
 	if apiFileSystem.FileSystemType != "" {
 		fst = string(apiFileSystem.FileSystemType)
 	}
-	var keyid string
+	var keyId string
 	if apiFileSystem.KmsKeyId != nil {
-		keyid = *apiFileSystem.KmsKeyId
+		keyId = *apiFileSystem.KmsKeyId
 	}
 
 	return &fsx.Filesystem{
 		Metadata:       metadata,
 		FileSystemType: types.String(fst, metadata),
-		KmsKeyId:       types.String(keyid, metadata),
+		KmsKeyId:       types.String(keyId, metadata),
 	}, nil
 
 }

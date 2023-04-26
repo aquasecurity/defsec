@@ -25,12 +25,19 @@ func adaptProjects(modules terraform.Modules) []codebuild.Project {
 func adaptProject(resource *terraform.Block) codebuild.Project {
 
 	project := codebuild.Project{
-		Metadata: resource.GetMetadata(),
+		Metadata:      resource.GetMetadata(),
+		SourceType:    types.StringDefault("", resource.GetMetadata()),
+		EncryptionKey: resource.GetAttribute("encryption_key").AsStringValueOrDefault("", resource),
 		ArtifactSettings: codebuild.ArtifactSettings{
 			Metadata:          resource.GetMetadata(),
 			EncryptionEnabled: types.BoolDefault(true, resource.GetMetadata()),
 		},
 		SecondaryArtifactSettings: nil,
+		SecondarySources:          nil,
+	}
+
+	if sourceblock := resource.GetBlock("source"); sourceblock.IsNotNil() {
+		project.SourceType = sourceblock.GetAttribute("type").AsStringValueOrDefault("CODECOMMIT", sourceblock)
 	}
 
 	var hasArtifacts bool
@@ -59,6 +66,14 @@ func adaptProject(resource *terraform.Block) codebuild.Project {
 		project.SecondaryArtifactSettings = append(project.SecondaryArtifactSettings, codebuild.ArtifactSettings{
 			Metadata:          secondaryArtifactBlock.GetMetadata(),
 			EncryptionEnabled: secondaryEncryptionEnabled,
+		})
+	}
+
+	secondrysources := resource.GetBlocks("secondary_sources")
+	for _, ss := range secondrysources {
+		project.SecondarySources = append(project.SecondarySources, codebuild.SecondarySources{
+			Metadata: ss.GetMetadata(),
+			Type:     ss.GetAttribute("type").AsStringValueOrDefault("CODECOMMIT", ss),
 		})
 	}
 

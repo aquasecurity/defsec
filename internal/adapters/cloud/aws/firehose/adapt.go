@@ -47,18 +47,18 @@ func (a *adapter) getDeliveryStream() (firehose.DeliveryStreamDescription, error
 	a.Tracker().SetServiceLabel("Discovering delivery streams descr...")
 	metadata := a.CreateMetadataFromARN(*apiDeliveryStream.DeliveryStreamARN)
 
-	var KEYARN string
-	for _, KA := range apiDeliveryStream.Destinations {
+	var keyArn string
+	for _, ka := range apiDeliveryStream.Destinations {
 		var awskmskeyarn string
-		if KA.ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig.AWSKMSKeyARN != nil {
-			awskmskeyarn = *KA.ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig.AWSKMSKeyARN
+		if ka.ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig.AWSKMSKeyARN != nil {
+			awskmskeyarn = *ka.ExtendedS3DestinationDescription.EncryptionConfiguration.KMSEncryptionConfig.AWSKMSKeyARN
 		}
-		KEYARN = awskmskeyarn
+		keyArn = awskmskeyarn
 	}
 
 	description := firehose.DeliveryStreamDescription{
 		Metadata:     metadata,
-		AWSKMSKeyARN: defsecTypes.String(KEYARN, metadata),
+		AWSKMSKeyARN: defsecTypes.String(keyArn, metadata),
 	}
 
 	output, err := a.api.DescribeDeliveryStream(a.Context(), &input)

@@ -11,16 +11,16 @@ func getListService(ctx parser.FileContext) (servicearn []apprunner.ListService)
 	ListService := ctx.GetResourcesByType("AWS::AppRunner::Service")
 
 	for _, r := range ListService {
-		var kmskey defsecTypes.StringValue
+		var kmsKey defsecTypes.StringValue
 
 		for range r.GetProperty("EncryptionConfiguration").Type() {
-			kmskey = r.GetStringProperty("KmsKey")
+			kmsKey = r.GetStringProperty("KmsKey")
 		}
 
 		fd := apprunner.ListService{
 			Metadata:   r.Metadata(),
 			ServiceArn: r.GetStringProperty("ServiceArn"),
-			KmsKey:     kmskey,
+			KmsKey:     kmsKey,
 		}
 		servicearn = append(servicearn, fd)
 	}

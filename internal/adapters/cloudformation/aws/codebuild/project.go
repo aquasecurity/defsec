@@ -13,8 +13,11 @@ func getProjects(ctx parser.FileContext) (projects []codebuild.Project) {
 	for _, r := range projectResources {
 		project := codebuild.Project{
 			Metadata:                  r.Metadata(),
+			EncryptionKey:             r.GetStringProperty("EncryptionKey"),
+			SourceType:                r.GetStringProperty("Source.Type"),
 			ArtifactSettings:          getArtifactSettings(r),
 			SecondaryArtifactSettings: getSecondaryArtifactSettings(r),
+			SecondarySources:          getSecondarySources(r),
 		}
 
 		projects = append(projects, project)
@@ -60,4 +63,19 @@ func getArtifactSettings(r *parser.Resource) codebuild.ArtifactSettings {
 	}
 
 	return settings
+}
+
+func getSecondarySources(r *parser.Resource) (secondarySources []codebuild.SecondarySources) {
+	secondarySourcesList := r.GetProperty("SecondarySources")
+	if secondarySourcesList.IsNil() || !secondarySourcesList.IsList() {
+		return
+	}
+
+	for _, s := range secondarySourcesList.AsList() {
+		secondarySources = append(secondarySources, codebuild.SecondarySources{
+			Metadata: s.Metadata(),
+			Type:     s.GetStringProperty("Type"),
+		})
+	}
+	return secondarySources
 }

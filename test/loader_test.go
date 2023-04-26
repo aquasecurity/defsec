@@ -16,7 +16,7 @@ func Test_loader_returns_expected_providers(t *testing.T) {
 
 func Test_load_returns_expected_services(t *testing.T) {
 	services := rules.GetProviderServiceNames("aws")
-	assert.Len(t, services, 33)
+	assert.Len(t, services, 34)
 }
 
 func Test_load_returns_expected_service_checks(t *testing.T) {

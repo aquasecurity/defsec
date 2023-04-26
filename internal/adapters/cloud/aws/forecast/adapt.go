@@ -103,14 +103,14 @@ func (a *adapter) getDescribeDatasets() (forecast.DescribeDataset, error) {
 
 	metadata := a.CreateMetadataFromARN(*apiDescribeDataset.KMSKeyArn)
 
-	var KEYARN string
+	var keyArn string
 	if apiDescribeDataset.KMSKeyArn != nil {
-		KEYARN = *apiDescribeDataset.KMSKeyArn
+		keyArn = *apiDescribeDataset.KMSKeyArn
 	}
 
 	describedataset := forecast.DescribeDataset{
 		Metadata:  metadata,
-		KMSKeyArn: types.String(KEYARN, metadata),
+		KMSKeyArn: types.String(keyArn, metadata),
 	}
 
 	output, err := a.api.DescribeDataset(a.Context(), &input)
@@ -132,15 +132,15 @@ func (a *adapter) adaptListExportJobs(apiListExportJobs aatypes.ForecastExportJo
 		arn = string(*apiListExportJobs.ForecastExportJobArn)
 	}
 
-	var KmsKey string
+	var kmsKey string
 	if *apiListExportJobs.Destination.S3Config.KMSKeyArn != "" {
-		arn = string(*apiListExportJobs.Destination.S3Config.KMSKeyArn)
+		kmsKey = string(*apiListExportJobs.Destination.S3Config.KMSKeyArn)
 	}
 
 	return &forecast.ListForecastExportJob{
 		Metadata:             metadata,
 		ForecastExportJobArn: types.String(arn, metadata),
-		KMSKeyArn:            types.String(KmsKey, metadata),
+		KMSKeyArn:            types.String(kmsKey, metadata),
 	}, nil
 
 }
@@ -148,14 +148,14 @@ func (a *adapter) adaptListExportJobs(apiListExportJobs aatypes.ForecastExportJo
 func (a *adapter) adaptListDataset(apiListDatasets aatypes.DatasetSummary) (*forecast.ListDataset, error) {
 	metadata := a.CreateMetadataFromARN(*apiListDatasets.DatasetArn)
 
-	var arn string
+	var datasetArn string
 	if *apiListDatasets.DatasetArn != "" {
-		arn = string(*apiListDatasets.DatasetArn)
+		datasetArn = string(*apiListDatasets.DatasetArn)
 	}
 
 	return &forecast.ListDataset{
 		Metadata:   metadata,
-		DatasetArn: types.String(arn, metadata),
+		DatasetArn: types.String(datasetArn, metadata),
 	}, nil
 
 }

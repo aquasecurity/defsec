@@ -11,7 +11,6 @@ func getDeliveryStreamDescription(ctx parser.FileContext) firehose.DeliveryStrea
 	deliveryDescriptions := firehose.DeliveryStreamDescription{
 		Metadata:     defsecTypes.NewUnmanagedMetadata(),
 		AWSKMSKeyARN: defsecTypes.StringDefault("", ctx.Metadata()),
-		// .GetStringProperty("KMSEncryptionConfig"),
 	}
 
 	deliveryStreamDescriptionResource := ctx.GetResourcesByType("AWS::KinesisFirehose::DeliveryStream")

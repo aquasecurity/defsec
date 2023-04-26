@@ -31,10 +31,11 @@ type Scanner struct {
 	regoScanner   *rego.Scanner
 	skipRequired  bool
 	options       []options.ScannerOption
-	loadEmbedded  bool
 	frameworks    []framework.Framework
 	spec          string
 	sync.Mutex
+	loadEmbeddedLibraries bool
+	loadEmbeddedPolicies  bool
 }
 
 func (s *Scanner) SetSpec(spec string) {
@@ -49,7 +50,11 @@ func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
-	s.loadEmbedded = b
+	s.loadEmbeddedPolicies = b
+}
+
+func (s *Scanner) SetUseEmbeddedLibraries(b bool) {
+	s.loadEmbeddedLibraries = b
 }
 
 func (s *Scanner) Name() string {
@@ -155,7 +160,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 
 	regoScanner := rego.NewScanner(types.SourceDockerfile, s.options...)
 	regoScanner.SetParentDebugLogger(s.debug)
-	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
+	if err := regoScanner.LoadPolicies(s.loadEmbeddedLibraries, s.loadEmbeddedPolicies, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner

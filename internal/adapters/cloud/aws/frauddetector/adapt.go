@@ -47,14 +47,14 @@ func (a *adapter) getKmsKey() (frauddetector.KmsKey, error) {
 	a.Tracker().SetServiceLabel("Discovering frauddetector kmskey arn...")
 	metadata := a.CreateMetadataFromARN(*apiKMSKeyArn.KmsEncryptionKeyArn)
 
-	var Kmskeyarn string
+	var kmsArn string
 	if apiKMSKeyArn.KmsEncryptionKeyArn != nil {
-		Kmskeyarn = *apiKMSKeyArn.KmsEncryptionKeyArn
+		kmsArn = *apiKMSKeyArn.KmsEncryptionKeyArn
 	}
 
 	description := frauddetector.KmsKey{
 		Metadata:            metadata,
-		KmsEncryptionKeyArn: defsecTypes.String(Kmskeyarn, metadata),
+		KmsEncryptionKeyArn: defsecTypes.String(kmsArn, metadata),
 	}
 
 	output, err := a.api.GetKMSEncryptionKey(a.Context(), &input)

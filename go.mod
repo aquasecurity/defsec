@@ -79,11 +79,23 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/appflow v1.24.3
 	github.com/aws/aws-sdk-go-v2/service/apprunner v1.17.2
 	github.com/aws/aws-sdk-go-v2/service/auditmanager v1.24.0
+	github.com/aws/aws-sdk-go-v2/service/autoscaling v1.28.4
 	github.com/aws/aws-sdk-go-v2/service/finspace v1.9.4
 	github.com/aws/aws-sdk-go-v2/service/firehose v1.16.5
 	github.com/aws/aws-sdk-go-v2/service/forecast v1.25.4
 	github.com/aws/aws-sdk-go-v2/service/frauddetector v1.23.2
 	github.com/aws/aws-sdk-go-v2/service/fsx v1.28.5
+	github.com/aws/aws-sdk-go-v2/service/kendra v1.38.5
+	github.com/aws/aws-sdk-go-v2/service/kinesisvideo v1.15.5
+	github.com/aws/aws-sdk-go-v2/service/proton v1.20.3
+	github.com/aws/aws-sdk-go-v2/service/ses v1.15.3
+	github.com/aws/aws-sdk-go-v2/service/shield v1.18.4
+	github.com/aws/aws-sdk-go-v2/service/timestreamwrite v1.16.0
+	github.com/aws/aws-sdk-go-v2/service/transfer v1.28.5
+	github.com/aws/aws-sdk-go-v2/service/translate v1.17.4
+	github.com/aws/aws-sdk-go-v2/service/waf v1.12.4
+	github.com/aws/aws-sdk-go-v2/service/wafv2 v1.26.0
+	github.com/aws/aws-sdk-go-v2/service/xray v1.16.5
 	github.com/aws/smithy-go v1.13.5
 	github.com/mitchellh/mapstructure v1.5.0
 	k8s.io/utils v0.0.0-20230115233650-391b47cb4029
@@ -117,7 +129,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.0.14 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.10 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.18 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.19 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.23 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.24 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.17 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.12.4 // indirect
