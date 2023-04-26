@@ -89,40 +89,40 @@ func getDBParameterGroups(ctx parser.FileContext, r *parser.Resource) (dbParamet
 func getEnabledCloudwatchLogsExports(r *parser.Resource) (enabledcloudwatchlogexportslist []types.StringValue) {
 	enabledCloudwatchLogExportList := r.GetProperty("EnableCloudwatchLogsExports")
 
-	if enabledCloudwatchLogExportList.IsNil() || enabledCloudwatchLogExportList.IsNotNil() {
+	if enabledCloudwatchLogExportList.IsNil() || enabledCloudwatchLogExportList.IsNotList() {
 		return enabledcloudwatchlogexportslist
 	}
 
-	for _, ECLE := range enabledCloudwatchLogExportList.AsList() {
-		enabledcloudwatchlogexportslist = append(enabledcloudwatchlogexportslist, ECLE.AsStringValue())
+	for _, ecle := range enabledCloudwatchLogExportList.AsList() {
+		enabledcloudwatchlogexportslist = append(enabledcloudwatchlogexportslist, ecle.AsStringValue())
 	}
 	return enabledcloudwatchlogexportslist
 }
 
 func getTagList(r *parser.Resource) (taglist []rds.TagList) {
-	TagLists := r.GetProperty("tags")
+	tagLists := r.GetProperty("tags")
 
-	if TagLists.IsNil() || TagLists.IsNotNil() {
+	if tagLists.IsNil() || tagLists.IsNotList() {
 		return taglist
 	}
 
-	for _, TL := range TagLists.AsList() {
+	for _, tl := range tagLists.AsList() {
 		taglist = append(taglist, rds.TagList{
-			Metadata: TL.Metadata(),
+			Metadata: tl.Metadata(),
 		})
 	}
 	return taglist
 }
 
 func getReadReplicaDBInstanceIdentifiers(r *parser.Resource) (readreplicadbidentifier []types.StringValue) {
-	ReadReplicaDBIdentifier := r.GetProperty("EnableCloudwatchLogsExports")
+	readReplicaDBIdentifier := r.GetProperty("EnableCloudwatchLogsExports")
 
-	if ReadReplicaDBIdentifier.IsNil() || ReadReplicaDBIdentifier.IsNotNil() {
+	if readReplicaDBIdentifier.IsNil() || readReplicaDBIdentifier.IsNotList() {
 		return readreplicadbidentifier
 	}
 
-	for _, RR := range ReadReplicaDBIdentifier.AsList() {
-		readreplicadbidentifier = append(readreplicadbidentifier, RR.AsStringValue())
+	for _, rr := range readReplicaDBIdentifier.AsList() {
+		readreplicadbidentifier = append(readreplicadbidentifier, rr.AsStringValue())
 	}
 	return readreplicadbidentifier
 }

@@ -195,13 +195,13 @@ func (a *adapter) adaptDBInstance(dbInstance types.DBInstance) (*rds.Instance, e
 	}
 
 	var EnabledCloudwatchLogsExports []defsecTypes.StringValue
-	for _, ECWE := range dbInstance.EnabledCloudwatchLogsExports {
-		EnabledCloudwatchLogsExports = append(EnabledCloudwatchLogsExports, defsecTypes.String(ECWE, dbInstanceMetadata))
+	for _, ecwe := range dbInstance.EnabledCloudwatchLogsExports {
+		EnabledCloudwatchLogsExports = append(EnabledCloudwatchLogsExports, defsecTypes.String(ecwe, dbInstanceMetadata))
 	}
 
 	var ReadReplicaDBInstanceIdentifiers []defsecTypes.StringValue
-	for _, RRDBI := range dbInstance.EnabledCloudwatchLogsExports {
-		ReadReplicaDBInstanceIdentifiers = append(ReadReplicaDBInstanceIdentifiers, defsecTypes.String(RRDBI, dbInstanceMetadata))
+	for _, rrdbi := range dbInstance.EnabledCloudwatchLogsExports {
+		ReadReplicaDBInstanceIdentifiers = append(ReadReplicaDBInstanceIdentifiers, defsecTypes.String(rrdbi, dbInstanceMetadata))
 	}
 
 	engine := rds.EngineAurora
@@ -268,7 +268,7 @@ func (a *adapter) adaptCluster(dbCluster types.DBCluster) (*rds.Cluster, error) 
 
 func (a *adapter) adaptParameterGroup(dbParameterGroup types.DBParameterGroup) (*rds.ParameterGroups, error) {
 
-	metadata := a.CreateMetadata("dbperametergroup:" + *dbParameterGroup.DBParameterGroupArn)
+	metadata := a.CreateMetadata("dbparametergroup:" + *dbParameterGroup.DBParameterGroupArn)
 	var parameter []rds.Parameters
 	output, err := a.api.DescribeDBParameters(a.Context(), &rdsApi.DescribeDBParametersInput{
 		DBParameterGroupName: dbParameterGroup.DBParameterGroupName,

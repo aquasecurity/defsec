@@ -25,17 +25,17 @@ func getParameterGroups(ctx parser.FileContext) (parametergroups []rds.Parameter
 
 func getParameters(r *parser.Resource) (parameters []rds.Parameters) {
 
-	DBParam := r.GetProperty("Parameters")
+	dBParam := r.GetProperty("Parameters")
 
-	if DBParam.IsNil() || DBParam.IsNotNil() {
+	if dBParam.IsNil() || dBParam.IsNotList() {
 		return parameters
 	}
 
-	for _, DBP := range DBParam.AsList() {
+	for _, dbp := range dBParam.AsList() {
 		parameters = append(parameters, rds.Parameters{
-			Metadata:       DBP.Metadata(),
-			ParameterName:  types.StringDefault("", DBP.Metadata()),
-			ParameterValue: types.StringDefault("", DBP.Metadata()),
+			Metadata:       dbp.Metadata(),
+			ParameterName:  types.StringDefault("", dbp.Metadata()),
+			ParameterValue: types.StringDefault("", dbp.Metadata()),
 		})
 	}
 	return parameters

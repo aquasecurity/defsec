@@ -117,9 +117,9 @@ func adaptClassicDBSecurityGroup(resource *terraform.Block) rds.DBSecurityGroup 
 func adaptInstance(resource *terraform.Block, modules terraform.Modules) rds.Instance {
 
 	var ReadReplicaDBInstanceIdentifiers []defsecTypes.StringValue
-	RRDIAttr := resource.GetAttribute("replicate_source_db")
-	for _, RRDI := range RRDIAttr.AsStringValues() {
-		ReadReplicaDBInstanceIdentifiers = append(ReadReplicaDBInstanceIdentifiers, RRDI)
+	rrdiAttr := resource.GetAttribute("replicate_source_db")
+	for _, rrdi := range rrdiAttr.AsStringValues() {
+		ReadReplicaDBInstanceIdentifiers = append(ReadReplicaDBInstanceIdentifiers, rrdi)
 	}
 
 	var TagList []rds.TagList
@@ -132,9 +132,9 @@ func adaptInstance(resource *terraform.Block, modules terraform.Modules) rds.Ins
 	}
 
 	var EnabledCloudwatchLogsExports []defsecTypes.StringValue
-	ECWEAttr := resource.GetAttribute("enabled_cloudwatch_logs_exports")
-	for _, ECWE := range ECWEAttr.AsStringValues() {
-		EnabledCloudwatchLogsExports = append(EnabledCloudwatchLogsExports, ECWE)
+	ecweAttr := resource.GetAttribute("enabled_cloudwatch_logs_exports")
+	for _, ecwe := range ecweAttr.AsStringValues() {
+		EnabledCloudwatchLogsExports = append(EnabledCloudwatchLogsExports, ecwe)
 	}
 
 	replicaSource := resource.GetAttribute("replicate_source_db")
