@@ -74,7 +74,7 @@ func init() {
 
 	matchers[FileTypeTerraform] = func(name string, _ io.ReadSeeker) bool {
 		ext := filepath.Ext(filepath.Base(name))
-		return strings.EqualFold(ext, ".tf") || strings.EqualFold(ext, ".tf.json")
+		return strings.EqualFold(ext, ".tf") || strings.EqualFold(ext, ".tf.json") || strings.EqualFold(ext, ".tfvars")
 	}
 
 	matchers[FileTypeTerraformPlan] = func(name string, r io.ReadSeeker) bool {
