@@ -3,6 +3,7 @@ package rds
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/rds"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func getClustersAndInstances(ctx parser.FileContext) (clusters []rds.Cluster, orphans []rds.Instance) {
@@ -25,10 +26,22 @@ func getClustersAndInstances(ctx parser.FileContext) (clusters []rds.Cluster, or
 				EncryptStorage: r.GetBoolProperty("StorageEncrypted"),
 				KMSKeyID:       r.GetStringProperty("KmsKeyId"),
 			},
-			PublicAccess:       r.GetBoolProperty("PubliclyAccessible", true),
-			Engine:             r.GetStringProperty("Engine"),
-			IAMAuthEnabled:     r.GetBoolProperty("EnableIAMDatabaseAuthentication"),
-			DeletionProtection: r.GetBoolProperty("DeletionProtection", false),
+			PublicAccess:                     r.GetBoolProperty("PubliclyAccessible", true),
+			Engine:                           r.GetStringProperty("Engine"),
+			IAMAuthEnabled:                   r.GetBoolProperty("EnableIAMDatabaseAuthentication"),
+			DeletionProtection:               r.GetBoolProperty("DeletionProtection", false),
+			DBInstanceArn:                    r.GetStringProperty("DBInstanceArn"),
+			StorageEncrypted:                 r.GetBoolProperty("StorageEncrypted", false),
+			DBInstanceIdentifier:             r.GetStringProperty("DBInstanceIdentifier"),
+			DBParameterGroups:                getDBParameterGroups(ctx, r),
+			TagList:                          getTagList(r),
+			EnabledCloudwatchLogsExports:     getEnabledCloudwatchLogsExports(r),
+			EngineVersion:                    r.GetStringProperty("EngineVersion"),
+			AutoMinorVersionUpgrade:          r.GetBoolProperty("AutoMinorVersionUpgrade"),
+			MultiAZ:                          r.GetBoolProperty("MultiAZ"),
+			PubliclyAccessible:               r.GetBoolProperty("PubliclyAccessible"),
+			LatestRestorableTime:             types.TimeUnresolvable(r.Metadata()),
+			ReadReplicaDBInstanceIdentifiers: getReadReplicaDBInstanceIdentifiers(r),
 		}
 
 		if clusterID := r.GetProperty("DBClusterIdentifier"); clusterID.IsString() {
@@ -57,4 +70,59 @@ func getClustersAndInstances(ctx parser.FileContext) (clusters []rds.Cluster, or
 	}
 
 	return clusters, orphans
+}
+
+func getDBParameterGroups(ctx parser.FileContext, r *parser.Resource) (dbParameterGroup []rds.DBParameterGroupsList) {
+
+	for _, r := range ctx.GetResourcesByType("DBParameterGroups") {
+		dbpmgl := rds.DBParameterGroupsList{
+			Metadata:             r.Metadata(),
+			DBParameterGroupName: r.GetStringProperty("DBParameterGroupName"),
+			KMSKeyID:             types.StringUnresolvable(r.Metadata()),
+		}
+		dbParameterGroup = append(dbParameterGroup, dbpmgl)
+	}
+
+	return dbParameterGroup
+}
+
+func getEnabledCloudwatchLogsExports(r *parser.Resource) (enabledcloudwatchlogexportslist []types.StringValue) {
+	enabledCloudwatchLogExportList := r.GetProperty("EnableCloudwatchLogsExports")
+
+	if enabledCloudwatchLogExportList.IsNil() || enabledCloudwatchLogExportList.IsNotList() {
+		return enabledcloudwatchlogexportslist
+	}
+
+	for _, ecle := range enabledCloudwatchLogExportList.AsList() {
+		enabledcloudwatchlogexportslist = append(enabledcloudwatchlogexportslist, ecle.AsStringValue())
+	}
+	return enabledcloudwatchlogexportslist
+}
+
+func getTagList(r *parser.Resource) (taglist []rds.TagList) {
+	tagLists := r.GetProperty("tags")
+
+	if tagLists.IsNil() || tagLists.IsNotList() {
+		return taglist
+	}
+
+	for _, tl := range tagLists.AsList() {
+		taglist = append(taglist, rds.TagList{
+			Metadata: tl.Metadata(),
+		})
+	}
+	return taglist
+}
+
+func getReadReplicaDBInstanceIdentifiers(r *parser.Resource) (readreplicadbidentifier []types.StringValue) {
+	readReplicaDBIdentifier := r.GetProperty("EnableCloudwatchLogsExports")
+
+	if readReplicaDBIdentifier.IsNil() || readReplicaDBIdentifier.IsNotList() {
+		return readreplicadbidentifier
+	}
+
+	for _, rr := range readReplicaDBIdentifier.AsList() {
+		readreplicadbidentifier = append(readreplicadbidentifier, rr.AsStringValue())
+	}
+	return readreplicadbidentifier
 }

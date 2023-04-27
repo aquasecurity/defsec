@@ -9,8 +9,10 @@ import (
 func Adapt(cfFile parser.FileContext) rds.RDS {
 	clusters, orphans := getClustersAndInstances(cfFile)
 	return rds.RDS{
-		Instances: orphans,
-		Clusters:  clusters,
-		Classic:   getClassic(cfFile),
+		Instances:       orphans,
+		Clusters:        clusters,
+		Classic:         getClassic(cfFile),
+		ParameterGroups: getParameterGroups(cfFile),
+		Snapshots:       nil,
 	}
 }

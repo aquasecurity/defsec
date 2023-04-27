@@ -24,8 +24,9 @@ func getClusters(ctx parser.FileContext) (clusters map[string]rds.Cluster) {
 				EncryptStorage: defsecTypes.BoolDefault(false, clusterResource.Metadata()),
 				KMSKeyID:       defsecTypes.StringDefault("", clusterResource.Metadata()),
 			},
-			PublicAccess: defsecTypes.BoolDefault(false, clusterResource.Metadata()),
-			Engine:       defsecTypes.StringDefault(rds.EngineAurora, clusterResource.Metadata()),
+			PublicAccess:         defsecTypes.BoolDefault(false, clusterResource.Metadata()),
+			Engine:               defsecTypes.StringDefault(rds.EngineAurora, clusterResource.Metadata()),
+			LatestRestorableTime: defsecTypes.TimeUnresolvable(clusterResource.Metadata()),
 		}
 
 		if engineProp := clusterResource.GetProperty("Engine"); engineProp.IsString() {
