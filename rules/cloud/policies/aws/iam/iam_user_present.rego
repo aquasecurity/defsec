@@ -3,7 +3,7 @@
 # description: "Ensure that at least one IAM user exists so that access to your AWS services and resources is made only through IAM users instead of the root account."
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html
 # custom:

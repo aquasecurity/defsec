@@ -3,7 +3,7 @@
 # description: "Ensures that an IAM role, group or user exists with specific permissions to access support center."
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - https://docs.aws.amazon.com/awssupport/latest/user/accessing-support.html
 # custom:
@@ -16,6 +16,9 @@
 #   input:
 #     selector:
 #     - type: cloud
+#       subtypes:
+#         - service: iam
+#           provider: aws
 package builtin.aws.iam.aws0330
 
 deny[res] {

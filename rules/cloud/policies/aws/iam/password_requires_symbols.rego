@@ -3,7 +3,7 @@
 # description: "Ensures password policy requires the use of symbols"
 # scope: package
 # schemas:
-# - input: schema.input
+# - input: schema["cloud"]
 # related_resources:
 # - http://docs.aws.amazon.com/IAM/latest/UserGuide/Using_ManagingPasswordPolicies.html
 # custom:
