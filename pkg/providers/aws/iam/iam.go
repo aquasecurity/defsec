@@ -13,7 +13,6 @@ type IAM struct {
 	Roles              []Role
 	ServerCertificates []ServerCertificate
 	VirtualMfaDevices  []VirtualMfaDevice
-	CredentialReports  []CredentialReport
 }
 
 type ServerCertificate struct {
@@ -132,30 +131,4 @@ func (d Document) MetadataFromIamGo(r ...iamgo.Range) defsecTypes.Metadata {
 
 type Tag struct {
 	Metadata defsecTypes.Metadata
-}
-
-type CredentialReport struct {
-	Metadata                       defsecTypes.Metadata
-	User                           defsecTypes.StringValue
-	Arn                            defsecTypes.StringValue
-	User_creation_time             defsecTypes.StringValue
-	Password_enabled               defsecTypes.StringValue
-	Password_last_used             defsecTypes.StringValue
-	Password_last_changed          defsecTypes.StringValue
-	Password_next_rotation         defsecTypes.StringValue
-	Mfa_active                     defsecTypes.StringValue
-	Access_key_1_active            defsecTypes.StringValue
-	Access_key_1_last_rotated      defsecTypes.StringValue
-	Access_key_1_last_used_date    defsecTypes.StringValue
-	Access_key_1_last_used_region  defsecTypes.StringValue
-	Access_key_1_last_used_service defsecTypes.StringValue
-	Access_key_2_active            defsecTypes.StringValue
-	Access_key_2_last_rotated      defsecTypes.StringValue
-	Access_key_2_last_used_date    defsecTypes.StringValue
-	Access_key_2_last_used_region  defsecTypes.StringValue
-	Access_key_2_last_used_service defsecTypes.StringValue
-	Cert_1_active                  defsecTypes.StringValue
-	Cert_1_last_rotated            defsecTypes.StringValue
-	Cert_2_active                  defsecTypes.StringValue
-	Cert_2_last_rotated            defsecTypes.StringValue
 }
