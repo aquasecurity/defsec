@@ -92,8 +92,11 @@ func (a *adapter) adaptRole(apiRole iamtypes.Role) (*iam.Role, error) {
 	}
 
 	var lastuseddate types.TimeValue
-	if output.Role.RoleLastUsed != nil {
-		lastuseddate = types.Time(*output.Role.RoleLastUsed.LastUsedDate, metadata)
+
+	if output.Role.RoleLastUsed == nil || output.Role.RoleLastUsed.LastUsedDate == nil {
+		lastuseddate = types.TimeUnresolvable(metadata)
+	} else {
+		lastuseddate = types.TimeExplicit(*output.Role.RoleLastUsed.LastUsedDate, metadata)
 	}
 
 	return &iam.Role{

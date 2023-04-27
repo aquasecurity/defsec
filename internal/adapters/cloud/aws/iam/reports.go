@@ -70,7 +70,7 @@ func (a *adapter) adaptCredentialReport(state *state.State) error {
 
 func (a *adapter) adaptReport(reportdata []string) (*iam.CredentialReport, error) {
 
-	metadata := a.CreateMetadataFromARN(reportdata[1])
+	metadata := a.CreateMetadata(reportdata[1])
 	report := iam.CredentialReport{
 		Metadata:                       metadata,
 		User:                           defsecTypes.String(reportdata[0], metadata),
