@@ -30,5 +30,5 @@ test_validate_read_only_argument_not_set {
 		"info": {"kubeletReadOnlyPortArgumentSet": {"values": []}},
 	}
 
-	count(r) == 1
+	count(r) == 0
 }

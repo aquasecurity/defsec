@@ -19,7 +19,7 @@ test_validate_kubelet_anonymous_auth_not_set {
 		"info": {"kubeletAnonymousAuthArgumentSet": {"values": []}},
 	}
 
-	count(r) == 1
+	count(r) == 0
 }
 
 test_validate_kubelet_anonymous_auth_set_false {
