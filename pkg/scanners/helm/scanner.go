@@ -30,18 +30,17 @@ var _ scanners.FSScanner = (*Scanner)(nil)
 var _ options.ConfigurableScanner = (*Scanner)(nil)
 
 type Scanner struct {
-	policyDirs            []string
-	dataDirs              []string
-	debug                 debug.Logger
-	options               []options.ScannerOption
-	parserOptions         []options.ParserOption
-	policyReaders         []io.Reader
-	loadEmbeddedLibraries bool
-	loadEmbeddedPolicies  bool
-	policyFS              fs.FS
-	skipRequired          bool
-	frameworks            []framework.Framework
-	spec                  string
+	policyDirs    []string
+	dataDirs      []string
+	debug         debug.Logger
+	options       []options.ScannerOption
+	parserOptions []options.ParserOption
+	policyReaders []io.Reader
+	loadEmbedded  bool
+	policyFS      fs.FS
+	skipRequired  bool
+	frameworks    []framework.Framework
+	spec          string
 }
 
 func (s *Scanner) SetSpec(spec string) {
@@ -72,11 +71,7 @@ func (s *Scanner) AddParserOptions(options ...options.ParserOption) {
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
-	s.loadEmbeddedPolicies = b
-}
-
-func (s *Scanner) SetUseEmbeddedLibraries(b bool) {
-	s.loadEmbeddedLibraries = b
+	s.loadEmbedded = b
 }
 
 func (s *Scanner) Name() string {
@@ -181,7 +176,7 @@ func (s *Scanner) getScanResults(path string, ctx context.Context, target fs.FS)
 	if s.policyFS != nil {
 		policyFS = s.policyFS
 	}
-	if err := regoScanner.LoadPolicies(s.loadEmbeddedLibraries, s.loadEmbeddedPolicies, policyFS, s.policyDirs, s.policyReaders); err != nil {
+	if err := regoScanner.LoadPolicies(s.loadEmbedded, policyFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, fmt.Errorf("policies load: %w", err)
 	}
 	for _, file := range chartFiles {

@@ -35,7 +35,7 @@ deny {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -70,7 +70,7 @@ deny {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"/policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"/policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -105,7 +105,7 @@ warn {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -137,7 +137,7 @@ deny {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -180,7 +180,7 @@ exception[ns] {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -228,7 +228,7 @@ exception[ns] {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -265,7 +265,7 @@ exception[rules] {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -301,7 +301,7 @@ exception[rules] {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -335,7 +335,7 @@ deny_evil {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -366,7 +366,7 @@ deny[msg] {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -404,7 +404,7 @@ deny[res] {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -446,7 +446,7 @@ deny[res] {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -500,7 +500,7 @@ deny[res] {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -549,7 +549,7 @@ deny {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -583,7 +583,7 @@ deny {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -614,7 +614,7 @@ deny {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -649,7 +649,7 @@ deny {
 	scanner := NewScanner(types.SourceJSON, options.ScannerWithTrace(traceBuffer))
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -683,7 +683,7 @@ deny {
 	scanner := NewScanner(types.SourceJSON, options.ScannerWithPerResultTracing(true))
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -721,7 +721,7 @@ deny {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -754,7 +754,7 @@ deny {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -801,7 +801,7 @@ deny {
 	scanner := NewScanner(types.SourceJSON)
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{
@@ -839,7 +839,7 @@ deny {
 	scanner := NewScanner(types.SourceDockerfile)
 	assert.ErrorContains(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 		"undefined ref: input.evil",
 	)
 }
@@ -861,7 +861,7 @@ deny {
 	scanner := NewScanner(types.SourceDockerfile)
 	assert.NoError(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 	)
 }
 
@@ -880,7 +880,7 @@ deny {
 	scanner := NewScanner(types.SourceJSON)
 	assert.ErrorContains(
 		t,
-		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
 		"undefined ref: input.evil",
 	)
 }
