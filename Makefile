@@ -76,3 +76,7 @@ outdated-api-updated:
 .PHONY: bundle
 bundle:
 	./scripts/bundle.sh
+
+.PHONY: build
+build:
+	go build -o bin/defsec ./cmd/defsec
