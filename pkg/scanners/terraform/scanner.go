@@ -2,6 +2,7 @@ package terraform
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"io/fs"
 	"path/filepath"
@@ -46,10 +47,9 @@ type Scanner struct {
 	debug                   debug.Logger
 	enableEmbeddedLibraries bool
 	sync.Mutex
-	frameworks            []framework.Framework
-	spec                  string
-	loadEmbeddedLibraries bool
-	loadEmbeddedPolicies  bool
+	loadEmbedded bool
+	frameworks   []framework.Framework
+	spec         string
 }
 
 func (s *Scanner) SetSpec(spec string) {
@@ -65,11 +65,7 @@ func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
-	s.loadEmbeddedPolicies = b
-}
-
-func (s *Scanner) SetUseEmbeddedLibraries(b bool) {
-	s.loadEmbeddedLibraries = b
+	s.loadEmbedded = b
 }
 
 func (s *Scanner) SetEmbeddedLibrariesEnabled(enabled bool) {
@@ -159,8 +155,12 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	}
 	regoScanner := rego.NewScanner(types.SourceCloud, s.options...)
 	regoScanner.SetParentDebugLogger(s.debug)
-
-	if err := regoScanner.LoadPolicies(s.loadEmbeddedLibraries, s.loadEmbeddedPolicies, srcFS, s.policyDirs, s.policyReaders); err != nil {
+	if s.enableEmbeddedLibraries {
+		if err := regoScanner.LoadEmbeddedLibraries(); err != nil {
+			return nil, fmt.Errorf("failed to load embedded libraries: %w", err)
+		}
+	}
+	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner

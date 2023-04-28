@@ -79,7 +79,7 @@ func Test_Docker_RegoPoliciesEmbedded(t *testing.T) {
 	entries, err := os.ReadDir("./testdata/dockerfile")
 	require.NoError(t, err)
 
-	scanner := dockerfile.NewScanner(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true))
+	scanner := dockerfile.NewScanner(options.ScannerWithEmbeddedPolicies(true))
 	srcFS := os.DirFS("../")
 
 	results, err := scanner.ScanFS(context.TODO(), srcFS, "test/testdata/dockerfile")

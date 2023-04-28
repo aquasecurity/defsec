@@ -45,10 +45,6 @@ type Scanner struct {
 	sourceType     types.Source
 }
 
-func (s *Scanner) SetUseEmbeddedLibraries(b bool) {
-	// handled externally
-}
-
 func (s *Scanner) SetSpec(spec string) {
 	s.spec = spec
 }
@@ -62,7 +58,6 @@ func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
 	// handled externally
 }
-
 func (s *Scanner) trace(heading string, input interface{}) {
 	if s.traceWriter == nil {
 		return

@@ -26,7 +26,6 @@ func Test_Kubernetes_RegoPoliciesFromDisk(t *testing.T) {
 	scanner := kubernetes.NewScanner(
 		options.ScannerWithPerResultTracing(true),
 		options.ScannerWithEmbeddedPolicies(true),
-		options.ScannerWithEmbeddedLibraries(true),
 	)
 
 	srcFS := os.DirFS("../")
@@ -84,7 +83,7 @@ func Test_Kubernetes_RegoPoliciesEmbedded(t *testing.T) {
 	entries, err := os.ReadDir("./testdata/kubernetes")
 	require.NoError(t, err)
 
-	scanner := kubernetes.NewScanner(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true), options.ScannerWithEmbeddedLibraries(true))
+	scanner := kubernetes.NewScanner(options.ScannerWithEmbeddedPolicies(true))
 
 	srcFS := os.DirFS("../")
 

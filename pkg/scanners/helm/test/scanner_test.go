@@ -35,7 +35,7 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 	for _, test := range tests {
 		t.Logf("Running test: %s", test.testName)
 
-		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true))
+		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true))
 
 		testTemp := t.TempDir()
 		testFileName := filepath.Join(testTemp, test.archiveName)
@@ -91,7 +91,7 @@ func Test_helm_scanner_with_missing_name_can_recover(t *testing.T) {
 	for _, test := range tests {
 		t.Logf("Running test: %s", test.testName)
 
-		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true))
+		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true))
 
 		testTemp := t.TempDir()
 		testFileName := filepath.Join(testTemp, test.archiveName)
@@ -119,7 +119,7 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 
 		t.Logf("Running test: %s", test.testName)
 
-		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true))
+		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true))
 
 		testFs := os.DirFS(filepath.Join("testdata", test.chartName))
 		results, err := helmScanner.ScanFS(context.TODO(), testFs, ".")
@@ -194,7 +194,7 @@ deny[res] {
 		t.Run(test.testName, func(t *testing.T) {
 			t.Logf("Running test: %s", test.testName)
 
-			helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true),
+			helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true),
 				options.ScannerWithPolicyDirs("rules"),
 				options.ScannerWithPolicyNamespaces("user"))
 
@@ -259,7 +259,7 @@ func copyArchive(src, dst string) error {
 }
 
 func Test_helm_chart_with_templated_name(t *testing.T) {
-	helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true))
+	helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true))
 	testFs := os.DirFS(filepath.Join("testdata", "templated-name"))
 	_, err := helmScanner.ScanFS(context.TODO(), testFs, ".")
 	require.NoError(t, err)
