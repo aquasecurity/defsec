@@ -52,6 +52,14 @@ func adaptDatabase(resource *terraform.Block) athena.Database {
 }
 
 func adaptWorkgroup(resource *terraform.Block) athena.Workgroup {
+
+	var outputLocation defsecTypes.StringValue
+
+	outputLocationBlock := resource.GetBlock("result_configuration")
+	if outputLocationBlock.IsNotNil() {
+		outputLocation = outputLocationBlock.GetAttribute("output_location").AsStringValueOrDefault("", outputLocationBlock)
+	}
+
 	workgroup := athena.Workgroup{
 		Metadata: resource.GetMetadata(),
 		Name:     resource.GetAttribute("name").AsStringValueOrDefault("", resource),
@@ -60,6 +68,7 @@ func adaptWorkgroup(resource *terraform.Block) athena.Workgroup {
 			Type:     defsecTypes.StringDefault("", resource.GetMetadata()),
 		},
 		EnforceConfiguration: defsecTypes.BoolDefault(false, resource.GetMetadata()),
+		OutputLocation:       outputLocation,
 	}
 
 	if configBlock := resource.GetBlock("configuration"); configBlock.IsNotNil() {

@@ -76,7 +76,15 @@ require (
 )
 
 require (
+	github.com/aws/aws-sdk-go-v2/service/appflow v1.24.3
+	github.com/aws/aws-sdk-go-v2/service/apprunner v1.17.2
+	github.com/aws/aws-sdk-go-v2/service/auditmanager v1.24.0
 	github.com/aws/aws-sdk-go-v2/service/autoscaling v1.28.4
+	github.com/aws/aws-sdk-go-v2/service/finspace v1.9.4
+	github.com/aws/aws-sdk-go-v2/service/firehose v1.16.5
+	github.com/aws/aws-sdk-go-v2/service/forecast v1.25.4
+	github.com/aws/aws-sdk-go-v2/service/frauddetector v1.23.2
+	github.com/aws/aws-sdk-go-v2/service/fsx v1.28.5
 	github.com/aws/aws-sdk-go-v2/service/kendra v1.38.5
 	github.com/aws/aws-sdk-go-v2/service/kinesisvideo v1.15.5
 	github.com/aws/aws-sdk-go-v2/service/proton v1.20.3

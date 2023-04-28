@@ -101,6 +101,11 @@ func (a *adapter) adaptWorkgroup(workgroup types.WorkGroupSummary) (*athena.Work
 		name = defsecTypes.String(*workgroup.Name, metadata)
 	}
 
+	var location string
+	if output.WorkGroup.Configuration.ResultConfiguration.OutputLocation != nil {
+		location = *output.WorkGroup.Configuration.ResultConfiguration.OutputLocation
+	}
+
 	return &athena.Workgroup{
 		Metadata: metadata,
 		Name:     name,
@@ -109,6 +114,7 @@ func (a *adapter) adaptWorkgroup(workgroup types.WorkGroupSummary) (*athena.Work
 			Type:     defsecTypes.String(encType, metadata),
 		},
 		EnforceConfiguration: defsecTypes.Bool(enforce, metadata),
+		OutputLocation:       defsecTypes.String(location, metadata),
 	}, nil
 }
 

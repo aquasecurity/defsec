@@ -20,6 +20,7 @@ type Workgroup struct {
 	Name                 defsecTypes.StringValue
 	Encryption           EncryptionConfiguration
 	EnforceConfiguration defsecTypes.BoolValue
+	OutputLocation       defsecTypes.StringValue
 }
 
 const (
