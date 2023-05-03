@@ -25,13 +25,8 @@ func adaptBrokers(modules terraform.Modules) []mq.Broker {
 func adaptBroker(resource *terraform.Block) mq.Broker {
 
 	broker := mq.Broker{
-		Metadata:                resource.GetMetadata(),
-		PublicAccess:            types.BoolDefault(false, resource.GetMetadata()),
-		EngineType:              resource.GetAttribute("engine_type").AsStringValueOrDefault("", resource),
-		HostInstanceType:        resource.GetAttribute("host_instance_type").AsStringValueOrDefault("", resource),
-		AutoMinorVersionUpgrade: resource.GetAttribute("auto_minor_version_upgrade").AsBoolValueOrDefault(true, resource),
-		DeploymentMode:          resource.GetAttribute("deployment_mode").AsStringValueOrDefault("SINGLE_INSTANCE", resource),
-		KmsKeyId:                types.StringDefault("", resource.GetMetadata()),
+		Metadata:     resource.GetMetadata(),
+		PublicAccess: types.BoolDefault(false, resource.GetMetadata()),
 		Logging: mq.Logging{
 			Metadata: resource.GetMetadata(),
 			General:  types.BoolDefault(false, resource.GetMetadata()),
@@ -47,9 +42,6 @@ func adaptBroker(resource *terraform.Block) mq.Broker {
 		broker.Logging.Audit = auditAttr.AsBoolValueOrDefault(false, logsBlock)
 		generalAttr := logsBlock.GetAttribute("general")
 		broker.Logging.General = generalAttr.AsBoolValueOrDefault(false, logsBlock)
-	}
-	if encryptBlock := resource.GetBlock("encryption_options"); encryptBlock.IsNotNil() {
-		broker.KmsKeyId = encryptBlock.GetAttribute("kms_key_id").AsStringValueOrDefault("", resource)
 	}
 
 	return broker

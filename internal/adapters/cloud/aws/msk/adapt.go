@@ -69,29 +69,16 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterInfo) (*msk.Cluster, erro
 	metadata := a.CreateMetadataFromARN(*apiCluster.ClusterArn)
 
 	var encInTransitClientBroker, encAtRestKMSKeyId string
-	var encAtRestEnabled, incluster bool
+	var encAtRestEnabled bool
 	if apiCluster.EncryptionInfo != nil {
 		if apiCluster.EncryptionInfo.EncryptionInTransit != nil {
 			encInTransitClientBroker = string(apiCluster.EncryptionInfo.EncryptionInTransit.ClientBroker)
-			incluster = apiCluster.EncryptionInfo.EncryptionInTransit.InCluster
 		}
 
 		if apiCluster.EncryptionInfo.EncryptionAtRest != nil {
 			encAtRestKMSKeyId = *apiCluster.EncryptionInfo.EncryptionAtRest.DataVolumeKMSKeyId
 			encAtRestEnabled = true
 		}
-	}
-
-	var publicaccesstype string
-	if apiCluster.BrokerNodeGroupInfo != nil && apiCluster.BrokerNodeGroupInfo.ConnectivityInfo != nil {
-		if apiCluster.BrokerNodeGroupInfo.ConnectivityInfo.PublicAccess != nil {
-			publicaccesstype = *apiCluster.BrokerNodeGroupInfo.ConnectivityInfo.PublicAccess.Type
-		}
-	}
-
-	var unauthenticated bool
-	if apiCluster.ClientAuthentication != nil && apiCluster.ClientAuthentication.Unauthenticated != nil {
-		unauthenticated = apiCluster.ClientAuthentication.Unauthenticated.Enabled
 	}
 
 	var logS3, logCW, logFH bool
@@ -113,20 +100,11 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterInfo) (*msk.Cluster, erro
 		EncryptionInTransit: msk.EncryptionInTransit{
 			Metadata:     metadata,
 			ClientBroker: defsecTypes.String(encInTransitClientBroker, metadata),
-			InCluster:    defsecTypes.Bool(incluster, metadata),
 		},
 		EncryptionAtRest: msk.EncryptionAtRest{
 			Metadata:  metadata,
 			KMSKeyARN: defsecTypes.String(encAtRestKMSKeyId, metadata),
 			Enabled:   defsecTypes.Bool(encAtRestEnabled, metadata),
-		},
-		BrokerNodeGroupInfo: msk.BrokerNodeGroupInfo{
-			Metadata:         metadata,
-			PublicAccessType: defsecTypes.String(publicaccesstype, metadata),
-		},
-		ClientAuthentication: msk.ClientAuthentication{
-			Metadata:        metadata,
-			Unauthenticated: defsecTypes.Bool(unauthenticated, metadata),
 		},
 		Logging: msk.Logging{
 			Metadata: metadata,
