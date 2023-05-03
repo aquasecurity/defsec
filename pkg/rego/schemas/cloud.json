@@ -794,36 +794,12 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.codebuild.ArtifactSettings"
         },
-        "encryptionkey": {
-          "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
-        },
         "secondaryartifactsettings": {
           "type": "array",
           "items": {
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.codebuild.ArtifactSettings"
           }
-        },
-        "secondarysources": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.codebuild.SecondarySources"
-          }
-        },
-        "sourcetype": {
-          "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
-        }
-      }
-    },
-    "github.com.aquasecurity.defsec.pkg.providers.aws.codebuild.SecondarySources": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },

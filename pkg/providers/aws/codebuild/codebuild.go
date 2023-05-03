@@ -10,9 +10,6 @@ type CodeBuild struct {
 
 type Project struct {
 	Metadata                  defsecTypes.Metadata
-	SourceType                defsecTypes.StringValue
-	EncryptionKey             defsecTypes.StringValue
-	SecondarySources          []SecondarySources
 	ArtifactSettings          ArtifactSettings
 	SecondaryArtifactSettings []ArtifactSettings
 }
@@ -20,9 +17,4 @@ type Project struct {
 type ArtifactSettings struct {
 	Metadata          defsecTypes.Metadata
 	EncryptionEnabled defsecTypes.BoolValue
-}
-
-type SecondarySources struct {
-	Metadata defsecTypes.Metadata
-	Type     defsecTypes.StringValue
 }
