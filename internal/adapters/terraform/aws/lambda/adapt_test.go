@@ -44,10 +44,7 @@ func Test_Adapt(t *testing.T) {
 			expected: lambda.Lambda{
 				Functions: []lambda.Function{
 					{
-						Metadata:     defsecTypes.NewTestMetadata(),
-						FunctionName: defsecTypes.String("lambda_function_name", defsecTypes.NewTestMetadata()),
-						FunctionArn:  defsecTypes.String("", defsecTypes.NewTestMetadata()),
-						Runtime:      defsecTypes.String("nodejs12.x", defsecTypes.NewTestMetadata()),
+						Metadata: defsecTypes.NewTestMetadata(),
 						Tracing: lambda.Tracing{
 							Metadata: defsecTypes.NewTestMetadata(),
 							Mode:     defsecTypes.String("Passthrough", defsecTypes.NewTestMetadata()),
@@ -58,10 +55,6 @@ func Test_Adapt(t *testing.T) {
 								Principal: defsecTypes.String("sns.amazonaws.com", defsecTypes.NewTestMetadata()),
 								SourceARN: defsecTypes.String("default", defsecTypes.NewTestMetadata()),
 							},
-						},
-						Envrionment: lambda.Environment{
-							Metadata:  defsecTypes.NewTestMetadata(),
-							Variables: defsecTypes.MapDefault(nil, defsecTypes.NewTestMetadata()),
 						},
 					},
 				},

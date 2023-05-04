@@ -51,13 +51,6 @@ func Test_adaptCluster(t *testing.T) {
 					}
 				  }
 				}
-				broker_node_group_info {
-					connectivity_info {
-						public-access{
-							type = "SERVICE_PROVIDED_EIPS"
-						}
-					}
-				}
 			  }
 `,
 			expected: msk.Cluster{
@@ -65,16 +58,11 @@ func Test_adaptCluster(t *testing.T) {
 				EncryptionInTransit: msk.EncryptionInTransit{
 					Metadata:     defsecTypes.NewTestMetadata(),
 					ClientBroker: defsecTypes.String("TLS", defsecTypes.NewTestMetadata()),
-					InCluster:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 				},
 				EncryptionAtRest: msk.EncryptionAtRest{
 					Metadata:  defsecTypes.NewTestMetadata(),
 					KMSKeyARN: defsecTypes.String("foo-bar-key", defsecTypes.NewTestMetadata()),
 					Enabled:   defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
-				},
-				BrokerNodeGroupInfo: msk.BrokerNodeGroupInfo{
-					Metadata:         defsecTypes.NewTestMetadata(),
-					PublicAccessType: defsecTypes.String("SERVICE_PROVIDED_EIPS", defsecTypes.NewTestMetadata()),
 				},
 				Logging: msk.Logging{
 					Metadata: defsecTypes.NewTestMetadata(),
@@ -107,11 +95,6 @@ func Test_adaptCluster(t *testing.T) {
 				EncryptionInTransit: msk.EncryptionInTransit{
 					Metadata:     defsecTypes.NewTestMetadata(),
 					ClientBroker: defsecTypes.String("TLS_PLAINTEXT", defsecTypes.NewTestMetadata()),
-					InCluster:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
-				},
-				BrokerNodeGroupInfo: msk.BrokerNodeGroupInfo{
-					Metadata:         defsecTypes.NewTestMetadata(),
-					PublicAccessType: defsecTypes.String("DISABLED", defsecTypes.NewTestMetadata()),
 				},
 				Logging: msk.Logging{
 					Metadata: defsecTypes.NewTestMetadata(),

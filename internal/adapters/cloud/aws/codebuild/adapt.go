@@ -95,32 +95,12 @@ func (a *adapter) adaptProject(name string) (*codebuild.Project, error) {
 		})
 	}
 
-	var encryptionkey, sourcetype string
-	if project.EncryptionKey != nil {
-		encryptionkey = *project.EncryptionKey
-	}
-
-	if project.Source != nil {
-		sourcetype = string(project.Source.Type)
-	}
-
-	var secondrysources []codebuild.SecondarySources
-	for _, s := range project.SecondarySources {
-		secondrysources = append(secondrysources, codebuild.SecondarySources{
-			Metadata: metadata,
-			Type:     defsecTypes.String(string(s.Type), metadata),
-		})
-	}
-
 	return &codebuild.Project{
-		Metadata:      metadata,
-		SourceType:    defsecTypes.String(sourcetype, metadata),
-		EncryptionKey: defsecTypes.String(encryptionkey, metadata),
+		Metadata: metadata,
 		ArtifactSettings: codebuild.ArtifactSettings{
 			Metadata:          metadata,
 			EncryptionEnabled: defsecTypes.Bool(encryptionEnabled, metadata),
 		},
 		SecondaryArtifactSettings: secondaryArtifactSettings,
-		SecondarySources:          secondrysources,
 	}, nil
 }

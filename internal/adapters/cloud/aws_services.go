@@ -4,7 +4,6 @@ import (
 	_ "github.com/aquasecurity/defsec/internal/adapters/cloud/aws/accessanalyzer"
 	_ "github.com/aquasecurity/defsec/internal/adapters/cloud/aws/api-gateway"
 	_ "github.com/aquasecurity/defsec/internal/adapters/cloud/aws/athena"
-	_ "github.com/aquasecurity/defsec/internal/adapters/cloud/aws/autoscaling"
 	_ "github.com/aquasecurity/defsec/internal/adapters/cloud/aws/cloudfront"
 	_ "github.com/aquasecurity/defsec/internal/adapters/cloud/aws/cloudtrail"
 	_ "github.com/aquasecurity/defsec/internal/adapters/cloud/aws/cloudwatch"

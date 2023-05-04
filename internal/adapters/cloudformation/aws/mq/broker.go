@@ -10,13 +10,8 @@ func getBrokers(ctx parser.FileContext) (brokers []mq.Broker) {
 	for _, r := range ctx.GetResourcesByType("AWS::AmazonMQ::Broker") {
 
 		broker := mq.Broker{
-			Metadata:                r.Metadata(),
-			PublicAccess:            r.GetBoolProperty("PubliclyAccessible"),
-			DeploymentMode:          r.GetStringProperty("DeploymentMode"),
-			AutoMinorVersionUpgrade: r.GetBoolProperty("AutoMinorVersionUpgrade"),
-			EngineType:              r.GetStringProperty("EngineType"),
-			HostInstanceType:        r.GetStringProperty("HostInstanceType"),
-			KmsKeyId:                r.GetStringProperty("EncryptionOptions.KmsKeyId"),
+			Metadata:     r.Metadata(),
+			PublicAccess: r.GetBoolProperty("PubliclyAccessible"),
 			Logging: mq.Logging{
 				Metadata: r.Metadata(),
 				General:  types.BoolDefault(false, r.Metadata()),

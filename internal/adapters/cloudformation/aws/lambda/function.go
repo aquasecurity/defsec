@@ -12,26 +12,13 @@ func getFunctions(ctx parser.FileContext) (functions []lambda.Function) {
 
 	for _, r := range functionResources {
 
-		var variables map[string]string
-
 		function := lambda.Function{
 			Metadata: r.Metadata(),
 			Tracing: lambda.Tracing{
 				Metadata: r.Metadata(),
 				Mode:     types.StringDefault("PassThrough", r.Metadata()),
 			},
-			Permissions:  getPermissions(r, ctx),
-			FunctionName: r.GetStringProperty("FunctionName"),
-			FunctionArn:  r.GetStringProperty("Arn"),
-			VpcConfig: lambda.VpcConfig{
-				Metadata: r.Metadata(),
-				VpcId:    types.String("", r.Metadata()),
-			},
-			Envrionment: lambda.Environment{
-				Metadata:  r.Metadata(),
-				Variables: types.Map(variables, r.Metadata()),
-			},
-			Runtime: r.GetStringProperty("Runtime"),
+			Permissions: getPermissions(r, ctx),
 		}
 
 		if prop := r.GetProperty("TracingConfig"); prop.IsNotNil() {
