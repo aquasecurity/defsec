@@ -21,18 +21,9 @@
 #           provider: aws
 package builtin.aws.iam.aws0342
 
-allows_permission(statements, permission, effect) {
-	statement := statements[_]
-	statement.Effect == effect
-	action = statement.Action[_]
-	action == permission
-}
-
 deny[res] {
 	policy := input.aws.iam.policies[_]
-	value = json.unmarshal(policy.document.value)
-	statements = value.Statement
-	not allows_permission(statements, "iam:PassRole", "Deny")
-	allows_permission(statements, "iam:PassRole", "Allow")
-	res = result.new("IAM policy allows 'iam:PassRole' action", policy.document)
+	action := policy.document.value
+	contains(action, "iam:PassRole")
+	res = result.new("Warning: 'iam:PassRole' action is present in policy", policy.document)
 }
