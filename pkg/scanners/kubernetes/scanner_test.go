@@ -168,11 +168,11 @@ spec:
  	not has_field(c.securityContext, "readOnlyRootFilesystem")
  }
 
- priviledge_escalation_allowed(c) {
+ privilege_escalation_allowed(c) {
  	not has_field(c, "securityContext")
  }
 
- priviledge_escalation_allowed(c) {
+ privilege_escalation_allowed(c) {
  	has_field(c, "securityContext")
  	has_field(c.securityContext, "allowPrivilegeEscalation")
  }
