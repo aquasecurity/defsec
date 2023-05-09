@@ -172,7 +172,7 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 }
 
 func (s *Scanner) prunePoliciesWithError(compiler *ast.Compiler) error {
-	if len(compiler.Errors) > ast.CompileErrorLimitDefault {
+	if len(compiler.Errors) > s.regoErrorLimit {
 		s.debug.Log("Error(s) occurred while loading policies")
 		return compiler.Errors
 	}

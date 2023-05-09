@@ -99,6 +99,7 @@ func (s *Scanner) SetTraceWriter(io.Writer)        {}
 func (s *Scanner) SetPerResultTracingEnabled(bool) {}
 func (s *Scanner) SetDataDirs(...string)           {}
 func (s *Scanner) SetPolicyNamespaces(...string)   {}
+func (s *Scanner) SetRegoErrorLimit(_ int)         {}
 
 func (s *Scanner) initRegoScanner(srcFS fs.FS) error {
 	s.Lock()

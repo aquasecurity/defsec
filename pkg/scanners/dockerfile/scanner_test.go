@@ -572,6 +572,7 @@ COPY --from=dep /binary /`
 				options.ScannerWithPolicyDirs("rules"),
 				options.ScannerWithTrace(&traceBuf),
 				options.ScannerWithDebug(&debugBuf),
+				options.ScannerWithRegoErrorLimits(0),
 			)
 
 			results, err := scanner.ScanFS(context.TODO(), fs, "code")
