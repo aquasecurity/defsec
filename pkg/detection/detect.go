@@ -3,6 +3,7 @@ package detection
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"path/filepath"
 	"strings"
@@ -74,6 +75,7 @@ func init() {
 
 	matchers[FileTypeTerraform] = func(name string, _ io.ReadSeeker) bool {
 		ext := filepath.Ext(filepath.Base(name))
+		fmt.Println(">>> ext: ", ext)
 		return strings.EqualFold(ext, ".tf") || strings.EqualFold(ext, ".tf.json") || strings.EqualFold(ext, ".tfvars")
 	}
 
@@ -86,8 +88,9 @@ func init() {
 			contents := make(map[string]interface{})
 			err := json.NewDecoder(r).Decode(&contents)
 			if err == nil {
-				if _, ok := contents["terraform_version"]; ok {
-					_, stillOk := contents["format_version"]
+				if tfv, ok := contents["terraform_version"]; ok {
+					fvv, stillOk := contents["format_version"]
+					fmt.Println(">>> tf ver:", tfv, "fv ver: ", fvv)
 					return stillOk
 				}
 			}
