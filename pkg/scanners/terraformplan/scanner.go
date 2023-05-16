@@ -96,11 +96,11 @@ func (s *Scanner) Name() string {
 	return "Terraform Plan"
 }
 
-func (s *Scanner) ScanFS(ctx context.Context, fs1 fs.FS, dir string) (scan.Results, error) {
+func (s *Scanner) ScanFS(ctx context.Context, inputFS fs.FS, dir string) (scan.Results, error) {
 	var filesFound []string
 
 	for _, ext := range tfPlanExts {
-		files, err := doublestar.Glob(fs1, ext, doublestar.WithFilesOnly())
+		files, err := doublestar.Glob(inputFS, ext, doublestar.WithFilesOnly())
 		if err != nil {
 			return nil, fmt.Errorf("unable to scan for terraform plan files: %w", err)
 		}
@@ -109,7 +109,7 @@ func (s *Scanner) ScanFS(ctx context.Context, fs1 fs.FS, dir string) (scan.Resul
 
 	var results scan.Results
 	for _, f := range filesFound {
-		res, err := s.ScanFile(f, fs1)
+		res, err := s.ScanFile(f, inputFS)
 		if err != nil {
 			return nil, err
 		}
