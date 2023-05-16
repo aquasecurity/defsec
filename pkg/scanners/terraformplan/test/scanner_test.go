@@ -1,7 +1,9 @@
 package terraformplan
 
 import (
+	"os"
 	"testing"
+	"testing/fstest"
 
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraformplan"
@@ -11,7 +13,12 @@ import (
 
 func Test_Scanning_Plan(t *testing.T) {
 	scanner := terraformplan.New()
-	results, err := scanner.ScanFile("testdata/plan.json")
+	b, _ := os.ReadFile("testdata/plan.json")
+	testFS := fstest.MapFS{
+		"testdata/plan.json": {Data: b},
+	}
+
+	results, err := scanner.ScanFile("testdata/plan.json", testFS)
 	require.NoError(t, err)
 	require.NotNil(t, results)
 

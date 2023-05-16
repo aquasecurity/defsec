@@ -47,7 +47,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.20.6
 	github.com/aws/aws-sdk-go-v2/service/sts v1.18.5
 	github.com/aws/aws-sdk-go-v2/service/workspaces v1.23.0
-	github.com/bmatcuk/doublestar v1.3.4
+	github.com/bmatcuk/doublestar/v4 v4.6.0
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-getter v1.7.1
 	github.com/hashicorp/go-uuid v1.0.3
