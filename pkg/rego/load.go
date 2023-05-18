@@ -48,7 +48,8 @@ func (s *Scanner) loadPoliciesFromDirs(target fs.FS, paths []string) (map[string
 				ProcessAnnotation: true,
 			})
 			if err != nil {
-				return err
+				s.debug.Log("Failed to load module: %s, err: %s", filepath.ToSlash(path), err.Error())
+				return nil
 			}
 			modules[path] = module
 			return nil
