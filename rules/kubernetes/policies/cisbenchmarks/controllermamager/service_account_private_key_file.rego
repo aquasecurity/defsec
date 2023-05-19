@@ -21,7 +21,7 @@ import data.lib.kubernetes
 
 checkFlag[container] {
 	container := kubernetes.containers[_]
-	kubernetes.is_controllermananager(container)
+	kubernetes.is_controllermanager(container)
 	not kubernetes.command_has_flag(container.command, "--service-account-private-key-file")
 }
 

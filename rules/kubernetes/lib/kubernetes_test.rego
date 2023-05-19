@@ -371,7 +371,7 @@ test_controllermananager_has_valid_container {
 			},
 		]},
 	}
-	is_controllermananager(controllermananager_container)
+	is_controllermanager(controllermananager_container)
 	any([controllermananager_container.name == "valid-1", controllermananager_container.name == "valid-2"])
 }
 
@@ -401,7 +401,7 @@ test_controllermananager_has_not_valid_container {
 			},
 		]},
 	}
-	not is_controllermananager(controllermananager_container)
+	not is_controllermanager(controllermananager_container)
 }
 
 test_scheduler_has_valid_container {

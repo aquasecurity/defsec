@@ -178,7 +178,7 @@ command_has_flag(command, flag) {
 	regex.match(flag, command[_])
 }
 
-is_controllermananager(container) {
+is_controllermanager(container) {
 	regex.match("^(.*/)?kube-controller-manager$", container.command[0])
 }
 
