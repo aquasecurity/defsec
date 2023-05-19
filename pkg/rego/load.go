@@ -48,7 +48,8 @@ func (s *Scanner) loadPoliciesFromDirs(target fs.FS, paths []string) (map[string
 				ProcessAnnotation: true,
 			})
 			if err != nil {
-				return err
+				s.debug.Log("Failed to load module: %s, err: %s", filepath.ToSlash(path), err.Error())
+				return nil
 			}
 			modules[path] = module
 			return nil
@@ -171,6 +172,19 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 	return s.compilePolicies(srcFS, paths)
 }
 
+func (s *Scanner) prunePoliciesWithError(compiler *ast.Compiler) error {
+	if len(compiler.Errors) > s.regoErrorLimit {
+		s.debug.Log("Error(s) occurred while loading policies")
+		return compiler.Errors
+	}
+
+	for _, e := range compiler.Errors {
+		s.debug.Log("Error occurred while parsing: %s, %s", e.Location.File, e.Error())
+		delete(s.policies, e.Location.File)
+	}
+	return nil
+}
+
 func (s *Scanner) compilePolicies(srcFS fs.FS, paths []string) error {
 	compiler := ast.NewCompiler()
 	schemaSet, custom, err := BuildSchemaSetFromPolicies(s.policies, paths, srcFS)
@@ -185,7 +199,10 @@ func (s *Scanner) compilePolicies(srcFS fs.FS, paths []string) error {
 	compiler.WithCapabilities(ast.CapabilitiesForThisVersion())
 	compiler.Compile(s.policies)
 	if compiler.Failed() {
-		return compiler.Errors
+		if err := s.prunePoliciesWithError(compiler); err != nil {
+			return err
+		}
+		return s.compilePolicies(srcFS, paths)
 	}
 	retriever := NewMetadataRetriever(compiler)
 
@@ -198,7 +215,10 @@ func (s *Scanner) compilePolicies(srcFS fs.FS, paths []string) error {
 		compiler.WithSchemas(schemaSet)
 		compiler.Compile(s.policies)
 		if compiler.Failed() {
-			return compiler.Errors
+			if err := s.prunePoliciesWithError(compiler); err != nil {
+				return err
+			}
+			return s.compilePolicies(srcFS, paths)
 		}
 	}
 	s.compiler = compiler

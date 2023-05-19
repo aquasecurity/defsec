@@ -115,6 +115,7 @@ func (s *Scanner) SetPolicyFilesystem(policyFS fs.FS) {
 }
 
 func (s *Scanner) SetDataFilesystem(_ fs.FS) {}
+func (s *Scanner) SetRegoErrorLimit(_ int)   {}
 
 func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, path string) (scan.Results, error) {
 
