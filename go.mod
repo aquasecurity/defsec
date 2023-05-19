@@ -76,6 +76,14 @@ require (
 )
 
 require (
+	github.com/aws/aws-sdk-go-v2/service/codestar v1.13.3
+	github.com/aws/aws-sdk-go-v2/service/comprehend v1.21.3
+	github.com/aws/aws-sdk-go-v2/service/computeoptimizer v1.21.2
+	github.com/aws/aws-sdk-go-v2/service/connect v1.46.1
+	github.com/aws/aws-sdk-go-v2/service/customerprofiles v1.23.2
+	github.com/aws/aws-sdk-go-v2/service/devopsguru v1.22.3
+	github.com/aws/aws-sdk-go-v2/service/voiceid v1.12.3
+	github.com/aws/aws-sdk-go-v2/service/wisdom v1.12.3
 	github.com/aws/smithy-go v1.13.5
 	github.com/mitchellh/mapstructure v1.5.0
 	k8s.io/utils v0.0.0-20230115233650-391b47cb4029

@@ -8,7 +8,13 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/codebuild"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/codestar"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/comprehend"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/computeoptimizer"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/config"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/connect"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/customerprofiles"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/devopsguru"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/documentdb"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/dynamodb"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
@@ -34,42 +40,52 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sns"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ssm"
+	voiceid "github.com/aquasecurity/defsec/pkg/providers/aws/voiceId"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/wisdom"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/workspaces"
 )
 
 type AWS struct {
-	AccessAnalyzer accessanalyzer.AccessAnalyzer
-	APIGateway     apigateway.APIGateway
-	Athena         athena.Athena
-	Cloudfront     cloudfront.Cloudfront
-	CloudTrail     cloudtrail.CloudTrail
-	CloudWatch     cloudwatch.CloudWatch
-	CodeBuild      codebuild.CodeBuild
-	Config         config.Config
-	DocumentDB     documentdb.DocumentDB
-	DynamoDB       dynamodb.DynamoDB
-	EC2            ec2.EC2
-	ECR            ecr.ECR
-	ECS            ecs.ECS
-	EFS            efs.EFS
-	EKS            eks.EKS
-	ElastiCache    elasticache.ElastiCache
-	Elasticsearch  elasticsearch.Elasticsearch
-	ELB            elb.ELB
-	EMR            emr.EMR
-	IAM            iam.IAM
-	Kinesis        kinesis.Kinesis
-	KMS            kms.KMS
-	Lambda         lambda.Lambda
-	MQ             mq.MQ
-	MSK            msk.MSK
-	Neptune        neptune.Neptune
-	RDS            rds.RDS
-	Redshift       redshift.Redshift
-	SAM            sam.SAM
-	S3             s3.S3
-	SNS            sns.SNS
-	SQS            sqs.SQS
-	SSM            ssm.SSM
-	WorkSpaces     workspaces.WorkSpaces
+	AccessAnalyzer   accessanalyzer.AccessAnalyzer
+	APIGateway       apigateway.APIGateway
+	Athena           athena.Athena
+	Cloudfront       cloudfront.Cloudfront
+	CloudTrail       cloudtrail.CloudTrail
+	CloudWatch       cloudwatch.CloudWatch
+	CodeBuild        codebuild.CodeBuild
+	Comprehend       comprehend.Comprehend
+	ComputeOptimizer computeoptimizer.ComputeOptimizer
+	CodeStar         codestar.CodeStar
+	Config           config.Config
+	Connect          connect.Connect
+	CustomerProfiles customerprofiles.Customerprofiles
+	Devopsguru       devopsguru.Devopsguru
+	DocumentDB       documentdb.DocumentDB
+	DynamoDB         dynamodb.DynamoDB
+	EC2              ec2.EC2
+	ECR              ecr.ECR
+	ECS              ecs.ECS
+	EFS              efs.EFS
+	EKS              eks.EKS
+	ElastiCache      elasticache.ElastiCache
+	Elasticsearch    elasticsearch.Elasticsearch
+	ELB              elb.ELB
+	EMR              emr.EMR
+	IAM              iam.IAM
+	Kinesis          kinesis.Kinesis
+	KMS              kms.KMS
+	Lambda           lambda.Lambda
+	MQ               mq.MQ
+	MSK              msk.MSK
+	Neptune          neptune.Neptune
+	RDS              rds.RDS
+	Redshift         redshift.Redshift
+	SAM              sam.SAM
+	S3               s3.S3
+	SNS              sns.SNS
+	SQS              sqs.SQS
+	SSM              ssm.SSM
+	VoiceId          voiceid.VoiceId
+	Wisdom           wisdom.Wisdom
+	WorkSpaces       workspaces.WorkSpaces
 }
