@@ -100,6 +100,7 @@ func (s *Scanner) SetPerResultTracingEnabled(b bool) {}
 func (s *Scanner) SetDataDirs(s2 ...string)          {}
 func (s *Scanner) SetPolicyNamespaces(s2 ...string)  {}
 func (s *Scanner) SetSkipRequiredCheck(b bool)       {}
+func (s *Scanner) SetRegoErrorLimit(_ int)           {}
 
 func AllSupportedServices() []string {
 	return aws.AllServices()

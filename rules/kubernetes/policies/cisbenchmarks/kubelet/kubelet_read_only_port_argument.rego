@@ -28,13 +28,6 @@ validate_kubelet_read_only_set(sp) := {"kubeletReadOnlyPortArgumentSet": violati
 	count(violation) > 0
 }
 
-validate_kubelet_read_only_set(sp) := {"kubeletReadOnlyPortArgumentSet": read_only} {
-	sp.kind == "NodeInfo"
-	sp.type == types[_]
-	count(sp.info.kubeletReadOnlyPortArgumentSet.values) == 0
-	read_only = {}
-}
-
 deny[res] {
 	output := validate_kubelet_read_only_set(input)
 	msg := "Verify that the --read-only-port argument is set to 0"

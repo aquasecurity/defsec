@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"unicode/utf8"
 
-	"github.com/bmatcuk/doublestar"
+	"github.com/bmatcuk/doublestar/v4"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/mitchellh/go-homedir"
@@ -253,7 +253,7 @@ func MakeFileSetFunc(baseDir string) function.Function {
 			// automatically cleaned during this operation.
 			pattern = filepath.Join(path, pattern)
 
-			matches, err := doublestar.Glob(pattern)
+			matches, err := doublestar.Glob(os.DirFS(path), pattern)
 			if err != nil {
 				return cty.UnknownVal(cty.Set(cty.String)), fmt.Errorf("failed to glob pattern (%s): %s", pattern, err)
 			}

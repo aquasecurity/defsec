@@ -837,6 +837,7 @@ deny {
 	})
 
 	scanner := NewScanner(types.SourceDockerfile)
+	scanner.SetRegoErrorLimit(0) // override to not allow any errors
 	assert.ErrorContains(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
@@ -878,6 +879,7 @@ deny {
 `,
 	})
 	scanner := NewScanner(types.SourceJSON)
+	scanner.SetRegoErrorLimit(0) // override to not allow any errors
 	assert.ErrorContains(
 		t,
 		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),

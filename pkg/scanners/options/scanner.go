@@ -22,6 +22,7 @@ type ConfigurableScanner interface {
 	SetFrameworks(frameworks []framework.Framework)
 	SetSpec(spec string)
 	SetRegoOnly(regoOnly bool)
+	SetRegoErrorLimit(limit int)
 }
 
 type ScannerOption func(s ConfigurableScanner)
@@ -110,5 +111,11 @@ func ScannerWithDataFilesystem(f fs.FS) ScannerOption {
 func ScannerWithRegoOnly(regoOnly bool) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetRegoOnly(regoOnly)
+	}
+}
+
+func ScannerWithRegoErrorLimits(limit int) ScannerOption {
+	return func(s ConfigurableScanner) {
+		s.SetRegoErrorLimit(limit)
 	}
 }

@@ -11,7 +11,6 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/severity"
-	"github.com/aquasecurity/defsec/pkg/types"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/mitchellh/mapstructure"
 	"github.com/open-policy-agent/opa/ast"
@@ -361,8 +360,8 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 					if rawType, ok := selectorMap["type"]; ok {
 						selector.Type = fmt.Sprintf("%s", rawType)
 						// handle backward compatibility for "defsec" source type which is now "cloud"
-						if selector.Type == string(types.SourceDefsec) {
-							selector.Type = string(types.SourceCloud)
+						if selector.Type == string(defsecTypes.SourceDefsec) {
+							selector.Type = string(defsecTypes.SourceCloud)
 						}
 					}
 					if subType, ok := selectorMap["subtypes"].([]interface{}); ok {
