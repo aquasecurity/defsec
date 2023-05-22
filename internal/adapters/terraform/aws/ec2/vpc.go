@@ -31,7 +31,17 @@ func adaptVPC(modules terraform.Modules, block *terraform.Block, def bool) ec2.V
 	var hasFlowLogs bool
 	for _, flow := range modules.GetResourcesByType("aws_flow_log") {
 		vpcAttr := flow.GetAttribute("vpc_id")
-		if vpcAttr.ReferencesBlock(block) {
+
+		// Determine whether the block is referenced via a local
+		// This only handles one level of indirection
+		refs := vpcAttr.AllReferences(block)
+		locals := flow.Context().Root().Inner().Variables["local"]
+		referencesViaLocal := false
+		if refs[0].BlockType().Name() == "locals" {
+			referencesViaLocal = block.ID() == locals.GetAttr(refs[0].NameLabel()).AsString()
+		}
+
+		if vpcAttr.ReferencesBlock(block) || referencesViaLocal {
 			hasFlowLogs = true
 			break
 		}
