@@ -36,7 +36,15 @@ fail_user_count {
 fail_last_user_root[lastUser] {
 	users := [user | user := docker.user[_]; true]
 	lastUser := users[count(users) - 1]
-	lastUser.Value[0] == "root"
+	regex.match("^root(:.+){0,1}$", lastUser.Value[0])
+}
+
+# fail_last_user_root is true if the last USER command
+# value is "0"
+fail_last_user_root[lastUser] {
+	users := [user | user := docker.user[_]; true]
+	lastUser := users[count(users) - 1]
+	regex.match("^0(:.+){0,1}$", lastUser.Value[0])
 }
 
 deny[res] {
