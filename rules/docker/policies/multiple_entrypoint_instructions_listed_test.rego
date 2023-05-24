@@ -41,7 +41,7 @@ test_denied {
 	]}
 
 	count(r) == 1
-	r[_].msg == "There are 2 duplicate ENTRYPOINT instructions for stage 'golang'"
+	r[_].msg == "There are 2 duplicate ENTRYPOINT instructions for stage"
 }
 
 test_allowed {

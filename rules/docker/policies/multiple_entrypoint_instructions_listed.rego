@@ -20,8 +20,8 @@ package builtin.dockerfile.DS007
 import data.lib.docker
 
 deny[res] {
-	entrypoints := docker.stage_entrypoints[name]
+	entrypoints := docker.stage_entrypoints[stage]
 	count(entrypoints) > 1
-	msg := sprintf("There are %d duplicate ENTRYPOINT instructions for stage '%s'", [count(entrypoints), name])
+	msg := sprintf("There are %d duplicate ENTRYPOINT instructions for stage", [count(entrypoints)])
 	res := result.new(msg, entrypoints[1])
 }
