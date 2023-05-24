@@ -60,7 +60,7 @@ require (
 	github.com/moby/buildkit v0.11.4
 	github.com/olekukonko/tablewriter v0.0.5
 	// using this commit to avoid a bug in the latest version - replace when > v0.44.0 is released
-	github.com/open-policy-agent/opa v0.52.0
+	github.com/open-policy-agent/opa v0.44.1-0.20220927105354-00e835a7cc15
 	github.com/owenrumney/go-sarif/v2 v2.1.2
 	github.com/owenrumney/squealer v1.1.1
 	github.com/sirupsen/logrus v1.9.0
