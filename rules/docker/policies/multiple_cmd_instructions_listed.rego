@@ -23,6 +23,6 @@ deny[res] {
 	cmds := docker.stage_cmd[name]
 	cnt := count(cmds)
 	cnt > 1
-	msg := sprintf("There are %d duplicate CMD instructions for stage '%s'", [cnt, name])
+	msg := sprintf("There are %d duplicate CMD instructions", [cnt])
 	res := result.new(msg, cmds[1])
 }

@@ -29,7 +29,7 @@ test_denied {
 	]}
 
 	count(r) == 1
-	r[_].msg == "There are 2 duplicate CMD instructions for stage 'golang:1.7.3'"
+	r[_].msg == "There are 2 duplicate CMD instructions"
 }
 
 test_allowed {
