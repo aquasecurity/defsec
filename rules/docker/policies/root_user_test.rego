@@ -117,6 +117,75 @@ test_last_root_case_2 {
 	startswith(r[_].msg, "Last USER command in Dockerfile should not be 'root'")
 }
 
+test_last_root_with_group_denied {
+	r := deny with input as {"Stages": [{
+		"Name": "alpine:3.13",
+		"Commands": [
+			{
+				"Cmd": "user",
+				"Value": ["user1"],
+				"StartLine": 1,
+				"Stage": 1,
+			},
+			{
+				"Cmd": "user",
+				"Value": ["root:root"],
+				"StartLine": 2,
+				"Stage": 1,
+			},
+		],
+	}]}
+
+	count(r) > 0
+	startswith(r[_].msg, "Last USER command in Dockerfile should not be 'root'")
+}
+
+test_last_root_as_uid_number_denied {
+	r := deny with input as {"Stages": [{
+		"Name": "alpine:3.13",
+		"Commands": [
+			{
+				"Cmd": "user",
+				"Value": ["user1"],
+				"StartLine": 1,
+				"Stage": 1,
+			},
+			{
+				"Cmd": "user",
+				"Value": ["0"],
+				"StartLine": 2,
+				"Stage": 1,
+			},
+		],
+	}]}
+
+	count(r) > 0
+	startswith(r[_].msg, "Last USER command in Dockerfile should not be 'root'")
+}
+
+test_last_root_as_uid_number_with_group_denied {
+	r := deny with input as {"Stages": [{
+		"Name": "alpine:3.13",
+		"Commands": [
+			{
+				"Cmd": "user",
+				"Value": ["user1"],
+				"StartLine": 1,
+				"Stage": 1,
+			},
+			{
+				"Cmd": "user",
+				"Value": ["0:0"],
+				"StartLine": 2,
+				"Stage": 1,
+			},
+		],
+	}]}
+
+	count(r) > 0
+	startswith(r[_].msg, "Last USER command in Dockerfile should not be 'root'")
+}
+
 test_empty_user_denied {
 	r := deny with input as {"Stages": [{
 		"Name": "alpine:3.13",
