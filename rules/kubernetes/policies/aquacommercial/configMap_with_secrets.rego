@@ -57,7 +57,7 @@ patternsForKey := [
 ]
 
 # ConfigMapWithSecret gives secret key
-# To reduce performace overhead, only matched patterns will be applied to each value for key
+# To reduce performance overhead, only matched patterns will be applied to each value for key
 ConfigMapWithSecret[secrets] {
 	kubernetes.kind == "ConfigMap"
 	regex.match(patterns[p], kubernetes.object.data[d])

@@ -140,11 +140,11 @@ no_read_only_filesystem(c) {
 	not has_field(c.securityContext, "readOnlyRootFilesystem")
 }
 
-priviledge_escalation_allowed(c) {
+privilege_escalation_allowed(c) {
 	not has_field(c, "securityContext")
 }
 
-priviledge_escalation_allowed(c) {
+privilege_escalation_allowed(c) {
 	has_field(c, "securityContext")
 	has_field(c.securityContext, "allowPrivilegeEscalation")
 }
@@ -178,7 +178,7 @@ command_has_flag(command, flag) {
 	regex.match(flag, command[_])
 }
 
-is_controllermananager(container) {
+is_controllermanager(container) {
 	regex.match("^(.*/)?kube-controller-manager$", container.command[0])
 }
 
