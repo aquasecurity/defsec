@@ -45,7 +45,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.16.2
 	github.com/aws/aws-sdk-go-v2/service/sns v1.20.10
 	github.com/aws/aws-sdk-go-v2/service/sqs v1.20.6
-	github.com/aws/aws-sdk-go-v2/service/sts v1.18.5
+	github.com/aws/aws-sdk-go-v2/service/sts v1.19.0
 	github.com/aws/aws-sdk-go-v2/service/workspaces v1.23.0
 	github.com/bmatcuk/doublestar/v4 v4.6.0
 	github.com/google/uuid v1.3.0
@@ -110,7 +110,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.10 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.18 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.19 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.24 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.27 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.17 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.12.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.14.4 // indirect
