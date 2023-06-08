@@ -31,14 +31,6 @@ func ScannerWithAWSRegion(region string) options.ScannerOption {
 	}
 }
 
-func ScannerWithRegoOnly(regoOnly bool) options.ScannerOption {
-	return func(s options.ConfigurableScanner) {
-		if aws, ok := s.(ConfigurableAWSScanner); ok {
-			aws.SetRegoOnly(regoOnly)
-		}
-	}
-}
-
 func ScannerWithAWSEndpoint(endpoint string) options.ScannerOption {
 	return func(s options.ConfigurableScanner) {
 		if aws, ok := s.(ConfigurableAWSScanner); ok {
