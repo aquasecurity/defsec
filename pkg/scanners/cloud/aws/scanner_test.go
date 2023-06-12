@@ -485,13 +485,46 @@ deny[res] {
 	res := result.new("Instance has Public Access enabled", instance.publicaccess)
 }
 `,
+				"policies/rds_cmk_encryption.rego": `# METADATA
+# title: "RDS CMK Encryption"
+# description: "Ensures RDS instances are encrypted with CMK."
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.html
+# custom:
+#   avd_id: AVD-AWS-0998
+#   provider: aws
+#   service: rds
+#   severity: HIGH
+#   short_code: rds_cmk_encryption
+#   recommended_action: "CMK Encrypt RDS instance'"
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#         - provider: aws
+#           service: rds
+package builtin.aws.rds.aws0998
+import data.settings.DS0998.rds_desired_encryption_level
+
+deny[res] {
+	instance := input.aws.rds.instances[_]
+	rds_desired_encryption_level <= 2
+	res := result.new("Instance is not CMK encrypted", instance.publicaccess)
+}
+`,
 			}),
 			dataFS: testutil.CreateFS(t, map[string]string{
 				"config-data/data.json": `{
     "settings": {
 		"DS0999": {
 			"ignore_deletion_protection": false
-		}
+		},
+        "DS0998": {
+            "rds_desired_encryption_level": 2
+        }
     }
 }
 
@@ -505,12 +538,11 @@ deny[res] {
 						},
 					},
 				},
-				// note: there is no CloudTrail resource in our AWS state (so we expect no results for it)
 			}},
 			expectedResults: struct {
 				totalResults int
 				summaries    []string
-			}{totalResults: 1, summaries: []string{"RDS Publicly Accessible"}},
+			}{totalResults: 2, summaries: []string{"RDS Publicly Accessible", "RDS CMK Encryption"}},
 		},
 	}
 
