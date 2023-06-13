@@ -385,7 +385,7 @@ func (e *evaluator) getValuesByBlockType(blockType string) cty.Value {
 				continue
 			}
 			values[b.Label()] = val
-		case "locals", "moved":
+		case "locals", "moved", "import":
 			for key, val := range b.Values().AsValueMap() {
 				values[key] = val
 			}
