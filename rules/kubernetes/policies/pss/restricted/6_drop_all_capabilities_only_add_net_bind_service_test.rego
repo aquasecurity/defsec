@@ -35,7 +35,7 @@ test_drop_all_add_net_bind_service_allowed {
 			],
 			"image": "busybox",
 			"name": "hello",
-			"securityContext": {"capabilities": {"drop": ["ALL"], "add": ["NET_BIND_SERVICE"]}},
+			"securityContext": {"capabilities": {"drop": ["all"], "add": ["NET_BIND_SERVICE"]}},
 		}]},
 	}
 
