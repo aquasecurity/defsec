@@ -33,7 +33,7 @@ var CheckNoConditionOnWorkloadIdentityPoolProvider = rules.Register(
 		for _, provider := range s.Google.IAM.WorkloadIdentityPoolProviders {
 			if provider.AttributeCondition.IsEmpty() {
 				results.Add(
-					"Project has automatic network creation enabled.",
+					"This workload identity pool provider configuration has no conditions set.",
 					provider.AttributeCondition,
 				)
 			} else {
