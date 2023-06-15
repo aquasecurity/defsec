@@ -1,6 +1,6 @@
 module github.com/aquasecurity/defsec
 
-go 1.20
+go 1.19
 
 require (
 	github.com/BurntSushi/toml v1.2.1
@@ -72,7 +72,7 @@ require (
 	golang.org/x/text v0.9.0
 	golang.org/x/tools v0.8.0
 	gopkg.in/yaml.v3 v3.0.1
-	helm.sh/helm/v3 v3.12.0
+	helm.sh/helm/v3 v3.12.1
 )
 
 require (
@@ -265,7 +265,7 @@ require (
 )
 
 // See https://github.com/moby/moby/issues/42939#issuecomment-1114255529
-//replace github.com/docker/docker => github.com/docker/docker v20.10.3-0.20220224222438-c78f6963a1c0+incompatible
+replace github.com/docker/docker => github.com/docker/docker v20.10.3-0.20220224222438-c78f6963a1c0+incompatible
 
 replace oras.land/oras-go => oras.land/oras-go v1.1.1
 
