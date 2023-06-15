@@ -267,6 +267,6 @@ require (
 // See https://github.com/moby/moby/issues/42939#issuecomment-1114255529
 replace github.com/docker/docker => github.com/docker/docker v20.10.24+incompatible
 
-replace oras.land/oras-go => oras.land/oras-go v1.1.1
+replace oras.land/oras-go => oras.land/oras-go v1.2.2
 
 replace github.com/elgohr/go-localstack => github.com/aquasecurity/go-localstack v0.0.0-20220706080605-1ec0e9b8753c
