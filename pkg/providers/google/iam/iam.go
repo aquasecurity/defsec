@@ -5,7 +5,8 @@ import (
 )
 
 type IAM struct {
-	Organizations []Organization
+	Organizations                 []Organization
+	WorkloadIdentityPoolProviders []WorkloadIdentityPoolProvider
 }
 
 type Organization struct {
@@ -43,6 +44,13 @@ type Member struct {
 	Member                defsecTypes.StringValue
 	Role                  defsecTypes.StringValue
 	DefaultServiceAccount defsecTypes.BoolValue
+}
+
+type WorkloadIdentityPoolProvider struct {
+	Metadata                       defsecTypes.Metadata
+	WorkloadIdentityPoolId         defsecTypes.StringValue
+	WorkloadIdentityPoolProviderId defsecTypes.StringValue
+	AttributeCondition             defsecTypes.StringValue
 }
 
 func (p *IAM) AllProjects() []Project {

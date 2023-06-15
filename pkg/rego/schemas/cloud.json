@@ -5375,6 +5375,13 @@
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.google.iam.Organization"
           }
+        },
+        "workloadidentitypoolproviders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.google.iam.WorkloadIdentityPoolProvider"
+          }
         }
       }
     },
@@ -5448,6 +5455,23 @@
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.google.iam.Member"
           }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.google.iam.WorkloadIdentityPoolProvider": {
+      "type": "object",
+      "properties": {
+        "attributecondition": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "workloadidentitypoolid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "workloadidentitypoolproviderid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },

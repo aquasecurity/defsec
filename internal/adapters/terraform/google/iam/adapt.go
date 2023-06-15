@@ -15,10 +15,11 @@ func Adapt(modules terraform.Modules) iam.IAM {
 }
 
 type adapter struct {
-	modules  terraform.Modules
-	orgs     map[string]iam.Organization
-	folders  []parentedFolder
-	projects []parentedProject
+	modules                       terraform.Modules
+	orgs                          map[string]iam.Organization
+	folders                       []parentedFolder
+	projects                      []parentedProject
+	workloadIdentityPoolProviders []iam.WorkloadIdentityPoolProvider
 }
 
 func (a *adapter) Adapt() iam.IAM {
@@ -27,6 +28,7 @@ func (a *adapter) Adapt() iam.IAM {
 	a.adaptFolderIAM()
 	a.adaptProjects()
 	a.adaptProjectIAM()
+	a.adaptWorkloadIdentityPoolProviders()
 	return a.merge()
 }
 
@@ -96,7 +98,8 @@ FOLDER_ORG:
 	}
 
 	output := iam.IAM{
-		Organizations: nil,
+		Organizations:                 nil,
+		WorkloadIdentityPoolProviders: a.workloadIdentityPoolProviders,
 	}
 	for _, org := range a.orgs {
 		output.Organizations = append(output.Organizations, org)
