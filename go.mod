@@ -1,6 +1,6 @@
 module github.com/aquasecurity/defsec
 
-go 1.19
+go 1.20
 
 require (
 	github.com/BurntSushi/toml v1.2.1
@@ -263,6 +263,9 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
+
+// See https://github.com/moby/moby/issues/42939#issuecomment-1114255529
+//replace github.com/docker/docker => github.com/docker/docker v20.10.3-0.20220224222438-c78f6963a1c0+incompatible
 
 replace oras.land/oras-go => oras.land/oras-go v1.1.1
 
