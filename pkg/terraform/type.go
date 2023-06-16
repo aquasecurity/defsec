@@ -33,6 +33,10 @@ var TypeVariable = Type{
 	refName: "var",
 }
 
+var TypeImport = Type{
+	name: "import",
+}
+
 var TypeLocal = Type{
 	name:    "locals",
 	refName: "local",
@@ -60,6 +64,7 @@ var TypeTerraform = Type{
 
 var ValidTypes = []Type{
 	TypeData,
+	TypeImport,
 	TypeLocal,
 	TypeModule,
 	TypeMoved,
