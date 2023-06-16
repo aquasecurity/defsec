@@ -39,7 +39,8 @@ moved {
 }
 
 import {
-
+  to = cats_cat.mittens
+  id = "mittens"
 }
 
 resource "cats_cat" "mittens" {
@@ -108,6 +109,13 @@ data "cats_cat" "the-cats-mother" {
 	assert.Equal(t, "cats_kitten", resourceBlocks[1].TypeLabel())
 	assert.Equal(t, "the great destroyer", resourceBlocks[1].GetAttribute("name").Value().AsString())
 	assert.Equal(t, "mittens", resourceBlocks[1].GetAttribute("parent").Value().AsString())
+
+	// import
+	importBlocks := blocks.OfType("import")
+
+	assert.Equal(t, "import", importBlocks[0].Type())
+	require.NotNil(t, importBlocks[0].GetAttribute("to"))
+	assert.Equal(t, "mittens", importBlocks[0].GetAttribute("id").Value().AsString())
 
 	// data
 	dataBlocks := blocks.OfType("data")
