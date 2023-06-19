@@ -389,7 +389,7 @@ func (e *evaluator) getValuesByBlockType(blockType string) cty.Value {
 			for key, val := range b.Values().AsValueMap() {
 				values[key] = val
 			}
-		case "provider", "module":
+		case "provider", "module", "check":
 			if b.Label() == "" {
 				continue
 			}
