@@ -128,7 +128,7 @@ func adaptAccount(resource *terraform.Block) storage.Account {
 	}
 
 	minTLSVersionAttr := resource.GetAttribute("min_tls_version")
-	account.MinimumTLSVersion = minTLSVersionAttr.AsStringValueOrDefault("TLS1_2", resource)
+	account.MinimumTLSVersion = minTLSVersionAttr.AsStringValueOrDefault("TLS1_0", resource)
 	return account
 }
 

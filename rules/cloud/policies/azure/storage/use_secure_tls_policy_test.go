@@ -20,6 +20,17 @@ func TestCheckUseSecureTlsPolicy(t *testing.T) {
 		expected bool
 	}{
 		{
+			name: "Storage account minimum TLS version unspecified",
+			input: storage.Storage{
+				Accounts: []storage.Account{
+					{
+						Metadata: defsecTypes.NewTestMetadata(),
+					},
+				},
+			},
+			expected: true,
+		},
+		{
 			name: "Storage account minimum TLS version 1.0",
 			input: storage.Storage{
 				Accounts: []storage.Account{
