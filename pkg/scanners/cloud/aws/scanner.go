@@ -47,6 +47,7 @@ type Scanner struct {
 	policyDirs          []string
 	policyReaders       []io.Reader
 	policyFS            fs.FS
+	dataFs              fs.FS
 	useEmbedded         bool
 	regoOnly            bool
 }
@@ -88,7 +89,7 @@ func (s *Scanner) SetPolicyFilesystem(fs fs.FS) {
 }
 
 func (s *Scanner) SetDataFilesystem(fs fs.FS) {
-	s.policyFS = fs
+	s.dataFs = fs
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {

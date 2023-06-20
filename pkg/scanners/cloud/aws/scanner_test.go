@@ -62,6 +62,7 @@ func Test_AWSInputSelectors(t *testing.T) {
 	testCases := []struct {
 		name            string
 		srcFS           fs.FS
+		dataFS          fs.FS
 		state           state.State
 		expectedResults struct {
 			totalResults int
@@ -418,15 +419,109 @@ deny[res] {
 				summaries    []string
 			}{totalResults: 1, summaries: []string{"AWS IAM Policy"}},
 		},
+		{
+			name: "single cloud, single selector with config data",
+			srcFS: testutil.CreateFS(t, map[string]string{
+				"policies/rds_policy.rego": `# METADATA
+# title: "RDS Publicly Accessible"
+# description: "Ensures RDS instances are not launched into the public cloud."
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.html
+# custom:
+#   avd_id: AVD-AWS-0999
+#   provider: aws
+#   service: rds
+#   severity: HIGH
+#   short_code: enable-public-access
+#   recommended_action: "Remove the public endpoint from the RDS instance'"
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#         - provider: aws
+#           service: rds
+package builtin.aws.rds.aws0999
+import data.settings.DS0999.ignore_deletion_protection
+deny[res] {
+	instance := input.aws.rds.instances[_]
+	instance.publicaccess.value
+	not ignore_deletion_protection
+	res := result.new("Instance has Public Access enabled", instance.publicaccess)
+}
+`,
+				"policies/rds_cmk_encryption.rego": `# METADATA
+# title: "RDS CMK Encryption"
+# description: "Ensures RDS instances are encrypted with CMK."
+# scope: package
+# schemas:
+# - input: schema.input
+# related_resources:
+# - http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.html
+# custom:
+#   avd_id: AVD-AWS-0998
+#   provider: aws
+#   service: rds
+#   severity: HIGH
+#   short_code: rds_cmk_encryption
+#   recommended_action: "CMK Encrypt RDS instance'"
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#         - provider: aws
+#           service: rds
+package builtin.aws.rds.aws0998
+import data.settings.DS0998.rds_desired_encryption_level
+deny[res] {
+	instance := input.aws.rds.instances[_]
+	rds_desired_encryption_level <= 2
+	res := result.new("Instance is not CMK encrypted", instance.publicaccess)
+}
+`,
+			}),
+			dataFS: testutil.CreateFS(t, map[string]string{
+				"config-data/data.json": `{
+    "settings": {
+		"DS0999": {
+			"ignore_deletion_protection": false
+		},
+        "DS0998": {
+            "rds_desired_encryption_level": 2
+        }
+    }
+}
+`,
+			}),
+			state: state.State{AWS: aws.AWS{
+				RDS: rds.RDS{
+					Instances: []rds.Instance{
+						{Metadata: defsecTypes.Metadata{},
+							PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						},
+					},
+				},
+			}},
+			expectedResults: struct {
+				totalResults int
+				summaries    []string
+			}{totalResults: 2, summaries: []string{"RDS Publicly Accessible", "RDS CMK Encryption"}},
+		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			scanner := New(
-				options.ScannerWithEmbeddedPolicies(false),
-				options.ScannerWithPolicyFilesystem(tc.srcFS),
-				options.ScannerWithRegoOnly(true),
-				options.ScannerWithPolicyDirs("policies/"))
+			var scannerOpts []options.ScannerOption
+			if tc.dataFS != nil {
+				scannerOpts = append(scannerOpts, options.ScannerWithPolicyDirs("config-data"))
+			}
+			scannerOpts = append(scannerOpts, options.ScannerWithEmbeddedPolicies(false))
+			scannerOpts = append(scannerOpts, options.ScannerWithPolicyFilesystem(tc.srcFS))
+			scannerOpts = append(scannerOpts, options.ScannerWithRegoOnly(true))
+			scannerOpts = append(scannerOpts, options.ScannerWithPolicyDirs("policies/"))
+			scanner := New(scannerOpts...)
 
 			results, err := scanner.Scan(context.TODO(), &tc.state)
 			require.NoError(t, err, tc.name)
