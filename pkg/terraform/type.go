@@ -19,6 +19,10 @@ func (t Type) ShortName() string {
 	return t.name
 }
 
+var TypeCheck = Type{
+	name: "check",
+}
+
 var TypeData = Type{
 	name: "data",
 }
@@ -63,6 +67,7 @@ var TypeTerraform = Type{
 }
 
 var ValidTypes = []Type{
+	TypeCheck,
 	TypeData,
 	TypeImport,
 	TypeLocal,

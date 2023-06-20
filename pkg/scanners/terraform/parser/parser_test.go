@@ -57,6 +57,17 @@ data "cats_cat" "the-cats-mother" {
 	name = local.proxy
 }
 
+check "cats_mittens_is_special" {
+  data "cats_cat" "mittens" {
+    name = "mittens"
+  }
+
+  assert {
+    condition = data.cats_cat.mittens.special == true
+    error_message = "${data.cats_cat.mittens.name} must be special"
+  }
+}
+
 `,
 	})
 
@@ -127,6 +138,17 @@ data "cats_cat" "the-cats-mother" {
 	assert.Equal(t, "the-cats-mother", dataBlocks[0].NameLabel())
 
 	assert.Equal(t, "boots", dataBlocks[0].GetAttribute("name").Value().AsString())
+
+	// check
+	checkBlocks := blocks.OfType("check")
+	require.Len(t, checkBlocks, 1)
+	require.Len(t, checkBlocks[0].Labels(), 1)
+
+	assert.Equal(t, "check", checkBlocks[0].Type())
+	assert.Equal(t, "cats_mittens_is_special", checkBlocks[0].TypeLabel())
+
+	require.NotNil(t, checkBlocks[0].GetBlock("data"))
+	require.NotNil(t, checkBlocks[0].GetBlock("assert"))
 }
 
 func Test_Modules(t *testing.T) {
