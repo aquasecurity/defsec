@@ -28,17 +28,18 @@ var _ scanners.FSScanner = (*Scanner)(nil)
 var _ options.ConfigurableScanner = (*Scanner)(nil)
 
 type Scanner struct {
-	scannerOptions []options.ScannerOption
-	parserOptions  []options.ParserOption
-	debug          debug.Logger
-	frameworks     []framework.Framework
-	skipRequired   bool
-	regoOnly       bool
-	loadEmbedded   bool
-	policyDirs     []string
-	policyReaders  []io.Reader
-	regoScanner    *rego.Scanner
-	spec           string
+	scannerOptions        []options.ScannerOption
+	parserOptions         []options.ParserOption
+	debug                 debug.Logger
+	frameworks            []framework.Framework
+	skipRequired          bool
+	regoOnly              bool
+	loadEmbeddedPolicies  bool
+	loadEmbeddedLibraries bool
+	policyDirs            []string
+	policyReaders         []io.Reader
+	regoScanner           *rego.Scanner
+	spec                  string
 	sync.Mutex
 }
 
@@ -87,8 +88,12 @@ func (s *Scanner) SetDataFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on
 }
 
-func (s *Scanner) SetUseEmbeddedPolicies(loadEmbedded bool) {
-	s.loadEmbedded = loadEmbedded
+func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
+	s.loadEmbeddedPolicies = b
+}
+
+func (s *Scanner) SetUseEmbeddedLibraries(b bool) {
+	s.loadEmbeddedLibraries = b
 }
 
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
@@ -109,7 +114,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) error {
 	}
 	regoScanner := rego.NewScanner(types.SourceCloud, s.scannerOptions...)
 	regoScanner.SetParentDebugLogger(s.debug)
-	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
+	if err := regoScanner.LoadPolicies(s.loadEmbeddedLibraries, s.loadEmbeddedPolicies, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return err
 	}
 	s.regoScanner = regoScanner
