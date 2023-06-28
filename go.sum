@@ -347,8 +347,9 @@ github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.19/go.mod 
 github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.17/go.mod h1:4nYOrY41Lrbk2170/BGkcJKBhws9Pfn8MG3aGqjjeFI=
 github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.23/go.mod h1:9uPh+Hrz2Vn6oMnQYiUi/zbh3ovbnQk19YKINkQny44=
 github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.24/go.mod h1:HMA4FZG6fyib+NDo5bpIxX1EhYjrAOveZJY2YR0xrNE=
-github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.27 h1:0iKliEXAcCa2qVtRs7Ot5hItA2MsufrphbRFlz1Owxo=
 github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.27/go.mod h1:EOwBD4J4S5qYszS5/3DpkejfuK+Z5/1uzICfPaZLtqw=
+github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.28 h1:bkRyG4a929RCnpVSTvLM2j/T4ls015ZhhYApbmYs15s=
+github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.28/go.mod h1:jj7znCIg05jXlaGBlFMGP8+7UN3VtCkRBG2spnmRQkU=
 github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.17 h1:HfVVR1vItaG6le+Bpw6P4midjBDMKnjMyZnw9MXYUcE=
 github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.17/go.mod h1:YqMdV+gEKCQ59NrB7rzrJdALeBIsYiVi8Inj3+KcqHI=
 github.com/aws/aws-sdk-go-v2/service/kafka v1.19.4 h1:EmEk3gRJzSEK8DUnkvTGDn/RQc/Ud+yimUFIG+PSvTI=
@@ -361,8 +362,8 @@ github.com/aws/aws-sdk-go-v2/service/lambda v1.24.6 h1:N7RkXX2SJbN+TCp295J3LdMR0
 github.com/aws/aws-sdk-go-v2/service/lambda v1.24.6/go.mod h1:oTJIIluTaJCRT6xP1AZpuU3JwRHBC0Q5O4Hg+SUxFHw=
 github.com/aws/aws-sdk-go-v2/service/mq v1.13.15 h1:K0UbxNfaPHoIXo0T4L4jrbE+TKcVPYp55nEnMLxVRPk=
 github.com/aws/aws-sdk-go-v2/service/mq v1.13.15/go.mod h1:ycghPMXYItx5Y74iehFgGwDNUMXdq0xCxLaYC5uYZO0=
-github.com/aws/aws-sdk-go-v2/service/neptune v1.17.12 h1:QxMwblYXBaAUnQsSbGGmGlqj5/lHJKaEr1HcMXnnaok=
-github.com/aws/aws-sdk-go-v2/service/neptune v1.17.12/go.mod h1:0arQRjGdCQgRNLiCIv5FEFCgQkDMUiLkv0mkrUbSrNE=
+github.com/aws/aws-sdk-go-v2/service/neptune v1.20.7 h1:cZ5WMVZeKBJZDNliJiEXjU3A+5sqCkXm8UE7ZsZGZN8=
+github.com/aws/aws-sdk-go-v2/service/neptune v1.20.7/go.mod h1:N1cuDqSpLRxxf3RUIKUvG7MFORReZmLFyskIXMeUCLY=
 github.com/aws/aws-sdk-go-v2/service/rds v1.26.1 h1:tiXsw36GaRUWMcH5uRM2uM7vo+bNsa1mEOn68ZOBjWA=
 github.com/aws/aws-sdk-go-v2/service/rds v1.26.1/go.mod h1:d8jJiNpy2cyl52sw5msQQ12ajEbPAK+twYPR7J35slw=
 github.com/aws/aws-sdk-go-v2/service/redshift v1.27.7 h1:fKg773iDMTGUxd8UNkEfwYGNjT6H6KFSmqV97Yte+jc=
