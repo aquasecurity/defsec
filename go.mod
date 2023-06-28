@@ -38,7 +38,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/kms v1.21.1
 	github.com/aws/aws-sdk-go-v2/service/lambda v1.24.6
 	github.com/aws/aws-sdk-go-v2/service/mq v1.13.15
-	github.com/aws/aws-sdk-go-v2/service/neptune v1.17.12
+	github.com/aws/aws-sdk-go-v2/service/neptune v1.20.7
 	github.com/aws/aws-sdk-go-v2/service/rds v1.26.1
 	github.com/aws/aws-sdk-go-v2/service/redshift v1.27.7
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.27.11
@@ -111,7 +111,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.10 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.1.18 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.19 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.27 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.9.28 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.13.17 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.12.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.14.4 // indirect
