@@ -3,16 +3,13 @@
 
 Welcome, and thank you for considering contributing to defsec!
 
-<p align="center">
-    <img alt="Welcome!" src="https://i.giphy.com/media/KczqttEJqm55hE1ccU/giphy.webp"/>
-</p>
-
-
 The following guide gives an overview of the project and some directions on how to make common types of contribution. If something is missing or you get stuck, please [jump on Slack](https://slack.aquasec.com/) or [start a discussion](https://github.com/aquasecurity/defsec/discussions/new) and we'll do our best to help.
 
 ## Project Overview
 
 _defsec_ is a library for defining security rules and policies in code, and the tools to apply those rules/policies to a variety of sources. The general architecture and project layout are defined in [ARCHITECTURE.md](ARCHITECTURE.md) - this is a great place to start exploring.
+
+_defsec_ is also the misconfiguration/IaC/Cloud scanning engine for Trivy. Trivy uses defsec internally as a library to perform various scans. 
 
 ## Guides
 
