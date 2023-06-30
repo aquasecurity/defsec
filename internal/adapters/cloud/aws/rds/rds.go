@@ -336,8 +336,13 @@ func (a *adapter) adaptDBSnapshots(dbSnapshots types.DBSnapshot) (*rds.Snapshots
 		DBSnapshotIdentifier: defsecTypes.String(*dbSnapshots.DBSnapshotIdentifier, metadata),
 		DBSnapshotArn:        defsecTypes.String(*dbSnapshots.DBSnapshotArn, metadata),
 		Encrypted:            defsecTypes.Bool(dbSnapshots.Encrypted, metadata),
-		KmsKeyId:             defsecTypes.String(*dbSnapshots.KmsKeyId, metadata),
+		KmsKeyId:             defsecTypes.String("", metadata),
 		SnapshotAttributes:   SnapshotAttributes,
+	}
+
+	// KMSKeyID is only set if Encryption is enabled
+	if snapshots.Encrypted.IsTrue() {
+		snapshots.KmsKeyId = defsecTypes.StringDefault(*dbSnapshots.KmsKeyId, metadata)
 	}
 
 	return snapshots, nil
