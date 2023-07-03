@@ -7,7 +7,7 @@ The following guide gives an overview of the project and some directions on how 
 
 ## Project Overview
 
-_defsec_ is a library for defining security rules and policies in code, and the tools to apply those rules/policies to a variety of sources. The general architecture and project layout are defined in [ARCHITECTURE.md](ARCHITECTURE.md) - this is a great place to start exploring.
+_defsec_ is a library for defining security rules and policies in code, and the tools to apply those rules/cloud/policies to a variety of sources. The general architecture and project layout are defined in [ARCHITECTURE.md](ARCHITECTURE.md) - this is a great place to start exploring.
 
 _defsec_ is also the misconfiguration/IaC/Cloud scanning engine for Trivy. Trivy uses defsec internally as a library to perform various scans. 
 
@@ -23,9 +23,9 @@ First of all, you should check if the provider your rule targets is supported by
 
 Next up, you'll need to check if the properties you want to target are supported, and if not, add support for them. The guide on [Adding Support for a New Service](#adding-support-for-a-new-service) covers adding new properties.
 
-At last, it's time to write your rule code! Rules are defined using _OPA Rego_. You can find a number of examples in the `rules/policies` directory. The [OPA documentation](https://www.openpolicyagent.org/docs/latest/policy-language/) is a great place to start learning Rego. You can also check out the [Rego Playground](https://play.openpolicyagent.org/) to experiment with Rego, and [join the OPA Slack](https://slack.openpolicyagent.org/).
+At last, it's time to write your rule code! Rules are defined using _OPA Rego_. You can find a number of examples in the `rules/cloud/policies` directory. The [OPA documentation](https://www.openpolicyagent.org/docs/latest/policy-language/) is a great place to start learning Rego. You can also check out the [Rego Playground](https://play.openpolicyagent.org/) to experiment with Rego, and [join the OPA Slack](https://slack.openpolicyagent.org/).
 
-Create a new file in `rules/policies` with the name of your rule. You should nest it in the existing directory structure as applicable. The package name should be in the format `builtin.PROVIDER.SERVICE.ID`, e.g. `builtin.aws.rds.aws0176`.
+Create a new file in `rules/cloud/policies` with the name of your rule. You should nest it in the existing directory structure as applicable. The package name should be in the format `builtin.PROVIDER.SERVICE.ID`, e.g. `builtin.aws.rds.aws0176`.
 
 Running `make id` will provide you with the next available _ID_ for your rule. You can use this ID in your rule code to identify it. 
 
@@ -60,7 +60,7 @@ deny[res] {
 }
 ```
 
-In fact, this is the code for an actual rule. You can find it in `rules/policies//aws/rds/enable_iam_auth.rego`. 
+In fact, this is the code for an actual rule. You can find it in `rules/cloud/policies/aws/rds/enable_iam_auth.rego`. 
 
 The metadata is the top section that starts with `# METADATA`, and is fairly verbose. You can copy and paste from another rule as a starting point. This format is effectively _yaml_ within a Rego comment, and is [defined as part of Rego itself](https://www.openpolicyagent.org/docs/latest/annotations/).
 
@@ -94,7 +94,7 @@ The rule should return a result, which can be created using `result.new` (this f
 
 In the example above, you'll notice properties are being accessed from the `input.aws` object. The full set of schemas containing all of these properties is [available here](https://github.com/aquasecurity/defsec/tree/master/pkg/rego/schemas). You can match the schema name to the type of input you want to scan.
 
-You should also write a test for your rule(s). There are many examples of these in the `rules/policies` directory.
+You should also write a test for your rule(s). There are many examples of these in the `rules/cloud/policies` directory.
 
 Finally, you'll want to run `make docs` to generate the documentation for your new policy.
 
