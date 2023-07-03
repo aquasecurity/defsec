@@ -62,7 +62,7 @@ deny[res] {
 
 In fact, this is the code for an actual rule. You can find it in `rules/cloud/policies/aws/rds/enable_iam_auth.rego`. 
 
-The metadata is the top section that starts with `# METADATA`, and is fairly verbose. You can copy and paste from another rule as a starting point. This format is effectively _yaml_ within a Rego comment, and is [defined as part of Rego itself](https://www.openpolicyagent.org/docs/latest/annotations/).
+The metadata is the top section that starts with `# METADATA`, and is fairly verbose. You can copy and paste from another rule as a starting point. This format is effectively _yaml_ within a Rego comment, and is [defined as part of Rego itself](https://www.openpolicyagent.org/docs/latest/policy-language/#metadata).
 
 Let's break the metadata down. 
 
