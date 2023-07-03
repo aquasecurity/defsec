@@ -2,6 +2,7 @@ package armjson
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/types"
 )
@@ -31,7 +32,7 @@ func (p *parser) parseString(parentMetadata *types.Metadata) (Node, error) {
 		return nil, p.makeError("expecting string delimiter")
 	}
 
-	var str string
+	var sb strings.Builder
 
 	var inEscape bool
 	var inHex bool
@@ -53,7 +54,7 @@ func (p *parser) parseString(parentMetadata *types.Metadata) (Node, error) {
 					if err != nil {
 						return nil, p.makeError("invalid unicode character '%s'", err)
 					}
-					str += char
+					sb.WriteString(char)
 					hex = nil
 				}
 			default:
@@ -69,20 +70,20 @@ func (p *parser) parseString(parentMetadata *types.Metadata) (Node, error) {
 			if !ok {
 				return nil, p.makeError("invalid escape sequence '\\%c'", c)
 			}
-			str += seq
+			sb.WriteString(seq)
 		} else {
 			switch c {
 			case '\\':
 				inEscape = true
 			case '"':
-				n.raw = str
+				n.raw = sb.String()
 				n.end = p.position
 				return n, nil
 			default:
 				if c < 0x20 || c > 0x10FFFF {
 					return nil, p.makeError("invalid unescaped character '0x%X'", c)
 				}
-				str += string(c)
+				sb.WriteRune(c)
 			}
 		}
 

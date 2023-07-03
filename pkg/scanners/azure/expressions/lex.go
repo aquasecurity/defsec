@@ -91,7 +91,7 @@ func (l *lexer) Lex() ([]Token, error) {
 }
 
 func (l *lexer) lexString(terminator rune) (Token, error) {
-	var raw string
+	var sb strings.Builder
 	for {
 		r, err := l.read()
 		if err != nil {
@@ -102,17 +102,17 @@ func (l *lexer) lexString(terminator rune) (Token, error) {
 			if err != nil {
 				return Token{}, fmt.Errorf("bad escape: %w", err)
 			}
-			raw += string(r)
+			sb.WriteRune(r)
 			continue
 		}
 		if r == terminator {
 			break
 		}
-		raw += string(r)
+		sb.WriteRune(r)
 	}
 	return Token{
 		Type: TokenLiteralString,
-		Data: raw,
+		Data: sb.String(),
 	}, nil
 }
 
@@ -137,7 +137,7 @@ func (l *lexer) readEscapedChar() (rune, error) {
 
 func (l *lexer) lexNumber() (Token, error) {
 
-	var raw string
+	var sb strings.Builder
 	var decimal bool
 
 LOOP:
@@ -149,15 +149,16 @@ LOOP:
 		switch r {
 		case '.':
 			decimal = true
-			raw += "."
+			sb.WriteRune('.')
 		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
-			raw += string(r)
+			sb.WriteRune(r)
 		default:
 			l.unread()
 			break LOOP
 		}
 	}
 
+	raw := sb.String()
 	if decimal {
 		fl, err := strconv.ParseFloat(raw, 64)
 		if err != nil {
@@ -180,7 +181,7 @@ LOOP:
 }
 
 func (l *lexer) lexKeyword() Token {
-	var raw string
+	var sb strings.Builder
 LOOP:
 	for {
 		r, err := l.read()
@@ -189,7 +190,7 @@ LOOP:
 		}
 		switch {
 		case r >= 'a' && r <= 'z', r >= 'A' && r <= 'Z', r >= '0' && r <= '9', r == '_':
-			raw += string(r)
+			sb.WriteRune(r)
 		default:
 			l.unread()
 			break LOOP
@@ -197,6 +198,6 @@ LOOP:
 	}
 	return Token{
 		Type: TokenName,
-		Data: raw,
+		Data: sb.String(),
 	}
 }
