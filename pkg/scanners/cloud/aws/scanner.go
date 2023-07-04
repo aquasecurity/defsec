@@ -220,7 +220,8 @@ func (s *Scanner) initRegoScanner() (*rego.Scanner, error) {
 	srcFS := s.policyFS
 	if srcFS == nil {
 		if runtime.GOOS == "windows" {
-			srcFS = os.DirFS("C:\\")
+			homeDir, _ := os.UserHomeDir()
+			srcFS = os.DirFS(homeDir)
 		} else {
 			srcFS = os.DirFS("/")
 		}
