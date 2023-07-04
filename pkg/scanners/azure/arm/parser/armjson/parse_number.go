@@ -3,6 +3,7 @@ package armjson
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/types"
 )
@@ -64,21 +65,21 @@ func (p *parser) parseIntegral() (string, error) {
 		return "0", nil
 	}
 
-	var str string
+	var sb strings.Builder
 	if r < '1' || r > '9' {
 		return "", p.makeError("invalid number")
 	}
-	str += string(r)
+	sb.WriteRune(r)
 
 	for {
 		r, err := p.next()
 		if err != nil {
-			return str, nil
+			return sb.String(), nil
 		}
 		if r < '0' || r > '9' {
-			return str, p.undo()
+			return sb.String(), p.undo()
 		}
-		str += string(r)
+		sb.WriteRune(r)
 	}
 }
 
@@ -91,7 +92,8 @@ func (p *parser) parseFraction() (string, error) {
 		return "", p.undo()
 	}
 
-	str := "."
+	var sb strings.Builder
+	sb.WriteRune('.')
 
 	for {
 		r, err := p.next()
@@ -104,9 +106,10 @@ func (p *parser) parseFraction() (string, error) {
 			}
 			break
 		}
-		str += string(r)
+		sb.WriteRune(r)
 	}
 
+	str := sb.String()
 	if str == "." {
 		return "", p.makeError("invalid number - missing digits after decimal point")
 	}
@@ -123,7 +126,8 @@ func (p *parser) parseExponent() (string, error) {
 		return "", p.undo()
 	}
 
-	str := string(r)
+	var sb strings.Builder
+	sb.WriteRune(r)
 
 	r, err = p.next()
 	if err != nil {
@@ -133,7 +137,8 @@ func (p *parser) parseExponent() (string, error) {
 	if r != '-' && r != '+' && !hasDigits {
 		return "", p.undo()
 	}
-	str += string(r)
+
+	sb.WriteRune(r)
 
 	for {
 		r, err := p.next()
@@ -147,12 +152,12 @@ func (p *parser) parseExponent() (string, error) {
 			break
 		}
 		hasDigits = true
-		str += string(r)
+		sb.WriteRune(r)
 	}
 
 	if !hasDigits {
 		return "", p.makeError("invalid number - no digits in exponent")
 	}
 
-	return str, nil
+	return sb.String(), nil
 }
