@@ -347,7 +347,7 @@ func (e *evaluator) evaluateVariable(b *terraform.Block) (cty.Value, error) {
 		return cty.NilVal, fmt.Errorf("cannot resolve variable with no attributes")
 	}
 	if def, exists := attributes["default"]; exists {
-		return def.Value(), nil
+		return def.NullableValue(), nil
 	}
 	return cty.NilVal, fmt.Errorf("no value found")
 }

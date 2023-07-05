@@ -253,6 +253,23 @@ func (a *Attribute) Value() (ctyVal cty.Value) {
 	return ctyVal
 }
 
+// Allows a null value for a variable https://developer.hashicorp.com/terraform/language/expressions/types#null
+func (a *Attribute) NullableValue() (ctyVal cty.Value) {
+	if a == nil {
+		return cty.NilVal
+	}
+	defer func() {
+		if err := recover(); err != nil {
+			ctyVal = cty.NilVal
+		}
+	}()
+	ctyVal, _ = a.hclAttribute.Expr.Value(a.ctx.Inner())
+	if !ctyVal.IsKnown() {
+		return cty.NilVal
+	}
+	return ctyVal
+}
+
 func (a *Attribute) Name() string {
 	if a == nil {
 		return ""
