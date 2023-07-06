@@ -633,3 +633,36 @@ module "registry" {
 	require.NoError(t, err)
 	require.Len(t, modules, 2)
 }
+
+func Test_NullDefaultValueForVar(t *testing.T) {
+	fs := testutil.CreateFS(t, map[string]string{
+		"test.tf": `
+variable "bucket_name" {
+  type    = string
+  default = null
+}
+
+resource "aws_s3_bucket" "default" {
+  bucket = var.bucket_name != null ? var.bucket_name : "default"
+}
+`,
+	})
+
+	parser := New(fs, "", OptionStopOnHCLError(true))
+	if err := parser.ParseFS(context.TODO(), "."); err != nil {
+		t.Fatal(err)
+	}
+	modules, _, err := parser.EvaluateAll(context.TODO())
+	require.NoError(t, err)
+	require.Len(t, modules, 1)
+
+	rootModule := modules[0]
+
+	blocks := rootModule.GetResourcesByType("aws_s3_bucket")
+	require.Len(t, blocks, 1)
+	block := blocks[0]
+
+	attr := block.GetAttribute("bucket")
+	require.NotNil(t, attr)
+	assert.Equal(t, "default", attr.Value().AsString())
+}
