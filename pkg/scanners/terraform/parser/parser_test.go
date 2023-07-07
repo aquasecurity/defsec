@@ -666,3 +666,66 @@ resource "aws_s3_bucket" "default" {
 	require.NotNil(t, attr)
 	assert.Equal(t, "default", attr.Value().AsString())
 }
+
+func Test_MultipleInstancesOfSameResource(t *testing.T) {
+	fs := testutil.CreateFS(t, map[string]string{
+		"test.tf": `
+
+resource "aws_kms_key" "key1" {
+	description         = "Key #1"
+	enable_key_rotation = true
+}
+
+resource "aws_kms_key" "key2" {
+	description         = "Key #2"
+	enable_key_rotation = true
+}
+
+resource "aws_s3_bucket" "this" {
+	bucket        = "test"
+  }
+
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "this1" {
+	bucket = aws_s3_bucket.this.id
+  
+	rule {
+	  apply_server_side_encryption_by_default {
+		kms_master_key_id = aws_kms_key.key1.arn
+		sse_algorithm     = "aws:kms"
+	  }
+	}
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "this2" {
+	bucket = aws_s3_bucket.this.id
+  
+	rule {
+	  apply_server_side_encryption_by_default {
+		kms_master_key_id = aws_kms_key.key2.arn
+		sse_algorithm     = "aws:kms"
+	  }
+	}
+}
+`,
+	})
+
+	parser := New(fs, "", OptionStopOnHCLError(true))
+	if err := parser.ParseFS(context.TODO(), "."); err != nil {
+		t.Fatal(err)
+	}
+	modules, _, err := parser.EvaluateAll(context.TODO())
+	assert.NoError(t, err)
+	assert.Len(t, modules, 1)
+
+	rootModule := modules[0]
+
+	blocks := rootModule.GetResourcesByType("aws_s3_bucket_server_side_encryption_configuration")
+	assert.Len(t, blocks, 2)
+
+	for _, block := range blocks {
+		attr := block.GetNestedAttribute("rule.apply_server_side_encryption_by_default.kms_master_key_id")
+		assert.NotNil(t, attr)
+		assert.NotEmpty(t, attr.Value().AsString())
+	}
+}
