@@ -57,7 +57,7 @@ require (
 	github.com/liamg/memoryfs v1.4.3
 	github.com/liamg/tml v0.6.0
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/moby/buildkit v0.11.4
+	github.com/moby/buildkit v0.11.6
 	github.com/olekukonko/tablewriter v0.0.5
 	// using this commit to avoid a bug in the latest version - replace when > v0.44.0 is released
 	github.com/open-policy-agent/opa v0.44.1-0.20220927105354-00e835a7cc15
