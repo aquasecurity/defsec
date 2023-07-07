@@ -15,9 +15,9 @@ import (
 func initStore(dataFS fs.FS, dataPaths, namespaces []string) (storage.Store, error) {
 	// FilteredPaths will recursively find all file paths that contain a valid document
 	// extension from the given list of data paths.
-	allDocumentPaths, err := loader.FilteredPathsFS(dataFS, dataPaths, func(abspath string, info os.FileInfo, depth int) bool {
+	allDocumentPaths, _ := loader.FilteredPathsFS(dataFS, dataPaths, func(abspath string, info os.FileInfo, depth int) bool {
 		if info.IsDir() {
-			return false
+			return false // filter in, include
 		}
 		ext := strings.ToLower(filepath.Ext(info.Name()))
 		for _, filter := range []string{
@@ -26,14 +26,11 @@ func initStore(dataFS fs.FS, dataPaths, namespaces []string) (storage.Store, err
 			".json",
 		} {
 			if filter == ext {
-				return false
+				return false // filter in, include
 			}
 		}
-		return true
+		return true // filter out, exclude
 	})
-	if err != nil {
-		return nil, fmt.Errorf("filter data paths: %w", err)
-	}
 
 	documents, err := loader.NewFileLoader().WithFS(dataFS).All(allDocumentPaths)
 	if err != nil {

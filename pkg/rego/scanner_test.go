@@ -886,3 +886,83 @@ deny {
 		"undefined ref: input.evil",
 	)
 }
+
+func Test_RegoScanning_CustomData(t *testing.T) {
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `
+package defsec.test
+import data.settings.DS123.foo_bar_baz
+
+deny {
+    not foo_bar_baz
+}
+`,
+	})
+
+	dataFS := testutil.CreateFS(t, map[string]string{
+		"data/data.json": `{
+	"settings": {
+		"DS123":{
+			"foo_bar_baz":false
+		}
+	}
+}`,
+		"data/junk.txt": "this file should be ignored",
+	})
+
+	scanner := NewScanner(types.SourceJSON)
+	scanner.SetDataFilesystem(dataFS)
+	scanner.SetDataDirs(".")
+
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{})
+	require.NoError(t, err)
+
+	assert.Equal(t, 1, len(results.GetFailed()))
+	assert.Equal(t, 0, len(results.GetPassed()))
+	assert.Equal(t, 0, len(results.GetIgnored()))
+}
+
+func Test_RegoScanning_InvalidFS(t *testing.T) {
+	srcFS := testutil.CreateFS(t, map[string]string{
+		"policies/test.rego": `
+package defsec.test
+import data.settings.DS123.foo_bar_baz
+
+deny {
+    not foo_bar_baz
+}
+`,
+	})
+
+	dataFS := testutil.CreateFS(t, map[string]string{
+		"data/data.json": `{
+	"settings": {
+		"DS123":{
+			"foo_bar_baz":false
+		}
+	}
+}`,
+		"data/junk.txt": "this file should be ignored",
+	})
+
+	scanner := NewScanner(types.SourceJSON)
+	scanner.SetDataFilesystem(dataFS)
+	scanner.SetDataDirs("X://")
+
+	require.NoError(
+		t,
+		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+	)
+
+	results, err := scanner.ScanInput(context.TODO(), Input{})
+	require.NoError(t, err)
+
+	assert.Equal(t, 1, len(results.GetFailed()))
+	assert.Equal(t, 0, len(results.GetPassed()))
+	assert.Equal(t, 0, len(results.GetIgnored()))
+}
