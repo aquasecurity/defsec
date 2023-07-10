@@ -23,7 +23,7 @@ var terraformLimitAuthorizedIpsBadExamples = []string{
 }
 
 var terraformLimitAuthorizedIpsLinks = []string{
-	`https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#api_server_authorized_ip_ranges`,
+	`https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#authorized_ip_ranges`,
 }
 
 var terraformLimitAuthorizedIpsRemediationMarkdown = ``

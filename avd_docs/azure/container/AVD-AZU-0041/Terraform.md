@@ -15,5 +15,5 @@ Limit the access to the API server to a limited IP range
 ```
 
 #### Remediation Links
- - https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#api_server_authorized_ip_ranges
+ - https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster#authorized_ip_ranges
 
