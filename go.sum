@@ -301,8 +301,8 @@ github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.24 h1:eWwaF3m67oAJGBhfzVC9
 github.com/aws/aws-sdk-go-v2/service/apigateway v1.15.24/go.mod h1:3olVANhEv+CFhEvC/TTkqh+1kg+r0px3CbH5eRKx7J4=
 github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.13.11 h1:1L2042GftNVyI3TtWclGodfN5zBQjBNXsTQxDNaPXs8=
 github.com/aws/aws-sdk-go-v2/service/apigatewayv2 v1.13.11/go.mod h1:Cs+mG0DXkVYPWsWIE8Ga78C/HeN5zFBbPHdOnJPwZ4M=
-github.com/aws/aws-sdk-go-v2/service/athena v1.18.10 h1:s8cE1HX3Pi53iMg+A+d7gGvmjA+Z4nH6u0BbbuFwXXE=
-github.com/aws/aws-sdk-go-v2/service/athena v1.18.10/go.mod h1:LiVr7tVQ2lrlv82VQhyuulN8uysLHsEeptFjA5PY1Pc=
+github.com/aws/aws-sdk-go-v2/service/athena v1.30.3 h1:ea74P2KHZ3YU2219stqJCspi777oKXT/A/olOy1esH4=
+github.com/aws/aws-sdk-go-v2/service/athena v1.30.3/go.mod h1:1wNfeJcbxrsrC/Oa3CjL1j8+0P1a6z//XZgcbYnCs/U=
 github.com/aws/aws-sdk-go-v2/service/cloudfront v1.20.5 h1:nLAPA7/DSmDWYP/MGtRNP6bHjiL8Fmyg8qeDxW90nm0=
 github.com/aws/aws-sdk-go-v2/service/cloudfront v1.20.5/go.mod h1:HYQXu2AKM7RLCn3APoQ5EvL2N/RlI4LSNN8pIGbdaDQ=
 github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.27.1 h1:Qw1G/M7eanpm6s/URkG1UuRLKEnRnpUvkUb7NMVvWb8=
