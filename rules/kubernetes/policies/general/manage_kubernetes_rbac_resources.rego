@@ -1,5 +1,5 @@
 # METADATA
-# title: "Do not allow management of RBAC resources"
+# title: "Manage Kubernetes RBAC resources"
 # description: "An effective level of access equivalent to cluster-admin should not be provided."
 # scope: package
 # schemas:
