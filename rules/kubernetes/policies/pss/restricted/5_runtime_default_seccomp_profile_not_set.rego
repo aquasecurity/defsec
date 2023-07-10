@@ -1,5 +1,5 @@
 # METADATA
-# title: "Default Seccomp profile not set"
+# title: "Runtime/Default Seccomp profile not set"
 # description: "The RuntimeDefault/Localhost seccomp profile must be required, or allow specific additional profiles."
 # scope: package
 # schemas:
