@@ -20,6 +20,7 @@ type FlatResult struct {
 	Warning         bool               `json:"warning"`
 	Status          Status             `json:"status"`
 	Resource        string             `json:"resource"`
+	Occurrences     []Occurrence       `json:"occurrences,omitempty"`
 	Location        FlatRange          `json:"location"`
 }
 
@@ -60,6 +61,7 @@ func (r *Result) Flatten() FlatResult {
 		Severity:        r.rule.Severity,
 		Status:          r.status,
 		Resource:        resMetadata.Reference(),
+		Occurrences:     r.Occurrences(),
 		Warning:         r.IsWarning(),
 		Location: FlatRange{
 			Filename:  rng.GetFilename(),
