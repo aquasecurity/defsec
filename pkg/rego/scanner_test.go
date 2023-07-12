@@ -916,7 +916,7 @@ deny {
 
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{})
@@ -956,7 +956,7 @@ deny {
 
 	require.NoError(
 		t,
-		scanner.LoadPolicies(false, srcFS, []string{"policies"}, nil),
+		scanner.LoadPolicies(false, false, srcFS, []string{"policies"}, nil),
 	)
 
 	results, err := scanner.ScanInput(context.TODO(), Input{})
