@@ -77,16 +77,20 @@ test_allowed {
 		},
 		{
 			"Cmd": "run",
-			"Value": ["apt-get update     && apt-get install -y --no-install-recommends mysql-client     && rm -rf /var/lib/apt/lists/*"],
+			"Value": ["apt-get update && apt-get install -y --no-install-recommends mysql-client && rm -rf /var/lib/apt/lists/*"],
 		},
 		{
 			"Cmd": "run",
-			"Value": ["apk update     && apk add --no-cache git ca-certificates"],
+			"Value": ["apk update && apk add --no-cache git ca-certificates"],
 		},
 		{
 			"Cmd": "run",
 			"Value": ["apk --update add easy-rsa"],
 		},
+    {
+      "Cmd": "run",
+      "Value": ["/bin/sh /scripts/someScript.sh update"],
+    },
 		{
 			"Cmd": "entrypoint",
 			"Value": ["mysql"],

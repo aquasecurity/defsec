@@ -24,6 +24,7 @@ deny[res] {
 
 	command = concat(" ", run.Value)
 
+  is_package_manager(command)
 	is_valid_update(command)
 	not update_followed_by_install(command)
 
@@ -31,16 +32,15 @@ deny[res] {
 	res := result.new(msg, run)
 }
 
+package_manager_regex := `(apk)|(apt-get)|(yum)`
+
+is_package_manager(command) {
+  regex.match(package_manager_regex, command)
+}
+
+update_regex := `( update)|( check-update)`
 is_valid_update(command) {
-	chained_parts := regex.split(`\s*&&\s*`, command)
-
-	array_split := split(chained_parts[_], " ")
-
-	len = count(array_split)
-
-	update := {"update", "--update"}
-
-	array_split[len - 1] == update[_]
+  regex.match(update_regex, command)
 }
 
 update_followed_by_install(command) {
