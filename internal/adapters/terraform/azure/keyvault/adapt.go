@@ -150,11 +150,13 @@ func adaptKey(resource *terraform.Block) keyvault.Key {
 	expiryDateAttr := resource.GetAttribute("expiration_date")
 	expiryDateVal := defsecTypes.TimeDefault(time.Time{}, resource.GetMetadata())
 
-	if expiryDateAttr.IsNotNil() {
+	if expiryDateAttr.IsString() {
 		expiryDateString := expiryDateAttr.Value().AsString()
 		if expiryDate, err := time.Parse(time.RFC3339, expiryDateString); err == nil {
 			expiryDateVal = defsecTypes.Time(expiryDate, expiryDateAttr.GetMetadata())
 		}
+	} else if expiryDateAttr.IsNotNil() {
+		expiryDateVal = defsecTypes.TimeUnresolvable(expiryDateAttr.GetMetadata())
 	}
 
 	return keyvault.Key{
