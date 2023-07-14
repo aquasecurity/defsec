@@ -348,7 +348,6 @@ func (r *Result) Occurrences() []Occurrence {
 	var occurrences []Occurrence
 
 	mod := &r.metadata
-	prevFileName := mod.Range().GetFilename()
 
 	for {
 		mod = mod.Parent()
@@ -356,11 +355,6 @@ func (r *Result) Occurrences() []Occurrence {
 			break
 		}
 		parentRange := mod.Range()
-		fileName := parentRange.GetFilename()
-		if fileName == prevFileName {
-			continue
-		}
-		prevFileName = fileName
 		occurrences = append(occurrences, Occurrence{
 			Resource:  mod.Reference(),
 			Filename:  parentRange.GetFilename(),
