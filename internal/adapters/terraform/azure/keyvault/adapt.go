@@ -127,26 +127,22 @@ func adaptSecret(resource *terraform.Block) keyvault.Secret {
 	contentTypeAttr := resource.GetAttribute("content_type")
 	contentTypeVal := contentTypeAttr.AsStringValueOrDefault("", resource)
 
-	expiryDateAttr := resource.GetAttribute("expiration_date")
-	expiryDateVal := defsecTypes.TimeDefault(time.Time{}, resource.GetMetadata())
-
-	if expiryDateAttr.IsString() {
-		expiryDateString := expiryDateAttr.Value().AsString()
-		if expiryDate, err := time.Parse(time.RFC3339, expiryDateString); err == nil {
-			expiryDateVal = defsecTypes.Time(expiryDate, expiryDateAttr.GetMetadata())
-		}
-	} else if expiryDateAttr.IsNotNil() {
-		expiryDateVal = defsecTypes.TimeUnresolvable(expiryDateAttr.GetMetadata())
-	}
-
 	return keyvault.Secret{
 		Metadata:    resource.GetMetadata(),
 		ContentType: contentTypeVal,
-		ExpiryDate:  expiryDateVal,
+		ExpiryDate:  resolveExpiryDate(resource),
 	}
 }
 
 func adaptKey(resource *terraform.Block) keyvault.Key {
+
+	return keyvault.Key{
+		Metadata:   resource.GetMetadata(),
+		ExpiryDate: resolveExpiryDate(resource),
+	}
+}
+
+func resolveExpiryDate(resource *terraform.Block) defsecTypes.TimeValue {
 	expiryDateAttr := resource.GetAttribute("expiration_date")
 	expiryDateVal := defsecTypes.TimeDefault(time.Time{}, resource.GetMetadata())
 
@@ -159,8 +155,5 @@ func adaptKey(resource *terraform.Block) keyvault.Key {
 		expiryDateVal = defsecTypes.TimeUnresolvable(expiryDateAttr.GetMetadata())
 	}
 
-	return keyvault.Key{
-		Metadata:   resource.GetMetadata(),
-		ExpiryDate: expiryDateVal,
-	}
+	return expiryDateVal
 }
