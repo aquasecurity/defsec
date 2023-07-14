@@ -176,3 +176,54 @@ func createTestFileContext(t *testing.T, source string) *FileContext {
 	require.Len(t, contexts, 1)
 	return contexts[0]
 }
+
+func Test_parse_yaml_use_condition_in_resource(t *testing.T) {
+	source := `---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: some description
+Parameters:
+  ServiceName:
+    Type: String
+    Description: The service name
+  EnvName:
+    Type: String
+    Description: Optional environment name to prefix all resources with
+    Default: ""
+
+Conditions:
+  SuffixResources: !Not [!Equals [!Ref EnvName, ""]]
+
+Resources:
+  ErrorTimedOutMetricFilter:
+    Type: AWS::Logs::MetricFilter
+    Properties:
+      FilterPattern: '?ERROR ?error ?Error ?"timed out"' # If log contains one of these error words or timed out
+      LogGroupName:
+        !If [
+          SuffixResources,
+          !Sub "/aws/lambda/${ServiceName}-${EnvName}",
+          !Sub "/aws/lambda/${ServiceName}",
+        ]
+      MetricTransformations:
+        - MetricName: !Sub "${ServiceName}-ErrorLogCount"
+          MetricNamespace: market-LogMetrics
+          MetricValue: 1
+          DefaultValue: 0
+`
+
+	files, err := parseFile(t, source, "cf.yaml")
+	require.NoError(t, err)
+	assert.Len(t, files, 1)
+	ctx := files[0]
+
+	assert.Len(t, ctx.Parameters, 2)
+	assert.Len(t, ctx.Conditions, 1)
+	assert.Len(t, ctx.Resources, 1)
+
+	res := ctx.GetResourceByLogicalID("ErrorTimedOutMetricFilter")
+	assert.NotNil(t, res)
+
+	refProp := res.GetProperty("LogGroupName")
+	assert.False(t, refProp.IsNil())
+	assert.Equal(t, "/aws/lambda/${ServiceName}", refProp.AsString())
+}
