@@ -136,3 +136,17 @@ test_chained_allowed {
 
 	count(r) == 0
 }
+
+test_flags_after_pkgs_allowed {
+	r := deny with input as {"Stages": [{"Name": "debian:11-slim", "Commands": [
+		{
+			"Cmd": "from",
+			"Value": ["debian:11-slim"],
+		},
+		{
+			"Cmd": "run",
+			"Value": ["apt-get update && apt-get install tzdata postgresql-10 -y && rm -rf /var/lib/apt/lists/*"],
+		},
+	]}]}
+	count(r) == 0
+}
