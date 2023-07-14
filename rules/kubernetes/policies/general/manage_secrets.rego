@@ -1,6 +1,6 @@
 # METADATA
-# title: "Do not allow management of secrets"
-# description: "Check whether role permits managing secrets"
+# title: "Manage secrets"
+# description: "Viewing secrets at the cluster-scope is akin to cluster-admin in most clusters as there are typically at least one service accounts (their token stored in a secret) bound to cluster-admin directly or a role/clusterrole that gives similar permissions."
 # scope: package
 # schemas:
 # - input: schema["kubernetes"]
@@ -11,7 +11,7 @@
 #   avd_id: AVD-KSV-0041
 #   severity: CRITICAL
 #   short_code: no-manage-secrets
-#   recommended_action: "Create a role which does not permit to manage secrets if not needed"
+#   recommended_actions: "Manage secrets are not allowed. Remove resource 'secrets' from cluster role"
 #   input:
 #     selector:
 #     - type: kubernetes
@@ -22,7 +22,7 @@ import data.lib.utils
 
 readVerbs := ["get", "list", "watch", "create", "update", "patch", "delete", "deletecollection", "impersonate", "*"]
 
-readKinds := ["Role", "ClusterRole"]
+readKinds := ["ClusterRole"]
 
 resourceManageSecret[input.rules[ru]] {
 	some ru, r, v
@@ -33,6 +33,6 @@ resourceManageSecret[input.rules[ru]] {
 
 deny[res] {
 	badRule := resourceManageSecret[_]
-	msg := "Role permits management of secret(s)"
+	msg := kubernetes.format(sprintf("%s '%s' shouldn't have access to manage resource 'secrets'", [kubernetes.kind, kubernetes.name]))
 	res := result.new(msg, badRule)
 }

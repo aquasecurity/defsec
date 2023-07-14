@@ -1,5 +1,5 @@
 
-Full control of the cluster resources, and therefore also root on all nodes where workloads can run and has access to all pods, secrets, and data.
+Ability to add AWS IAM to RBAC bindings via special EKS configmap.
 
 ### Impact
 <!-- Add Impact here -->

@@ -1,6 +1,6 @@
-package builtin.kubernetes.KSV046
+package builtin.kubernetes.KSV114
 
-test_resource_verb_role_secrets {
+test_manageWebhookConfig_verb_create {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -10,43 +10,7 @@ test_resource_verb_role_secrets {
 		},
 		"rules": [{
 			"apiGroups": ["*"],
-			"resources": ["*"],
-			"verbs": ["delete"],
-		}],
-	}
-
-	count(r) > 0
-}
-
-test_resource_verb_role_pods {
-	r := deny with input as {
-		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "Role",
-		"metadata": {
-			"namespace": "default",
-			"name": "pod-reader",
-		},
-		"rules": [{
-			"apiGroups": ["*"],
-			"resources": ["*"],
-			"verbs": ["deletecollection"],
-		}],
-	}
-
-	count(r) > 0
-}
-
-test_resource_verb_role_deployments {
-	r := deny with input as {
-		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "Role",
-		"metadata": {
-			"namespace": "default",
-			"name": "pod-reader",
-		},
-		"rules": [{
-			"apiGroups": ["*"],
-			"resources": ["*"],
+			"resources": ["mutatingwebhookconfigurations"],
 			"verbs": ["create"],
 		}],
 	}
@@ -54,7 +18,7 @@ test_resource_verb_role_deployments {
 	count(r) > 0
 }
 
-test_resource_verb_role_daemonsets {
+test_manageWebhookConfig_verb_update {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -64,15 +28,15 @@ test_resource_verb_role_daemonsets {
 		},
 		"rules": [{
 			"apiGroups": ["*"],
-			"resources": ["*"],
-			"verbs": ["list"],
+			"resources": ["mutatingwebhookconfigurations"],
+			"verbs": ["update"],
 		}],
 	}
 
 	count(r) > 0
 }
 
-test_resource_verb_role_statefulsets {
+test_manageWebhookConfig_verb_patch {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -82,15 +46,15 @@ test_resource_verb_role_statefulsets {
 		},
 		"rules": [{
 			"apiGroups": ["*"],
-			"resources": ["*"],
-			"verbs": ["get"],
+			"resources": ["mutatingwebhookconfigurations"],
+			"verbs": ["patch"],
 		}],
 	}
 
 	count(r) > 0
 }
 
-test_resource_verb_role_replicationcontrollers {
+test_manageWebhookConfig_verb_delete {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
 		"kind": "Role",
@@ -100,7 +64,43 @@ test_resource_verb_role_replicationcontrollers {
 		},
 		"rules": [{
 			"apiGroups": ["*"],
-			"resources": ["*"],
+			"resources": ["validatingwebhookconfigurations"],
+			"verbs": ["delete"],
+		}],
+	}
+
+	count(r) > 0
+}
+
+test_manageWebhookConfig_verb_deletecollection {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "Role",
+		"metadata": {
+			"namespace": "default",
+			"name": "pod-reader",
+		},
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["validatingwebhookconfigurations"],
+			"verbs": ["deletecollection"],
+		}],
+	}
+
+	count(r) > 0
+}
+
+test_manageWebhookConfig_verb_impersonate {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "Role",
+		"metadata": {
+			"namespace": "default",
+			"name": "pod-reader",
+		},
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["validatingwebhookconfigurations"],
 			"verbs": ["impersonate"],
 		}],
 	}
@@ -108,38 +108,56 @@ test_resource_verb_role_replicationcontrollers {
 	count(r) > 0
 }
 
-test_resource_resource_role_no_specific_verb {
+test_validatingWebhook_manageWebhookConfig_verb_all {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "Role",
+		"kind": "ClusterRole",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
 		},
 		"rules": [{
 			"apiGroups": ["*"],
-			"resources": ["impersonate"],
-			"verbs": ["aaa"],
-		}],
-	}
-
-	count(r) == 0
-}
-
-test_resource_verb_role_no_any_verb {
-	r := deny with input as {
-		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "Role",
-		"metadata": {
-			"namespace": "default",
-			"name": "pod-reader",
-		},
-		"rules": [{
-			"apiGroups": ["*"],
-			"resources": ["*"],
+			"resources": ["validatingwebhookconfigurations"],
 			"verbs": ["*"],
 		}],
 	}
 
 	count(r) > 0
+}
+
+test_mutatingWebhook_manageWebhookConfig_verb_all {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "ClusterRole",
+		"metadata": {
+			"namespace": "default",
+			"name": "pod-reader",
+		},
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["mutatingwebhookconfigurations"],
+			"verbs": ["*"],
+		}],
+	}
+
+	count(r) > 0
+}
+
+test_manageWebhookConfig_verb_wrong {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "ClusterRole",
+		"metadata": {
+			"namespace": "default",
+			"name": "pod-reader",
+		},
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["mutatingwebhookconfigurations"],
+			"verbs": ["just"],
+		}],
+	}
+
+	count(r) == 0
 }
