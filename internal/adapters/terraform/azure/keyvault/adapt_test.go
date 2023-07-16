@@ -159,6 +159,50 @@ func Test_adaptKey(t *testing.T) {
 				ExpiryDate: defsecTypes.Time(time.Time{}, defsecTypes.NewTestMetadata()),
 			},
 		},
+		{
+			name: "expiration date refers to the resource",
+			terraform: `
+terraform {
+  required_version = ">=1.3.0"
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = ">=3.0.0"
+    }
+    time = {
+      source  = "hashicorp/time"
+      version = ">=0.9.0"
+    }
+  }
+}
+
+resource "azurerm_key_vault" "this" {
+  name                = "keyvault"
+  location            = "us-west"
+  resource_group_name = "resource-group"
+  tenant_id           = "tenant-id"
+  sku_name            = "Standard"
+}
+
+resource "time_offset" "expiry" {
+  offset_years = 1
+  base_rfc3339 = "YYYY-MM-DDTHH:MM:SSZ"
+}
+
+resource "azurerm_key_vault_key" "this" {
+  name            = "key"
+  key_vault_id    = azurerm_key_vault.this.id
+  key_type        = "RSA"
+  key_size        = 2048
+  key_opts        = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey"]
+  expiration_date = time_offset.expiry.rfc3339
+}
+`,
+			expected: keyvault.Key{
+				Metadata:   defsecTypes.NewTestMetadata(),
+				ExpiryDate: defsecTypes.TimeUnresolvable(defsecTypes.NewTestMetadata()),
+			},
+		},
 	}
 
 	for _, test := range tests {
