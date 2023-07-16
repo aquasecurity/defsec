@@ -30,10 +30,15 @@ type Scanner struct {
 	spec                    string
 	executorOpt             []executor.Option
 	frameworks              []framework.Framework
-	loadEmbedded            bool
+	loadEmbeddedPolicies    bool
+	loadEmbeddedLibraries   bool
 	enableEmbeddedLibraries bool
 	policyDirs              []string
 	policyReaders           []io.Reader
+}
+
+func (s *Scanner) SetUseEmbeddedLibraries(b bool) {
+	s.loadEmbeddedLibraries = b
 }
 
 func (s *Scanner) SetSpec(spec string) {
@@ -49,7 +54,7 @@ func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
-	s.loadEmbedded = b
+	s.loadEmbeddedPolicies = b
 }
 
 func (s *Scanner) SetEmbeddedLibrariesEnabled(enabled bool) {
