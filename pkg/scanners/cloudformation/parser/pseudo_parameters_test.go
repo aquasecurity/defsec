@@ -18,7 +18,7 @@ func Test_Raw(t *testing.T) {
 			expected: "123456789012",
 		},
 		{
-			name:     "a parameter with a list type valuer",
+			name:     "a parameter with a list type value",
 			key:      "AWS::NotificationARNs",
 			expected: []string{"notification::arn::1", "notification::arn::2"},
 		},
