@@ -63,8 +63,8 @@ func resolveMapSub(refValue *Property, original *Property) (*Property, bool) {
 func resolveStringSub(refValue *Property, original *Property) *Property {
 	workingString := refValue.AsString()
 
-	for k, v := range pseudoParameters {
-		workingString = strings.ReplaceAll(workingString, fmt.Sprintf("${%s}", k), fmt.Sprintf("%v", v))
+	for k, param := range pseudoParameters {
+		workingString = strings.ReplaceAll(workingString, fmt.Sprintf("${%s}", k), fmt.Sprintf("%v", param.getRawValue()))
 	}
 
 	return original.deriveResolved(cftypes.String, workingString)
