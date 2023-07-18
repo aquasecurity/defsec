@@ -27,6 +27,7 @@ func init() {
 		"Fn::And":         ResolveAnd,
 		"Fn::Or":          ResolveOr,
 		"Fn::Not":         ResolveNot,
+		"Fn::Length":      ResolveLength,
 	}
 }
 
