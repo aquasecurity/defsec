@@ -94,9 +94,7 @@ func getVersioning(block *terraform.Block, a *adapter) s3.Versioning {
 		versioning.Enabled = *enabled
 	}
 
-	if val, ok := applyForBucketRelatedResource(a, block, "aws_s3_bucket_versioning", func(resource *terraform.Block) s3.Versioning {
-		return getVersioningFromResource(resource)
-	}); ok {
+	if val, ok := applyForBucketRelatedResource(a, block, "aws_s3_bucket_versioning", getVersioningFromResource); ok {
 		return val
 	}
 	return versioning
@@ -272,5 +270,6 @@ func applyForBucketRelatedResource[T any](a *adapter, block *terraform.Block, re
 		}
 
 	}
-	return *new(T), false
+	var res T
+	return res, false
 }
