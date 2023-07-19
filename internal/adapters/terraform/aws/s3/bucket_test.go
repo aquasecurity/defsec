@@ -162,6 +162,70 @@ resource "aws_s3_bucket_versioning" "example" {
 	assert.True(t, s3.Buckets[0].Versioning.Enabled.Value())
 }
 
+func Test_BucketGetVersioningWithLockDeprecated(t *testing.T) {
+	source := `
+resource "aws_s3_bucket" "example" {
+  bucket = "mybucket"
+  object_lock_configuration {
+    object_lock_enabled = "Enabled"
+  }
+}	
+`
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
+
+	s3 := Adapt(modules)
+
+	assert.Equal(t, 1, len(s3.Buckets))
+	assert.True(t, s3.Buckets[0].Versioning.Enabled.Value())
+
+}
+
+func Test_BucketGetVersioningWithLockForNewBucket(t *testing.T) {
+	source := `
+resource "aws_s3_bucket" "example" {
+  bucket = "mybucket"
+  object_lock_enabled = true
+}
+
+resource "aws_s3_bucket_object_lock_configuration" "example" {
+	bucket = aws_s3_bucket.example.id
+}
+`
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
+
+	s3 := Adapt(modules)
+
+	assert.Equal(t, 1, len(s3.Buckets))
+	assert.True(t, s3.Buckets[0].Versioning.Enabled.Value())
+
+}
+
+func Test_BucketGetVersioningWhenLockDisabledButVersioningEnabled(t *testing.T) {
+	source := `
+resource "aws_s3_bucket" "example" {
+  bucket = "mybucket"
+}
+
+resource "aws_s3_bucket_object_lock_configuration" "example" {
+	bucket = aws_s3_bucket.example.id
+}
+
+resource "aws_s3_bucket_versioning" "example" {
+  bucket = aws_s3_bucket.example.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+`
+	modules := tftestutil.CreateModulesFromSource(t, source, ".tf")
+
+	s3 := Adapt(modules)
+
+	assert.Equal(t, 1, len(s3.Buckets))
+	assert.True(t, s3.Buckets[0].Versioning.Enabled.Value())
+
+}
+
 func Test_BucketGetEncryption(t *testing.T) {
 
 	source := `
