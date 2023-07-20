@@ -19,6 +19,10 @@ func ResolveReference(property *Property) (resolved *Property, success bool) {
 		return property.deriveResolved(cftypes.String, pseudo.(string)), true
 	}
 
+	if property.ctx == nil {
+		return property, false
+	}
+
 	var param *Parameter
 	for k := range property.ctx.Parameters {
 		if k == refValue {

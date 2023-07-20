@@ -145,6 +145,11 @@ func (p *Parser) ParseFile(ctx context.Context, fs fs.FS, path string) (context 
 
 	p.debug.Log("Context loaded from source %s", path)
 
+	// the context must be set to conditions before resources
+	for _, c := range context.Conditions {
+		c.setContext(context)
+	}
+
 	for name, r := range context.Resources {
 		r.ConfigureResource(name, fs, path, context)
 	}
