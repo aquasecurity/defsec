@@ -68,6 +68,10 @@ short_flags := `(-([a-xzA-XZ])*y([a-xzA-XZ])*)`
 
 long_flags := `(--yes)|(--assume-yes)`
 
+# https://www.debian.org/doc/debian-policy/ch-controlfields.html#s-f-source
+# https://www.debian.org/doc/debian-policy/ch-controlfields.html#version
+pkgs := `([a-z\d][a-z\d+\-.]+(?:=[\w.+\-~:]+)?\s*)*`
+
 optional_not_related_flags := `\s*(-(-)?[a-zA-Z]+\s*)*`
 
 combined_flags := sprintf(`%s(%s|%s)%s`, [optional_not_related_flags, short_flags, long_flags, optional_not_related_flags])
@@ -81,5 +85,11 @@ includes_assume_yes(command) {
 # flags behind command
 includes_assume_yes(command) {
 	install_regexp := sprintf(`apt-get%sinstall%s`, [optional_not_related_flags, combined_flags])
+	regex.match(install_regexp, command)
+}
+
+# flags after pkgs
+includes_assume_yes(command) {
+	install_regexp := sprintf(`apt-get%sinstall%s%s%s`, [optional_not_related_flags, optional_not_related_flags, pkgs, combined_flags])
 	regex.match(install_regexp, command)
 }

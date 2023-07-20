@@ -16,7 +16,11 @@ func ResolveReference(property *Property) (resolved *Property, success bool) {
 	refValue := refProp.AsString()
 
 	if pseudo, ok := pseudoParameters[refValue]; ok {
-		return property.deriveResolved(cftypes.String, pseudo.(string)), true
+		return property.deriveResolved(pseudo.t, pseudo.val), true
+	}
+
+	if property.ctx == nil {
+		return property, false
 	}
 
 	var param *Parameter

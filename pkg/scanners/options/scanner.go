@@ -23,6 +23,7 @@ type ConfigurableScanner interface {
 	SetSpec(spec string)
 	SetRegoOnly(regoOnly bool)
 	SetRegoErrorLimit(limit int)
+	SetUseEmbeddedLibraries(bool)
 }
 
 type ScannerOption func(s ConfigurableScanner)
@@ -55,6 +56,12 @@ func ScannerWithDebug(w io.Writer) ScannerOption {
 func ScannerWithEmbeddedPolicies(embedded bool) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetUseEmbeddedPolicies(embedded)
+	}
+}
+
+func ScannerWithEmbeddedLibraries(enabled bool) ScannerOption {
+	return func(s ConfigurableScanner) {
+		s.SetUseEmbeddedLibraries(enabled)
 	}
 }
 

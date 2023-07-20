@@ -225,7 +225,7 @@ func (v Value) AsInt() int {
 	if v.Kind != KindNumber {
 		return 0
 	}
-	return int(v.rLit.(float64))
+	return int(v.rLit.(int64))
 }
 
 func (v Value) AsFloat() float64 {

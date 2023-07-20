@@ -241,13 +241,17 @@ func (p *Property) GetProperty(path string) *Property {
 	pathParts := strings.Split(path, ".")
 
 	first := pathParts[0]
-	var property *Property
+	property := p
 
-	if p.IsNotMap() {
+	if p.isFunction() {
+		property, _ = p.resolveValue()
+	}
+
+	if property.IsNotMap() {
 		return nil
 	}
 
-	for n, p := range p.AsMap() {
+	for n, p := range property.AsMap() {
 		if n == first {
 			property = p
 			break
