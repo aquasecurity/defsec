@@ -1,4 +1,4 @@
-name: test go
+name: test trivy
 on:
   push:
     branches-ignore:
@@ -11,7 +11,7 @@ env:
 
 jobs:
   test:
-    name: Test with Trivy
+    name: Test trivy
     defaults:
       run:
         working-directory: ${{ env.TRIVY_DIR }}
