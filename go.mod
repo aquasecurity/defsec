@@ -76,6 +76,7 @@ require (
 )
 
 require (
+	github.com/aws/aws-sdk-go-v2/service/backup v1.19.1
 	github.com/aws/smithy-go v1.13.5
 	github.com/mitchellh/mapstructure v1.5.0
 	k8s.io/utils v0.0.0-20230220204549-a5ecb0141aa5
