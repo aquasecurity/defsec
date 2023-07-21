@@ -4,10 +4,14 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/accessanalyzer"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/apigateway"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/athena"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudformation"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudfront"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudtrail"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/codeartifact"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/codebuild"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/codepipeline"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/cognito"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/config"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/documentdb"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/dynamodb"
@@ -41,10 +45,14 @@ type AWS struct {
 	AccessAnalyzer accessanalyzer.AccessAnalyzer
 	APIGateway     apigateway.APIGateway
 	Athena         athena.Athena
+	Cloudformation cloudformation.Cloudformation
 	Cloudfront     cloudfront.Cloudfront
 	CloudTrail     cloudtrail.CloudTrail
 	CloudWatch     cloudwatch.CloudWatch
+	CodeArtifact   codeartifact.Codeartifact
 	CodeBuild      codebuild.CodeBuild
+	CodePipeline   codepipeline.Codepipeline
+	Cognito        cognito.Cognito
 	Config         config.Config
 	DocumentDB     documentdb.DocumentDB
 	DynamoDB       dynamodb.DynamoDB

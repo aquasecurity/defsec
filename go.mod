@@ -76,6 +76,10 @@ require (
 )
 
 require (
+	github.com/aws/aws-sdk-go-v2/service/cloudformation v1.26.2
+	github.com/aws/aws-sdk-go-v2/service/codeartifact v1.16.2
+	github.com/aws/aws-sdk-go-v2/service/codepipeline v1.14.2
+	github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider v1.22.2
 	github.com/aws/smithy-go v1.13.5
 	github.com/mitchellh/mapstructure v1.5.0
 	k8s.io/utils v0.0.0-20230220204549-a5ecb0141aa5
