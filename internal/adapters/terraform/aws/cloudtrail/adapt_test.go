@@ -32,17 +32,19 @@ func Test_adaptTrail(t *testing.T) {
 				s3_bucket_name = "abcdefgh"
 				cloud_watch_logs_group_arn = "abc"
 				enable_logging = false
+				include_global_service_events = false
 			}
 `,
 			expected: cloudtrail.Trail{
-				Metadata:                  defsecTypes.NewTestMetadata(),
-				Name:                      defsecTypes.String("example", defsecTypes.NewTestMetadata()),
-				EnableLogFileValidation:   defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
-				IsMultiRegion:             defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
-				KMSKeyID:                  defsecTypes.String("kms-key", defsecTypes.NewTestMetadata()),
-				CloudWatchLogsLogGroupArn: defsecTypes.String("abc", defsecTypes.NewTestMetadata()),
-				IsLogging:                 defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
-				BucketName:                defsecTypes.String("abcdefgh", defsecTypes.NewTestMetadata()),
+				Metadata:                   defsecTypes.NewTestMetadata(),
+				Name:                       defsecTypes.String("example", defsecTypes.NewTestMetadata()),
+				EnableLogFileValidation:    defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				IsMultiRegion:              defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				KMSKeyID:                   defsecTypes.String("kms-key", defsecTypes.NewTestMetadata()),
+				CloudWatchLogsLogGroupArn:  defsecTypes.String("abc", defsecTypes.NewTestMetadata()),
+				IsLogging:                  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				IncludeGlobalServiceEvents: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				BucketName:                 defsecTypes.String("abcdefgh", defsecTypes.NewTestMetadata()),
 			},
 		},
 		{
@@ -52,14 +54,15 @@ func Test_adaptTrail(t *testing.T) {
 			}
 `,
 			expected: cloudtrail.Trail{
-				Metadata:                  defsecTypes.NewTestMetadata(),
-				Name:                      defsecTypes.String("", defsecTypes.NewTestMetadata()),
-				EnableLogFileValidation:   defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
-				IsMultiRegion:             defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
-				KMSKeyID:                  defsecTypes.String("", defsecTypes.NewTestMetadata()),
-				BucketName:                defsecTypes.String("", defsecTypes.NewTestMetadata()),
-				CloudWatchLogsLogGroupArn: defsecTypes.String("", defsecTypes.NewTestMetadata()),
-				IsLogging:                 defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				Metadata:                   defsecTypes.NewTestMetadata(),
+				Name:                       defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				EnableLogFileValidation:    defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				IsMultiRegion:              defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+				KMSKeyID:                   defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				BucketName:                 defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				CloudWatchLogsLogGroupArn:  defsecTypes.String("", defsecTypes.NewTestMetadata()),
+				IsLogging:                  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+				IncludeGlobalServiceEvents: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 			},
 		},
 	}

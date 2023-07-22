@@ -141,14 +141,15 @@ func (a *adapter) adaptTrail(info types.TrailInfo) (*cloudtrail.Trail, error) {
 	}
 
 	return &cloudtrail.Trail{
-		Metadata:                  metadata,
-		Name:                      name,
-		EnableLogFileValidation:   defsecTypes.Bool(response.Trail.LogFileValidationEnabled != nil && *response.Trail.LogFileValidationEnabled, metadata),
-		IsMultiRegion:             defsecTypes.Bool(response.Trail.IsMultiRegionTrail != nil && *response.Trail.IsMultiRegionTrail, metadata),
-		CloudWatchLogsLogGroupArn: cloudWatchLogsArn,
-		KMSKeyID:                  defsecTypes.String(kmsKeyId, metadata),
-		IsLogging:                 isLogging,
-		BucketName:                defsecTypes.String(bucketName, metadata),
-		EventSelectors:            eventSelectors,
+		Metadata:                   metadata,
+		Name:                       name,
+		EnableLogFileValidation:    defsecTypes.Bool(response.Trail.LogFileValidationEnabled != nil && *response.Trail.LogFileValidationEnabled, metadata),
+		IsMultiRegion:              defsecTypes.Bool(response.Trail.IsMultiRegionTrail != nil && *response.Trail.IsMultiRegionTrail, metadata),
+		CloudWatchLogsLogGroupArn:  cloudWatchLogsArn,
+		KMSKeyID:                   defsecTypes.String(kmsKeyId, metadata),
+		IsLogging:                  isLogging,
+		IncludeGlobalServiceEvents: defsecTypes.Bool(response.Trail.IncludeGlobalServiceEvents != nil && *response.Trail.IncludeGlobalServiceEvents, metadata),
+		BucketName:                 defsecTypes.String(bucketName, metadata),
+		EventSelectors:             eventSelectors,
 	}, nil
 }
