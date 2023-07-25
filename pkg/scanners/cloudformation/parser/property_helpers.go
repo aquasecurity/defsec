@@ -166,6 +166,10 @@ func (p *Property) AsList() []*Property {
 	return nil
 }
 
+func (p *Property) Len() int {
+	return len(p.AsList())
+}
+
 func (p *Property) EqualTo(checkValue interface{}, equalityOptions ...EqualityOptions) bool {
 	var ignoreCase bool
 	for _, option := range equalityOptions {
