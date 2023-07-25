@@ -30,7 +30,7 @@ var CheckThreatAlertEmailSet = rules.Register(
 	func(s *state.State) (results scan.Results) {
 		for _, server := range s.Azure.Database.MSSQLServers {
 			for _, policy := range server.SecurityAlertPolicies {
-				if len(policy.EmailAddresses) == 0 {
+				if len(policy.EmailAddresses) == 0 && policy.State.NotEqualTo("Disabled") {
 					results.Add(
 						"Security alert policy does not include any email addresses for notification.",
 						&policy,

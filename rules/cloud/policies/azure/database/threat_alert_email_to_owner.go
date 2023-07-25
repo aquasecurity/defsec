@@ -30,7 +30,7 @@ var CheckThreatAlertEmailToOwner = rules.Register(
 	func(s *state.State) (results scan.Results) {
 		for _, server := range s.Azure.Database.MSSQLServers {
 			for _, policy := range server.SecurityAlertPolicies {
-				if policy.EmailAccountAdmins.IsFalse() {
+				if policy.EmailAccountAdmins.IsFalse() && policy.State.NotEqualTo("Disabled") {
 					results.Add(
 						"Security alert policy does not alert account admins.",
 						policy.EmailAccountAdmins,
