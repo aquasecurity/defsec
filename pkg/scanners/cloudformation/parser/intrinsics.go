@@ -28,6 +28,7 @@ func init() {
 		"Fn::Or":          ResolveOr,
 		"Fn::Not":         ResolveNot,
 		"Fn::Length":      ResolveLength,
+		"Condition":       ResolveCondition,
 	}
 }
 
@@ -46,7 +47,7 @@ func IsIntrinsicFunc(node *yaml.Node) bool {
 	}
 
 	nodeTag := strings.TrimPrefix(node.Tag, "!")
-	if nodeTag != "Ref" {
+	if nodeTag != "Ref" && nodeTag != "Condition" {
 		nodeTag = fmt.Sprintf("Fn::%s", nodeTag)
 	}
 	for tag := range intrinsicFuncs {
