@@ -1,6 +1,7 @@
 name: verify schema
 on:
   pull_request:
+  merge_group:
 jobs:
   build:
     name: verifying schema

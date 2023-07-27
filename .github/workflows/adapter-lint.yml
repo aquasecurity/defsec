@@ -1,6 +1,7 @@
 name: adapter-lint
 on:
   pull_request:
+  merge_group:
 jobs:
   adapter-lint:
     runs-on: ubuntu-latest
