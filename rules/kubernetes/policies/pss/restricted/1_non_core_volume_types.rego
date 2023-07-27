@@ -1,5 +1,5 @@
 # METADATA
-# title: "Non-ephemeral volume types used"
+# title: "Non-core volume types used."
 # description: "In addition to restricting HostPath volumes, usage of non-ephemeral volume types should be limited to those defined through PersistentVolumes."
 # scope: package
 # schemas:
@@ -42,6 +42,7 @@ disallowed_volume_types = [
 	"portworxVolume",
 	"scaleIO",
 	"storageos",
+	"csi",
 ]
 
 # getDisallowedVolumes returns a list of volume names

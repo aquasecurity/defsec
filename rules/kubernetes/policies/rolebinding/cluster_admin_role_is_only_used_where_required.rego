@@ -1,5 +1,5 @@
 # METADATA
-# title: "Ensure that the cluster-admin role is only used where required"
+# title: "User with admin access"
 # description: "The RBAC role cluster-admin provides wide-ranging powers over the environment and should be used only where and when needed."
 # scope: package
 # schemas:
@@ -19,16 +19,17 @@ package builtin.kubernetes.KSV111
 
 import data.lib.kubernetes
 
+readRoleRefs := ["cluster-admin", "admin", "edit"]
+
 roleBindings := ["clusterrolebinding", "rolebinding"]
 
 clusterAdminRoleInUse(roleBinding) {
 	lower(kubernetes.kind) == roleBindings[_]
-	roleBinding.roleRef.name == "cluster-admin"
-	roleBinding.subjects[_].name != "system:masters"
+	roleBinding.roleRef.name == readRoleRefs[_]
 }
 
 deny[res] {
 	clusterAdminRoleInUse(input)
-	msg := sprintf("%s '%s' with role 'cluster-admin' should be used only when required", [kubernetes.kind, kubernetes.name])
+	msg := kubernetes.format(sprintf("%s '%s' should not bind to roles %s", [kubernetes.kind, kubernetes.name, readRoleRefs]))
 	res := result.new(msg, input.metadata)
 }

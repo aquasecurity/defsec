@@ -1,5 +1,5 @@
 # METADATA
-# title: "Default capabilities not dropped"
+# title: "Default capabilities: some containers do not drop all"
 # description: "The container should drop all default capabilities and add only those that are needed for its execution."
 # scope: package
 # schemas:

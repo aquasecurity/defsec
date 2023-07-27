@@ -1,5 +1,5 @@
 # METADATA
-# title: "Default AppArmor profile not set"
+# title: "Runtime/Default AppArmor profile not set"
 # description: "A program inside the container can bypass AppArmor protection policies."
 # scope: package
 # schemas:

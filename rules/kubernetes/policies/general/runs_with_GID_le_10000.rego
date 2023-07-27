@@ -1,5 +1,5 @@
 # METADATA
-# title: "Runs with low group ID"
+# title: "Runs with GID <= 10000"
 # description: "Force the container to run with group ID > 10000 to avoid conflicts with the host’s user table."
 # scope: package
 # schemas:

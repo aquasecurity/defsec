@@ -8,18 +8,11 @@ test_getting_shell_on_pods {
 			"namespace": "default",
 			"name": "pod-reader",
 		},
-		"rules": [
-			{
-				"apiGroups": ["*"],
-				"resources": ["pods/exec"],
-				"verbs": ["create"],
-			},
-			{
-				"apiGroups": ["*"],
-				"resources": ["pods"],
-				"verbs": ["get"],
-			},
-		],
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["pods/exec"],
+			"verbs": ["create"],
+		}],
 	}
 
 	count(r) == 1
@@ -33,18 +26,11 @@ test_getting_shell_on_pods_no_pod_exec {
 			"namespace": "default",
 			"name": "pod-reader",
 		},
-		"rules": [
-			{
-				"apiGroups": ["*"],
-				"resources": ["pods/exec1"],
-				"verbs": ["create"],
-			},
-			{
-				"apiGroups": ["*"],
-				"resources": ["pods"],
-				"verbs": ["get"],
-			},
-		],
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["pods/exec1"],
+			"verbs": ["create"],
+		}],
 	}
 
 	count(r) == 0
@@ -58,18 +44,11 @@ test_getting_shell_on_pods_no_verb_create {
 			"namespace": "default",
 			"name": "pod-reader",
 		},
-		"rules": [
-			{
-				"apiGroups": ["*"],
-				"resources": ["pods/exec"],
-				"verbs": ["create1"],
-			},
-			{
-				"apiGroups": ["*"],
-				"resources": ["pods"],
-				"verbs": ["get"],
-			},
-		],
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["pods/exec"],
+			"verbs": ["create1"],
+		}],
 	}
 
 	count(r) == 0
@@ -83,18 +62,11 @@ test_getting_shell_on_pods_no_resource_pod {
 			"namespace": "default",
 			"name": "pod-reader",
 		},
-		"rules": [
-			{
-				"apiGroups": ["*"],
-				"resources": ["pods/exec"],
-				"verbs": ["create1"],
-			},
-			{
-				"apiGroups": ["*"],
-				"resources": ["pods1"],
-				"verbs": ["get"],
-			},
-		],
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["pods/exec"],
+			"verbs": ["create1"],
+		}],
 	}
 
 	count(r) == 0
@@ -108,18 +80,11 @@ test_getting_shell_on_pods_no_verb_get {
 			"namespace": "default",
 			"name": "pod-reader",
 		},
-		"rules": [
-			{
-				"apiGroups": ["*"],
-				"resources": ["pods/exec"],
-				"verbs": ["create1"],
-			},
-			{
-				"apiGroups": ["*"],
-				"resources": ["pods"],
-				"verbs": ["get1"],
-			},
-		],
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["pods/exec"],
+			"verbs": ["create1"],
+		}],
 	}
 
 	count(r) == 0
