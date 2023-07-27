@@ -112,9 +112,10 @@ type resolver struct {
 
 func (r *resolver) ResolveEndpoint(_, _ string, _ ...interface{}) (aws.Endpoint, error) {
 	return aws.Endpoint{
-		URL:           r.endpoint,
-		SigningRegion: "custom-signing-region",
-		Source:        aws.EndpointSourceCustom,
+		URL:               r.endpoint,
+		SigningRegion:     "custom-signing-region",
+		Source:            aws.EndpointSourceCustom,
+		HostnameImmutable: true,
 	}, nil
 }
 
