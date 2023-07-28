@@ -1,124 +1,34 @@
-package builtin.kubernetes.KSV041
+package builtin.kubernetes.KSV112
 
-test_manage_secrets {
+test_resource_verb_role_secrets {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
 		},
 		"rules": [{
 			"apiGroups": ["*"],
-			"resources": ["secrets"],
-			"verbs": ["get"],
+			"resources": ["*"],
+			"verbs": ["delete"],
 		}],
 	}
 
 	count(r) > 0
 }
 
-test_manage_verb_update {
+test_resource_verb_role_pods {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
 		},
 		"rules": [{
 			"apiGroups": ["*"],
-			"resources": ["secrets"],
-			"verbs": ["update"],
-		}],
-	}
-
-	count(r) > 0
-}
-
-test_manage_verb_list {
-	r := deny with input as {
-		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
-		"metadata": {
-			"namespace": "default",
-			"name": "pod-reader",
-		},
-		"rules": [{
-			"apiGroups": ["*"],
-			"resources": ["secrets"],
-			"verbs": ["list"],
-		}],
-	}
-
-	count(r) > 0
-}
-
-test_manage_not_secret_resource {
-	r := deny with input as {
-		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
-		"metadata": {
-			"namespace": "default",
-			"name": "pod-reader",
-		},
-		"rules": [{
-			"apiGroups": ["*"],
-			"resources": ["secrets1"],
-			"verbs": ["list"],
-		}],
-	}
-
-	count(r) == 0
-}
-
-test_manage_secret_verb_update {
-	r := deny with input as {
-		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
-		"metadata": {
-			"namespace": "default",
-			"name": "pod-reader",
-		},
-		"rules": [{
-			"apiGroups": ["*"],
-			"resources": ["secrets"],
-			"verbs": ["update"],
-		}],
-	}
-
-	count(r) > 0
-}
-
-test_manage_secret_verb_impersonate {
-	r := deny with input as {
-		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
-		"metadata": {
-			"namespace": "default",
-			"name": "pod-reader",
-		},
-		"rules": [{
-			"apiGroups": ["*"],
-			"resources": ["secrets"],
-			"verbs": ["impersonate"],
-		}],
-	}
-
-	count(r) > 0
-}
-
-test_manage_secret_verb_deletecollection {
-	r := deny with input as {
-		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
-		"metadata": {
-			"namespace": "default",
-			"name": "pod-reader",
-		},
-		"rules": [{
-			"apiGroups": ["*"],
-			"resources": ["secrets"],
+			"resources": ["*"],
 			"verbs": ["deletecollection"],
 		}],
 	}
@@ -126,36 +36,108 @@ test_manage_secret_verb_deletecollection {
 	count(r) > 0
 }
 
-test_manage_secret_verb_patch {
+test_resource_verb_role_deployments {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
 		},
 		"rules": [{
 			"apiGroups": ["*"],
-			"resources": ["secrets"],
-			"verbs": ["patch"],
+			"resources": ["*"],
+			"verbs": ["create"],
 		}],
 	}
 
 	count(r) > 0
 }
 
-test_manage_secret_verb_watch {
+test_resource_verb_role_daemonsets {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
 		},
 		"rules": [{
 			"apiGroups": ["*"],
-			"resources": ["secrets"],
-			"verbs": ["watch"],
+			"resources": ["*"],
+			"verbs": ["list"],
+		}],
+	}
+
+	count(r) > 0
+}
+
+test_resource_verb_role_statefulsets {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "Role",
+		"metadata": {
+			"namespace": "default",
+			"name": "pod-reader",
+		},
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["*"],
+			"verbs": ["get"],
+		}],
+	}
+
+	count(r) > 0
+}
+
+test_resource_verb_role_replicationcontrollers {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "Role",
+		"metadata": {
+			"namespace": "default",
+			"name": "pod-reader",
+		},
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["*"],
+			"verbs": ["impersonate"],
+		}],
+	}
+
+	count(r) > 0
+}
+
+test_resource_resource_role_no_specific_verb {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "Role",
+		"metadata": {
+			"namespace": "default",
+			"name": "pod-reader",
+		},
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["impersonate"],
+			"verbs": ["aaa"],
+		}],
+	}
+
+	count(r) == 0
+}
+
+test_resource_verb_role_no_any_verb {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "Role",
+		"metadata": {
+			"namespace": "default",
+			"name": "pod-reader",
+		},
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["*"],
+			"verbs": ["*"],
 		}],
 	}
 
