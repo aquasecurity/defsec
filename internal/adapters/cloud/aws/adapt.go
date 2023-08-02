@@ -110,10 +110,10 @@ type resolver struct {
 	endpoint string
 }
 
-func (r *resolver) ResolveEndpoint(_, _ string, _ ...interface{}) (aws.Endpoint, error) {
+func (r *resolver) ResolveEndpoint(_, region string, _ ...interface{}) (aws.Endpoint, error) {
 	return aws.Endpoint{
 		URL:           r.endpoint,
-		SigningRegion: "custom-signing-region",
+		SigningRegion: region,
 		Source:        aws.EndpointSourceCustom,
 	}, nil
 }
