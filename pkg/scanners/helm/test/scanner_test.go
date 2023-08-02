@@ -35,7 +35,7 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 	for _, test := range tests {
 		t.Logf("Running test: %s", test.testName)
 
-		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true))
+		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true))
 
 		testTemp := t.TempDir()
 		testFileName := filepath.Join(testTemp, test.archiveName)
@@ -47,7 +47,7 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 		require.NotNil(t, results)
 
 		failed := results.GetFailed()
-		assert.Equal(t, 12, len(failed))
+		assert.Equal(t, 19, len(failed))
 
 		visited := make(map[string]bool)
 		var errorCodes []string
@@ -58,7 +58,7 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 				errorCodes = append(errorCodes, id)
 			}
 		}
-		assert.Len(t, errorCodes, 12)
+		assert.Len(t, errorCodes, 14)
 
 		sort.Strings(errorCodes)
 
@@ -67,7 +67,7 @@ func Test_helm_scanner_with_archive(t *testing.T) {
 			"AVD-KSV-0011", "AVD-KSV-0012", "AVD-KSV-0014",
 			"AVD-KSV-0015", "AVD-KSV-0016", "AVD-KSV-0018",
 			"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0030",
-			"AVD-KSV-0106",
+			"AVD-KSV-0104", "AVD-KSV-0106", "AVD-KSV-0116",
 		}, errorCodes)
 	}
 }
@@ -91,7 +91,7 @@ func Test_helm_scanner_with_missing_name_can_recover(t *testing.T) {
 	for _, test := range tests {
 		t.Logf("Running test: %s", test.testName)
 
-		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true))
+		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true))
 
 		testTemp := t.TempDir()
 		testFileName := filepath.Join(testTemp, test.archiveName)
@@ -119,7 +119,7 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 
 		t.Logf("Running test: %s", test.testName)
 
-		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true))
+		helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true))
 
 		testFs := os.DirFS(filepath.Join("testdata", test.chartName))
 		results, err := helmScanner.ScanFS(context.TODO(), testFs, ".")
@@ -127,7 +127,7 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 		require.NotNil(t, results)
 
 		failed := results.GetFailed()
-		assert.Equal(t, 12, len(failed))
+		assert.Equal(t, 16, len(failed))
 
 		visited := make(map[string]bool)
 		var errorCodes []string
@@ -146,7 +146,7 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 			"AVD-KSV-0011", "AVD-KSV-0012", "AVD-KSV-0014",
 			"AVD-KSV-0015", "AVD-KSV-0016", "AVD-KSV-0018",
 			"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0030",
-			"AVD-KSV-0106",
+			"AVD-KSV-0104", "AVD-KSV-0106", "AVD-KSV-0116",
 		}, errorCodes)
 	}
 }
@@ -194,7 +194,7 @@ deny[res] {
 		t.Run(test.testName, func(t *testing.T) {
 			t.Logf("Running test: %s", test.testName)
 
-			helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true),
+			helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true),
 				options.ScannerWithPolicyDirs("rules"),
 				options.ScannerWithPolicyNamespaces("user"))
 
@@ -213,7 +213,7 @@ deny[res] {
 			require.NotNil(t, results)
 
 			failed := results.GetFailed()
-			assert.Equal(t, 14, len(failed))
+			assert.Equal(t, 21, len(failed))
 
 			visited := make(map[string]bool)
 			var errorCodes []string
@@ -224,7 +224,7 @@ deny[res] {
 					errorCodes = append(errorCodes, id)
 				}
 			}
-			assert.Len(t, errorCodes, 13)
+			assert.Len(t, errorCodes, 15)
 
 			sort.Strings(errorCodes)
 
@@ -233,7 +233,7 @@ deny[res] {
 				"AVD-KSV-0011", "AVD-KSV-0012", "AVD-KSV-0014",
 				"AVD-KSV-0015", "AVD-KSV-0016", "AVD-KSV-0018",
 				"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0030",
-				"AVD-KSV-0106", "AVD-USR-ID001",
+				"AVD-KSV-0104", "AVD-KSV-0106", "AVD-KSV-0116", "AVD-USR-ID001",
 			}, errorCodes)
 		})
 	}
@@ -259,7 +259,7 @@ func copyArchive(src, dst string) error {
 }
 
 func Test_helm_chart_with_templated_name(t *testing.T) {
-	helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true))
+	helmScanner := helm.New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true))
 	testFs := os.DirFS(filepath.Join("testdata", "templated-name"))
 	_, err := helmScanner.ScanFS(context.TODO(), testFs, ".")
 	require.NoError(t, err)

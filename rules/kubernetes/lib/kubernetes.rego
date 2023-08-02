@@ -140,11 +140,11 @@ no_read_only_filesystem(c) {
 	not has_field(c.securityContext, "readOnlyRootFilesystem")
 }
 
-priviledge_escalation_allowed(c) {
+privilege_escalation_allowed(c) {
 	not has_field(c, "securityContext")
 }
 
-priviledge_escalation_allowed(c) {
+privilege_escalation_allowed(c) {
 	has_field(c, "securityContext")
 	has_field(c.securityContext, "allowPrivilegeEscalation")
 }
@@ -178,18 +178,18 @@ command_has_flag(command, flag) {
 	regex.match(flag, command[_])
 }
 
-is_controllermananager(container) {
-	regex.match("kube-controller-manager", container.command[0])
+is_controllermanager(container) {
+	regex.match("^(.*/)?kube-controller-manager$", container.command[0])
 }
 
 is_etcd(container) {
-	regex.match("etcd", container.command[0])
+	regex.match("^(.*/)?etcd$", container.command[0])
 }
 
 is_scheduler(container) {
-	regex.match("kube-scheduler", container.command[0])
+	regex.match("^(.*/)?kube-scheduler$", container.command[0])
 }
 
 is_apiserver(container) {
-	regex.match("kube-apiserver", container.command[0])
+	regex.match("^(.*/)?kube-apiserver$", container.command[0])
 }

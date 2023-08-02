@@ -48,7 +48,8 @@ func (s *Scanner) loadPoliciesFromDirs(target fs.FS, paths []string) (map[string
 				ProcessAnnotation: true,
 			})
 			if err != nil {
-				return err
+				s.debug.Log("Failed to load module: %s, err: %s", filepath.ToSlash(path), err.Error())
+				return nil
 			}
 			modules[path] = module
 			return nil
@@ -93,7 +94,33 @@ func (s *Scanner) LoadEmbeddedLibraries() error {
 	return nil
 }
 
-func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, readers []io.Reader) error {
+func (s *Scanner) loadEmbedded(enableEmbeddedLibraries, enableEmbeddedPolicies bool) error {
+	if enableEmbeddedLibraries {
+		loadedLibs, errLoad := loadEmbeddedLibraries()
+		if errLoad != nil {
+			return fmt.Errorf("failed to load embedded rego libraries: %w", errLoad)
+		}
+		for name, policy := range loadedLibs {
+			s.policies[name] = policy
+		}
+		s.debug.Log("Loaded %d embedded libraries.", len(loadedLibs))
+	}
+
+	if enableEmbeddedPolicies {
+		loaded, err := loadEmbeddedPolicies()
+		if err != nil {
+			return fmt.Errorf("failed to load embedded rego policies: %w", err)
+		}
+		for name, policy := range loaded {
+			s.policies[name] = policy
+		}
+		s.debug.Log("Loaded %d embedded policies.", len(loaded))
+	}
+
+	return nil
+}
+
+func (s *Scanner) LoadPolicies(enableEmbeddedLibraries, enableEmbeddedPolicies bool, srcFS fs.FS, paths []string, readers []io.Reader) error {
 
 	if s.policies == nil {
 		s.policies = make(map[string]*ast.Module)
@@ -104,23 +131,8 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 		srcFS = s.policyFS
 	}
 
-	if loadEmbedded {
-		loadedLibs, errLoad := loadEmbeddedLibraries()
-		if errLoad != nil {
-			return fmt.Errorf("failed to load embedded rego libraries: %w", errLoad)
-		}
-		for name, policy := range loadedLibs {
-			s.policies[name] = policy
-		}
-		s.debug.Log("Loaded %d embedded libraries.", len(loadedLibs))
-		loaded, err := loadEmbeddedPolicies()
-		if err != nil {
-			return fmt.Errorf("failed to load embedded rego policies: %w", err)
-		}
-		for name, policy := range loaded {
-			s.policies[name] = policy
-		}
-		s.debug.Log("Loaded %d embedded policies.", len(loaded))
+	if err := s.loadEmbedded(enableEmbeddedLibraries, enableEmbeddedPolicies); err != nil {
+		return err
 	}
 
 	var err error
@@ -171,6 +183,19 @@ func (s *Scanner) LoadPolicies(loadEmbedded bool, srcFS fs.FS, paths []string, r
 	return s.compilePolicies(srcFS, paths)
 }
 
+func (s *Scanner) prunePoliciesWithError(compiler *ast.Compiler) error {
+	if len(compiler.Errors) > s.regoErrorLimit {
+		s.debug.Log("Error(s) occurred while loading policies")
+		return compiler.Errors
+	}
+
+	for _, e := range compiler.Errors {
+		s.debug.Log("Error occurred while parsing: %s, %s", e.Location.File, e.Error())
+		delete(s.policies, e.Location.File)
+	}
+	return nil
+}
+
 func (s *Scanner) compilePolicies(srcFS fs.FS, paths []string) error {
 	compiler := ast.NewCompiler()
 	schemaSet, custom, err := BuildSchemaSetFromPolicies(s.policies, paths, srcFS)
@@ -185,7 +210,10 @@ func (s *Scanner) compilePolicies(srcFS fs.FS, paths []string) error {
 	compiler.WithCapabilities(ast.CapabilitiesForThisVersion())
 	compiler.Compile(s.policies)
 	if compiler.Failed() {
-		return compiler.Errors
+		if err := s.prunePoliciesWithError(compiler); err != nil {
+			return err
+		}
+		return s.compilePolicies(srcFS, paths)
 	}
 	retriever := NewMetadataRetriever(compiler)
 
@@ -198,7 +226,10 @@ func (s *Scanner) compilePolicies(srcFS fs.FS, paths []string) error {
 		compiler.WithSchemas(schemaSet)
 		compiler.Compile(s.policies)
 		if compiler.Failed() {
-			return compiler.Errors
+			if err := s.prunePoliciesWithError(compiler); err != nil {
+				return err
+			}
+			return s.compilePolicies(srcFS, paths)
 		}
 	}
 	s.compiler = compiler

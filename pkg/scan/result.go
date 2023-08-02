@@ -281,11 +281,15 @@ func (r *Results) SetSourceAndFilesystem(source string, f fs.FS, logicalSource b
 			newrng = defsecTypes.NewRangeWithLogicalSource(rng.GetLocalFilename(), rng.GetStartLine(), rng.GetEndLine(),
 				source, f)
 		}
+		parent := m.Parent()
 		switch {
 		case m.IsExplicit():
 			m = defsecTypes.NewExplicitMetadata(newrng, m.Reference())
 		default:
 			m = defsecTypes.NewMetadata(newrng, m.Reference())
+		}
+		if parent != nil {
+			m.SetParentPtr(parent)
 		}
 		(*r)[i].OverrideMetadata(m)
 	}
@@ -331,4 +335,32 @@ func rawToString(raw interface{}) string {
 	default:
 		return "?"
 	}
+}
+
+type Occurrence struct {
+	Resource  string `json:"resource"`
+	Filename  string `json:"filename"`
+	StartLine int    `json:"start_line"`
+	EndLine   int    `json:"end_line"`
+}
+
+func (r *Result) Occurrences() []Occurrence {
+	var occurrences []Occurrence
+
+	mod := &r.metadata
+
+	for {
+		mod = mod.Parent()
+		if mod == nil {
+			break
+		}
+		parentRange := mod.Range()
+		occurrences = append(occurrences, Occurrence{
+			Resource:  mod.Reference(),
+			Filename:  parentRange.GetFilename(),
+			StartLine: parentRange.GetStartLine(),
+			EndLine:   parentRange.GetEndLine(),
+		})
+	}
+	return occurrences
 }

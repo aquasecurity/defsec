@@ -33,6 +33,7 @@ type Scanner struct {
 	dataDirs       []string
 	runtimeValues  *ast.Term
 	compiler       *ast.Compiler
+	regoErrorLimit int
 	debug          debug.Logger
 	traceWriter    io.Writer
 	tracePerResult bool
@@ -43,6 +44,10 @@ type Scanner struct {
 	spec           string
 	inputSchema    interface{} // unmarshalled into this from a json schema document
 	sourceType     types.Source
+}
+
+func (s *Scanner) SetUseEmbeddedLibraries(b bool) {
+	// handled externally
 }
 
 func (s *Scanner) SetSpec(spec string) {
@@ -58,6 +63,7 @@ func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
 	// handled externally
 }
+
 func (s *Scanner) trace(heading string, input interface{}) {
 	if s.traceWriter == nil {
 		return
@@ -111,6 +117,10 @@ func (s *Scanner) SetSkipRequiredCheck(_ bool) {
 	// NOTE: Skip required option not applicable for rego.
 }
 
+func (s *Scanner) SetRegoErrorLimit(limit int) {
+	s.regoErrorLimit = limit
+}
+
 type DynamicMetadata struct {
 	Warning   bool
 	Filepath  string
@@ -138,7 +148,8 @@ func NewScanner(source types.Source, options ...options.ScannerOption) *Scanner 
 	}
 
 	s := &Scanner{
-		sourceType: source,
+		regoErrorLimit: ast.CompileErrorLimitDefault,
+		sourceType:     source,
 		ruleNamespaces: map[string]struct{}{
 			"builtin":   {},
 			"appshield": {},

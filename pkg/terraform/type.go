@@ -19,6 +19,10 @@ func (t Type) ShortName() string {
 	return t.name
 }
 
+var TypeCheck = Type{
+	name: "check",
+}
+
 var TypeData = Type{
 	name: "data",
 }
@@ -31,6 +35,10 @@ var TypeResource = Type{
 var TypeVariable = Type{
 	name:    "variable",
 	refName: "var",
+}
+
+var TypeImport = Type{
+	name: "import",
 }
 
 var TypeLocal = Type{
@@ -59,7 +67,9 @@ var TypeTerraform = Type{
 }
 
 var ValidTypes = []Type{
+	TypeCheck,
 	TypeData,
+	TypeImport,
 	TypeLocal,
 	TypeModule,
 	TypeMoved,

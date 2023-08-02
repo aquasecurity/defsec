@@ -346,7 +346,9 @@ END REGO INPUT
             "fskey": "",
             "managed": true,
             "msg": "'COPY --from' should not mention current alias 'dep' since it is impossible to copy from itself",
+            "parent": null,
             "resource": "",
+            "sourceprefix": "",
             "startline": 2
           }
         ],
@@ -427,7 +429,9 @@ END REGO INPUT
             "fskey": "",
             "managed": true,
             "msg": "'COPY --from' should not mention current alias 'dep' since it is impossible to copy from itself",
+            "parent": null,
             "resource": "",
+            "sourceprefix": "",
             "startline": 2
           }
         ],
@@ -508,7 +512,9 @@ END REGO INPUT
             "fskey": "",
             "managed": true,
             "msg": "'COPY --from' should not mention current alias 'dep' since it is impossible to copy from itself",
+            "parent": null,
             "resource": "",
+            "sourceprefix": "",
             "startline": 2
           }
         ],
@@ -566,6 +572,7 @@ COPY --from=dep /binary /`
 				options.ScannerWithPolicyDirs("rules"),
 				options.ScannerWithTrace(&traceBuf),
 				options.ScannerWithDebug(&debugBuf),
+				options.ScannerWithRegoErrorLimits(0),
 			)
 
 			results, err := scanner.ScanFS(context.TODO(), fs, "code")

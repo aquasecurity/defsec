@@ -38,6 +38,11 @@ moved {
 
 }
 
+import {
+  to = cats_cat.mittens
+  id = "mittens"
+}
+
 resource "cats_cat" "mittens" {
 	name = "mittens"
 	special = true
@@ -45,11 +50,22 @@ resource "cats_cat" "mittens" {
 
 resource "cats_kitten" "the-great-destroyer" {
 	name = "the great destroyer"
-    parent = cats_cat.mittens.name
+	parent = cats_cat.mittens.name
 }
 
 data "cats_cat" "the-cats-mother" {
 	name = local.proxy
+}
+
+check "cats_mittens_is_special" {
+  data "cats_cat" "mittens" {
+    name = "mittens"
+  }
+
+  assert {
+    condition = data.cats_cat.mittens.special == true
+    error_message = "${data.cats_cat.mittens.name} must be special"
+  }
 }
 
 `,
@@ -105,6 +121,13 @@ data "cats_cat" "the-cats-mother" {
 	assert.Equal(t, "the great destroyer", resourceBlocks[1].GetAttribute("name").Value().AsString())
 	assert.Equal(t, "mittens", resourceBlocks[1].GetAttribute("parent").Value().AsString())
 
+	// import
+	importBlocks := blocks.OfType("import")
+
+	assert.Equal(t, "import", importBlocks[0].Type())
+	require.NotNil(t, importBlocks[0].GetAttribute("to"))
+	assert.Equal(t, "mittens", importBlocks[0].GetAttribute("id").Value().AsString())
+
 	// data
 	dataBlocks := blocks.OfType("data")
 	require.Len(t, dataBlocks, 1)
@@ -115,6 +138,17 @@ data "cats_cat" "the-cats-mother" {
 	assert.Equal(t, "the-cats-mother", dataBlocks[0].NameLabel())
 
 	assert.Equal(t, "boots", dataBlocks[0].GetAttribute("name").Value().AsString())
+
+	// check
+	checkBlocks := blocks.OfType("check")
+	require.Len(t, checkBlocks, 1)
+	require.Len(t, checkBlocks[0].Labels(), 1)
+
+	assert.Equal(t, "check", checkBlocks[0].Type())
+	assert.Equal(t, "cats_mittens_is_special", checkBlocks[0].TypeLabel())
+
+	require.NotNil(t, checkBlocks[0].GetBlock("data"))
+	require.NotNil(t, checkBlocks[0].GetBlock("assert"))
 }
 
 func Test_Modules(t *testing.T) {
@@ -598,4 +632,100 @@ module "registry" {
 	modules, _, err := parser.EvaluateAll(context.TODO())
 	require.NoError(t, err)
 	require.Len(t, modules, 2)
+}
+
+func Test_NullDefaultValueForVar(t *testing.T) {
+	fs := testutil.CreateFS(t, map[string]string{
+		"test.tf": `
+variable "bucket_name" {
+  type    = string
+  default = null
+}
+
+resource "aws_s3_bucket" "default" {
+  bucket = var.bucket_name != null ? var.bucket_name : "default"
+}
+`,
+	})
+
+	parser := New(fs, "", OptionStopOnHCLError(true))
+	if err := parser.ParseFS(context.TODO(), "."); err != nil {
+		t.Fatal(err)
+	}
+	modules, _, err := parser.EvaluateAll(context.TODO())
+	require.NoError(t, err)
+	require.Len(t, modules, 1)
+
+	rootModule := modules[0]
+
+	blocks := rootModule.GetResourcesByType("aws_s3_bucket")
+	require.Len(t, blocks, 1)
+	block := blocks[0]
+
+	attr := block.GetAttribute("bucket")
+	require.NotNil(t, attr)
+	assert.Equal(t, "default", attr.Value().AsString())
+}
+
+func Test_MultipleInstancesOfSameResource(t *testing.T) {
+	fs := testutil.CreateFS(t, map[string]string{
+		"test.tf": `
+
+resource "aws_kms_key" "key1" {
+	description         = "Key #1"
+	enable_key_rotation = true
+}
+
+resource "aws_kms_key" "key2" {
+	description         = "Key #2"
+	enable_key_rotation = true
+}
+
+resource "aws_s3_bucket" "this" {
+	bucket        = "test"
+  }
+
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "this1" {
+	bucket = aws_s3_bucket.this.id
+  
+	rule {
+	  apply_server_side_encryption_by_default {
+		kms_master_key_id = aws_kms_key.key1.arn
+		sse_algorithm     = "aws:kms"
+	  }
+	}
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "this2" {
+	bucket = aws_s3_bucket.this.id
+  
+	rule {
+	  apply_server_side_encryption_by_default {
+		kms_master_key_id = aws_kms_key.key2.arn
+		sse_algorithm     = "aws:kms"
+	  }
+	}
+}
+`,
+	})
+
+	parser := New(fs, "", OptionStopOnHCLError(true))
+	if err := parser.ParseFS(context.TODO(), "."); err != nil {
+		t.Fatal(err)
+	}
+	modules, _, err := parser.EvaluateAll(context.TODO())
+	assert.NoError(t, err)
+	assert.Len(t, modules, 1)
+
+	rootModule := modules[0]
+
+	blocks := rootModule.GetResourcesByType("aws_s3_bucket_server_side_encryption_configuration")
+	assert.Len(t, blocks, 2)
+
+	for _, block := range blocks {
+		attr := block.GetNestedAttribute("rule.apply_server_side_encryption_by_default.kms_master_key_id")
+		assert.NotNil(t, attr)
+		assert.NotEmpty(t, attr.Value().AsString())
+	}
 }

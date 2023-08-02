@@ -1,4 +1,4 @@
-DYNAMIC_REGO_FOLDER=./rules/policies/kubernetes/policies/dynamic
+DYNAMIC_REGO_FOLDER=./rules/kubernetes/policies/dynamic
 
 .PHONY: test
 test:
@@ -17,7 +17,7 @@ schema:
 
 .PHONY: fmt-rego
 fmt-rego:
-	opa fmt -w rules/policies
+	opa fmt -w rules/cloud/policies
 
 .PHONY: test-rego
 test-rego:
@@ -76,3 +76,7 @@ outdated-api-updated:
 .PHONY: bundle
 bundle:
 	./scripts/bundle.sh
+
+.PHONY: build
+build:
+	go build -o bin/defsec ./cmd/defsec

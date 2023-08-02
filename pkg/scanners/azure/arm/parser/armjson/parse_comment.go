@@ -1,6 +1,10 @@
 package armjson
 
-import "github.com/aquasecurity/defsec/pkg/types"
+import (
+	"strings"
+
+	"github.com/aquasecurity/defsec/pkg/types"
+)
 
 func (p *parser) parseComment(parentMetadata *types.Metadata) (Node, error) {
 
@@ -32,7 +36,7 @@ func (p *parser) parseLineComment(parentMetadata *types.Metadata) (Node, error) 
 
 	n, _ := p.newNode(KindComment, parentMetadata)
 
-	var comment string
+	var sb strings.Builder
 	for {
 		c, err := p.next()
 		if err != nil {
@@ -43,10 +47,10 @@ func (p *parser) parseLineComment(parentMetadata *types.Metadata) (Node, error) 
 			p.position.Line++
 			break
 		}
-		comment += string(c)
+		sb.WriteRune(c)
 	}
 
-	n.raw = comment
+	n.raw = sb.String()
 	n.end = p.position
 
 	if err := p.parseWhitespace(); err != nil {
@@ -59,7 +63,7 @@ func (p *parser) parseBlockComment(parentMetadata *types.Metadata) (Node, error)
 
 	n, _ := p.newNode(KindComment, parentMetadata)
 
-	var comment string
+	var sb strings.Builder
 
 	for {
 		c, err := p.next()
@@ -74,17 +78,17 @@ func (p *parser) parseBlockComment(parentMetadata *types.Metadata) (Node, error)
 			if c == '/' {
 				break
 			}
-			comment += "*"
+			sb.WriteRune('*')
 		} else {
 			if c == '\n' {
 				p.position.Column = 1
 				p.position.Line++
 			}
-			comment += string(c)
+			sb.WriteRune(c)
 		}
 	}
 
-	n.raw = comment
+	n.raw = sb.String()
 
 	if err := p.parseWhitespace(); err != nil {
 		return nil, err

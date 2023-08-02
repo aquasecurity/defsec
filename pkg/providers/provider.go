@@ -22,6 +22,7 @@ const (
 	KubernetesProvider   Provider = "kubernetes"
 	OracleProvider       Provider = "oracle"
 	OpenStackProvider    Provider = "openstack"
+	NifcloudProvider     Provider = "nifcloud"
 	CloudStackProvider   Provider = "cloudstack"
 )
 

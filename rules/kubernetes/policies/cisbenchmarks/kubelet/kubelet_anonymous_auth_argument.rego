@@ -28,13 +28,6 @@ validate_kubelet_anonymous_auth_set(sp) := {"kubeletAnonymousAuthArgumentSet": v
 	count(violation) > 0
 }
 
-validate_kubelet_anonymous_auth_set(sp) := {"kubeletAnonymousAuthArgumentSet": anonymous_auth} {
-	sp.kind == "NodeInfo"
-	sp.type == types[_]
-	count(sp.info.kubeletAnonymousAuthArgumentSet.values) == 0
-	anonymous_auth = {}
-}
-
 deny[res] {
 	output := validate_kubelet_anonymous_auth_set(input)
 	msg := "Ensure that the --anonymous-auth argument is set to false"

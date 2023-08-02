@@ -13,26 +13,35 @@ import (
 )
 
 type regoResult struct {
-	Filepath  string
-	Resource  string
-	StartLine int
-	EndLine   int
-	Message   string
-	Explicit  bool
-	Managed   bool
-	FSKey     string
-	FS        fs.FS
+	Filepath     string
+	Resource     string
+	StartLine    int
+	EndLine      int
+	SourcePrefix string
+	Message      string
+	Explicit     bool
+	Managed      bool
+	FSKey        string
+	FS           fs.FS
+	Parent       *regoResult
 }
 
 func (r regoResult) GetMetadata() defsecTypes.Metadata {
+	var m defsecTypes.Metadata
 	if !r.Managed {
-		return defsecTypes.NewUnmanagedMetadata()
+		m = defsecTypes.NewUnmanagedMetadata()
+	} else {
+		rng := defsecTypes.NewRangeWithFSKey(r.Filepath, r.StartLine, r.EndLine, r.SourcePrefix, r.FSKey, r.FS)
+		if r.Explicit {
+			m = defsecTypes.NewExplicitMetadata(rng, r.Resource)
+		} else {
+			m = defsecTypes.NewMetadata(rng, r.Resource)
+		}
 	}
-	rng := defsecTypes.NewRangeWithFSKey(r.Filepath, r.StartLine, r.EndLine, "", r.FSKey, r.FS)
-	if r.Explicit {
-		return defsecTypes.NewExplicitMetadata(rng, r.Resource)
+	if r.Parent != nil {
+		return m.WithParent(r.Parent.GetMetadata())
 	}
-	return defsecTypes.NewMetadata(rng, r.Resource)
+	return m
 }
 
 func (r regoResult) GetRawValue() interface{} {
@@ -85,6 +94,9 @@ func parseCause(cause map[string]interface{}) regoResult {
 	if end, ok := cause["endline"]; ok {
 		result.EndLine = parseLineNumber(end)
 	}
+	if prefix, ok := cause["sourceprefix"]; ok {
+		result.SourcePrefix = fmt.Sprintf("%s", prefix)
+	}
 	if explicit, ok := cause["explicit"]; ok {
 		if set, ok := explicit.(bool); ok {
 			result.Explicit = set
@@ -93,6 +105,12 @@ func parseCause(cause map[string]interface{}) regoResult {
 	if managed, ok := cause["managed"]; ok {
 		if set, ok := managed.(bool); ok {
 			result.Managed = set
+		}
+	}
+	if parent, ok := cause["parent"]; ok {
+		if m, ok := parent.(map[string]interface{}); ok {
+			parentResult := parseCause(m)
+			result.Parent = &parentResult
 		}
 	}
 	return result
@@ -123,18 +141,7 @@ func (s *Scanner) convertResults(set rego.ResultSet, input Input, namespace stri
 		for _, expression := range result.Expressions {
 			values, ok := expression.Value.([]interface{})
 			if !ok {
-				regoResult := parseResult(expression.Value)
-				regoResult.FS = input.FS
-				if regoResult.Filepath == "" && input.Path != "" {
-					regoResult.Filepath = input.Path
-				}
-				if regoResult.Message == "" {
-					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
-				}
-				regoResult.StartLine += offset
-				regoResult.EndLine += offset
-				results.AddRego(regoResult.Message, namespace, rule, traces, regoResult)
-				continue
+				values = []interface{}{expression.Value}
 			}
 
 			for _, value := range values {

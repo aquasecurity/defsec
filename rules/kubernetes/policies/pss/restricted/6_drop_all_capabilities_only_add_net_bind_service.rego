@@ -21,7 +21,7 @@ import data.lib.kubernetes
 import data.lib.utils
 
 hasDropAll(container) {
-	container.securityContext.capabilities.drop[_] == "ALL"
+	upper(container.securityContext.capabilities.drop[_]) == "ALL"
 }
 
 containersWithoutDropAll[container] {

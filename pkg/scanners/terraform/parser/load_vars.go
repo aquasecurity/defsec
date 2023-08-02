@@ -44,7 +44,6 @@ func loadTFVars(srcFS fs.FS, filenames []string) (map[string]cty.Value, error) {
 }
 
 func loadTFVarsFile(srcFS fs.FS, filename string) (map[string]cty.Value, error) {
-
 	inputVars := make(map[string]cty.Value)
 	if filename == "" {
 		return inputVars, nil

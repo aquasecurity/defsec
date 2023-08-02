@@ -41,6 +41,7 @@ type Parser struct {
 	values       []string
 	fileValues   []string
 	stringValues []string
+	apiVersions  []string
 }
 
 type ChartFile struct {
@@ -72,6 +73,10 @@ func (p *Parser) SetStringValues(values ...string) {
 	p.stringValues = values
 }
 
+func (p *Parser) SetAPIVersions(values ...string) {
+	p.apiVersions = values
+}
+
 func New(path string, options ...options.ParserOption) *Parser {
 
 	client := action.NewInstall(&action.Configuration{})
@@ -87,6 +92,11 @@ func New(path string, options ...options.ParserOption) *Parser {
 	for _, option := range options {
 		option(p)
 	}
+
+	if p.apiVersions != nil {
+		p.helmClient.APIVersions = p.apiVersions
+	}
+
 	return p
 }
 
@@ -212,7 +222,6 @@ func (p *Parser) RenderedChartFiles() ([]ChartFile, error) {
 }
 
 func (p *Parser) getRelease(chart *chart.Chart) (*release.Release, error) {
-
 	opts := &ValueOptions{
 		ValueFiles:   p.valuesFiles,
 		Values:       p.values,

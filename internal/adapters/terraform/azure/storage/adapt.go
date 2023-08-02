@@ -107,7 +107,7 @@ func adaptAccount(resource *terraform.Block) storage.Account {
 			Metadata:      resource.GetMetadata(),
 			EnableLogging: defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		},
-		MinimumTLSVersion: defsecTypes.StringDefault("TLS1_0", resource.GetMetadata()),
+		MinimumTLSVersion: defsecTypes.StringDefault("TLS1_2", resource.GetMetadata()),
 	}
 
 	networkRulesBlocks := resource.GetBlocks("network_rules")

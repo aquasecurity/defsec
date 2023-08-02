@@ -35,6 +35,6 @@ Resources:
 `,
 }
 
-var cloudFormationEnableAccessLoggingLinks = []string{}
+var cloudFormationEnableAccessLoggingLinks []string
 
 var cloudFormationEnableAccessLoggingRemediationMarkdown = ``

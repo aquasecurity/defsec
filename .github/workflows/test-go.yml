@@ -1,6 +1,7 @@
 name: test go
 on:
   pull_request:
+  merge_group:
   schedule:
   - cron:  0 23 * * *
 jobs:

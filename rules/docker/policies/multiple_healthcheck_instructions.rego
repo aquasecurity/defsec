@@ -23,6 +23,6 @@ deny[res] {
 	healthchecks := docker.stage_healthcheck[name]
 	cnt := count(healthchecks)
 	cnt > 1
-	msg := sprintf("There are %d duplicate HEALTHCHECK instructions in the stage '%s'", [cnt, name])
+	msg := sprintf("There are %d duplicate HEALTHCHECK instructions in the stage", [cnt])
 	res := result.new(msg, healthchecks[1])
 }

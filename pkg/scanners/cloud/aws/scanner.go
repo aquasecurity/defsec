@@ -34,21 +34,23 @@ var _ ConfigurableAWSScanner = (*Scanner)(nil)
 
 type Scanner struct {
 	sync.Mutex
-	regoScanner         *rego.Scanner
-	debug               debug.Logger
-	options             []options.ScannerOption
-	progressTracker     progress.Tracker
-	region              string
-	endpoint            string
-	services            []string
-	frameworks          []framework.Framework
-	spec                string
-	concurrencyStrategy concurrency.Strategy
-	policyDirs          []string
-	policyReaders       []io.Reader
-	policyFS            fs.FS
-	useEmbedded         bool
-	regoOnly            bool
+	regoScanner           *rego.Scanner
+	debug                 debug.Logger
+	options               []options.ScannerOption
+	progressTracker       progress.Tracker
+	region                string
+	endpoint              string
+	services              []string
+	frameworks            []framework.Framework
+	spec                  string
+	concurrencyStrategy   concurrency.Strategy
+	policyDirs            []string
+	policyReaders         []io.Reader
+	policyFS              fs.FS
+	dataFs                fs.FS
+	loadEmbeddedPolicies  bool
+	loadEmbeddedLibraries bool
+	regoOnly              bool
 }
 
 func (s *Scanner) SetRegoOnly(value bool) {
@@ -88,11 +90,15 @@ func (s *Scanner) SetPolicyFilesystem(fs fs.FS) {
 }
 
 func (s *Scanner) SetDataFilesystem(fs fs.FS) {
-	s.policyFS = fs
+	s.dataFs = fs
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
-	s.useEmbedded = b
+	s.loadEmbeddedPolicies = b
+}
+
+func (s *Scanner) SetUseEmbeddedLibraries(b bool) {
+	s.loadEmbeddedLibraries = b
 }
 
 func (s *Scanner) SetTraceWriter(writer io.Writer)   {}
@@ -100,6 +106,7 @@ func (s *Scanner) SetPerResultTracingEnabled(b bool) {}
 func (s *Scanner) SetDataDirs(s2 ...string)          {}
 func (s *Scanner) SetPolicyNamespaces(s2 ...string)  {}
 func (s *Scanner) SetSkipRequiredCheck(b bool)       {}
+func (s *Scanner) SetRegoErrorLimit(_ int)           {}
 
 func AllSupportedServices() []string {
 	return aws.AllServices()
@@ -218,7 +225,11 @@ func (s *Scanner) initRegoScanner() (*rego.Scanner, error) {
 	srcFS := s.policyFS
 	if srcFS == nil {
 		if runtime.GOOS == "windows" {
-			srcFS = os.DirFS("C:\\")
+			homeDrive := os.Getenv("HOMEDRIVE")
+			if homeDrive == "" {
+				homeDrive = "C:"
+			}
+			srcFS = os.DirFS(homeDrive + "\\")
 		} else {
 			srcFS = os.DirFS("/")
 		}
@@ -226,7 +237,7 @@ func (s *Scanner) initRegoScanner() (*rego.Scanner, error) {
 
 	regoScanner := rego.NewScanner(types.SourceCloud, s.options...)
 	regoScanner.SetParentDebugLogger(s.debug)
-	if err := regoScanner.LoadPolicies(s.useEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
+	if err := regoScanner.LoadPolicies(s.loadEmbeddedLibraries, s.loadEmbeddedPolicies, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner

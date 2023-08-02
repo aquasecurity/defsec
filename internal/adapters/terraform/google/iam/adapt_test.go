@@ -23,38 +23,38 @@ func Test_Adapt(t *testing.T) {
 			terraform: `
 			data "google_organization" "org" {
 				domain = "example.com"
-			  }
+			}
 				  
-			  resource "google_project" "my_project" {
+			resource "google_project" "my_project" {
 				name       = "My Project"
 				project_id = "your-project-id"
 				org_id = data.google_organization.org.id
 				auto_create_network = true
-			  }
+			}
 
-			  resource "google_folder" "department1" {
+			resource "google_folder" "department1" {
 				display_name = "Department 1"
 				parent       = data.google_organization.org.id
-			  }
+			}
 
-			  resource "google_folder_iam_member" "admin" {
+			resource "google_folder_iam_member" "admin" {
 				folder = google_folder.department1.name
 				role   = "roles/editor"
 				member = "user:alice@gmail.com"
-			  }
+			}
 
 			resource "google_folder_iam_binding" "folder-123" {
 				folder = google_folder.department1.name
 				role    = "roles/nothing"
 				members = [
 					"user:not-alice@gmail.com",
-				  ]
+				]
 		 	  }
 
 			resource "google_organization_iam_member" "org-123" {
-					org_id = data.google_organization.org.id
-					role    = "roles/whatever"
-					member = "user:member@gmail.com"
+				org_id = data.google_organization.org.id
+				role    = "roles/whatever"
+				member = "user:member@gmail.com"
 		 	 }
 
 			resource "google_organization_iam_binding" "binding" {
@@ -64,7 +64,13 @@ func Test_Adapt(t *testing.T) {
 				members = [
 					"user:member_2@gmail.com",
 				]
-			  }
+			}
+			
+			resource "google_iam_workload_identity_pool_provider" "example" {
+				workload_identity_pool_id          = "example-pool"
+				workload_identity_pool_provider_id = "example-provider"
+				attribute_condition                = "assertion.repository_owner=='your-github-organization'"
+			}
 `,
 			expected: iam.IAM{
 				Organizations: []iam.Organization{
@@ -120,6 +126,15 @@ func Test_Adapt(t *testing.T) {
 						},
 					},
 				},
+				WorkloadIdentityPoolProviders: []iam.WorkloadIdentityPoolProvider{
+					{
+						Metadata: defsecTypes.NewTestMetadata(),
+
+						WorkloadIdentityPoolId:         defsecTypes.String("example-pool", defsecTypes.NewTestMetadata()),
+						WorkloadIdentityPoolProviderId: defsecTypes.String("example-provider", defsecTypes.NewTestMetadata()),
+						AttributeCondition:             defsecTypes.String("assertion.repository_owner=='your-github-organization'", defsecTypes.NewTestMetadata()),
+					},
+				},
 			},
 		},
 	}
@@ -166,9 +181,9 @@ func TestLines(t *testing.T) {
 		}
 
 		resource "google_organization_iam_member" "org-123" {
-				org_id = data.google_organization.org.id
-				role    = "roles/whatever"
-				member = "user:member@gmail.com"
+			org_id = data.google_organization.org.id
+			role    = "roles/whatever"
+			member = "user:member@gmail.com"
 		}
 
 		resource "google_organization_iam_binding" "binding" {
@@ -178,6 +193,12 @@ func TestLines(t *testing.T) {
 			members = [
 				"user:member_2@gmail.com",
 			]
+		}
+		
+		resource "google_iam_workload_identity_pool_provider" "example" {
+			workload_identity_pool_id          = "example-pool"
+			workload_identity_pool_provider_id = "example-provider"
+			attribute_condition                = "assertion.repository_owner=='your-github-organization'"
 		}`
 
 	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
@@ -188,11 +209,13 @@ func TestLines(t *testing.T) {
 	require.Len(t, adapted.Organizations[0].Folders, 1)
 	require.Len(t, adapted.Organizations[0].Bindings, 1)
 	require.Len(t, adapted.Organizations[0].Members, 1)
+	require.Len(t, adapted.WorkloadIdentityPoolProviders, 1)
 
 	project := adapted.Organizations[0].Projects[0]
 	folder := adapted.Organizations[0].Folders[0]
 	binding := adapted.Organizations[0].Bindings[0]
 	member := adapted.Organizations[0].Members[0]
+	pool := adapted.WorkloadIdentityPoolProviders[0]
 
 	assert.Equal(t, 6, project.Metadata.Range().GetStartLine())
 	assert.Equal(t, 11, project.Metadata.Range().GetEndLine())
@@ -238,4 +261,6 @@ func TestLines(t *testing.T) {
 
 	assert.Equal(t, 42, binding.Members[0].GetMetadata().Range().GetStartLine())
 	assert.Equal(t, 44, binding.Members[0].GetMetadata().Range().GetEndLine())
+
+	assert.Equal(t, 51, pool.Metadata.Range().GetEndLine())
 }

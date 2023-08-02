@@ -31,6 +31,10 @@ var Schema = &hcl.BodySchema{
 			LabelNames: []string{"name"},
 		},
 		{
+			Type:       "check",
+			LabelNames: []string{"name"},
+		},
+		{
 			Type:       "resource",
 			LabelNames: []string{"type", "name"},
 		},
@@ -40,6 +44,9 @@ var Schema = &hcl.BodySchema{
 		},
 		{
 			Type: "moved",
+		},
+		{
+			Type: "import",
 		},
 	},
 }

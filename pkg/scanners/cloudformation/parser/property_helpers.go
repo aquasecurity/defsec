@@ -17,16 +17,20 @@ func (p *Property) IsNotNil() bool {
 	return !p.IsUnresolved() && !p.IsNil()
 }
 
-func (p *Property) IsString() bool {
+func (p *Property) Is(t cftypes.CfType) bool {
 	if p.IsNil() || p.IsUnresolved() {
 		return false
 	}
 	if p.isFunction() {
 		if prop, success := p.resolveValue(); success && prop != p {
-			return prop.IsString()
+			return prop.Is(t)
 		}
 	}
-	return p.Inner.Type == cftypes.String
+	return p.Inner.Type == t
+}
+
+func (p *Property) IsString() bool {
+	return p.Is(cftypes.String)
 }
 
 func (p *Property) IsNotString() bool {
@@ -34,15 +38,7 @@ func (p *Property) IsNotString() bool {
 }
 
 func (p *Property) IsInt() bool {
-	if p.IsNil() || p.IsUnresolved() {
-		return false
-	}
-	if p.isFunction() {
-		if prop, success := p.resolveValue(); success && prop != p {
-			return prop.IsInt()
-		}
-	}
-	return p.Inner.Type == cftypes.Int
+	return p.Is(cftypes.Int)
 }
 
 func (p *Property) IsNotInt() bool {
@@ -61,15 +57,7 @@ func (p *Property) IsNotMap() bool {
 }
 
 func (p *Property) IsList() bool {
-	if p.IsNil() || p.IsUnresolved() {
-		return false
-	}
-	if p.isFunction() {
-		if prop, success := p.resolveValue(); success && prop != p {
-			return prop.IsList()
-		}
-	}
-	return p.Inner.Type == cftypes.List
+	return p.Is(cftypes.List)
 }
 
 func (p *Property) IsNotList() bool {
@@ -77,15 +65,7 @@ func (p *Property) IsNotList() bool {
 }
 
 func (p *Property) IsBool() bool {
-	if p.IsNil() || p.IsUnresolved() {
-		return false
-	}
-	if p.isFunction() {
-		if prop, success := p.resolveValue(); success && prop != p {
-			return prop.IsBool()
-		}
-	}
-	return p.Inner.Type == cftypes.Bool
+	return p.Is(cftypes.Bool)
 }
 
 func (p *Property) IsUnresolved() bool {
@@ -186,6 +166,10 @@ func (p *Property) AsList() []*Property {
 	return nil
 }
 
+func (p *Property) Len() int {
+	return len(p.AsList())
+}
+
 func (p *Property) EqualTo(checkValue interface{}, equalityOptions ...EqualityOptions) bool {
 	var ignoreCase bool
 	for _, option := range equalityOptions {
@@ -200,22 +184,25 @@ func (p *Property) EqualTo(checkValue interface{}, equalityOptions ...EqualityOp
 			return false
 		}
 
-		switch p.Inner.Type {
-		case cftypes.String:
+		if p.Inner.Type == cftypes.String || p.IsString() {
 			if ignoreCase {
 				return strings.EqualFold(p.AsString(), checkerVal)
 			}
 			return p.AsString() == checkerVal
-		case cftypes.Int:
+		} else if p.Inner.Type == cftypes.Int || p.IsInt() {
 			if val, err := strconv.Atoi(checkerVal); err == nil {
 				return p.AsInt() == val
 			}
 		}
 		return false
 	case bool:
-		return p.Inner.Value == checkerVal
+		if p.Inner.Type == cftypes.Bool || p.IsBool() {
+			return p.AsBool() == checkerVal
+		}
 	case int:
-		return p.Inner.Value == checkerVal
+		if p.Inner.Type == cftypes.Int || p.IsInt() {
+			return p.AsInt() == checkerVal
+		}
 	}
 
 	return false

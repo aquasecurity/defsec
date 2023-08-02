@@ -234,11 +234,27 @@ deny[cause] {
 	}
 	assert.Equal(t, []scan.Line{
 		{
+			Number:     2,
+			Content:    "resource \"aws_s3_bucket\" \"my-bucket\" {",
+			IsCause:    false,
+			FirstCause: false,
+			LastCause:  false,
+			Annotation: "",
+		},
+		{
 			Number:     3,
 			Content:    "\tbucket = \"evil\"",
 			IsCause:    true,
 			FirstCause: true,
 			LastCause:  true,
+			Annotation: "",
+		},
+		{
+			Number:     4,
+			Content:    "}",
+			IsCause:    false,
+			FirstCause: false,
+			LastCause:  false,
 			Annotation: "",
 		},
 	}, actualCode.Lines)
@@ -495,6 +511,43 @@ deny[res] {
 	if t.Failed() {
 		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
 	}
+}
+
+func Test_OptionWithSkipDownloaded(t *testing.T) {
+	fs := testutil.CreateFS(t, map[string]string{
+		"test/main.tf": `
+module "s3-bucket" {
+  source   = "terraform-aws-modules/s3-bucket/aws"
+  version = "3.14.0"
+  bucket = mybucket
+}
+`,
+		// creating our own rule for the reliability of the test
+		"/rules/test.rego": `
+package defsec.abcdefg
+
+__rego_input__ := {
+	"combine": false,
+	"selector": [{"type": "defsec", "subtypes": [{"service": "s3", "provider": "aws"}]}],
+}
+
+deny[cause] {
+	bucket := input.aws.s3.buckets[_]
+	bucket.name.value == "mybucket"
+	cause := bucket.name
+}`,
+	})
+
+	scanner := New()
+	results, err := scanner.ScanFS(context.TODO(), fs, "test")
+	assert.NoError(t, err)
+	assert.Greater(t, len(results.GetFailed()), 0)
+
+	scanner = New(ScannerWithSkipDownloaded(true))
+	results, err = scanner.ScanFS(context.TODO(), fs, "test")
+	assert.NoError(t, err)
+	assert.Len(t, results.GetFailed(), 0)
+
 }
 
 func Test_IAMPolicyRego(t *testing.T) {

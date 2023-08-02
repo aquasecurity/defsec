@@ -37,9 +37,10 @@ type Scanner struct {
 	parser        *parser.Parser
 	skipRequired  bool
 	sync.Mutex
-	loadEmbedded bool
-	frameworks   []framework.Framework
-	spec         string
+	loadEmbeddedPolicies  bool
+	frameworks            []framework.Framework
+	spec                  string
+	loadEmbeddedLibraries bool
 }
 
 func (s *Scanner) SetSpec(spec string) {
@@ -53,7 +54,11 @@ func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
 }
 
 func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
-	s.loadEmbedded = b
+	s.loadEmbeddedPolicies = b
+}
+
+func (s *Scanner) SetUseEmbeddedLibraries(b bool) {
+	s.loadEmbeddedLibraries = b
 }
 
 func (s *Scanner) SetPolicyReaders(readers []io.Reader) {
@@ -89,6 +94,7 @@ func (s *Scanner) SetPolicyFilesystem(_ fs.FS) {
 func (s *Scanner) SetDataFilesystem(_ fs.FS) {
 	// handled by rego when option is passed on
 }
+func (s *Scanner) SetRegoErrorLimit(_ int) {}
 
 func NewScanner(opts ...options.ScannerOption) *Scanner {
 	s := &Scanner{
@@ -113,7 +119,7 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	}
 	regoScanner := rego.NewScanner(types.SourceKubernetes, s.options...)
 	regoScanner.SetParentDebugLogger(s.debug)
-	if err := regoScanner.LoadPolicies(s.loadEmbedded, srcFS, s.policyDirs, s.policyReaders); err != nil {
+	if err := regoScanner.LoadPolicies(s.loadEmbeddedLibraries, s.loadEmbeddedPolicies, srcFS, s.policyDirs, s.policyReaders); err != nil {
 		return nil, err
 	}
 	s.regoScanner = regoScanner

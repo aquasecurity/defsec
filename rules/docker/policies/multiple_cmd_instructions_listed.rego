@@ -11,7 +11,7 @@
 #   avd_id: AVD-DS-0016
 #   severity: HIGH
 #   short_code: only-one-cmd
-#   recommended_action: "Dockefile should only have one CMD instruction. Remove all the other CMD instructions"
+#   recommended_action: "Dockerfile should only have one CMD instruction. Remove all the other CMD instructions"
 #   input:
 #     selector:
 #     - type: dockerfile
@@ -23,6 +23,6 @@ deny[res] {
 	cmds := docker.stage_cmd[name]
 	cnt := count(cmds)
 	cnt > 1
-	msg := sprintf("There are %d duplicate CMD instructions for stage '%s'", [cnt, name])
+	msg := sprintf("There are %d duplicate CMD instructions", [cnt])
 	res := result.new(msg, cmds[1])
 }

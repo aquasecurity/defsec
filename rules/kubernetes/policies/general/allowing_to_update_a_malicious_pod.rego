@@ -1,5 +1,5 @@
 # METADATA
-# title: "Do not allow update/create of a malicious pod"
+# title: "Manage Kubernetes workloads and pods"
 # description: "Check whether role permits update/create of a malicious pod"
 # scope: package
 # schemas:
@@ -20,9 +20,9 @@ package builtin.kubernetes.KSV048
 import data.lib.kubernetes
 import data.lib.utils
 
-workloads := ["deployments", "daemonsets", "statefulsets", "replicationcontrollers", "replicasets", "jobs", "cronjobs"]
+workloads := ["pods", "deployments", "jobs", "cronjobs", "statefulsets", "daemonsets", "replicasets", "replicationcontrollers"]
 
-changeVerbs := ["update", "create", "*"]
+changeVerbs := ["create", "update", "patch", "delete", "deletecollection", "impersonate", "*"]
 
 readKinds := ["Role", "ClusterRole"]
 
@@ -35,6 +35,6 @@ update_malicious_pod[input.rules[ru]] {
 
 deny[res] {
 	badRule := update_malicious_pod[_]
-	msg := "Role permits create/update of a malicious pod"
+	msg := kubernetes.format(sprintf("%s '%s' should not have access to resources %s for verbs %s", [kubernetes.kind, kubernetes.name, workloads, changeVerbs]))
 	res := result.new(msg, badRule)
 }

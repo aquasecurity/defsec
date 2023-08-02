@@ -347,7 +347,7 @@ func (e *evaluator) evaluateVariable(b *terraform.Block) (cty.Value, error) {
 		return cty.NilVal, fmt.Errorf("cannot resolve variable with no attributes")
 	}
 	if def, exists := attributes["default"]; exists {
-		return def.Value(), nil
+		return def.NullableValue(), nil
 	}
 	return cty.NilVal, fmt.Errorf("no value found")
 }
@@ -385,11 +385,11 @@ func (e *evaluator) getValuesByBlockType(blockType string) cty.Value {
 				continue
 			}
 			values[b.Label()] = val
-		case "locals", "moved":
+		case "locals", "moved", "import":
 			for key, val := range b.Values().AsValueMap() {
 				values[key] = val
 			}
-		case "provider", "module":
+		case "provider", "module", "check":
 			if b.Label() == "" {
 				continue
 			}
@@ -399,7 +399,7 @@ func (e *evaluator) getValuesByBlockType(blockType string) cty.Value {
 				continue
 			}
 
-			blockMap, ok := values[b.Label()]
+			blockMap, ok := values[b.Labels()[0]]
 			if !ok {
 				values[b.Labels()[0]] = cty.ObjectVal(make(map[string]cty.Value))
 				blockMap = values[b.Labels()[0]]

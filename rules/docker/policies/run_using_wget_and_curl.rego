@@ -37,7 +37,7 @@ deny[res] {
 get_tool_usage(cmd, cmd_name) = r {
 	count(cmd.Value) == 1
 
-	commands_list = split(cmd.Value[0], "&&")
+	commands_list = regex.split(`\s*&&\s*`, cmd.Value[0])
 
 	reg_exp = sprintf("^( )*%s", [cmd_name])
 

@@ -1,5 +1,5 @@
 # METADATA
-# title: "Non-default capabilities added"
+# title: "Specific capabilities added"
 # description: "Adding NET_RAW or capabilities beyond the default set must be disallowed."
 # scope: package
 # schemas:

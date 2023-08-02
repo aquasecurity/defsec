@@ -1,5 +1,5 @@
 # METADATA
-# title: "Runs with low user ID"
+# title: "Runs with UID <= 10000"
 # description: "Force the container to run with user ID > 10000 to avoid conflicts with the host’s user table."
 # scope: package
 # schemas:

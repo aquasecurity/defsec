@@ -22,6 +22,8 @@ type ConfigurableScanner interface {
 	SetFrameworks(frameworks []framework.Framework)
 	SetSpec(spec string)
 	SetRegoOnly(regoOnly bool)
+	SetRegoErrorLimit(limit int)
+	SetUseEmbeddedLibraries(bool)
 }
 
 type ScannerOption func(s ConfigurableScanner)
@@ -54,6 +56,12 @@ func ScannerWithDebug(w io.Writer) ScannerOption {
 func ScannerWithEmbeddedPolicies(embedded bool) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetUseEmbeddedPolicies(embedded)
+	}
+}
+
+func ScannerWithEmbeddedLibraries(enabled bool) ScannerOption {
+	return func(s ConfigurableScanner) {
+		s.SetUseEmbeddedLibraries(enabled)
 	}
 }
 
@@ -110,5 +118,11 @@ func ScannerWithDataFilesystem(f fs.FS) ScannerOption {
 func ScannerWithRegoOnly(regoOnly bool) ScannerOption {
 	return func(s ConfigurableScanner) {
 		s.SetRegoOnly(regoOnly)
+	}
+}
+
+func ScannerWithRegoErrorLimits(limit int) ScannerOption {
+	return func(s ConfigurableScanner) {
+		s.SetRegoErrorLimit(limit)
 	}
 }

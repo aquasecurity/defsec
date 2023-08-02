@@ -8,6 +8,7 @@ type ConfigurableHelmParser interface {
 	SetValues(...string)
 	SetFileValues(...string)
 	SetStringValues(...string)
+	SetAPIVersions(...string)
 }
 
 func OptionWithValuesFile(paths ...string) options.ParserOption {
@@ -38,6 +39,14 @@ func OptionWithStringValues(values ...string) options.ParserOption {
 	return func(p options.ConfigurableParser) {
 		if helmParser, ok := p.(ConfigurableHelmParser); ok {
 			helmParser.SetValues(values...)
+		}
+	}
+}
+
+func OptionWithAPIVersions(values ...string) options.ParserOption {
+	return func(p options.ConfigurableParser) {
+		if helmParser, ok := p.(ConfigurableHelmParser); ok {
+			helmParser.SetAPIVersions(values...)
 		}
 	}
 }

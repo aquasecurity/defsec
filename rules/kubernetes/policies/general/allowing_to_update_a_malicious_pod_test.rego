@@ -251,3 +251,75 @@ test_update_malicious_pod_cronjobs {
 
 	count(r) > 0
 }
+
+test_update_malicious_pod_deletecollection {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "Role",
+		"metadata": {
+			"namespace": "default",
+			"name": "pod-reader",
+		},
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["cronjobs"],
+			"verbs": ["deletecollection"],
+		}],
+	}
+
+	count(r) > 0
+}
+
+test_update_malicious_pod_delete {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "Role",
+		"metadata": {
+			"namespace": "default",
+			"name": "pod-reader",
+		},
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["job"],
+			"verbs": ["delete"],
+		}],
+	}
+
+	count(r) == 0
+}
+
+test_update_malicious_pod_patch {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "Role",
+		"metadata": {
+			"namespace": "default",
+			"name": "pod-reader",
+		},
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["job"],
+			"verbs": ["patch"],
+		}],
+	}
+
+	count(r) == 0
+}
+
+test_update_malicious_pod_impersonate {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "Role",
+		"metadata": {
+			"namespace": "default",
+			"name": "pod-reader",
+		},
+		"rules": [{
+			"apiGroups": ["*"],
+			"resources": ["job"],
+			"verbs": ["impersonate"],
+		}],
+	}
+
+	count(r) == 0
+}
