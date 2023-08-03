@@ -2,7 +2,7 @@
 Secure boot helps ensure that the system only runs authentic software.
 
 ### Impact
-Unable to verify digital signature of boot components, and unable to stop the boot process if verificaiton fails.
+Unable to verify digital signature of boot components, and unable to stop the boot process if verification fails.
 
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
