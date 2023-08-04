@@ -20,7 +20,7 @@ func TestCheckEnableAllRegions(t *testing.T) {
 		expected bool
 	}{
 		{
-			name: "AWS CloudTrail not enabled accross all regions",
+			name: "AWS CloudTrail not enabled across all regions",
 			input: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{
@@ -32,7 +32,7 @@ func TestCheckEnableAllRegions(t *testing.T) {
 			expected: true,
 		},
 		{
-			name: "AWS CloudTrail enabled accross all regions",
+			name: "AWS CloudTrail enabled across all regions",
 			input: cloudtrail.CloudTrail{
 				Trails: []cloudtrail.Trail{
 					{

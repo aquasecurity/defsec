@@ -15,7 +15,7 @@ var CheckEnableShieldedVMSecureBoot = rules.Register(
 		Service:     "compute",
 		ShortCode:   "enable-shielded-vm-sb",
 		Summary:     "Instances should have Shielded VM secure boot enabled",
-		Impact:      "Unable to verify digital signature of boot components, and unable to stop the boot process if verificaiton fails.",
+		Impact:      "Unable to verify digital signature of boot components, and unable to stop the boot process if verification fails.",
 		Resolution:  "Enable Shielded VM secure boot",
 		Explanation: `Secure boot helps ensure that the system only runs authentic software.`,
 		Links: []string{

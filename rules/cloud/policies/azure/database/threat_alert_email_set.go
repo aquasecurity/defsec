@@ -15,7 +15,7 @@ var CheckThreatAlertEmailSet = rules.Register(
 		Service:     "database",
 		ShortCode:   "threat-alert-email-set",
 		Summary:     "At least one email address is set for threat alerts",
-		Impact:      "Nobody will be prompty alerted in the case of a threat being detected",
+		Impact:      "Nobody will be promptly alerted in the case of a threat being detected",
 		Resolution:  "Provide at least one email address for threat alerts",
 		Explanation: `SQL Server sends alerts for threat detection via email, if there are no email addresses set then mitigation will be delayed.`,
 		Links:       []string{},
