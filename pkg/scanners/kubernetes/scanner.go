@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/fs"
 	"path/filepath"
+	"sort"
 	"sync"
 
 	"github.com/aquasecurity/defsec/pkg/types"
@@ -174,5 +175,9 @@ func (s *Scanner) ScanFS(ctx context.Context, target fs.FS, dir string) (scan.Re
 		return nil, err
 	}
 	results.SetSourceAndFilesystem("", target, false)
+
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Rule().AVDID < results[j].Rule().AVDID
+	})
 	return results, nil
 }
