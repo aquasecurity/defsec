@@ -1,6 +1,6 @@
 # METADATA
-# title: "No wildcard resource roles"
-# description: "Check whether role permits specific verb on wildcard resources"
+# title: "Manage all resources"
+# description: "Full control of the cluster resources, and therefore also root on all nodes where workloads can run and has access to all pods, secrets, and data."
 # scope: package
 # schemas:
 # - input: schema["kubernetes"]
@@ -10,8 +10,8 @@
 #   id: KSV046
 #   avd_id: AVD-KSV-0046
 #   severity: CRITICAL
-#   short_code: no-wildcard-resource-role
-#   recommended_action: "Create a role which does not permit specific verb on wildcard resources"
+#   short_code: no-wildcard-resource-clusterrole
+#   recommended_actions: "Remove '*' from 'rules.resources'. Provide specific list of resources to be managed by cluster role"
 #   input:
 #     selector:
 #     - type: kubernetes
@@ -22,7 +22,7 @@ import data.lib.utils
 
 readVerbs := ["create", "update", "delete", "deletecollection", "impersonate", "*", "list", "get"]
 
-readKinds := ["Role", "ClusterRole"]
+readKinds := ["ClusterRole"]
 
 resourceAllowSpecificVerbOnAnyResource[input.rules[ru]] {
 	some ru, r, v
@@ -33,6 +33,6 @@ resourceAllowSpecificVerbOnAnyResource[input.rules[ru]] {
 
 deny[res] {
 	badRule := resourceAllowSpecificVerbOnAnyResource[_]
-	msg := "Role permits specific verb on wildcard resource"
+	msg := kubernetes.format(sprintf("%s '%s' shouldn't manage all resources", [kubernetes.kind, kubernetes.name]))
 	res := result.new(msg, badRule)
 }

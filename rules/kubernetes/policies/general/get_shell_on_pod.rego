@@ -1,5 +1,5 @@
 # METADATA
-# title: "Do not allow getting shell on pods"
+# title: "Exec into Pods"
 # description: "Check whether role permits getting shell on pods"
 # scope: package
 # schemas:
@@ -20,24 +20,21 @@ package builtin.kubernetes.KSV053
 import data.lib.kubernetes
 import data.lib.utils
 
+workloads := ["pods/exec"]
+
+changeVerbs := ["create", "update", "patch", "delete", "deletecollection", "impersonate", "*"]
+
 readKinds := ["Role", "ClusterRole"]
 
-get_shell_on_pod[ruleA] {
+execPodsRestricted[input.rules[ru]] {
+	some ru, r, v
 	input.kind == readKinds[_]
-	some i, j
-	ruleA := input.rules[i]
-	ruleB := input.rules[j]
-	i < j
-	ruleA.apiGroups[_] == "*"
-	ruleA.resources[_] == "pods/exec"
-	ruleA.verbs[_] == "create"
-	ruleB.apiGroups[_] == "*"
-	ruleB.resources[_] == "pods"
-	ruleB.verbs[_] == "get"
+	input.rules[ru].resources[r] == workloads[_]
+	input.rules[ru].verbs[v] == changeVerbs[_]
 }
 
 deny[res] {
-	badRule := get_shell_on_pod[_]
-	msg := "Role permits getting shell on pods"
+	badRule := execPodsRestricted[_]
+	msg := kubernetes.format(sprintf("%s '%s' should not have access to resource '%s' for verbs %s", [kubernetes.kind, kubernetes.name, workloads, changeVerbs]))
 	res := result.new(msg, badRule)
 }

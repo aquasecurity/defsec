@@ -1,5 +1,5 @@
 
-Full control of the cluster resources, and therefore also root on all nodes where workloads can run and has access to all pods, secrets, and data.
+Webhooks can silently intercept or actively mutate/block resources as they are being created or updated. This includes secrets and pod specs.
 
 ### Impact
 <!-- Add Impact here -->

@@ -1,5 +1,5 @@
 # METADATA
-# title: "Privileged container"
+# title: "Privileged"
 # description: "Privileged containers share namespaces with the host system and do not offer any security. They should be used exclusively for system containers that require high privileges."
 # scope: package
 # schemas:

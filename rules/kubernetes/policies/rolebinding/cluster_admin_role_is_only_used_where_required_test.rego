@@ -43,5 +43,51 @@ test_cluster_role_admin__used_with_system_role_binding {
 		},
 	}
 
+	count(r) == 1
+}
+
+test_admin_used_with_system_role_binding {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "ClusterRoleBinding",
+		"metadata": {
+			"name": "system:read-pods",
+			"namespace": "default",
+		},
+		"subjects": [{
+			"kind": "User",
+			"name": "system:masters",
+			"apiGroup": "rbac.authorization.k8s.io",
+		}],
+		"roleRef": {
+			"kind": "Role",
+			"name": "admin",
+			"apiGroup": "rbac.authorization.k8s.io",
+		},
+	}
+
+	count(r) == 1
+}
+
+test_non_role_ref_used_with_system_role_binding {
+	r := deny with input as {
+		"apiVersion": "rbac.authorization.k8s.io/v1",
+		"kind": "ClusterRoleBinding",
+		"metadata": {
+			"name": "system:read-pods",
+			"namespace": "default",
+		},
+		"subjects": [{
+			"kind": "User",
+			"name": "system:masters",
+			"apiGroup": "rbac.authorization.k8s.io",
+		}],
+		"roleRef": {
+			"kind": "Role",
+			"name": "admin1",
+			"apiGroup": "rbac.authorization.k8s.io",
+		},
+	}
+
 	count(r) == 0
 }

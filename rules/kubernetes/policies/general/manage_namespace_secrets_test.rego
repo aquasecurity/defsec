@@ -1,9 +1,9 @@
-package builtin.kubernetes.KSV041
+package builtin.kubernetes.KSV113
 
 test_manage_secrets {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
@@ -21,7 +21,7 @@ test_manage_secrets {
 test_manage_verb_update {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
@@ -39,7 +39,7 @@ test_manage_verb_update {
 test_manage_verb_list {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
@@ -57,7 +57,7 @@ test_manage_verb_list {
 test_manage_not_secret_resource {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
@@ -75,7 +75,7 @@ test_manage_not_secret_resource {
 test_manage_secret_verb_update {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
@@ -93,7 +93,7 @@ test_manage_secret_verb_update {
 test_manage_secret_verb_impersonate {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
@@ -111,7 +111,7 @@ test_manage_secret_verb_impersonate {
 test_manage_secret_verb_deletecollection {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
@@ -129,7 +129,7 @@ test_manage_secret_verb_deletecollection {
 test_manage_secret_verb_patch {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
@@ -147,7 +147,7 @@ test_manage_secret_verb_patch {
 test_manage_secret_verb_watch {
 	r := deny with input as {
 		"apiVersion": "rbac.authorization.k8s.io/v1",
-		"kind": "ClusterRole",
+		"kind": "Role",
 		"metadata": {
 			"namespace": "default",
 			"name": "pod-reader",
