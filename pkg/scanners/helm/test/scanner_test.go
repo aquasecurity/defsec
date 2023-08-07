@@ -127,7 +127,7 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 		require.NotNil(t, results)
 
 		failed := results.GetFailed()
-		assert.Equal(t, 16, len(failed))
+		assert.Equal(t, 17, len(failed))
 
 		visited := make(map[string]bool)
 		var errorCodes []string
@@ -147,6 +147,7 @@ func Test_helm_scanner_with_dir(t *testing.T) {
 			"AVD-KSV-0015", "AVD-KSV-0016", "AVD-KSV-0018",
 			"AVD-KSV-0020", "AVD-KSV-0021", "AVD-KSV-0030",
 			"AVD-KSV-0104", "AVD-KSV-0106", "AVD-KSV-0116",
+			"AVD-KSV-0117",
 		}, errorCodes)
 	}
 }
