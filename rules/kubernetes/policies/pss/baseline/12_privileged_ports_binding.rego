@@ -22,6 +22,7 @@ import data.lib.kubernetes
 default failPrivilegedPort = false
 
 # failPrivilegedPort is true if spec.containers.ports.containerPort is set to less than 1024
+
 failPrivilegedPort {
 	containerPort := kubernetes.containers[_].ports[_].containerPort
 	containerPort < 1024
