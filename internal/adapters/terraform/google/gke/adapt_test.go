@@ -22,81 +22,81 @@ func Test_Adapt(t *testing.T) {
 		{
 			name: "separately defined pool",
 			terraform: `
-			resource "google_service_account" "default" {
-				account_id   = "service-account-id"
-				display_name = "Service Account"
-			  }
+resource "google_service_account" "default" {
+  account_id   = "service-account-id"
+  display_name = "Service Account"
+}
 
-			resource "google_container_cluster" "example" {
-				name     = "my-gke-cluster"
+resource "google_container_cluster" "example" {
+  name = "my-gke-cluster"
 
-				node_config {			  
-					metadata = {
-					  disable-legacy-endpoints = true
-					}
-				}
+  node_config {
+    metadata = {
+      disable-legacy-endpoints = true
+    }
+  }
 
-				pod_security_policy_config {
-					enabled = "true"
-				}
+  pod_security_policy_config {
+    enabled = "true"
+  }
 
-				enable_legacy_abac = "true"
-				enable_shielded_nodes = "true"
-			
-				remove_default_node_pool = true
-				initial_node_count       = 1
-				monitoring_service = "monitoring.googleapis.com/kubernetes"
-				logging_service = "logging.googleapis.com/kubernetes"
+  enable_legacy_abac    = "true"
+  enable_shielded_nodes = "true"
 
-				master_auth {
-					client_certificate_config {
-					  issue_client_certificate = true
-					}
-				  }
+  remove_default_node_pool = true
+  initial_node_count       = 1
+  monitoring_service       = "monitoring.googleapis.com/kubernetes"
+  logging_service          = "logging.googleapis.com/kubernetes"
 
-				master_authorized_networks_config {
-					cidr_blocks {
-					  cidr_block = "10.10.128.0/24"
-					  display_name = "internal"
-					}
-				  }
+  master_auth {
+    client_certificate_config {
+      issue_client_certificate = true
+    }
+  }
 
-				resource_labels = {
-				  "env" = "staging"
-				}
+  master_authorized_networks_config {
+    cidr_blocks {
+      cidr_block   = "10.10.128.0/24"
+      display_name = "internal"
+    }
+  }
 
-				private_cluster_config {
-					enable_private_nodes = true
-				  }
+  resource_labels = {
+    "env" = "staging"
+  }
 
-				  network_policy {
-					enabled = true
-				  }
+  private_cluster_config {
+    enable_private_nodes = true
+  }
 
-				  ip_allocation_policy {}
-				  
-				enable_autopilot = true
-			  }
-			  
-			  resource "google_container_node_pool" "primary_preemptible_nodes" {
-				cluster    = google_container_cluster.example.name
-				node_count = 1
-			  
-				node_config {			  
-				  service_account = google_service_account.default.email
-				  metadata = {
-					disable-legacy-endpoints = true
-				}
-				  image_type = "COS_CONTAINERD"
-				  workload_metadata_config {
-					mode = "GCE_METADATA"
-				  }
-				}
-				management {
-					auto_repair = true
-					auto_upgrade = true
-				  }
-			  }
+  network_policy {
+    enabled = true
+  }
+
+  ip_allocation_policy {}
+
+  enable_autopilot = true
+}
+
+resource "google_container_node_pool" "primary_preemptible_nodes" {
+  cluster    = google_container_cluster.example.name
+  node_count = 1
+
+  node_config {
+    service_account = google_service_account.default.email
+    metadata = {
+      disable-legacy-endpoints = true
+    }
+    image_type = "COS_CONTAINERD"
+    workload_metadata_config {
+      mode = "GCE_METADATA"
+    }
+  }
+  management {
+    auto_repair  = true
+    auto_upgrade = true
+  }
+}
 `,
 			expected: gke.GKE{
 				Clusters: []gke.Cluster{
@@ -180,19 +180,18 @@ func Test_Adapt(t *testing.T) {
 		{
 			name: "default node pool",
 			terraform: `
-
-			resource "google_container_cluster" "example" {
-				node_config {			  
-					service_account = "service-account"
-					metadata = {
-					  disable-legacy-endpoints = true
-				  }
-					image_type = "COS"
-					workload_metadata_config {
-					  mode = "GCE_METADATA"
-					}
-				  }
-			  }	
+resource "google_container_cluster" "example" {
+  node_config {
+    service_account = "service-account"
+    metadata = {
+      disable-legacy-endpoints = true
+    }
+    image_type = "COS"
+    workload_metadata_config {
+      mode = "GCE_METADATA"
+    }
+  }
+} 
 `,
 			expected: gke.GKE{
 				Clusters: []gke.Cluster{
@@ -262,70 +261,70 @@ func Test_Adapt(t *testing.T) {
 
 func TestLines(t *testing.T) {
 	src := `
-	resource "google_container_cluster" "example" {
+resource "google_container_cluster" "example" {
 
-		node_config {
-			metadata = {
-				disable-legacy-endpoints = true
-			}
-		}
-		pod_security_policy_config {
-			enabled = "true"
-		}
+  node_config {
+    metadata = {
+      disable-legacy-endpoints = true
+    }
+  }
+  pod_security_policy_config {
+    enabled = "true"
+  }
 
-		enable_legacy_abac = "true"
-		enable_shielded_nodes = "true"
-	
-		remove_default_node_pool = true
-		monitoring_service = "monitoring.googleapis.com/kubernetes"
-		logging_service = "logging.googleapis.com/kubernetes"
+  enable_legacy_abac    = "true"
+  enable_shielded_nodes = "true"
 
-		master_auth {
-			client_certificate_config {
-			  issue_client_certificate = true
-			}
-		}
+  remove_default_node_pool = true
+  monitoring_service       = "monitoring.googleapis.com/kubernetes"
+  logging_service          = "logging.googleapis.com/kubernetes"
 
-		master_authorized_networks_config {
-			cidr_blocks {
-			  cidr_block = "10.10.128.0/24"
-			}
-		  }
+  master_auth {
+    client_certificate_config {
+      issue_client_certificate = true
+    }
+  }
 
-		resource_labels = {
-		  "env" = "staging"
-		}
+  master_authorized_networks_config {
+    cidr_blocks {
+      cidr_block = "10.10.128.0/24"
+    }
+  }
 
-		private_cluster_config {
-			enable_private_nodes = true
-		}
+  resource_labels = {
+    "env" = "staging"
+  }
 
-		network_policy {
-			enabled = true
-		}
-		ip_allocation_policy {}
-	  }
-	  
-	  resource "google_container_node_pool" "primary_preemptible_nodes" {
-		cluster    = google_container_cluster.example.name
-	  
-		node_config {
-			metadata = {
-				disable-legacy-endpoints = true
-			}
-			service_account = google_service_account.default.email
-			image_type = "COS_CONTAINERD"
+  private_cluster_config {
+    enable_private_nodes = true
+  }
 
-			workload_metadata_config {
-				mode = "GCE_METADATA"
-			}
-		}
-		management {
-			auto_repair = true
-			auto_upgrade = true
-		}
-	  }
-	`
+  network_policy {
+    enabled = true
+  }
+  ip_allocation_policy {}
+}
+
+resource "google_container_node_pool" "primary_preemptible_nodes" {
+  cluster = google_container_cluster.example.name
+
+  node_config {
+    metadata = {
+      disable-legacy-endpoints = true
+    }
+    service_account = google_service_account.default.email
+    image_type      = "COS_CONTAINERD"
+
+    workload_metadata_config {
+      mode = "GCE_METADATA"
+    }
+  }
+  management {
+    auto_repair  = true
+    auto_upgrade = true
+  }
+}
+`
 
 	modules := tftestutil.CreateModulesFromSource(t, src, ".tf")
 	adapted := Adapt(modules)
