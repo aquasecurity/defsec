@@ -9,7 +9,6 @@ import (
 	"github.com/aquasecurity/defsec/internal/rules"
 	rules2 "github.com/aquasecurity/defsec/rules"
 	"github.com/open-policy-agent/opa/ast"
-	"github.com/open-policy-agent/opa/bundle"
 )
 
 func init() {
@@ -88,7 +87,7 @@ func RecurseEmbeddedModules(fs embed.FS, dir string) (map[string]*ast.Module, er
 			}
 			continue
 		}
-		if !strings.HasSuffix(entry.Name(), bundle.RegoExt) || strings.HasSuffix(entry.Name(), "_test"+bundle.RegoExt) {
+		if !isRegoFile(entry.Name()) || isDotFile(entry.Name()) {
 			continue
 		}
 		fullPath := strings.Join([]string{dir, entry.Name()}, "/")
