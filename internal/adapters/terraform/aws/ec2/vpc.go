@@ -31,9 +31,19 @@ func adaptVPC(modules terraform.Modules, block *terraform.Block, def bool) ec2.V
 	var hasFlowLogs bool
 	for _, flow := range modules.GetResourcesByType("aws_flow_log") {
 		vpcAttr := flow.GetAttribute("vpc_id")
-		if vpcAttr.ReferencesBlock(block) {
-			hasFlowLogs = true
-			break
+		if vpcAttr.IsNotNil() {
+			if vpcAttr.IsString() {
+				if vpcAttr.Equals(block.ID()) {
+					hasFlowLogs = true
+					break
+				}
+			}
+			if referencedBlock, err := modules.GetReferencedBlock(vpcAttr, flow); err == nil {
+				if referencedBlock.ID() == block.ID() {
+					hasFlowLogs = true
+					break
+				}
+			}
 		}
 	}
 	return ec2.VPC{

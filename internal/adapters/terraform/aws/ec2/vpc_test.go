@@ -188,13 +188,37 @@ func Test_AdaptVPC(t *testing.T) {
 						Rules: []ec2.NetworkACLRule{
 							{
 								Metadata: defsecTypes.NewTestMetadata(),
-
 								Type:     defsecTypes.String("ingress", defsecTypes.NewTestMetadata()),
 								Action:   defsecTypes.String("", defsecTypes.NewTestMetadata()),
 								Protocol: defsecTypes.String("-1", defsecTypes.NewTestMetadata()),
 							},
 						},
 						IsDefaultRule: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					},
+				},
+			},
+		},
+		{
+			name: "aws_flow_log refer to locals",
+			terraform: `
+locals {
+  vpc_id = try(aws_vpc.this.id, "")
+}
+
+resource "aws_vpc" "this" {
+}
+
+resource "aws_flow_log" "this" {
+  vpc_id = local.vpc_id
+}
+`,
+			expected: ec2.EC2{
+				VPCs: []ec2.VPC{
+					{
+						Metadata:        defsecTypes.NewTestMetadata(),
+						IsDefault:       defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						ID:              defsecTypes.String("", defsecTypes.NewTestMetadata()),
+						FlowLogsEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
