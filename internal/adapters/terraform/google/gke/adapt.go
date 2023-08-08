@@ -270,6 +270,7 @@ func (a *adapter) adaptNodePool(resource *terraform.Block) {
 		EnableLegacyABAC:      defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 		ResourceLabels:        defsecTypes.MapDefault(nil, defsecTypes.NewUnmanagedMetadata()),
 		RemoveDefaultNodePool: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+		EnableAutpilot:        defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 	}
 }
 
