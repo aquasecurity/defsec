@@ -49,6 +49,22 @@ func TestCheckEnableNetworkPolicy(t *testing.T) {
 			},
 			expected: false,
 		},
+		{
+			name: "Cluster autopilot enabled",
+			input: gke.GKE{
+				Clusters: []gke.Cluster{
+					{
+						Metadata: defsecTypes.NewTestMetadata(),
+						NetworkPolicy: gke.NetworkPolicy{
+							Metadata: defsecTypes.NewTestMetadata(),
+							Enabled:  defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						},
+						EnableAutpilot: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+					},
+				},
+			},
+			expected: false,
+		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

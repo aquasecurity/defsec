@@ -74,7 +74,8 @@ func Test_Adapt(t *testing.T) {
 				  }
 
 				  ip_allocation_policy {}
-
+				  
+				enable_autopilot = true
 			  }
 			  
 			  resource "google_container_node_pool" "primary_preemptible_nodes" {
@@ -171,6 +172,7 @@ func Test_Adapt(t *testing.T) {
 							"env": "staging",
 						}, defsecTypes.NewTestMetadata()),
 						RemoveDefaultNodePool: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						EnableAutpilot:        defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 			},
