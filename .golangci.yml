@@ -2,15 +2,12 @@
 linters:
   disable-all: true
   enable:
-    - deadcode
     - errcheck
     - gosimple
     - govet
     - ineffassign
     - staticcheck
-    - structcheck
     - unused
-    - varcheck
     - bodyclose
     - cyclop
     - durationcheck
@@ -21,7 +18,7 @@ linters:
     - gocritic
     - gosec
 
-linters-settings: 
+linters-settings:
   cyclop:
     max-complexity: 18
   gocritic:
