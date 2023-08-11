@@ -1,6 +1,6 @@
 # METADATA
 # title: "S3 Bucket Logging"
-# description: "Ensures S3 bucket logging is enabled for S3 buckets.ff"
+# description: "Ensures S3 bucket logging is enabled for S3 buckets."
 # scope: package
 # schemas:
 # - input: schema["cloud"]
