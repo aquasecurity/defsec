@@ -538,7 +538,7 @@ deny[cause] {
 }`,
 	})
 
-	scanner := New()
+	scanner := New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true))
 	results, err := scanner.ScanFS(context.TODO(), fs, "test")
 	assert.NoError(t, err)
 	assert.Greater(t, len(results.GetFailed()), 0)

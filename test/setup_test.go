@@ -57,7 +57,7 @@ func scanJSON(t *testing.T, source string) scan.Results {
 		"main.tf.json": source,
 	})
 
-	s := tfScanner.New()
+	s := tfScanner.New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true))
 	results, _, err := s.ScanFSWithMetrics(context.TODO(), fs, ".")
 	require.NoError(t, err)
 	return results

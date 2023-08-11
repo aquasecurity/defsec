@@ -24,6 +24,7 @@ package builtin.aws.s3.aws0089
 
 deny[res] {
 	bucket := input.aws.s3.buckets[_]
+	not bucket.acl.value == "log-delivery-write"
 	not bucket.logging.enabled.value
 	res := result.new("Bucket has logging disabled", bucket.logging.enabled)
 }

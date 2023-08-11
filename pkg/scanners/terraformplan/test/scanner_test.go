@@ -5,6 +5,8 @@ import (
 	"testing"
 	"testing/fstest"
 
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraformplan"
 	"github.com/stretchr/testify/assert"
@@ -12,7 +14,7 @@ import (
 )
 
 func Test_Scanning_Plan(t *testing.T) {
-	scanner := terraformplan.New()
+	scanner := terraformplan.New(options.ScannerWithEmbeddedPolicies(true), options.ScannerWithEmbeddedLibraries(true))
 	b, _ := os.ReadFile("testdata/plan.json")
 	testFS := fstest.MapFS{
 		"testdata/plan.json": {Data: b},
@@ -28,7 +30,7 @@ func Test_Scanning_Plan(t *testing.T) {
 			failedResults = append(failedResults, r)
 		}
 	}
-	assert.Len(t, results, 13)
+	assert.Len(t, results, 15)
 	assert.Len(t, failedResults, 9)
 
 }
