@@ -83,7 +83,17 @@ func createTrivyContainer(ctx context.Context, regIP string) testcontainers.Cont
 	return trivyC
 }
 
-func main() {
+func debugLogsForContainer(ctx context.Context, c testcontainers.Container) string {
+	r, err := c.Logs(ctx)
+	if err != nil {
+		panic(err)
+	}
+
+	b, _ := io.ReadAll(r)
+	return string(b)
+}
+
+func LoadBundle() {
 	ctx := context.Background()
 
 	bundlePath, err := filepath.Abs("bundle.tar.gz")
@@ -118,12 +128,6 @@ func main() {
 	fmt.Println(debugLogsForContainer(ctx, trivyC))
 }
 
-func debugLogsForContainer(ctx context.Context, c testcontainers.Container) string {
-	r, err := c.Logs(ctx)
-	if err != nil {
-		panic(err)
-	}
-
-	b, _ := io.ReadAll(r)
-	return string(b)
+func main() {
+	LoadBundle()
 }
