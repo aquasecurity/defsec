@@ -2379,6 +2379,13 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.rds.Cluster": {
       "type": "object",
       "properties": {
+        "availabilityzones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+          }
+        },
         "backupretentionperioddays": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"

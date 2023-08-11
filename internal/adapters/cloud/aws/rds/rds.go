@@ -248,6 +248,11 @@ func (a *adapter) adaptCluster(dbCluster types.DBCluster) (*rds.Cluster, error) 
 		engine = *dbCluster.Engine
 	}
 
+	var availabilityZones []defsecTypes.StringValue
+	for _, az := range dbCluster.AvailabilityZones {
+		availabilityZones = append(availabilityZones, defsecTypes.String(az, dbClusterMetadata))
+	}
+
 	cluster := &rds.Cluster{
 		Metadata:                  dbClusterMetadata,
 		BackupRetentionPeriodDays: defsecTypes.IntFromInt32(aws.ToInt32(dbCluster.BackupRetentionPeriod), dbClusterMetadata),
@@ -261,6 +266,7 @@ func (a *adapter) adaptCluster(dbCluster types.DBCluster) (*rds.Cluster, error) 
 		PublicAccess:         defsecTypes.Bool(aws.ToBool(dbCluster.PubliclyAccessible), dbClusterMetadata),
 		Engine:               defsecTypes.String(engine, dbClusterMetadata),
 		LatestRestorableTime: defsecTypes.TimeUnresolvable(dbClusterMetadata),
+		AvailabilityZones:    availabilityZones,
 	}
 
 	return cluster, nil

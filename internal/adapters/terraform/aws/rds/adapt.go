@@ -72,6 +72,7 @@ func getClusters(modules terraform.Modules) (clusters []rds.Cluster) {
 			PublicAccess:         defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 			Engine:               defsecTypes.StringUnresolvable(defsecTypes.NewUnmanagedMetadata()),
 			LatestRestorableTime: defsecTypes.TimeUnresolvable(defsecTypes.NewUnmanagedMetadata()),
+			AvailabilityZones:    nil,
 		}
 		for _, orphan := range orphanResources {
 			orphanage.Instances = append(orphanage.Instances, adaptClusterInstance(orphan, modules))
@@ -223,6 +224,7 @@ func adaptCluster(resource *terraform.Block, modules terraform.Modules) (rds.Clu
 		PublicAccess:              defsecTypes.Bool(public, resource.GetMetadata()),
 		Engine:                    resource.GetAttribute("engine").AsStringValueOrDefault(rds.EngineAurora, resource),
 		LatestRestorableTime:      defsecTypes.TimeUnresolvable(resource.GetMetadata()),
+		AvailabilityZones:         resource.GetAttribute("availability_zones").AsStringValueSliceOrEmpty(resource),
 	}, ids
 }
 
