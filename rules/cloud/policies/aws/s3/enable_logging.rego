@@ -1,13 +1,14 @@
 # METADATA
 # title: "S3 Bucket Logging"
-# description: "Ensures S3 bucket logging is enabled for S3 buckets."
+# description: "Ensures S3 bucket logging is enabled for S3 buckets.ff"
 # scope: package
 # schemas:
 # - input: schema["cloud"]
 # related_resources:
 # - http://docs.aws.amazon.com/AmazonS3/latest/dev/Logging.html
 # custom:
-#   avd_id: AVD-AWS-0321
+#   id: AVD-AWS-0089
+#   avd_id: AVD-AWS-0089
 #   provider: aws
 #   service: s3
 #   severity: LOW
@@ -19,7 +20,7 @@
 #       subtypes:
 #         - service: s3
 #           provider: aws
-package builtin.aws.s3.aws0321
+package builtin.aws.s3.aws0089
 
 deny[res] {
 	bucket := input.aws.s3.buckets[_]

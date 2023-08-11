@@ -1,4 +1,4 @@
-package builtin.aws.s3.aws0321
+package builtin.aws.s3.aws0089
 
 test_detects_when_disabled {
 	r := deny with input as {"aws": {"s3": {"buckets": [{"logging": {"enabled": {"value": false}}}]}}}
