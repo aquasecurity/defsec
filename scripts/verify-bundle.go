@@ -1,17 +1,12 @@
-//go:build linux
-// +build linux
-
-package test
+package main
 
 import (
 	"context"
 	"fmt"
 	"io"
 	"path/filepath"
-	"testing"
 
 	"github.com/docker/docker/api/types/container"
-	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
@@ -19,9 +14,7 @@ import (
 var bundlePath = "bundle.tar.gz"
 var OrasPush = []string{"--config", "/dev/null:application/vnd.cncf.openpolicyagent.config.v1+json", fmt.Sprintf("%s:application/vnd.cncf.openpolicyagent.layer.v1.tar+gzip", bundlePath)}
 
-func createRegistryContainer(t *testing.T, ctx context.Context) (testcontainers.Container, string) {
-	t.Helper()
-
+func createRegistryContainer(ctx context.Context) (testcontainers.Container, string) {
 	reqReg := testcontainers.ContainerRequest{
 		Image:        "registry:2",
 		ExposedPorts: []string{"5111:5000/tcp"},
@@ -32,7 +25,9 @@ func createRegistryContainer(t *testing.T, ctx context.Context) (testcontainers.
 		ContainerRequest: reqReg,
 		Started:          true,
 	})
-	require.NoError(t, err)
+	if err != nil {
+		panic(err)
+	}
 
 	regIP, _ := regC.Host(ctx)
 	fmt.Println(regIP)
@@ -40,9 +35,7 @@ func createRegistryContainer(t *testing.T, ctx context.Context) (testcontainers.
 	return regC, regIP
 }
 
-func createOrasContainer(t *testing.T, ctx context.Context, regIP string, bundlePath string) testcontainers.Container {
-	t.Helper()
-
+func createOrasContainer(ctx context.Context, regIP string, bundlePath string) testcontainers.Container {
 	reqOras := testcontainers.ContainerRequest{
 		Image: "bitnami/oras:latest",
 		Cmd:   append([]string{"push", fmt.Sprintf("%s:5111/defsec-test:latest", regIP)}, OrasPush...),
@@ -63,14 +56,14 @@ func createOrasContainer(t *testing.T, ctx context.Context, regIP string, bundle
 		ContainerRequest: reqOras,
 		Started:          true,
 	})
-	require.NoError(t, err)
+	if err != nil {
+		panic(err)
+	}
 
 	return orasC
 }
 
-func createTrivyContainer(t *testing.T, ctx context.Context, regIP string) testcontainers.Container {
-	t.Helper()
-
+func createTrivyContainer(ctx context.Context, regIP string) testcontainers.Container {
 	reqTrivy := testcontainers.ContainerRequest{
 		Image: "aquasec/trivy:latest",
 		Cmd:   []string{"--debug", "config", fmt.Sprintf("--policy-bundle-repository=%s:5111/defsec-test:latest", regIP), "."},
@@ -83,43 +76,53 @@ func createTrivyContainer(t *testing.T, ctx context.Context, regIP string) testc
 		ContainerRequest: reqTrivy,
 		Started:          true,
 	})
-	require.NoError(t, err)
+	if err != nil {
+		panic(err)
+	}
 
 	return trivyC
 }
 
-func Test_Bundle(t *testing.T) {
+func main() {
 	ctx := context.Background()
 
 	bundlePath, err := filepath.Abs("bundle.tar.gz")
-	require.NoError(t, err)
+	if err != nil {
+		panic(err)
+	}
 
-	regC, regIP := createRegistryContainer(t, ctx)
+	regC, regIP := createRegistryContainer(ctx)
 	defer func() {
-		require.NoError(t, regC.Terminate(ctx))
+		if err = regC.Terminate(ctx); err != nil {
+			panic(err)
+		}
 	}()
 
-	orasC := createOrasContainer(t, ctx, regIP, bundlePath)
+	orasC := createOrasContainer(ctx, regIP, bundlePath)
 	defer func() {
-		require.NoError(t, orasC.Terminate(ctx))
+		if err = orasC.Terminate(ctx); err != nil {
+			panic(err)
+		}
 	}()
 
-	trivyC := createTrivyContainer(t, ctx, regIP)
+	trivyC := createTrivyContainer(ctx, regIP)
 	defer func() {
-		require.NoError(t, trivyC.Terminate(ctx))
+		if err = trivyC.Terminate(ctx); err != nil {
+			panic(err)
+		}
 	}()
 
 	// for debugging
-	fmt.Println(debugLogsForContainer(t, ctx, regC))
-	fmt.Println(debugLogsForContainer(t, ctx, orasC))
-	fmt.Println(debugLogsForContainer(t, ctx, trivyC))
+	fmt.Println(debugLogsForContainer(ctx, regC))
+	fmt.Println(debugLogsForContainer(ctx, orasC))
+	fmt.Println(debugLogsForContainer(ctx, trivyC))
 }
 
-func debugLogsForContainer(t *testing.T, ctx context.Context, c testcontainers.Container) string {
-	t.Helper()
-
+func debugLogsForContainer(ctx context.Context, c testcontainers.Container) string {
 	r, err := c.Logs(ctx)
-	require.NoError(t, err)
+	if err != nil {
+		panic(err)
+	}
 
 	b, _ := io.ReadAll(r)
 	return string(b)
