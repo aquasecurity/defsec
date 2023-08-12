@@ -47,6 +47,48 @@ func Test_Detection(t *testing.T) {
 			},
 		},
 		{
+			name: "teffarom json, no reader",
+			path: "main.tf.json",
+			r:    nil,
+			expected: []FileType{
+				FileTypeTerraform,
+				FileTypeJSON,
+			},
+		},
+		{
+			name: "teffarom json, with reader",
+			path: "main.tf.json",
+			r: strings.NewReader(`
+{
+  "variable": {
+    "example": {
+      "default": "hello"
+    }
+  }
+}
+`),
+			expected: []FileType{
+				FileTypeTerraform,
+				FileTypeJSON,
+			},
+		},
+		{
+			name: "terraform vars, no reader",
+			path: "main.tfvars",
+			r:    nil,
+			expected: []FileType{
+				FileTypeTerraform,
+			},
+		},
+		{
+			name: "teffarom vars, with reader",
+			path: "main.tfvars",
+			r:    strings.NewReader("some_var = \"some value\""),
+			expected: []FileType{
+				FileTypeTerraform,
+			},
+		},
+		{
 			name: "cloudformation, no reader",
 			path: "main.yaml",
 			r:    nil,
