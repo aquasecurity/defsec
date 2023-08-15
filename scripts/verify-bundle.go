@@ -42,7 +42,7 @@ func createOrasContainer(ctx context.Context, regIP string, bundlePath string) t
 		Mounts: testcontainers.ContainerMounts{
 			testcontainers.ContainerMount{
 				Source: testcontainers.GenericBindMountSource{
-					HostPath: filepath.Join(bundlePath),
+					HostPath: bundlePath,
 				},
 				Target: "/bundle.tar.gz",
 			},
