@@ -40,7 +40,7 @@ jobs:
 
       - name: Replace defsec
         run: |
-          go mod edit -replace "github.com/aquasecurity/defsec=../$DEFSEC_DIR"
+          go mod edit -replace "github.com/aquasecurity/defsec=../${{ env.DEFSEC_DIR }}"
 
       - name: Install tools
         uses: aquaproj/aqua-installer@v2.1.2
