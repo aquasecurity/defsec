@@ -182,6 +182,122 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 			},
 			expected: false,
 		},
+		{
+			name: "IAM policy with wildcard resource for cloudwatch log stream",
+			input: iam.IAM{
+				Policies: []iam.Policy{
+					{
+						Metadata: defsecTypes.NewTestMetadata(),
+						Document: func() iam.Document {
+
+							builder := iamgo.NewPolicyBuilder()
+							builder.WithVersion("2012-10-17")
+
+							sb := iamgo.NewStatementBuilder()
+							sb.WithEffect(iamgo.EffectAllow)
+							sb.WithActions([]string{"logs:CreateLogStream"})
+							sb.WithResources([]string{"arn:aws:logs:us-west-2:123456789012:log-group:SampleLogGroupName:*"})
+							sb.WithAWSPrincipals([]string{"arn:aws:iam::1234567890:root"})
+
+							builder.WithStatement(sb.Build())
+
+							return iam.Document{
+								Parsed:   builder.Build(),
+								Metadata: defsecTypes.NewTestMetadata(),
+							}
+						}(),
+						Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					},
+				},
+				Roles: []iam.Role{
+					{
+						Metadata: defsecTypes.NewTestMetadata(),
+						Policies: []iam.Policy{
+							{
+								Metadata: defsecTypes.NewTestMetadata(),
+								Document: func() iam.Document {
+
+									builder := iamgo.NewPolicyBuilder()
+									builder.WithVersion("2012-10-17")
+
+									sb := iamgo.NewStatementBuilder()
+									sb.WithEffect(iamgo.EffectAllow)
+									sb.WithActions([]string{"sts:AssumeRole"})
+									sb.WithServicePrincipals([]string{"logs.amazonaws.com"})
+
+									builder.WithStatement(sb.Build())
+
+									return iam.Document{
+										Parsed:   builder.Build(),
+										Metadata: defsecTypes.NewTestMetadata(),
+									}
+								}(),
+								Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
+			name: "IAM policy with wildcard resource for cloudwatch log stream",
+			input: iam.IAM{
+				Policies: []iam.Policy{
+					{
+						Metadata: defsecTypes.NewTestMetadata(),
+						Document: func() iam.Document {
+
+							builder := iamgo.NewPolicyBuilder()
+							builder.WithVersion("2012-10-17")
+
+							sb := iamgo.NewStatementBuilder()
+							sb.WithEffect(iamgo.EffectAllow)
+							sb.WithActions([]string{"logs:CreateLogStream"})
+							sb.WithResources([]string{"arn:aws:logs:us-west-2:123456789012:log-group:SampleLogGroupName:*"})
+							sb.WithAWSPrincipals([]string{"arn:aws:iam::1234567890:root"})
+
+							builder.WithStatement(sb.Build())
+
+							return iam.Document{
+								Parsed:   builder.Build(),
+								Metadata: defsecTypes.NewTestMetadata(),
+							}
+						}(),
+						Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+					},
+				},
+				Roles: []iam.Role{
+					{
+						Metadata: defsecTypes.NewTestMetadata(),
+						Policies: []iam.Policy{
+							{
+								Metadata: defsecTypes.NewTestMetadata(),
+								Document: func() iam.Document {
+
+									builder := iamgo.NewPolicyBuilder()
+									builder.WithVersion("2012-10-17")
+
+									sb := iamgo.NewStatementBuilder()
+									sb.WithEffect(iamgo.EffectAllow)
+									sb.WithActions([]string{"sts:AssumeRole"})
+									sb.WithServicePrincipals([]string{"logs.amazonaws.com"})
+
+									builder.WithStatement(sb.Build())
+
+									return iam.Document{
+										Parsed:   builder.Build(),
+										Metadata: defsecTypes.NewTestMetadata(),
+									}
+								}(),
+								Builtin: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
