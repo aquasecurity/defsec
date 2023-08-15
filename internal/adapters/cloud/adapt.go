@@ -18,6 +18,6 @@ func Adapt(ctx context.Context, opt options.Options) (*state.State, error) {
 
 func AZUREAdapt(ctx context.Context, opt options.AZUREOptions) (*state.State, error) {
 	cloudState := &state.State{}
-	err := azure.Adapt(ctx, cloudState, opt)
+	err := azure.Adapt(ctx, cloudState, &opt)
 	return cloudState, err
 }

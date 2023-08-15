@@ -3,6 +3,7 @@ package azure
 import (
 	"context"
 	"fmt"
+	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	//"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/errs"
@@ -13,11 +14,11 @@ import (
 	"github.com/aquasecurity/defsec/pkg/debug"
 	"github.com/aquasecurity/defsec/pkg/progress"
 	"github.com/aquasecurity/defsec/pkg/state"
-	//"github.com/aws/aws-sdk-go-v2/aws"
 	//"github.com/aws/aws-sdk-go-v2/service/sts"
 )
 
 var registeredAdapters []ServiceAdapter
+var Token string
 
 func RegisterServiceAdapter(adapter ServiceAdapter) {
 	for _, existing := range registeredAdapters {
@@ -36,7 +37,6 @@ type ServiceAdapter interface {
 
 type RootAdapter struct {
 	ctx                 context.Context
-	sessionCfg          *azidentity.DefaultAzureCredential
 	tracker             progress.ServiceTracker
 	accountID           string
 	currentService      string
@@ -45,16 +45,15 @@ type RootAdapter struct {
 	concurrencyStrategy concurrency.Strategy
 }
 
-func NewRootAdapter(ctx context.Context, cfg *azidentity.DefaultAzureCredential, tracker progress.ServiceTracker) *RootAdapter {
+func NewRootAdapter(ctx context.Context, tracker progress.ServiceTracker) *RootAdapter {
 	return &RootAdapter{
-		ctx:        ctx,
-		tracker:    tracker,
-		sessionCfg: cfg,
+		ctx:     ctx,
+		tracker: tracker,
 		//location:   cfg.Region,
 	}
 }
 
-func (a *RootAdapter) Region() string {
+func (a *RootAdapter) Location() string {
 	return a.location
 }
 
@@ -64,10 +63,6 @@ func (a *RootAdapter) Debug(format string, args ...interface{}) {
 
 func (a *RootAdapter) ConcurrencyStrategy() concurrency.Strategy {
 	return a.concurrencyStrategy
-}
-
-func (a *RootAdapter) SessionConfig() *azidentity.DefaultAzureCredential {
-	return a.sessionCfg
 }
 
 func (a *RootAdapter) Context() context.Context {
@@ -85,15 +80,15 @@ func (a *RootAdapter) Tracker() progress.ServiceTracker {
 	namespace := a.accountID
 	location := a.location
 	switch a.currentService {
-	case "s3":
+	case "compute":
 		namespace = ""
 		location = ""
 	}
 
 	return a.CreateMetadataFromARN((arn.ARN{
-		Partition: "aws",
+		Partition: "azure",
 		Service:   a.currentService,
-		Region:    region,
+		Location:  location,
 		AccountID: namespace,
 		Resource:  resource,
 	}).String())
@@ -103,17 +98,17 @@ func (a *RootAdapter) CreateMetadataFromARN(arn string) types.Metadata {
 	return types.NewRemoteMetadata(arn)
 }
 
-type resolver struct {
+/*type resolver struct {
 	endpoint string
 }
 
-func (r *resolver) ResolveEndpoint(_, _ string, _ ...interface{}) (aws.Endpoint, error) {
-	return aws.Endpoint{
+func (r *resolver) ResolveEndpoint(_, _ string, _ ...interface{}) (azure.Endpoint, error) {
+	return azure.Endpoint{
 		URL:           r.endpoint,
 		SigningRegion: "custom-signing-region",
 		Source:        aws.EndpointSourceCustom,
 	}, nil
-}
+
 
 func createResolver(endpoint string) aws.EndpointResolverWithOptions {
 	return &resolver{
@@ -129,7 +124,7 @@ func AllServices() []string {
 	return services
 }
 
-func Adapt(ctx context.Context, state *state.State, opt options.AZUREOptions) error {
+func Adapt(ctx context.Context, state *state.State, opt *options.AZUREOptions) error {
 	c := &RootAdapter{
 		ctx:                 ctx,
 		tracker:             opt.ProgressTracker,
@@ -141,7 +136,14 @@ func Adapt(ctx context.Context, state *state.State, opt options.AZUREOptions) er
 	if err != nil {
 		return err
 	}
-	c.sessionCfg = cred
+
+	const scope = "https://management.azure.com/.default"
+
+	if err != nil {
+		fmt.Errorf("unable to get an access token: %w", err)
+	}
+	aadToken, err := cred.GetToken(ctx, policy.TokenRequestOptions{Scopes: []string{scope}})
+	Token = aadToken.Token
 
 	/*if opt.Location != "" {
 		c.Debug("Using location '%s'", opt.Location)
@@ -205,4 +207,8 @@ func contains(services []string, service string) bool {
 		}
 	}
 	return false
+}
+
+func GetToken() string {
+	return Token
 }
