@@ -21,7 +21,6 @@ func Test_Detection(t *testing.T) {
 		{
 			name:     "text file, no reader",
 			path:     "something.txt",
-			r:        nil,
 			expected: nil,
 		},
 		{
@@ -33,7 +32,6 @@ func Test_Detection(t *testing.T) {
 		{
 			name: "terraform, no reader",
 			path: "main.tf",
-			r:    nil,
 			expected: []FileType{
 				FileTypeTerraform,
 			},
@@ -47,16 +45,15 @@ func Test_Detection(t *testing.T) {
 			},
 		},
 		{
-			name: "teffarom json, no reader",
+			name: "terraform json, no reader",
 			path: "main.tf.json",
-			r:    nil,
 			expected: []FileType{
 				FileTypeTerraform,
 				FileTypeJSON,
 			},
 		},
 		{
-			name: "teffarom json, with reader",
+			name: "terraform json, with reader",
 			path: "main.tf.json",
 			r: strings.NewReader(`
 {
@@ -75,13 +72,12 @@ func Test_Detection(t *testing.T) {
 		{
 			name: "terraform vars, no reader",
 			path: "main.tfvars",
-			r:    nil,
 			expected: []FileType{
 				FileTypeTerraform,
 			},
 		},
 		{
-			name: "teffarom vars, with reader",
+			name: "terraform vars, with reader",
 			path: "main.tfvars",
 			r:    strings.NewReader("some_var = \"some value\""),
 			expected: []FileType{
@@ -91,7 +87,6 @@ func Test_Detection(t *testing.T) {
 		{
 			name: "cloudformation, no reader",
 			path: "main.yaml",
-			r:    nil,
 			expected: []FileType{
 				FileTypeYAML,
 				FileTypeHelm,
