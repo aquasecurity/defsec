@@ -5115,6 +5115,10 @@
     "github.com.aquasecurity.defsec.pkg.providers.google.gke.Cluster": {
       "type": "object",
       "properties": {
+        "enableautpilot": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
         "enablelegacyabac": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"

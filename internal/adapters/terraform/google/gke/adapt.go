@@ -96,6 +96,7 @@ func (a *adapter) adaptCluster(resource *terraform.Block, module *terraform.Modu
 		EnableLegacyABAC:      defsecTypes.BoolDefault(false, resource.GetMetadata()),
 		ResourceLabels:        defsecTypes.MapDefault(make(map[string]string), resource.GetMetadata()),
 		RemoveDefaultNodePool: defsecTypes.BoolDefault(false, resource.GetMetadata()),
+		EnableAutpilot:        defsecTypes.BoolDefault(false, resource.GetMetadata()),
 	}
 
 	if allocBlock := resource.GetBlock("ip_allocation_policy"); allocBlock.IsNotNil() {
@@ -145,6 +146,8 @@ func (a *adapter) adaptCluster(resource *terraform.Block, module *terraform.Modu
 
 	enableLegacyABACAttr := resource.GetAttribute("enable_legacy_abac")
 	cluster.EnableLegacyABAC = enableLegacyABACAttr.AsBoolValueOrDefault(false, resource)
+
+	cluster.EnableAutpilot = resource.GetAttribute("enable_autopilot").AsBoolValueOrDefault(false, resource)
 
 	resourceLabelsAttr := resource.GetAttribute("resource_labels")
 	if resourceLabelsAttr.IsNotNil() {
@@ -267,6 +270,7 @@ func (a *adapter) adaptNodePool(resource *terraform.Block) {
 		EnableLegacyABAC:      defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 		ResourceLabels:        defsecTypes.MapDefault(nil, defsecTypes.NewUnmanagedMetadata()),
 		RemoveDefaultNodePool: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+		EnableAutpilot:        defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 	}
 }
 
