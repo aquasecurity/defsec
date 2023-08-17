@@ -72,7 +72,6 @@ func getClusters(modules terraform.Modules) (clusters []rds.Cluster) {
 			PublicAccess:         defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 			Engine:               defsecTypes.StringUnresolvable(defsecTypes.NewUnmanagedMetadata()),
 			LatestRestorableTime: defsecTypes.TimeUnresolvable(defsecTypes.NewUnmanagedMetadata()),
-			AvailabilityZones:    nil,
 		}
 		for _, orphan := range orphanResources {
 			orphanage.Instances = append(orphanage.Instances, adaptClusterInstance(orphan, modules))
