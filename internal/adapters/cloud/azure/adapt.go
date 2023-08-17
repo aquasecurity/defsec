@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
+	"github.com/aquasecurity/defsec/pkg/types"
+
 	//"github.com/Azure/azure-sdk-for-go/sdk/azcore/policy"
 	"github.com/aquasecurity/defsec/pkg/concurrency"
 	"github.com/aquasecurity/defsec/pkg/errs"
@@ -38,19 +40,10 @@ type ServiceAdapter interface {
 type RootAdapter struct {
 	ctx                 context.Context
 	tracker             progress.ServiceTracker
-	accountID           string
 	currentService      string
 	location            string
 	debugWriter         debug.Logger
 	concurrencyStrategy concurrency.Strategy
-}
-
-func NewRootAdapter(ctx context.Context, tracker progress.ServiceTracker) *RootAdapter {
-	return &RootAdapter{
-		ctx:     ctx,
-		tracker: tracker,
-		//location:   cfg.Region,
-	}
 }
 
 func (a *RootAdapter) Location() string {
@@ -73,48 +66,9 @@ func (a *RootAdapter) Tracker() progress.ServiceTracker {
 	return a.tracker
 }
 
-/*func (a *RootAdapter) CreateMetadata(resource string) types.Metadata {
-
-	// some services don't require region/account id in the ARN
-	// see https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html#genref-aws-service-namespaces
-	namespace := a.accountID
-	location := a.location
-	switch a.currentService {
-	case "compute":
-		namespace = ""
-		location = ""
-	}
-
-	return a.CreateMetadataFromARN((arn.ARN{
-		Partition: "azure",
-		Service:   a.currentService,
-		Location:  location,
-		AccountID: namespace,
-		Resource:  resource,
-	}).String())
+func (a *RootAdapter) CreateMetadata(resource string) types.Metadata {
+	return types.NewRemoteMetadata(resource)
 }
-
-func (a *RootAdapter) CreateMetadataFromARN(arn string) types.Metadata {
-	return types.NewRemoteMetadata(arn)
-}
-
-/*type resolver struct {
-	endpoint string
-}
-
-func (r *resolver) ResolveEndpoint(_, _ string, _ ...interface{}) (azure.Endpoint, error) {
-	return azure.Endpoint{
-		URL:           r.endpoint,
-		SigningRegion: "custom-signing-region",
-		Source:        aws.EndpointSourceCustom,
-	}, nil
-
-
-func createResolver(endpoint string) aws.EndpointResolverWithOptions {
-	return &resolver{
-		endpoint: endpoint,
-	}
-}*/
 
 func AllServices() []string {
 	var services []string
@@ -145,27 +99,6 @@ func Adapt(ctx context.Context, state *state.State, opt *options.AZUREOptions) e
 	aadToken, err := cred.GetToken(ctx, policy.TokenRequestOptions{Scopes: []string{scope}})
 	Token = aadToken.Token
 
-	/*if opt.Location != "" {
-		c.Debug("Using location '%s'", opt.Location)
-		c.sessionCfg.Location = opt.Location
-	}
-	if opt.Endpoint != "" {
-		c.Debug("Using endpoint '%s'", opt.Endpoint)
-		c.sessionCfg.EndpointResolverWithOptions = createResolver(opt.Endpoint)
-	}*/
-
-	c.Debug("Discovering caller identity...")
-	//stsClient := sts.NewFromConfig(c.sessionCfg.)
-	//result, err := stsClient.GetCallerIdentity(ctx, &sts.GetCallerIdentityInput{})
-	if err != nil {
-		return fmt.Errorf("failed to discover AZURE caller identity: %w", err)
-	}
-	//if result.Account == nil {
-	//	return fmt.Errorf("missing account id for aws account")
-	//}
-	//c.accountID = *result.Account
-	//c.Debug("AWS account ID: %s", c.accountID)
-
 	if len(opt.Services) == 0 {
 		c.Debug("Preparing to run for all %d registered services...", len(registeredAdapters))
 		opt.ProgressTracker.SetTotalServices(len(registeredAdapters))
@@ -173,8 +106,6 @@ func Adapt(ctx context.Context, state *state.State, opt *options.AZUREOptions) e
 		c.Debug("Preparing to run for %d filtered services...", len(opt.Services))
 		opt.ProgressTracker.SetTotalServices(len(opt.Services))
 	}
-
-	//c.location = c.sessionCfg.Region
 
 	var adapterErrors []error
 

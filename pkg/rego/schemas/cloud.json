@@ -3604,8 +3604,11 @@
           }
         },
         "virtualmachinelist": {
-          "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.azure.compute.VirtualMachineList"
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.azure.compute.VirtualMachines"
+          }
         },
         "windowsvirtualmachines": {
           "type": "array",
@@ -3673,10 +3676,12 @@
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.azure.compute.DiagnosticsProfile"
         },
         "provisioningstate": {
-          "type": "string"
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "vmid": {
-          "type": "string"
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3689,26 +3694,16 @@
         }
       }
     },
-    "github.com.aquasecurity.defsec.pkg.providers.azure.compute.VirtualMachineList": {
-      "type": "object",
-      "properties": {
-        "value": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.azure.compute.VirtualMachines"
-          }
-        }
-      }
-    },
     "github.com.aquasecurity.defsec.pkg.providers.azure.compute.VirtualMachines": {
       "type": "object",
       "properties": {
         "id": {
-          "type": "string"
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "name": {
-          "type": "string"
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
         "properties": {
           "type": "object",

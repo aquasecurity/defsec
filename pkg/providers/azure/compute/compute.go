@@ -8,11 +8,7 @@ type Compute struct {
 	LinuxVirtualMachines   []LinuxVirtualMachine
 	WindowsVirtualMachines []WindowsVirtualMachine
 	ManagedDisks           []ManagedDisk
-	VirtualMachineList     VirtualMachineList
-}
-
-type VirtualMachineList struct {
-	Value []VirtualMachines `json:"value"`
+	VirtualMachineList     []VirtualMachines
 }
 
 type VirtualMachine struct {
@@ -22,15 +18,15 @@ type VirtualMachine struct {
 
 type VirtualMachines struct {
 	Metadata   defsecTypes.Metadata
-	Id         string
-	Name       string
+	Id         defsecTypes.StringValue
+	Name       defsecTypes.StringValue
 	Properties Properties
 }
 
 type Properties struct {
 	Metadata           defsecTypes.Metadata
-	ProvisioningState  string
-	VmId               string
+	ProvisioningState  defsecTypes.StringValue
+	VmId               defsecTypes.StringValue
 	DiagnosticsProfile DiagnosticsProfile
 }
 
@@ -41,7 +37,7 @@ type DiagnosticsProfile struct {
 
 type BootDiagnostics struct {
 	Metadata defsecTypes.Metadata
-	Enabled  bool
+	Enabled  defsecTypes.BoolValue
 }
 
 type LinuxVirtualMachine struct {

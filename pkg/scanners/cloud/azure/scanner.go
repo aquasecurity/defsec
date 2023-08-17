@@ -54,7 +54,7 @@ type Scanner struct {
 }
 
 func (s *Scanner) SetRegoOnly(value bool) {
-	s.regoOnly = true
+	s.regoOnly = value
 }
 
 func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {

@@ -14,10 +14,10 @@ var CheckNoPublicIp = rules.Register(
 		Provider:   providers.OracleProvider,
 		Service:    "compute",
 		ShortCode:  "no-public-ip",
-		Summary:    "Compute instance requests an IP reservation from a public pool",
+		Summary:    "compute instance requests an IP reservation from a public pool",
 		Impact:     "The compute instance has the ability to be reached from outside",
 		Resolution: "Reconsider the use of an public IP",
-		Explanation: `Compute instance requests an IP reservation from a public pool
+		Explanation: `compute instance requests an IP reservation from a public pool
 
 The compute instance has the ability to be reached from outside, you might want to sonder the use of a non public IP.`,
 		Links: []string{},

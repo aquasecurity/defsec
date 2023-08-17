@@ -20,7 +20,7 @@ func TestCheckNoPublicIp(t *testing.T) {
 		expected bool
 	}{
 		{
-			name: "Compute instance public reservation pool",
+			name: "compute instance public reservation pool",
 			input: oracle.Compute{
 				AddressReservations: []oracle.AddressReservation{
 					{
@@ -32,7 +32,7 @@ func TestCheckNoPublicIp(t *testing.T) {
 			expected: true,
 		},
 		{
-			name: "Compute instance cloud reservation pool",
+			name: "compute instance cloud reservation pool",
 			input: oracle.Compute{
 				AddressReservations: []oracle.AddressReservation{
 					{
