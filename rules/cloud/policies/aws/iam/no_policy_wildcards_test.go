@@ -254,7 +254,7 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 							sb := iamgo.NewStatementBuilder()
 							sb.WithEffect(iamgo.EffectAllow)
 							sb.WithActions([]string{"logs:CreateLogStream"})
-							sb.WithResources([]string{"arn:aws:logs:us-west-2:123456789012:log-group:SampleLogGroupName:*"})
+							sb.WithResources([]string{"*"})
 							sb.WithAWSPrincipals([]string{"arn:aws:iam::1234567890:root"})
 
 							builder.WithStatement(sb.Build())
@@ -296,7 +296,7 @@ func TestCheckNoPolicyWildcards(t *testing.T) {
 					},
 				},
 			},
-			expected: false,
+			expected: true,
 		},
 	}
 	for _, test := range tests {
