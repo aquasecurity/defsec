@@ -2,6 +2,7 @@ package iam
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/framework"
@@ -18,6 +19,11 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers"
 
 	"github.com/liamg/iamgo"
+)
+
+var (
+	//arn:aws:logs:us-west-2:123456789012:log-group:SampleLogGroupName:*
+	cloudwatchLogStreamResourceRegex = regexp.MustCompile(`^arn:aws:logs:.*:.+:log-group:.+:\*`)
 )
 
 var CheckNoPolicyWildcards = rules.Register(
@@ -123,6 +129,10 @@ func checkStatement(src iam.Document, statement iamgo.Statement, results scan.Re
 				if strings.HasSuffix(resource, "/*") && strings.HasPrefix(resource, "arn:aws:s3") {
 					continue
 				}
+				if cloudwatchLogStreamResourceRegex.MatchString(resource) {
+					continue
+				}
+
 				results.Add(
 					fmt.Sprintf("IAM policy document uses sensitive action '%s' on wildcarded resource '%s'", action, resources[0]),
 					src.MetadataFromIamGo(statement.Range(), r),
