@@ -223,6 +223,7 @@ func adaptCluster(resource *terraform.Block, modules terraform.Modules) (rds.Clu
 		PublicAccess:              defsecTypes.Bool(public, resource.GetMetadata()),
 		Engine:                    resource.GetAttribute("engine").AsStringValueOrDefault(rds.EngineAurora, resource),
 		LatestRestorableTime:      defsecTypes.TimeUnresolvable(resource.GetMetadata()),
+		AvailabilityZones:         resource.GetAttribute("availability_zones").AsStringValueSliceOrEmpty(resource),
 	}, ids
 }
 

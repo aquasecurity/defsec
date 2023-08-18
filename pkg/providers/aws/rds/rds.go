@@ -46,6 +46,7 @@ type Cluster struct {
 	PublicAccess              defsecTypes.BoolValue
 	Engine                    defsecTypes.StringValue
 	LatestRestorableTime      defsecTypes.TimeValue
+	AvailabilityZones         []defsecTypes.StringValue
 }
 
 type Snapshots struct {

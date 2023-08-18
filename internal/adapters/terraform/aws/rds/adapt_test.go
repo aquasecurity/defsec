@@ -25,6 +25,7 @@ func Test_Adapt(t *testing.T) {
 
 			resource "aws_rds_cluster" "example" {
 				engine                  = "aurora-mysql"
+				availability_zones      = ["us-west-2a", "us-west-2b", "us-west-2c"]
 				backup_retention_period = 7
 				kms_key_id  = "kms_key_1"
 				storage_encrypted = true
@@ -115,6 +116,11 @@ func Test_Adapt(t *testing.T) {
 						},
 						PublicAccess: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 						Engine:       defsecTypes.String(rds.EngineAuroraMysql, defsecTypes.NewTestMetadata()),
+						AvailabilityZones: defsecTypes.StringValueList{
+							defsecTypes.String("us-west-2a", defsecTypes.NewTestMetadata()),
+							defsecTypes.String("us-west-2b", defsecTypes.NewTestMetadata()),
+							defsecTypes.String("us-west-2c", defsecTypes.NewTestMetadata()),
+						},
 					},
 				},
 				Classic: rds.Classic{
