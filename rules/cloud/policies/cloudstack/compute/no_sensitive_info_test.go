@@ -20,7 +20,7 @@ func TestCheckNoSensitiveInfo(t *testing.T) {
 		expected bool
 	}{
 		{
-			name: "Compute instance with sensitive information in user data",
+			name: "compute instance with sensitive information in user data",
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{
@@ -32,7 +32,7 @@ func TestCheckNoSensitiveInfo(t *testing.T) {
 			expected: true,
 		},
 		{
-			name: "Compute instance with no sensitive information in user data",
+			name: "compute instance with no sensitive information in user data",
 			input: compute.Compute{
 				Instances: []compute.Instance{
 					{

@@ -20,7 +20,7 @@ func TestCheckProjectLevelOslogin(t *testing.T) {
 		expected bool
 	}{
 		{
-			name: "Compute OS login disabled",
+			name: "compute OS login disabled",
 			input: compute.Compute{
 				ProjectMetadata: compute.ProjectMetadata{
 					Metadata:      defsecTypes.NewTestMetadata(),
@@ -30,7 +30,7 @@ func TestCheckProjectLevelOslogin(t *testing.T) {
 			expected: true,
 		},
 		{
-			name: "Compute OS login enabled",
+			name: "compute OS login enabled",
 			input: compute.Compute{
 				ProjectMetadata: compute.ProjectMetadata{
 					Metadata:      defsecTypes.NewTestMetadata(),

@@ -16,7 +16,7 @@ func Adapt(deployment azure.Deployment) compute.Compute {
 
 func adaptManagedDisks(deployment azure.Deployment) (managedDisks []compute.ManagedDisk) {
 
-	for _, resource := range deployment.GetResourcesByType("Microsoft.Compute/disks") {
+	for _, resource := range deployment.GetResourcesByType("Microsoft.compute/disks") {
 		managedDisks = append(managedDisks, adaptManagedDisk(resource))
 	}
 
@@ -36,7 +36,7 @@ func adaptManagedDisk(resource azure.Resource) compute.ManagedDisk {
 }
 
 func adaptWindowsVirtualMachines(deployment azure.Deployment) (windowsVirtualMachines []compute.WindowsVirtualMachine) {
-	for _, resource := range deployment.GetResourcesByType("Microsoft.Compute/virtualMachines") {
+	for _, resource := range deployment.GetResourcesByType("Microsoft.compute/virtualMachines") {
 		if resource.Properties.GetMapValue("osProfile").GetMapValue("windowsConfiguration").AsMap() != nil {
 			windowsVirtualMachines = append(windowsVirtualMachines, adaptWindowsVirtualMachine(resource))
 		}
@@ -57,7 +57,7 @@ func adaptWindowsVirtualMachine(resource azure.Resource) compute.WindowsVirtualM
 }
 
 func adaptLinuxVirtualMachines(deployment azure.Deployment) (linuxVirtualMachines []compute.LinuxVirtualMachine) {
-	for _, resource := range deployment.GetResourcesByType("Microsoft.Compute/virtualMachines") {
+	for _, resource := range deployment.GetResourcesByType("Microsoft.compute/virtualMachines") {
 		if resource.Properties.GetMapValue("osProfile").GetMapValue("linuxConfiguration").AsMap() != nil {
 			linuxVirtualMachines = append(linuxVirtualMachines, adaptLinuxVirtualMachine(resource))
 		}

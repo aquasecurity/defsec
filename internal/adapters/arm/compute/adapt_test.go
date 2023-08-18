@@ -16,7 +16,7 @@ func Test_AdaptLinuxVM(t *testing.T) {
 	input := azure.Deployment{
 		Resources: []azure.Resource{
 			{
-				Type: azure.NewValue("Microsoft.Compute/virtualMachines", types.NewTestMetadata()),
+				Type: azure.NewValue("Microsoft.compute/virtualMachines", types.NewTestMetadata()),
 				Properties: azure.NewValue(map[string]azure.Value{
 					"osProfile": azure.NewValue(map[string]azure.Value{
 						"linuxConfiguration": azure.NewValue(map[string]azure.Value{
@@ -43,7 +43,7 @@ func Test_AdaptWindowsVM(t *testing.T) {
 	input := azure.Deployment{
 		Resources: []azure.Resource{
 			{
-				Type: azure.NewValue("Microsoft.Compute/virtualMachines", types.NewTestMetadata()),
+				Type: azure.NewValue("Microsoft.compute/virtualMachines", types.NewTestMetadata()),
 				Properties: azure.NewValue(map[string]azure.Value{
 					"osProfile": azure.NewValue(map[string]azure.Value{
 						"windowsConfiguration": azure.NewValue(map[string]azure.Value{}, types.NewTestMetadata()),

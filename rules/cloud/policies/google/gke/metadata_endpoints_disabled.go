@@ -17,7 +17,7 @@ var CheckMetadataEndpointsDisabled = rules.Register(
 		Summary:    "Legacy metadata endpoints enabled.",
 		Impact:     "Legacy metadata endpoints don't require metadata headers",
 		Resolution: "Disable legacy metadata endpoints",
-		Explanation: `The Compute Engine instance metadata server exposes legacy v0.1 and v1beta1 endpoints, which do not enforce metadata query headers. 
+		Explanation: `The compute Engine instance metadata server exposes legacy v0.1 and v1beta1 endpoints, which do not enforce metadata query headers. 
 
 This is a feature in the v1 APIs that makes it more difficult for a potential attacker to retrieve instance metadata. 
 

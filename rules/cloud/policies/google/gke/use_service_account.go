@@ -17,7 +17,7 @@ var CheckUseServiceAccount = rules.Register(
 		Summary:     "Checks for service account defined for GKE nodes",
 		Impact:      "Service accounts with wide permissions can increase the risk of compromise",
 		Resolution:  "Use limited permissions for service accounts to be effective",
-		Explanation: `You should create and use a minimally privileged service account to run your GKE cluster instead of using the Compute Engine default service account.`,
+		Explanation: `You should create and use a minimally privileged service account to run your GKE cluster instead of using the compute Engine default service account.`,
 		Links: []string{
 			"https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa",
 		},
