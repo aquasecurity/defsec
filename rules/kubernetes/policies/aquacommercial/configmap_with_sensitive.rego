@@ -7,14 +7,14 @@
 # custom:
 #   id: AVD-KSV-01010
 #   avd_id: AVD-KSV-01010
-#   severity: HIGH
+#   severity: MEDIUM
 #   short_code: configMap_with_sensitive
 #   recommended_action: "Remove sensitive content from configMap data value"
 #   input:
 #     selector:
 #     - type: kubernetes
 
-package builtin.kubernetes.KSV01010
+package builtin.kubernetes.KSV1010
 
 import data.lib.kubernetes
 

@@ -1,5 +1,5 @@
 
-Check whether role permits getting shell on pods
+The ability to exec into a container with privileged access to the host or with an attached SA with higher RBAC permissions is a common escalation path to cluster-admin.
 
 ### Impact
 <!-- Add Impact here -->

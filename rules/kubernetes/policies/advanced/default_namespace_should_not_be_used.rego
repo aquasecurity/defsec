@@ -1,6 +1,6 @@
 # METADATA
 # title: "Workloads in the default namespace"
-# description: "ensure that default namespace should not be used"
+# description: "Checks whether a workload is running in the default namespace."
 # scope: package
 # schemas:
 # - input: schema["kubernetes"]
@@ -11,7 +11,7 @@
 #   avd_id: AVD-KSV-0110
 #   severity: LOW
 #   short_code: default-namespace-should-not-be-used
-#   recommended_action: "Ensure that namespaces are created to allow for appropriate segregation of Kubernetes resources and that all new resources are created in a specific namespace."
+#   recommended_action: "Set 'metadata.namespace' to a non-default namespace."
 #   input:
 #     selector:
 #     - type: kubernetes

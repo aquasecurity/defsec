@@ -1,5 +1,5 @@
 
-The RuntimeDefault/Localhost seccomp profile must be required, or allow specific additional profiles.
+According to pod security standard 'Seccomp', the RuntimeDefault seccomp profile must be required, or allow specific additional profiles.
 
 ### Impact
 <!-- Add Impact here -->

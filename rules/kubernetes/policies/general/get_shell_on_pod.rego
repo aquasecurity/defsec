@@ -1,6 +1,6 @@
 # METADATA
 # title: "Exec into Pods"
-# description: "Check whether role permits getting shell on pods"
+# description: "The ability to exec into a container with privileged access to the host or with an attached SA with higher RBAC permissions is a common escalation path to cluster-admin."
 # scope: package
 # schemas:
 # - input: schema["kubernetes"]
@@ -11,7 +11,7 @@
 #   avd_id: AVD-KSV-0053
 #   severity: HIGH
 #   short_code: no-getting-shell-pods
-#   recommended_action: "Create a role which does not permit getting shell on pods"
+#   recommended_action: "Remove write permission verbs for resource 'pods/exec'"
 #   input:
 #     selector:
 #     - type: kubernetes

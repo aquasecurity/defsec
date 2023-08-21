@@ -1,4 +1,4 @@
-package builtin.kubernetes.KSV0109
+package builtin.kubernetes.KSV109
 
 test_configMap_with_secrets_denied {
 	r := deny with input as {

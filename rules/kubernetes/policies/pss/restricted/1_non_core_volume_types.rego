@@ -1,6 +1,6 @@
 # METADATA
 # title: "Non-core volume types used."
-# description: "In addition to restricting HostPath volumes, usage of non-ephemeral volume types should be limited to those defined through PersistentVolumes."
+# description: "According to pod security standard 'Volume types', non-core volume types must not be used."
 # scope: package
 # schemas:
 # - input: schema["kubernetes"]

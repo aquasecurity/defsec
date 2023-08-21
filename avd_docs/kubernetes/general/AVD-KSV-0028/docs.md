@@ -1,5 +1,5 @@
 
-In addition to restricting HostPath volumes, usage of non-ephemeral volume types should be limited to those defined through PersistentVolumes.
+According to pod security standard 'Volume types', non-core volume types must not be used.
 
 ### Impact
 <!-- Add Impact here -->

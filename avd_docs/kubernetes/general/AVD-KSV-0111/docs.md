@@ -1,5 +1,5 @@
 
-The RBAC role cluster-admin provides wide-ranging powers over the environment and should be used only where and when needed.
+Either cluster-admin or those granted powerful permissions.
 
 ### Impact
 <!-- Add Impact here -->

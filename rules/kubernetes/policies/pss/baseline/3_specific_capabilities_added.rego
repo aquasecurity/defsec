@@ -1,6 +1,6 @@
 # METADATA
 # title: "Specific capabilities added"
-# description: "Adding NET_RAW or capabilities beyond the default set must be disallowed."
+# description: "According to pod security standard 'Capabilities', capabilities beyond the default set must not be added."
 # scope: package
 # schemas:
 # - input: schema["kubernetes"]
@@ -11,7 +11,7 @@
 #   avd_id: AVD-KSV-0022
 #   severity: MEDIUM
 #   short_code: no-non-default-capabilities
-#   recommended_action: "Do not set spec.containers[*].securityContext.capabilities.add and spec.initContainers[*].securityContext.capabilities.add"
+#   recommended_action: "Do not set spec.containers[*].securityContext.capabilities.add and spec.initContainers[*].securityContext.capabilities.add."
 #   input:
 #     selector:
 #     - type: kubernetes

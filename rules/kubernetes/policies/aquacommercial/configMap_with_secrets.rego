@@ -14,7 +14,7 @@
 #     selector:
 #     - type: kubernetes
 
-package builtin.kubernetes.KSV0109
+package builtin.kubernetes.KSV109
 
 import data.lib.kubernetes
 
