@@ -13,7 +13,8 @@
 #   input:
 #     selector:
 #     - type: kubernetes
-
+#       subtypes:
+#         - kind: configmap
 package builtin.kubernetes.KSV01010
 
 import data.lib.kubernetes
