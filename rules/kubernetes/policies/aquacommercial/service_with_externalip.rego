@@ -13,6 +13,8 @@
 #   input:
 #     selector:
 #     - type: kubernetes
+#       subtypes:
+#         - kind: service
 package builtin.kubernetes.KSV0108
 
 import data.lib.kubernetes

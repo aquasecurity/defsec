@@ -15,6 +15,9 @@
 #   input:
 #     selector:
 #     - type: kubernetes
+#       subtypes:
+#         - kind: rolebinding
+#         - kind: clusterrolebinding
 package builtin.kubernetes.KSV111
 
 import data.lib.kubernetes

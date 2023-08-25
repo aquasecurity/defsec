@@ -15,6 +15,8 @@
 #   input:
 #     selector:
 #     - type: kubernetes
+#       subtypes:
+#         - kind: clusterrole
 package builtin.kubernetes.KSV041
 
 import data.lib.kubernetes
