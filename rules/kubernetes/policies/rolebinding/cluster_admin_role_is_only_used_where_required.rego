@@ -1,6 +1,6 @@
 # METADATA
 # title: "User with admin access"
-# description: "The RBAC role cluster-admin provides wide-ranging powers over the environment and should be used only where and when needed."
+# description: "Either cluster-admin or those granted powerful permissions."
 # scope: package
 # schemas:
 # - input: schema["kubernetes"]
@@ -11,7 +11,7 @@
 #   avd_id: AVD-KSV-0111
 #   severity: MEDIUM
 #   short_code: cluster-admin0-role-only-used-where-required"
-#   recommended_action: "Identify all clusterrolebindings to the cluster-admin role. Check if they are used and if they need this role or if they could use a role with fewer privileges."
+#   recommended_action: "Remove binding for clusterrole 'cluster-admin', 'admin' or 'edit'"
 #   input:
 #     selector:
 #     - type: kubernetes

@@ -1,6 +1,6 @@
 # METADATA
 # title: "Runtime/Default AppArmor profile not set"
-# description: "A program inside the container can bypass AppArmor protection policies."
+# description: "According to pod security standard 'AppArmor', the AppArmor key must be set to the runtime/default profile or to be undefined."
 # scope: package
 # schemas:
 # - input: schema["kubernetes"]
@@ -9,9 +9,9 @@
 # custom:
 #   id: KSV002
 #   avd_id: AVD-KSV-0002
-#   severity: MEDIUM
+#   severity: Low
 #   short_code: use-default-apparmor-profile
-#   recommended_action: "Remove 'container.apparmor.security.beta.kubernetes.io' annotation or set it to 'runtime/default'."
+#   recommended_action: "set the 'runtime/default' value from 'container.apparmor.security.beta.kubernetes.io'."
 #   input:
 #     selector:
 #     - type: kubernetes

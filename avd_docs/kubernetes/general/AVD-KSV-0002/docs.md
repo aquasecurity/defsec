@@ -1,5 +1,5 @@
 
-A program inside the container can bypass AppArmor protection policies.
+According to pod security standard 'AppArmor', the AppArmor key must be set to the runtime/default profile or to be undefined.
 
 ### Impact
 <!-- Add Impact here -->

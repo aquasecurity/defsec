@@ -1,6 +1,6 @@
 # METADATA
 # title: "Seccomp policies disabled"
-# description: "Seccomp profile must not be explicitly set to 'Unconfined'."
+# description: "A program inside the container can bypass Seccomp protection policies."
 # scope: package
 # schemas:
 # - input: schema["kubernetes"]
@@ -11,7 +11,7 @@
 #   avd_id: AVD-KSV-0104
 #   severity: MEDIUM
 #   short_code: no-seccomp-unconfined
-#   recommended_action: "Do not set seccomp profile to 'Unconfined'"
+#   recommended_action: "Specify seccomp either by annotation or by seccomp profile type having allowed values as per pod security standards"
 #   input:
 #     selector:
 #     - type: kubernetes

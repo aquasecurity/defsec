@@ -1,5 +1,5 @@
 
-HostPath volumes must be forbidden.
+According to pod security standard 'HostPath Volumes', HostPath volumes must be forbidden.
 
 ### Impact
 <!-- Add Impact here -->

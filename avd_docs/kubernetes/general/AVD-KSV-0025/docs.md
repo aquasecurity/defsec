@@ -1,5 +1,5 @@
 
-Setting a custom SELinux user or role option should be forbidden.
+According to pod security standard 'SElinux', setting custom SELinux options should be disallowed.
 
 ### Impact
 <!-- Add Impact here -->

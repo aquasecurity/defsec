@@ -1,6 +1,6 @@
 # METADATA
 # title: "Manage Kubernetes workloads and pods"
-# description: "Check whether role permits update/create of a malicious pod"
+# description: "Depending on the policies enforced by the admission controller, this permission ranges from the ability to steal compute (crypto) by running workloads or allowing for creating workloads that escape to the node as root and escalation to cluster-admin."
 # scope: package
 # schemas:
 # - input: schema["kubernetes"]
@@ -9,9 +9,9 @@
 # custom:
 #   id: KSV048
 #   avd_id: AVD-KSV-0048
-#   severity: HIGH
+#   severity: MEDIUM
 #   short_code: deny-create-update-malicious-pod
-#   recommended_action: "Create a role which does not permit update/create of a malicious pod"
+#   recommended_action: "Kubernetes workloads resources are only allowed for verbs 'list', 'watch', 'get'"
 #   input:
 #     selector:
 #     - type: kubernetes

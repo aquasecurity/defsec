@@ -1,5 +1,5 @@
 
-Adding NET_RAW or capabilities beyond the default set must be disallowed.
+According to pod security standard 'Capabilities', capabilities beyond the default set must not be added.
 
 ### Impact
 <!-- Add Impact here -->

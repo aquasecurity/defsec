@@ -1,5 +1,5 @@
 
-Seccomp profile must not be explicitly set to 'Unconfined'.
+A program inside the container can bypass Seccomp protection policies.
 
 ### Impact
 <!-- Add Impact here -->

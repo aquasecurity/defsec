@@ -1,5 +1,5 @@
 
-ensure that default namespace should not be used
+Checks whether a workload is running in the default namespace.
 
 ### Impact
 <!-- Add Impact here -->

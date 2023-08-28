@@ -1,6 +1,6 @@
 # METADATA
 # title: "Runs as root user"
-# description: "'runAsNonRoot' forces the running image to run as a non-root user to ensure least privileges."
+# description: "Force the running image to run as a non-root user to ensure least privileges."
 # scope: package
 # schemas:
 # - input: schema["kubernetes"]

@@ -1,6 +1,6 @@
 # METADATA
 # title: "hostPath volumes mounted"
-# description: "HostPath volumes must be forbidden."
+# description: "According to pod security standard 'HostPath Volumes', HostPath volumes must be forbidden."
 # scope: package
 # schemas:
 # - input: schema["kubernetes"]
