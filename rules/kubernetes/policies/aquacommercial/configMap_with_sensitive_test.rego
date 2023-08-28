@@ -1,4 +1,4 @@
-package builtin.kubernetes.KSV1010
+package builtin.kubernetes.KSV01010
 
 test_configMap_with_sensitive_denied {
 	r := deny with input as {
