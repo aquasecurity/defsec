@@ -15,6 +15,8 @@
 #   input:
 #     selector:
 #     - type: kubernetes
+#       subtypes:
+#         - kind: role
 package builtin.kubernetes.KSV113
 
 import data.lib.kubernetes
