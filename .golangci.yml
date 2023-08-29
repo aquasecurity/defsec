@@ -1,4 +1,3 @@
-
 linters:
   disable-all: true
   enable:
@@ -21,7 +20,7 @@ linters:
     - gocritic
     - gosec
 
-linters-settings: 
+linters-settings:
   cyclop:
     max-complexity: 18
   gocritic:
@@ -36,6 +35,16 @@ issues:
     - path: rules/
       linters:
         - gosec
+
+    # Allow unused variables that are necessary for EngineMetadata,
+    # since they are referenced from .rego files.
+    - path: 'rules/*/(.+)\.tf|cf\.go'
+      text: "`.+(Good|Bad)Examples|Links|RemediationMarkdown` is unused"
+      linters:
+        - unused
+        - deadcode
+        - varcheck
+
     - path: pkg/scanners/terraform/parser/funcs/
       linters:
         - cyclop
