@@ -3,7 +3,7 @@ package neptune
 var cloudFormationEnableLogExportGoodExamples = []string{
 	`---
 AWSTemplateFormatVersion: 2010-09-09
-Description: Bad example
+Description: Good example
 Resources:
   Cluster:
     Type: AWS::Neptune::DBCluster
