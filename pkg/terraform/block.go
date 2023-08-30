@@ -74,9 +74,7 @@ func NewBlock(hclBlock *hcl.Block, ctx *context.Context, moduleBlock *Block, par
 	ref, _ := newReference(parts, parent)
 	if len(index) > 0 {
 		key := index[0]
-		if !key.IsNull() {
-			ref.SetKey(key)
-		}
+		ref.SetKey(key)
 	}
 
 	metadata := defsecTypes.NewMetadata(rng, ref.String())

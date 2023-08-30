@@ -114,8 +114,7 @@ func (r Reference) String() string {
 	return base
 }
 
-func (r Reference) RefersTo(a Reference) bool {
-	other := a
+func (r Reference) RefersTo(other Reference) bool {
 
 	if r.BlockType() != other.BlockType() {
 		return false
@@ -133,9 +132,35 @@ func (r Reference) RefersTo(a Reference) bool {
 }
 
 func (r *Reference) SetKey(key cty.Value) {
+	if key.IsNull() || !key.IsKnown() {
+		return
+	}
 	r.key = key
 }
+
 func (r Reference) KeyBracketed() string {
+	switch v := key(r).(type) {
+	case int:
+		return fmt.Sprintf("[%d]", v)
+	case string:
+		if v == "" {
+			return ""
+		}
+		return fmt.Sprintf("[%q]", v)
+	default:
+		return ""
+	}
+}
+
+func (r Reference) RawKey() cty.Value {
+	return r.key
+}
+
+func (r Reference) Key() string {
+	return fmt.Sprintf("%v", key(r))
+}
+
+func key(r Reference) interface{} {
 	if r.key.IsNull() || !r.key.IsKnown() {
 		return ""
 	}
@@ -143,23 +168,7 @@ func (r Reference) KeyBracketed() string {
 	case cty.Number:
 		f := r.key.AsBigFloat()
 		f64, _ := f.Float64()
-		return fmt.Sprintf("[%d]", int(f64))
-	case cty.String:
-		return fmt.Sprintf("[%q]", r.key.AsString())
-	default:
-		return ""
-	}
-}
-func (r Reference) RawKey() cty.Value {
-	return r.key
-}
-
-func (r Reference) Key() string {
-	switch r.key.Type() {
-	case cty.Number:
-		f := r.key.AsBigFloat()
-		f64, _ := f.Float64()
-		return fmt.Sprintf("%d", int(f64))
+		return int(f64)
 	case cty.String:
 		return r.key.AsString()
 	default:

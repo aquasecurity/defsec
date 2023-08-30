@@ -884,9 +884,7 @@ func createDotReferenceFromTraversal(parentRef string, traversals ...hcl.Travers
 	if err != nil {
 		return nil, err
 	}
-	if !key.IsNull() {
-		ref.SetKey(key)
-	}
+	ref.SetKey(key)
 	return ref, nil
 }
 
