@@ -39,8 +39,6 @@ issues:
       text: "`.+(Good|Bad)Examples|Links|RemediationMarkdown` is unused"
       linters:
         - unused
-        - deadcode
-        - varcheck
 
     - path: pkg/scanners/terraform/parser/funcs/
       linters:
