@@ -4,12 +4,12 @@ on:
     branches:
       - master
     paths-ignore:
-      - '**/*.md'
-      - 'LICENSE'
+      - "**/*.md"
+      - "LICENSE"
   pull_request:
     paths-ignore:
-      - '**/*.md'
-      - 'LICENSE'
+      - "**/*.md"
+      - "LICENSE"
   merge_group:
 env:
   GO_VERSION: "1.18"
@@ -21,12 +21,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Setup OPA
-        run: |
-          curl -L -o opa_linux_amd64 https://openpolicyagent.org/downloads/latest/opa_linux_amd64
-          curl -L -o checksum https://openpolicyagent.org/downloads/latest/opa_linux_amd64.sha256
-          sha256sum -c checksum
-          chmod 755 ./opa_linux_amd64
-          sudo mv ./opa_linux_amd64 /usr/local/bin/opa
+        uses: ./.github/actions/setup-opa
       - name: OPA Format
         run: |
           files=$(opa fmt --list . | grep -v vendor || true)

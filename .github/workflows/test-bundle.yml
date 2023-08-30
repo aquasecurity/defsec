@@ -14,11 +14,6 @@ jobs:
       - name: Build bundle
         run: make bundle
       - name: Setup OPA
-        run: |
-          curl -L -o opa_linux_amd64 https://openpolicyagent.org/downloads/latest/opa_linux_amd64
-          curl -L -o checksum https://openpolicyagent.org/downloads/latest/opa_linux_amd64.sha256
-          sha256sum -c checksum
-          chmod 755 ./opa_linux_amd64
-          sudo mv ./opa_linux_amd64 /usr/local/bin/opa
+        uses: ./.github/actions/setup-opa
       - name: Check bundle
         run: opa inspect bundle.tar.gz

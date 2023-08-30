@@ -1,0 +1,13 @@
+name: Setup OPA CLI
+description: Setup OPA CLI
+runs:
+  using: composite
+  steps:
+    - name: Setup OPA
+      shell: bash
+      run: |
+        curl --retry 3 -L -o opa_linux_amd64_static https://github.com/open-policy-agent/opa/releases/latest/download/opa_linux_amd64_static
+        curl -L -o checksum https://github.com/open-policy-agent/opa/releases/latest/download/opa_linux_amd64_static.sha256
+        sha256sum -c checksum
+        chmod 755 ./opa_linux_amd64_static
+        sudo mv ./opa_linux_amd64_static /usr/local/bin/opa
