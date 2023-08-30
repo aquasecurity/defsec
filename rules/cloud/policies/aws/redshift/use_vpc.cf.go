@@ -3,7 +3,7 @@ package redshift
 var cloudFormationUseVpcGoodExamples = []string{
 	`---
 AWSTemplateFormatVersion: 2010-09-09
-Description: Bad example of redshift cluster
+Description: Good example of redshift cluster
 Resources:
   Queue:
     Type: AWS::Redshift::Cluster

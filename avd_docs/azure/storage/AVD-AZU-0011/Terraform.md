@@ -6,6 +6,7 @@ Use a more recent TLS/SSL policy for the load balancer
    name                     = "storageaccountname"
    resource_group_name      = azurerm_resource_group.example.name
    location                 = azurerm_resource_group.example.location
+   min_tls_version          = "TLS1_2"
  }
  
 ```

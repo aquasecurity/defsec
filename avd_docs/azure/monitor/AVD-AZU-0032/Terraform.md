@@ -2,7 +2,7 @@
 Enable capture for all locations
 
 ```hcl
- resource "azurerm_monitor_log_profile" "bad_example" {
+ resource "azurerm_monitor_log_profile" "good_example" {
    name = "bad_example"
  
    categories = []

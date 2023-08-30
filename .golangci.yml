@@ -1,4 +1,3 @@
-
 linters:
   disable-all: true
   enable:
@@ -33,6 +32,16 @@ issues:
     - path: rules/
       linters:
         - gosec
+
+    # Allow unused variables that are necessary for EngineMetadata,
+    # since they are referenced from .rego files.
+    - path: 'rules/*/(.+)\.tf|cf\.go'
+      text: "`.+(Good|Bad)Examples|Links|RemediationMarkdown` is unused"
+      linters:
+        - unused
+        - deadcode
+        - varcheck
+
     - path: pkg/scanners/terraform/parser/funcs/
       linters:
         - cyclop

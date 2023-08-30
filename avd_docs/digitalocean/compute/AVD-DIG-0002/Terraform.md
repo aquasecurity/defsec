@@ -2,7 +2,7 @@
 Switch to HTTPS to benefit from TLS security features
 
 ```hcl
- resource "digitalocean_loadbalancer" "bad_example" {
+ resource "digitalocean_loadbalancer" "good_example" {
    name   = "bad_example-1"
    region = "nyc3"
    

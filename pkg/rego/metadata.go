@@ -235,7 +235,7 @@ func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata
 						metadata.References = append(metadata.References, fmt.Sprintf("%s", raw))
 					}
 				} else if relatedResourceString, ok := relatedResource.(string); ok {
-					metadata.References = append(metadata.References, fmt.Sprintf("%s", relatedResourceString))
+					metadata.References = append(metadata.References, relatedResourceString)
 				}
 			}
 		}

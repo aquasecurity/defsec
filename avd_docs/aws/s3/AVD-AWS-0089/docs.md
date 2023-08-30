@@ -1,13 +1,13 @@
 
-Buckets should have logging enabled so that access can be audited.
+Ensures S3 bucket logging is enabled for S3 buckets
 
 ### Impact
-There is no way to determine the access to this bucket
+<!-- Add Impact here -->
 
 <!-- DO NOT CHANGE -->
 {{ remediationActions }}
 
 ### Links
-- https://docs.aws.amazon.com/AmazonS3/latest/dev/ServerLogs.html
+- https://docs.aws.amazon.com/AmazonS3/latest/userguide/ServerLogs.html
 
 
