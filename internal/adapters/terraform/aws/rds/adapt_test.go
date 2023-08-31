@@ -30,6 +30,7 @@ func Test_Adapt(t *testing.T) {
 				kms_key_id  = "kms_key_1"
 				storage_encrypted = true
 				replication_source_identifier = "arn-of-a-source-db-cluster"
+                deletion_protection = true
 			  }
 	
 			resource "aws_rds_cluster_instance" "example" {
@@ -121,6 +122,7 @@ func Test_Adapt(t *testing.T) {
 							defsecTypes.String("us-west-2b", defsecTypes.NewTestMetadata()),
 							defsecTypes.String("us-west-2c", defsecTypes.NewTestMetadata()),
 						},
+						DeletionProtection: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 				Classic: rds.Classic{

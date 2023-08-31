@@ -2398,6 +2398,10 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         },
+        "deletionprotection": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.rds.Encryption"
+        },
         "instances": {
           "type": "array",
           "items": {
