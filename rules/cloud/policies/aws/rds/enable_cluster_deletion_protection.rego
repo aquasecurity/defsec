@@ -1,6 +1,6 @@
 # METADATA
-# title: "RDS Deletion Protection Disabled"
-# description: "Ensure deletion protection is enabled for RDS database instances."
+# title: "RDS Cluster Deletion Protection Disabled"
+# description: "Ensure deletion protection is enabled for RDS clusters."
 # scope: package
 # schemas:
 # - input: schema["cloud"]
