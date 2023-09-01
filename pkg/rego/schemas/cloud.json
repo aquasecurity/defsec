@@ -2390,6 +2390,10 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.IntValue"
         },
+        "deletionprotection": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
+        },
         "encryption": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.rds.Encryption"
@@ -2397,10 +2401,6 @@
         "engine": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
-        },
-        "deletionprotection": {
-          "type": "object",
-          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.rds.Encryption"
         },
         "instances": {
           "type": "array",
