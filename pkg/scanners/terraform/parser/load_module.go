@@ -10,8 +10,6 @@ import (
 
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser/resolvers"
 	"github.com/aquasecurity/defsec/pkg/terraform"
-
-	"github.com/zclconf/go-cty/cty"
 )
 
 type moduleLoadError struct {
@@ -82,16 +80,8 @@ func (e *evaluator) loadModule(ctx context.Context, b *terraform.Block) (*Module
 		return nil, fmt.Errorf("module without label at %s", metadata.Range())
 	}
 
-	var source string
-	attrs := b.Attributes()
-	for _, attr := range attrs {
-		if attr.Name() == "source" {
-			sourceVal := attr.Value()
-			if sourceVal.Type() == cty.String {
-				source = sourceVal.AsString()
-			}
-		}
-	}
+	source := b.GetAttribute("source").AsStringValueOrDefault("", b).Value()
+
 	if source == "" {
 		return nil, fmt.Errorf("could not read module source attribute at %s", metadata.Range().String())
 	}
@@ -112,6 +102,9 @@ func (e *evaluator) loadModuleFromTerraformCache(ctx context.Context, b *terrafo
 		name := b.ModuleName()
 		for _, module := range e.moduleMetadata.Modules {
 			if module.Key == name {
+				if module.Source == module.Dir {
+					return nil, fmt.Errorf("module %q cannot use itself as a child", name)
+				}
 				modulePath = filepath.Clean(filepath.Join(e.projectRootPath, module.Dir))
 				break
 			}
