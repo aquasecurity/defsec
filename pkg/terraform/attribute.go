@@ -1,7 +1,6 @@
 package terraform
 
 import (
-	"errors"
 	"fmt"
 	"io/fs"
 	"reflect"
@@ -30,7 +29,7 @@ type Attribute struct {
 func (a *Attribute) DecodeVarType() (cty.Type, *typeexpr.Defaults, error) {
 	t, def, diag := typeexpr.TypeConstraintWithDefaults(a.hclAttribute.Expr)
 	if diag.HasErrors() {
-		return cty.NilType, nil, errors.Join(diag.Errs()...)
+		return cty.NilType, nil, diag
 	}
 	return t, def, nil
 }
