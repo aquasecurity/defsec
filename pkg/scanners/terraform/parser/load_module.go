@@ -102,7 +102,7 @@ func (e *evaluator) loadModuleFromTerraformCache(ctx context.Context, b *terrafo
 		name := b.ModuleName()
 		for _, module := range e.moduleMetadata.Modules {
 			if module.Key == name {
-				if module.Source == module.Dir {
+				if filepath.Clean(module.Source) == module.Dir {
 					return nil, fmt.Errorf("module %q cannot use itself as a child", name)
 				}
 				modulePath = filepath.Clean(filepath.Join(e.projectRootPath, module.Dir))
