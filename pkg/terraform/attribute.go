@@ -12,6 +12,7 @@ import (
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
 	"github.com/hashicorp/hcl/v2"
+	"github.com/hashicorp/hcl/v2/ext/typeexpr"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/zclconf/go-cty/cty"
 	"github.com/zclconf/go-cty/cty/gocty"
@@ -23,6 +24,14 @@ type Attribute struct {
 	ctx          *context.Context
 	metadata     defsecTypes.Metadata
 	reference    Reference
+}
+
+func (a *Attribute) DecodeVarType() (cty.Type, *typeexpr.Defaults, error) {
+	t, def, diag := typeexpr.TypeConstraintWithDefaults(a.hclAttribute.Expr)
+	if diag.HasErrors() {
+		return cty.NilType, nil, diag
+	}
+	return t, def, nil
 }
 
 func NewAttribute(attr *hcl.Attribute, ctx *context.Context, module string, parent defsecTypes.Metadata, parentRef Reference, moduleSource string, moduleFS fs.FS) *Attribute {
