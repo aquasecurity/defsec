@@ -34,6 +34,10 @@ func Test_Parse_Plan_File_Include_Map_Slice(t *testing.T) {
 	assert.NotNil(t, fs)
 
 	file, err := fs.ReadFile("main.tf")
-	_, diags := hclsyntax.ParseTemplate(file, "main.tf", hcl.Pos{Line: 1, Column: 1})
+	require.NoError(t, err)
+
+	expr, diags := hclsyntax.ParseTemplate(file, "main.tf", hcl.Pos{Line: 1, Column: 1})
 	assert.False(t, diags.HasErrors())
+
+	assert.NotNil(t, expr)
 }
