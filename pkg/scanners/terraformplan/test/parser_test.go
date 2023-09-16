@@ -1,12 +1,13 @@
 package terraformplan
 
 import (
+	"testing"
+
 	"github.com/aquasecurity/defsec/pkg/scanners/terraformplan/parser"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func Test_Parse_Plan_File(t *testing.T) {
