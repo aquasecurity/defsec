@@ -10,7 +10,7 @@ import (
 
 var checkIncludeGlobalServiceEvents = rules.Register(
 	scan.Rule{
-		AVDID:       "AVD-AWS-0343",
+		AVDID:       "AVD-AWS-0344",
 		Provider:    providers.AWSProvider,
 		Service:     "cloudtrail",
 		ShortCode:   "include-global-service-events",
