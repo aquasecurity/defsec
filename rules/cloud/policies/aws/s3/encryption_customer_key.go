@@ -47,7 +47,7 @@ var CheckEncryptionCustomerKey = rules.Register(
 			if bucket.Encryption.KMSKeyId.IsEmpty() {
 				results.Add(
 					"Bucket does not encrypt data with a customer managed key.",
-					&bucket.Encryption,
+					bucket.Encryption.KMSKeyId,
 				)
 			} else {
 				results.AddPassed(&bucket)

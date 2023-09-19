@@ -724,7 +724,8 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "this2" {
 	assert.Len(t, blocks, 2)
 
 	for _, block := range blocks {
-		attr := block.GetNestedAttribute("rule.apply_server_side_encryption_by_default.kms_master_key_id")
+		attr, parent := block.GetNestedAttribute("rule.apply_server_side_encryption_by_default.kms_master_key_id")
+		assert.Equal(t, "apply_server_side_encryption_by_default", parent.Type())
 		assert.NotNil(t, attr)
 		assert.NotEmpty(t, attr.Value().AsString())
 	}
