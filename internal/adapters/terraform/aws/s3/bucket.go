@@ -22,7 +22,7 @@ func (a *adapter) adaptBuckets() []s3.Bucket {
 			Versioning:                    getVersioning(block, a),
 			Logging:                       getLogging(block, a),
 			ACL:                           getBucketAcl(block, a),
-			AccelerateConfigurationStatus: getaccelerateStatus(block, a),
+			AccelerateConfigurationStatus: getAccelerateStatus(block, a),
 			BucketLocation:                block.GetAttribute("region").AsStringValueOrDefault("", block),
 			LifecycleConfiguration:        getLifecycle(block, a),
 			Website:                       getWebsite(block, a),
@@ -43,21 +43,11 @@ func (a *adapter) adaptBuckets() []s3.Bucket {
 }
 
 func getEncryption(block *terraform.Block, a *adapter) s3.Encryption {
-	if block.HasChild("server_side_encryption_configuration") {
-		return s3.Encryption{
-			Metadata:  block.GetMetadata(),
-			Enabled:   isEncrypted(block.GetBlock("server_side_encryption_configuration")),
-			Algorithm: block.GetNestedAttribute("server_side_encryption_configuration.rule.apply_server_side_encryption_by_default.sse_algorithm").AsStringValueOrDefault("", block),
-			KMSKeyId:  block.GetNestedAttribute("server_side_encryption_configuration.rule.apply_server_side_encryption_by_default.kms_master_key_id").AsStringValueOrDefault("", block),
-		}
+	if sseConfgihuration := block.GetBlock("server_side_encryption_configuration"); sseConfgihuration != nil {
+		return newS3Encryption(block, sseConfgihuration)
 	}
 	if val, ok := applyForBucketRelatedResource(a, block, "aws_s3_bucket_server_side_encryption_configuration", func(resource *terraform.Block) s3.Encryption {
-		return s3.Encryption{
-			Metadata:  resource.GetMetadata(),
-			Enabled:   isEncrypted(resource),
-			Algorithm: resource.GetNestedAttribute("rule.apply_server_side_encryption_by_default.sse_algorithm").AsStringValueOrDefault("", block),
-			KMSKeyId:  resource.GetNestedAttribute("rule.apply_server_side_encryption_by_default.kms_master_key_id").AsStringValueOrDefault("", block),
-		}
+		return newS3Encryption(resource, resource)
 	}); ok {
 		return val
 	}
@@ -66,6 +56,27 @@ func getEncryption(block *terraform.Block, a *adapter) s3.Encryption {
 		Enabled:   defsecTypes.BoolDefault(false, block.GetMetadata()),
 		KMSKeyId:  defsecTypes.StringDefault("", block.GetMetadata()),
 		Algorithm: defsecTypes.StringDefault("", block.GetMetadata()),
+	}
+}
+
+func newS3Encryption(root *terraform.Block, sseConfgihuration *terraform.Block) s3.Encryption {
+	return s3.Encryption{
+		Metadata: root.GetMetadata(),
+		Enabled:  isEncrypted(sseConfgihuration),
+		Algorithm: terraform.MapNestedAttribute(
+			sseConfgihuration,
+			"rule.apply_server_side_encryption_by_default.sse_algorithm",
+			func(attr *terraform.Attribute, parent *terraform.Block) defsecTypes.StringValue {
+				return attr.AsStringValueOrDefault("", parent)
+			},
+		),
+		KMSKeyId: terraform.MapNestedAttribute(
+			sseConfgihuration,
+			"rule.apply_server_side_encryption_by_default.kms_master_key_id",
+			func(attr *terraform.Attribute, parent *terraform.Block) defsecTypes.StringValue {
+				return attr.AsStringValueOrDefault("", parent)
+			},
+		),
 	}
 }
 
@@ -178,22 +189,19 @@ func getBucketAcl(block *terraform.Block, a *adapter) defsecTypes.StringValue {
 	return defsecTypes.StringDefault("private", block.GetMetadata())
 }
 
-func isEncrypted(encryptionBlock *terraform.Block) defsecTypes.BoolValue {
-	ruleBlock := encryptionBlock.GetBlock("rule")
-	if ruleBlock.IsNil() {
-		return defsecTypes.BoolDefault(false, encryptionBlock.GetMetadata())
-	}
-	defaultBlock := ruleBlock.GetBlock("apply_server_side_encryption_by_default")
-	if defaultBlock.IsNil() {
-		return defsecTypes.BoolDefault(false, ruleBlock.GetMetadata())
-	}
-	sseAlgorithm := defaultBlock.GetAttribute("sse_algorithm")
-	if sseAlgorithm.IsNil() {
-		return defsecTypes.BoolDefault(false, defaultBlock.GetMetadata())
-	}
-	return defsecTypes.Bool(
-		true,
-		sseAlgorithm.GetMetadata(),
+func isEncrypted(sseConfgihuration *terraform.Block) defsecTypes.BoolValue {
+	return terraform.MapNestedAttribute(
+		sseConfgihuration,
+		"rule.apply_server_side_encryption_by_default.sse_algorithm",
+		func(attr *terraform.Attribute, parent *terraform.Block) defsecTypes.BoolValue {
+			if attr.IsNil() {
+				return defsecTypes.BoolDefault(false, parent.GetMetadata())
+			}
+			return defsecTypes.Bool(
+				true,
+				attr.GetMetadata(),
+			)
+		},
 	)
 }
 
@@ -244,7 +252,7 @@ func getObject(b *terraform.Block, a *adapter) []s3.Contents {
 	return object
 }
 
-func getaccelerateStatus(b *terraform.Block, a *adapter) defsecTypes.StringValue {
+func getAccelerateStatus(b *terraform.Block, a *adapter) defsecTypes.StringValue {
 	var status defsecTypes.StringValue
 	for _, r := range a.modules.GetReferencingResources(b, " aws_s3_bucket_accelerate_configuration", "bucket") {
 		status = r.GetAttribute("status").AsStringValueOrDefault("Enabled", r)
