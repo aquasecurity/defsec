@@ -1,3 +1,0 @@
----
-securityContext:
-  runAsUser: 0
