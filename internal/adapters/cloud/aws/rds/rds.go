@@ -268,6 +268,7 @@ func (a *adapter) adaptCluster(dbCluster types.DBCluster) (*rds.Cluster, error) 
 		LatestRestorableTime: defsecTypes.TimeUnresolvable(dbClusterMetadata),
 		AvailabilityZones:    availabilityZones,
 		DeletionProtection:   defsecTypes.Bool(aws.ToBool(dbCluster.DeletionProtection), dbClusterMetadata),
+		SkipFinalSnapshot:    defsecTypes.Bool(false, dbClusterMetadata),
 	}
 
 	return cluster, nil

@@ -31,6 +31,7 @@ func Test_Adapt(t *testing.T) {
 				storage_encrypted = true
 				replication_source_identifier = "arn-of-a-source-db-cluster"
 				deletion_protection = true
+				skip_final_snapshot = true
 			  }
 	
 			resource "aws_rds_cluster_instance" "example" {
@@ -123,6 +124,7 @@ func Test_Adapt(t *testing.T) {
 							defsecTypes.String("us-west-2c", defsecTypes.NewTestMetadata()),
 						},
 						DeletionProtection: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						SkipFinalSnapshot:  defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 					},
 				},
 				Classic: rds.Classic{

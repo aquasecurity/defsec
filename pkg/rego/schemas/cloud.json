@@ -2424,6 +2424,10 @@
         "replicationsourcearn": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
+        "skipfinalsnapshot": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
         }
       }
     },

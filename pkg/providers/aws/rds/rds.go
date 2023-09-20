@@ -48,6 +48,7 @@ type Cluster struct {
 	LatestRestorableTime      defsecTypes.TimeValue
 	AvailabilityZones         []defsecTypes.StringValue
 	DeletionProtection        defsecTypes.BoolValue
+	SkipFinalSnapshot         defsecTypes.BoolValue
 }
 
 type Snapshots struct {
