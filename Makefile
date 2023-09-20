@@ -8,21 +8,6 @@ test:
 test-no-localstack:
 	go test $$(go list ./... | grep -v internal/adapters/cloud/aws | awk -F'github.com/aquasecurity/defsec/' '{print "./"$$2}')
 
-.PHONY: rego
-rego: fmt-rego test-rego
-
-.PHONY: schema
-schema:
-	go run ./cmd/schema generate
-
-.PHONY: fmt-rego
-fmt-rego:
-	opa fmt -w rules/cloud/policies
-
-.PHONY: test-rego
-test-rego:
-	go test --run Test_AllRegoRules ./test
-
 .PHONY: typos
 typos:
 	which codespell || pip3 install codespell
@@ -55,10 +40,6 @@ docs:
 docs-test:
 	go test -v ./cmd/avd_generator/...
 
-.PHONY: id
-id:
-	@go run ./cmd/id
-
 .PHONY: update-aws-deps
 update-aws-deps:
 	@grep aws-sdk-go-v2 go.mod | grep -v '// indirect' | sed 's/^[\t\s]*//g' | sed 's/\s.*//g' | xargs go get
@@ -72,13 +53,6 @@ adapter-lint:
 .PHONY: outdated-api-updated
 outdated-api-updated:
 	sed -i.bak "s|recommendedVersions :=.*|recommendedVersions := $(OUTDATE_API_DATA)|" $(DYNAMIC_REGO_FOLDER)/outdated_api.rego && rm $(DYNAMIC_REGO_FOLDER)/outdated_api.rego.bak
-
-.PHONY: bundle
-bundle:
-	./scripts/bundle.sh
-	cp bundle.tar.gz scripts/bundle.tar.gz
-	go run ./scripts/verify-bundle.go
-	rm scripts/bundle.tar.gz
 
 .PHONY: build
 build:
