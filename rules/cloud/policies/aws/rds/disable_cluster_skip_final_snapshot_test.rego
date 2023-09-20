@@ -1,4 +1,4 @@
-package PACKAGE_NAME
+package builtin.aws.rds.aws0344
 
 test_when_enabled {
 	r := deny with input as {"aws": {"rds": {"clusters": [{"skipfinalsnapshot": {"value": true}}]}}}

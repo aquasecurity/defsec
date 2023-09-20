@@ -19,7 +19,7 @@
 #       subtypes:
 #         - service: rds
 #           provider: aws
-package PACKAGE_NAME
+package builtin.aws.rds.aws0344
 
 deny[res] {
 	cluster := input.aws.rds.clusters[_]
