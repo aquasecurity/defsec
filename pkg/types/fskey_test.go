@@ -7,8 +7,6 @@ import (
 
 	"github.com/liamg/memoryfs"
 
-	"github.com/aquasecurity/defsec/pkg/extrafs"
-
 	"github.com/stretchr/testify/assert"
 )
 
@@ -17,8 +15,6 @@ func Test_FSKey(t *testing.T) {
 	systems := []fs.FS{
 		os.DirFS("."),
 		os.DirFS(".."),
-		extrafs.OSDir("."),
-		extrafs.OSDir(".."),
 		memoryfs.New(),
 		memoryfs.New(),
 	}
