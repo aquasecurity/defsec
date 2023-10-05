@@ -1006,3 +1006,101 @@ deny[res] {
 	}
 
 }
+
+func TestXxx(t *testing.T) {
+	fs := testutil.CreateFS(t, map[string]string{
+		"/code/app1/main.tf": `
+module "s3" {
+  source      = "./modules/s3"
+  bucket_name = "test"
+}
+`,
+		"/code/app1/modules/s3/main.tf": `
+variable "bucket_name" {
+  type = string
+}
+
+resource "aws_s3_bucket" "main" {
+  bucket = var.bucket_name
+}
+`,
+		"/code/app1/app2/main.tf": `
+module "s3" {
+  source      = "../modules/s3"
+  bucket_name = "test"
+}
+
+module "ec2" {
+  source = "./modules/ec2"
+}
+`,
+		"/code/app1/app2/modules/ec2/main.tf": `
+variable "security_group_description" {
+	type = string
+}
+resource "aws_security_group" "main" {
+	description = var.security_group_description
+}
+`,
+		"/rules/bucket_name.rego": `
+# METADATA
+# schemas:
+# - input: schema.input
+# custom:
+#   avd_id: AVD-AWS-0001
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#         - service: s3
+#           provider: aws
+package defsec.test.aws1
+deny[res] {
+  bucket := input.aws.s3.buckets[_]
+  bucket.name.value == ""
+  res := result.new("The name of the bucket must not be empty", bucket)
+}
+`,
+		"/rules/sec_group_description.rego": `
+# METADATA
+# schemas:
+# - input: schema.input
+# custom:
+#   avd_id: AVD-AWS-0002
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#         - service: ec2
+#           provider: aws
+package defsec.test.aws2
+deny[res] {
+  group := input.aws.ec2.securitygroups[_]
+  group.description.value == ""
+  res := result.new("The description of the security group must not be empty", group)
+}
+`,
+	})
+
+	debugLog := bytes.NewBuffer([]byte{})
+	scanner := New(
+		options.ScannerWithDebug(debugLog),
+		options.ScannerWithPolicyFilesystem(fs),
+		options.ScannerWithPolicyDirs("rules"),
+		options.ScannerWithEmbeddedPolicies(false),
+		options.ScannerWithEmbeddedLibraries(false),
+		options.ScannerWithRegoOnly(true),
+		ScannerWithAllDirectories(true),
+	)
+
+	results, err := scanner.ScanFS(context.TODO(), fs, "code")
+	require.NoError(t, err)
+
+	assert.Len(t, results.GetPassed(), 2)
+	require.Len(t, results.GetFailed(), 1)
+	assert.Equal(t, "AVD-AWS-0002", results.GetFailed()[0].Rule().AVDID)
+
+	if t.Failed() {
+		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
+	}
+}
