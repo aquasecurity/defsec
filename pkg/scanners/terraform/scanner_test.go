@@ -1007,7 +1007,7 @@ deny[res] {
 
 }
 
-func TestXxx(t *testing.T) {
+func Test_DoNotScanNonRootModules(t *testing.T) {
 	fs := testutil.CreateFS(t, map[string]string{
 		"/code/app1/main.tf": `
 module "s3" {
