@@ -11,8 +11,7 @@ on:
       - "**/*.md"
       - "LICENSE"
   merge_group:
-env:
-  GO_VERSION: "1.18"
+
 jobs:
   opa-tests:
     name: OPA tests
