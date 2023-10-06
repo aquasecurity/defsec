@@ -70,6 +70,7 @@ func adaptLaunchConfiguration(resource *terraform.Block) ec2.LaunchConfiguration
 		UserData:        defsecTypes.StringDefault("", resource.GetMetadata()),
 	}
 
+	//#nosec G101 -- False positive
 	if resource.TypeLabel() == "aws_launch_configuration" {
 		nameAttr := resource.GetAttribute("name")
 		launchConfig.Name = nameAttr.AsStringValueOrDefault("", resource)

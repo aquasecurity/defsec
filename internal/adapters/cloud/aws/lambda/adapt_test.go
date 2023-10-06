@@ -125,14 +125,15 @@ func bootstrapFunction(t *testing.T, ra *aws.RootAdapter, spec functionDetails) 
 	require.NoError(t, err)
 
 	for i, permission := range spec.permissions {
+		perm := permission
 		statementID := fmt.Sprintf("%d", i)
 		_, err = api.AddPermission(ra.Context(), &lambdaapi.AddPermissionInput{
-			Action:       &permission.action,
+			Action:       &perm.action,
 			FunctionName: &spec.name,
 			Qualifier:    output.Version,
-			Principal:    &permission.principal,
+			Principal:    &perm.principal,
 			StatementId:  &statementID,
-			SourceArn:    &permission.source,
+			SourceArn:    &perm.source,
 		})
 		require.NoError(t, err)
 	}
