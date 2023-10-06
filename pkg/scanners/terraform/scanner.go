@@ -34,18 +34,17 @@ var _ options.ConfigurableScanner = (*Scanner)(nil)
 var _ ConfigurableTerraformScanner = (*Scanner)(nil)
 
 type Scanner struct {
-	options                 []options.ScannerOption
-	parserOpt               []options.ParserOption
-	executorOpt             []executor.Option
-	dirs                    map[string]struct{}
-	forceAllDirs            bool
-	policyDirs              []string
-	policyReaders           []io.Reader
-	regoScanner             *rego.Scanner
-	execLock                sync.RWMutex
-	debug                   debug.Logger
-	enableEmbeddedLibraries bool
 	sync.Mutex
+	options               []options.ScannerOption
+	parserOpt             []options.ParserOption
+	executorOpt           []executor.Option
+	dirs                  map[string]struct{}
+	forceAllDirs          bool
+	policyDirs            []string
+	policyReaders         []io.Reader
+	regoScanner           *rego.Scanner
+	execLock              sync.RWMutex
+	debug                 debug.Logger
 	frameworks            []framework.Framework
 	spec                  string
 	loadEmbeddedLibraries bool
@@ -70,10 +69,6 @@ func (s *Scanner) SetUseEmbeddedPolicies(b bool) {
 
 func (s *Scanner) SetUseEmbeddedLibraries(b bool) {
 	s.loadEmbeddedLibraries = b
-}
-
-func (s *Scanner) SetEmbeddedLibrariesEnabled(enabled bool) {
-	s.enableEmbeddedLibraries = enabled
 }
 
 func (s *Scanner) Name() string {

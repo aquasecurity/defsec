@@ -36,6 +36,26 @@ var alwaysFailRule = scan.Rule{
 	},
 }
 
+const emptyBucketRule = `
+# METADATA
+# schemas:
+# - input: schema.input
+# custom:
+#   avd_id: AVD-AWS-0001
+#   input:
+#     selector:
+#     - type: cloud
+#       subtypes:
+#         - service: s3
+#           provider: aws
+package defsec.test.aws1
+deny[res] {
+  bucket := input.aws.s3.buckets[_]
+  bucket.name.value == ""
+  res := result.new("The name of the bucket must not be empty", bucket)
+}
+`
+
 func scanWithOptions(t *testing.T, code string, opt ...options.ScannerOption) scan.Results {
 
 	fs := testutil.CreateFS(t, map[string]string{
@@ -498,7 +518,7 @@ deny[res] {
 		options.ScannerWithDebug(debugLog),
 		options.ScannerWithPolicyDirs("rules"),
 		options.ScannerWithRegoOnly(true),
-		ScannerWithEmbeddedLibraries(true),
+		options.ScannerWithEmbeddedLibraries(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
@@ -610,7 +630,7 @@ deny[res] {
 		options.ScannerWithTrace(debugLog),
 		options.ScannerWithPolicyDirs("rules"),
 		options.ScannerWithRegoOnly(true),
-		ScannerWithEmbeddedLibraries(true),
+		options.ScannerWithEmbeddedLibraries(true),
 	)
 
 	defer func() {
@@ -702,7 +722,7 @@ deny[res] {
 		options.ScannerWithDebug(debugLog),
 		options.ScannerWithPolicyDirs("rules"),
 		options.ScannerWithRegoOnly(true),
-		ScannerWithEmbeddedLibraries(true),
+		options.ScannerWithEmbeddedLibraries(true),
 	)
 
 	results, err := scanner.ScanFS(context.TODO(), fs, "code")
@@ -1005,4 +1025,91 @@ deny[res] {
 		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
 	}
 
+}
+
+func Test_OptionWithConfigsFileSystem(t *testing.T) {
+	fs := testutil.CreateFS(t, map[string]string{
+		"code/main.tf": `
+
+variable "bucket_name" {
+  type = string
+}
+
+resource "aws_s3_bucket" "main" {
+  bucket = var.bucket_name
+}
+`,
+		"rules/bucket_name.rego": emptyBucketRule,
+	})
+
+	configsFS := testutil.CreateFS(t, map[string]string{
+		"main.tfvars": `
+bucket_name = "test"
+`,
+	})
+
+	debugLog := bytes.NewBuffer([]byte{})
+	scanner := New(
+		options.ScannerWithDebug(debugLog),
+		options.ScannerWithPolicyDirs("rules"),
+		options.ScannerWithPolicyFilesystem(fs),
+		options.ScannerWithRegoOnly(true),
+		options.ScannerWithEmbeddedLibraries(false),
+		options.ScannerWithEmbeddedPolicies(false),
+		ScannerWithAllDirectories(true),
+		ScannerWithTFVarsPaths("main.tfvars"),
+		ScannerWithConfigsFileSystem(configsFS),
+	)
+
+	results, err := scanner.ScanFS(context.TODO(), fs, "code")
+	require.NoError(t, err)
+
+	assert.Len(t, results, 1)
+	assert.Len(t, results.GetPassed(), 1)
+
+	if t.Failed() {
+		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
+	}
+}
+
+func Test_OptionWithConfigsFileSystem_ConfigInCode(t *testing.T) {
+	fs := testutil.CreateFS(t, map[string]string{
+		"code/main.tf": `
+
+variable "bucket_name" {
+  type = string
+}
+
+resource "aws_s3_bucket" "main" {
+  bucket = var.bucket_name
+}
+`,
+		"rules/bucket_name.rego": emptyBucketRule,
+		"main.tfvars": `
+bucket_name = "test"
+`,
+	})
+
+	debugLog := bytes.NewBuffer([]byte{})
+	scanner := New(
+		options.ScannerWithDebug(debugLog),
+		options.ScannerWithPolicyDirs("rules"),
+		options.ScannerWithPolicyFilesystem(fs),
+		options.ScannerWithRegoOnly(true),
+		options.ScannerWithEmbeddedLibraries(false),
+		options.ScannerWithEmbeddedPolicies(false),
+		ScannerWithAllDirectories(true),
+		ScannerWithTFVarsPaths("main.tfvars"),
+		ScannerWithConfigsFileSystem(fs),
+	)
+
+	results, err := scanner.ScanFS(context.TODO(), fs, "code")
+	require.NoError(t, err)
+
+	assert.Len(t, results, 1)
+	assert.Len(t, results.GetPassed(), 1)
+
+	if t.Failed() {
+		fmt.Printf("Debug logs:\n%s\n", debugLog.String())
+	}
 }

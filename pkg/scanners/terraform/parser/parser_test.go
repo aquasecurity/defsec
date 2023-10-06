@@ -826,6 +826,9 @@ resource "google_network_security_gateway_security_policy_rule" "secure_tag_rule
   session_matcher        = each.value.session_matcher
 }
 `,
+	})
+
+	configsFS := testutil.CreateFS(t, map[string]string{
 		"main.tfvars": `
 policy_rules = {
   secure_tags = {
@@ -838,8 +841,12 @@ policy_rules = {
 `,
 	})
 
-	parser := New(fs, "", OptionStopOnHCLError(true))
-	parser.SetTFVarsPaths("main.tfvars")
+	parser := New(
+		fs, "",
+		OptionStopOnHCLError(true),
+		OptionWithTFVarsPaths("main.tfvars"),
+		OptionWithConfigsFS(configsFS),
+	)
 	if err := parser.ParseFS(context.TODO(), "."); err != nil {
 		t.Fatal(err)
 	}
@@ -858,4 +865,37 @@ policy_rules = {
 	assert.Equal(t, true, block.GetAttribute("enabled").AsBoolValueOrDefault(false, block).Value())
 	assert.Equal(t, "host() != 'google.com'", block.GetAttribute("session_matcher").AsStringValueOrDefault("", block).Value())
 	assert.Equal(t, 1001, block.GetAttribute("priority").AsIntValueOrDefault(0, block).Value())
+}
+
+func Test_IfConfigFsIsNotSet_ThenUseModuleFsForVars(t *testing.T) {
+	fs := testutil.CreateFS(t, map[string]string{
+		"main.tf": `
+variable "bucket_name" {
+	type = string
+}
+resource "aws_s3_bucket" "main" {
+	bucket = var.bucket_name
+}
+`,
+		"main.tfvars": `bucket_name = "test_bucket"`,
+	})
+	parser := New(fs, "",
+		OptionStopOnHCLError(true),
+		OptionWithTFVarsPaths("main.tfvars"),
+	)
+
+	if err := parser.ParseFS(context.TODO(), "."); err != nil {
+		t.Fatal(err)
+	}
+	modules, _, err := parser.EvaluateAll(context.TODO())
+	assert.NoError(t, err)
+	assert.Len(t, modules, 1)
+
+	rootModule := modules[0]
+	blocks := rootModule.GetResourcesByType("aws_s3_bucket")
+	require.Len(t, blocks, 1)
+
+	block := blocks[0]
+
+	assert.Equal(t, "test_bucket", block.GetAttribute("bucket").AsStringValueOrDefault("", block).Value())
 }
