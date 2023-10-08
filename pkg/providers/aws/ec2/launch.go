@@ -15,8 +15,11 @@ type LaunchConfiguration struct {
 }
 
 type LaunchTemplate struct {
-	Metadata defsecTypes.Metadata
+	Metadata       defsecTypes.Metadata
+	Id             defsecTypes.StringValue
+	DefaultVersion defsecTypes.IntValue
 	Instance
+	LaunchTemplateVersions []LaunchTemplateVersion
 }
 
 func (i *LaunchConfiguration) RequiresIMDSToken() bool {
@@ -25,4 +28,27 @@ func (i *LaunchConfiguration) RequiresIMDSToken() bool {
 
 func (i *LaunchConfiguration) HasHTTPEndpointDisabled() bool {
 	return i.MetadataOptions.HttpEndpoint.EqualTo("disabled")
+}
+
+type AccountAttribute struct {
+	Metadata        defsecTypes.Metadata
+	AttributeName   defsecTypes.StringValue
+	AttributeValues []defsecTypes.StringValue
+}
+
+type NetworkInterface struct {
+	Metadata defsecTypes.Metadata
+	Id       defsecTypes.StringValue
+	Status   defsecTypes.StringValue
+}
+
+type LaunchTemplateVersion struct {
+	Metadata           defsecTypes.Metadata
+	VersionNumber      defsecTypes.IntValue
+	LaunchTemplateData LaunchTemplateData
+}
+
+type LaunchTemplateData struct {
+	Metadata defsecTypes.Metadata
+	ImageId  defsecTypes.StringValue
 }

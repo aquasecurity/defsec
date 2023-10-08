@@ -20,10 +20,30 @@ func getInstances(ctx parser.FileContext) (instances []ec2.Instance) {
 				HttpTokens:   defsecTypes.StringDefault("optional", r.Metadata()),
 				HttpEndpoint: defsecTypes.StringDefault("enabled", r.Metadata()),
 			},
-			UserData:        r.GetStringProperty("UserData"),
-			SecurityGroups:  nil,
-			RootBlockDevice: nil,
-			EBSBlockDevices: nil,
+			CPUOptions: ec2.CPUOptions{
+				Metadata:      r.Metadata(),
+				CoreCount:     r.GetIntProperty("CpuOptions.CoreCount"),
+				ThreadPerCore: r.GetIntProperty("CpuOptions.ThreadsPerCore"),
+			},
+			UserData:              r.GetStringProperty("UserData"),
+			VPCId:                 defsecTypes.String("", r.Metadata()),
+			ImageId:               r.GetStringProperty("ImageId"),
+			PublicIpAddress:       r.GetStringProperty("PublicIp"),
+			SubnetId:              r.GetStringProperty("SubnetId"),
+			InstanceId:            defsecTypes.String("", r.Metadata()),
+			InstanceType:          r.GetStringProperty("InstanceType"),
+			IamInstanceProfile:    r.GetStringProperty("IamInstanceProfile"),
+			InstanceLifecycle:     defsecTypes.String("", r.Metadata()),
+			StateName:             defsecTypes.StringDefault("pending", r.Metadata()),
+			MonitoringState:       r.GetBoolProperty("Monitoring"),
+			KeyName:               r.GetStringProperty("KeyName"),
+			SpotInstanceRequestId: defsecTypes.String("", r.Metadata()),
+			SecurityGroupIds:      getSecurityGroupsIds(r),
+			SecurityGroups:        nil,
+			RootBlockDevice:       nil,
+			EBSBlockDevices:       nil,
+			Tags:                  nil,
+			NetworkInterfaces:     getNetworkInterfaces(r),
 		}
 		blockDevices := getBlockDevices(r)
 		for i, device := range blockDevices {
@@ -34,6 +54,12 @@ func getInstances(ctx parser.FileContext) (instances []ec2.Instance) {
 			}
 			instance.EBSBlockDevices = append(instance.EBSBlockDevices, device)
 		}
+		for _, tags := range r.GetProperty("Tags").AsList() {
+			instance.Tags = append(instance.Tags, ec2.Tags{
+				Metadata: tags.Metadata(),
+			})
+		}
+
 		instances = append(instances, instance)
 	}
 
@@ -61,10 +87,40 @@ func getBlockDevices(r *parser.Resource) []*ec2.BlockDevice {
 		device := &ec2.BlockDevice{
 			Metadata:  d.Metadata(),
 			Encrypted: result,
+			VolumeId:  defsecTypes.String("", d.Metadata()),
 		}
 
 		blockDevices = append(blockDevices, device)
 	}
 
 	return blockDevices
+}
+
+func getNetworkInterfaces(r *parser.Resource) []ec2.NetworkInterfaces {
+	var networkInterfaces []ec2.NetworkInterfaces
+
+	NIProp := r.GetProperty("NetworkInterfaces")
+	if NIProp.IsNil() || NIProp.IsNotList() {
+		return networkInterfaces
+	}
+
+	for _, NI := range NIProp.AsList() {
+		networkInterfaces = append(networkInterfaces, ec2.NetworkInterfaces{
+			Metadata: NI.Metadata(),
+		})
+	}
+	return networkInterfaces
+}
+
+func getSecurityGroupsIds(r *parser.Resource) []defsecTypes.StringValue {
+	var SGIds []defsecTypes.StringValue
+	SGProp := r.GetProperty("SecurityGroupIds")
+	if SGProp.IsNil() || SGProp.IsNotList() {
+		return SGIds
+	}
+
+	for _, SGId := range SGProp.AsList() {
+		SGIds = append(SGIds, SGId.AsStringValue())
+	}
+	return SGIds
 }

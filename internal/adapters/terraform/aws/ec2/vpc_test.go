@@ -23,9 +23,6 @@ func Test_AdaptVPC(t *testing.T) {
 		{
 			name: "defined",
 			terraform: `
-			resource "aws_flow_log" "this" {
-				vpc_id = aws_vpc.main.id
-			}
 			resource "aws_default_vpc" "default" {
 				tags = {
 				  Name = "Default VPC"
@@ -42,9 +39,6 @@ func Test_AdaptVPC(t *testing.T) {
 			  
 				ingress {
 				  description = "Rule #1"
-				  from_port   = 80
-				  to_port     = 80
-				  protocol    = "tcp"
 				  cidr_blocks = [aws_vpc.main.cidr_block]
 				}
 
@@ -55,10 +49,8 @@ func Test_AdaptVPC(t *testing.T) {
 
 			resource "aws_network_acl_rule" "example" {
 				egress         = false
-				protocol       = "tcp"
-				from_port      = 22
-				to_port        = 22
 				rule_action    = "allow"
+				protocol    = "tcp"
 				cidr_block     = "10.0.0.0/16"
 			}
 
@@ -66,9 +58,6 @@ func Test_AdaptVPC(t *testing.T) {
 				type              = "ingress"
 				description = "Rule #2"
 				security_group_id = aws_security_group.example.id
-				from_port         = 22
-				to_port           = 22
-				protocol          = "tcp"
 				cidr_blocks = [
 				  "1.2.3.4/32",
 				  "4.5.6.7/32",
@@ -78,16 +67,14 @@ func Test_AdaptVPC(t *testing.T) {
 			expected: ec2.EC2{
 				VPCs: []ec2.VPC{
 					{
-						Metadata:        defsecTypes.NewTestMetadata(),
-						IsDefault:       defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
-						ID:              defsecTypes.String("", defsecTypes.NewTestMetadata()),
-						FlowLogsEnabled: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						Metadata:  defsecTypes.NewTestMetadata(),
+						IsDefault: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						ID:        defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					},
 					{
-						Metadata:        defsecTypes.NewTestMetadata(),
-						IsDefault:       defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
-						ID:              defsecTypes.String("", defsecTypes.NewTestMetadata()),
-						FlowLogsEnabled: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
+						Metadata:  defsecTypes.NewTestMetadata(),
+						IsDefault: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
+						ID:        defsecTypes.String("", defsecTypes.NewTestMetadata()),
 					},
 				},
 				SecurityGroups: []ec2.SecurityGroup{

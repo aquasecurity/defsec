@@ -30,6 +30,7 @@ func Test_adaptSubnet(t *testing.T) {
 `,
 			expected: ec2.Subnet{
 				Metadata:            defsecTypes.NewTestMetadata(),
+				VPcId:               defsecTypes.String("vpc-123456", defsecTypes.NewTestMetadata()),
 				MapPublicIpOnLaunch: defsecTypes.Bool(true, defsecTypes.NewTestMetadata()),
 			},
 		},
@@ -43,6 +44,7 @@ func Test_adaptSubnet(t *testing.T) {
 `,
 			expected: ec2.Subnet{
 				Metadata:            defsecTypes.NewTestMetadata(),
+				VPcId:               defsecTypes.String("vpc-123456", defsecTypes.NewTestMetadata()),
 				MapPublicIpOnLaunch: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
@@ -50,11 +52,12 @@ func Test_adaptSubnet(t *testing.T) {
 			name: "defaults",
 			terraform: `
 			resource "aws_subnet" "example" {
-			    vpc_id = "vpc-123456"
+			    vpc_id = ""
 			}
 `,
 			expected: ec2.Subnet{
 				Metadata:            defsecTypes.NewTestMetadata(),
+				VPcId:               defsecTypes.String("", defsecTypes.NewTestMetadata()),
 				MapPublicIpOnLaunch: defsecTypes.Bool(false, defsecTypes.NewTestMetadata()),
 			},
 		},
