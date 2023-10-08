@@ -10,10 +10,11 @@ type APIGateway struct {
 }
 
 type API struct {
-	Metadata  defsecTypes.Metadata
-	Name      defsecTypes.StringValue
-	Stages    []Stage
-	Resources []Resource
+	Metadata               defsecTypes.Metadata
+	Name                   defsecTypes.StringValue
+	Stages                 []Stage
+	Resources              []Resource
+	MinimumCompressionSize defsecTypes.IntValue
 }
 
 type Stage struct {

@@ -39,10 +39,11 @@ func adaptAPIsV1(modules terraform.Modules) []v1.API {
 
 	for _, apiBlock := range modules.GetResourcesByType("aws_api_gateway_rest_api") {
 		api := v1.API{
-			Metadata:  apiBlock.GetMetadata(),
-			Name:      apiBlock.GetAttribute("name").AsStringValueOrDefault("", apiBlock),
-			Stages:    nil,
-			Resources: adaptAPIResourcesV1(modules, apiBlock),
+			Metadata:               apiBlock.GetMetadata(),
+			Name:                   apiBlock.GetAttribute("name").AsStringValueOrDefault("", apiBlock),
+			Stages:                 nil,
+			Resources:              adaptAPIResourcesV1(modules, apiBlock),
+			MinimumCompressionSize: apiBlock.GetAttribute("minimun_compression_size").AsIntValueOrDefault(0, apiBlock),
 		}
 
 		for _, stageBlock := range modules.GetReferencingResources(apiBlock, "aws_api_gateway_stage", "rest_api_id") {

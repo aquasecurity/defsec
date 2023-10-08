@@ -1,6 +1,7 @@
 package apigateway
 
 import (
+	v1 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v1"
 	v2 "github.com/aquasecurity/defsec/pkg/providers/aws/apigateway/v2"
 	"github.com/aquasecurity/defsec/pkg/scanners/cloudformation/parser"
 	"github.com/aquasecurity/defsec/pkg/types"
@@ -20,6 +21,21 @@ func getApis(cfFile parser.FileContext) (apis []v2.API) {
 	}
 
 	return apis
+}
+func getAPIsV1(cfFile parser.FileContext) (apis []v1.API) {
+
+	apiResources := cfFile.GetResourcesByType("AWS::ApiGateway::RestApi")
+	for _, apiRes := range apiResources {
+		api := v1.API{
+			Metadata:               apiRes.Metadata(),
+			Name:                   types.StringDefault("", apiRes.Metadata()),
+			MinimumCompressionSize: types.IntDefault(0, apiRes.Metadata()),
+		}
+		apis = append(apis, api)
+	}
+
+	return apis
+
 }
 
 func getStages(apiId string, cfFile parser.FileContext) []v2.Stage {
