@@ -12,18 +12,27 @@ type IAM struct {
 	Users              []User
 	Roles              []Role
 	ServerCertificates []ServerCertificate
+	VirtualMfaDevices  []VirtualMfaDevice
+	CredentialReports  []CredentialReport
 }
 
 type ServerCertificate struct {
 	Metadata   defsecTypes.Metadata
+	Name       defsecTypes.StringValue
 	Expiration defsecTypes.TimeValue
 }
 
+type VirtualMfaDevice struct {
+	Metadata     defsecTypes.Metadata
+	SerialNumber defsecTypes.StringValue
+}
+
 type Policy struct {
-	Metadata defsecTypes.Metadata
-	Name     defsecTypes.StringValue
-	Document Document
-	Builtin  defsecTypes.BoolValue
+	Metadata         defsecTypes.Metadata
+	DefaultVersionId defsecTypes.StringValue
+	Name             defsecTypes.StringValue
+	Document         Document
+	Builtin          defsecTypes.BoolValue
 }
 
 type Document struct {
@@ -55,13 +64,15 @@ type Group struct {
 }
 
 type User struct {
-	Metadata   defsecTypes.Metadata
-	Name       defsecTypes.StringValue
-	Groups     []Group
-	Policies   []Policy
-	AccessKeys []AccessKey
-	MFADevices []MFADevice
-	LastAccess defsecTypes.TimeValue
+	Metadata      defsecTypes.Metadata
+	Name          defsecTypes.StringValue
+	Groups        []Group
+	Policies      []Policy
+	AccessKeys    []AccessKey
+	MFADevices    []MFADevice
+	SSHPublicKeys []SSHPublicKey
+	Tags          []Tag
+	LastAccess    defsecTypes.TimeValue
 }
 
 func (u *User) HasLoggedIn() bool {
@@ -73,6 +84,12 @@ type MFADevice struct {
 	IsVirtual defsecTypes.BoolValue
 }
 
+type SSHPublicKey struct {
+	Metadata   defsecTypes.Metadata
+	ID         defsecTypes.StringValue
+	Status     defsecTypes.StringValue
+	UploadDate defsecTypes.TimeValue
+}
 type AccessKey struct {
 	Metadata     defsecTypes.Metadata
 	AccessKeyId  defsecTypes.StringValue
@@ -82,9 +99,12 @@ type AccessKey struct {
 }
 
 type Role struct {
-	Metadata defsecTypes.Metadata
-	Name     defsecTypes.StringValue
-	Policies []Policy
+	Metadata                 defsecTypes.Metadata
+	Name                     defsecTypes.StringValue
+	AssumeRolePolicyDocument defsecTypes.StringValue
+	Tags                     []Tag
+	LastUsedDate             defsecTypes.TimeValue
+	Policies                 []Policy
 }
 
 func (d Document) MetadataFromIamGo(r ...iamgo.Range) defsecTypes.Metadata {
@@ -108,4 +128,34 @@ func (d Document) MetadataFromIamGo(r ...iamgo.Range) defsecTypes.Metadata {
 		m = defsecTypes.NewMetadata(newRange, m.Reference()).WithParent(m)
 	}
 	return m
+}
+
+type Tag struct {
+	Metadata defsecTypes.Metadata
+}
+
+type CredentialReport struct {
+	Metadata                       defsecTypes.Metadata
+	User                           defsecTypes.StringValue
+	Arn                            defsecTypes.StringValue
+	User_creation_time             defsecTypes.StringValue
+	Password_enabled               defsecTypes.StringValue
+	Password_last_used             defsecTypes.StringValue
+	Password_last_changed          defsecTypes.StringValue
+	Password_next_rotation         defsecTypes.StringValue
+	Mfa_active                     defsecTypes.StringValue
+	Access_key_1_active            defsecTypes.StringValue
+	Access_key_1_last_rotated      defsecTypes.StringValue
+	Access_key_1_last_used_date    defsecTypes.StringValue
+	Access_key_1_last_used_region  defsecTypes.StringValue
+	Access_key_1_last_used_service defsecTypes.StringValue
+	Access_key_2_active            defsecTypes.StringValue
+	Access_key_2_last_rotated      defsecTypes.StringValue
+	Access_key_2_last_used_date    defsecTypes.StringValue
+	Access_key_2_last_used_region  defsecTypes.StringValue
+	Access_key_2_last_used_service defsecTypes.StringValue
+	Cert_1_active                  defsecTypes.StringValue
+	Cert_1_last_rotated            defsecTypes.StringValue
+	Cert_2_active                  defsecTypes.StringValue
+	Cert_2_last_rotated            defsecTypes.StringValue
 }

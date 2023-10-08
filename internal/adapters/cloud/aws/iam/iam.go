@@ -55,6 +55,14 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 		return err
 	}
 
+	if err := a.adaptVirtualMfadevices(state); err != nil {
+		return err
+	}
+
+	if err := a.adaptCredentialReport(state); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -74,6 +82,7 @@ func (a *adapter) adaptPasswordPolicy(state *state.State) error {
 	if policy.PasswordReusePrevention != nil {
 		reusePrevention = int(*policy.PasswordReusePrevention)
 	}
+
 	maxAge := 0
 	if policy.MaxPasswordAge != nil {
 		maxAge = int(*policy.MaxPasswordAge)
@@ -83,14 +92,16 @@ func (a *adapter) adaptPasswordPolicy(state *state.State) error {
 		minimumLength = int(*policy.MinimumPasswordLength)
 	}
 	state.AWS.IAM.PasswordPolicy = iam.PasswordPolicy{
-		Metadata:             metadata,
-		ReusePreventionCount: types.Int(reusePrevention, metadata),
-		RequireLowercase:     types.Bool(policy.RequireLowercaseCharacters, metadata),
-		RequireUppercase:     types.Bool(policy.RequireUppercaseCharacters, metadata),
-		RequireNumbers:       types.Bool(policy.RequireNumbers, metadata),
-		RequireSymbols:       types.Bool(policy.RequireSymbols, metadata),
-		MaxAgeDays:           types.Int(maxAge, metadata),
-		MinimumLength:        types.Int(minimumLength, metadata),
+		Metadata:                   metadata,
+		ReusePreventionCount:       types.Int(reusePrevention, metadata),
+		RequireLowercase:           types.Bool(policy.RequireLowercaseCharacters, metadata),
+		RequireUppercase:           types.Bool(policy.RequireUppercaseCharacters, metadata),
+		RequireNumbers:             types.Bool(policy.RequireNumbers, metadata),
+		RequireSymbols:             types.Bool(policy.RequireSymbols, metadata),
+		ExpirePasswords:            types.Bool(policy.ExpirePasswords, metadata),
+		MaxAgeDays:                 types.Int(maxAge, metadata),
+		MinimumLength:              types.Int(minimumLength, metadata),
+		AllowUsersToChangePassword: types.Bool(policy.AllowUsersToChangePassword, metadata),
 	}
 
 	return nil

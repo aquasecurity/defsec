@@ -13,14 +13,15 @@ import (
 func adaptPasswordPolicy(modules terraform.Modules) iam.PasswordPolicy {
 
 	policy := iam.PasswordPolicy{
-		Metadata:             defsecTypes.NewUnmanagedMetadata(),
-		ReusePreventionCount: defsecTypes.IntDefault(0, defsecTypes.NewUnmanagedMetadata()),
-		RequireLowercase:     defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
-		RequireUppercase:     defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
-		RequireNumbers:       defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
-		RequireSymbols:       defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
-		MaxAgeDays:           defsecTypes.IntDefault(math.MaxInt, defsecTypes.NewUnmanagedMetadata()),
-		MinimumLength:        defsecTypes.IntDefault(0, defsecTypes.NewUnmanagedMetadata()),
+		Metadata:                   defsecTypes.NewUnmanagedMetadata(),
+		ReusePreventionCount:       defsecTypes.IntDefault(0, defsecTypes.NewUnmanagedMetadata()),
+		RequireLowercase:           defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+		RequireUppercase:           defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+		RequireNumbers:             defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+		RequireSymbols:             defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
+		MaxAgeDays:                 defsecTypes.IntDefault(math.MaxInt, defsecTypes.NewUnmanagedMetadata()),
+		MinimumLength:              defsecTypes.IntDefault(0, defsecTypes.NewUnmanagedMetadata()),
+		AllowUsersToChangePassword: defsecTypes.BoolDefault(false, defsecTypes.NewUnmanagedMetadata()),
 	}
 
 	passwordPolicies := modules.GetResourcesByType("aws_iam_account_password_policy")
@@ -53,11 +54,21 @@ func adaptPasswordPolicy(modules terraform.Modules) iam.PasswordPolicy {
 	} else {
 		policy.RequireSymbols = defsecTypes.BoolDefault(false, policyBlock.GetMetadata())
 	}
+	if attr := policyBlock.GetAttribute("allow_users_to_change_password"); attr.IsNotNil() {
+		policy.AllowUsersToChangePassword = defsecTypes.BoolExplicit(attr.IsTrue(), attr.GetMetadata())
+	} else {
+		policy.AllowUsersToChangePassword = defsecTypes.BoolDefault(false, policyBlock.GetMetadata())
+	}
 	if attr := policyBlock.GetAttribute("password_reuse_prevention"); attr.IsNumber() {
 		value := attr.AsNumber()
 		policy.ReusePreventionCount = defsecTypes.IntExplicit(int(value), attr.GetMetadata())
 	} else {
 		policy.ReusePreventionCount = defsecTypes.IntDefault(0, policyBlock.GetMetadata())
+	}
+	if attr := policyBlock.GetAttribute("expire_passwords"); attr.IsNotNil() {
+		policy.ExpirePasswords = defsecTypes.BoolExplicit(attr.IsTrue(), attr.GetMetadata())
+	} else {
+		policy.ExpirePasswords = defsecTypes.BoolDefault(false, policyBlock.GetMetadata())
 	}
 	if attr := policyBlock.GetAttribute("max_password_age"); attr.IsNumber() {
 		value := attr.AsNumber()
@@ -71,6 +82,5 @@ func adaptPasswordPolicy(modules terraform.Modules) iam.PasswordPolicy {
 	} else {
 		policy.MinimumLength = defsecTypes.IntDefault(0, policyBlock.GetMetadata())
 	}
-
 	return policy
 }
