@@ -9,6 +9,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/cloudwatch"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/codebuild"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/config"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/dms"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/documentdb"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/dynamodb"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ec2"
@@ -46,6 +47,7 @@ type AWS struct {
 	CloudWatch     cloudwatch.CloudWatch
 	CodeBuild      codebuild.CodeBuild
 	Config         config.Config
+	DMS            dms.DMS
 	DocumentDB     documentdb.DocumentDB
 	DynamoDB       dynamodb.DynamoDB
 	EC2            ec2.EC2
