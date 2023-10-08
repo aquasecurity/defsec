@@ -28,11 +28,12 @@ func (w CloudWatch) GetAlarmByMetricName(metricName string) (alarm *Alarm) {
 }
 
 type Alarm struct {
-	Metadata   defsecTypes.Metadata
-	AlarmName  defsecTypes.StringValue
-	MetricName defsecTypes.StringValue
-	Dimensions []AlarmDimension
-	Metrics    []MetricDataQuery
+	Metadata    defsecTypes.Metadata
+	AlarmName   defsecTypes.StringValue
+	MetricName  defsecTypes.StringValue
+	Dimensions  []AlarmDimension
+	Metrics     []MetricDataQuery
+	AlarmAction []defsecTypes.StringValue
 }
 
 type AlarmDimension struct {
@@ -42,15 +43,22 @@ type AlarmDimension struct {
 }
 
 type MetricFilter struct {
-	Metadata      defsecTypes.Metadata
-	FilterName    defsecTypes.StringValue
-	FilterPattern defsecTypes.StringValue
+	Metadata              defsecTypes.Metadata
+	LogGroupName          defsecTypes.StringValue
+	MetricTransformations []MetricTransformation
+	FilterName            defsecTypes.StringValue
+	FilterPattern         defsecTypes.StringValue
 }
 
 type MetricDataQuery struct {
 	Metadata   defsecTypes.Metadata
 	Expression defsecTypes.StringValue
 	ID         defsecTypes.StringValue
+}
+
+type MetricTransformation struct {
+	Metadata   defsecTypes.Metadata
+	MetricName defsecTypes.StringValue
 }
 
 type LogGroup struct {

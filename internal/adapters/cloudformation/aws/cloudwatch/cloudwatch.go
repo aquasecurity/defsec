@@ -9,6 +9,6 @@ import (
 func Adapt(cfFile parser.FileContext) cloudwatch.CloudWatch {
 	return cloudwatch.CloudWatch{
 		LogGroups: getLogGroups(cfFile),
-		Alarms:    nil,
+		Alarms:    getAlarms(cfFile),
 	}
 }
