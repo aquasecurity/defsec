@@ -121,7 +121,8 @@ func (a *adapter) adaptQueue(queueUrl string) (*sqs.Queue, error) {
 					Metadata: queueMetadata,
 					Parsed:   *policy,
 				},
-				Builtin: defsecTypes.Bool(false, queueMetadata),
+				Builtin:          defsecTypes.Bool(false, queueMetadata),
+				DefaultVersionId: defsecTypes.String("", queueMetadata),
 			})
 
 		}

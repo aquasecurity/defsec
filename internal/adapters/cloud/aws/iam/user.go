@@ -6,10 +6,9 @@ import (
 	"time"
 
 	"github.com/aquasecurity/defsec/pkg/concurrency"
-	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
-
 	"github.com/aquasecurity/defsec/pkg/providers/aws/iam"
 	"github.com/aquasecurity/defsec/pkg/state"
+	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	iamapi "github.com/aws/aws-sdk-go-v2/service/iam"
 	iamtypes "github.com/aws/aws-sdk-go-v2/service/iam/types"
 )
@@ -73,6 +72,37 @@ func (a *adapter) getMFADevices(user iamtypes.User) ([]iam.MFADevice, error) {
 	}
 
 	return devices, nil
+}
+
+func (a *adapter) getSSHPublicKeys(user iamtypes.User) ([]iam.SSHPublicKey, error) {
+	input := &iamapi.ListSSHPublicKeysInput{
+		UserName: user.UserName,
+	}
+	var apiDevices []iamtypes.SSHPublicKeyMetadata
+	for {
+		output, err := a.api.ListSSHPublicKeys(a.Context(), input)
+		if err != nil {
+			return nil, err
+		}
+		apiDevices = append(apiDevices, output.SSHPublicKeys...)
+		if !output.IsTruncated {
+			break
+		}
+		input.Marker = output.Marker
+	}
+	var sshPublickey []iam.SSHPublicKey
+
+	for _, key := range apiDevices {
+		metadata := a.CreateMetadata(*key.SSHPublicKeyId)
+		sshPublickey = append(sshPublickey, iam.SSHPublicKey{
+			Metadata:   metadata,
+			ID:         defsecTypes.String(*key.SSHPublicKeyId, metadata),
+			Status:     defsecTypes.String(string(key.Status), metadata),
+			UploadDate: defsecTypes.Time(*key.UploadDate, metadata),
+		})
+	}
+	return sshPublickey, nil
+
 }
 
 func (a *adapter) getUserGroups(apiUser iamtypes.User) []iam.Group {
@@ -206,6 +236,11 @@ func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 		return nil, err
 	}
 
+	sshKeys, err := a.getSSHPublicKeys(apiUser)
+	if err != nil {
+		return nil, err
+	}
+
 	lastAccess := defsecTypes.TimeUnresolvable(metadata)
 	if apiUser.PasswordLastUsed != nil {
 		lastAccess = defsecTypes.Time(*apiUser.PasswordLastUsed, metadata)
@@ -216,13 +251,30 @@ func (a *adapter) adaptUser(apiUser iamtypes.User) (*iam.User, error) {
 		username = defsecTypes.String(*apiUser.UserName, metadata)
 	}
 
+	var tags []iam.Tag
+	output, err := a.api.GetUser(a.Context(), &iamapi.GetUserInput{
+		UserName: apiUser.UserName,
+	})
+	if err != nil {
+		output = nil
+	}
+	if output != nil {
+		for range output.User.Tags {
+			tags = append(tags, iam.Tag{
+				Metadata: metadata,
+			})
+		}
+	}
+
 	return &iam.User{
-		Metadata:   metadata,
-		Name:       username,
-		Groups:     groups,
-		Policies:   policies,
-		AccessKeys: keys,
-		MFADevices: mfaDevices,
-		LastAccess: lastAccess,
+		Metadata:      metadata,
+		Name:          username,
+		Groups:        groups,
+		Policies:      policies,
+		AccessKeys:    keys,
+		MFADevices:    mfaDevices,
+		SSHPublicKeys: sshKeys,
+		LastAccess:    lastAccess,
+		Tags:          tags,
 	}, nil
 }

@@ -38,7 +38,8 @@ func parsePolicy(policyBlock *terraform.Block, modules terraform.Modules) (iam.P
 			IsOffset: false,
 			HasRefs:  false,
 		},
-		Builtin: defsecTypes.Bool(false, policyBlock.GetMetadata()),
+		Builtin:          defsecTypes.Bool(false, policyBlock.GetMetadata()),
+		DefaultVersionId: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 	}
 	var err error
 	doc, err := ParsePolicyFromAttr(policyBlock.GetAttribute("policy"), policyBlock, modules)
@@ -60,7 +61,8 @@ func adaptPolicies(modules terraform.Modules) (policies []iam.Policy) {
 				IsOffset: false,
 				HasRefs:  false,
 			},
-			Builtin: defsecTypes.Bool(false, policyBlock.GetMetadata()),
+			Builtin:          defsecTypes.Bool(false, policyBlock.GetMetadata()),
+			DefaultVersionId: defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 		}
 		doc, err := ParsePolicyFromAttr(policyBlock.GetAttribute("policy"), policyBlock, modules)
 		if err != nil {

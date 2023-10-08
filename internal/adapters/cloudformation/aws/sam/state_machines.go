@@ -71,7 +71,8 @@ func setStateMachinePolicies(r *parser.Resource, stateMachine *sam.StateMachine)
 						Metadata: property.Metadata(),
 						Parsed:   *parsed,
 					},
-					Builtin: defsecTypes.Bool(false, property.Metadata()),
+					Builtin:          defsecTypes.Bool(false, property.Metadata()),
+					DefaultVersionId: defsecTypes.StringDefault("", property.Metadata()),
 				}
 				stateMachine.Policies = append(stateMachine.Policies, policy)
 			}

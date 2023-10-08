@@ -57,7 +57,8 @@ func getPolicy(id string, ctx parser.FileContext) (*iam.Policy, error) {
 						Metadata: documentProp.Metadata(),
 						Parsed:   *parsed,
 					},
-					Builtin: defsecTypes.Bool(false, documentProp.Metadata()),
+					Builtin:          defsecTypes.Bool(false, documentProp.Metadata()),
+					DefaultVersionId: defsecTypes.StringDefault("", documentProp.Metadata()),
 				}, nil
 			}
 		}

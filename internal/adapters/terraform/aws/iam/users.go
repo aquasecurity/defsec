@@ -28,13 +28,15 @@ func adaptUsers(modules terraform.Modules) []iam.User {
 		user, ok := userMap[userBlock.ID()]
 		if !ok {
 			user = iam.User{
-				Metadata:   userBlock.GetMetadata(),
-				Name:       userBlock.GetAttribute("name").AsStringValueOrDefault("", userBlock),
-				Groups:     nil,
-				Policies:   nil,
-				AccessKeys: nil,
-				MFADevices: nil,
-				LastAccess: defsecTypes.TimeUnresolvable(userBlock.GetMetadata()),
+				Metadata:      userBlock.GetMetadata(),
+				Name:          userBlock.GetAttribute("name").AsStringValueOrDefault("", userBlock),
+				Groups:        nil,
+				Policies:      nil,
+				AccessKeys:    nil,
+				MFADevices:    nil,
+				SSHPublicKeys: adaptSSHPublicKey(policyBlock, modules),
+				Tags:          gettags(userBlock),
+				LastAccess:    defsecTypes.TimeUnresolvable(userBlock.GetMetadata()),
 			}
 		}
 		user.Policies = append(user.Policies, policy)
@@ -155,4 +157,30 @@ func adaptAccessKey(block *terraform.Block) (*iam.AccessKey, error) {
 		Active:       active,
 	}
 	return &key, nil
+}
+
+func adaptSSHPublicKey(block *terraform.Block, modules terraform.Modules) []iam.SSHPublicKey {
+
+	sshKeyResources := modules.GetReferencingResources(block, " aws_iam_user_ssh_key", "username")
+	var sshkey []iam.SSHPublicKey
+
+	for _, key := range sshKeyResources {
+		sshkey = append(sshkey, iam.SSHPublicKey{
+			Metadata:   key.GetMetadata(),
+			ID:         key.GetAttribute("ssh_public_key_id").AsStringValueOrDefault("", key),
+			Status:     key.GetAttribute("status").AsStringValueOrDefault("", key),
+			UploadDate: defsecTypes.TimeUnresolvable(key.GetMetadata()),
+		})
+	}
+	return sshkey
+}
+
+func gettags(block *terraform.Block) []iam.Tag {
+	var tags []iam.Tag
+	for _, t := range block.GetBlocks("tags") {
+		tags = append(tags, iam.Tag{
+			Metadata: t.GetMetadata(),
+		})
+	}
+	return tags
 }

@@ -30,9 +30,11 @@ func adaptRoles(modules terraform.Modules) []iam.Role {
 		role, ok := roleMap[roleBlock.ID()]
 		if !ok {
 			role = iam.Role{
-				Metadata: roleBlock.GetMetadata(),
-				Name:     roleBlock.GetAttribute("name").AsStringValueOrDefault("", roleBlock),
-				Policies: nil,
+				Metadata:                 roleBlock.GetMetadata(),
+				Name:                     roleBlock.GetAttribute("name").AsStringValueOrDefault("", roleBlock),
+				Policies:                 nil,
+				AssumeRolePolicyDocument: roleBlock.GetAttribute("assume_role_policy").AsStringValueOrDefault("", roleBlock),
+				LastUsedDate:             defsecTypes.TimeUnresolvable(roleBlock.GetMetadata()),
 			}
 		}
 		role.Policies = append(role.Policies, policy)
@@ -51,9 +53,12 @@ func mapRoles(modules terraform.Modules) (map[string]iam.Role, map[string]struct
 	roleMap := make(map[string]iam.Role)
 	for _, roleBlock := range modules.GetResourcesByType("aws_iam_role") {
 		role := iam.Role{
-			Metadata: roleBlock.GetMetadata(),
-			Name:     roleBlock.GetAttribute("name").AsStringValueOrDefault("", roleBlock),
-			Policies: nil,
+			Metadata:                 roleBlock.GetMetadata(),
+			Name:                     roleBlock.GetAttribute("name").AsStringValueOrDefault("", roleBlock),
+			Tags:                     gettags(roleBlock),
+			LastUsedDate:             defsecTypes.TimeUnresolvable(roleBlock.GetMetadata()),
+			AssumeRolePolicyDocument: roleBlock.GetAttribute("assume_role_policy").AsStringValueOrDefault("", roleBlock),
+			Policies:                 nil,
 		}
 		if inlineBlock := roleBlock.GetBlock("inline_policy"); inlineBlock.IsNotNil() {
 			policy := iam.Policy{
@@ -65,7 +70,8 @@ func mapRoles(modules terraform.Modules) (map[string]iam.Role, map[string]struct
 					IsOffset: false,
 					HasRefs:  false,
 				},
-				Builtin: defsecTypes.Bool(false, inlineBlock.GetMetadata()),
+				Builtin:          defsecTypes.Bool(false, inlineBlock.GetMetadata()),
+				DefaultVersionId: defsecTypes.StringDefault("", inlineBlock.GetMetadata()),
 			}
 			doc, err := ParsePolicyFromAttr(inlineBlock.GetAttribute("policy"), inlineBlock, modules)
 			if err != nil {
