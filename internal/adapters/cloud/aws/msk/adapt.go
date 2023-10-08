@@ -69,15 +69,30 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterInfo) (*msk.Cluster, erro
 	metadata := a.CreateMetadataFromARN(*apiCluster.ClusterArn)
 
 	var encInTransitClientBroker, encAtRestKMSKeyId string
-	var encAtRestEnabled bool
+	var encAtRestEnabled, encInTransitInCluster bool
 	if apiCluster.EncryptionInfo != nil {
 		if apiCluster.EncryptionInfo.EncryptionInTransit != nil {
 			encInTransitClientBroker = string(apiCluster.EncryptionInfo.EncryptionInTransit.ClientBroker)
+			encInTransitInCluster = bool(apiCluster.EncryptionInfo.EncryptionInTransit.InCluster)
 		}
 
 		if apiCluster.EncryptionInfo.EncryptionAtRest != nil {
 			encAtRestKMSKeyId = *apiCluster.EncryptionInfo.EncryptionAtRest.DataVolumeKMSKeyId
 			encAtRestEnabled = true
+		}
+	}
+
+	var UnauthenticatedEnabled bool
+	if apiCluster.ClientAuthentication != nil {
+		if apiCluster.ClientAuthentication.Unauthenticated != nil {
+			UnauthenticatedEnabled = bool(apiCluster.ClientAuthentication.Unauthenticated.Enabled)
+		}
+	}
+
+	var PublicAccessType string
+	if apiCluster.BrokerNodeGroupInfo != nil && apiCluster.BrokerNodeGroupInfo.ConnectivityInfo != nil {
+		if apiCluster.BrokerNodeGroupInfo.ConnectivityInfo.PublicAccess != nil {
+			PublicAccessType = *apiCluster.BrokerNodeGroupInfo.ConnectivityInfo.PublicAccess.Type
 		}
 	}
 
@@ -97,14 +112,32 @@ func (a *adapter) adaptCluster(apiCluster types.ClusterInfo) (*msk.Cluster, erro
 
 	return &msk.Cluster{
 		Metadata: metadata,
+		BrokerNodeGroupInfo: msk.BrokerNodeGroupInfo{
+			Metadata: metadata,
+			ConnectivityInfo: msk.ConnectivityInfo{
+				Metadata: metadata,
+				PublicAccess: msk.PublicAccess{
+					Metadata: metadata,
+					Type:     defsecTypes.String(PublicAccessType, metadata),
+				},
+			},
+		},
 		EncryptionInTransit: msk.EncryptionInTransit{
 			Metadata:     metadata,
 			ClientBroker: defsecTypes.String(encInTransitClientBroker, metadata),
+			InCluster:    defsecTypes.Bool(encInTransitInCluster, metadata),
 		},
 		EncryptionAtRest: msk.EncryptionAtRest{
 			Metadata:  metadata,
 			KMSKeyARN: defsecTypes.String(encAtRestKMSKeyId, metadata),
 			Enabled:   defsecTypes.Bool(encAtRestEnabled, metadata),
+		},
+		ClientAuthentication: msk.ClientAuthentication{
+			Metadata: metadata,
+			Unauthenticated: msk.Unauthenticated{
+				Metadata: metadata,
+				Enabled:  defsecTypes.Bool(UnauthenticatedEnabled, metadata),
+			},
 		},
 		Logging: msk.Logging{
 			Metadata: metadata,
