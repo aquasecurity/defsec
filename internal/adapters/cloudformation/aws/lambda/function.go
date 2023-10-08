@@ -18,6 +18,11 @@ func getFunctions(ctx parser.FileContext) (functions []lambda.Function) {
 				Metadata: r.Metadata(),
 				Mode:     types.StringDefault("PassThrough", r.Metadata()),
 			},
+			VpcConfig: lambda.VpcConfig{
+				Metadata: r.Metadata(),
+				VpcId:    types.StringDefault("", r.Metadata()),
+			},
+
 			Permissions: getPermissions(r, ctx),
 		}
 
@@ -25,6 +30,13 @@ func getFunctions(ctx parser.FileContext) (functions []lambda.Function) {
 			function.Tracing = lambda.Tracing{
 				Metadata: prop.Metadata(),
 				Mode:     prop.GetStringProperty("Mode", "PassThrough"),
+			}
+		}
+
+		if vpcProp := r.GetProperty("VpcConfig"); vpcProp.IsNotNil() {
+			function.VpcConfig = lambda.VpcConfig{
+				Metadata: vpcProp.Metadata(),
+				VpcId:    vpcProp.GetStringProperty("VpcId", ""),
 			}
 		}
 

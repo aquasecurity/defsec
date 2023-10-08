@@ -39,6 +39,10 @@ func (a *adapter) adaptFunctions(modules terraform.Modules) []lambda.Function {
 				Metadata: defsecTypes.NewUnmanagedMetadata(),
 				Mode:     defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
 			},
+			VpcConfig: lambda.VpcConfig{
+				Metadata: defsecTypes.NewUnmanagedMetadata(),
+				VpcId:    defsecTypes.StringDefault("", defsecTypes.NewUnmanagedMetadata()),
+			},
 			Permissions: nil,
 		}
 		for _, permission := range orphanResources {
@@ -64,6 +68,7 @@ func (a *adapter) adaptFunction(function *terraform.Block, modules terraform.Mod
 	return lambda.Function{
 		Metadata:    function.GetMetadata(),
 		Tracing:     a.adaptTracing(function),
+		VpcConfig:   a.adaptVpc(function),
 		Permissions: permissions,
 	}
 }
@@ -79,6 +84,20 @@ func (a *adapter) adaptTracing(function *terraform.Block) lambda.Tracing {
 	return lambda.Tracing{
 		Metadata: function.GetMetadata(),
 		Mode:     defsecTypes.StringDefault("", function.GetMetadata()),
+	}
+}
+
+func (a *adapter) adaptVpc(function *terraform.Block) lambda.VpcConfig {
+	if vpcConfig := function.GetBlock("vpc_config"); vpcConfig.IsNotNil() {
+		return lambda.VpcConfig{
+			Metadata: vpcConfig.GetMetadata(),
+			VpcId:    vpcConfig.GetAttribute("vpc_id").AsStringValueOrDefault("", vpcConfig),
+		}
+	}
+
+	return lambda.VpcConfig{
+		Metadata: function.GetMetadata(),
+		VpcId:    defsecTypes.StringDefault("", function.GetMetadata()),
 	}
 }
 
