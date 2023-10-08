@@ -44,6 +44,7 @@ func adaptSecurityAlertPolicies(resource azure.Resource, deployment azure.Deploy
 	for _, policy := range deployment.GetResourcesByType("Microsoft.Sql/servers/securityAlertPolicies") {
 		policies = append(policies, database.SecurityAlertPolicy{
 			Metadata:           policy.Metadata,
+			State:              resource.Properties.GetMapValue("state").AsStringValue("", resource.Metadata),
 			EmailAddresses:     adaptStringList(policy.Properties.GetMapValue("emailAddresses")),
 			DisabledAlerts:     adaptStringList(policy.Properties.GetMapValue("disabledAlerts")),
 			EmailAccountAdmins: policy.Properties.GetMapValue("emailAccountAdmins").AsBoolValue(false, policy.Metadata),

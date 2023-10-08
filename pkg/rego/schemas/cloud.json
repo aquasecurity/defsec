@@ -3827,6 +3827,10 @@
         "server": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.azure.database.Server"
+        },
+        "state": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
@@ -3898,6 +3902,10 @@
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
           }
+        },
+        "state": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },

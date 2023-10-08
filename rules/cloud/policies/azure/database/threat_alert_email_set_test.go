@@ -37,6 +37,24 @@ func TestCheckThreatAlertEmailSet(t *testing.T) {
 			expected: true,
 		},
 		{
+			name: "No email address provided for threat alerts, but alert is disabled",
+			input: database.Database{
+				MSSQLServers: []database.MSSQLServer{
+					{
+						Metadata: defsecTypes.NewTestMetadata(),
+						SecurityAlertPolicies: []database.SecurityAlertPolicy{
+							{
+								Metadata:       defsecTypes.NewTestMetadata(),
+								State:          defsecTypes.String("Disabled", defsecTypes.NewTestMetadata()),
+								EmailAddresses: []defsecTypes.StringValue{},
+							},
+						},
+					},
+				},
+			},
+			expected: false,
+		},
+		{
 			name: "Email address provided for threat alerts",
 			input: database.Database{
 				MSSQLServers: []database.MSSQLServer{

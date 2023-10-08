@@ -400,6 +400,9 @@ func adaptPostgreSQLConfig(resource *terraform.Block, configBlocks []*terraform.
 
 func adaptMSSQLSecurityAlertPolicy(resource *terraform.Block) database.SecurityAlertPolicy {
 
+	stateAttr := resource.GetAttribute("state")
+	stateVal := stateAttr.AsStringValueOrDefault("", resource)
+
 	emailAddressesAttr := resource.GetAttribute("email_addresses")
 	disabledAlertsAttr := resource.GetAttribute("disabled_alerts")
 
@@ -408,6 +411,7 @@ func adaptMSSQLSecurityAlertPolicy(resource *terraform.Block) database.SecurityA
 
 	return database.SecurityAlertPolicy{
 		Metadata:           resource.GetMetadata(),
+		State:              stateVal,
 		EmailAddresses:     emailAddressesAttr.AsStringValues(),
 		DisabledAlerts:     disabledAlertsAttr.AsStringValues(),
 		EmailAccountAdmins: emailAccountAdminsVal,

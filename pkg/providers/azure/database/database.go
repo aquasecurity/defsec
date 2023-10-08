@@ -45,12 +45,14 @@ type Server struct {
 type MSSQLServer struct {
 	Metadata defsecTypes.Metadata
 	Server
+	State                    defsecTypes.StringValue
 	ExtendedAuditingPolicies []ExtendedAuditingPolicy
 	SecurityAlertPolicies    []SecurityAlertPolicy
 }
 
 type SecurityAlertPolicy struct {
 	Metadata           defsecTypes.Metadata
+	State              defsecTypes.StringValue
 	EmailAddresses     []defsecTypes.StringValue
 	DisabledAlerts     []defsecTypes.StringValue
 	EmailAccountAdmins defsecTypes.BoolValue
