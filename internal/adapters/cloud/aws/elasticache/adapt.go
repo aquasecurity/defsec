@@ -43,6 +43,11 @@ func (a *adapter) Adapt(root *aws.RootAdapter, state *state.State) error {
 		return err
 	}
 
+	state.AWS.ElastiCache.ReservedCacheNodes, err = a.getCacheNodes()
+	if err != nil {
+		return err
+	}
+
 	// this can error if classic resources are requested where not available
 	state.AWS.ElastiCache.SecurityGroups, _ = a.getSecurityGroups()
 
@@ -90,8 +95,23 @@ func (a *adapter) adaptCluster(apiCluster types.CacheCluster) (*elasticache.Clus
 		limit = defsecTypes.Int(int(*apiCluster.SnapshotRetentionLimit), metadata)
 	}
 
+	var port int
+	if apiCluster.ConfigurationEndpoint != nil {
+		port = int(apiCluster.ConfigurationEndpoint.Port)
+	}
+
 	return &elasticache.Cluster{
-		Metadata:               metadata,
+		Metadata:                 metadata,
+		Id:                       defsecTypes.String(*apiCluster.CacheClusterId, metadata),
+		EngineVersion:            defsecTypes.String(*apiCluster.EngineVersion, metadata),
+		NumCacheNodes:            defsecTypes.Int(int(*apiCluster.NumCacheNodes), metadata),
+		AtRestEncryptionEnabled:  defsecTypes.Bool(*apiCluster.AtRestEncryptionEnabled, metadata),
+		TransitEncryptionEnabled: defsecTypes.Bool(*apiCluster.TransitEncryptionEnabled, metadata),
+		CacheSubnetGroupName:     defsecTypes.String(*apiCluster.CacheSubnetGroupName, metadata),
+		ConfigurationEndpoint: elasticache.ConfigurationEndpoint{
+			Metadata: metadata,
+			Port:     defsecTypes.Int(port, metadata),
+		},
 		Engine:                 engine,
 		NodeType:               nodeType,
 		SnapshotRetentionLimit: limit,
@@ -145,8 +165,15 @@ func (a *adapter) adaptReplicationGroup(apiGroup types.ReplicationGroup) (*elast
 		atRestEncrypted = defsecTypes.Bool(*apiGroup.AtRestEncryptionEnabled, metadata)
 	}
 
+	multiAZ := defsecTypes.BoolDefault(false, metadata)
+	if apiGroup.MultiAZ == types.MultiAZStatusEnabled {
+		multiAZ = defsecTypes.Bool(true, metadata)
+	}
+
 	return &elasticache.ReplicationGroup{
 		Metadata:                 metadata,
+		MultiAZ:                  multiAZ,
+		KmsKeyId:                 defsecTypes.String(*apiGroup.KmsKeyId, metadata),
 		TransitEncryptionEnabled: transitEncrypted,
 		AtRestEncryptionEnabled:  atRestEncrypted,
 	}, nil
@@ -196,5 +223,41 @@ func (a *adapter) adaptSecurityGroup(apiGroup types.CacheSecurityGroup) (*elasti
 	return &elasticache.SecurityGroup{
 		Metadata:    metadata,
 		Description: description,
+	}, nil
+}
+
+func (a *adapter) getCacheNodes() ([]elasticache.ReservedCacheNode, error) {
+
+	a.Tracker().SetServiceLabel("Discovering reserved cache nodes...")
+
+	var input api.DescribeReservedCacheNodesInput
+	var apiClusters []types.ReservedCacheNode
+	for {
+		output, err := a.api.DescribeReservedCacheNodes(a.Context(), &input)
+		if err != nil {
+			return nil, err
+		}
+		apiClusters = append(apiClusters, output.ReservedCacheNodes...)
+		a.Tracker().SetTotalResources(len(apiClusters))
+		if output.Marker == nil {
+			break
+		}
+		input.Marker = output.Marker
+	}
+
+	a.Tracker().SetServiceLabel("Adapting clusters...")
+	return concurrency.Adapt(apiClusters, a.RootAdapter, a.adaptCacheNodes), nil
+}
+
+func (a *adapter) adaptCacheNodes(apiNodes types.ReservedCacheNode) (*elasticache.ReservedCacheNode, error) {
+
+	metadata := a.CreateMetadataFromARN(*apiNodes.ReservationARN)
+
+	return &elasticache.ReservedCacheNode{
+		Metadata:  metadata,
+		StartTime: defsecTypes.Time(*apiNodes.StartTime, metadata),
+		Duration:  defsecTypes.Int(int(apiNodes.Duration), metadata),
+		State:     defsecTypes.String(*apiNodes.State, metadata),
+		NodeType:  defsecTypes.String(*apiNodes.CacheNodeType, metadata),
 	}, nil
 }

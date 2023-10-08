@@ -3,13 +3,15 @@ package elasticache
 import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/elasticache"
 	"github.com/aquasecurity/defsec/pkg/terraform"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 func Adapt(modules terraform.Modules) elasticache.ElastiCache {
 	return elasticache.ElastiCache{
-		Clusters:          adaptClusters(modules),
-		ReplicationGroups: adaptReplicationGroups(modules),
-		SecurityGroups:    adaptSecurityGroups(modules),
+		Clusters:           adaptClusters(modules),
+		ReplicationGroups:  adaptReplicationGroups(modules),
+		SecurityGroups:     adaptSecurityGroups(modules),
+		ReservedCacheNodes: nil,
 	}
 }
 func adaptClusters(modules terraform.Modules) []elasticache.Cluster {
@@ -53,7 +55,17 @@ func adaptCluster(resource *terraform.Block) elasticache.Cluster {
 	snapshotRetentionVal := snapshotRetentionAttr.AsIntValueOrDefault(0, resource)
 
 	return elasticache.Cluster{
-		Metadata:               resource.GetMetadata(),
+		Metadata:                 resource.GetMetadata(),
+		Id:                       resource.GetAttribute("cluster_id").AsStringValueOrDefault("", resource),
+		EngineVersion:            resource.GetAttribute("engine_version").AsStringValueOrDefault("", resource),
+		AtRestEncryptionEnabled:  types.Bool(false, resource.GetMetadata()),
+		TransitEncryptionEnabled: types.Bool(false, resource.GetMetadata()),
+		CacheSubnetGroupName:     resource.GetAttribute("subnet_group_name").AsStringValueOrDefault("", resource),
+		NumCacheNodes:            resource.GetAttribute("num_cache_nodes").AsIntValueOrDefault(1, resource),
+		ConfigurationEndpoint: elasticache.ConfigurationEndpoint{
+			Metadata: resource.GetMetadata(),
+			Port:     resource.GetAttribute("port").AsIntValueOrDefault(11211, resource),
+		},
 		Engine:                 engineVal,
 		NodeType:               nodeTypeVal,
 		SnapshotRetentionLimit: snapshotRetentionVal,
@@ -69,6 +81,8 @@ func adaptReplicationGroup(resource *terraform.Block) elasticache.ReplicationGro
 
 	return elasticache.ReplicationGroup{
 		Metadata:                 resource.GetMetadata(),
+		MultiAZ:                  resource.GetAttribute("multi_az_enabled").AsBoolValueOrDefault(false, resource),
+		KmsKeyId:                 resource.GetAttribute("kms_key_id").AsStringValueOrDefault("", resource),
 		TransitEncryptionEnabled: transitEncryptionVal,
 		AtRestEncryptionEnabled:  atRestEncryptionVal,
 	}
