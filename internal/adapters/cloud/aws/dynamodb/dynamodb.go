@@ -7,13 +7,16 @@ import (
 	"github.com/aquasecurity/defsec/pkg/state"
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 	"github.com/aws/aws-sdk-go-v2/aws"
+	daxApi "github.com/aws/aws-sdk-go-v2/service/dax"
+	daxtype "github.com/aws/aws-sdk-go-v2/service/dax/types"
 	dynamodbApi "github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	dynamodbTypes "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 type adapter struct {
 	*aws2.RootAdapter
-	client *dynamodbApi.Client
+	client  *dynamodbApi.Client
+	client2 *daxApi.Client
 }
 
 func init() {
@@ -35,6 +38,16 @@ func (a *adapter) Adapt(root *aws2.RootAdapter, state *state.State) error {
 
 	state.AWS.DynamoDB.Tables, err = a.getTables()
 	if err != nil {
+		return err
+	}
+
+	state.AWS.DynamoDB.Backups, err = a.getBackups()
+	if err != nil {
+		return err
+	}
+
+	state.AWS.DynamoDB.DAXClusters, err = a.getcluster()
+	if err == nil {
 		return err
 	}
 
@@ -94,17 +107,98 @@ func (a *adapter) adaptTable(tableName string) (*dynamodb.Table, error) {
 	continuousBackup, err := a.client.DescribeContinuousBackups(a.Context(), &dynamodbApi.DescribeContinuousBackupsInput{
 		TableName: aws.String(tableName),
 	})
-
+	var status string
 	if err != nil && continuousBackup != nil && continuousBackup.ContinuousBackupsDescription != nil &&
 		continuousBackup.ContinuousBackupsDescription.PointInTimeRecoveryDescription != nil {
 		if continuousBackup.ContinuousBackupsDescription.PointInTimeRecoveryDescription.PointInTimeRecoveryStatus == dynamodbTypes.PointInTimeRecoveryStatusEnabled {
 			pitRecovery = defsecTypes.BoolDefault(true, tableMetadata)
 		}
+		status = string(continuousBackup.ContinuousBackupsDescription.ContinuousBackupsStatus)
 
 	}
 	return &dynamodb.Table{
-		Metadata:             tableMetadata,
+		Metadata:               tableMetadata,
+		ServerSideEncryption:   encryption,
+		PointInTimeRecovery:    pitRecovery,
+		ContinuousBackupStatus: defsecTypes.String(status, tableMetadata),
+	}, nil
+}
+
+func (a *adapter) getBackups() (backup []dynamodb.Backup, err error) {
+
+	a.Tracker().SetServiceLabel("Discovering DynamoDB backups...")
+
+	var apiBackup []dynamodbTypes.BackupSummary
+	var input dynamodbApi.ListBackupsInput
+	for {
+		output, err := a.client.ListBackups(a.Context(), &input)
+		if err != nil {
+			return nil, err
+		}
+		apiBackup = append(apiBackup, output.BackupSummaries...)
+		a.Tracker().SetTotalResources(len(apiBackup))
+		if output.LastEvaluatedBackupArn == nil {
+			break
+		}
+
+	}
+
+	a.Tracker().SetServiceLabel("Adapting DynamoDB backups..")
+	return concurrency.Adapt(apiBackup, a.RootAdapter, a.adaptbackup), nil
+
+}
+
+func (a *adapter) adaptbackup(backup dynamodbTypes.BackupSummary) (*dynamodb.Backup, error) {
+
+	metadata := a.CreateMetadataFromARN(*backup.BackupArn)
+	return &dynamodb.Backup{
+		Metadata: metadata,
+	}, nil
+}
+
+func (a *adapter) getcluster() (clusters []dynamodb.DAXCluster, err error) {
+
+	a.Tracker().SetServiceLabel("Discovering DynamoDB clusters...")
+
+	var apiclusters []daxtype.Cluster
+	var input daxApi.DescribeClustersInput
+	for {
+		output, err := a.client2.DescribeClusters(a.Context(), &input)
+		if err != nil {
+			return nil, err
+		}
+		apiclusters = append(apiclusters, output.Clusters...)
+		a.Tracker().SetTotalResources(len(apiclusters))
+		if output.NextToken == nil {
+			break
+		}
+		input.NextToken = output.NextToken
+	}
+
+	a.Tracker().SetServiceLabel("Adapting DynamoDB clusters..")
+	return concurrency.Adapt(apiclusters, a.RootAdapter, a.adaptcluster), nil
+
+}
+
+func (a *adapter) adaptcluster(cluster daxtype.Cluster) (*dynamodb.DAXCluster, error) {
+
+	metadata := a.CreateMetadataFromARN(*cluster.ClusterArn)
+
+	encryption := dynamodb.ServerSideEncryption{
+		Metadata: metadata,
+		Enabled:  defsecTypes.BoolDefault(false, metadata),
+		KMSKeyID: defsecTypes.StringDefault("", metadata),
+	}
+	if cluster.SSEDescription != nil {
+
+		if cluster.SSEDescription.Status == daxtype.SSEStatusEnabled {
+			encryption.Enabled = defsecTypes.BoolDefault(true, metadata)
+		}
+	}
+
+	return &dynamodb.DAXCluster{
+		Metadata:             metadata,
 		ServerSideEncryption: encryption,
-		PointInTimeRecovery:  pitRecovery,
+		PointInTimeRecovery:  defsecTypes.BoolUnresolvable(metadata),
 	}, nil
 }

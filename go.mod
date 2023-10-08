@@ -76,6 +76,7 @@ require (
 )
 
 require (
+	github.com/aws/aws-sdk-go-v2/service/dax v1.12.1
 	github.com/aws/smithy-go v1.13.5
 	github.com/docker/docker v24.0.5+incompatible
 	github.com/mitchellh/mapstructure v1.5.0

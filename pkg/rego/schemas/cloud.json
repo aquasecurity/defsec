@@ -877,6 +877,9 @@
         }
       }
     },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.dynamodb.Backup": {
+      "type": "object"
+    },
     "github.com.aquasecurity.defsec.pkg.providers.aws.dynamodb.DAXCluster": {
       "type": "object",
       "properties": {
@@ -893,6 +896,13 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.dynamodb.DynamoDB": {
       "type": "object",
       "properties": {
+        "backups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.dynamodb.Backup"
+          }
+        },
         "daxclusters": {
           "type": "array",
           "items": {
@@ -925,6 +935,10 @@
     "github.com.aquasecurity.defsec.pkg.providers.aws.dynamodb.Table": {
       "type": "object",
       "properties": {
+        "continuousbackupstatus": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        },
         "pointintimerecovery": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.BoolValue"
