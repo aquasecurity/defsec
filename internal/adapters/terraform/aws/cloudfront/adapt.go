@@ -32,14 +32,28 @@ func adaptDistribution(resource *terraform.Block) cloudfront.Distribution {
 			Bucket:   types.StringDefault("", resource.GetMetadata()),
 		},
 		DefaultCacheBehaviour: cloudfront.CacheBehaviour{
-			Metadata:             resource.GetMetadata(),
-			ViewerProtocolPolicy: types.String("allow-all", resource.GetMetadata()),
+			Metadata:               resource.GetMetadata(),
+			ViewerProtocolPolicy:   types.String("allow-all", resource.GetMetadata()),
+			FieldLevelEncryptionId: types.String("", resource.GetMetadata()),
+			Compress:               types.Bool(true, resource.GetMetadata()),
 		},
 		OrdererCacheBehaviours: nil,
 		ViewerCertificate: cloudfront.ViewerCertificate{
-			Metadata:               resource.GetMetadata(),
-			MinimumProtocolVersion: types.StringDefault("TLSv1", resource.GetMetadata()),
+			Metadata:                     resource.GetMetadata(),
+			MinimumProtocolVersion:       types.StringDefault("TLSv1", resource.GetMetadata()),
+			CloudFrontDefaultCertificate: types.BoolDefault(true, resource.GetMetadata()),
 		},
+		OriginGroups: cloudfront.OriginGroups{
+			Metadata: resource.GetMetadata(),
+			Quantity: types.Int(0, resource.GetMetadata()),
+		},
+		Restrictions: cloudfront.Restrictions{
+			Metadata:           resource.GetMetadata(),
+			GeoRestrictionType: types.String("", resource.GetMetadata()),
+			GeoItems:           nil,
+		},
+		Etag:        resource.GetAttribute("etag").AsStringValueOrDefault("", resource),
+		OriginItems: nil,
 	}
 
 	distribution.WAFID = resource.GetAttribute("web_acl_id").AsStringValueOrDefault("", resource)
@@ -54,6 +68,10 @@ func adaptDistribution(resource *terraform.Block) cloudfront.Distribution {
 		distribution.DefaultCacheBehaviour.Metadata = defaultCacheBlock.GetMetadata()
 		viewerProtocolPolicyAttr := defaultCacheBlock.GetAttribute("viewer_protocol_policy")
 		distribution.DefaultCacheBehaviour.ViewerProtocolPolicy = viewerProtocolPolicyAttr.AsStringValueOrDefault("allow-all", defaultCacheBlock)
+		fieldLevelEncryptionIdAttr := defaultCacheBlock.GetAttribute("field_level_encryption_id")
+		distribution.DefaultCacheBehaviour.FieldLevelEncryptionId = fieldLevelEncryptionIdAttr.AsStringValueOrDefault("", defaultCacheBlock)
+		compressAttr := defaultCacheBlock.GetAttribute("compress")
+		distribution.DefaultCacheBehaviour.Compress = compressAttr.AsBoolValueOrDefault(true, defaultCacheBlock)
 	}
 
 	orderedCacheBlocks := resource.GetBlocks("ordered_cache_behavior")
@@ -66,10 +84,54 @@ func adaptDistribution(resource *terraform.Block) cloudfront.Distribution {
 		})
 	}
 
+	originBlock := resource.GetBlocks("origin")
+	for _, origin := range originBlock {
+		var OAI, OPP types.StringValue
+		var sslItems []types.StringValue
+		if S3originblock := origin.GetBlock("s3_origin_config"); S3originblock.IsNotNil() {
+			OAI = S3originblock.GetAttribute("origin_access_identity").AsStringValueOrDefault("", S3originblock)
+		}
+		if customOriginBlock := origin.GetBlock("custom_origin_config"); customOriginBlock.IsNotNil() {
+			OPP = customOriginBlock.GetAttribute("origin_protocol_policy").AsStringValueOrDefault("match-viewer", customOriginBlock)
+			sslAttr := origin.GetAttribute("origin_ssl_protocols")
+			for _, ssl := range sslAttr.AsStringValues() {
+				sslItems = append(sslItems, ssl)
+			}
+		}
+		distribution.OriginItems = append(distribution.OriginItems, cloudfront.OriginItem{
+			Metadata: origin.GetMetadata(),
+			S3OriginConfig: cloudfront.S3OriginConfig{
+				Metadata:             origin.GetMetadata(),
+				OriginAccessIdentity: OAI,
+			},
+			CustomOriginConfig: cloudfront.CustomOriginConfig{
+				Metadata:                origin.GetMetadata(),
+				OriginProtocolPolicy:    OPP,
+				OriginSslProtocolsItems: sslItems,
+			},
+		})
+	}
+
 	if viewerCertBlock := resource.GetBlock("viewer_certificate"); viewerCertBlock.IsNotNil() {
 		distribution.ViewerCertificate.Metadata = viewerCertBlock.GetMetadata()
 		minProtocolAttr := viewerCertBlock.GetAttribute("minimum_protocol_version")
 		distribution.ViewerCertificate.MinimumProtocolVersion = minProtocolAttr.AsStringValueOrDefault("TLSv1", viewerCertBlock)
+		cloudfrontDefaulAttr := viewerCertBlock.GetAttribute("cloudfront_default_certificate")
+		distribution.ViewerCertificate.CloudFrontDefaultCertificate = cloudfrontDefaulAttr.AsBoolValueOrDefault(true, viewerCertBlock)
+	}
+
+	if restrictionblock := resource.GetBlock("restrictions"); restrictionblock.IsNotNil() {
+		if georesblock := restrictionblock.GetBlock("geo_restriction"); georesblock.IsNotNil() {
+			distribution.Restrictions.Metadata = georesblock.GetMetadata()
+			typeAttr := georesblock.GetAttribute("restriction_type")
+			distribution.Restrictions.GeoRestrictionType = typeAttr.AsStringValueOrDefault("", georesblock)
+			var locations []types.StringValue
+			itemAttr := georesblock.GetAttribute("locations")
+			for _, item := range itemAttr.AsStringValues() {
+				locations = append(locations, item)
+			}
+			distribution.Restrictions.GeoItems = locations
+		}
 	}
 
 	return distribution
