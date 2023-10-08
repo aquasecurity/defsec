@@ -28,9 +28,13 @@ func adaptKey(resource *terraform.Block) kms.Key {
 	enableKeyRotationAttr := resource.GetAttribute("enable_key_rotation")
 	enableKeyRotationVal := enableKeyRotationAttr.AsBoolValueOrDefault(false, resource)
 
+	managerAttr := resource.GetAttribute("key_manager")
+	managerVal := managerAttr.AsStringValueOrDefault("AWS", resource)
+
 	return kms.Key{
 		Metadata:        resource.GetMetadata(),
 		Usage:           usageVal,
 		RotationEnabled: enableKeyRotationVal,
+		Manager:         managerVal,       
 	}
 }

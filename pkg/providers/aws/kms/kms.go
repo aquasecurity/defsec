@@ -16,4 +16,5 @@ type Key struct {
 	Metadata        defsecTypes.Metadata
 	Usage           defsecTypes.StringValue
 	RotationEnabled defsecTypes.BoolValue
+    Manager         defsecTypes.StringValue
 }

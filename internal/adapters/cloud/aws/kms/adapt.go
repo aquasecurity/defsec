@@ -79,5 +79,6 @@ func (a *adapter) adaptKey(apiKey types.KeyListEntry) (*kms.Key, error) {
 		Metadata:        metadata,
 		Usage:           defsecTypes.String(string(output.KeyMetadata.KeyUsage), metadata),
 		RotationEnabled: defsecTypes.Bool(output.KeyMetadata.ValidTo != nil, metadata),
+		Manager:         defsecTypes.String(string(output.KeyMetadata.KeyManager), metadata),
 	}, nil
 }
