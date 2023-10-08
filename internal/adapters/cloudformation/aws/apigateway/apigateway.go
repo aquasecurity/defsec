@@ -11,8 +11,8 @@ import (
 func Adapt(cfFile parser.FileContext) apigateway.APIGateway {
 	return apigateway.APIGateway{
 		V1: v1.APIGateway{
-			APIs:        nil,
-			DomainNames: nil,
+			APIs:        getApisV1(cfFile),
+			DomainNames: getDomain(cfFile),
 		},
 		V2: v2.APIGateway{
 			APIs: getApis(cfFile),

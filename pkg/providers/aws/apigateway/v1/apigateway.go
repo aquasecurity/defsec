@@ -10,18 +10,31 @@ type APIGateway struct {
 }
 
 type API struct {
-	Metadata  defsecTypes.Metadata
-	Name      defsecTypes.StringValue
-	Stages    []Stage
-	Resources []Resource
+	Metadata                  defsecTypes.Metadata
+	Name                      defsecTypes.StringValue
+	Id                        defsecTypes.StringValue
+	MinimumCompressionSize    defsecTypes.IntValue
+	EndpointConfiguration     EndpointConfiguration
+	Stages                    []Stage
+	Resources                 []Resource
+	DisableExecuteApiEndpoint defsecTypes.BoolValue
+}
+
+type EndpointConfiguration struct {
+	Metadata defsecTypes.Metadata
+	Types    []defsecTypes.StringValue
 }
 
 type Stage struct {
-	Metadata           defsecTypes.Metadata
-	Name               defsecTypes.StringValue
-	AccessLogging      AccessLogging
-	XRayTracingEnabled defsecTypes.BoolValue
-	RESTMethodSettings []RESTMethodSettings
+	Metadata            defsecTypes.Metadata
+	Name                defsecTypes.StringValue
+	ClientCertificateId defsecTypes.StringValue
+	ClientCertificate   ClientCertificate
+	AccessLogging       AccessLogging
+	XRayTracingEnabled  defsecTypes.BoolValue
+	RESTMethodSettings  []RESTMethodSettings
+	CacheClusterEnabled defsecTypes.BoolValue
+	WebAclArn           defsecTypes.StringValue
 }
 
 type Resource struct {
@@ -34,11 +47,17 @@ type AccessLogging struct {
 	CloudwatchLogGroupARN defsecTypes.StringValue
 }
 
+type ClientCertificate struct {
+	Metadata       defsecTypes.Metadata
+	ExpirationDate defsecTypes.TimeValue
+}
+
 type RESTMethodSettings struct {
 	Metadata           defsecTypes.Metadata
 	Method             defsecTypes.StringValue
 	CacheDataEncrypted defsecTypes.BoolValue
 	CacheEnabled       defsecTypes.BoolValue
+	MetricsEnabled     defsecTypes.BoolValue
 }
 
 const (
