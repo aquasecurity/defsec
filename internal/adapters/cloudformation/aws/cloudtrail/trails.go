@@ -11,14 +11,15 @@ func getCloudTrails(ctx parser.FileContext) (trails []cloudtrail.Trail) {
 
 	for _, r := range cloudtrailResources {
 		ct := cloudtrail.Trail{
-			Metadata:                  r.Metadata(),
-			Name:                      r.GetStringProperty("TrailName"),
-			EnableLogFileValidation:   r.GetBoolProperty("EnableLogFileValidation"),
-			IsMultiRegion:             r.GetBoolProperty("IsMultiRegionTrail"),
-			KMSKeyID:                  r.GetStringProperty("KmsKeyId"),
-			CloudWatchLogsLogGroupArn: r.GetStringProperty("CloudWatchLogsLogGroupArn"),
-			IsLogging:                 r.GetBoolProperty("IsLogging"),
-			BucketName:                r.GetStringProperty("S3BucketName"),
+			Metadata:                   r.Metadata(),
+			Name:                       r.GetStringProperty("TrailName"),
+			EnableLogFileValidation:    r.GetBoolProperty("EnableLogFileValidation"),
+			IsMultiRegion:              r.GetBoolProperty("IsMultiRegionTrail"),
+			KMSKeyID:                   r.GetStringProperty("KmsKeyId"),
+			CloudWatchLogsLogGroupArn:  r.GetStringProperty("CloudWatchLogsLogGroupArn"),
+			IsLogging:                  r.GetBoolProperty("IsLogging"),
+			BucketName:                 r.GetStringProperty("S3BucketName"),
+			IncludeGlobalServiceEvents: r.GetBoolProperty("IncludeGlobalServiceEvents"),
 		}
 
 		trails = append(trails, ct)

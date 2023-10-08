@@ -54,14 +54,15 @@ func adaptTrail(resource *terraform.Block) cloudtrail.Trail {
 	}
 
 	return cloudtrail.Trail{
-		Metadata:                  resource.GetMetadata(),
-		Name:                      nameVal,
-		EnableLogFileValidation:   enableLogFileValidationVal,
-		IsMultiRegion:             isMultiRegionVal,
-		KMSKeyID:                  KMSKeyIDVal,
-		CloudWatchLogsLogGroupArn: resource.GetAttribute("cloud_watch_logs_group_arn").AsStringValueOrDefault("", resource),
-		IsLogging:                 resource.GetAttribute("enable_logging").AsBoolValueOrDefault(true, resource),
-		BucketName:                resource.GetAttribute("s3_bucket_name").AsStringValueOrDefault("", resource),
-		EventSelectors:            selectors,
+		Metadata:                   resource.GetMetadata(),
+		Name:                       nameVal,
+		EnableLogFileValidation:    enableLogFileValidationVal,
+		IsMultiRegion:              isMultiRegionVal,
+		KMSKeyID:                   KMSKeyIDVal,
+		CloudWatchLogsLogGroupArn:  resource.GetAttribute("cloud_watch_logs_group_arn").AsStringValueOrDefault("", resource),
+		IsLogging:                  resource.GetAttribute("enable_logging").AsBoolValueOrDefault(true, resource),
+		BucketName:                 resource.GetAttribute("s3_bucket_name").AsStringValueOrDefault("", resource),
+		EventSelectors:             selectors,
+		IncludeGlobalServiceEvents: resource.GetAttribute("include_global_service_events").AsBoolValueOrDefault(true, resource),
 	}
 }
