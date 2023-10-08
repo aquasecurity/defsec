@@ -10,10 +10,12 @@ type SQS struct {
 }
 
 type Queue struct {
-	Metadata   defsecTypes.Metadata
-	QueueURL   defsecTypes.StringValue
-	Encryption Encryption
-	Policies   []iam.Policy
+	Metadata                    defsecTypes.Metadata
+	QueueURL                    defsecTypes.StringValue
+	Encryption                  Encryption
+	ApproximateNumberOfMessages defsecTypes.StringValue
+	RedrivePolicy               defsecTypes.StringValue
+	Policies                    []iam.Policy
 }
 
 type Encryption struct {

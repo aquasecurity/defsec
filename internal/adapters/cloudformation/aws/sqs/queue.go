@@ -16,8 +16,10 @@ import (
 func getQueues(ctx parser.FileContext) (queues []sqs.Queue) {
 	for _, r := range ctx.GetResourcesByType("AWS::SQS::Queue") {
 		queue := sqs.Queue{
-			Metadata: r.Metadata(),
-			QueueURL: defsecTypes.StringDefault("", r.Metadata()),
+			Metadata:                    r.Metadata(),
+			QueueURL:                    defsecTypes.StringDefault("", r.Metadata()),
+			ApproximateNumberOfMessages: defsecTypes.String("", r.Metadata()),
+			RedrivePolicy:               r.GetStringProperty("RedrivePolicy"),
 			Encryption: sqs.Encryption{
 				Metadata:          r.Metadata(),
 				ManagedEncryption: defsecTypes.Bool(false, r.Metadata()),

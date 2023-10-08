@@ -78,6 +78,8 @@ func (a *adapter) adaptQueue(queueUrl string) (*sqs.Queue, error) {
 			sqsTypes.QueueAttributeNameKmsMasterKeyId,
 			sqsTypes.QueueAttributeNamePolicy,
 			sqsTypes.QueueAttributeNameQueueArn,
+			sqsTypes.QueueAttributeNameApproximateNumberOfMessages,
+			sqsTypes.QueueAttributeNameRedrivePolicy,
 		},
 	})
 	if err != nil {
@@ -88,9 +90,11 @@ func (a *adapter) adaptQueue(queueUrl string) (*sqs.Queue, error) {
 	queueMetadata := a.CreateMetadataFromARN(queueARN)
 
 	queue := &sqs.Queue{
-		Metadata: queueMetadata,
-		QueueURL: defsecTypes.String(queueUrl, queueMetadata),
-		Policies: []iam.Policy{},
+		Metadata:                    queueMetadata,
+		QueueURL:                    defsecTypes.String(queueUrl, queueMetadata),
+		ApproximateNumberOfMessages: defsecTypes.String("", queueMetadata),
+		RedrivePolicy:               defsecTypes.String("", queueMetadata),
+		Policies:                    []iam.Policy{},
 		Encryption: sqs.Encryption{
 			Metadata:          queueMetadata,
 			KMSKeyID:          defsecTypes.StringDefault("", queueMetadata),
@@ -101,6 +105,8 @@ func (a *adapter) adaptQueue(queueUrl string) (*sqs.Queue, error) {
 	sseEncrypted := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameSqsManagedSseEnabled)]
 	kmsEncryption := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameKmsMasterKeyId)]
 	queuePolicy := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNamePolicy)]
+	approximateNoOfMessages := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameApproximateNumberOfMessages)]
+	redrivePolicy := queueAttributes.Attributes[string(sqsTypes.QueueAttributeNameRedrivePolicy)]
 
 	if sseEncrypted == "SSE-SQS" || sseEncrypted == "SSE-KMS" {
 		queue.Encryption.ManagedEncryption = defsecTypes.Bool(true, queueMetadata)
@@ -108,6 +114,14 @@ func (a *adapter) adaptQueue(queueUrl string) (*sqs.Queue, error) {
 
 	if kmsEncryption != "" {
 		queue.Encryption.KMSKeyID = defsecTypes.String(kmsEncryption, queueMetadata)
+	}
+
+	if redrivePolicy != "" {
+		queue.RedrivePolicy = defsecTypes.String(redrivePolicy, queueMetadata)
+	}
+
+	if approximateNoOfMessages != "" {
+		queue.ApproximateNumberOfMessages = defsecTypes.String(approximateNoOfMessages, queueMetadata)
 	}
 
 	if queuePolicy != "" {
