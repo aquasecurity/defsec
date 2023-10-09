@@ -11,6 +11,7 @@ type Module struct {
 	rootPath   string
 	modulePath string
 	ignores    Ignores
+	parent     *Module
 }
 
 func NewModule(rootPath string, modulePath string, blocks Blocks, ignores Ignores) *Module {
@@ -30,6 +31,10 @@ func NewModule(rootPath string, modulePath string, blocks Blocks, ignores Ignore
 		rootPath:   rootPath,
 		modulePath: modulePath,
 	}
+}
+
+func (c *Module) SetParent(parent *Module) {
+	c.parent = parent
 }
 
 func (c *Module) RootPath() string {

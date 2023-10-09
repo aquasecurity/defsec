@@ -10,23 +10,20 @@ import (
 	"sync"
 	"time"
 
-	"github.com/aquasecurity/defsec/pkg/types"
-
-	"github.com/aquasecurity/defsec/pkg/framework"
+	"golang.org/x/exp/slices"
 
 	"github.com/aquasecurity/defsec/pkg/debug"
-
-	"github.com/aquasecurity/defsec/pkg/scanners/options"
-
+	"github.com/aquasecurity/defsec/pkg/extrafs"
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/rego"
+	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/aquasecurity/defsec/pkg/scanners"
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/executor"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser"
 	"github.com/aquasecurity/defsec/pkg/scanners/terraform/parser/resolvers"
-
-	"github.com/aquasecurity/defsec/pkg/scan"
-
-	"github.com/aquasecurity/defsec/pkg/extrafs"
+	"github.com/aquasecurity/defsec/pkg/terraform"
+	"github.com/aquasecurity/defsec/pkg/types"
 )
 
 var _ scanners.FSScanner = (*Scanner)(nil)
@@ -163,6 +160,31 @@ func (s *Scanner) initRegoScanner(srcFS fs.FS) (*rego.Scanner, error) {
 	return regoScanner, nil
 }
 
+// terraformRootModule represents the module to be used as the root module for Terraform deployment.
+type terraformRootModule struct {
+	rootPath string
+	childs   terraform.Modules
+	fsMap    map[string]fs.FS
+}
+
+func excludeNonRootModules(modules []terraformRootModule) []terraformRootModule {
+	var result []terraformRootModule
+	var childPaths []string
+
+	for _, module := range modules {
+		childPaths = append(childPaths, module.childs.ChildModulesPaths()...)
+	}
+
+	for _, module := range modules {
+		// if the path of the root module matches the path of the child module,
+		// then we should not scan it
+		if !slices.Contains(childPaths, module.rootPath) {
+			result = append(result, module)
+		}
+	}
+	return result
+}
+
 func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir string) (scan.Results, Metrics, error) {
 
 	var metrics Metrics
@@ -190,14 +212,12 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 	var allResults scan.Results
 
 	// parse all root module directories
+	var rootModules []terraformRootModule
 	for _, dir := range rootDirs {
 
 		s.debug.Log("Scanning root module '%s'...", dir)
 
 		p := parser.New(target, "", s.parserOpt...)
-		s.execLock.RLock()
-		e := executor.New(s.executorOpt...)
-		s.execLock.RUnlock()
 
 		if err := p.ParseFS(ctx, dir); err != nil {
 			return nil, metrics, err
@@ -215,12 +235,25 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 		metrics.Parser.Timings.DiskIODuration += parserMetrics.Timings.DiskIODuration
 		metrics.Parser.Timings.ParseDuration += parserMetrics.Timings.ParseDuration
 
-		results, execMetrics, err := e.Execute(modules)
+		p.GetFilesystemMap()
+		rootModules = append(rootModules, terraformRootModule{
+			rootPath: dir,
+			childs:   modules,
+			fsMap:    p.GetFilesystemMap(),
+		})
+	}
+
+	rootModules = excludeNonRootModules(rootModules)
+
+	for _, module := range rootModules {
+		s.execLock.RLock()
+		e := executor.New(s.executorOpt...)
+		s.execLock.RUnlock()
+		results, execMetrics, err := e.Execute(module.childs)
 		if err != nil {
 			return nil, metrics, err
 		}
 
-		fsMap := p.GetFilesystemMap()
 		for i, result := range results {
 			if result.Metadata().Range().GetFS() != nil {
 				continue
@@ -229,7 +262,7 @@ func (s *Scanner) ScanFSWithMetrics(ctx context.Context, target fs.FS, dir strin
 			if key == "" {
 				continue
 			}
-			if filesystem, ok := fsMap[key]; ok {
+			if filesystem, ok := module.fsMap[key]; ok {
 				override := scan.Results{
 					result,
 				}

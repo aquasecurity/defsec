@@ -80,6 +80,7 @@ require (
 	github.com/docker/docker v24.0.5+incompatible
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/testcontainers/testcontainers-go v0.22.0
+	golang.org/x/exp v0.0.0-20230510235704-dd950f8aeaea
 	k8s.io/utils v0.0.0-20230220204549-a5ecb0141aa5
 )
 
@@ -238,7 +239,6 @@ require (
 	go.opentelemetry.io/otel v1.14.0 // indirect
 	go.opentelemetry.io/otel/trace v1.14.0 // indirect
 	go.starlark.net v0.0.0-20200306205701-8dd3e2ee1dd5 // indirect
-	golang.org/x/exp v0.0.0-20230510235704-dd950f8aeaea // indirect
 	golang.org/x/mod v0.10.0 // indirect
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/oauth2 v0.7.0 // indirect
