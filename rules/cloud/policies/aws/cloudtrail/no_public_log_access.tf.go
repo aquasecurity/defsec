@@ -39,7 +39,7 @@ resource "aws_cloudtrail" "bad_example" {
    }
 }
 
-resource "aws_s3_bucket" "good_example" {
+resource "aws_s3_bucket" "bad_example" {
 	bucket = "abcdefgh"
 	acl = "public-read"
 }

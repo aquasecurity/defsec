@@ -18,15 +18,16 @@ func (c CloudTrail) MultiRegionTrails() (multiRegionTrails []Trail) {
 }
 
 type Trail struct {
-	Metadata                  defsecTypes.Metadata
-	Name                      defsecTypes.StringValue
-	EnableLogFileValidation   defsecTypes.BoolValue
-	IsMultiRegion             defsecTypes.BoolValue
-	KMSKeyID                  defsecTypes.StringValue
-	CloudWatchLogsLogGroupArn defsecTypes.StringValue
-	IsLogging                 defsecTypes.BoolValue
-	BucketName                defsecTypes.StringValue
-	EventSelectors            []EventSelector
+	Metadata                   defsecTypes.Metadata
+	Name                       defsecTypes.StringValue
+	EnableLogFileValidation    defsecTypes.BoolValue
+	IsMultiRegion              defsecTypes.BoolValue
+	KMSKeyID                   defsecTypes.StringValue
+	CloudWatchLogsLogGroupArn  defsecTypes.StringValue
+	IsLogging                  defsecTypes.BoolValue
+	IncludeGlobalServiceEvents defsecTypes.BoolValue
+	BucketName                 defsecTypes.StringValue
+	EventSelectors             []EventSelector
 }
 
 type EventSelector struct {

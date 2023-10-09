@@ -3,7 +3,7 @@ Enable Cloudtrail in all regions
 
 ```yaml---
 Resources:
-  BadExample:
+  GoodExample:
     Type: AWS::CloudTrail::Trail
     Properties:
       IsLogging: true

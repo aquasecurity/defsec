@@ -3,7 +3,7 @@ Enable encryption at rest
 
 ```yaml---
 Resources:
-  BadExample:
+  GoodExample:
     Type: AWS::CloudTrail::Trail
     Properties:
       IsLogging: true

@@ -3,7 +3,7 @@ package cloudtrail
 var cloudFormationEnableLogValidationGoodExamples = []string{
 	`---
 Resources:
-  BadExample:
+  GoodExample:
     Type: AWS::CloudTrail::Trail
     Properties:
       IsLogging: true

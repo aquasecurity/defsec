@@ -3,7 +3,7 @@ Turn on log validation for Cloudtrail
 
 ```yaml---
 Resources:
-  BadExample:
+  GoodExample:
     Type: AWS::CloudTrail::Trail
     Properties:
       IsLogging: true

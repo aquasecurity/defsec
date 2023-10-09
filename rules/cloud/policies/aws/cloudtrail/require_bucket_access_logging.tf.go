@@ -41,7 +41,7 @@ resource "aws_cloudtrail" "bad_example" {
    }
 }
 
-resource "aws_s3_bucket" "good_example" {
+resource "aws_s3_bucket" "bad_example" {
 	bucket = "abcdefgh"
 	
 }
@@ -49,7 +49,7 @@ resource "aws_s3_bucket" "good_example" {
 }
 
 var terraformBucketAccessLoggingRequiredLinks = []string{
-	`https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudtrail#is_multi_region_trail`,
+	`https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudtrail#enable_logging`,
 }
 
 var terraformBucketAccessLoggingRequiredRemediationMarkdown = ``
