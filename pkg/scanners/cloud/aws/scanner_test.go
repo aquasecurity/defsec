@@ -522,8 +522,8 @@ deny[res] {
 			scannerOpts = append(scannerOpts, options.ScannerWithRegoOnly(true))
 			scannerOpts = append(scannerOpts, options.ScannerWithPolicyDirs("policies/"))
 			scanner := New(scannerOpts...)
-
-			results, err := scanner.Scan(context.TODO(), &tc.state)
+			state := tc.state
+			results, err := scanner.Scan(context.TODO(), &state)
 			require.NoError(t, err, tc.name)
 			require.Equal(t, tc.expectedResults.totalResults, len(results), tc.name)
 			for i := range results.GetFailed() {

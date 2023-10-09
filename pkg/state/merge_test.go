@@ -330,7 +330,8 @@ func Test_Merging(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			actual, err := test.a.Merge(&test.b)
+			state := test.b
+			actual, err := test.a.Merge(&state)
 			if err != nil {
 				t.Fatal(err)
 			}
