@@ -1,1 +1,0 @@
-Please see [this guide](https://docs.aws.amazon.com/prescriptive-guidance/latest/patterns/encrypt-an-existing-amazon-rds-for-postgresql-db-instance.html) to enable encryption on your RDS instance.

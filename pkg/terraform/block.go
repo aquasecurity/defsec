@@ -7,7 +7,7 @@ import (
 
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 
-	"github.com/aquasecurity/defsec/pkg/scanners/terraform/context"
+	"github.com/aquasecurity/defsec/pkg/terraform/context"
 
 	"github.com/google/uuid"
 	"github.com/hashicorp/hcl/v2"
