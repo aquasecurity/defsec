@@ -80,7 +80,7 @@ func (c *Context) Set(val cty.Value, parts ...string) {
 func mergeVars(src cty.Value, parts []string, value cty.Value) cty.Value {
 
 	if len(parts) == 0 {
-		if value.IsKnown() && value.Type().IsObjectType() && !value.IsNull() && value.LengthInt() > 0 && src.IsKnown() && src.Type().IsObjectType() && !src.IsNull() && src.LengthInt() > 0 {
+		if isNotEmptyObject(src) && isNotEmptyObject(value) {
 			return mergeObjects(src, value)
 		}
 		return value
@@ -110,11 +110,15 @@ func mergeObjects(a cty.Value, b cty.Value) cty.Value {
 	}
 	for key, val := range b.AsValueMap() {
 		old, exists := output[key]
-		if exists && val.IsKnown() && val.Type().IsObjectType() && !val.IsNull() && val.LengthInt() > 0 && old.IsKnown() && old.Type().IsObjectType() && !old.IsNull() && old.LengthInt() > 0 {
-			output[key] = mergeObjects(val, old)
+		if exists && isNotEmptyObject(old) && isNotEmptyObject(val) {
+			output[key] = mergeObjects(old, val)
 		} else {
 			output[key] = val
 		}
 	}
 	return cty.ObjectVal(output)
+}
+
+func isNotEmptyObject(val cty.Value) bool {
+	return !val.IsNull() && val.IsKnown() && val.Type().IsObjectType() && val.LengthInt() > 0
 }

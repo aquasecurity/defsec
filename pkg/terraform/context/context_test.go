@@ -106,3 +106,108 @@ func Test_ContextSetThenImmediateGetWithChild(t *testing.T) {
 	val := ctx.Get("module", "modulename", "mod_result")
 	assert.Equal(t, "ok", val.AsString())
 }
+
+func Test_MergeObjects(t *testing.T) {
+
+	tests := []struct {
+		name     string
+		oldVal   cty.Value
+		newVal   cty.Value
+		expected cty.Value
+	}{
+		{
+			name: "happy",
+			oldVal: cty.ObjectVal(map[string]cty.Value{
+				"this": cty.ObjectVal(map[string]cty.Value{
+					"id":  cty.StringVal("some_id"),
+					"arn": cty.StringVal("some_arn"),
+				}),
+			}),
+			newVal: cty.ObjectVal(map[string]cty.Value{
+				"this": cty.ObjectVal(map[string]cty.Value{
+					"arn":    cty.StringVal("some_new_arn"),
+					"bucket": cty.StringVal("test"),
+				}),
+			}),
+			expected: cty.ObjectVal(map[string]cty.Value{
+				"this": cty.ObjectVal(map[string]cty.Value{
+					"id":     cty.StringVal("some_id"),
+					"arn":    cty.StringVal("some_new_arn"),
+					"bucket": cty.StringVal("test"),
+				}),
+			}),
+		},
+		{
+			name:   "old value is empty",
+			oldVal: cty.EmptyObjectVal,
+			newVal: cty.ObjectVal(map[string]cty.Value{
+				"this": cty.ObjectVal(map[string]cty.Value{
+					"bucket": cty.StringVal("test"),
+				}),
+			}),
+			expected: cty.ObjectVal(map[string]cty.Value{
+				"this": cty.ObjectVal(map[string]cty.Value{
+					"bucket": cty.StringVal("test"),
+				}),
+			}),
+		},
+		{
+			name: "new value is empty",
+			oldVal: cty.ObjectVal(map[string]cty.Value{
+				"this": cty.ObjectVal(map[string]cty.Value{
+					"bucket": cty.StringVal("test"),
+				}),
+			}),
+			newVal: cty.EmptyObjectVal,
+			expected: cty.ObjectVal(map[string]cty.Value{
+				"this": cty.ObjectVal(map[string]cty.Value{
+					"bucket": cty.StringVal("test"),
+				}),
+			}),
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.expected, mergeObjects(tt.oldVal, tt.newVal))
+		})
+	}
+
+}
+
+func Test_IsNotEmptyObject(t *testing.T) {
+	tests := []struct {
+		name     string
+		val      cty.Value
+		expected bool
+	}{
+		{
+			name: "happy",
+			val: cty.ObjectVal(map[string]cty.Value{
+				"field": cty.NilVal,
+			}),
+			expected: true,
+		},
+		{
+			name:     "empty object",
+			val:      cty.EmptyObjectVal,
+			expected: false,
+		},
+		{
+			name:     "nil value",
+			val:      cty.NilVal,
+			expected: false,
+		},
+		{
+			name:     "dynamic value",
+			val:      cty.DynamicVal,
+			expected: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.expected, isNotEmptyObject(tt.val))
+		})
+	}
+}
