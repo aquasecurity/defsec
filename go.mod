@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/hcl/v2 v2.17.0
 	github.com/liamg/iamgo v0.0.9
-	github.com/liamg/memoryfs v1.4.3
+	github.com/liamg/memoryfs v1.6.0
 	github.com/owenrumney/squealer v1.1.1
 	github.com/stretchr/testify v1.8.4
 	github.com/zclconf/go-cty v1.13.0
