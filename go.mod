@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/alecthomas/chroma v0.10.0
 	github.com/google/uuid v1.3.0
-	github.com/hashicorp/hcl/v2 v2.17.0
+	github.com/hashicorp/hcl/v2 v2.18.1
 	github.com/liamg/iamgo v0.0.9
 	github.com/liamg/memoryfs v1.4.3
 	github.com/owenrumney/squealer v1.1.1
@@ -21,6 +21,7 @@ require (
 	github.com/acomagu/bufpipe v1.0.3 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
+	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/cloudflare/circl v1.3.3 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dlclark/regexp2 v1.4.0 // indirect
