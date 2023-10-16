@@ -11,7 +11,7 @@ require (
 	github.com/owenrumney/squealer v1.1.1
 	github.com/stretchr/testify v1.8.4
 	github.com/zclconf/go-cty v1.13.0
-	golang.org/x/text v0.11.0
+	golang.org/x/text v0.13.0
 
 )
 
