@@ -5,19 +5,14 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/aquasecurity/defsec/pkg/framework"
-
+	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 
-	"golang.org/x/text/cases"
-
-	"github.com/aquasecurity/defsec/pkg/terraform"
-
-	"github.com/aquasecurity/defsec/pkg/severity"
-
-	"github.com/aquasecurity/defsec/pkg/state"
-
+	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/providers"
+	"github.com/aquasecurity/defsec/pkg/severity"
+	"github.com/aquasecurity/defsec/pkg/state"
+	"github.com/aquasecurity/defsec/pkg/terraform"
 )
 
 type CheckFunc func(s *state.State) (results Results)
@@ -57,6 +52,7 @@ type Rule struct {
 	CustomChecks   CustomChecks                     `json:"-"`
 	RegoPackage    string                           `json:"-"`
 	Frameworks     map[framework.Framework][]string `json:"frameworks"`
+	Check          CheckFunc                        `json:"-"`
 }
 
 func (r Rule) HasID(id string) bool {
@@ -81,6 +77,21 @@ func (r Rule) ServiceDisplayName() string {
 
 func (r Rule) ShortCodeDisplayName() string {
 	return nicify(r.ShortCode)
+}
+
+func (r Rule) CanCheck() bool {
+	return r.Check != nil
+}
+
+func (r Rule) Evaluate(s *state.State) Results {
+	if !r.CanCheck() {
+		return nil
+	}
+	results := r.Check(s)
+	for i := range results {
+		results[i].SetRule(r)
+	}
+	return results
 }
 
 var acronyms = []string{
