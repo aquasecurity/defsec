@@ -22,7 +22,7 @@ You can read more about the project overview on the [architecture](./ARCHITECTUR
 The following are guides for contributing to the project in specific ways. If you're not sure where to start, these are a good place to look. If you need some tips on getting started with contributing to open source in general, check out this useful [GitHub contribution guide](https://docs.github.com/en/get-started/quickstart/contributing-to-projects).
 
 ### Writing New Policies
-You can find a guide to writing new policies [insert link here from trivy-policies repo]()
+You can find a guide to writing new policies [here](https://github.com/aquasecurity/trivy-policies/blob/main/CONTRIBUTING.md#writing-rules)
 
 ### Adding Support for a New Cloud Provider
 
