@@ -37,6 +37,11 @@ graph TD;
     dfparser --> rules
 ```
 
+## Component breakdown
+
+defsec is further divided into 3 high level components as shown below
+![defsec-components.png](.github/images/defsec-components.png)
+
 ## Scanning Overview
 
 The diagram below shows the process for parsing -> adapting -> scanning -> reporting.
