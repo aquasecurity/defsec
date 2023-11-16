@@ -2,7 +2,6 @@ package ec2
 
 import (
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
-	"github.com/owenrumney/squealer/pkg/squealer"
 )
 
 type Instance struct {
@@ -46,9 +45,4 @@ func (i *Instance) RequiresIMDSToken() bool {
 
 func (i *Instance) HasHTTPEndpointDisabled() bool {
 	return i.MetadataOptions.HttpEndpoint.EqualTo("disabled")
-}
-
-func (i *Instance) HasSensitiveInformationInUserData() bool {
-	scanner := squealer.NewStringScanner()
-	return scanner.Scan(i.UserData.Value()).TransgressionFound
 }
