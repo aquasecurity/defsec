@@ -38,6 +38,7 @@ import (
 )
 
 type AWS struct {
+	Providers      []TerraformProvider
 	AccessAnalyzer accessanalyzer.AccessAnalyzer
 	APIGateway     apigateway.APIGateway
 	Athena         athena.Athena

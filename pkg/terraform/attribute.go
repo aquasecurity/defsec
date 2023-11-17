@@ -126,9 +126,20 @@ func (a *Attribute) AsStringValueOrDefault(defaultValue string, parent *Block) d
 	)
 }
 
-func (a *Attribute) AsStringValueSliceOrEmpty(parent *Block) (stringValues []defsecTypes.StringValue) {
+func (a *Attribute) AsStringValueSliceOrEmpty() (stringValues []defsecTypes.StringValue) {
 	if a.IsNil() {
 		return stringValues
+	}
+	return a.AsStringValues()
+}
+
+func (a *Attribute) AsStringValuesOrDefault(parent *Block, defaults ...string) []defsecTypes.StringValue {
+	if a.IsNil() {
+		res := make(defsecTypes.StringValueList, 0, len(defaults))
+		for _, def := range defaults {
+			res = append(res, defsecTypes.StringDefault(def, parent.GetMetadata()))
+		}
+		return res
 	}
 	return a.AsStringValues()
 }
@@ -215,6 +226,14 @@ func (a *Attribute) IsString() bool {
 		return false
 	}
 	return !a.Value().IsNull() && a.Value().IsKnown() && a.Value().Type() == cty.String
+}
+
+func (a *Attribute) IsMapOrObject() bool {
+	if a == nil || a.Value().IsNull() || !a.Value().IsKnown() {
+		return false
+	}
+
+	return a.Value().Type().IsObjectType() || a.Value().Type().IsMapType()
 }
 
 func (a *Attribute) IsNumber() bool {
@@ -800,6 +819,21 @@ func (a *Attribute) MapValue(mapKey string) cty.Value {
 		}
 	}
 	return cty.NilVal
+}
+
+func (a *Attribute) AsMapValue() defsecTypes.MapValue {
+	if a.IsNil() || a.IsNotResolvable() || !a.IsMapOrObject() {
+		return defsecTypes.MapValue{}
+	}
+
+	values := make(map[string]string)
+	_ = a.Each(func(key, val cty.Value) {
+		if key.Type() == cty.String && val.Type() == cty.String {
+			values[key.AsString()] = val.AsString()
+		}
+	})
+
+	return defsecTypes.Map(values, a.GetMetadata())
 }
 
 func (a *Attribute) LessThan(checkValue interface{}) bool {
