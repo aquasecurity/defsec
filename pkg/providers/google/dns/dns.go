@@ -21,16 +21,11 @@ func (m ManagedZone) IsPrivate() bool {
 type DNSSec struct {
 	Metadata        defsecTypes.Metadata
 	Enabled         defsecTypes.BoolValue
-	DefaultKeySpecs KeySpecs
+	DefaultKeySpecs []KeySpecs
 }
 
 type KeySpecs struct {
-	Metadata       defsecTypes.Metadata
-	KeySigningKey  Key
-	ZoneSigningKey Key
-}
-
-type Key struct {
 	Metadata  defsecTypes.Metadata
 	Algorithm defsecTypes.StringValue
+	KeyType   defsecTypes.StringValue
 }
