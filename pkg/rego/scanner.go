@@ -11,14 +11,13 @@ import (
 
 	"github.com/aquasecurity/defsec/pkg/debug"
 	"github.com/aquasecurity/defsec/pkg/framework"
+	"github.com/aquasecurity/defsec/pkg/rego/schemas"
 	"github.com/aquasecurity/defsec/pkg/scan"
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
 	"github.com/aquasecurity/defsec/pkg/types"
-	"github.com/aquasecurity/trivy-iac/pkg/rego/schemas"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/storage"
-
-	"github.com/aquasecurity/defsec/pkg/scanners/options"
 )
 
 var _ options.ConfigurableScanner = (*Scanner)(nil)

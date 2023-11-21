@@ -1,4 +1,4 @@
-package types
+package rules
 
 import (
 	"github.com/aquasecurity/defsec/pkg/scan"

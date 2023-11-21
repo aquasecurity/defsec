@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/aquasecurity/trivy-iac/pkg/rules"
+	"github.com/aquasecurity/defsec/pkg/rules"
 	rules2 "github.com/aquasecurity/trivy-policies/rules"
 	"github.com/open-policy-agent/opa/ast"
 )

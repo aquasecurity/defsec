@@ -1,25 +1,24 @@
 package rules
 
 import (
+	"github.com/aquasecurity/defsec/internal/rules"
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/scan"
-
-	"github.com/aquasecurity/trivy-iac/internal/rules"
-	"github.com/aquasecurity/trivy-iac/pkg/types"
+	ruleTypes "github.com/aquasecurity/defsec/pkg/types/rules"
 )
 
-func Register(rule scan.Rule) types.RegisteredRule {
+func Register(rule scan.Rule) ruleTypes.RegisteredRule {
 	return rules.Register(rule)
 }
 
-func Deregister(rule types.RegisteredRule) {
+func Deregister(rule ruleTypes.RegisteredRule) {
 	rules.Deregister(rule)
 }
 
-func GetRegistered(fw ...framework.Framework) []types.RegisteredRule {
+func GetRegistered(fw ...framework.Framework) []ruleTypes.RegisteredRule {
 	return rules.GetFrameworkRules(fw...)
 }
 
-func GetSpecRules(spec string) []types.RegisteredRule {
+func GetSpecRules(spec string) []ruleTypes.RegisteredRule {
 	return rules.GetSpecRules(spec)
 }
