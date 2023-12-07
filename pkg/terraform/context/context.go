@@ -77,6 +77,16 @@ func (c *Context) Set(val cty.Value, parts ...string) {
 	c.ctx.Variables[parts[0]] = v
 }
 
+func (c *Context) Replace(val cty.Value, path string) {
+	parts := strings.Split(path, ".")
+	if len(parts) == 0 {
+		return
+	}
+
+	delete(c.ctx.Variables, parts[0])
+	c.Set(val, parts...)
+}
+
 func mergeVars(src cty.Value, parts []string, value cty.Value) cty.Value {
 
 	if len(parts) == 0 {
