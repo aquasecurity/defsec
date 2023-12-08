@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/hcl/v2"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/zclconf/go-cty/cty"
 	"github.com/zclconf/go-cty/cty/gocty"
 )
@@ -210,4 +211,28 @@ func Test_IsNotEmptyObject(t *testing.T) {
 			assert.Equal(t, tt.expected, isNotEmptyObject(tt.val))
 		})
 	}
+}
+
+func TestReplace(t *testing.T) {
+	t.Run("replacement of an existing value", func(t *testing.T) {
+		underlying := &hcl.EvalContext{}
+		ctx := NewContext(underlying, nil)
+		ctx.SetByDot(cty.StringVal("some-value"), "my.value")
+		require.NotEqual(t, cty.NilVal, ctx.GetByDot("my.value"))
+		ctx.Replace(cty.NumberIntVal(-1), "my.value")
+		assert.Equal(t, cty.NumberIntVal(-1), ctx.GetByDot("my.value"))
+	})
+
+	t.Run("replacement of a non-existing value", func(t *testing.T) {
+		underlying := &hcl.EvalContext{}
+		ctx := NewContext(underlying, nil)
+		ctx.Replace(cty.NumberIntVal(-1), "my.value")
+		assert.Equal(t, cty.NumberIntVal(-1), ctx.GetByDot("my.value"))
+	})
+
+	t.Run("empty path", func(t *testing.T) {
+		underlying := &hcl.EvalContext{}
+		ctx := NewContext(underlying, nil)
+		ctx.Replace(cty.NumberIntVal(-1), "")
+	})
 }
