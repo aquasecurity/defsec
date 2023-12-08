@@ -24,6 +24,7 @@ type Cluster struct {
 	ResourceLabels           defsecTypes.MapValue
 	RemoveDefaultNodePool    defsecTypes.BoolValue
 	EnableAutpilot           defsecTypes.BoolValue
+	DatapathProvider         defsecTypes.StringValue
 }
 
 type NodeConfig struct {
