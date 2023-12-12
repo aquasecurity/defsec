@@ -24,8 +24,9 @@ type KubernetesCluster struct {
 }
 
 type LoadBalancer struct {
-	Metadata        defsecTypes.Metadata
-	ForwardingRules []ForwardingRule
+	Metadata            defsecTypes.Metadata
+	ForwardingRules     []ForwardingRule
+	RedirectHttpToHttps defsecTypes.BoolValue
 }
 
 type ForwardingRule struct {
