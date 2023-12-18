@@ -16,6 +16,7 @@ type LaunchConfiguration struct {
 
 type LaunchTemplate struct {
 	Metadata defsecTypes.Metadata
+	Name     defsecTypes.StringValue
 	Instance
 }
 
