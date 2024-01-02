@@ -9,6 +9,6 @@ type ClientVpn struct {
 }
 
 type VpnEndpoint struct {
-	Metadata 		defsecTypes.Metadata
-	BannerOptions	defsecTypes.StringValue
+	Metadata      defsecTypes.Metadata
+	BannerOptions defsecTypes.StringValue
 }

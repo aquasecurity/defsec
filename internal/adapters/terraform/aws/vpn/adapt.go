@@ -24,7 +24,7 @@ func adaptVPNs(modules terraform.Modules) []vpn.VpnEndpoint {
 
 func adaptVpn(resource *terraform.Block) vpn.VpnEndpoint {
 	vpnEndpoint := vpn.VpnEndpoint{
-		Metadata: resource.GetMetadata(),
+		Metadata:      resource.GetMetadata(),
 		BannerOptions: defsecTypes.StringDefault("", resource.GetMetadata()),
 	}
 

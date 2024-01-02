@@ -16,9 +16,9 @@ import (
 
 func Test_adaptVpnEndpoint(t *testing.T) {
 	tests := []struct {
-		name	string
+		name      string
 		terraform string
-		expected vpn.VpnEndpoint
+		expected  vpn.VpnEndpoint
 	}{
 		{
 			name: "configured",
@@ -28,7 +28,7 @@ func Test_adaptVpnEndpoint(t *testing.T) {
 			}
 `,
 			expected: vpn.VpnEndpoint{
-				Metadata: defsecTypes.NewTestMetadata(),
+				Metadata:      defsecTypes.NewTestMetadata(),
 				BannerOptions: defsecTypes.String("test-configuration", defsecTypes.NewTestMetadata()),
 			},
 		},
@@ -39,7 +39,7 @@ func Test_adaptVpnEndpoint(t *testing.T) {
 			}
 `,
 			expected: vpn.VpnEndpoint{
-				Metadata: defsecTypes.NewTestMetadata(),
+				Metadata:      defsecTypes.NewTestMetadata(),
 				BannerOptions: defsecTypes.String("", defsecTypes.NewTestMetadata()),
 			},
 		},
@@ -64,7 +64,7 @@ func TestLines(t *testing.T) {
 
 	require.Len(t, adapted.Vpns, 1)
 	vpn := adapted.Vpns[0]
-	
+
 	assert.Equal(t, 2, vpn.Metadata.Range().GetStartLine())
 	assert.Equal(t, 4, vpn.Metadata.Range().GetEndLine())
 
