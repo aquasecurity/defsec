@@ -34,6 +34,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sns"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/sqs"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/ssm"
+	"github.com/aquasecurity/defsec/pkg/providers/aws/vpn"
 	"github.com/aquasecurity/defsec/pkg/providers/aws/workspaces"
 )
 
@@ -71,5 +72,6 @@ type AWS struct {
 	SNS            sns.SNS
 	SQS            sqs.SQS
 	SSM            ssm.SSM
+	VPN			   vpn.VPN
 	WorkSpaces     workspaces.WorkSpaces
 }
