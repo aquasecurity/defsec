@@ -6,32 +6,30 @@ import (
 	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
 )
 
-type adapter struct {
-	modules terraform.Modules
-	vpnMap  map[string]*vpn.VPN
+func Adapt(modules terraform.Modules) vpn.ClientVpn {
+	return vpn.ClientVpn{
+		Vpns: adaptVPNs(modules),
+	}
 }
 
-func (a *adapter) adaptVPNs() []vpn.VPN {
-	for _, block := range a.modules.GetResourcesByType("aws_ec2_client_vpn_endpoint") {
-		vpn := &vpn.VPN{
-			BannerOptions: block.GetAttribute("client_login_banner_options").AsStringValueOrDefault("", block),
+func adaptVPNs(modules terraform.Modules) []vpn.VpnEndpoint {
+	var vpnEndpoints []vpn.VpnEndpoint
+	for _, module := range modules {
+		for _, resource := range module.GetResourcesByType("aws_ec2_client_vpn_endpoint") {
+			vpnEndpoints = append(vpnEndpoints, adaptVpn(resource))
 		}
-
-		a.vpnMap[block.ID()] = vpn
 	}
-
-	var vpns []vpn.VPN
-	for _, vpn := range a.vpnMap {
-		vpns = append(vpns, *vpn)
-	}
-
-	return vpns
+	return vpnEndpoints
 }
 
-func getBannerOptions (b *terraform.Block, a *adapter) defsecTypes.StringValue {
-	var options defsecTypes.StringValue
-	for _, r := range a.modules.GetReferencingResources(b, "aws_ec2_client_vpn_endpoint", "client_login_banner_options") {
-		options = r.GetAttribute("client_login_banner_options").AsStringValueOrDefault("", r)
+func adaptVpn(resource *terraform.Block) vpn.VpnEndpoint {
+	vpnEndpoint := vpn.VpnEndpoint{
+		Metadata: resource.GetMetadata(),
+		BannerOptions: defsecTypes.StringDefault("", resource.GetMetadata()),
 	}
-	return options
+
+	bannerOptions := resource.GetAttribute("client_login_banner_options")
+	vpnEndpoint.BannerOptions = bannerOptions.AsStringValueOrDefault("", resource)
+
+	return vpnEndpoint
 }

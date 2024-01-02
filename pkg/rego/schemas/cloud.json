@@ -178,6 +178,10 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.ssm.SSM"
         },
+        "vpn": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.vpn.ClientVpn"
+        },
         "workspaces": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.workspaces.WorkSpaces"
@@ -3364,6 +3368,27 @@
       "type": "object",
       "properties": {
         "kmskeyid": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.vpn.ClientVpn": {
+      "type": "object",
+      "properties": {
+        "vpns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.vpn.VpnEndpoint"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.vpn.VpnEndpoint": {
+      "type": "object",
+      "properties": {
+        "banneroptions": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }

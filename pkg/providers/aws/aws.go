@@ -72,6 +72,6 @@ type AWS struct {
 	SNS            sns.SNS
 	SQS            sqs.SQS
 	SSM            ssm.SSM
-	VPN			   vpn.VPN
+	VPN			   vpn.ClientVpn
 	WorkSpaces     workspaces.WorkSpaces
 }
