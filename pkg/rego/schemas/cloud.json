@@ -126,6 +126,10 @@
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iam.IAM"
         },
+        "iamidentitycenter": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iamidentitycenter.IAMIdentityCenter"
+        },
         "kinesis": {
           "type": "object",
           "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.kinesis.Kinesis"
@@ -2072,6 +2076,27 @@
             "type": "object",
             "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iam.Policy"
           }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.iamidentitycenter.IAMIdentityCenter": {
+      "type": "object",
+      "properties": {
+        "permissionsets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.providers.aws.iamidentitycenter.PermissionSet"
+          }
+        }
+      }
+    },
+    "github.com.aquasecurity.defsec.pkg.providers.aws.iamidentitycenter.PermissionSet": {
+      "type": "object",
+      "properties": {
+        "sessionduration": {
+          "type": "object",
+          "$ref": "#/definitions/github.com.aquasecurity.defsec.pkg.types.StringValue"
         }
       }
     },
