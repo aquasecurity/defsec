@@ -39,7 +39,7 @@ import (
 )
 
 type AWS struct {
-	Meta.             Meta
+	Meta              Meta
 	AccessAnalyzer    accessanalyzer.AccessAnalyzer
 	APIGateway        apigateway.APIGateway
 	Athena            athena.Athena
