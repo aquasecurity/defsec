@@ -5,9 +5,8 @@ import (
 	"embed"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/aquasecurity/defsec/pkg/types"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -20,7 +19,7 @@ func Test_RegoScanning_WithSomeInvalidPolicies(t *testing.T) {
 		scanner := NewScanner(types.SourceDockerfile)
 		scanner.SetRegoErrorLimit(0)
 		scanner.SetDebugWriter(&debugBuf)
-		p, _ := RecurseEmbeddedModules(testEmbedFS, ".")
+		p, _ := LoadPoliciesFromDirs(testEmbedFS, ".")
 		require.NotNil(t, p)
 
 		scanner.policies = p
@@ -35,7 +34,7 @@ func Test_RegoScanning_WithSomeInvalidPolicies(t *testing.T) {
 		scanner.SetRegoErrorLimit(1)
 		scanner.SetDebugWriter(&debugBuf)
 
-		p, _ := RecurseEmbeddedModules(testEmbedFS, ".")
+		p, _ := LoadPoliciesFromDirs(testEmbedFS, ".")
 		scanner.policies = p
 
 		err := scanner.compilePolicies(testEmbedFS, []string{"policies"})

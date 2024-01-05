@@ -4,16 +4,15 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	"github.com/aquasecurity/defsec/pkg/framework"
 	"github.com/aquasecurity/defsec/pkg/scan"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_Reset(t *testing.T) {
 	rule := scan.Rule{}
-	_ = Register(rule, nil)
+	_ = Register(rule)
 	assert.Equal(t, 1, len(GetFrameworkRules()))
 	Reset()
 	assert.Equal(t, 0, len(GetFrameworkRules()))
@@ -85,10 +84,10 @@ func Test_Registration(t *testing.T) {
 				AVDID:      fmt.Sprintf("%d-%s", i, test.name),
 				Frameworks: test.registeredFrameworks,
 			}
-			_ = Register(rule, nil)
+			_ = Register(rule)
 			var found bool
 			for _, matchedRule := range GetFrameworkRules(test.inputFrameworks...) {
-				if matchedRule.Rule().AVDID == rule.AVDID {
+				if matchedRule.GetRule().AVDID == rule.AVDID {
 					assert.False(t, found, "rule should not be returned more than once")
 					found = true
 				}
@@ -102,15 +101,15 @@ func Test_Deregistration(t *testing.T) {
 	Reset()
 	registrationA := Register(scan.Rule{
 		AVDID: "A",
-	}, nil)
+	})
 	registrationB := Register(scan.Rule{
 		AVDID: "B",
-	}, nil)
+	})
 	assert.Equal(t, 2, len(GetFrameworkRules()))
 	Deregister(registrationA)
 	actual := GetFrameworkRules()
 	require.Equal(t, 1, len(actual))
-	assert.Equal(t, "B", actual[0].Rule().AVDID)
+	assert.Equal(t, "B", actual[0].GetRule().AVDID)
 	Deregister(registrationB)
 	assert.Equal(t, 0, len(GetFrameworkRules()))
 }
@@ -119,7 +118,7 @@ func Test_DeregistrationMultipleFrameworks(t *testing.T) {
 	Reset()
 	registrationA := Register(scan.Rule{
 		AVDID: "A",
-	}, nil)
+	})
 	registrationB := Register(scan.Rule{
 		AVDID: "B",
 		Frameworks: map[framework.Framework][]string{
@@ -128,12 +127,12 @@ func Test_DeregistrationMultipleFrameworks(t *testing.T) {
 			"c":               nil,
 			framework.Default: nil,
 		},
-	}, nil)
+	})
 	assert.Equal(t, 2, len(GetFrameworkRules()))
 	Deregister(registrationA)
 	actual := GetFrameworkRules()
 	require.Equal(t, 1, len(actual))
-	assert.Equal(t, "B", actual[0].Rule().AVDID)
+	assert.Equal(t, "B", actual[0].GetRule().AVDID)
 	Deregister(registrationB)
 	assert.Equal(t, 0, len(GetFrameworkRules()))
 }

@@ -1,6 +1,7 @@
 package terraform
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/zclconf/go-cty/cty"
@@ -36,6 +37,15 @@ func postProcessValues(b *Block, input map[string]cty.Value) map[string]cty.Valu
 		} else {
 			input["bucket"] = cty.StringVal(b.ID())
 		}
+	}
+
+	switch b.TypeLabel() {
+	case "aws_s3_bucket":
+		var bucketName string
+		if bucket := input["bucket"]; bucket.Type().Equals(cty.String) {
+			bucketName = bucket.AsString()
+		}
+		input["arn"] = cty.StringVal(fmt.Sprintf("arn:aws:s3:::%s", bucketName))
 	}
 
 	return input

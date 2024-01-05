@@ -3,8 +3,6 @@ package rego
 import (
 	"context"
 	"fmt"
-	"io/fs"
-	"path/filepath"
 	"strings"
 
 	"github.com/aquasecurity/defsec/pkg/framework"
@@ -15,7 +13,6 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
-	"github.com/open-policy-agent/opa/util"
 )
 
 type StaticMetadata struct {
@@ -36,6 +33,128 @@ type StaticMetadata struct {
 	Library            bool
 	CloudFormation     *scan.EngineMetadata
 	Terraform          *scan.EngineMetadata
+}
+
+func NewStaticMetadata(pkgPath string, inputOpt InputOptions) *StaticMetadata {
+	return &StaticMetadata{
+		ID:           "N/A",
+		Title:        "N/A",
+		Severity:     "UNKNOWN",
+		Description:  fmt.Sprintf("Rego module: %s", pkgPath),
+		Package:      pkgPath,
+		InputOptions: inputOpt,
+		Frameworks:   make(map[framework.Framework][]string),
+	}
+}
+
+func (sm *StaticMetadata) Update(meta map[string]any) error {
+
+	upd := func(field *string, key string) {
+		if raw, ok := meta[key]; ok {
+			*field = fmt.Sprintf("%s", raw)
+		}
+	}
+
+	upd(&sm.ID, "id")
+	upd(&sm.AVDID, "avd_id")
+	upd(&sm.Title, "title")
+	upd(&sm.ShortCode, "short_code")
+	upd(&sm.Description, "description")
+	upd(&sm.Service, "service")
+	upd(&sm.Provider, "provider")
+	upd(&sm.RecommendedActions, "recommended_actions")
+	upd(&sm.RecommendedActions, "recommended_action")
+
+	if raw, ok := meta["severity"]; ok {
+		sm.Severity = strings.ToUpper(fmt.Sprintf("%s", raw))
+	}
+
+	if raw, ok := meta["library"]; ok {
+		if lib, ok := raw.(bool); ok {
+			sm.Library = lib
+		}
+	}
+
+	if raw, ok := meta["url"]; ok {
+		sm.References = append(sm.References, fmt.Sprintf("%s", raw))
+	}
+	if raw, ok := meta["frameworks"]; ok {
+		frameworks, ok := raw.(map[string][]string)
+		if !ok {
+			return fmt.Errorf("failed to parse framework metadata: not an object")
+		}
+		for fw, sections := range frameworks {
+			sm.Frameworks[framework.Framework(fw)] = sections
+		}
+	}
+	if raw, ok := meta["related_resources"]; ok {
+		if relatedResources, ok := raw.([]map[string]any); ok {
+			for _, relatedResource := range relatedResources {
+				if raw, ok := relatedResource["ref"]; ok {
+					sm.References = append(sm.References, fmt.Sprintf("%s", raw))
+				}
+			}
+		} else if relatedResources, ok := raw.([]string); ok {
+			sm.References = append(sm.References, relatedResources...)
+		}
+	}
+
+	var err error
+	if sm.CloudFormation, err = NewEngineMetadata("cloud_formation", meta); err != nil {
+		return err
+	}
+
+	if sm.Terraform, err = NewEngineMetadata("terraform", meta); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (sm *StaticMetadata) FromAnnotations(annotations *ast.Annotations) error {
+	sm.Title = annotations.Title
+	sm.Description = annotations.Description
+	for _, resource := range annotations.RelatedResources {
+		if !resource.Ref.IsAbs() {
+			continue
+		}
+		sm.References = append(sm.References, resource.Ref.String())
+	}
+	if custom := annotations.Custom; custom != nil {
+		if err := sm.Update(custom); err != nil {
+			return err
+		}
+	}
+	if len(annotations.RelatedResources) > 0 {
+		sm.PrimaryURL = annotations.RelatedResources[0].Ref.String()
+	}
+	return nil
+}
+
+func NewEngineMetadata(schema string, meta map[string]interface{}) (*scan.EngineMetadata, error) {
+	var sMap map[string]interface{}
+	if raw, ok := meta[schema]; ok {
+		sMap, ok = raw.(map[string]interface{})
+		if !ok {
+			return nil, fmt.Errorf("failed to parse %s metadata: not an object", schema)
+		}
+	}
+
+	var em scan.EngineMetadata
+	if val, ok := sMap["good_examples"].(string); ok {
+		em.GoodExamples = []string{val}
+	}
+	if val, ok := sMap["bad_examples"].(string); ok {
+		em.BadExamples = []string{val}
+	}
+	if val, ok := sMap["links"].(string); ok {
+		em.Links = []string{val}
+	}
+	if val, ok := sMap["remediation_markdown"].(string); ok {
+		em.RemediationMarkdown = val
+	}
+
+	return &em, nil
 }
 
 type InputOptions struct {
@@ -99,7 +218,7 @@ func NewMetadataRetriever(compiler *ast.Compiler) *MetadataRetriever {
 	}
 }
 
-func (m *MetadataRetriever) findPackageAnnotation(module *ast.Module) *ast.Annotations {
+func (m *MetadataRetriever) findPackageAnnotations(module *ast.Module) *ast.Annotations {
 	annotationSet := m.compiler.GetAnnotationSet()
 	if annotationSet == nil {
 		return nil
@@ -113,24 +232,19 @@ func (m *MetadataRetriever) findPackageAnnotation(module *ast.Module) *ast.Annot
 	return nil
 }
 
-func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Module, inputs ...Input) (*StaticMetadata, error) {
+func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Module, contents ...any) (*StaticMetadata, error) {
 
-	metadata := StaticMetadata{
-		ID:           "N/A",
-		Title:        "N/A",
-		Severity:     "UNKNOWN",
-		Description:  fmt.Sprintf("Rego module: %s", module.Package.Path.String()),
-		Package:      module.Package.Path.String(),
-		InputOptions: m.queryInputOptions(ctx, module),
-		Frameworks:   make(map[framework.Framework][]string),
-	}
+	metadata := NewStaticMetadata(
+		module.Package.Path.String(),
+		m.queryInputOptions(ctx, module),
+	)
 
 	// read metadata from official rego annotations if possible
-	if annotation := m.findPackageAnnotation(module); annotation != nil {
-		if err := m.fromAnnotation(&metadata, annotation); err != nil {
+	if annotations := m.findPackageAnnotations(module); annotations != nil {
+		if err := metadata.FromAnnotations(annotations); err != nil {
 			return nil, err
 		}
-		return &metadata, nil
+		return metadata, nil
 	}
 
 	// otherwise, try to read metadata from the rego module itself - we used to do this before annotations were a thing
@@ -143,8 +257,8 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		rego.Capabilities(nil),
 	}
 	// support dynamic metadata fields
-	for _, in := range inputs {
-		options = append(options, rego.Input(in.Contents))
+	for _, in := range contents {
+		options = append(options, rego.Input(in))
 	}
 
 	instance := rego.New(options...)
@@ -155,7 +269,7 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 
 	// no metadata supplied
 	if set == nil {
-		return &metadata, nil
+		return metadata, nil
 	}
 
 	if len(set) != 1 {
@@ -170,133 +284,11 @@ func (m *MetadataRetriever) RetrieveMetadata(ctx context.Context, module *ast.Mo
 		return nil, fmt.Errorf("failed to parse metadata: not an object")
 	}
 
-	err = m.updateMetadata(meta, &metadata)
-	if err != nil {
+	if err := metadata.Update(meta); err != nil {
 		return nil, err
 	}
 
-	return &metadata, nil
-}
-
-// nolint
-func (m *MetadataRetriever) updateMetadata(meta map[string]interface{}, metadata *StaticMetadata) error {
-	if raw, ok := meta["id"]; ok {
-		metadata.ID = fmt.Sprintf("%s", raw)
-	}
-	if raw, ok := meta["avd_id"]; ok {
-		metadata.AVDID = fmt.Sprintf("%s", raw)
-	}
-	if raw, ok := meta["title"]; ok {
-		metadata.Title = fmt.Sprintf("%s", raw)
-	}
-	if raw, ok := meta["short_code"]; ok {
-		metadata.ShortCode = fmt.Sprintf("%s", raw)
-	}
-	if raw, ok := meta["severity"]; ok {
-		metadata.Severity = strings.ToUpper(fmt.Sprintf("%s", raw))
-	}
-	if raw, ok := meta["description"]; ok {
-		metadata.Description = fmt.Sprintf("%s", raw)
-	}
-	if raw, ok := meta["service"]; ok {
-		metadata.Service = fmt.Sprintf("%s", raw)
-	}
-	if raw, ok := meta["provider"]; ok {
-		metadata.Provider = fmt.Sprintf("%s", raw)
-	}
-	if raw, ok := meta["library"]; ok {
-		if lib, ok := raw.(bool); ok {
-			metadata.Library = lib
-		}
-	}
-	if raw, ok := meta["recommended_actions"]; ok {
-		metadata.RecommendedActions = fmt.Sprintf("%s", raw)
-	}
-	if raw, ok := meta["recommended_action"]; ok {
-		metadata.RecommendedActions = fmt.Sprintf("%s", raw)
-	}
-	if raw, ok := meta["url"]; ok {
-		metadata.References = append(metadata.References, fmt.Sprintf("%s", raw))
-	}
-	if raw, ok := meta["frameworks"]; ok {
-		frameworks, ok := raw.(map[string][]string)
-		if !ok {
-			return fmt.Errorf("failed to parse framework metadata: not an object")
-		}
-		for fw, sections := range frameworks {
-			metadata.Frameworks[framework.Framework(fw)] = sections
-		}
-	}
-	if raw, ok := meta["related_resources"]; ok {
-		if relatedResources, ok := raw.([]interface{}); ok {
-			for _, relatedResource := range relatedResources {
-				if relatedResourceMap, ok := relatedResource.(map[string]interface{}); ok {
-					if raw, ok := relatedResourceMap["ref"]; ok {
-						metadata.References = append(metadata.References, fmt.Sprintf("%s", raw))
-					}
-				} else if relatedResourceString, ok := relatedResource.(string); ok {
-					metadata.References = append(metadata.References, relatedResourceString)
-				}
-			}
-		}
-	}
-
-	var err error
-	if metadata.CloudFormation, err = m.getEngineMetadata("cloud_formation", meta); err != nil {
-		return err
-	}
-
-	if metadata.Terraform, err = m.getEngineMetadata("terraform", meta); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *MetadataRetriever) getEngineMetadata(schema string, meta map[string]interface{}) (*scan.EngineMetadata, error) {
-	var sMap map[string]interface{}
-	if raw, ok := meta[schema]; ok {
-		sMap, ok = raw.(map[string]interface{})
-		if !ok {
-			return nil, fmt.Errorf("failed to parse %s metadata: not an object", schema)
-		}
-	}
-
-	var em scan.EngineMetadata
-	if val, ok := sMap["good_examples"].(string); ok {
-		em.GoodExamples = []string{val}
-	}
-	if val, ok := sMap["bad_examples"].(string); ok {
-		em.BadExamples = []string{val}
-	}
-	if val, ok := sMap["links"].(string); ok {
-		em.Links = []string{val}
-	}
-	if val, ok := sMap["remediation_markdown"].(string); ok {
-		em.RemediationMarkdown = val
-	}
-
-	return &em, nil
-}
-
-func (m *MetadataRetriever) fromAnnotation(metadata *StaticMetadata, annotation *ast.Annotations) error {
-	metadata.Title = annotation.Title
-	metadata.Description = annotation.Description
-	for _, resource := range annotation.RelatedResources {
-		if !resource.Ref.IsAbs() {
-			continue
-		}
-		metadata.References = append(metadata.References, resource.Ref.String())
-	}
-	if custom := annotation.Custom; custom != nil {
-		if err := m.updateMetadata(custom, metadata); err != nil {
-			return err
-		}
-	}
-	if len(annotation.RelatedResources) > 0 {
-		metadata.PrimaryURL = annotation.RelatedResources[0].Ref.String()
-	}
-	return nil
+	return metadata, nil
 }
 
 // nolint: cyclop
@@ -310,7 +302,7 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 	var metadata map[string]interface{}
 
 	// read metadata from official rego annotations if possible
-	if annotation := m.findPackageAnnotation(module); annotation != nil && annotation.Custom != nil {
+	if annotation := m.findPackageAnnotations(module); annotation != nil && annotation.Custom != nil {
 		if input, ok := annotation.Custom["input"]; ok {
 			if mapped, ok := input.(map[string]interface{}); ok {
 				metadata = mapped
@@ -383,64 +375,6 @@ func (m *MetadataRetriever) queryInputOptions(ctx context.Context, module *ast.M
 
 }
 
-func BuildSchemaSetFromPolicies(policies map[string]*ast.Module, paths []string, srcFS fs.FS) (*ast.SchemaSet, bool, error) {
-	schemaSet := ast.NewSchemaSet()
-	schemaSet.Put(ast.MustParseRef("schema.input"), map[string]interface{}{}) // for backwards compat only
-	var customFound bool
-	for _, policy := range policies {
-		for _, annotation := range policy.Annotations {
-			for _, ss := range annotation.Schemas {
-				schemaName, err := ss.Schema.Ptr()
-				if err != nil {
-					continue
-				}
-				if schemaName != "input" {
-					if schema, ok := SchemaMap[defsecTypes.Source(schemaName)]; ok {
-						customFound = true
-						schemaSet.Put(ast.MustParseRef(ss.Schema.String()), util.MustUnmarshalJSON([]byte(schema)))
-					} else {
-						b, err := findSchemaInFS(paths, srcFS, schemaName)
-						if err != nil {
-							return schemaSet, true, err
-						}
-						if b != nil {
-							customFound = true
-							schemaSet.Put(ast.MustParseRef(ss.Schema.String()), util.MustUnmarshalJSON(b))
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return schemaSet, customFound, nil
-}
-
-// findSchemaInFS tries to find the schema anywhere in the specified FS
-func findSchemaInFS(paths []string, srcFS fs.FS, schemaName string) ([]byte, error) {
-	var schema []byte
-	for _, path := range paths {
-		if err := fs.WalkDir(srcFS, sanitisePath(path), func(path string, info fs.DirEntry, err error) error {
-			if err != nil {
-				return err
-			}
-			if info.IsDir() {
-				return nil
-			}
-			if !isJSONFile(info.Name()) {
-				return nil
-			}
-			if info.Name() == schemaName+".json" {
-				schema, err = fs.ReadFile(srcFS, filepath.ToSlash(path))
-				if err != nil {
-					return err
-				}
-				return nil
-			}
-			return nil
-		}); err != nil {
-			return nil, err
-		}
-	}
-	return schema, nil
+func getModuleNamespace(module *ast.Module) string {
+	return strings.TrimPrefix(module.Package.Path.String(), "data.")
 }

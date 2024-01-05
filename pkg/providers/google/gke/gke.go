@@ -17,7 +17,6 @@ type Cluster struct {
 	PrivateCluster           PrivateCluster
 	LoggingService           defsecTypes.StringValue
 	MonitoringService        defsecTypes.StringValue
-	PodSecurityPolicy        PodSecurityPolicy
 	MasterAuth               MasterAuth
 	NodeConfig               NodeConfig
 	EnableShieldedNodes      defsecTypes.BoolValue
@@ -25,6 +24,7 @@ type Cluster struct {
 	ResourceLabels           defsecTypes.MapValue
 	RemoveDefaultNodePool    defsecTypes.BoolValue
 	EnableAutpilot           defsecTypes.BoolValue
+	DatapathProvider         defsecTypes.StringValue
 }
 
 type NodeConfig struct {
@@ -50,11 +50,6 @@ type MasterAuth struct {
 type ClientCertificate struct {
 	Metadata         defsecTypes.Metadata
 	IssueCertificate defsecTypes.BoolValue
-}
-
-type PodSecurityPolicy struct {
-	Metadata defsecTypes.Metadata
-	Enabled  defsecTypes.BoolValue
 }
 
 type PrivateCluster struct {

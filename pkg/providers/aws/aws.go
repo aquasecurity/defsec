@@ -39,6 +39,7 @@ import (
 )
 
 type AWS struct {
+	Meta.             Meta
 	AccessAnalyzer    accessanalyzer.AccessAnalyzer
 	APIGateway        apigateway.APIGateway
 	Athena            athena.Athena
@@ -74,4 +75,8 @@ type AWS struct {
 	SQS               sqs.SQS
 	SSM               ssm.SSM
 	WorkSpaces        workspaces.WorkSpaces
+}
+
+type Meta struct {
+	TFProviders []TerraformProvider
 }

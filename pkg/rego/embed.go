@@ -2,23 +2,23 @@ package rego
 
 import (
 	"context"
-	"embed"
+	"io/fs"
 	"path/filepath"
 	"strings"
 
-	"github.com/aquasecurity/defsec/internal/rules"
-	rules2 "github.com/aquasecurity/defsec/rules"
+	"github.com/aquasecurity/defsec/pkg/rules"
+	rules2 "github.com/aquasecurity/trivy-policies/rules"
 	"github.com/open-policy-agent/opa/ast"
 )
 
 func init() {
 
-	modules, err := loadEmbeddedPolicies()
+	modules, err := LoadEmbeddedPolicies()
 	if err != nil {
 		// we should panic as the policies were not embedded properly
 		panic(err)
 	}
-	loadedLibs, err := loadEmbeddedLibraries()
+	loadedLibs, err := LoadEmbeddedLibraries()
 	if err != nil {
 		panic(err)
 	}
@@ -32,10 +32,13 @@ func init() {
 func RegisterRegoRules(modules map[string]*ast.Module) {
 	ctx := context.TODO()
 
-	compiler := ast.NewCompiler()
 	schemaSet, _, _ := BuildSchemaSetFromPolicies(modules, nil, nil)
-	compiler.WithSchemas(schemaSet)
-	compiler.WithCapabilities(nil)
+
+	compiler := ast.NewCompiler().
+		WithSchemas(schemaSet).
+		WithCapabilities(nil).
+		WithUseTypeCheckAnnotations(true)
+
 	compiler.Compile(modules)
 	if compiler.Failed() {
 		// we should panic as the embedded rego policies are syntactically incorrect...
@@ -53,55 +56,52 @@ func RegisterRegoRules(modules map[string]*ast.Module) {
 		}
 		rules.Register(
 			metadata.ToRule(),
-			nil,
 		)
 	}
 }
 
-func loadEmbeddedPolicies() (map[string]*ast.Module, error) {
-	return RecurseEmbeddedModules(rules2.EmbeddedPolicyFileSystem, ".")
+func LoadEmbeddedPolicies() (map[string]*ast.Module, error) {
+	return LoadPoliciesFromDirs(rules2.EmbeddedPolicyFileSystem, ".")
 }
 
-func loadEmbeddedLibraries() (map[string]*ast.Module, error) {
-	return RecurseEmbeddedModules(rules2.EmbeddedLibraryFileSystem, ".")
+func LoadEmbeddedLibraries() (map[string]*ast.Module, error) {
+	return LoadPoliciesFromDirs(rules2.EmbeddedLibraryFileSystem, ".")
 }
 
-func RecurseEmbeddedModules(fs embed.FS, dir string) (map[string]*ast.Module, error) {
-	if strings.HasSuffix(dir, "policies/advanced/optional") {
-		return nil, nil
-	}
-	dir = strings.TrimPrefix(dir, "./")
+func LoadPoliciesFromDirs(target fs.FS, paths ...string) (map[string]*ast.Module, error) {
 	modules := make(map[string]*ast.Module)
-	entries, err := fs.ReadDir(filepath.ToSlash(dir))
-	if err != nil {
-		return nil, err
-	}
-	for _, entry := range entries {
-		if entry.IsDir() {
-			subs, err := RecurseEmbeddedModules(fs, strings.Join([]string{dir, entry.Name()}, "/"))
+	for _, path := range paths {
+		if err := fs.WalkDir(target, sanitisePath(path), func(path string, info fs.DirEntry, err error) error {
 			if err != nil {
-				return nil, err
+				return err
 			}
-			for key, val := range subs {
-				modules[key] = val
+			if info.IsDir() {
+				return nil
 			}
-			continue
-		}
-		if !isRegoFile(entry.Name()) || isDotFile(entry.Name()) {
-			continue
-		}
-		fullPath := strings.Join([]string{dir, entry.Name()}, "/")
-		data, err := fs.ReadFile(filepath.ToSlash(fullPath))
-		if err != nil {
+
+			if strings.HasSuffix(filepath.Dir(filepath.ToSlash(path)), "policies/advanced/optional") {
+				return fs.SkipDir
+			}
+
+			if !IsRegoFile(info.Name()) || IsDotFile(info.Name()) {
+				return nil
+			}
+			data, err := fs.ReadFile(target, filepath.ToSlash(path))
+			if err != nil {
+				return err
+			}
+			module, err := ast.ParseModuleWithOpts(path, string(data), ast.ParserOptions{
+				ProcessAnnotation: true,
+			})
+			if err != nil {
+				// s.debug.Log("Failed to load module: %s, err: %s", filepath.ToSlash(path), err.Error())
+				return err
+			}
+			modules[path] = module
+			return nil
+		}); err != nil {
 			return nil, err
 		}
-		mod, err := ast.ParseModuleWithOpts(fullPath, string(data), ast.ParserOptions{
-			ProcessAnnotation: true,
-		})
-		if err != nil {
-			return nil, err
-		}
-		modules[fullPath] = mod
 	}
 	return modules, nil
 }

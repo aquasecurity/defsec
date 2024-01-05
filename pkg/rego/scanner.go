@@ -9,19 +9,15 @@ import (
 	"io/fs"
 	"strings"
 
-	"github.com/aquasecurity/defsec/pkg/rego/schemas"
-
-	"github.com/aquasecurity/defsec/pkg/types"
-
 	"github.com/aquasecurity/defsec/pkg/debug"
 	"github.com/aquasecurity/defsec/pkg/framework"
-
+	"github.com/aquasecurity/defsec/pkg/rego/schemas"
+	"github.com/aquasecurity/defsec/pkg/scan"
+	"github.com/aquasecurity/defsec/pkg/scanners/options"
+	"github.com/aquasecurity/defsec/pkg/types"
 	"github.com/open-policy-agent/opa/ast"
 	"github.com/open-policy-agent/opa/rego"
 	"github.com/open-policy-agent/opa/storage"
-
-	"github.com/aquasecurity/defsec/pkg/scan"
-	"github.com/aquasecurity/defsec/pkg/scanners/options"
 )
 
 var _ options.ConfigurableScanner = (*Scanner)(nil)
@@ -129,20 +125,8 @@ type DynamicMetadata struct {
 	EndLine   int
 }
 
-var SchemaMap = map[types.Source]schemas.Schema{
-	types.SourceDefsec:     schemas.Cloud,
-	types.SourceCloud:      schemas.Cloud,
-	types.SourceKubernetes: schemas.Kubernetes,
-	types.SourceRbac:       schemas.Kubernetes,
-	types.SourceDockerfile: schemas.Dockerfile,
-	types.SourceTOML:       schemas.Anything,
-	types.SourceYAML:       schemas.Anything,
-	types.SourceJSON:       schemas.Anything,
-}
-
 func NewScanner(source types.Source, options ...options.ScannerOption) *Scanner {
-
-	schema, ok := SchemaMap[source]
+	schema, ok := schemas.SchemaMap[source]
 	if !ok {
 		schema = schemas.Anything
 	}
@@ -171,10 +155,6 @@ func NewScanner(source types.Source, options ...options.ScannerOption) *Scanner 
 
 func (s *Scanner) SetParentDebugLogger(l debug.Logger) {
 	s.debug = l.Extend("rego")
-}
-
-func getModuleNamespace(module *ast.Module) string {
-	return strings.TrimPrefix(module.Package.Path.String(), "data.")
 }
 
 func (s *Scanner) runQuery(ctx context.Context, query string, input interface{}, disableTracing bool) (rego.ResultSet, []string, error) {
@@ -227,6 +207,14 @@ type Input struct {
 	Contents interface{} `json:"contents"`
 }
 
+func GetInputsContents(inputs []Input) []any {
+	results := make([]any, len(inputs))
+	for i, c := range inputs {
+		results[i] = c.Contents
+	}
+	return results
+}
+
 func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results, error) {
 
 	s.debug.Log("Scanning %d inputs...", len(inputs))
@@ -247,7 +235,7 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 			continue
 		}
 
-		staticMeta, err := s.retriever.RetrieveMetadata(ctx, module, inputs...)
+		staticMeta, err := s.retriever.RetrieveMetadata(ctx, module, GetInputsContents(inputs)...)
 		if err != nil {
 			return nil, err
 		}
@@ -287,7 +275,7 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 }
 
 func isPolicyWithSubtype(sourceType types.Source) bool {
-	for _, s := range []types.Source{types.SourceCloud, types.SourceDefsec} { // TODO(simar): Add types.Kubernetes once all k8s policy have subtype
+	for _, s := range []types.Source{types.SourceCloud, types.SourceDefsec, types.SourceKubernetes} {
 		if sourceType == s {
 			return true
 		}
