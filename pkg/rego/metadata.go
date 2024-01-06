@@ -20,6 +20,7 @@ type StaticMetadata struct {
 	AVDID              string
 	Title              string
 	ShortCode          string
+	Aliases            []string
 	Description        string
 	Severity           string
 	RecommendedActions string
@@ -96,6 +97,14 @@ func (sm *StaticMetadata) Update(meta map[string]any) error {
 			}
 		} else if relatedResources, ok := raw.([]string); ok {
 			sm.References = append(sm.References, relatedResources...)
+		}
+	}
+
+	if raw, ok := meta["aliases"]; ok {
+		if aliases, ok := raw.([]interface{}); ok {
+			for _, a := range aliases {
+				sm.Aliases = append(sm.Aliases, fmt.Sprintf("%s", a))
+			}
 		}
 	}
 
@@ -191,7 +200,7 @@ func (m StaticMetadata) ToRule() scan.Rule {
 
 	return scan.Rule{
 		AVDID:          m.AVDID,
-		Aliases:        []string{m.ID},
+		Aliases:        append(m.Aliases, m.ID),
 		ShortCode:      m.ShortCode,
 		Summary:        m.Title,
 		Explanation:    m.Description,
