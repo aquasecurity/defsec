@@ -100,13 +100,7 @@ func (sm *StaticMetadata) Update(meta map[string]any) error {
 		}
 	}
 
-	if raw, ok := meta["aliases"]; ok {
-		if aliases, ok := raw.([]interface{}); ok {
-			for _, a := range aliases {
-				sm.Aliases = append(sm.Aliases, fmt.Sprintf("%s", a))
-			}
-		}
-	}
+	sm.updateAliases(meta)
 
 	var err error
 	if sm.CloudFormation, err = NewEngineMetadata("cloud_formation", meta); err != nil {
@@ -118,6 +112,16 @@ func (sm *StaticMetadata) Update(meta map[string]any) error {
 	}
 
 	return nil
+}
+
+func (sm *StaticMetadata) updateAliases(meta map[string]any) {
+	if raw, ok := meta["aliases"]; ok {
+		if aliases, ok := raw.([]interface{}); ok {
+			for _, a := range aliases {
+				sm.Aliases = append(sm.Aliases, fmt.Sprintf("%s", a))
+			}
+		}
+	}
 }
 
 func (sm *StaticMetadata) FromAnnotations(annotations *ast.Annotations) error {
