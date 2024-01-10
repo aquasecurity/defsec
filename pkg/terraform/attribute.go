@@ -987,8 +987,10 @@ func (a *Attribute) referencesFromExpression(expression hcl.Expression) []*Refer
 			refs = append(refs, ref)
 		}
 	case *hclsyntax.TupleConsExpr:
-		if ref, err := createDotReferenceFromTraversal(a.module, t.Variables()...); err == nil {
-			refs = append(refs, ref)
+		for _, v := range t.Variables() {
+			if ref, err := createDotReferenceFromTraversal(a.module, v); err == nil {
+				refs = append(refs, ref)
+			}
 		}
 	case *hclsyntax.RelativeTraversalExpr:
 		switch s := t.Source.(type) {
