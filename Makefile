@@ -16,3 +16,7 @@ fix-typos:
 quality:
 	which golangci-lint || go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.54.2
 	golangci-lint run --timeout 3m --verbose
+
+.PHONY: schema
+schema:
+	go run ./cmd/schema generate
