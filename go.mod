@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/alecthomas/chroma v0.10.0
 	github.com/aquasecurity/trivy-policies v0.6.1-0.20231120231532-f6f2330bf842
-	github.com/google/uuid v1.4.0
+	github.com/google/uuid v1.5.0
 	github.com/hashicorp/hcl/v2 v2.19.1
 	github.com/liamg/iamgo v0.0.9
 	github.com/liamg/memoryfs v1.6.0

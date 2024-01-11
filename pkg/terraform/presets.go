@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/zclconf/go-cty/cty"
 )
 
@@ -22,6 +23,9 @@ func createPresetValues(b *Block) map[string]cty.Value {
 	switch b.TypeLabel() {
 	case "aws_iam_policy_document":
 		presets["json"] = cty.StringVal(b.ID())
+	// If the user leaves the name blank, Terraform will automatically generate a unique name
+	case "aws_launch_template":
+		presets["name"] = cty.StringVal(uuid.New().String())
 	}
 
 	return presets
