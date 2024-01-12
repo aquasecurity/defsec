@@ -296,11 +296,10 @@ func checkSubtype(ii map[string]interface{}, provider string, subTypes []SubType
 					return true
 				}
 			}
-		case string: // k8s
-			// TODO(simar): This logic probably needs to be revisited
-			if services == st.Group ||
-				services == st.Version ||
-				services == st.Kind {
+		case string: // k8s - logic can be improved
+			if strings.EqualFold(services, st.Group) ||
+				strings.EqualFold(services, st.Version) ||
+				strings.EqualFold(services, st.Kind) {
 				return true
 			}
 		}
