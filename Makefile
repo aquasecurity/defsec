@@ -20,3 +20,8 @@ quality:
 .PHONY: schema
 schema:
 	go run ./cmd/schema generate
+
+.PHONY: update-allowed-actions
+update-allowed-actions:
+	go run ./cmd/allowed_actions
+
