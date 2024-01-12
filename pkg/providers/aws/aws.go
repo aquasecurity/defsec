@@ -39,42 +39,42 @@ import (
 )
 
 type AWS struct {
-	Meta                 Meta
-	AccessAnalyzer       accessanalyzer.AccessAnalyzer
-	APIGateway           apigateway.APIGateway
-	Athena               athena.Athena
-	Cloudfront           cloudfront.Cloudfront
-	CloudTrail           cloudtrail.CloudTrail
-	CloudWatch           cloudwatch.CloudWatch
-	CodeBuild            codebuild.CodeBuild
-	Config               config.Config
-	DocumentDB           documentdb.DocumentDB
-	DynamoDB             dynamodb.DynamoDB
-	EC2                  ec2.EC2
-	ECR                  ecr.ECR
-	ECS                  ecs.ECS
-	EFS                  efs.EFS
-	EKS                  eks.EKS
-	ElastiCache          elasticache.ElastiCache
-	Elasticsearch        elasticsearch.Elasticsearch
-	ELB                  elb.ELB
-	EMR                  emr.EMR
-	IAM                  iam.IAM
+	Meta              Meta
+	AccessAnalyzer    accessanalyzer.AccessAnalyzer
+	APIGateway        apigateway.APIGateway
+	Athena            athena.Athena
+	Cloudfront        cloudfront.Cloudfront
+	CloudTrail        cloudtrail.CloudTrail
+	CloudWatch        cloudwatch.CloudWatch
+	CodeBuild         codebuild.CodeBuild
+	Config            config.Config
+	DocumentDB        documentdb.DocumentDB
+	DynamoDB          dynamodb.DynamoDB
+	EC2               ec2.EC2
+	ECR               ecr.ECR
+	ECS               ecs.ECS
+	EFS               efs.EFS
+	EKS               eks.EKS
+	ElastiCache       elasticache.ElastiCache
+	Elasticsearch     elasticsearch.Elasticsearch
+	ELB               elb.ELB
+	EMR               emr.EMR
+	IAM               iam.IAM
 	IAMIdentityCenter iamidentitycenter.IAMIdentityCenter
-	Kinesis              kinesis.Kinesis
-	KMS                  kms.KMS
-	Lambda               lambda.Lambda
-	MQ                   mq.MQ
-	MSK                  msk.MSK
-	Neptune              neptune.Neptune
-	RDS                  rds.RDS
-	Redshift             redshift.Redshift
-	SAM                  sam.SAM
-	S3                   s3.S3
-	SNS                  sns.SNS
-	SQS                  sqs.SQS
-	SSM                  ssm.SSM
-	WorkSpaces           workspaces.WorkSpaces
+	Kinesis           kinesis.Kinesis
+	KMS               kms.KMS
+	Lambda            lambda.Lambda
+	MQ                mq.MQ
+	MSK               msk.MSK
+	Neptune           neptune.Neptune
+	RDS               rds.RDS
+	Redshift          redshift.Redshift
+	SAM               sam.SAM
+	S3                s3.S3
+	SNS               sns.SNS
+	SQS               sqs.SQS
+	SSM               ssm.SSM
+	WorkSpaces        workspaces.WorkSpaces
 }
 
 type Meta struct {
