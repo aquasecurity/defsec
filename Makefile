@@ -16,3 +16,6 @@ fix-typos:
 quality:
 	which golangci-lint || go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.54.2
 	golangci-lint run --timeout 3m --verbose
+
+update-allowed-actions:
+	go run ./cmd/allowed_actions
