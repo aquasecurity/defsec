@@ -296,10 +296,10 @@ func checkSubtype(ii map[string]interface{}, provider string, subTypes []SubType
 					return true
 				}
 			}
-		case string: // k8s - basic logic, for now can be improved
-			if strings.ToLower(services) == strings.ToLower(st.Group) ||
-				strings.ToLower(services) == strings.ToLower(st.Version) ||
-				strings.ToLower(services) == strings.ToLower(st.Kind) {
+		case string: // k8s - logic can be improved
+			if strings.EqualFold(services, st.Group) ||
+				strings.EqualFold(services, st.Version) ||
+				strings.EqualFold(services, st.Kind) {
 				return true
 			}
 		}
