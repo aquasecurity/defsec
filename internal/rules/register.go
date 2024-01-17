@@ -9,7 +9,7 @@ import (
 	"github.com/aquasecurity/defsec/pkg/scan"
 	dftypes "github.com/aquasecurity/defsec/pkg/types"
 	ruleTypes "github.com/aquasecurity/defsec/pkg/types/rules"
-	"github.com/aquasecurity/trivy-policies/rules/specs"
+	"github.com/aquasecurity/trivy-policies/specs"
 )
 
 type registry struct {
