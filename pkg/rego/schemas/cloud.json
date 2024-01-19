@@ -2159,6 +2159,12 @@
         "managed": {
           "type": "boolean"
         },
+        "resource": {
+          "type": "string"
+        },
+        "sourceprefix": {
+          "type": "string"
+        },
         "startline": {
           "type": "integer"
         },

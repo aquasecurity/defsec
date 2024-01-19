@@ -36,15 +36,23 @@ type Document struct {
 func (d Document) ToRego() interface{} {
 	m := d.Metadata
 	doc, _ := d.Parsed.MarshalJSON()
-	return map[string]interface{}{
-		"filepath":  m.Range().GetFilename(),
-		"startline": m.Range().GetStartLine(),
-		"endline":   m.Range().GetEndLine(),
-		"managed":   m.IsManaged(),
-		"explicit":  m.IsExplicit(),
-		"value":     string(doc),
-		"fskey":     defsecTypes.CreateFSKey(m.Range().GetFS()),
+	input := map[string]interface{}{
+		"filepath":     m.Range().GetFilename(),
+		"startline":    m.Range().GetStartLine(),
+		"endline":      m.Range().GetEndLine(),
+		"managed":      m.IsManaged(),
+		"explicit":     m.IsExplicit(),
+		"value":        string(doc),
+		"sourceprefix": m.Range().GetSourcePrefix(),
+		"fskey":        defsecTypes.CreateFSKey(m.Range().GetFS()),
+		"resource":     m.Reference(),
 	}
+
+	if m.Parent() != nil {
+		input["parent"] = m.Parent().ToRego()
+	}
+
+	return input
 }
 
 type Group struct {
