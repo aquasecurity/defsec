@@ -37,7 +37,7 @@ func Test_parseResult(t *testing.T) {
 			},
 		},
 		{
-			name: "maps",
+			name: "slice",
 			input: []interface{}{
 				"message",
 				map[string]interface{}{
@@ -51,7 +51,7 @@ func Test_parseResult(t *testing.T) {
 			},
 		},
 		{
-			name: "map",
+			name: "legacy",
 			input: map[string]interface{}{
 				"msg":          "message",
 				"filepath":     "a.out",
@@ -76,19 +76,51 @@ func Test_parseResult(t *testing.T) {
 			},
 		},
 		{
-			name: "parent",
-			input: map[string]interface{}{
-				"msg": "child",
-				"parent": map[string]interface{}{
-					"msg": "parent",
+			name: "with parent",
+			input: map[string]any{
+				"msg": "message",
+				"metadata": map[string]any{
+					"filepath":     "a.out",
+					"fskey":        "abcd",
+					"resource":     "resource",
+					"startline":    "123",
+					"endline":      "456",
+					"sourceprefix": "git",
+					"explicit":     true,
+					"managed":      true,
+					"parent": map[string]any{
+						"__defsec_metadata": map[string]any{
+							"filepath":     "parent-a.out",
+							"fskey":        "parent-abcd",
+							"resource":     "parent-resource",
+							"startline":    "234",
+							"endline":      "345",
+							"sourceprefix": "parent-git",
+							"explicit":     true,
+							"managed":      true,
+						},
+					},
 				},
 			},
 			want: regoResult{
-				Message: "child",
-				Managed: true,
+				Filepath:     "a.out",
+				FSKey:        "abcd",
+				Resource:     "resource",
+				StartLine:    123,
+				EndLine:      456,
+				SourcePrefix: "git",
+				Explicit:     true,
+				Managed:      true,
+				Message:      "message",
 				Parent: &regoResult{
-					Message: "parent",
-					Managed: true,
+					Filepath:     "parent-a.out",
+					FSKey:        "parent-abcd",
+					Resource:     "parent-resource",
+					StartLine:    234,
+					EndLine:      345,
+					SourcePrefix: "parent-git",
+					Explicit:     true,
+					Managed:      true,
 				},
 			},
 		},

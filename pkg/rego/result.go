@@ -10,6 +10,8 @@ import (
 	"github.com/open-policy-agent/opa/rego"
 )
 
+const denyMessage = "Rego policy resulted in DENY"
+
 type regoResult struct {
 	Filepath     string
 	Resource     string
@@ -22,6 +24,13 @@ type regoResult struct {
 	FSKey        string
 	FS           fs.FS
 	Parent       *regoResult
+}
+
+func messageResult(msg string) *regoResult {
+	return &regoResult{
+		Managed: true,
+		Message: msg,
+	}
 }
 
 func (r regoResult) GetMetadata() defsecTypes.Metadata {
@@ -46,102 +55,147 @@ func (r regoResult) GetRawValue() interface{} {
 	return nil
 }
 
-func parseResult(raw interface{}) *regoResult {
-	var result regoResult
-	result.Managed = true
+func (r *regoResult) applyOffset(offset int) {
+	r.StartLine += offset
+	r.EndLine += offset
+}
+
+func (r *regoResult) updateMeta(raw map[string]any) {
+	for k, v := range raw {
+		switch k {
+		case "startline", "StartLine":
+			r.StartLine = parseLineNumber(v)
+		case "endline", "EndLine":
+			r.EndLine = parseLineNumber(v)
+		case "filepath", "Path":
+			r.Filepath = getString(v)
+		case "sourceprefix":
+			r.SourcePrefix = getString(v)
+		case "explicit":
+			r.Explicit = getBool(v)
+		case "managed":
+			r.Managed = getBool(v)
+		case "fskey":
+			r.FSKey = getString(v)
+		case "resource":
+			r.Resource = getString(v)
+		}
+	}
+}
+
+func getString(raw any) string {
+	if str, ok := raw.(string); ok {
+		return str
+	}
+	return ""
+}
+
+func getBool(raw any) bool {
+	if b, ok := raw.(bool); ok {
+		return b
+	}
+	return false
+}
+
+func newRegoResult(rawInput any) *regoResult {
+	result := &regoResult{
+		Managed: true,
+	}
+
+	input, ok := rawInput.(map[string]any)
+	if !ok {
+		return result
+	}
+
+	if rawMsg, exists := input["msg"]; exists {
+		if msg, ok := rawMsg.(string); ok {
+			result.Message = msg
+		}
+	}
+
+	meta := parseMetadata(input)
+	result.updateMeta(meta)
+
+	if parent, ok := meta["parent"]; ok {
+		result.Parent = newRegoResult(map[string]any{"metadata": parent})
+	}
+
+	return result
+}
+
+func parseMetadata(input map[string]any) map[string]any {
+	res := make(map[string]any)
+	rawMetadata, exists := input["metadata"]
+	if !exists {
+		// for backward compatibility
+		rawMetadata = input
+	}
+
+	cause, ok := rawMetadata.(map[string]any)
+	if !ok {
+		return res
+	}
+
+	rawDefsecMeta, exists := cause["__defsec_metadata"]
+	if !exists {
+		res = cause
+	} else {
+		defsecMeta, ok := rawDefsecMeta.(map[string]any)
+		if !ok {
+			return res
+		}
+		res = defsecMeta
+	}
+
+	return res
+}
+
+func parseResult(raw any) *regoResult {
+
 	switch val := raw.(type) {
-	case []interface{}:
+	case []any:
 		var msg string
+		var result *regoResult
 		for _, item := range val {
 			switch raw := item.(type) {
-			case map[string]interface{}:
-				result = parseCause(raw)
+			case map[string]any:
+				if res := newRegoResult(raw); res != nil {
+					result = res
+				}
 			case string:
 				msg = raw
 			}
 		}
-		result.Message = msg
+		if result != nil {
+			result.Message = msg
+			return result
+		}
+		return messageResult(msg)
 	case string:
-		result.Message = val
-	case map[string]interface{}:
-		result = parseCause(val)
+		return messageResult(val)
+	case map[string]any:
+		return newRegoResult(val)
 	default:
-		result.Message = "Rego policy resulted in DENY"
+		return messageResult(denyMessage)
 	}
-	return &result
 }
 
-func parseCause(cause map[string]interface{}) regoResult {
-	var result regoResult
-	result.Managed = true
-	if msg, ok := cause["msg"]; ok {
-		result.Message = fmt.Sprintf("%s", msg)
-	}
-	if filepath, ok := cause["filepath"]; ok {
-		result.Filepath = fmt.Sprintf("%s", filepath)
-	}
-	if msg, ok := cause["fskey"]; ok {
-		result.FSKey = fmt.Sprintf("%s", msg)
-	}
-	if msg, ok := cause["resource"]; ok {
-		result.Resource = fmt.Sprintf("%s", msg)
-	}
-	if start, ok := cause["startline"]; ok {
-		result.StartLine = parseLineNumber(start)
-	}
-	if end, ok := cause["endline"]; ok {
-		result.EndLine = parseLineNumber(end)
-	}
-	if prefix, ok := cause["sourceprefix"]; ok {
-		result.SourcePrefix = fmt.Sprintf("%s", prefix)
-	}
-	if explicit, ok := cause["explicit"]; ok {
-		if set, ok := explicit.(bool); ok {
-			result.Explicit = set
-		}
-	}
-	if managed, ok := cause["managed"]; ok {
-		if set, ok := managed.(bool); ok {
-			result.Managed = set
-		}
-	}
-	if parent, ok := cause["parent"]; ok {
-		if m, ok := parent.(map[string]interface{}); ok {
-			parentResult := parseCause(m)
-			result.Parent = &parentResult
-		}
-	}
-	return result
-}
-
-func parseLineNumber(raw interface{}) int {
-	str := fmt.Sprintf("%s", raw)
-	n, _ := strconv.Atoi(str)
+func parseLineNumber(raw any) int {
+	n, _ := strconv.Atoi(fmt.Sprintf("%s", raw))
 	return n
 }
 
 func (s *Scanner) convertResults(set rego.ResultSet, input Input, namespace string, rule string, traces []string) scan.Results {
 	var results scan.Results
 
-	offset := 0
-	if input.Contents != nil {
-		if xx, ok := input.Contents.(map[string]interface{}); ok {
-			if md, ok := xx["__defsec_metadata"]; ok {
-				if md2, ok := md.(map[string]interface{}); ok {
-					if sl, ok := md2["offset"]; ok {
-						offset, _ = sl.(int)
-					}
-				}
-			}
-		}
-	}
+	offset := input.GetOffset()
+
 	for _, result := range set {
 		for _, expression := range result.Expressions {
-			values, ok := expression.Value.([]interface{})
+			values, ok := expression.Value.([]any)
 			if !ok {
-				values = []interface{}{expression.Value}
+				values = []any{expression.Value}
 			}
-
 			for _, value := range values {
 				regoResult := parseResult(value)
 				regoResult.FS = input.FS
@@ -151,16 +205,10 @@ func (s *Scanner) convertResults(set rego.ResultSet, input Input, namespace stri
 				if regoResult.Message == "" {
 					regoResult.Message = fmt.Sprintf("Rego policy rule: %s.%s", namespace, rule)
 				}
-				regoResult.StartLine += offset
-				regoResult.EndLine += offset
+				regoResult.applyOffset(offset)
 				results.AddRego(regoResult.Message, namespace, rule, traces, regoResult)
 			}
 		}
 	}
-	return results
-}
-
-func (s *Scanner) embellishResultsWithRuleMetadata(results scan.Results, metadata StaticMetadata) scan.Results {
-	results.SetRule(metadata.ToRule())
 	return results
 }
