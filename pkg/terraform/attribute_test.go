@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/aquasecurity/defsec/pkg/terraform/context"
-	defsecTypes "github.com/aquasecurity/defsec/pkg/types"
+	"github.com/aquasecurity/defsec/pkg/types"
 	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/stretchr/testify/require"
@@ -17,6 +17,10 @@ func Test_AllReferences(t *testing.T) {
 	}{
 		{
 			input: "42", // literal
+			refs:  []string{},
+		},
+		{
+			input: "5 == 5", // comparison
 			refs:  []string{},
 		},
 		{
@@ -35,6 +39,10 @@ func Test_AllReferences(t *testing.T) {
 			input: `{x = 1, y = data.aws_ami.ubuntu.most_recent}`,
 			refs:  []string{"data.aws_ami.ubuntu.most_recent"},
 		},
+		{
+			input: `{foo = 1 == 1 ? true : data.aws_ami.ubuntu.most_recent}`,
+			refs:  []string{"data.aws_ami.ubuntu.most_recent"},
+		},
 	}
 
 	for _, test := range cases {
@@ -51,7 +59,7 @@ func Test_AllReferences(t *testing.T) {
 				Expr:      exp,
 				Range:     hcl.Range{},
 				NameRange: hcl.Range{},
-			}, ctx, "", defsecTypes.Metadata{}, Reference{}, "", nil)
+			}, ctx, "", types.Metadata{}, Reference{}, "", nil)
 
 			refs := a.AllReferences()
 			humanRefs := make([]string, 0, len(refs))
