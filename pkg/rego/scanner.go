@@ -207,6 +207,33 @@ type Input struct {
 	Contents interface{} `json:"contents"`
 }
 
+func (i Input) GetOffset() int {
+	if i.Contents == nil {
+		return 0
+	}
+
+	contents, ok := i.Contents.(map[string]any)
+	if !ok {
+		return 0
+	}
+	rawMetadata, ok := contents["__defsec_metadata"]
+	if !ok {
+		return 0
+	}
+	metadata, ok := rawMetadata.(map[string]any)
+	if !ok {
+		return 0
+	}
+	rawOffset, ok := metadata["offset"]
+	if !ok {
+		return 0
+	}
+	if offset, ok := rawOffset.(int); ok {
+		return offset
+	}
+	return 0
+}
+
 func GetInputsContents(inputs []Input) []any {
 	results := make([]any, len(inputs))
 	for i, c := range inputs {
@@ -265,7 +292,8 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 				if err != nil {
 					return nil, err
 				}
-				results = append(results, s.embellishResultsWithRuleMetadata(ruleResults, *staticMeta)...)
+				ruleResults.SetRule(staticMeta.ToRule())
+				results = append(results, ruleResults...)
 			}
 		}
 
